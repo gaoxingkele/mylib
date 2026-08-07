@@ -1,0 +1,341 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/entsoe_transparency/entsoe_transparency__Probabilistic_load_forecasting__eb2b63fa82.pdf",
+  "n_pages": 11,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 I NTRODUCTION",
+      "level": 1,
+      "text": "High-end high performance computing (HPC) systems have contin-\nuously become more and more capable with higher computational\ncapacity with every new system replacement. This was the case for\nthe replacement of the K computer to the supercomputer Fugaku at\nthe RIKEN R-CCS. The increased number of CPUs and computa-\ntional cores have been applied for Capability Computing to tackle\neven larger numerical simulations with higher spatio-temporal reso-\nlutions. In addition, this also has been used for Capacity Computing\nto handle an even larger number of parameters and members during\nparametric sweep and ensemble simulations. On the other hand,\nthis proportionately generates even larger simulation outputs, thus,\nmaking the visualization and analysis tasks even more challenging.\nAs a result, the importance of in-situ visualization and analysis has\ncontinuously become even more evident.\nA variety of approaches have already been proposed and applied\nfor the in-situ visualization and analysis as discussed in [6]. We can\nalso verify that there are also a variety of existing applications and\nlibraries for realizing in-situ visualization and analysis. However,\nsince in-situ processing is executed simultaneously with the simu-\nlation, it becomes highly important to collaborate with the domain\nscientists . We have been working with domain scientists working\nwith computational ﬂuid dynamics (CFD) simulation of the sound\ngeneration mechanisms [27], and we already worked on an adaptive\nin situ time-step sampling approach [26]. In this work, we have\nused the same OpenFOAM CFD application and simulation model\nand obtained assistance from them for necessary technical feedback\nduring the developments.\nProbably the most widely used image-based in-situ visualization\napproach is ParaView Cinema [1]. In that approach, a large set of\npre-computed images are generated in-situ on the HPC system side\nfor the interactive post-hoc visual exploration on a local machine\nsuch as desktop PC and laptop. There is also an image-based in-situ\nvisualization approach that generates a set of images from omni-\ndirectional camera positions [9], and its extension for video-based\narXiv:2301.11591v2  [cs.GR]  30 Jan 2023\nin-situ visualization [8]. These image- or video-based in-situ visual-\nization approaches have proven useful for detailed analysis of the\nmain simulation results. In this work, we have focused on rapid un-\nderstanding of the underlying simulation during test runs and model\ncalibration runs before the main simulation run. For this purpose,\nwe focused on selecting the most appropriate viewpoints, based on\ninformation entropy, at regular time intervals of the simulation in\norder to obtain as much information as possible trying to facilitate\nthe rapid understanding of such kinds of simulations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 R ELATED WORK",
+      "level": 1,
+      "text": "There is an extensive work that culminated in the creation of a classi-\nﬁcation and terminology for the in-situ visualization approaches [6].\nHere, we will only focus on related works for realizing tightly cou-\npled in-situ visualization, and techniques for selecting time steps\nand viewpoints that can be used for minimizing the amount of im-\nages for the image- or video-based in-situ visualization. VTK-based\nParaView and VisIt are probably the most widely used visualization\napplication for large data visualization. Both applications provide in-\nsitu visualization APIs, ParaView Catalyst[2] and VisIt LibSim [11],\nfor integrating to the simulation code. In a batch-based in-situ visu-\nalization, a large amount of images can be generated for assisting\nthe post-hoc visualization [9]. To facilitate this post-hoc visual anal-\nysis, Ahrens et al. [1] proposed an image-based approach for the\nin-situ visualization and analysis, and was implemented as Paraview\nCinema. In this approach a large set of images are generated in-\nsitu, and a custom visualization application is used, on the local\nmachine, to perform interactive visual analysis by automatically\nswitching between the generated set of images. Similar to this ap-\nproach, Kageyama et al. [8] proposed a video-based approach by\ngenerating an omnidirectional animated video, from the set of in-situ\ngenerated images, which are explorable from a custom visualization\napplication. Although these approaches have proven efﬁcient, most\nof the generated images may have small or even no contribution to\nthe visual analysis, thus it may be unnecessarily increasing the time\nspent on the post-hoc visual analysis task.\nAn approach to minimize the aforementioned amount of gen-\nerated images is the selection of the most valuable time steps for\nrendering the images. For this purpose, Ling et al. [12] proposed a\nmethod to estimate the probability density function of the simulation\nﬁeld, at each time step, by using the kernel density estimation. They\nalso applied machine learning for extracting feature quantity from\nthe obtained estimation, and detected potentially valuable time steps\nwhere an important phenomena may occur. However, this method\ncan cause false detections depending on the high correlation among\nthe physical quantities on the simulation ﬁeld as mentioned by the\nauthors. Yamaoka et al. [26] extend the aforementioned work, and\nproposed an adaptive time sampling method for in-situ visualization.\nIn this method, kernel density function and Kullback–Leibler diver-\ngence is applied to estimate the amount of change on the simulation\nﬁeld. The sampling intervals are adaptively changed according to\nthe estimated amount of change in the simulation.\nAnother approach for reducing the amount of images is the se-\nlection of viewpoints for generating the images. For this purpose,\nKamada et al. [10] considered the viewpoints capable of minimizing\nthe number of degenerated face as being the optimal viewpoints.\nHowever, they did not extend their work for the case when there\nexist multiple viewpoints with the same number of degenerated\nfaces. Barral et al. [3] solved this problem by adding the projected\narea as a weight to the number of degenerated faces. However,\nthere still remains a problem on how to properly set these weights.\nVazquez et al. [23] proposed a method to select the optimal view-\npoint deﬁned by the viewpoint entropy based on the information\nentropy. Since this method cannot handle the movement of view-\npoints, the authors improved the viewpoint entropy and applied it\nto molecular objects [25] as well as to image-based modeling [24].\nPage et al. [18] proposed a method to analyze the object shape by\ncalculating the entropy for the silhouette and surface curvature of\nthe model. Polonsky et al. [19] discussed evaluation indices for the\nviewpoint selection, and concluded that none of them could make\nthe best choice in any situation. However, they also said that by\nimproving each of these indices, it will become possible to make a\nbetter choice by using a combination of them.\nSecord et al. [21] proposed some evaluation indices for the view-\npoint selection, and showed that optimal viewpoints can be selected\nby combining these metrics. Takahashi et al. [22] proposed a method\nfor estimating the optimal viewpoint for volume data by using in-\nformation entropy. Bordoloi et al. [5] proposed an information\nentropy-based evaluation metric for the viewpoints during volume\nrendering by using the transfer function, data distribution, and voxel\nvisibility information. Zhang et al. [28] also proposed an evaluation\nmetric for volume rendering based on the opacity, brightness, and\nstructural features. Ji et al. [7] proposed a method to ﬁnd the optimal\ntime-varying views by using the viewpoint selection method to max-\nimize the amount of information for time-series volume data. They\nshowed that it is possible to create an animation with the largest\namounts of information. This was realized by searching for a move-\nment route with the largest amounts of information using dynamic\nprogramming. Marsaglia et al. [14] proposed a viewpoint quality\nevaluation metric based on information entropy involving the visible\nﬁeld data, depth, and shading values belonging to each of the pixels\nin the image. In another work, they also utilized a trigger-based ap-\nproach in combination with information entropy to determine when\nto search for a new camera position as a simulation evolves [15].\nOur work was inspired in their viewpoint quality evaluation metric,\nwhich we extended with the lightness information for evaluating\nthe viewpoint quality. We will detail the methodology behind our\nproposed method in the next section.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 M ETHODOLOGY",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Overview",
+      "level": 2,
+      "text": "In this work, we focused on a viewpoint selection approach, based\non information entropy, and on a camera path estimation approach,\nbased on quaternion interpolation. The viewpoints selected at regular\nintervals are used as markers to estimate the smooth camera path.\nFollowing are the necessary requirements to meet this goal:\nR1. Images from the selected viewpoints should capture important\nphenomenon from the underlying simulation.\nR2. The resulting video generated from the rendered outputs should\nbe smooth for post-hoc analysis.\nBelow is the adopted approach to satisfy the aforementioned\nrequirements, and they are divided into the following three parts:\nA. Viewpoint evaluation\nThe viewpoint quality will be evaluated using information\nentropy and will be used to select the most appropriate image\nfor each evaluated time step. Only images from the selected\nviewpoints will be output (R1).\nB. Camera path estimation\nThe camera path connecting these selected viewpoints will be\nestimated, and the rendered images through this camera path\nwill also be output as intermediate images (R2).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "Video generation",
+      "level": 1,
+      "text": "At the end of the simulation, these output images will be se-\nquentially concatenated to produce a video (R2).\nRegarding part A, the simulation state usually does not often\nsigniﬁcantly change within a single simulation time step. Therefore,\nSimulation time step\n•Execute simulation\nVisualizationtime step\n•Store simulation data\nEntropy evaluation time step\n•Select optimal viewpoint\n•Calculate camera path \nTimes and Intervals\n•Simulation time\n𝑇!=𝑖∆𝑇\n•Visualization time\n𝑇\"!=𝑖∆𝑇\"=𝑖𝑁\"∆𝑇\n•Entropy evaluation time\n𝑇#!=𝑖∆𝑇#=𝑖𝑁\"𝑁#∆𝑇\ndata1\ntime [ 𝑇\"]\n∆𝑇\"\ntime [ 𝑇#]\n∆𝑇#\ntime [\t𝑇\t]\n∆𝑇\ndata2data3\nRendering\nSelected Viewpoint “A”\nSelected Viewpoint “B” Intermediate Images\nFigure 2: Different time step intervals for the simulation, visualization and entropy evaluation.\nthere is usually no need to visualize at every simulation time step,\nand the visualization can be performed at every set of simulation time\nsteps. In the same manner, the viewpoint evaluation for viewpoint\nselection will be performed at every set of visualization time steps to\nsatisfy R1. In this paper, as shown in Fig. 2, we use T to represent\nthe simulation time step, TV to represent the visualization time step,\nand TE to represent the entropy evaluation time step,∆T to represent\nthe simulation time step interval, ∆TV to represent the visualization\ntime step interval, and ∆TE to represent the entropy evaluation time\nstep interval. The elapsed time for theith simulation time step T i can\nbe expressed as T i = i∆T . In the same manner, the visualization time\nstep and entropy evaluation time steps can be expressed respectively\nas T i\nV = i∆TV and T i\nE = i∆TE. Considering that the simulation is\nperformed NV times for every visualization, and the visualization is\nperformed NE times for every optimal viewpoint selection, then we\ncan express these intervals as ∆TV = NV ∆T and ∆TE = NE NV ∆T .\nRegarding part B, a camera path connecting viewpoints selected at\nevery ∆TE entropy evaluation time step will be estimated. Although\nvisualization is not performed during the visualization time steps\nin between the entropy evaluation time steps, the simulation data\nfor each ∆TV visualization time step is stacked. From the obtained\ncamera path, the rendered images at the intermediate visualization\ntime steps will be output as the intermediate images for generating a\nsmooth video, and this satisﬁes R2. It is worth noting that it is also\npossible to generate the full set of images from the entire viewpoints\nfor the detailed post-hoc analysis when necessary.\nRegarding part C, the set of output images generated at each ∆TV\nvisualization time step will be joined sequentially to create a video\nﬁle. For this purpose, we can use existing tools such as the well-\nknown FFmpeg available to a variety of platforms. In the resulting\nvideo, the camera will automatically move and capture the important\nphenomenon, and this allows the R2 to be satisﬁed. Traditional\napproach requires the user to search for the best location, in the\ntrial-and-error manner, to visually explore when searching for an\nimportant phenomenon during the simulation. However, by using\nthe proposed method, this search for the best camera position may\nbe alleviated and may facilitate narrowing down the spatio-temporal\nregion of interest for the detailed visual analysis.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 Viewpoint Selection",
+      "level": 2,
+      "text": "In this section, we will detail the utilized viewpoint selection ap-\nproach. The evaluation of the viewpoints is based on information\nentropy. We used depth and lightness values from the rendered\nimages for calculating the associated information entropy, that is,\nthe depth entropy and lightness entropy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2.1 Information Entropy",
+      "level": 3,
+      "text": "Information entropy used in this work can be deﬁned as the expected\nvalue for the amount of information obtained from a certain infor-\nmation source [4]. The information entropy H(X) from a source\nX given by the set of probabilities P(x1), P(x2),··· , P(xn) corre-\nsponding respectively to the set of information x1, x2,··· , xn can be\nrepresented as follows:\nH(X) =−\nn\n∑\ni=1\nP(xi)log P(xi) (1)\nHere, when P(xi) = 0, we will consider P(xi)log P(xi) = 0. Re-\ngarding the selection of the logarithm’s base, the base inﬂuences\nthe multiplication factor and, thus, is arbitrary. Base 2 is commonly\nused in information theory, and was used in this work. Taking into\nconsideration the probability distribution of the information source,\nthe larger the information bias, the smaller the value of information\nentropy, and vice versa.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2.2 Depth Entropy",
+      "level": 3,
+      "text": "Depth entropy used in this work is based on the viewpoint quality\nevaluation metric proposed by Marsaglia et al. [14]. The information\nentropy is calculated by considering the image as the source of\ninformation, and by using the depth values belonging to each of the\npixels in the image. The depth values can vary in the range of 0∼ 1,\nand the closer the distance to the object, the smaller the value. The\nbackground portion in the image where there is no object is set to\ninﬁnity and will have their depth values corresponding to 1.\nThe depth values from all pixels of the rendered image are binned\ninto 256 groups d0, d1,··· , d255 for creating a discrete probability\ndistribution D, which will be used to calculate the information en-\ntropy. At this time, the background portion in the image is considered\nto have no information, and only the pixels with some information\nwill be used in the calculation. By using the discrete probability\ndistribution, the depth entropy Hd can be calculated as follows:\nHd =−\n255\n∑\ni=0\nD(di)log2 D(di) (2)\nHere, D(di) corresponds to the probability for a given value,\nselected based on the probability distribution D, being di. When\nevaluating a viewpoint using depth entropy, the resulting value will\nbe larger for images with large dispersion in the distribution of depth\nvalues. Therefore, the viewpoints of images showing objects with\nhigh undulations will be highly evaluated.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.2.3 Lightness Entropy",
+      "level": 3,
+      "text": "In this work, in addition to the depth entropy, we propose the use of\nlightness entropy to also take into consideration the color informa-\ntion in the image. Diverging color maps, proposed by Moreland [16],\nhave become prevalent in scientiﬁc visualization as the substitute\nfor the traditional but problematic rainbow color map. Although the\nchange in color values, such as RGB values, in a color map may\nfollow different behavior depending on the color map, diverging\ncolor maps usually show similar behavior in the lightness values in\nCIELAB color space as shown in the Fig. 3. Therefore, lightness\nentropy is expected to work robustly for the diverging color maps.\nThe proposed lightness entropy can be deﬁned as an information en-\ntropy using the lightness values from the target image as the source\nof information. The lightness value is calculated from RGB values\nand can vary in the range of 0∼ 100.\nPiYG\nRdBu\nPuOr\nLightness \nL*\nFigure 3: Lightness values for different diverging color maps.\nThe lightness values, as well as the depth values, obtained\nfrom all pixels of the rendered image, are binned into 256 groups\nl0, l1,··· , l255 for creating a discrete probability distributionL, which\nwill be used to calculate the information entropy. At this time, the\nbackground portion in the image is considered to have no infor-\nmation, and only the pixels with some information will be used in\nthe calculation. By using the discrete probability distribution, the\nlightness entropy Hl can be calculated as follows:\nHl =−\n255\n∑\ni=0\nL(li)log2 L(li) (3)\nHere, L(li) corresponds to the probability for a given value, se-\nlected based on the probability distribution L, being li. When a\nviewpoint is evaluated using the lightness entropy, the resulting\nvalue will be larger for images with large dispersion in the distribu-\ntion of lightness values. Therefore, the viewpoints of images with\nclear brightness and darkness will be highly evaluated.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.3 Path Estimation between Selected Viewpoints",
+      "level": 2,
+      "text": "In this section, we will detail the utilized camera path estimation\nbetween the viewpoints selected by using the depth and/or lightness\nentropy. In this work, we considered that the viewpoints are pre-\narranged in a spherical surface as shown in Fig. 4, and the camera\npath from one viewpoint to another will move over this spherical\nsurface. More speciﬁcally, the position and orientation of a given\nviewpoint will be represented as a quaternion, and the movement\nfrom one to another viewpoint will be obtained by using quaternion\ninterpolation. In this work, we investigated two quaternion interpola-\ntion methods: spherical linear interpolation (SLERP) and spherical\nquadrangle interpolation (SQUAD). In the following subsections,\nwe will explain about spherical linear interpolation and spherical\nquadrangle interpolation.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.3.1 Spherical Linear Interpolation (SLERP)",
+      "level": 3,
+      "text": "SLERP is an abbreviation for spherical linear interpolation, and is\na quaternion interpolation method for connecting two points over a\nsphere in the straight line direction, or the shortest path, as shown\nin Fig. 5. SLERP-based interpolation from a quaternion qA to the\nquaternion qB can be calculated by using time t∈ [0, 1] as follows:\n: Viewpoints\nFigure 4: Viewpoint distribution over spherical surface.\nsler p(qA, qB, t) = sin (1− t)φ\nsin φ qA + sintφ\nsin φ qB (4)\nHere, φ = arccos⟨qA, qB⟩. In addition, in the case of⟨qA, qB⟩ < 0,\nthe interpolation will be interpolated in the contrary direction over\nthe sphere surface, that is by the longest path in the straight-line\ndirection. To interpolate by the shortest path, then either qA or qB\nshould be replaced with a quaternion with same rotation but in the\nopposite direction. For instance, by replacing qA with−qA.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3.2 Spherical Quadrangle Interpolation (SQUAD)",
+      "level": 3,
+      "text": "SQUAD is an abbreviation for spherical quadrangle interpolation,\nand is a quaternion interpolation method to connect multiple points\nin a smoothness way so that the derivatives are continuous in the\nneighborhood of the points (Fig. 5). Considering a quaternion list\n{q1, q2, . . .qn}, then the SQUAD-based interpolation from qi to\nqi+1 can be calculated by using the time t∈ [0, 1] as follows:\nsquad(qi, qi+1, ai, ai+1, t)\n= sler p(sler p(qi, qi+1, t), sler p(ai, ai+1, t), 2t(1− t)) (5)\nai = qi exp\n(\n− log q∗\ni qi−1 + log q∗\ni qi+1\n4\n)\n(6)\nHere, the exponential of the quaternion exp(q) and the logarithm\nof the quaternion log q for the quaternion q = a + bi + c j + dk are\ndeﬁned as follows:\nexp(q) = ea\n(\ncos∥bi + c j + dk∥ + bi + c j + dk\n∥bi + c j + dk∥ sin∥bi + c j + dk∥\n)\n(7)\nlog q = log∥q∥ + bi + c j + dk\n∥bi + c j + dk∥ arctan∥bi + c j + dk∥\na (8)\nIn addition, in the case of performing SQUAD-based interpolation\nfrom q1 to q2, and from qn−1 to qn, we consider q0 = q1 and qn+1 =\nqn.\nUnit Sphere in Quaternion Space\n: SLERP \n: SQUAD\n: Rotation Quaternion\nFigure 5: Comparison of SLERP and SQUAD interpolation methods.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.3.3 Implementation",
+      "level": 3,
+      "text": "We utilized the Kyoto Visualization System (KVS) [20] for imple-\nmenting the proposed viewpoint selection approach, based on depth\nand lightness entropy, as well as the sequential camera path between\nthe selected viewpoints via SLERP- and SQUAD-based interpolation\nmethods. KVS is a cross-platform, open-source C++ visualization\nlibrary capable of running on a variety of hardware systems from\ntraditional x86/GPU systems to GPU-less HPC systems including\nIBM Blue Gene L/P (PowerPC), K computer (SPARC VIIIfx), and\nFugaku (ARM A64FX). KVS supports hybrid MPI/OpenMP paral-\nlelism and implements a sort-last parallel image composition method\nbased on Binary-Swap [13], with an extension to support non-power-\nof-two number of nodes, which is named 234Compositor [17].\nThe pseudocode of our implementation, using the SQUAD-based\ninterpolation, is described in Algorithm 1. In this pseudocode, I[],\nV [], and Q[] respectively represent the queues for storing the out-\nput image, simulation data, and the quaternion for the selected\nviewpoint. In addition, is initial step (t) and is f inal step (t) are\nfunctions that respectively return the true information in the ﬁrst\nand the ﬁnal time step. The Vis(V, q) function renders the simu-\nlation data V from the viewpoint represented by the quaternion of\nq. Entropy Evaluation (V ) is the function that calculates the en-\ntropy for the simulation data V at all pre-arranged viewpoints on\nthe spherical surface, and returns the quaternion information of the\nviewpoint with highest entropy value. Its pseudocode is described in\nAlgorithm 2. In this pseudocode, L represents the set of viewpoints\nand the read back(V, l) is a function that renders the simulation data\nV from the viewpoint l and returns its frame buffer. entropy( f ) is\na function that calculates the entropy for the frame buffer f and re-\nturns its value. quaternion() is a function that returns the quaternion\ninformation from a given viewpoint.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1",
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4 E XPERIMENTAL EVALUATIONS",
+      "level": 1,
+      "text": "We used the OpenFOAM CFD code and model for the experimental\nevaluations. The simulation model used for the evaluations was\nobtained from our collaborators [27], and refers to a sound propaga-\ntion in the oral cavity by using irregular volume data composed of\n3,197,279 hexahedral elements. We integrated the in situ KVS mod-\nule to the OpenFOAM code, and evaluated on two systems shown\nin Tables 1 and 2. The irregular volume data was decomposed into 8\nblocks for the x86 Server, and up to 1,024 blocks for the Fugaku.\nT able 1: x86/GPU-based Server System.\nNodes 1\nCPU Intel Xeon Gold 6238R 2.20GHz 28Core×2\nCores 28× 2 = 56\nRAM 384 GB DRAM\nGPU NVIDIA Quadro RTX8000\nCompiler GCC version 7.5.0\nMPI OpenMPI 2.1.1\nT able 2: ARM-based Supercomputer Fugaku.\nNodes 158,976\nCPU Fujitsu A64FX (Armv8.2-A SVE)\nCores 48 + 2 Assistant Cores\nRAM 32GB HBM2\nCompiler GCC-based Fujitsu Compiler Ver. 4.8.0\nMPI OpenMPI with Fujitsu expensions for Tofu\nAlgorithm 1 In-situ visualization (using SQUAD interpolation).\n1: function IN SITU VISUALIZATION (∆TV , ∆TE)\n2: I[], V [], Q[], t;\n3: while t≤ tend do\n4: Vt = Sim();\n5: if is initial step (t) then\n6: Qt = Entropy Evaluation (Vt );\n7: Q.push(Qt ); Q.push(Qt );\n8: else if t%∆TV == 0 then\n9: if t%∆TE == 0 then\n10: Qt = Entropy Evaluation (Vt );\n11: Q.push(Qt );\n12: if Q.size() == 4 then\n13: q1 = Q. f ront(); Q.pop();\n14: q2 = Q. f ront(); Q.pop();\n15: q3 = Q. f ront(); Q.pop();\n16: q4 = Q. f ront(); Q.pop();\n17: for i = 0, 1,··· , ∆TE− 1 do\n18: s = i/TE;\n19: qs = squad(q1, q2, q3, q4, s);\n20: Vs = V. f ront(); V.pop();\n21: Is = Vis(Vs, qs);\n22: I.push(Is);\n23: end for\n24: end if\n25: end if\n26: end if\n27: if is f inal step (t) then\n28: q1 = Q. f ront(); Q.pop();\n29: q2 = Q. f ront(); Q.pop();\n30: q3 = Q. f ront(); Q.pop();\n31: q4 = q3;\n32: for i = 0, 1,··· , ∆TE− 1 do\n33: s = i/TE;\n34: qs = squad(q1, q2, q3, q4, s);\n35: Vs = V. f ront(); V.pop();\n36: Is = Vis(Vs, qs);\n37: I.push(Is);\n38: end for\n39: while V.size() > 0 do\n40: Vs = V. f ront(); V.pop();\n41: Is = Vis(Vs, q3);\n42: I.push(Is);\n43: end while\n44: end if\n45: t + +;\n46: end while\n47: return I;\n48: end function",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.1 Some Results",
+      "level": 2,
+      "text": "For the initial experimental evaluations, we selected the pressure\nvariable and used multi-isosurface rendering with three distinct iso-\nvalues that are rendered as different colors. The total number of\nsimulation time steps for the utilized CFD model was 15,000, and\nwe used the parameters shown in Table 3 for the evaluations. We\nevaluated the use of our proposed lightness entropy (Lightness) in ad-\ndition to the depth entropy (Depth) proposed by Marsaglia et al. [14],\nand also the use of the average of depth and lightness entropy (Depth\n& Lightness ). For the use of only lightness entropy, we experi-\nmented with three diverging color maps (RdBu, PiYG, PuOr). We\nselected three entropy evaluation intervals (10, 30, 50), which repre-\nsent the visualization time step interval for performing the entropy\ncalculation. We also selected three sets of viewpoints with differ-\nAlgorithm 2 Entropy Evaluation.\n1: function ENTROPY EVALUATION (V )\n2: E = 0.0;\n3: Q = 1 + 0i + 0 j + 0k;\n4: for l∈ L do\n5: f = read back(V, l);\n6: e = entropy( f );\n7: if e > E then\n8: E = e;\n9: Q = l.quaternion();\n10: end if\n11: end for\n12: return Q;\n13: end function\nent numbers of viewpoints in the latitude and longitude directions\n(latitude× longitude). Both SLERP- and SQUAD-based quaternion\ninterpolation methods were also evaluated for estimating the camera\npath between the selected viewpoints. The x86/GPU Server was\nused for the detailed evaluation using these different parameters, and\nthe supercomputer Fugaku was used for the scalability analysis by\nusing up to 1024 nodes, that is, 49,152 cores in hybrid MPI/OpenMP\nparallelism.\nT able 3: Parameters used for the experimental evaluations.\nEntropy source Depth; Lightness; Depth & Lightness\nColor maps RdBu; PiYG; PuOr\n# of viewpoints 15× 30; 25× 50; 35× 70\nIntervals (NE) 10; 30; 50\nInterpolation SLERP; SQUAD\nFig. 6 shows some entropy heatmaps evaluated by using all three\nentropy sources at different simulation time steps (2400, 6000, 9600,\nand 13200). The set of viewpoints evenly distributed on the spherical\nsurface is mapped onto the 2D heatmap where the viewpoints on\nthe same latitude are placed on the same horizontal axis, and in the\nsame manner, the viewpoints on the same longitude are placed on\nthe same vertical axis. The blue-colored regions show the portions\nwhere the evaluated entropy has low value, and on the other hand,\nthe red-colored regions show the portions where the evaluated en-\ntropy has high value. Fig. 7 shows the multi-isosurface rendered\nresults from the selected viewpoints obtained in Fig. 6; Fig. 9 shows\nthe multi-isosurface rendered results from the selected viewpoints\nobtained in Fig. 8; Fig. 11 shows the multi-isosurface rendered\nresults from the selected viewpoints obtained in Fig. 10. Table 4\nshows the average elapsed time of entropy calculation per image for\ndifferent entropy sources when using an image size of 512× 512\non the x86/GPU-based Server System. Compared to depth entropy,\nwe can observe that the computational costs when using lightness\nbecome much higher. In addition, we can verify that the number\nof viewpoints directly inﬂuences the computational cost. Code op-\ntimizations and the use of parallel processing for trying to reduce\nthis computational cost are planned as future works.Table 5 shows\na comparison of output images’ average entropy when varying the\nnumber of viewpoints. Here, the utilized entropy source is Depth &\nLightness, the entropy evaluation interval is 30, and the interpolation\nmethod is SQUAD. We can observe that the difference in the average\nentropy when varying the number of viewpoints is small.\nFig. 12 shows a comparison of the accumulative distance from\nthe estimated camera path position to the viewpoint with the high-\nest entropy, at each visualization time step, for different entropy\nevaluation intervals; Fig. 13 shows a comparison of the accumula-\ntive distance for different interpolation methods.Table 6 shows a\ncomparison of output images’ average entropy for different entropy\nT able 4: Average elapsed time of entropy calculation for different\nentropy sources (x86 System).\nEntropy Sources A verage elapsed time [s]\nDepth 2.24e-4\nLightness 1.30e-3\nDepth & Lightness 1.53e-3\nT able 5: Average entropy when varying the number of viewpoints.\n# of viewpoints A verage entropy\n15× 30 3.09\n25× 50 3.10\n35× 50 3.09\nevaluation intervals. Here, the utilized entropy source is Depth &\nLightness, the number of viewpoints is25×50, and the interpolation\nmethod is SQUAD. In the case of NE = 1, rendered images of the\nviewpoint with the highest entropy at each visualization time step\nare output. From this ﬁgure and table, we can observe that as the\nentropy evaluation interval increases, the accumulative distance also\nincreases, and the amount of average entropy decreases. Table 7\nshows the average elapsed time for path calculation between two\nselected viewpoints for different interpolation methods. We can\nobserve that the computational cost is proportional to the number\nof intervals, and the cost of SQUAD is much higher than that of\nSLERP. However, it is worth noting that the inﬂuence on the total\ncomputational cost compared to the entropy calculation cost is small\nand almost neglectable. Table 8 shows a comparison of output im-\nages’ average entropy for different interpolation methods. Here, the\nentropy source is Depth & Lightness, the number of viewpoints is\n25× 50, and the entropy evaluation interval is 30. We can observe\nthat when selecting SQUAD, the accumulative distance becomes\nsmaller and achieves a slight increase in average entropy.\nT able 6: Average entropy for different entropy evaluation intervals.\nIntervals (NE) A verage entropy\n1 3.17\n10 3.12\n30 3.10\n50 3.08\nT able 7: Average elapsed time for path calculation between two se-\nlected viewpoints using different interpolation methods (x86 System).\nInterpolation Intervals ( NE )\nmethod 10 30 50\nSLERP 2.80e-6 5.16e-6 6.93e-6\nSQUAD 9.80e-6 3.04e-5 3.54e-5\nT able 8: Average entropy for different interpolation methods.\nInterpolation method A verage entropy\nSLERP 3.09\nSQUAD 3.10",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f9",
+          "f12",
+          "f11",
+          "f10",
+          "f13",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.2 Discussions",
+      "level": 2,
+      "text": "Regarding the inﬂuence of different entropy sources (Fig. 6), we\nobserved that the lightness entropy has a higher inﬂuence than the\nSimulation step: 2400 6000 9600 13200\nDepth:\nDepth & Lightness:\nLightness:\nFigure 6: Entropy heatmaps for different entropy sources.\nDepth:\nSimulation step: 2400 6000 9600 13200\nLightness:\nDepth & Lightness:\nFigure 7: Rendered images from the selected viewpoints.\ndepth entropy, and has an even higher inﬂuence when using both\ndepth and lightness entropy. Therefore, we opted to add both depth\nand lightness entropies after normalization. In addition, due to a\nlarge number of viewpoints with high entropy, the sequentially se-\nlected viewpoints can be separated far apart from each other thus\nresulting in an intense camera movement over the entire visualization\ntime steps. We also observed that when using the lightness entropy,\nthe entropy calculation took a little more time than using the depth\nentropy. This was because of the necessary conversion from RGB\nvalues to lightness values. It is worth noting that the selection of the\nviewpoint evaluation metric will depend on the targeted simulation,\nvisualization method, and users’ analysis goals. Therefore, to satisfy\nR1, it becomes important to implement a variety of viewpoint evalu-\nation metrics to handle different use case combinations. In addition,\ndepending on the use case, it may be helpful that different evaluation\nmetrics are interchangeable at run time in an adaptive manner.\nRegarding the inﬂuence of the diverging color maps for the light-\nness entropy, we initially perceived almost no difference between\nthe heatmaps. However, there was a slight difference among them,\nand at certain time steps, we observed that the selected viewpoints\nwere also different. Among the color maps, heatmaps for the PuOr\nwas especially different from the others. This may be because the\nchange in the lightness of the PuOr was also different from the other\ndiverging color maps.\nRegarding the inﬂuence of the entropy evaluation intervals, as this\ninterval becomes smaller there will be fewer complementary images\nbetween the selected viewpoints. As a result, changes in viewpoint\nmay become intense in a short period of time, this will lead to a non-\nsmooth video which affects the users’ post-hoc visual analysis tasks.\nIt is worth noting that when the simulation state is not expected\nto change rapidly, there will be no necessity to frequently evaluate\nthe viewpoints. However, when utilizing larger entropy evaluation\nintervals, a larger amount of memory will be required for temporarily\nstoring the simulation data. That is, there is a trade-off between the\nentropy evaluation intervals and the memory consumption, and as a\nresult, depending on the simulation time step range and simulation\ndata size, large entropy evaluation intervals, such as the utilized\nNE = 30 and NE = 50, may be sufﬁcient to satisfy the R2.\nRegarding the inﬂuence of the number of viewpoints on the spher-\nical surface, we verify that there was no signiﬁcant difference for\nSimulation step: 2400 6000 9600 13200\n25x50:\n15x30:\n35x70:\nFigure 8: Lightness Entropy heatmaps for different diverging color maps.\nSimulation step: 2400 6000 9600 13200\nRdBu:\nPiYG:\nPuOr:\nFigure 9: Rendered images from the selected viewpoints for different diverging color maps.\nvarying number of viewpoints. However, it is worth noting that the\ncomputational time required to select the viewpoints will increase\nproportionately with the increase in the number of viewpoints.\nRegarding the inﬂuence of the quaternion interpolation method\nfor estimating the camera path between selected viewpoints, we\nobserved that the camera path using SQUAD-based interpolation\npasses closer to the viewpoint with highest entropy at the interme-\ndiate time steps. We also observed that jerky camera movements\ntend to occur when using the SLERP-based interpolation. On the\nother hand, smoother camera movement was observed when using\nthe SQUAD-based interpolation, and as a result, we can consider\nthat it will cause less discomfort to the user when seeing the ani-\nmated rendering results since the camera movement will be more\nnatural. Therefore, we can consider that SQUAD-based quaternion\ninterpolation satisﬁes the R2.\nMoreover, we carried out some evaluations with the domain sci-\nentists who assisted in the development of previous work on in-situ\nadaptive timestep selection [26]. We obtained technical feedback\nfrom the generated visualization results in the form of animated\nvideos. According to them, the video generated by using the pro-\nposed method seems to present more information than the video\ngenerated by using ﬁxed viewpoint camera settings, which has tradi-\ntionally been used in their simulation analysis. However, they also\npointed out that the proposed video gives the impression of exces-\nsive movement and sometimes tracking phenomena that do not need\nmuch attention. As some suggestions, they mentioned that it would\nbe better to slightly reduce high viewpoint variations or suppress\nunnecessary movement, and to improve evaluation methods for the\nviewpoint selection. As an additional suggestion, they would prefer\nto have the ability to zoom in on the target object to enable closer\nobservation. These suggestions will be taken into consideration for\nfurther developments planned as future works.\nIn our current implementation, the set of volume data in the en-\ntropy evaluation interval needs to be stored in the memory before\nthe processing, and this memory cost can become an impediment\nfor memory-hungry simulations. However, we consider that this\napproach can be useful during test runs and model calibration runs,\nbefore the main simulation run, when smaller models are usually\nsufﬁcient. In addition, the in-transit approach for ﬂushing the simu-\nlation data from the memory to another node or even system can be\nSimulation step: 2400 6000 9600 13200\n25x50:\n15x30:\n35x70:\nFigure 10: Entropy heatmaps when varying the number of viewpoints.\nSimulation step: 2400 6000 9600 13200\n25x50:\n15x30:\n35x70:\nFigure 11: Rendered images from the selected viewpoints when varying the number of viewpoints.\nFigure 12: Accumulative distance from the interpolated camera path\nto the viewpoints, with the highest entropy , at each visualization time\nstep, for different entropy evaluation intervals.\nconsidered helpful for minimizing this problem and is planned for\nfuture work. Another planned future work is the application of the\nFigure 13: Accumulative distance to the viewpoints, with the highest\nentropy , at each visualization time step, for different interpolation\nmethods.\nadaptive timestep sampling [26] where larger time intervals will be\nassigned to timestep regions with small variations between the simu-\nlation results. This larger entropy evaluation time step by skipping\nsome simulation results may be helpful for accelerating the visu-\nalization processing as well as reducing the excessive movements\npointed out by the domain scientists.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f9",
+          "f12",
+          "f11",
+          "f10",
+          "f13",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 C ONCLUSIONS",
+      "level": 1,
+      "text": "In this work, we proposed an information entropy-based camera path\nestimation method for in-situ visualization. Considering that most\nof the images generated by traditional batch-based tightly coupled\nin-situ visualization may have small or even no contribution for the\npost-hoc visual analysis, we focused on generating a smooth video\nthat tries to provide as much information as possible to facilitate the\nrapid understanding of the simulation or to narrow down the spatio-\ntemporal region of interest for posterior detailed analysis such as by\nusing traditional image-based visualization. The proposed method\nfocuses on selecting the most appropriate viewpoints, based on in-\nformation entropy, at regular intervals. Intermediate images are\ngenerated from the estimated camera path connecting these selected\nviewpoints, and the produced smooth video that is produced is ex-\npected to be helpful for understanding the underlying simulation\nphenomena. From the experimental evaluations and feedback from\ndomain scientists, we can conﬁrm that the video generated by the\nproposed approach provides more information compared to those\ngenerated by using ﬁxed viewpoint camera settings. However, there\nis still need for improvements, and we can cite the following targets\nfor future works: implementation of better evaluation methods for\nthe viewpoint selection; implementation of zoom in and out func-\ntionalities; integration with the adaptive timestep sampling (irregular\ntime intervals); improvement of computational performance such as\nby applying parallel processing; and estimation of the focal point\nfor the camera.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Depth and lightness entropy-based viewpoint selection and camera path estimation for generating a smooth video, with as"
+    },
+    {
+      "id": "f2",
+      "caption": "Different time step intervals for the simulation, visualization and entropy evaluation."
+    },
+    {
+      "id": "f3",
+      "caption": "Lightness values for different diverging color maps."
+    },
+    {
+      "id": "f4",
+      "caption": "Viewpoint distribution over spherical surface."
+    },
+    {
+      "id": "f5",
+      "caption": "Comparison of SLERP and SQUAD interpolation methods."
+    },
+    {
+      "id": "f6",
+      "caption": "Entropy heatmaps for different entropy sources."
+    },
+    {
+      "id": "f7",
+      "caption": "Rendered images from the selected viewpoints."
+    },
+    {
+      "id": "f8",
+      "caption": "Lightness Entropy heatmaps for different diverging color maps."
+    },
+    {
+      "id": "f9",
+      "caption": "Rendered images from the selected viewpoints for different diverging color maps."
+    },
+    {
+      "id": "f10",
+      "caption": "Entropy heatmaps when varying the number of viewpoints."
+    },
+    {
+      "id": "f11",
+      "caption": "Rendered images from the selected viewpoints when varying the number of viewpoints."
+    },
+    {
+      "id": "f12",
+      "caption": "Accumulative distance from the interpolated camera path"
+    },
+    {
+      "id": "f13",
+      "caption": "Accumulative distance to the viewpoints, with the highest"
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a2",
+      "caption": "In this pseudocode, L represents the set of viewpoints"
+    },
+    {
+      "id": "a1",
+      "caption": "In-situ visualization (using SQUAD interpolation)."
+    }
+  ],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 13,
+    "n_tables": 0,
+    "n_algorithms": 2,
+    "n_equations": 2
+  }
+}

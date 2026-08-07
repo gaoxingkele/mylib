@@ -1,0 +1,480 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/ett/ett__FEDformer_Frequency_Enhanced_Decomposed_Transformer__2b109d378d.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Long-term time series forecasting is a long-standing chal-\nlenge in various applications (e.g., energy, weather, traf -\nﬁc, economics). Despite the impressive results achieved\nby RNN-type methods (\nRangapuram et al., 2018; Flunkert\net al. , 2017), they often suffer from the problem of gradi-\n*Equal contribution 1Machine Intelligence Technology, Al-\nibaba Group.. Correspondence to: Tian Zhou <tian.zt@alibaba-\ninc.com>, Rong Jin <jinrong.jr@alibaba-inc.com>.\nProceedings of the 39 th International Conference on Machine\nLearning, Baltimore, Maryland, USA, PMLR 162, 2022. Copy-\nright 2022 by the author(s).\nent vanishing or exploding ( Pascanu et al. , 2013), signiﬁ-\ncantly limiting their performance. Following the recent suc-\ncess in NLP and CV community ( V aswani et al., 2017; De-\nvlin et al., 2019; Dosovitskiy et al., 2021; Rao et al., 2021),\nTransformer ( V aswani et al., 2017) has been introduced to\ncapture long-term dependencies in time series forecasting\nand shows promising results (\nZhou et al. , 2021; Wu et al. ,\n2021). Since high computational complexity and memory\nrequirement make it difﬁcult for Transformer to be applied\nto long sequence modeling, numerous studies are devoted\nto reduce the computational cost of Transformer (\nLi et al. ,\n2019; Kitaev et al. , 2020; Zhou et al. , 2021; Wang et al. ,\n2020; Xiong et al. , 2021; Ma et al. , 2021). A through\noverview of this line of works can be found in Appendix\nA.\nDespite the progress made by Transformer-based meth-\nods for time series forecasting, they tend to fail in cap-\nturing the overall characteristics/distribution of time s e-\nries in some cases. In Figure\n1, we compare the time\nseries of ground truth with that predicted by the vanilla\nTransformer method ( V aswani et al., 2017) in a real-world\nETTm1 dataset ( Zhou et al. , 2021). It is clear that the pre-\ndicted time series shared a different distribution from that\nof ground truth. The discrepancy between ground truth\nand prediction could be explained by the point-wise atten-\ntion and prediction in Transformer. Since prediction for\neach timestep is made individually and independently, it\nis likely that the model fails to maintain the global prop-\nerty and statistics of time series as a whole. To address\nthis problem, we exploit two ideas in this work. The ﬁrst\nidea is to incorporate a seasonal-trend decomposition ap-\nproach (\nCleveland et al. , 1990; Wen et al., 2019), which is\nwidely used in time series analysis, into the Transformer-\nbased method. Although this idea has been exploited be-\nfore (\nOreshkin et al. , 2019; Wu et al. , 2021), we present a\nspecial design of network that is effective in bringing the\ndistribution of prediction close to that of ground truth, ac -\ncording to Kologrov-Smirnov distribution test. Our second\nidea is to combine Fourier analysis with the Transformer-\nbased method. Instead of applying Transformer to the time\ndomain, we apply it to the frequency domain which helps\nTransformer better capture global properties of time serie s.\nCombining both ideas, we propose a Frequency Enhanced\nSubmission and Formatting Instructions for ICML 2022\nDecomposition Transformer, or, FEDformer for short, for\nlong-term time series forecasting.\nOne critical question with FEDformer is which subset of\nfrequency components should be used by Fourier analysis\nto represent time series. A common wisdom is to keep low-\nfrequency components and throw away the high-frequency\nones. This may not be appropriate for time series forecast-\ning as some of trend changes in time series are related to im-\nportant events, and this piece of information could be lost\nif we simply remove all high-frequency components. We\naddress this problem by effectively exploiting the fact tha t\ntime series tend to have (unknown) sparse representations\non a basis like Fourier basis. According to our theoretical\nanalysis, a randomly selected subset of frequency compo-\nnents, including both low and high ones, will give a better\nrepresentation for time series, which is further veriﬁed by\nextensive empirical studies. Besides being more effective\nfor long term forecasting, combining Transformer with fre-\nquency analysis allows us to reduce the computational cost\nof Transformer from quadratic to linear complexity. We\nnote that this is different from previous efforts on speedin g\nup Transformer, which often leads to a performance drop.\nIn short, we summarize the key contributions of this work\nas follows:",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 We propose a frequency enhanced decomposed Trans-",
+      "level": 1,
+      "text": "former architecture with mixture of experts for\nseasonal-trend decomposition in order to better cap-\nture global properties of time series.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 We propose F ourier enhanced blocks and W avelet",
+      "level": 1,
+      "text": "enhanced blocks in the Transformer structure that\nallows us to capture important structures in time\nseries through frequency domain mapping. They\nserve as substitutions for both self-attention and cross-\nattention blocks.\n3. By randomly selecting a ﬁxed number of Fourier com-\nponents, the proposed model achieves linear computa-\ntional complexity and memory cost . The effectiveness\nof this selection method is veriﬁed both theoretically\nand empirically.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 We conduct extensive experiments over 6 benchmark",
+      "level": 1,
+      "text": "datasets across multiple domains (energy, trafﬁc, eco-\nnomics, weather and disease). Our empirical stud-\nies show that the proposed model improves the per-\nformance of state-of-the-art methods by 14.8% and\n22.6% for multivariate and univariate forecasting, re-\nspectively.\nFigure 1. Different distribution between ground truth and fore-\ncasting output from vanilla Transformer in a real-world ETT m1\ndataset. Left: frequency mode and trend shift. Right: trend shift.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Compact Representation of Time Series in",
+      "level": 1,
+      "text": "Frequency Domain\nIt is well-known that time series data can be modeled from\nthe time domain and frequency domain. One key contribu-\ntion of our work which separates from other long-term fore-\ncasting algorithms is the frequency-domain operation with\na neural network. As Fourier analysis is a common tool\nto dive into the frequency domain, while how to appropri-\nately represent the information in time series using Fourie r\nanalysis is critical. Simply keeping all the frequency com-\nponents may result in inferior representations since many\nhigh-frequency changes in time series are due to noisy in-\nputs. On the other hand, only keeping the low-frequency\ncomponents may also be inappropriate for series forecast-\ning as some trend changes in time series represent impor-\ntant events. Instead, keeping a compact representation of\ntime series using a small number of selected Fourier com-\nponents will lead to efﬁcient computation of transformer,\nwhich is crucial for modelling long sequences. We pro-\npose to represent time series by randomly selecting a con-\nstant number of Fourier components, including both high-\nfrequency and low-frequency. Below, an analysis that justi -\nﬁes the random selection is presented theoretically. Empir -\nical veriﬁcation can be found in the experimental session.\nConsider we have m time series, denoted as\nX1(t),...,X m(t). By applying Fourier transform\nto each time series, we turn each Xi(t) into a vec-\ntor ai = ( ai, 1,...,a i,d )⊤ ∈ Rd. By putting all\nthe Fourier transform vectors into a matrix, we have\nA = ( a1,a 2,...,a m)⊤ ∈ Rm×d, with each row cor-\nresponding to a different time series and each column\ncorresponding to a different Fourier component. Although\nusing all the Fourier components allows us to best preserve\nthe history information in the time series, it may potential ly\nlead to overﬁtting of the history data and consequentially\na poor prediction of future signals. Hence, we need to\nselect a subset of Fourier components, that on the one hand\nshould be small enough to avoid the overﬁtting problem\nand on the other hand, should be able to preserve most\nof the history information. Here, we propose to select\ns components from the d Fourier components ( s < d)\nSubmission and Formatting Instructions for ICML 2022\nFeed \nForward \nFrequency \nEnhanced \nBlock \nMOE \nDecomp \nMOE \nDecomp \nFEDformer Encoder \nFrequency \nEnhanced \nAttention \nFrequency \nEnhanced \nBlock \nMOE \nDecomp \nMOE \nDecomp \nFEDformer Decoder \n+ +\nN\n+ +\n+\nFeed \nForward \nMOE \nDecomp +\nQ\n+\n+ +\nOutput \nM\nK",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "Encoder",
+      "level": 1,
+      "text": "Input \nSeasoal \nInit \nTrend Init \nT l, 2\nde T l, 1\nde T l, 3\nde \nS l, 2\nde S l, 1\nde \nS l, 1\nen S l, 2\nen (or X l\nen )\nX 0\nen ∈ R I× D\nX 0\nde ∈ R (I/ 2+ O )× D\nT 0\nde ∈ R (I/ 2+ O )× D\nX l− 1\nen \nT l− 1\nde \nX l− 1\nde \nT l\nde \nS l, 3\nde (or X l\nde )\nFigure 2. FEDformer Structure. The FEDformer consists of N encoders and M decoders. The Frequency Enhanced Block (FEB, green\nblocks) and Frequency Enhanced Attention (FEA, red blocks) are used to perform representation learning in freq uency domain. Either\nFEB or FEA has two subversions (FEB-f & FEB-w or FEA-f & FEA-w) , where ‘-f’ means using Fourier basis and ‘-w’ means using\nWavelet basis. The Mixture Of Expert Decomposition Blocks ( MOEDecomp, yellow blocks) are used to extract seasonal-trend patterns\nfrom the input data.\nuniformly at random. More speciﬁcally, we denote by\ni1 < i2 < ... < is the randomly selected components.\nWe construct matrix S ∈ { 0, 1}s×d, with Si,k = 1 if\ni = ik andSi,k = 0 otherwise. Then, our representation\nof multivariate time series becomes A′ = AS⊤ ∈ Rm×s.\nBelow, we will show that, although the Fourier basis are\nrandomly selected, under a mild condition, A′ is able to\npreserve most of the information from A.\nIn order to measure how wellA′ is able to preserve informa-\ntion from A, we project each column vector of A into the\nsubspace spanned by the column vectors in A′. We denote\nbyPA′ (A) the resulting matrix after the projection, where\nPA′ (·) represents the projection operator. If A′ preserves\na large portion of information from A, we would expect a\nsmall error between A andPA′ (A), i.e. |A −PA′ (A)|. Let\nAk represent the approximation of A by its ﬁrst k largest\nsingle value decomposition. The theorem below shows that\n|A−PA′ (A)| is close to |A−Ak| if the number of randomly\nsampled Fourier components s is on the order of k2.\nTheorem 1. Assume that µ(A), the coherence measure of\nmatrix A, is Ω(k/n). Then, with a high probability, we\nhave\n|A −PA′ (A)| ≤ (1 +ǫ)|A −Ak|\nifs =O(k2/ǫ2).\nThe detailed analysis can be found in Appendix",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "For real-world multivariate times series, the correspondi ng",
+      "level": 1,
+      "text": "matrix A from Fourier transform often exhibit low rank\nproperty, since those univaraite variables in multivariat e\ntimes series depend not only on its past values but also\nhas dependency on each other, as well as share similar fre-\nquency components. Therefore, as indicated by the The-\norem\n1, randomly selecting a subset of Fourier compo-\nnents allows us to appropriately represent the information\nin Fourier matrix A.\nSimilarly, wavelet orthogonal polynomials, such as Legen-\ndre Polynomials, obey restricted isometry property (RIP)\nand can be used for capture information in time series as\nwell. Compared to Fourier basis, wavelet based representa-\ntion is more effective in capturing local structures in time\nseries and thus can be more effective for some forecasting\ntasks. We defer the discussion of wavelet based representa-\ntion in Appendix\nB. In the next section, we will present the\ndesign of frequency enhanced decomposed Transformer ar-\nchitecture that incorporate the Fourier transform into tra ns-\nformer.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Model Structure",
+      "level": 1,
+      "text": "In this section, we will introduce (1) the overall structure\nof FEDformer, as shown in Figure\n2, (2) two subversion\nstructures for signal process: one uses Fourier basis and\nthe other uses Wavelet basis, (3) the mixture of experts\nmechanism for seasonal-trend decomposition, and (4) the\ncomplexity analysis of the proposed model.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1 FEDformer Framework",
+      "level": 2,
+      "text": "Preliminary Long-term time series forecasting is a se-\nquence to sequence problem. We denote the input length\nasI and output length as O. We denote D as the hidden\nstates of the series. The input of the encoder is a I ×D\nmatrix and the decoder has (I/2 +O) ×D input.\nFEDformer Structure Inspired by the seasonal-trend de-\ncomposition and distribution analysis as discussed in Sec-\ntion\n1, we renovate Transformer as a deep decomposition\narchitecture as shown in Figure 2, including Frequency\nEnhanced Block (FEB), Frequency Enhanced Attention\nSubmission and Formatting Instructions for ICML 2022\n(FEA) connecting encoder and decoder, and the Mixture\nOf Experts Decomposition block (MOEDecomp). The de-\ntailed description of FEB, FEA, and MOEDecomp blocks\nwill be given in the following Section\n3.2, 3.3, and 3.4 re-\nspectively.\nThe encoder adopts a multilayer structure as: X l\nen =\nEncoder(X l−1\nen ), where l ∈ { 1, · · ·,N } denotes the out-\nput ofl-th encoder layer and X 0\nen ∈ RI×D is the embedded\nhistorical series. The Encoder (·) is formalized as\nS l,1\nen , − = MOEDecomp(FEB\n(\nX l−1\nen\n)\n+ X l−1\nen ),\nS l,2\nen , − = MOEDecomp(FeedForward\n(\nS l,1\nen\n)\n+ S l,1\nen ),\nX l\nen = S l,2\nen ,\n(1)\nwhere Sl,i\nen,i ∈ { 1, 2} represents the seasonal compo-\nnent after the i-th decomposition block in the l-th layer re-\nspectively. For FEB module, it has two different versions\n(FEB-f & FEB-w) which are implemented through Discrete\nFourier transform (DFT) and Discrete Wavelet transform\n(DWT) mechanism respectively and can seamlessly replace\nthe self-attention block.\nThe decoder also adopts a multilayer structure as:\nX l\nde, T l\nde = Decoder(X l−1\nde , T l−1\nde ), where l ∈ { 1, · · ·,M }\ndenotes the output of l-th decoder layer. The Decoder (·) is\nformalized as\nS l,1\nde , T l,1\nde = MOEDecomp\n(\nFEB\n(\nX l−1\nde\n)\n+ X l−1\nde\n)\n,\nS l,2\nde , T l,2\nde = MOEDecomp\n(\nFEA\n(\nS l,1\nde , X N\nen\n)\n+ S l,1\nde\n)\n,\nS l,3\nde , T l,3\nde = MOEDecomp\n(\nFeedForward\n(\nS l,2\nde\n)\n+ S l,2\nde\n)\n,\nX l\nde = S l,3\nde ,\nT l\nde = T l−1\nde + Wl,1 ·T l,1\nde + Wl,2 ·T l,2\nde + Wl,3 ·T l,3\nde ,\n(2)\nwhere Sl,i\nde, T l,i\nde ,i ∈ { 1, 2, 3} represent the seasonal and\ntrend component after thei-th decomposition block in thel-\nth layer respectively. Wl,i,i ∈ { 1, 2, 3} represents the pro-\njector for thei-th extracted trend T l,i\nde . Similar to FEB, FEA\nhas two different versions (FEA-f & FEA-w) which are im-\nplemented through DFT and DWT projection respectively\nwith attention design, and can replace the cross-attention\nblock. The detailed description of FEA (·) will be given in\nthe following Section\n3.3.\nThe ﬁnal prediction is the sum of the two reﬁned decom-\nposed components as WS · X M\nde + T M\nde , where WS is to\nproject the deep transformed seasonal component X M\nde to\nthe target dimension.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.2 Fourier Enhanced Structure",
+      "level": 2,
+      "text": "Discrete Fourier Transform (DFT) The proposed\nFourier Enhanced Structures use discrete Fourier transform\n(DFT). Let F denotes the Fourier transform and F −1 de-\nF F − 1\nq ∈ R L × D\nSampling \n×\nQ ∈ C N × D\nC M × D\n˜Q ∈\nR ∈\n˜Y ∈\nC M × D\npadding \nY ∈ C N × D\ny ∈ R L de × D\nC M × D × D\nX l− 1\nen /de \nMLP \nFigure 3. Frequency Enhanced Block with Fourier transform\n(FEB-f) structure.\n×MLP \nv\nF + Sampling \nMLP \nMLP \n˜Q\n˜K\n˜V\nF + Sampling \nF + Sampling \nσ (·)\n×\nPadding + F − 1\ny ∈ R L de × D\nq ∈ R L de × D\nk\n˜Q ˜K ⊤\nX l\nen \nS l, 1\nde \nFigure 4. Frequency Enhanced Attention with Fourier transform\n(FEA-f) structure, σ (·) is the activation function.\nnotes the inverse Fourier transform. Given a sequence of\nreal numbersxn in time domain, where n = 1, 2...N . DFT\nis deﬁned as Xl =∑ N −1\nn=0 xne−iωln , where i is the imag-\ninary unit and Xl, l = 1, 2...L is a sequence of complex\nnumbers in the frequency domain. Similarly, the inverse\nDFT is deﬁned as xn = ∑ L−1\nl=0 Xleiωln . The complex-\nity of DFT is O(N 2). With fast Fourier transform (FFT),\nthe computation complexity can be reduced toO(N logN ).\nHere a random subset of the Fourier basis is used and\nthe scale of the subset is bounded by a scalar. When we\nchoose the mode index before DFT and reverse DFT oper-\nations, the computation complexity can be further reduced\ntoO(N ).\nFrequency Enhanced Block with Fourier Transform\n(FEB-f) The FEB-f is used in both encoder and decoder\nas shown in Figure\n2. The input ( x ∈ RN ×D) of the\nFEB-f block is ﬁrst linearly projected with w ∈ RD×D, so\nq = x·w. Then q is converted from the time domain to the\nfrequency domain. The Fourier transform of q is denoted\nas Q ∈ CN ×D. In frequency domain, only the randomly\nselectedM modes are kept so we use a select operator as\n˜Q = Select(Q) = Select( F(q)), (3)\nwhere ˜Q ∈ CM×D and M << N. Then, the FEB-f is\ndeﬁned as\nFEB-f(q) = F −1(Padding( ˜Q ⊙ R)), (4)\nwhere R ∈ CD×D×M is a parameterized kernel initialized\nrandomly. Let Y = Q ⊙ C, with Y ∈ CM×D. The pro-\nduction operator ⊙ is deﬁned as: Ym,d o =∑ D\ndi=0Qm,d i ·\nRdi,d o,m , where di = 1 , 2...D is the input channel and\ndo = 1, 2...D is the output channel. The result of Q ⊙ R\nis then zero-padded to CN ×D before performing inverse\nFourier transform back to the time domain. The structure\nis shown in Figure",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Submission and Formatting Instructions for ICML 2022",
+      "level": 1,
+      "text": "Frequency Enhanced Attention with Fourier Trans-\nform (FEA-f) We use the expression of the canonical\ntransformer. The input: queries, keys, values are denoted\nas q ∈ RL×D, k ∈ RL×D, v ∈ RL×D. In cross-attention,\nthe queries come from the decoder and can be obtained by\nq = xen · wq, where wq ∈ RD×D. The keys and values\nare from the encoder and can be obtained by k = xde · wk\nand v = xde · wv, where wk, wv ∈ RD×D. Formally, the\ncanonical attention can be written as\nAtten(q, k, v) = Softmax( qk⊤\n√\ndq\n)v. (5)\nIn FEA-f, we convert the queries, keys, and values with\nFourier Transform and perform a similar attention mecha-\nnism in the frequency domain, by randomly selecting M\nmodes. We denote the selected version after Fourier Trans-\nform as ˜Q ∈ CM×D, ˜K ∈ CM×D, ˜V ∈ CM×D. The\nFEA-f is deﬁned as\n˜Q = Select( F(q))\n˜K = Select(F(k))\n˜V = Select( F(v))\n(6)\nFEA-f(q, k, v) = F −1(Padding(σ ( ˜Q · ˜K⊤) · ˜V )), (7)\nwhere σ is the activation function. We use softmax or\ntanh for activation, since their converging performance di f-\nfers in different data sets. Let Y = σ( ˜Q · ˜K ⊤) · ˜V , and\nY ∈ CM×D needs to be zero-padded to CL×D before per-\nforming inverse Fourier transform. The FEA-f structure is\nshown in Figure\n4.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3 Wavelet Enhanced Structure",
+      "level": 2,
+      "text": "Discrete Wavelet Transform (DWT) While the Fourier\ntransform creates a representation of the signal in the fre-\nquency domain, the Wavelet transform creates a represen-\ntation in both the frequency and time domain, allowing efﬁ-\ncient access of localized information of the signal. The mul-\ntiwavelet transform synergizes the advantages of orthog-\nonal polynomials as well as wavelets. For a given f (x),\nthe multiwavelet coefﬁcients at the scale n can be deﬁned\nas sn\nl =\n[\n⟨f,φ n\nil⟩µ n\n] k−1\ni=0\n, dn\nl =\n[\n⟨f,ψ n\nil⟩µ n\n] k−1\ni=0\n, respec-\ntively, w.r.t. measure µn with sn\nl, dn\nl ∈ Rk×2n\n. φn",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "are",
+      "level": 1,
+      "text": "wavelet orthonormal basis of piecewise polynomials. The\ndecomposition/reconstruction across scales is deﬁned as\nsn\nl = H (0)sn+1\n2l + H (1)sn+1\n2l+1,\nsn+1\n2l = Σ (0)\n(\nH (0)T sn\nl + G(0)T dn\nl\n)\n,\ndn\nl = G(0)sn+1\n2l + H (1)sn+1\n2l+1,\nsn+1\n2l+1 = Σ (1)\n(\nH (1)T sn\nl + G(1)T dn\nl\n)\n,\n(8)\nwhere\n(\nH (0),H (1),G (0),G (1))\nare linear coefﬁcients for\nmultiwavelet decomposition ﬁlters. They are ﬁxed matrices\nDecomposed \nMatrix \nX(L) Lf :X(L+1) \nFEB-f FEB-f \nHf Hf \nUd(L) Us(L) Ud(L) Us(L) X’(L+1) \n+\nX’(L) \nReconstruction \nmatrix \nFEB-f \nLf \n+\nDecomposed \nMatrix \nq(L) \nk(L) \nv(L) \nLf :q(L+1) \n     k(L+1) \n     v(L+1) \nFEA-f FEA-f \nHf_q \nHf_k \nHf_v \nUd(L) Us(L) \nFEA-f \n+\nHf_q \nHf_k \nHf_v \nLf_q \nLf_k \nLf_v \nFEA-f \nX’(L+1) \nFigure 5. Top Left: Wavelet frequency enhanced block decompo-\nsition stage. Top Right: Wavelet block reconstruction stage shared\nby FEB-w and FEA-w. Bottom: Wavelet frequency enhanced\ncross attention decomposition stage.\nused for wavelet decomposition. The multiwavelet repre-\nsentation of a signal can be obtained by the tensor product\nof multiscale and multiwavelet basis. Note that the basis\nat various scales are coupled by the tensor product, so we\nneed to untangle it. Inspired by (\nGupta et al. , 2021), we\nadapt a non-standard wavelet representation to reduce the\nmodel complexity. For a map function F (x) = x′, the map\nunder multiwavelet domain can be written as\nU n\ndl = Andn\nl + Bnsn\nl , U n\nˆsl = Cndn\nl , U L\nsl = ¯F sL\nl , (9)\nwhere (U n\nsl,U n\ndl,s n\nl,d n\nl ) are the multiscale, multiwavelet\ncoefﬁcients, L is the coarsest scale under recursive decom-\nposition, and An, Bn, Cn are three independent FEB-f\nblocks modules used for processing different signal during\ndecomposition and reconstruction. Here ¯F is a single-layer\nof perceptrons which processes the remaining coarsest sig-\nnal after L decomposed steps. More designed detail is de-\nscribed in Appendix\nD.\nFrequency Enhanced Block with Wavelet Transform\n(FEB-w) The overall FEB-w architecture is shown in Fig-\nure 5. It differs from FEB-f in the recursive mechanism:\nthe input is decomposed into 3 parts recursively and oper-\nates individually. For the wavelet decomposition part, we\nimplement the ﬁxed Legendre wavelets basis decomposi-\ntion matrix. Three FEB-f modules are used to process the\nresulting high-frequency part, low-frequency part, and re -\nmaining part from wavelet decomposition respectively. For\neach cycle L, it produces a processed high-frequency ten-\nsor Ud (L), a processed low-frequency frequency tensor\nSubmission and Formatting Instructions for ICML 2022\nUs (L), and the raw low-frequency tensorX(L+1). This is\na ladder-down approach, and the decomposition stage per-\nforms the decimation of the signal by a factor of 1/2, run-\nning for a maximum of L cycles, where L <log2(M ) for\na given input sequence of size M . In practice, L is set as a\nﬁxed argument parameter. The three sets of FEB-f blocks\nare shared during different decomposition cyclesL. For the\nwavelet reconstruction part, we recursively build up our out-\nput tensor as well. For each cycleL, we combineX(L+1),\nUs (L), and Ud (L) produced from the decomposition part\nand produce X(L) for the next reconstruction cycle. For\neach cycle, the length dimension of the signal tensor is in-\ncreased by 2 times.\nFrequency Enhanced Attention with Wavelet Trans-\nform (FEA-w) FEA-w contains the decomposition stage\nand reconstruction stage like FEB-w. Here we keep the\nreconstruction stage unchanged. The only difference lies\nin the decomposition stage. The same decomposed matrix\nis used to decompose q, k, v signal separately, and q, k, v\nshare the same sets of module to process them as well. As\nshown above, a frequency enhanced block with wavelet de-\ncomposition block (FEB-w) contains three FEB-f blocks\nfor the signal process. We can view the FEB-f as a sub-\nstitution of self-attention mechanism. We use a straightfo r-\nward way to build the frequency enhanced cross attention\nwith wavelet decomposition, substituting each FEB-f with\na FEA-f module. Besides, another FEA-f module is added\nto process the coarsest remaining q(L),k (L),v (L) signal.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.4 Mixture of Experts for Seasonal-Trend",
+      "level": 2,
+      "text": "Decomposition\nBecause of the commonly observed complex periodic pat-\ntern coupled with the trend component on real-world data,\nextracting the trend can be hard with ﬁxed window average\npooling. To overcome such a problem, we design a Mix-\nture Of Experts Decomposition block (MOEDecomp). It\ncontains a set of average ﬁlters with different sizes to ex-\ntract multiple trend components from the input signal and\na set of data-dependent weights for combining them as the\nﬁnal trend. Formally, we have\nXtrend = Softmax(L(x)) ∗ (F (x)), (10)\nwhere F (·) is a set of average pooling ﬁlters and\nSoftmax(L(x)) is the weights for mixing these extracted\ntrends.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.5 Complexity Analysis",
+      "level": 2,
+      "text": "For FEDformer-f, the computational complexity for time\nand memory is O(L) with a ﬁxed number of randomly se-\nlected modes in FEB & FEA blocks. We set modes num-\nber M = 64 as default value. Though the complexity\nTable 1. Complexity analysis of different forecasting models.\nMethods Training Testing\nTime Memory Steps\nFEDformer O(L) O(L) 1\nAutoformer O(L logL) O(L logL) 1\nInformer O(L logL) O(L logL) 1\nTransformer O\n(\nL2)\nO\n(\nL2)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "LogTrans O(L logL) O",
+      "level": 1,
+      "text": "(\nL2)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "1 Reformer O(L logL) O(L logL) L",
+      "level": 1,
+      "text": "LSTM O(L) O(L) L\nof full DFT transformation by FFT is ( O(L log(L)), our\nmodel only needs O(L) cost and memory complexity with\nthe pre-selected set of Fourier basis for quick implemen-\ntation. For FEDformer-w, when we set the recursive de-\ncompose step to a ﬁxed number L and use a ﬁxed number\nof randomly selected modes the same as FEDformer-f, the\ntime complexity and memory usage are O(L) as well. In\npractice, we choose L = 3 and modes number M = 64\nas default value. The comparisons of the time complexity\nand memory usage in training and the inference steps in\ntesting are summarized in Table",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 It can be seen that the",
+      "level": 1,
+      "text": "proposed FEDformer achieves the best overall complexity\namong Transformer-based forecasting models.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "To evaluate the proposed FEDformer, we conduct exten-\nsive experiments on six popular real-world datasets, inclu d-\ning energy, economics, trafﬁc, weather, and disease. Since\nclassic models like ARIMA and basic RNN/CNN models\nperform relatively inferior as shown in (\nZhou et al. , 2021)\nand (Wu et al. , 2021), we mainly include four state-of-the-\nart transformer-based models for comparison, i.e., Auto-\nformer (\nWu et al., 2021), Informer (Zhou et al., 2021), Log-\nTrans ( Li et al. , 2019) and Reformer ( Kitaev et al. , 2020)\nas baseline models. Note that since Autoformer holds the\nbest performance in all the six benchmarks, it is used as\nthe main baseline model for comparison. More details\nabout baseline models, datasets, and implementation are\ndescribed in Appendix\nA.2, F.1, and F.2, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.1 Main Results",
+      "level": 2,
+      "text": "For better comparison, we follow the experiment settings\nof Autoformer in (\nWu et al. , 2021) where the input length\nis ﬁxed to 96, and the prediction lengths for both training\nand evaluation are ﬁxed to be 96, 192, 336, and 720, respec-\ntively.\nMultivariate Results For the multivariate forecasting,\nFEDformer achieves the best performance on all six bench-\nmark datasets at all horizons as shown in Table",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "2 Com-",
+      "level": 1,
+      "text": "pared with Autoformer, the proposed FEDformer yields an\noverall 14.8% relative MSE reduction. It is worth noting\nSubmission and Formatting Instructions for ICML 2022\nTable 2. Multivariate long-term series forecasting results on six d atasets with input length I = 96 and prediction length O ∈\n{96, 192, 336, 720} (For ILI dataset, we use input length I = 36 and prediction length O ∈ { 24, 36, 48, 60}). A lower MSE indi-\ncates better performance, and the best results are highligh ted in bold.\nMethods Metric ETTm2 Electricity Exchange Trafﬁc Weather ILI\n96 192 336 720 96 192 336 720 96 192 336 720 96 192 336 720 96 192 336 720 24 36 48 60\nFEDformer-f MSE 0.203 0.269 0.325 0.421 0.193 0.201 0.214 0.246 0.148 0.271 0.460 1.195 0.587 0.604 0.621 0.626 0.217 0.276 0.339 0.403 3.228 2.679 2.622 2.857\nMAE 0.287 0.328 0.366 0.415 0.308 0.315 0.329 0.355 0.278 0.380 0.500 0.841 0.366 0.373 0.383 0.382 0.296 0.336 0.380 0.428 1.260 1.080 1.078 1.157\nFEDformer-w MSE 0.204 0.316 0.359 0.433 0.183 0.195 0.212 0.231 0.139 0.256 0.426 1.090 0.562 0.562 0.570 0.596 0.227 0.295 0.381 0.424 2.203 2.272 2.209 2.545\nMAE 0.288 0.363 0.387 0.432 0.297 0.308 0.313 0.343 0.276 0.369 0.464 0.800 0.349 0.346 0.323 0.368 0.304 0.363 0.416 0.434 0.963 0.976 0.981 1.061\nAutoformer MSE 0.255 0.281 0.339 0.422 0.201 0.222 0.231 0.254 0.197 0.300 0.509 1.447 0.613 0.616 0.622 0.660 0.266 0.307 0.359 0.419 3.483 3.103 2.669 2.770\nMAE 0.339 0.340 0.372 0.419 0.317 0.334 0.338 0.361 0.323 0.369 0.524 0.941 0.388 0.382 0.337 0.408 0.336 0.367 0.395 0.428 1.287 1.148 1.085 1.125\nInformer MSE 0.365 0.533 1.363 3.379 0.274 0.296 0.300 0.373 0.847 1.204 1.672 2.478 0.719 0.696 0.777 0.864 0.300 0.598 0.578 1.059 5.764 4.755 4.763 5.264\nMAE 0.453 0.563 0.887 1.338 0.368 0.386 0.394 0.439 0.752 0.895 1.036 1.310 0.391 0.379 0.420 0.472 0.384 0.544 0.523 0.741 1.677 1.467 1.469 1.564\nLogTrans MSE 0.768 0.989 1.334 3.048 0.258 0.266 0.280 0.283 0.968 1.040 1.659 1.941 0.684 0.685 0.7337 0.717 0.458 0.658 0.797 0.869 4.480 4.799 4.800 5.278\nMAE 0.642 0.757 0.872 1.328 0.357 0.368 0.380 0.376 0.812 0.851 1.081 1.127 0.384 0.390 0.408 0.396 0.490 0.589 0.652 0.675 1.444 1.467 1.468 1.560\nReformer MSE 0.658 1.078 1.549 2.631 0.312 0.348 0.350 0.340 1.065 1.188 1.357 1.510 0.732 0.733 0.742 0.755 0.689 0.752 0.639 1.130 4.400 4.783 4.832 4.882\nMAE 0.619 0.827 0.972 1.242 0.402 0.433 0.433 0.420 0.829 0.906 0.976 1.016 0.423 0.420 0.420 423 0.596 0.638 0.596 0.792 1.382 1.448 1.465 1.483\nTable 3. Univariate long-term series forecasting results on six dat asets with input length I = 96 and prediction length O ∈\n{96, 192, 336, 720} (For ILI dataset, we use input length I = 36 and prediction length O ∈ { 24, 36, 48, 60}). A lower MSE indi-\ncates better performance, and the best results are highligh ted in bold.\nMethods Metric ETTm2 Electricity Exchange Trafﬁc Weather ILI\n96 192 336 720 96 192 336 720 96 192 336 720 96 192 336 720 96 192 336 720 24 36 48 60\nFEDformer-f MSE 0.072 0.102 0.130 0.178 0.253 0.282 0.346 0.422 0.154 0.286 0.511 1.301 0.207 0.205 0.219 0.244 0.0062 0.0060 0.0041 0.0055 0.708 0.584 0.717 0.855\nMAE 0.206 0.245 0.279 0.325 0.370 0.386 0.431 0.484 0.304 0.420 0.555 0.879 0.312 0.312 0.323 0.344 0.062 0.062 0.050 0.059 0.627 0.617 0.697 0.774\nFEDformer-w MSE 0.063 0.110 0.147 0.219 0.262 0.316 0.361 0.448 0.131 0.277 0.426 1.162 0.170 0.173 0.178 0.187 0.0035 0.0054 0.008 0.015 0.693 0.554 0.699 0.828\nMAE 0.189 0.252 0.301 0.368 0.378 0.410 0.445 0.501 0.284 0.420 0.511 0.832 0.263 0.265 0.266 0.286 0.046 0.059 0.072 0.091 0.629 0.604 0.696 0.770\nAutoformer MSE 0.065 0.118 0.154 0.182 0.341 0.345 0.406 0.565 0.241 0.300 0.509 1.260 0.246 0.266 0.263 0.269 0.011 0.0075 0.0063 0.0085 0.948 0.634 0.791 0.874\nMAE 0.189 0.256 0.305 0.335 0.438 0.428 0.470 0.581 0.387 0.369 0.524 0.867 0.346 0.370 0.371 0.372 0.081 0.067 0.062 0.070 0.732 0.650 0.752 0.797\nInformer MSE 0.080 0.112 0.166 0.228 0.258 0.285 0.336 0.607 1.327 1.258 2.179 1.280 0.257 0.299 0.312 0.366 0.004 0.002 0.004 0.003 5.282 4.554 4.273 5.214\nMAE 0.217 0.259 0.314 0.380 0.367 0.388 0.423 0.599 0.944 0.924 1.296 0.953 0.353 0.376 0.387 0.436 0.044 0.040 0.049 0.042 2.050 1.916 1.846 2.057\nLogTrans MSE 0.075 0.129 0.154 0.160 0.288 0.432 0.430 0.491 0.237 0.738 2.018 2.405 0.226 0.314 0.387 0.437 0.0046 0.0060 0.0060 0.007 3.607 2.407 3.106 3.698\nMAE 0.208 0.275 0.302 0.322 0.393 0.483 0.483 0.531 0.377 0.619 1.070 1.175 0.317 0.408 0.453 0.491 0.052 0.060 0.054 0.059 1.662 1.363 1.575 1.733\nReformer MSE 0.077 0.138 0.160 0.168 0.275 0.304 0.370 0.460 0.298 0.777 1.833 1.203 0.313 0.386 0.423 0.378 0.012 0.0098 0.013 0.011 3.838 2.934 3.755 4.162\nMAE 0.214 0.290 0.313 0.334 0.379 0.402 0.448 0.511 0.444 0.719 1.128 0.956 0.383 0.453 0.468 0.433 0.087 0.044 0.100 0.083 1.720 1.520 1.749 1.847\nthat for some of the datasets, such as Exchange and ILI, the\nimprovement is even more signiﬁcant (over 20%). Note\nthat the Exchange dataset does not exhibit clear periodic-\nity in its time series, but FEDformer can still achieve su-\nperior performance. Overall, the improvement made by\nFEDformer is consistent with varying horizons, implying\nits strength in long term forecasting. More detailed result s\non ETT full benchmark are provided in Appendix\nF.3.\nUnivariate Results The results for univariate time series\nforecasting are summarized in Table 3. Compared with\nAutoformer, FEDformer yields an overall 22.6% relative\nMSE reduction, and on some datasets, such as trafﬁc and\nweather, the improvement can be more than 30%. It again\nveriﬁes that FEDformer is more effective in long-term fore-\ncasting. Note that due to the difference between Fourier\nand wavelet basis, FEDformer-f and FEDformer-w perform\nwell on different datasets, making them complementary\nchoice for long term forecasting. More detailed results on\nETT full benchmark are provided in Appendix\nF.3.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.2 Ablation Studies",
+      "level": 2,
+      "text": "In this section, the ablation experiments are conducted, aim-\ning at comparing the performance of frequency enhanced\nblock and its alternatives. The current SOTA results of Aut-\noformer which uses the autocorrelation mechanism serve\nas the baseline. Three ablation variants of FEDformer are\ntested: 1) FEDformer V1: we use FEB to substitute self-\nattention only; 2) FEDformer V2: we use FEA to sub-\nstitute cross attention only; 3) FEDFormer V3: we use\nFEA to substitute both self and cross attention. The ab-\nlated versions of FEDformer-f as well as the SOTA models\nare compared in Table\n4, and we use a bold number if the\nablated version brings improvements compared with Auto-\nformer. We omit the similar results in FEDformer-w due to\nspace limit. It can be seen in Table",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4 that FEDformer V1",
+      "level": 1,
+      "text": "brings improvement in 10/16 cases, while FEDformer V2\nimproves in 12/16 cases. The best performance is achieved\nin our FEDformer with FEB and FEA blocks which im-\nproves performance in all 16/16 cases. This veriﬁes the\neffectiveness of the designed FEB, FEA for substituting\nself and cross attention. Furthermore, experiments on ETT\nand Weather datasets show that the adopted MOEDecomp\n(mixture of experts decomposition) scheme can bring an\naverage of 2.96% improvement compared with the single\ndecomposition scheme. More details are provided in Ap-\npendix\nF.5.\nSubmission and Formatting Instructions for ICML 2022\nTable 4. Ablation studies: multivariate long-term series forecast ing results on ETTm1 and ETTm2 with input length I = 96 and predic-\ntion length O ∈ { 96, 192, 336, 720}. Three variants of FEDformer-f are compared with baselines . The best results are highlighted in\nbold.\nMethods Transformer Informer Autoformer FEDformer V1 FEDformer V2 FEDformer V3 FEDformer-f\nSelf-att FullAtt ProbAtt AutoCorr FEB-f(Eq. 4) AutoCorr FEA-f(Eq. 7) FEB-f(Eq. 4)\nCross-att FullAtt ProbAtt AutoCorr AutoCorr FEA-f(Eq. 7) FEA-f(Eq. 7) FEA-f(Eq. 7)\nMetric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nETTm1\n96 0.525 0.486 0.458 0.465 0.481 0.463 0.378 0.419 0.539 0.490 0.534 0.482 0.379 0.419\n192 0.526 0.502 0.564 0.521 0.628 0.526 0.417 0.442 0.556 0.499 0.552 0.493 0.426 0.441\n336 0.514 0.502 0.672 0.559 0.728 0.567 0.480 0.477 0.541 0.498 0.565 0.503 0.445 0.459\n720 0.564 0.529 0.714 0.596 0.658 0.548 0.543 0.517 0.558 0.507 0.585 0.515 0.543 0.490\nETTm2\n96 0.268 0.346 0.227 0.305 0.255 0.339 0.259 0.337 0.216 0.297 0.211 0.292 0.203 0.287\n192 0.304 0.355 0.300 0.360 0.281 0.340 0.285 0.344 0.274 0.331 0.272 0.329 0.269 0.328\n336 0.365 0.400 0.382 0.410 0.339 0.372 0.320 0.373 0.334 0.369 0.327 0.363 0.325 0.366\n720 0.475 0.466 1.637 0.794 0.422 0.419 0.761 0.628 0.427 0.420 0.418 0.415 0.421 0.415\nCount 0 0 0 0 0 0 5 5 6 6 7 7 8 8\n2 4 8 16 32 64 128 256\nMode number\n0.45\n0.50\n0.55\n0.60\n0.65MSE\nh1 rand\nh1 fix\nm1 rand\nm1 fix\n2 4 8 16 32 64 128 256\nMode number\n0.415\n0.420\n0.425\n0.430\n0.435\n0.440MSE\nh2 rand\nh2 fix\nm2 rand\nm2 fix\nFigure 6. Comparison of two base-modes selection method\n(Fix&Rand). Rand policy means randomly selecting a subset o f\nmodes, Fix policy means selecting the lowest frequency mode s.\nTwo policies are compared on a variety of base-modes number\nM ∈ {2, 4, 8... 256} on ETT full-benchmark (h1, m1, h2, m2).",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.3 Mode Selection Policy",
+      "level": 2,
+      "text": "The selection of discrete Fourier basis is the key to effec-\ntively representing the signal and maintaining the model’s\nlinear complexity. As we discussed in Section\n2, ran-\ndom Fourier mode selection is a better policy in forecast-\ning tasks. more importantly, random policy requires no\nprior knowledge of the input and generalizes easily in new\ntasks. Here we empirically compare the random selection\npolicy with ﬁxed selection policy, and summarize the ex-\nperimental results in Figure",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6 It can be observed that the",
+      "level": 1,
+      "text": "adopted random policy achieves better performance than\nthe common ﬁxed policy which only keeps the low fre-\nquency modes. Meanwhile, the random policy exhibits\nsome mode saturation effect , indicating an appropriate\nrandom number of modes instead of all modes would bring\nbetter performance, which is also consistent with the theo-\nretical analysis in Section\n2.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "4.4 Distribution Analysis of Forecasting Output",
+      "level": 2,
+      "text": "In this section, we evaluate the distribution similarity be -\ntween the input sequence and forecasting output of dif-\nferent transformer models quantitatively. In Table\n5, we\napplied the Kolmogrov-Smirnov test to check if the fore-\ncasting results of different models made on ETTm1 and\nTable 5. P-values of Kolmogrov-Smirnov test of different trans-\nformer models for long-term forecasting output on ETTm1 and\nETTm2 dataset. Larger value indicates the hypothesis (the i nput\nsequence and forecasting output come from the same distribu tion)\nis less likely to be rejected. The best results are highlight ed.\nMethods Transformer Informer Autoformer FEDformer True\nETTm1\n96 0.0090 0.0055 0.020 0.048 0.023\n192 0.0052 0.0029 0.015 0.028 0.013\n336 0.0022 0.0019 0.012 0.015 0.010\n720 0.0023 0.0016 0.008 0.014 0.004\nETTm2\n96 0.0012 0.0008 0.079 0.071 0.087\n192 0.0011 0.0006 0.047 0.045 0.060\n336 0.0005 0.00009 0.027 0.028 0.042\n720 0.0008 0.0002 0.023 0.021 0.023\nCount 0 0 3 5 NA\nETTm2 are consistent with the input sequences. In partic-\nular, we test if the input sequence of ﬁxed 96-time steps\ncome from the same distribution as the predicted sequence,\nwith the null hypothesis that both sequences come from the\nsame distribution. On both datasets, by setting the com-\nmon P-value as 0.01, various existing Transformer base-\nline models have much less values than 0.01 except Aut-\noformer, which indicates their forecasting output have a\nhigher probability to be sampled from the different distri-\nbutions compared to the input sequence. In contrast, Auto-\nformer and FEDformer have much larger P-value compared\nto others, which mainly contributes to their seasonal-tren d\ndecomposition mechanism. Though we get close results\nfrom ETTm2 by both models, the proposed FEDformer has\nmuch larger P-value in ETTm1. And it’s the only model\nwhose null hypothesis can not be rejected with P-value\nlarger than 0.01 in all cases of the two datasets, implying\nthat the output sequence generated by FEDformer shares a\nmore similar distribution as the input sequence than others\nand thus justiﬁes the our design motivation of FEDformer\nas discussed in Section",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "1 More detailed analysis are pro-",
+      "level": 1,
+      "text": "vided in Appendix E.\nSubmission and Formatting Instructions for ICML 2022",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "4.5 Differences Compared to Autoformer baseline",
+      "level": 2,
+      "text": "Since we use the decomposed encoder-decoder overall ar-\nchitecture as Autoformer, we think it is critical to empha-\nsize the differences. In Autoformer, the authors consider\na nice idea to use the top-k sub-sequence correlation (auto-\ncorrelation) module instead of point-wise attention, and t he\nFourier method is applied to improve the efﬁciency for sub-\nsequence level similarity computation. In general, Auto-\nformer can be considered as decomposing the sequence\ninto multiple time domain sub-sequences for feature exac-\ntion. In contrast, We use frequency transform to decom-\npose the sequence into multiple frequency domain modes\nto extract the feature. In particular, we do not use a selec-\ntive approach in sub-sequence selection. Instead, all fre-\nquency features are computed from the whole sequence,\nand this global property makes our model engage better per-\nformance for long sequence.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "5 Conclusions",
+      "level": 1,
+      "text": "This paper proposes a frequency enhanced transformer\nmodel for long-term series forecasting which achieves\nstate-of-the-art performance and enjoys linear computa-\ntional complexity and memory cost. We propose an atten-\ntion mechanism with low-rank approximation in frequency\nand a mixture of experts decomposition to control the dis-\ntribution shifting. The proposed frequency enhanced struc -\nture decouples the input sequence length and the attention\nmatrix dimension, leading to the linear complexity. More-\nover, we theoretically and empirically prove the effective -\nness of the adopted random mode selection policy in fre-\nquency. Lastly, extensive experiments show that the pro-\nposed model achieves the best forecasting performance on\nsix benchmark datasets in comparison with four state-of-\nthe-art algorithms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Different distribution between ground truth and fore-"
+    },
+    {
+      "id": "f2",
+      "caption": "FEDformer Structure. The FEDformer consists of N encoders and M decoders. The Frequency Enhanced Block (FEB, green"
+    },
+    {
+      "id": "f3",
+      "caption": "Frequency Enhanced Block with Fourier transform"
+    },
+    {
+      "id": "f4",
+      "caption": "Frequency Enhanced Attention with Fourier transform"
+    },
+    {
+      "id": "f5",
+      "caption": "Top Left: Wavelet frequency enhanced block decompo-"
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of two base-modes selection method"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Complexity analysis of different forecasting models."
+    },
+    {
+      "id": "t2",
+      "caption": "Multivariate long-term series forecasting results on six d atasets with input length I = 96 and prediction length O ∈"
+    },
+    {
+      "id": "t3",
+      "caption": "Univariate long-term series forecasting results on six dat asets with input length I = 96 and prediction length O ∈"
+    },
+    {
+      "id": "t4",
+      "caption": "Ablation studies: multivariate long-term series forecast ing results on ETTm1 and ETTm2 with input length I = 96 and predic-"
+    },
+    {
+      "id": "t5",
+      "caption": "P-values of Kolmogrov-Smirnov test of different trans-"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Eq. 4)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Eq. 7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 6
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/springer-discover-computing/springer-discover-computing__2025__genomic_privacy_and_security_in_the_era_of_artificial_i__f783b3feea.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Advancements in genome sequencing and genetic analysis technologies have significantly reduced the cost of sequenc-\ning and analyzing DNA. This has increased the accessibility and sharing of genomic data across various fields. In biotech-\nnology, genomic data provides detailed genetic insights. In forensic sciences, genetic data is used extensively in criminal \ninvestigations. However, the widespread sharing of genomic data introduces substantial privacy and security concerns. \nMalicious individuals can exploit this data to identify individuals, leading to potential privacy breaches, identity tracing, \nextortion, or unauthorized surveillance [1 ].\nCompanies and research organizations often store genomic data in third-party cloud services. This increases the \nvulnerability of genomic data to cyber threats and unauthorized access. Such practices expose genomic datasets to \nre-identification, membership inference, and linkage attacks, often facilitated by public databases and social media \n * Letu Qingge, lqingge@ncat.edu | 1Department of Computer Science, North Carolina A&T State University, 1601 East Market St, \nGreensboro, NC 27411, USA.\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\nplatforms [2]. Additionally, genomic data analysts frequently prioritize speed and accuracy over security. This approach \nincreases the susceptibility of genomic software to vulnerabilities and cyber threats.\nThis review addresses the crucial balance between data utility and privacy. It systematically identifies key vulnerabili-\nties and evaluates privacy-preserving techniques used in genomic data [2 –4]. We discuss various technical solutions \nincluding data perturbation, cryptographic methods, and AI-driven defenses. The review also explores legal and ethical \nconsiderations to offer a comprehensive understanding of genomic privacy risks and protective measures. By reviewing \ncurrent research and policy frameworks, we highlight existing gaps and suggest future research directions to improve \ngenomic data security.\nWe categorize literature related to genomic privacy and security. The focus is on technical vulnerabilities, privacy-\npreserving techniques, and regulatory frameworks. This review follows a structured literature review (SLR) approach. \nIt includes peer-reviewed journal articles, conference papers, and regulatory guidelines. The goal is to ensure a com-\nprehensive and up-to-date analysis. Our methodology involves selecting, analyzing, and evaluating relevant academic \nstudies and policy documents. We apply inclusion and exclusion criteria to refine our selection process:\n• Inclusion criteria: We include studies on novel security techniques, AI-driven privacy risks, cryptographic protec -\ntions, and recent regulatory changes. We also prioritize research on comparative security frameworks, computational \nefficiency, and real-world applications.\n• Exclusion criteria: We exclude studies that lack technical depth or focus only on ethical discussions without security \nsolutions. We also remove outdated papers that do not cover recent AI-based genomic privacy risks. Studies that \ndiscuss general data privacy laws without relevance to genomics are not included.\nWe gather literature from IEEE Xplore, ACM Digital Library, and Google Scholar, ArXiv. We use a thematic categorization \napproach to structure the findings. The review is divided into genomic data attack types, cryptographic protections, AI-\ndriven threats, and regulatory frameworks. The goal is to highlight key trends, research gaps, and future directions. To \nmaintain relevance, we focus on papers published between 2020 and 2025.\nThe paper is structured as follows: Section  2 discusses genomic data attacks; Section  3 reviews privacy-preserving \nmethods; and Section 4 covers regulatory and ethical frameworks. Later sections critically evaluate computational effi-\nciency, AI-driven threats, and quantum-resistant solutions. The paper concludes by offering recommendations for future \nresearch directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Genomics data attacks",
+      "level": 1,
+      "text": "In this section, we categorize and explain various attacks on genomic data. We detail how these attacks are performed \nby adversaries. Genomic data is vulnerable to various types of privacy attacks. These attacks exploit statistical, compu-\ntational, and AI-driven methods to extract sensitive genetic information. Table  1 summarizes these attacks.\nIdentity tracing attacks use quasi-identifiers such as age, sex, and location to re-identify individuals from de-identified \ngenomic datasets. Techniques like genealogical triangulation and public record linkage enable adversaries to match \ngenetic data with existing demographic information. This creates a significant privacy risk [5–8]. Also, inference attacks, \nincluding Attribute Disclosure and Membership Inference, allow attackers to infer sensitive phenotypic traits or deter -\nmine an individual’s participation in a genomic study. They do this by analyzing allele frequencies or dataset summary \nstatistics. Genome-Wide Association Studies (GWAS) have been particularly susceptible to these attacks. Because of \nthis, stricter access control measures are necessary [9 –12]. Completion attacks, also known as genome reconstruction \nattacks, leverage genetic similarities among family members to infer missing genotypic information. High-profile cases, \nsuch as the Golden State Killer investigation, show how forensic genealogy and public DNA databases can be exploited \nfor identity reconstruction [2, 13, 14].\nFurthermore, advancements in machine learning and Bayesian networks have introduced novel threats to genomic data \nsecurity. Bayesian networks have been used to predict missing genomic markers and perform identity inference. This remains \npossible even when differential privacy protections are applied [15, 16]. AI-driven machine learning-based re-identification \ntechniques weaken de-identification strategies. They use deep learning models to match anonymized genomic sequences \nto identified datasets [17, 18]. Additionally, adversarial attacks on genomic AI models manipulate input data to mislead \npredictive models. This compromises their accuracy in genomic classification tasks [19–21]. These attacks include white-box \nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\nTable 1  Summary of genomic privacy attacks and their mechanisms\nAttack type Description Methods used Notable examples\nIdentity Tracing Attacks Adversaries use de-identified genomic data \nalong with quasi-identifiers (e.g., age, sex, \nlast name) to re-identify individuals.\n∙ Genealogical triangulation\n∙ Public record linkage\n∙ Re-identification via demographics: Using \ndate of birth, sex, and zip code to uniquely \nidentify individuals [5–7].\n∙ Re-identification using microbiome \nsequencing: Likelihood scores applied to \nhuman genome reads to predict genetic sex \nand ancestry, achieving high re-identification \naccuracy [8].\nInference Attacks Attackers use partial information to infer \nadditional related data, potentially expos-\ning sensitive genomic details.\n∙ Attribute Disclosure Attacks (ADA): Infers \nindividual traits from genomic datasets.\n∙ Membership Inference Attacks (MIA): Deter-\nmines whether an individual’s data is part \nof a dataset.\n∙ Statistical inference using allele frequencies: \nExploits allele frequency variations to infer \ndisease risks or genetic traits.\n∙ Attribute Disclosure Attack in GWAS: Led \nto phenotype inference from allele frequen-\ncies [9].\n∙ Membership Inference Attack on GWAS: \nDemonstrated vulnerability in summary \nstatistics [10].\n∙ Enhanced inference attacks using allele \nfrequency statistics: Showed greater accu-\nracy in identifying individuals [11, 12].\nCompletion Attacks Adversaries reconstruct all or part of an indi-\nvidual’s genetic information using publicly \navailable DNA data or a family member’s \nDNA sequence.\n∙ Genotype imputation: Filling in miss-\ning genetic information using statistical \nmethods.\n∙ Familial reconstruction: Using relatives’ DNA \nto predict an individual’s genetic makeup.\n∙ Matching DNA profiles against known fam-\nily trees\n∙ Golden State Killer case: FBI identified \nJoseph DeAngelo using forensic genealogy \nvia GEDMatch [2, 13].\n∙ Haplotype identification via genetic cor-\nrelation: Identified unknown individuals \nby matching identical DNA regions across \nrelatives [14].\nBayesian Networks in Genetic Attacks Bayesian networks (BNs) are probabilistic \ngraphical models that adversaries use to \ninfer missing genomic data and relation-\nships between genetic markers.\n∙ Bayesian inference models: Uses probabil-\nity-based statistical modeling to predict \nmissing genetic data.\n∙ GWAS data reconstruction: Bayesian \nmethods have been used to reveal disease-\nassociated genetic markers [15].\n∙ Inference attacks using Bayesian networks: \nDemonstrated re-identification of individuals \nfrom GWAS statistics, even when differential \nprivacy protections were applied [16].\nMachine Learning-Based Re-Identification Exploits AI models trained on genomic \nsequences to match anonymized data with \nidentified datasets, undermining de-identi-\nfication efforts.\n∙ Deep learning models for genomic \nsequence matching.\n∙ Clustering and feature extraction.\n∙ Adversarial learning in genomic data \nprivacy.\n∙ Genome reconstruction attack in genomic \ndata-sharing beacons using clustering and \nmachine learning [17].\n∙ AI-based classification of genomic variants for \nprivacy threats [18].\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\nTable 1  (continued)\nAttack type Description Methods used Notable examples\nAdversarial Attacks on Genomic AI Models These attacks involve the deliberate manipu-\nlation of genomic AI models through \nadversarial perturbations, which can lead to \nmisclassification or the extraction of sensi-\ntive genomic data.\n∙ White-box attacks: Direct gradient-based \nadversarial examples designed to deceive \nAI-based genomic models.\n∙ Black-box attacks: Adversarial perturbations \nwithout direct access to model gradients.\n∙ Data poisoning attacks: Injecting adversarial \nsamples to corrupt model training.\n∙ Feature importance adversarial attacks: \nTargeting AI feature selection mechanisms \nto misguide prediction outcomes.\n∙ Misclassification of genomic variants: \nAdversarial mutations disrupt population \nclustering and ancestry inference [19].\n∙ Data integrity compromise: Poisoned \ngenomic datasets degrade AI model perfor-\nmance and accuracy [20].\n∙ Privacy leakage: Adversarial methods \nbypass AI security measures, revealing sensi-\ntive genomic features [21].\nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\nadversarial perturbations, black-box attacks, and data poisoning. All of these methods have been shown to degrade model \nperformance significantly.\nAs AI and cryptographic solutions evolve, a hybrid security approach is essential. It must integrate robust encryption, \nadversarially trained AI models, and privacy-preserving federated learning frameworks. These measures are necessary to \nsafeguard genomic data against emerging threats.\n3  Technical solutions to mitigate genetic attacks\nCompanies and laboratories are increasingly outsourcing genetic information to cloud services due to benefits such as \ncomputational resources and cost savings [22]. However, storing data on clouds makes it vulnerable to cyber-attacks, neces-\nsitating strict access controls to ensure only authorized individuals can access the data. In addition, genomic technologies \nlike sequencers, now capable of sequencing a whole genome in days, are often connected Internet of Things (IoT) devices. \nThese devices are vulnerable to security threats due to their full internet connectivity and inherent limitations in processing, \nmemory, and power. To mitigate genetic data attacks, several techniques are employed as summarized in Table 2. These",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3.1 Data perturbation methods",
+      "level": 2,
+      "text": "To protect privacy when sharing de-identified data, perturbation methods such as data transformation, aggregation, obfus-\ncation, and synthetic data generation can be used. Data transformation modifies the format or structure of data. A common \nmethod is k-anonymity, which ensures each quasi-identifier sequence (e.g., race, birth) appears at least k times in a dataset \n[26]. For example, ZIP codes can be generalized to larger regions by reducing a 5-digit ZIP code (e.g., 02139) to a 3-digit \nprefix (e.g., 021xx). Generalizing ZIP codes in this way groups individuals into broader geographic categories. This makes it \nmore likely that each group contains at least k people who share the same quasi-identifiers (like birth date, gender, and the \ngeneralized ZIP code), which satisfies the privacy condition of k-anonymity. As a result, it becomes harder for an adversary \nto isolate and identify individuals based on detailed location information. This is particularly important because 5-digit ZIP \ncodes, when combined with birth date and gender, can uniquely identify over 50% of U.S. residents [27]. This type of gener-\nalization is a common technique to protect against identity tracing attacks that exploit quasi-identifiers.\nData aggregation summarizes data instead of revealing individual records. The Beacon Network, developed by the \nGlobal Alliance for Genomics and Health (GA4GH), preserves privacy by responding to user queries with a simple “yes” or \n“no” as to whether a specific allele exists in a dataset, without exposing raw data [2]. This binary response format restricts \ndirect access to individual-level information. In addition, privacy is further supported by methods such as query aggrega-\ntion, rate limiting, and the potential integration of differential privacy, which together reduce the risk of re-identification \nthrough repeated or cross-referenced queries [2 ]. Data obfuscation adds noise to mask sensitive information. A key \nmethod is differential privacy, which limits membership inference attacks through a privacy budget. While effective, it \nmust balance privacy and data utility. Combining differential privacy with cryptographic methods or using a weaker \nadversarial model can improve data usability [2]. An algorithm satisfies differential privacy if its output remains nearly the \nsame with or without an individual’s data [28]. The privacy parameter /u1D700 (or /u1D716 ) controls privacy strength; lower values add \nmore noise, enhancing privacy [28, 29]. Equation (1) defines the conditions for a mechanism to meet differential privacy.\nEquation (1) shows two neighboring datasets x and x’ where they differ by one record. A mechanism F takes the neighbor-\ning datasets as inputs and the equation shows the probability ratio of F(x)=S to F(x’)=S is at most e  raised to the privacy \nbudget /u1D716.\nLaplace Mechanism: The Laplace mechanism addresses the challenge of adding noise to datasets by sampling \nnoise from a Laplace distribution and using it to perturb each coordinate of the output. This noise is scaled by the sen-\nsitivity of the function, which measures the effect of a change in the dataset on the query result. Equation (2 ) defines \n(1)\nPr[F(x)= S]\nPr[F(x�)=S ] ≤ e/u1D716\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\nthe sensitivity S (Q), where D1 and D2 are neighboring databases, and Q  is the query. ‖Q(D1)−Q (D2)‖1 is the L1 distance \nbetween Q(D1) and Q(D2) , capturing the maximum change a single individual’s data can cause in the function [30].\nThe Laplace mechanism ensures /u1D700-differential privacy by injecting noise into each query result value. This noise follows \nan independently and identically distributed (i.i.d.) Laplace distribution with a mean of zero and scale S(Q )\n/u1D716 . The probability \ndensity function (pdf ) for the Laplace distribution is given by Equation (3).\nFigure 1 graphically represents the pdf of the Laplace distribution.\nFor example, to use the Laplace mechanism to add noise to the average of m  numbers, given a set S  of m numbers \nin the range [0,  b], the function f(S )= 1\n�S �\n∑\nz∈S z calculates the average. The mechanism M (S) adds noise /u1D702 to f(S):\nThe noise /u1D702 follows a Laplace distribution with scale b\nm/u1D716:\nWith high probability, M (S) approximates f(S) closely, achieving high accuracy with few errors. Equation (6 ) shows this \nprobability for the error parameter /u1D6FC:\nHere, /u1D6FC represents the error parameter, and /u1D6FD is the confidence parameter, showing the high probability of achieving \naccurate results.\nExponential Mechanism: The exponential mechanism is used for non-numeric query outputs, particularly when \nselecting an item from a finite set where noise addition is impractical. For example, choosing the best meeting day \nto maximize attendance. It uses a scoring function, the sensitivity of the scoring function, a dataset, possible outputs, \nand the privacy budget /u1D700 . The scoring function assigns scores to all outputs, and the mechanism selects an output \nthat is approximately the best, ensuring differential privacy.\nA mechanism satisfies the exponential mechanism M u,e ∶ X → Y with quality score u and parameter /u1D700 if the outcome \ny is sampled with probability proportional to e/u1D700u(x,y):\n(2)S(Q)= max\nD1 ,D2\n‖Q(D1)−Q (D2)‖1\n(3)pdf(/u1D702)= /u1D716\n2S(Q ) exp\n/parenleft.s3\n−/uni007C.var/u1D702/uni007C.var⋅ /u1D716\nS(Q )\n/parenright.s3\n(4)M (S)=f (S)+/u1D702\n(5)/u1D702∼ Lap\n/parenleft.s3\nb\nm/u1D716\n/parenright.s3\n(6)\nPr\n����M (S)− 1\n�S�\n∑\nz∈S z��� ≥ /u1D6FC\n�\n= Prx∼Lap\n�\nb\nm/u1D716\n� [�x� ≥ /u1D6FC]\n= exp\n�\n−/u1D6FC/u1D716m\nb\n�\n≤ /u1D6FD\nFig. 1  Probability density \nfunction of the Laplace distri-\nbution\n\nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\nExponential mechanisms provide strong utility guarantees by quickly omitting lower-quality outcomes [31]. Dwork and \nRoth showed that the exponential mechanism ensures high utility by not significantly lowering the utility score of any \nreturned element compared to the maximum score in the database [31].\nDP mechanisms are proposed for genomics studies to provide privacy guarantees [32], but they do not consider data \ndependencies [33]. Data may be dependent due to social, behavioral, and genomic interactions [34, 35]. Adversaries could \ninfer susceptibility to diseases using family genome correlations [36]. Researchers have shown that user dependencies \ncan predict sensitive information from differentially private queries [34, 37].\n3.2  Current machine learning methods for protecting genetic privacy and security\nMachine learning has seen significant success in recent years and is now being applied in various fields, including bio -\ninformatics, medicine, and health care. Research has focused on using machine learning models to protect sensitive \ninformation from leakage.\n3.2.1  Differentiable private stochastic gradient descent (DP‑SGD)\nZhang et al. [38] proposed the functional mechanism, a differential privacy technique designed for optimization-based \nanalyses. This mechanism enforces /u1D700-differential privacy by perturbing the objective function of the optimization problem \nrather than its results. A randomized mechanism M satisfies /u1D700-differential privacy if, for any output from M and given two \nneighboring databases D1 and D2 , we have:\nThey constructed an algorithm for regression analysis based on the Laplace mechanism, which samples noise from an \nindependent and identically distributed Laplace distribution. The main challenge was perturbing the objective function \nin a differentially private manner, given its mathematical complexity and high dimensionality. Objective functions in \nregression often involve non-linear relationships and multiple variables, making it difficult to directly apply noise with-\nout degrading model performance. Zhang et al. in ",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.2.2 Federated learning",
+      "level": 3,
+      "text": "A study proposed using federated learning (FL) to address challenges in sharing genomics data and handling large vol-\numes of data [41]. FL trains a machine learning model using data from multiple devices without distributing the data, \naddressing privacy, security, and access control issues. Figure 3 shows devices training models locally and sending them \nto a centralized server to create a global model. FL generates valuable insights from sensitive data, but additional safety \nmechanisms are needed. Aziz et al. used differential privacy and the exponential mechanism to protect genetic data \nprivacy, creating private histograms and applying differential privacy after data dimension reduction [41].\n(7)P[M u,e(x)=y ]= e/u1D700u(x,y)\n∑\ny∈Y e/u1D700u(x,y)\n(8)Pr[M (D1)=O ] ≤ e/u1D716⋅ Pr[M (D2)=O ]\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\nData-private collaborative learning (DPCL) enables model training across institutions without sharing patient data, \nunlike the Collaborative Data Sharing approach (CDS) [42]. Examples include Cyclic Institutional Incremental Learning \n(CIIL) and Institutional Incremental Learning (IIL), which are prone to “catastrophic forgetting” [43]. In IIL, each institution \ntrains the model once before passing it to the next institution, while in CIIL, institutions can train more than once with a \nfixed number of training epochs [42]. Also, Sheller et al. showed that FL converges faster and performs better than CDS, \nCIIL, and IIL, with less bias due to aggregated results [42].\nFL addresses privacy, data ownership, and technical concerns, encouraging multi-institutional collaborations and \nleading to accurate models for medical applications [42]. FL complies with HIPAA and GDPR but is vulnerable to privacy \nattacks like inference, reconstruction, and backdoors [44, 45]. Researchers should conduct privacy analysis and supple -\nment models with other privacy-preserving techniques [46, 47].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.3 Cryptographic solutions",
+      "level": 2,
+      "text": "To address concerns related to outsourcing genomic data to untrusted cloud environments, unauthorized use beyond \nagreed research scopes, and potential privacy breaches, cryptographic techniques have been developed to safeguard \ngenomic data and prevent privacy leakage. One widely studied approach is Homomorphic Encryption (HE), which enables \ncomputations on encrypted data without requiring decryption. This technique allows secure outsourcing of statistical \nFig. 2  DP-SGD on CNN model computing gradients on a per training example basis\nFig. 3  Federated Learning \napproach\n\nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\noperations, such as allele frequency calculations and regression modeling, to cloud platforms [3, 48, 49]. Mathematically, \nHE follows the principle:\nwhere m i represents a message, E and D are encryption and decryption schemes, and op and oe are operations on plain \nand encrypted messages, respectively. HE schemes are classified as partially HE (supporting only addition or multiplica-\ntion), somewhat HE (allowing limited operations), and fully HE (enabling arbitrary computations on encrypted data).\nKim et al. [50] proposed an HE-based framework to protect genotype data during imputation. This allows computa-\ntions to be performed securely without exposing sensitive genetic sequences. Additionally, Mahdi et al. [24] improved \nprivacy-preserving genomic searches by using an encrypted Generalized Suffix Tree (GST). In this method, genomic data \nis encrypted before storage. Secure access is ensured through a cryptographic protocol. This framework, as shown in \nFigure 4, involves multiple entities, including hospitals, research institutions, and cloud servers. These entities manage \nencryption keys and enable secure queries using Garbled Circuit (GC) protocols [51].\nAnother cryptographic approach is Secure Multi-Party Computation (SMC). This method allows multiple parties to \nanalyze genomic datasets together without exposing individual data points [2 ]. In SMC, sensitive genomic data is split \ninto secret shares and distributed among multiple entities. No single entity has access to the complete data. Computation \nis carried out over these shares using cryptographic protocols such as additive secret sharing, Shamir’s secret sharing, \nor garbled circuits [52]. Each party performs operations only on its share of the data, and the intermediate results are \ncombined at the end to reconstruct the final output. This approach ensures data privacy throughout the process. Many \nSMC implementations use homomorphic encryption and secret sharing to improve data security. GC-based techniques \nprovide additional privacy protection [3, 53]. However, despite its privacy benefits, SMC has scalability issues. High com-\nputation and communication costs make it impractical for large-scale genomic datasets.\nTo overcome some of these limitations, researchers have explored Secure Cryptographic Hardware (SCH) solutions. \nOne example is Intel Software Guard Extensions (SGX), which creates secure enclaves within CPUs to protect data dur -\ning computation [54, 55]. Unlike software-based encryption techniques, SCH provides hardware-enforced security. This \nensures that genomic data remains protected even during processing. Chen et al. [56] introduced an SCH-based tech-\nnique to securely outsource genetic testing to untrusted cloud environments. This makes SCH a scalable alternative for \ngenomic privacy. However, SCH still has challenges. It struggles to handle large-scale genomic datasets due to limited \nmemory capacity. It also has potential security vulnerabilities that need further investigation [3 ].\nApart from cryptographic encryption, Differential Privacy (DP) has been widely used to enhance genomic privacy, \nespecially in Genome-Wide Association Studies (GWAS). DP adds carefully calibrated noise to summary statistics, such \nas Minor Allele Frequencies (MAFs), chi-square ( x2 ) statistics, and P-values. This prevents adversaries from inferring indi-\nvidual genomic data [9]. While DP helps reduce privacy risks, it often lowers data utility. To balance privacy and accuracy, \nresearchers have explored relaxed DP models, such as Pufferfish Privacy [57], Bayesian Differential Privacy [58], and Rényi \nDifferential Privacy (RDP) [59], which adjust adversarial assumptions or redefine sensitivity to improve usability while \nmaintaining privacy as applicable to protecting against membership inference attacks [60].\n(9)∀m 1 ,m 2 ∈ M ,D(E(m 1 ) oe E(m 2 )) = m 1 op m 2\nFig. 4  System model for the \nproposed privacy-preserving \nstring search on encrypted \ndata\n\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\nFigure 5 provides a comparative analysis of these cryptographic techniques, highlighting their respective strengths, \nlimitations, and applicability in genomic privacy protection.",
+      "refs": {
+        "figures": [
+          "f2",
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.4 Blockchain solution",
+      "level": 2,
+      "text": "Blockchain is a shared, immutable database that records and distributes digital information among authorized partici-\npants [61]. It has been considered for genomic data sharing while protecting privacy [62, 63]. Researchers have proposed \nusing blockchain to securely share GWAS datasets or machine learning (ML) model parameters trained on genomics \ndata [64]. Figure  6 illustrates how blockchain functions in genomics. Access to genomic data is controlled by multiple \nindependent parties holding shares of a split encryption key [16]. The blockchain ensures immutable storage of indi-\nviduals’ consent and data access requests [16]. Key features include user anonymity, access control, record auditability, \nand secure data analysis [62].\nGrishin et al. [62] proposed pseudo-anonymous transactions using blockchain addresses for genetic testing. This \nmethod hides identity information and reduces the need for data de-identification. They also introduced delegated access \ncontrol, where multiple independent organizations manage data access [62]. Blockchain further enables tamper-proof \nrecord-keeping by storing data access requests and user consent [ 62]. When an investigator requests access, encryp -\ntion key holders read permissions from the blockchain, decrypt the data, and grant access if authorized [62]. This model \nsupports secure computing by “bringing algorithms to the data, ” reducing exposure of sensitive information. Grishin \net al. [62] recommended privacy-preserving technologies like homomorphic encryption (HE) and secure multiparty \ncomputation (SMC) to enhance security. Recent advances have made these technologies more practical and scalable \nfor direct-to-consumer (DTC) genomics companies [65].\nFig. 5  The comparison of cryptographic techniques and a data perturbation technique, which is made on overheads, benefits, and limita-\ntions of each technique\nFig. 6  A depiction of a block-\nchain network that controls \ndata access using multiple \nparties that hold shares of an \nencryption key. The block-\nchain stores immutable and \ntransparent records, tracking \nconsumers’ written consent \nand researchers’ requests to \naccess data\n\nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\nTable 2  Summary of privacy-preserving solutions for genomic data security\nCategory Techniques Description Advantages Limitations References\nData Perturbation Methods Differential Privacy (DP) Adds noise to genomic data \nbefore sharing or analysis to \nprotect individual privacy.\nPrevents re-identification and \ninference attacks; allows data \nsharing.\nReduces data accuracy; requires \ntuning to balance privacy and \nutility.\n[2, 23, 28, 29]\nK-Anonymity Data Aggregation Generalizes or groups genomic \nattributes to prevent unique \nidentification.\nSimple to implement; effective \nfor small datasets.\nVulnerable to linkage attacks; \nmay not fully protect indi-\nvidual privacy.\n[26]\nMachine Learning-Based Solu-\ntions\nDP-SGD (Differentially Private \nStochastic Gradient Descent)\nUses differentially private train-\ning methods to prevent data \nleakage in machine learning \nmodels.\nProtects model training data \nfrom membership inference \nattacks.\nComputational overhead; may \ndegrade model performance.\n[38–40]\nFederated Learning (FL) Enables decentralized model \ntraining on genomic data with-\nout sharing raw data.\nReduces the need for data cen-\ntralization; privacy-preserving \nAI training.\nVulnerable to inference and poi-\nsoning attacks; requires robust \nsecurity mechanisms.\n[41, 42, 41–42]\nCryptographic Solutions Homomorphic Encryption (HE) Allows computations on \nencrypted genomic data with-\nout needing decryption.\nStrong confidentiality; enables \nsecure genomic cloud com-\nputing.\nHigh computational cost; slow \nexecution for large datasets.\n[3, 48, 49, 80]\nSecure Multi-Party Computation \n(SMC)\nEnables collaborative genomic \nanalysis while keeping indi-\nvidual data private.\nEnsures privacy even in multi-\ninstitutional studies.\nHigh communication and com-\nputation overhead.\n[2, 3, 53]\nBlockchain-Based Security Blockchain for Genomic Data \nSharing\nUses distributed ledger technol-\nogy to control access and \nmaintain immutable records of \ngenomic data transactions.\nEnhances trust; ensures tamper-\nproof data sharing.\nHigh energy consumption; \nstorage inefficiencies for large \ngenomic datasets.\n[61–64]\nSynthetic Data Generation Generative Adversarial Net-\nworks (GANs) Synthetic Data \nModels\nUses deep learning to generate \nsynthetic genomic datasets \nwith privacy guarantees.\nAllows privacy-preserving data \nsharing while maintaining sta-\ntistical properties of real data.\nMay still be vulnerable to re-\nidentification attacks if not \ncarefully implemented.\n[66–68]\nAccess Control Solutions Authority-Based Access Control Restricts access to genomic data \nbased on institutional approv-\nals (e.g., NIH’s controlled-\naccess databases).\nEnsures oversight and policy \nenforcement for genomic data \nuse.\nRequires centralized control, \npotential misuse by authori-\nties.\n[69, 70]\nParticipant-Based Access \nControl\nAllows individuals to control \nwho can access their genomic \ndata.\nProvides autonomy and user \nconsent-based security.\nRelies on individuals’ awareness \nand compliance, may limit \nresearch accessibility.\n[71]\nTrust-But-Verify Logging Enables auditing and tracking of \ngenomic data access through \nimmutable logs.\nIncreases accountability and \ntransparency in genomic data \nuse.\nCannot prevent unauthor-\nized access in real-time, only \ndetects it after occurrence.\n[72, 73]\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.5 Synthetic data generation techniques",
+      "level": 2,
+      "text": "Researchers have proposed synthetic data generation to protect anonymity. Deep learning models like Generative \nAdversarial Networks (GANs) and Restricted Boltzmann Machines (RBMs) generate data that maintains the characteristics \nof the original data, reducing the risk of malicious inference [66]. However, synthetic data may not always guarantee \nprivacy and utility. Oprisanu et al. [67] studied methods like Recombination model (Recomb), RBMs, GANs, WGANS, Rec-\nRBM, and Rec-GAN, measuring their utility and privacy. The Recomb model on the HapMap dataset had the best utility \nbut reduced privacy. No single method was best across all metrics and datasets, indicating further research is needed \nto achieve high privacy and utility. Likewise, Jordan et al. in [68] used differential privacy in GANs with the PATE-GAN \nframework, bounding the influence of individual samples to ensure privacy and improve performance. Their experiments \nshowed the synthetic data was as useful as the original and outperformed other methods.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.6 Access control solutions",
+      "level": 2,
+      "text": "Preventing unauthorized access is crucial for genomics privacy and security. The U.S. National Institutes of Health (NIH) \nand the Wellcome Trust Foundation mitigated attacks by moving demographic information and GWAS summary statis-\ntics into controlled-access databases [69, 70]. Various access control models are used to prevent data breaches. Another \nmodel applicable in the context genomics privacy is using a trust-but-verify approach, recording and auditing transac -\ntions to detect malicious activities [71]. A participant-based model grants original participants control over their data and \nmanages access through a trusted agent [71]. Furthermore, the NIH prefers an authority-based access control solution \nover identity-based methods. This context-sensitive model recognizes the source of authority, grants minimal necessary \nprivileges, and uses the Research Authorization Service (RAS) to verify identities and issue authorization tokens [72 ]. \nHowever, NIH’s reliance on commercial cloud storage, which uses identity-based solutions, poses security risks. More so, \nMosca and colleagues highlight a significant concern indicating the genomic data protection through on controlled-\naccess databases might not be adequately shielded from unauthorized users [73].\n3.7  Translating privacy‑preserving techniques into practice: real‑world genomic frameworks\nThe Global Alliance for Genomics and Health (GA4GH) is a worldwide group that creates technical and policy guidelines \nto support the safe and ethical sharing of genomic data. It aims to balance data access with privacy protection. To achieve \nthis, GA4GH has developed a set of standards that enable collaboration while keeping sensitive genomic information \nsecure. These standards use data masking, encryption, and access control to reduce privacy risks in research. Some key \nstandards include the Beacon Project, which allows controlled data queries, and the Passport Standard, which supports \nsecure authentication across different systems. Other initiatives, like CanDIG, enable privacy-focused data analysis, while \nDUOS automates decisions on data use. These efforts show that privacy-preserving methods can work in large-scale \ngenomic data management [74–77].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.7.1 GA4GH Beacon Project",
+      "level": 3,
+      "text": "The GA4GH Beacon Project helps researchers find genomic data while protecting privacy. It allows users to check if a \nspecific allele is present. It gives a simple “yes” or “no” answer without revealing raw data. Beacons limit direct access to \ndatasets and use query aggregation to lower the risk of identifying individuals. However, privacy risks still exist. If multiple \nBeacons are queried together, statistical methods could be used to infer sensitive information. To prevent this, stronger \nprivacy techniques like differential privacy or threshold-based responses may be needed [74].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.7.2 GA4GH passport standard",
+      "level": 3,
+      "text": "The GA4GH Passport Standard introduces a federated authentication and authorization model. It grants role-based \naccess to genomic datasets using machine-readable “visas. ” These visas are individual assertions about a user’s roles or \ndata access rights. They define user permissions and are encoded within JSON Web Tokens (JWTs). Both Passports and \nVisas are digitally signed using cryptographic algorithms such as Secure Hash Algorithm (SHA), Rivest-Shamir-Adleman \nVol.:(0123456789)\nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w \n \n Review\n(RSA), and Elliptic Curve (EC) [78, 79]. By using these cryptographic schemes, the GA4GH Passport Standard ensures \nthat user permissions are securely transmitted and verifiable across different systems in the genomics and health data-\nsharing ecosystem. This approach improves interoperability and security. However, it still depends on centralized trust \nauthorities, which could fail in multi-institutional collaborations. Also, verifying user credentials alone does not prevent \nunethical data use. This makes insider threat mitigation an ongoing challenge [75].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.7.3 CanDIG federated data sharing",
+      "level": 3,
+      "text": "The CanDIG Federated Data Sharing platform is closely related to Secure Multi-Party Computation (SMC). It allows \ngenomic analysis across institutions without revealing raw data (CanDIG Consortium, 2022). It ensures that institutions \nkeep control over their datasets. This reduces the risks linked to centralized genomic repositories. However, SMC has \nmajor computational challenges. It requires high processing power and is complex to implement. This may limit its abil-\nity to handle large genomic studies. Federated querying helps protect raw data, but it does not fully eliminate the risk \nof inference attacks. Additional safeguards, like noise injection or differential privacy, are needed [76].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.7.4 Data use ontology (DUO) system",
+      "level": 3,
+      "text": "The Data Use Ontology (DUO) system strengthens genomic privacy. It does this by enforcing policy-driven access restric-\ntions (GA4GH Ethics and Policy Working Group, 2021). The DUO system employs structured Data Use Limitations (DULs) to \nautomate access approvals. This ensures compliance with ethical and legal frameworks. This system reduces administra-\ntive burdens. However, it relies on predefined policies. This reliance may lead to inflexibility when addressing emerging \nprivacy risks. A more adaptive governance model could enhance its effectiveness in preventing unauthorized access [77].\nOverall, these genomic privacy frameworks show how privacy-preserving techniques are applied in genomic research. \nThey prove the feasibility of federated authentication, cryptographic protections, and policy-driven oversight. However, \nchallenges remain in scalability, computational efficiency, and resistance to inference attacks. Future advancements \nshould focus on hybrid cryptographic methods and adaptive privacy-preserving techniques. These improvements will \nhelp strengthen genomic data security.\n4  Laws and policies related to genetic information",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.1 Current policies",
+      "level": 2,
+      "text": "The rapid expansion of genomics and data-sharing technologies challenges genetic privacy regulation. Public policies \naim to balance individual privacy with societal benefits, but defining privacy in the digital era remains complex [ 81]. \nBelow are key regulations governing genetic data protection.\n4.1.1  Health insurance portability and accountability act (HIPAA)\nHIPAA, enacted in 1996, regulates healthcare entities but excludes private companies [81]. Its privacy rule protects \npersonal health data while allowing controlled use for public health [ 82]. The security rule mandates administrative, \ntechnical, and physical safeguards for electronic health information but excludes oral and written transmissions [82]. \nHIPAA permits data sharing without consent if de-identified using Safe Harbor or Expert Determination methods, which \nassess re-identification risks [83].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1.2 General data protection regulation (GDPR)",
+      "level": 3,
+      "text": "The GDPR enforces strict privacy controls on personal data, including genomic information, processed by organizations \nhandling EU citizens’ data [84, 85]. It mandates data controllers to maintain security throughout data processing and \nensures de-identified data remains irreversible [84]. Entities must adhere to seven principles: accountability, storage \nlimitation, accuracy, data minimization, purpose limitation, integrity and confidentiality, and transparency [86].\nVol:.(1234567890)\nReview  \nDiscover Computing          (2025) 28:108  | https://doi.org/10.1007/s10791-025-09627-w\n4.1.3  Genetic information discrimination law and the genetic information privacy act\nThe Genetic Information Nondiscrimination Act (GINA) provides limited protection against genetic discrimination. It \nmainly applies to employment and health insurance [87, 88]. It does not cover epigenome, microbiome, or metagenome \ndata [25]. Some states, like California, have stronger protections under the Genetic Information Privacy Act (GIPA). This law \ndefines genetic data broadly and requires explicit consent for testing and data sharing [25, 89]. Other states, including \nVirginia and Colorado, have passed similar privacy laws [89– 91]. Furthermore, GIPA requires direct-to-consumer (DTC) \ngenetic testing companies to obtain consent before collecting, using, or sharing genetic data. Consumers have the right \nto revoke consent, delete data, and request account removal on platforms like 23andMe [23]. Additionally, GIPA requires \na court order for law enforcement or third-party access to genetic data [23].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.2 Surreptitious genetic testing (SGT)",
+      "level": 2,
+      "text": "SGT refers to collecting and analyzing DNA without a person’s knowledge or consent. This raises ethical and legal con-\ncerns. No federal law explicitly bans SGT, but some states have restrictions with different penalties [81, 92, 93]. GINA and \nthe Affordable Care Act (ACA) provide limited protections. They apply only to employment and health insurance [81 ]. \nDTC companies have created internal policies that require users to verify ownership or get consent before submitting \ngenetic samples. However, enforcement is inconsistent. A major case involving the Golden State Killer highlighted these \nconcerns. Investigators used a public genealogy database (GEDMatch) and secretly collected DNA from a discarded tis-\nsue and a car door handle [81]. Police obtained a court order for genetic testing, but they searched GEDMatch without \nprior approval. This raised privacy concerns. Most jurisdictions do not require warrants for surreptitious DNA collection. \nAs a result, individuals remain vulnerable to forensic genetic surveillance [94].\n5  Addressing genomics data privacy and security issues\nIn this section, we summarize current challenges and provide recommendations for securing genomics data.\n5.1  Challenging problems in genomic data privacy and security\nThe rapid growth of genomic data sharing has increased privacy and security risks. This has created a need for strong \ncryptographic and privacy-preserving techniques. Traditional methods like homomorphic encryption (HE), secure multi-\nparty computation (SMC), and federated learning (FL) provide security guarantees. However, they also cause computa-\ntional inefficiencies. AI-driven attacks and the risk of quantum decryption add more challenges. To address these issues, \ngenomic privacy frameworks must be redesigned. They should include AI-resilient security mechanisms and quantum-\nresistant cryptographic methods.\n5.1.1  Trade‑offs in cryptographic security and computational efficiency for genomic data protection\nGenomic data encryption has always struggled to balance privacy, efficiency, and usability. Techniques like HE and SMC \nprovide strong security. They allow computations on encrypted data without revealing sensitive information. However, \nthese methods create high computational overhead, making them impractical for large-scale genomic analysis and \nreal-time applications [2 , 3, 95]. In contrast, lighter cryptographic methods like Secure Hybrid Rivest-Shamir-Adleman \n(SHRSA) and Elliptic Curve Cryptography (ECC) are more efficient. They are widely used for secure genomic data transmis-\nsion [96, 97]. For example, Barmana and Saha in [97] proposed a DNA Encoded Elliptic Curve Cryptography System for \nIoT security. However, the security of these cryptographic methods depends on the difficulty of certain mathematical \nproblems. RSA relies on integer factorization, while ECC is based on the discrete logarithm problem. These problems \nare too complex for classical computers but can be solved efficiently using Shor’s algorithm on a quantum computer \n[98, 99]. This growing vulnerability has increased interest in quantum-resistant cryptographic approaches, which are \ndiscussed further in Section 5.2. Additionally, privacy-enhancing techniques like Differentiable Private Stochastic Gradi-\nent Descent (DP-SGD) and federated learning (FL), detailed in Section 3.2, have been proposed for genomic security [38, \n39, 41]. However, these methods face new risks from AI-driven attacks. These attacks use machine learning models to \ninfer sensitive genomic information.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "graphically represents the pdf of the Laplace distribution."
+    },
+    {
+      "id": "f2",
+      "caption": "shows a DP-SGD model on a CNN, where gradients are computed per training example, resulting in compu-"
+    },
+    {
+      "id": "f4",
+      "caption": ", involves multiple entities, including hospitals, research institutions, and cloud servers. These entities manage"
+    },
+    {
+      "id": "f5",
+      "caption": "provides a comparative analysis of these cryptographic techniques, highlighting their respective strengths,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Summary of genomic privacy attacks and their mechanisms"
+    },
+    {
+      "id": "t2",
+      "caption": "Summary of privacy-preserving solutions for genomic data security"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Equation (3)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 4
+  }
+}

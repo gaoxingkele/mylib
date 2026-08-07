@@ -1,0 +1,127 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/ijacsa/ijacsa__2014__a_comparative_study_of_decision_tree_id3_and_c4_5__c64bd0fead.pdf",
+  "n_pages": 7,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "The construction of decision trees from data is a \nlongstanding discipline. Statisticians attribute the paternity to \nSonquist and Morgan (1963) [4] who used regression trees in \nthe process of prediction and explanation (AID - Automatic \nInteraction Detection). It was followed by a whole family of \nmethod, extended to the problems of discrimination and \nclassification, which were based on the same paradigm of \nrepresentation trees (Thaid - Morgan and Messenger, 1973; \nCHAID - Kass, 1980). It is generally considere d that this \napproach has culminated in the CART (Classification and \nRegression Tree ) method of Breiman et al. (1984 ) described \nin detail in a monograph refers today. [4] \nIn machine learning, most studies are based on information \ntheory. It is customary t o quote the ID3 Quinlan method \n(Induction of Decision Tree - Quinlan 1979), which itself \nrelates his work to that of Hunt (1962) [4]. Quinlan has been a \nvery active player in the second half of the 80s with a large \nnumber of publications in which he propos es a heuristics to \nimprove the behavior of the system. His approach has made a \nsignificant turning point in the 90s when he presented the C4.5 \nmethod which is the other essential reference when we want to \ninclude decision trees (1993). There are many other  changes \nthis algorithm, C5.0, but is implemented in a commercial \nsoftware. \nClassification methods aim to identify the classes that \nbelong objects from some descriptive traits. They find utility in \na wide range of human activities and particularly in autom ated \ndecision making. \nDecision trees are a very effective method of supervised \nlearning. It aims is the partition of a dataset into groups as \nhomogeneous as possible in terms of the variable to be \npredicted. It takes as input a set of classified data, and outputs a \ntree that resembles to an orientation diagram where each end \nnode (leaf) is a decision (a class) and each non - final node \n(internal) represents a test. Each leaf represents the decision of \nbelonging to a class of data verifying all tests path fro m the \nroot to the leaf. \nThe tree is simpler, and technically it seems easy to use. In \nfact, it is more interesting to get a tree that is adapted to the \nprobabilities of variables to be tested. Mostly balanced tree will \nbe a good result. If a sub -tree can o nly lead to a unique \nsolution, then all sub -tree can be reduced to the simple \nconclusion, this simplifies the process and does not change the \nfinal result. Ross Quinlan worked on this kind of decision trees.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "INFORMATION THEORY",
+      "level": 1,
+      "text": "Theories of Shannon is at the base of the ID3 algorithm and \nthus C4.5. Entropy Shannon is the best known and most \napplied. It first defines the amount of information provided by \nan event: the higher the probability of an event is low (it is \nrare), the more information it provides is g reat. [2] (In the \nfollowing all logarithms are base2). \nA. Shannon Entropy \nIn general, if we are given a probability distribution P = (p1, \np2,…, pn) and a sample S then the Information carried by this \ndistribution, also called the entropy of P is giving by: \n \nB.  The gain information G (p, T) \nWe have functions that allow us to measure the degree of \nmixing of classes for all sample and therefore any position of \nthe tree in construction. It remains to define a function to select \nthe test that must label the current node. \nIt defines the gain for a test T and a position p \n \nwhere values (p j) is the set of all possible values for \nattribute T.  We  can use  this measure  to rank attributes  and  \nbuild the  decision  tree  where  at  each node  is located the \n(1) \n \n(2) \n(IJACSA) International Journal of Advanced Computer Science and Applications,  \nSpecial Issue on Advances in Vehicular Ad Hoc Networking and Applications \n14 | P a g e  \nwww.ijacsa.thesai.org \nattribute with the highest information gain among the attributes \nnot yet considered  in the path from the root.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "ID3 ALGORITHM",
+      "level": 1,
+      "text": "J.  Ross Quinlan originally developed ID3 (Iterative \nDiChaudomiser 3) [21] at the University of Sydney. He first \npresented ID3 in 1975 in a book, Machine Learning  [21], vol.  \n1, no.  1.  ID3 is based off the Concept Learning System (CLS) \nalgorithm.  The basic CLS algorithm over a set of training \ninstances C.  ID3 is a supervised learning algorithm, [10] builds \na decision tree from a fixed  set of examples. The resulting tree \nis us ed to classify future samples. ID3 algorithm builds tree \nbased on the information (info rmation gain) obtained from the \ntraining instances and then uses the same to classify the test \ndata. ID3 algorithm generally uses nominal attributes for \nclassification with no missing values. [10] \nThe pseudo code of this algorithm is very simple. Given a \nset of attributes not target C 1, C2, ..., C n, C the target attribute, \nand a set S of recording learning. [7] \nInputs: R: a set of non- target attributes, C: the target \nattribute, S: training data. \nOutput: returns a decision tree \nStart \nInitialize to empty tree; \n If S is empty then \n         Return a single node failure value \nEnd If \nIf S is made only for the values of the same target \nthen \n                   Return a single node of this value \nEnd if \nIf R is empty then \n     Return a single node with value as the most \ncommon value of the target attribute values found in \nS \nEnd if \nD ← the attribute that has the largest Gain (D, S) among all \nthe attributes of R \n{dj j = 1, 2, ..., m} ← Attribute values of D \n{Sj with j = 1, 2, ..., m} ←The subsets of S respectively \nconstituted of dj records attribute value D \nReturn a tree whose root is D and the arcs are \nlabeled by d1, d2, ..., dm and going to sub-trees ID3 (R-{D}, \nC, S1), ID3 (R-{D} C, S2), .., ID3 (R-{D}, C, Sm) \nEnd \nFig. 1.  Pseudocode of ID3 algorithm \nEXAMPLE 1 \nSuppose we want to use the ID3 algorithm to decide if the time \nready to play ball.  \nDuring two weeks, the data are collected to help build an ID3 \ndecision tree (Table 1).  \nThe classification of the target is \"should we play ball?\" which \ncan be Yes or No.  \nWeather attributes outlook, temperature, humidity and wind \nspeed. They can take the following values:  \nOutlook = {Sun, Overcast, Rain}  \nTemperature = {Hot, Sweet, Cold}  \nHumidity = {High, Normal}  \nWind = {Low, High}  \nExamples of the set S are: \nTABLE I. DATA SET S \nDay Outlook Temperature Humidity Wind Play \nD1 Sun Hot High Low No \nD2 Sun Hot High High No \nD3 Overcast Hot High Low Yes \nD4 Rain Sweet High Low Yes \nD5 Rain Cold Normal Low Yes \nD6 Rain Cold Normal High No \nD7 Overcast Cold Normal High Yes \nD8 Sun Sweet High Low No \nD9 Sun Cold Normal Low Yes \nD10 Rain Sweet Normal Low Yes \nD11 Sun Sweet Normal High Yes \nD12 Overcast Sweet High High Yes \nD13 Overcast Hot Normal Low Yes \nD14 Rain Sweet High High No \n \nWe need to find the attribute that will be the root node in \nour decision tree. The gain is calculated for the four attributes.  \nThe entropy of the set S: \nEntropy (S) =-9/14*log2 (9/14)-5/14*log2 (5/14) = 0.94 \n \nCalculation for the first attribute \nGain(S, Outlook) = Entropy (S)-5/14*Entropy (SSun) \n                        -4/14*Entropy (SRain) \n                   -5/14* Entropy (SOvercast) \n            =0.94 – 5/14*0.9710-4/14*0 – 5/14*0.9710 \n  Gain(S, Outlook) = 0 .246 \nCalculation of entropies: \nEntropy (SSunl) = -2/5*log2 (2/5)-3/5* log2 (3/5) = 0.9710 \nEntropy (SRain) = -4/4*log2 (4/4)-0* log2 (0) =0 \nEntropy (Sovercast) = -3/5* log2 (3/5) -/5* log2 (2/5) =0.9710 \nAs well we find for the other variables: \nGain(S, Wind) = 0.048 \n      Gain(S, Temperature) = 0.0289 \n Gain(S, Humidity) =   0.1515 \nOutlook attribute has the highest gain, so it is used as a \ndecision attribute in the root node of the tree (Figure 2).  \nSince Visibility has three possible values, the root node has \nthree branches (Sun, Rain and Overcast). \n(IJACSA) International Journal of Advanced Computer Science and Applications,  \nSpecial Issue on Advances in Vehicular Ad Hoc Networking and Applications \n15 | P a g e  \nwww.ijacsa.thesai.org \n \nFig. 2.  Root node of the ID3 decision tree \nSo by using the three new sets, the information gain is \ncalculated for the temperature, humidity, until we obtain \nsubsets Sample containing (almost) all belonging examples to \nthe same class (Figure 3). \n \nFig. 3. ID3  Final tree \nIV. C4.5 ALGORITHME \nThis algorithm was proposed in 1993, again by Ross \nQuinlan [28], to overcome the limitations of ID3 algorithm \ndiscussed earlier. \n One  limitation  of  ID3  is  that  it  is  overly  sensitive  to  \nfeatures  wit h  large  numbers  of  values. This must be \novercome if you are going to use ID3 as an Internet search \nagent. I address this difficulty by borrowing from the C4.5 \nalgorithm, an  ID3 extension.  ID3's  sensitivity  to  features  \nwith  large  numbers  of  value s  is  illustrated  by Social \nSecurity numbers. Since Social Security numbers are unique \nfor every individual, testing on its value will always yield low \nconditional entropy values. However, this is not a useful  test. \nTo overcome this problem, C4.5 uses \"Information gain,\" This \ncomputation does  not, in itself, produce anything new. \nHowever, it allows to measure a gain ratio.  \nGain ratio, is defined as follows: \n \n where SplitInfo is: \n \nP’ (j/p) is the proportion of elements present at the position \np, taking the value of j-th test. Note that, unlike the entropy, the \nforegoing definition is independent of the distribution of \nexamples inside the different classes. \nLike ID3 the data is sorted  at  e very  node  of  the  tree  in  \norder  to  determine  the  b est  splitting  attribute.  It uses gain \nratio impurity method to evaluate the splittin g attribute \n(Quinlan, 1993). [10] Decision trees are built in C4.5 by using \na set of training data or data sets as in ID3.  At each node of the \ntree, C4.5 chooses one attribute of the data that most effectively \nsplits its set of samples into subsets enriched in one class or the \nother. Its criterion  is the normalized  information  gain  \n(difference  in  entropy)  th at  results  from  choosing  an  \nattribute  for  splitting  the  data.  The attribute with the highest \nnormalized information gain is chosen to make the decision. \nA. Attributes of unknown value \nDuring the construction of the decision tree, it is possible to \nmanage data for which some attributes have an unknown value \nby evaluating the gain or the gain ratio for such an attribute \nconsidering only the records for which this attribute is defined. \n[2] \nUsing a decision tree, it is possible to classify the records \nthat have unknown values by estimating the probabilities of \ndifferent outcomes. \nThe new criterion gain will be of the form: \nGain (p) = F (Info (T) - Info (p, T))        (5) \nwhere : \n \n  Info (T) = Entropy (T) \n \nF = number of samples in the database with the known value \nfor a given / total number of samples in a set of attribute data. \nB. Attributes value on continuous interval \nC4.5 also manages the cases of attributes with values in \ncontinuous intervals as follows. Let us say that Ci attribute a \ncontinuous interval of values. Examines the values of this \nattribute in the training data. Let that these values are in \nascending order, A 1, A2, ..., A m .Then for each of these values , \nthe partitioned between records those that have values of C, \nless tha n or equal to A j and those which have  a value larger \nthen Aj values. For each of these partitions gain is calculated, \n(3) \n(4) \n(6) \n(IJACSA) International Journal of Advanced Computer Science and Applications,  \nSpecial Issue on Advances in Vehicular Ad Hoc Networking and Applications \n16 | P a g e  \nwww.ijacsa.thesai.org \nor the gain ratio and the partition that maximizes the gain is \nselected.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "Pruning",
+      "level": 1,
+      "text": "Generating a decision to function best with a given of \ntraining data set often creates a tree that over-fits the data and is \ntoo sensitive on the sample noise. Such decision trees do not \nperform well with new unseen samples. \nWe need to prune the tree in such a way to reduce the \nprediction error rate. Pruning  [5]  is a technique in machine \nlearning that  reduces  the  size  of  decision  trees  by removing \nsections of the tree that provide little power  to  classify  \ninstances.  The dual goal of pruning  is the reduction  \ncomplexity  of  the  final classifier a s well as better predictive \naccuracy by the reduction of over -fitting and removal of \nsections  of  a  classifier  that  may  be  based  on noisy or \nerroneous data. \n The pruning algorithm is based on a pessimistic estimate of \nthe error rate associated with a set of N cases, E of which do \nnot belong to the most frequent class. Instead of E/N, C4.5 \ndetermines the upper limit of the binomial probability when E \nevents have been observed in N trials, using a user -specified \nconfidence whose default value is 0.25.  \nPruning is carried out from the leaves to the root. The \nestimated error at a leaf with N cases and E errors is N times \nthe pessimistic error rate as above. For a sub -tree, C4.5 adds \nthe estimated errors of the branches and compares this to the \nestimated error if the sub-tree is replaced by a leaf; if the latter \nis no higher than the former, the sub-tree is pruned. \nD. Exemple 2 \nWe will work with the same example used before but this \ntime we will take continuous values for humidity attribute. \nTABLE II.  DATA SET S \nDay Outlook Temperature Humidity Wind Play \nD1 Sun Hot 85 Low No \nD2 Sun Hot 90 High No \nD3 Overcast Hot 78 Low Yes \nD4 Rain Sweet 96 Low Yes \nD5 Rain Cold 80 Low Yes \nD6 Rain Cold 70 High No \nD7 Overcast Cold 65 High Yes \nD8 Sun Sweet 95 Low No \nD9 Sun Cold 70 Low Yes \nD10 Rain Sweet 80 Low Yes \nD11 Sun Sweet 70 High Yes \nD12 Overcast Sweet 90 High Yes \nD13 Overcast Hot 75 Low Yes \nD14 Rain Sweet 80 High No \n \n Treating numerical values \nAs C4.5 is an improvement of ID3, then the first step of \ncalculating the gain is the same except for the attributes to \ncontinuous values. \nIn this example we are going to detail the calculation of \ninformation gain for an attribute of continuing value. \nGain (S, Humidity) =? \nWe must now sort the attribute values in ascending ord er, the \nset of values is as follows: \n{65, 70, 70, 70, 75, 78, 80, 80, 80, 85, 90, 90, 95, 96} \nwe will remove values that are repeated: \n{65, 70, 75, 78, 80, 85, 90, 95, 96} \nTABLE III. GAIN CALCULATION FOR THE ATTRIBUTE CONTINUOUS \nHUMIDITY USING C4.5 ALGORITHM  \n \n \nGain (S, Humidity) = 0.102  \nThen assigns Visibility has the largest value of Information \nGain is the root node of the tree (Figure 4). \n \nFig. 4. Root node of the C4.5  decision tree \n Treating attributed to unknown value \nC4.5 accepted principle that a sample with unknown values \nare distributed based on the probability relative frequency of \nknown values (Table 2). \nSuppose the unknown value of D12 day for visibility \nattributes. \nInfo(S)= -8/13*log2 (8/13)-5/13* log2 (5/13)= 0.961 \nInfo (Outlook, S) = 5/13*Entropy (SSun) \n + 3/13* Entropy(Sovercast)   \n + 5/13* Entropy(SRain)  \n                                     =  0.747  \n\n(IJACSA) International Journal of Advanced Computer Science and Applications,  \nSpecial Issue on Advances in Vehicular Ad Hoc Networking and Applications \n17 | P a g e  \nwww.ijacsa.thesai.org \nEntropy (SSun) =-2/5* log2 (2/5) –3/5* log2 (3/5)= 0.9710 \nEntropy (SOvercast) =-3/3*log2 (3/3) –0/3* log2 (0/3)=0 \nEntropy (SRain) =-3/5* log2 (3/5) –2/5* log2 (2/5)= 0.9710 \nGain (Outlook) = 13/14 (0.961 – 0.747) = 0.199  \nWhen a case of S with the known value is assigned to the \nsubsets Si, the probability belonging to Si is 1, and in all other \nsubsets is 0.  \nC4.5 therefore associated with each s ample (with  missing \nvalues) in each subset Si weight w representing the probability \nthat the case belongs to each subset (Figure 5).  \nFractionation of the set S using the test on the attribute \nvisibility. A new w i weight is equal to the probability in t his \ncase: 5/13, 3/13 and 5/13, because the initial value (Table 2) w \nis S1 = 5+5/13, S2 = 3 +3/13, and S3 = 5+5/13. \n Generating decision rules \n \nTo make a clearer decision tree model, a path of each leaf \ncan be converted into a production rule IF-THEN. \nIf Outlook= Sun then  \n          If Humidity <= 70 Then  \n           Classification = Yes (2.0 / 0);  \n             else \n             Classification = No (3.38 / 0.6);  \nElse if  Outlook = Overcast \n               Classification = Yes (3.2 / 0);  \nElse if  Outlook= Rain then \n               If Wind =High  \n         Classification = Not (2.0 / 0);  \nelse \nClassification = Yes (3.38 / 0). \nFig. 5.  Decision rules",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "COMPARISON BETWEEN SEVERAL ALGORITHMS",
+      "level": 1,
+      "text": "A. ID3 Vs C4.5 \nID3 algorithm selects the best attribute based on the \nconcept of e ntropy and information gain for  developing the \ntree.  \nC4.5 algorithm acts similar to ID3 but improves a few of \nID3 behaviors: \n A possibility to use continuous data.  \n Using unknown (missing) values  \n Ability to use attributes with different weights. \n Pruning the tree after being created. \n Pessimistic prediction error \n sub-tree Raising \nPerformance Parameters: \nAccuracy:  The measurements of a quantity to that \nquantity’s factual value to the degree of familiarity are known \nas accuracy. \nThe Table 4 presents a comparison of ID3 and C4.5 \naccuracy with different data set size , t his comparison is \npresented graphically in Figure 6. \nTABLE IV. ACCURACY COMPARISON BETWEEN ID3 AND C4.5 \nALGORITHM  \nSize of Data Set Algorithm \nID3        (%) C4.5         (%) \n14 94.15 96.2 \n24 78.47 83.52 \n35 82.2 84.12 \n \n \nFig. 6. Comparison of Accuracy for ID3 & C4.5 Algorithm \nThe 2nd parameter compared between ID3 and C4.5 is the \nexecution time, Table 5 present the comparison. \nThis comparison is presented graphically in Figure 7. \nTABLE V. COMPARISON OF EXECUTION TIME FOR ID3 & C4.5 \nALGORITHM \nSize of Data Set Algorithm \nID3        (%) C4.5         (%) \n14 0.215 0.0015 \n24 0.32 0.17 \n35 0.39 0.23 \n \nFig. 7. Comparison of Execution Time for ID3 & C4.5 Algorithm \n\n(IJACSA) International Journal of Advanced Computer Science and Applications,  \nSpecial Issue on Advances in Vehicular Ad Hoc Networking and Applications \n18 | P a g e  \nwww.ijacsa.thesai.org \nB. C4.5 Vs C5.0 \nC4.5 was superseded in 1997 by a commercial system \nSee5/C5.0 (C5.0 for Unix / Linux, See5 pour Windows). \n The changes encompass new capabilities as well as much -\nimproved efficiency, and include [13]: \n A variant of boosting, which constructs an ensemble of \nclassifiers that are then voted  to give a final \nclassification. Boosting often leads to a dramatic \nimprovement in predictive accuracy. \n New data types (e.g., dates), “not applicable” values, \nvariable misclassification costs, and  mechanisms to \npre-filter attributes. \n Unordered rule sets —when a case is classified, all \napplicable rules are found and voted. \n This improves both the interpretability of rule  sets and \ntheir predictive accuracy.  \n Greatly improved scalability of both decision trees and \n(particularly) rul e sets. Scalability is enhanced by \nmulti-threading; C5.0 can take advantage of computers \nwith multiple CPUs and/or cores [13]. \nC. C5.0 Vs CART \nClassification and Regression Trees (CART) is a flexible \nmethod to describe how the variable Y distributes after \nassigning the forecast vector X. This model uses the binary tree \nto divide the forecast space into certain subsets on which  \nY distribution is continuously even. Tree's leaf nodes \ncorrespond  to  different  division  areas which  are  determined  \nby  Splitting  Rules relating to each internal node. By moving \nfrom the tree root to the leaf node, a forecast sample will  be  \ngiven  an  only  leaf  node,  and  Y distribution on this node \nalso be determined. \nCART uses GINI Index to determine in which attrib ute the \nbranch should be generated.  The strategy is to choose th e \nattribute whose GINI Index is a minimum after splitting. \nLet S be a sample, a the target attribute,S1, ....., SK were \nstarting from S, according to the classes of a \n \n \nThe C5.0 algorithm differs in several respects from CART, \nfor example: \n The CART tests are always binary, but C5.0 allows \ntwo or more outcomes. \n CART uses the Gini diversity index for classifying \ntests, while C5.0 uses criteria based on the information. \n CART prunes trees using a complex model whose \nparameters are estimated by cross -validation; C5.0 uses \na single -pass algorithm derived from binomial \nconfidence limits. \n CART looks for alternative tests that approximate the \nresults when tested attribute has an unknown value, b ut \nC5.0 distributes cases among probabilistic results. \n Speed of C5.0 algorithm is significantly faster and \nmore accurate than C4.5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "CONLUSION",
+      "level": 1,
+      "text": "Decision trees are simply responding to a problem of \ndiscrimination is one of the few methods that can be presented \nquickly enough to a non -specialist audience data processing \nwithout getting lost in difficult to understand mathematical \nformulations. In th is article, we wanted to focus on the key \nelements of their construction from a set of data, then we \npresented the algorithm ID3 and C4.5 that respond to these \nspecifications. And we did compare ID3/C4.5, C4.5/C5.0 and \nC5.0/CART, which led us to confirm th at the most powerful \nand preferred method in machine learning is certainly C4.5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 6
+  }
+}

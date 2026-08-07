@@ -1,0 +1,234 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-future-internet/mdpi-future-internet__2025__benchmarking_large_language_models_from_open_and_closed__ad6b0a74db.pdf",
+  "n_pages": 41,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Large language models (LLMs) have emerged as powerful tools in natural language \nprocessing, driving innovation across various industries, including healthcare [1,2]. The \nrapid expansion of both open and closed source LLMs marks a transformative shift in \nhow data are processed, interpreted, and utilized, ushering in a new era of computational \nintelligence [3,4]. LLMs have demonstrated significant potential in extracting patient \ninformation from free-text clinical records [5]. Clinical notes, discharge summaries, and \nmedical reports—key components of medical documentation—contain free-text descriptions \nof patient characteristics that provide invaluable insights for clinical decision-making, \nresearch, and education. Accurate extraction of this information is critical for enhancing \npatient care, supporting clinical decisions, advancing research, and informing policy-making \n[6]. However, a fundamental question remains: can we rely on LLMs to extract meaningful \ninsights from free-text medical reports?\nThis study is designed to bridge critical gaps in evaluating LLMs for healthcare applications, \naddressing two complementary objectives: first, to propose a novel evaluation framework \nspecifically tailored for the healthcare domain, leveraging advanced multi-criteria decision-\nmaking techniques to provide rigorous and context-specific benchmarks; second, to \nsystematically assess the performance of LLMs in extracting diverse patient attributes, such \nas age, gender, BMI, disease presence, and hematological parameters, from unstructured \nclinical records, thus shedding light on their practical utility and limitations in this sensitive \nfield [7].\nMulti-Criteria Decision Analysis (MCDA) is a structured approach used to evaluate and \nprioritize alternatives based on multiple conflicting criteria [8]. In healthcare, this is \nparticularly relevant as decisions often involve trade-offs between accuracy, efficiency, and \nethical considerations. MCDA provides a systematic framework to weigh these criteria, \nensuring a balanced evaluation that aligns with the complex demands of healthcare \napplications [9].\nThe TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution) method, \na key component of MCDA, ranks alternatives by comparing their distance to an ideal \nsolution [10]. This technique identifies the best option as the one closest to the positive ideal \n(most desirable) and furthest from the negative ideal (least desirable). TOPSIS is particularly \neffective in contexts where multiple quantitative metrics must be balanced, making it well \nsuited for evaluating LLMs based on diverse performance criteria such as precision, recall, \nsemantic coherence, and completeness [9].\nNemati et al. Page 2\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nAlthough extensive research has focused on benchmarking LLMs for general tasks such \nas named entity recognition [11], relation extraction [12], and question answering [12], \nthese studies often lack a focus on real-world clinical applications. In particular, there \nremains a critical gap in frameworks specifically designed to evaluate the nuanced task \nof extracting patient-specific characteristics from free-text clinical records, a process that \nrequires balancing precision, relevance, and context-awareness. This study aims to address \nthis gap, introducing a novel framework for evaluating LLMs against diverse criteria \nreflective of healthcare-specific needs [13].\nTo ensure a robust and nuanced evaluation, this study employs a hybrid methodology \nthat integrates automated processes with human oversight. Automated scripts, utilizing \nmetrics such as precision, recall, and F1-score, provide an initial layer of evaluation, \nparticularly suited for large-scale data processing [14]. However, recognizing the limitations \nof automated systems in capturing the full context of clinical text, human evaluators are \nincorporated to validate outputs where scripts alone prove insufficient. By combining \nthe methodological rigor of MCDA with the ranking capabilities of TOPSIS, this study \nintroduces a robust framework for systematically evaluating LLMs. These methods ensure \nthat healthcare-specific benchmarks incorporate not only technical performance metrics but \nalso broader considerations such as reliability and relevance.\nBy providing a rigorous benchmark for LLM performance, this study seeks to facilitate the \nresponsible adoption of these models in healthcare settings. The findings have significant \nimplications for clinical trial recruitment, where accurate extraction of patient characteristics \nis crucial, as well as for personalized medicine, which relies on precise annotation of \nindividual attributes. Furthermore, the proposed framework offers a pathway for operational \nefficiency by automating routine tasks, enabling healthcare professionals to focus on higher-\nvalue activities. Ultimately, this research aims to support the broader integration of LLMs \ninto healthcare, ensuring they are used effectively and ethically to improve patient outcomes.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Dataset",
+      "level": 2,
+      "text": "The data source for this study is patient characteristic descriptions, commonly known \nas patient eligibility criteria, which are used for screening patients for clinical research \n[15]. These descriptions are an essential part of clinical trial protocols and provide \ndetailed information about the target patient population, including demographic, clinical, \nand laboratory parameters [16].\nThe dataset used in this study was acquired from the Clinical Trials Transformation Initiative \n(CTTI) [17], a public–private partnership that aims to develop and drive the adoption of \npractices that will increase the quality and efficiency of clinical trials [18]. CTTI maintains a \ncomprehensive database of clinical trial protocols, which includes patient eligibility criteria \nfrom a wide range of therapeutic areas and study designs.\nFigure 1 illustrates the process of evaluating clinical trial notes. Initially, a large dataset of \nclinical trial notes, totaling 447,000, is filtered down to identify eligible notes, resulting in a \nNemati et al. Page 3\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nsubset of 57,231 notes. From this eligible subset, 500 notes are randomly selected for further \nevaluation.\nFor our evaluation tests, we randomly selected a sample of patient eligibility criteria \ndescriptions from the CTTI database. The sample size was determined based on \ncomputational power considerations and the practical feasibility of processing large datasets. \nConsequently, we narrowed the dataset to approximately 500 patient criteria descriptions \nfor each of the evaluation tests, ensuring a diverse and representative subset. This approach \nbalances the need for generalizability with the limitations of computational resources. These \nselected notes undergo two distinct rounds of human evaluation. In the first round, we \nmeticulously review and annotate every piece of context, then cross-check and validate each \ntext against specific categories for all criteria. This process is referred to as establishing \nthe “ground truth”, as we are confident that the results are accurate and have been double-\nchecked. Then, the notes are categorized based on specific criteria, including age, BMI, \ndisease presence, gender, platelets count, and white blood cell (WBC) count. The counts for \neach category are as follows: Age (n = 332), BMI (n = 43), Disease (n = 279), Gender \n(n = 341), Platelets (n = 61), and WBC (n = 37). This systematic approach ensures \na thorough and categorized evaluation of the clinical trial notes based on these critical \nparameters. By integrating the flowchart’s process with our evaluation methodology, we \nensure that each clinical trial note is comprehensively evaluated and validated, providing a \nrobust framework for patient eligibility criteria assessment. This process involves comparing \nthe LLM’s output with ground truth answers provided by our team for specific criteria, \nincluding age, gender, BMI, platelets count, white blood cell (WBC) count, and disease \ncategories. To generate the ground truth, we prompt GPT4 to provide initial results based \non the specified categories. These results are then validated by human experts who carefully \nreview and verify each extracted characteristic. To ensure the accuracy and reliability of the \nground truth, a second round of validation is conducted, where the results are rechecked to \nconfirm their correctness. This rigorous validation process ensures that the ground truth used \nfor comparison is precise and trustworthy.\nThe patient eligibility criteria descriptions in our dataset cover a broad spectrum of medical \nconditions, including but not limited to cardiovascular diseases, oncology, neurological \ndisorders, and infectious diseases. The descriptions also encompass various study types, \nsuch as randomized controlled trials, observational studies, and pragmatic trials, as \ncontained in a registry and a database of publicly and privately supported clinical studies \nacross the globe. This diversity in the dataset allows for a comprehensive evaluation of LLM \nperformance across different clinical domains and research settings.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Data Preprocessing",
+      "level": 2,
+      "text": "To ensure dataset quality and consistency, we conducted data preprocessing steps, including \ntext cleaning, anonymization, and standardization by removing stop words and applying a \nhybrid approach of stemming and lemmatization. These steps were crucial to remove any \npersonally identifiable information, resolve inconsistencies in the data format, and prepare \nthe dataset for input into the LLMs [19]. In our research, we categorize the dataset into two \nprimary types: raw and clean data. Raw data refers to the dataset in its original form, without \nNemati et al. Page 4\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nundergoing any preprocessing. On the other hand, clean data, as the term suggests, involves \nrefining the text through various preprocessing steps to enhance its quality and consistency. \nThese steps include removing stop words to reduce noise in the text, correcting encoding \nmismatches or corruptions (e.g., removing characters like “ï¿½?ï¿½”), and standardizing \nmathematical symbols for uniformity. For example, inconsistent representations such as \n“16>=” and “=<16” in different rows are unified to a single format, “=<16”. Furthermore, \nin addressing gender criteria, variations such as “women”, “a pregnant person”, or “Female” \nare standardized to “female” to maintain consistency across the dataset.\nOur preprocessing methodology employs a context-sensitive hybrid approach of stemming \nand lemmatization to reduce token variability while ensuring linguistic consistency. Rather \nthan applying these techniques uniformly, we strategically implemented them based \non the nature of the text segments being processed. For sections containing medical \nterminology (e.g., rheumatoid arthritis, nephritis, thrombosis), lemmatization was preferred \nto preserve the precise meaning of these terms. Examples include the following: “Patients \nwith thromboses” was transformed to “Patients with thrombosis” and “Diagnosed with \nnephropathies” was converted to “Diagnosed with nephropathy”. This ensures that words \nretain their medically relevant base form, preventing unintended distortions that could \narise from stemming. Conversely, for common eligibility criteria or exclusion terms (e.g., \n“patients must”, “requirement of”), stemming was applied to standardize word forms \nwhere semantic precision was less critical. Examples include the following: “treated” \nreduced to “treat”, “evaluations” to “evalu”, and “conditions” to “condit”. This balanced \napproach leverages both the efficiency of stemming (reducing computational complexity \nand vocabulary size) and the accuracy of lemmatization (ensuring grammatically significant \nwords or ambiguous root forms are converted into their correct dictionary forms). For \ninstance, while stemming quickly reduces variability, lemmatization handles irregular forms \nmore accurately. To ensure the correctness and consistency of our preprocessing steps, we \nmanually reviewed the processed data against the original text as ground truth validation. \nThis verification process confirmed that key medical terms remained accurate and unaltered \nin their intended context, stemming did not compromise readability or meaning in general \ndescriptive criteria, and the processed text accurately reflected the original information while \nmaintaining linguistic consistency. By reducing variability while respecting the contextual \nneeds of different text segments, this hybrid method minimizes data sparsity and improves \nthe quality of the preprocessed data for subsequent analysis.\nHowever, recognizing the critical importance of clinical terminology accuracy, we \nimplemented a human validation process to ensure that no essential medical terms were lost \nduring preprocessing. Our validation methodology involved a comparison between raw and \npreprocessed (clean) data, where human evaluators meticulously reviewed and confirmed \nthat critical medical terms, such as “platelets count”, “white blood cell count”, and other key \npatient attributes, remained intact. This careful verification process ensured that essential \nclinical information was preserved while benefiting from text normalization techniques. By \nusing a large, diverse, and well-curated dataset from a reputable source like CTTI, our study \naims to provide a robust and reliable evaluation of LLM performance in extracting patient \ncharacteristics from free-text eligibility criteria descriptions. The insights gained from this \nNemati et al. Page 5\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nevaluation can inform the development and implementation of LLMs in clinical research and \nsupport the identification of eligible patients for clinical trials.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3 Designing Effective Prompts",
+      "level": 2,
+      "text": "Prompt design plays a crucial role in eliciting accurate and relevant responses from language \nmodels [20]. In this study, we propose a structured approach to prompt design, which \nwe call “Designing Effective Prompts” (Figure 2). This methodology emphasizes the \nimportance of three key elements: role, context, and task. While not all three elements \nare required in every prompt, their precise definition and thoughtful integration are essential \nfor optimizing the performance of language models.\nThe role element defines the identity or function that the language model should assume in a \ngiven scenario. The language model could be prompted to act as a highly skilled data analyst \nand annotator, or as a hospital receptionist processing patient information. For example, \nconsider the following:\nYou are an intelligent recipient for a doctor’s office. Extract the following patient-related \ninformation from the text: Extract disease. Look for the following diseases: hepatitis, HIV , \ncardiovascular disease, cancer, and diabetes. This information is being gathered to ensure \naccurate disease tracking and patient care management based on these specific criteria.\nIn our study, we are using these criteria to enhance the precision of disease identification \nand to streamline the processing of patient information. By specifying the role, we provide \nthe language model with a clear understanding of the perspective it should adopt when \nresponding to the prompt.\nThe task element provides the language model with the necessary background information \nand guidelines to perform the task effectively. In the task of patient eligibility criteria \nextraction, the task element might include instructions on how to interpret and annotate \nspecific patient characteristics, such as gender, age, or medical conditions. This process can \nutilize the method of few-shot learning to enhance the model’s understanding and accuracy \nin performing the task [20].\nFor instance, the context element could specify the use of standardized markers like “M”, \n“F”, or “ALL” for gender, or provide guidance on assigning “F” when pregnancy is \nmentioned.\nThe context element clearly outlines the specific objectives or actions the language model \nis expected to accomplish. In our study, the context element focuses on identifying and \nextracting patient characteristics relevant to eligibility criteria for clinical trials. This \ncould include identifying patients with specific medical conditions (e.g., type 2 diabetes), \ndemographic characteristics (e.g., age, gender), or clinical parameters (e.g., body mass \nindex, etc.).\nBy combining these three elements, “Designing Effective Prompts” offers a structured and \nadaptable approach to evaluate the capabilities of language models across various tasks and \nscenarios [21]. This methodology allows for the creation of targeted prompts that assess \nNemati et al. Page 6\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nthe language model’s ability to understand and extract patient characteristics from free-text \neligibility criteria descriptions.\nTo ensure the effectiveness and reliability of our prompts, we conducted a thorough \nliterature review and consulted with domain experts, including clinicians, researchers, and \ndata annotators [22]. We also performed iterative testing and refinement of the prompts to \noptimize their clarity, specificity, and comprehensiveness.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 LLM Data Extraction",
+      "level": 2,
+      "text": "To test the ability of large language models (LLMs) to extract patient characteristics from \ntext, we passed prompts to various models asking them to identify specific criteria, such \nas age, gender, and other eligibility-related details, from a dataset. Each LLM was given \na standardized prompt designed to extract relevant patient characteristics from free-text \ndescriptions, which included eligibility criteria in clinical studies. Multiple LLMs, including \nGPT3.5, GPT4, Bard, Mistral, and Llama, were utilized to perform this task. The responses \nfrom these models were collected and saved for subsequent analysis. The evaluation \ninvolved using both raw and cleaned versions of the dataset, allowing us to assess the impact \nof data preprocessing on the models’ performance. This comparison provided insights into \nthe robustness and adaptability of the LLMs in handling varying data quality. The extracted \ninformation was analyzed for accuracy, consistency, and completeness, focusing on specific \nmetrics such as precision, recall, and F1-score. These findings highlighted the strengths \nand limitations of each model in processing free-text data and emphasized the importance \nof preprocessing in improving extraction accuracy and reliability. For all experiments, we \nset the temperature parameter to 0.0001, ensuring near-deterministic outputs. This choice \nminimizes randomness in model responses, making the results more stable across multiple \nruns. Additionally, to further control the generation process, we used the default top-k to 1 \nand top-p to 0 of each model, as they varied based on their underlying architectures and API \nconstraints.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.5 LLM Evaluation Design",
+      "level": 2,
+      "text": "In order to assess the performance of LLMs in extracting patient characteristics from \nfree-text eligibility criteria descriptions, it is crucial to establish a comprehensive and \nmultifaceted evaluation framework. The evaluation of LLMs in this context is essential for \nseveral reasons:\n1. Ensuring accuracy and reliability: Extracting patient characteristics from free-\ntext descriptions requires a high level of accuracy to support clinical decision-\nmaking and research. Evaluating LLMs helps ensure that the extracted \ninformation is reliable and can be trusted for downstream applications [23].\n2. Assessing generalizability: LLMs should be able to perform well across a diverse \nrange of eligibility criteria descriptions, covering various therapeutic areas, study \ndesigns, and patient populations. A comprehensive evaluation framework allows \nus to assess the generalizability of LLMs and identify potential limitations or \nbiases [24].\nNemati et al. Page 7\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n3. Facilitating model selection and improvement: By evaluating multiple LLMs \nusing a standardized framework, we can compare their performance, identify \nstrengths and weaknesses, and select the most suitable models for specific tasks \n[23]. Moreover, the evaluation results can guide the development and fine-tuning \nof LLMs to enhance their performance in extracting patient characteristics \n[25,26].\nTo address these objectives, we propose an evaluation framework that incorporates multiple \nmetrics, each capturing different aspects of LLM performance (Figure 2). The rationale for \nusing multiple metrics is to provide a holistic assessment of LLMs, considering factors such \nas accuracy, relevance, consistency, and coherence [25]. By combining these metrics, we aim \nto obtain a more comprehensive understanding of LLM performance and make informed \ndecisions regarding their deployment in clinical research settings.\nThe evaluation metrics included in our framework are as follows:\n1. Human Validation: This metric involves comparing the LLMs’ outputs with \nground truth answers provided by human experts for specific criteria such as \nBMI, age, gender, platelets count, and white blood cell count [27]. Human \nvalidation ensures that the LLMs’ performance is benchmarked against the gold \nstandard of human judgment [27].\n2. F1-Score, Precision, and Recall: These metrics, derived from the BERTScore \nmethodology [28], assess the LLMs’ ability to generate outputs that match \nthe ground truth data. By computing the similarity between tokens in the \nLLM output and the ground truth, we quantify each model’s accuracy and \ncompleteness in extracting relevant information.\n3. Semantic Textual Similarity: Using the Sentence Transformer library with the \n“all-mpnet-base-v2” model, we measure the semantic similarity between the \nground truth data and the LLM output. This metric captures the semantic \nproximity of sentences, providing insights into the model’s capacity to generate \ncoherent and meaningful outputs [26,29], and is inspired by the DeepEval \nframework [30].\n4. Factual Consistency: Factual consistency, a critical metric inspired by the \nDeepEval framework [30], was used to evaluate the alignment of the LLMs’ \noutputs with the input data. This metric is particularly important in the clinical \ndomain, where inaccuracies could have serious consequences for patient care \nand research integrity [26]. In our study, factual consistency was assessed by \nemploying string-matching algorithms. These algorithms compared key terms \nand phrases extracted by the LLMs, such as age, gender, and other eligibility-\nrelated criteria, against their counterparts in the input data. This approach \nensured that the extracted terms matched the intended meanings in the clinical \ncontext, reducing the risk of misinterpretation or error.\nThe choice of string-matching algorithms was informed by their ability to handle \nsynonyms, abbreviations, and variations in phrasing common in free-text clinical \ndescriptions. For instance, terms like “male” and “M” were mapped consistently, \nNemati et al. Page 8\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nand numerical data such as age ranges were validated against explicit and \nimplied descriptions in the input text. This level of granularity provided a robust \nmechanism to ensure that the outputs generated by the LLMs were factually \naligned with the source material.\nIn addition to factual consistency, qualitative metrics such as coherence, \nconsistency, fluency, and relevance were evaluated. These metrics, inspired \nby the Unified Multi-dimensional Evaluator framework [26,31,32], provided \na nuanced understanding of the LLMs’ language generation capabilities. \nCoherence assessed the logical flow and structure of the outputs, ensuring \nthat the extracted information formed a comprehensible narrative. Consistency \nevaluated whether the outputs remained uniform across different sections of \nthe generated text, avoiding contradictions or deviations. Fluency measured the \nlinguistic quality of the text, focusing on grammar, syntax, and readability, while \nrelevance ensured that the generated outputs were directly aligned with the input \nprompts and data.\nThese qualitative metrics were applied systematically to compare the \nperformance of multiple LLMs. The evaluation revealed key insights into the \nmodels’ strengths and limitations, such as their ability to handle complex \neligibility criteria with overlapping or ambiguous terms. By combining the \nquantitative assessment of factual consistency with these qualitative measures, \nour study offered a comprehensive framework for evaluating the performance of \nLLMs in extracting reliable and contextually appropriate outputs from free-text \nclinical data.\nTo integrate these multiple metrics and identify the top-ranking LLMs, we employ Multi-\nCriteria Decision Analysis (MCDA) using the Technique for Order of Preference by \nSimilarity to Ideal Solution (TOPSIS) [33]. TOPSIS allows us to consider the relative \nimportance of each metric and rank the LLMs based on their proximity to the ideal solution \n[34]. By applying MCDA, we can make informed decisions about the most suitable LLMs \nfor extracting patient characteristics from free-text eligibility criteria descriptions.\nFigure 3 presents a multi-dimensional evaluation framework for large language models, \nintegrating automated metrics (inspired by BertScore, DeepEval, and UNDE) with human \njudgment. These measures encompass precision-based metrics (F1, precision, recall), factual \nconsistency, semantic similarity, and coherence to ensure a comprehensive assessment of \nmodel outputs.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.6 Human Validation",
+      "level": 2,
+      "text": "To assess the performance of LLMs in extracting patient characteristics from free-text \neligibility criteria descriptions, we incorporate a human validation process. Human \nvalidation is critical for ensuring the accuracy and reliability of automated information \nextraction from medical texts [35]. Human evaluators were provided with comprehensive \nand detailed annotation guidelines to ensure consistency and accuracy in the evaluation \nprocess. Annotation guidelines included a standardized set of instructions outlining the \ncriteria for labeling each patient characteristic, including definitions and examples for age, \nNemati et al. Page 9\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ngender, BMI, platelets count, WBC count, and disease categories. To ensure inter-rater \nreliability, each clinical trial note was independently evaluated by two annotators.\n2.6.1. Scoring System: For age, gender, BMI, platelets count, and WBC count, we \nemploy a binary scoring system:\n1. Score of 1: Assigned if the LLM’s output accurately extracts the information for \nthe specified criterion.\n2. Score of 0: Assigned if the LLM’s output fails to mention or incorrectly \nmentions the information for the specified criterion.\nThis binary scoring system allows us to evaluate the LLM’s accuracy in extracting these key \npatient characteristics.\nFor evaluating the LLM’s performance in identifying disease-related information, we \nconsider five main disease categories: cancer, hepatitis, HIV , diabetes, and cardiovascular \ndiseases. We use a proportional scoring system based on the number of correctly identified \ndisease categories:\n1. Score of 0.2: Assigned for each correctly identified disease category.\n2. Score of 0.4: Assigned for two correctly identified disease categories.\n3. Score of 0.6: Assigned for three correctly identified disease categories.\n4. Score of 0.8: Assigned for four correctly identified disease categories.\n5. Maximum score of 1: Achieved if the LLM’s output accurately includes all five \ndisease categories.\nThe proportional scoring system acknowledges the LLM’s ability to identify multiple \ndisease categories and provides a more granular assessment of its performance.\n2.6.2. Overall Human Validation Score: To calculate the overall human validation \nscore for each LLM, we first compute the average score for age, gender, BMI, platelets \ncount, and WBC count:\nAvg Score(Age, Gender, BMI, Platelets, WBC) = i = 1\nn Scorei\nn\n(1)\nwhere n is the total number of criteria (i.e., five) and Scorei is the binary score for each \ncriterion.\nNext, we calculate the average score for the disease categories:\nAvg Score (Disease Categories) = j = 1\nm Scorej\nm\n(2)\nNemati et al. Page 10\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nwhere m is the total number of disease categories (i.e., five) and Scorej is the proportional \nscore for each category.\nFinally, we compute the overall human validation score by taking the average of the two \nscores:\nHuman Validation Score = 1\n2 Avg Score(Age, Gender, BMI,Platelets, WBC) + Avg Score (Disease Categories)\n(3)\nThe human validation score ranges from 0 to 1, with higher scores indicating \nbetter performance in extracting patient characteristics from free-text eligibility criteria \ndescriptions.\nBy using this clear and structured scoring system, we aim to provide a thorough \nand systematic assessment of LLM performance in the context of patient characteristic \nextraction. The human validation score serves as a crucial component of our evaluation \nframework, enabling the comparison of different LLMs and guiding their selection for \nclinical research applications.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.7 F1-Score, Precision and Recall",
+      "level": 2,
+      "text": "To evaluate the performance of LLMs in extracting patient characteristics, we employ the \nBERTScore methodology. BERTScore provides a comprehensive evaluation by comparing \nthe tokens of the ground truth data (x) with the LLM’s output xˆ. This comparison is \nperformed using a pre-trained BERT model, which generates contextualized embeddings for \neach token [28].\nThe BERTScore calculation involves a greedy matching process to maximize the similarity \nscore between the tokens of the ground truth and the LLM’s output. For each token in the \nground truth, the most similar token in the LLM’s output is identified, and vice versa. This \nmatching process allows for the computation of precision and recall scores.\nRecall (RBERT) measures the proportion of tokens in the ground truth that are correctly \ncaptured by the LLM’s output. It is calculated as follows:\nRBERT = 1\nx xi ∈ x\nmax\nxˆ j ∈ xˆ\nxi\n⊤xˆ j\n(4)\nwhere xi represents a token in the ground truth, xˆj represents a token in the LLM’s output, \nand xi⊤xˆj denotes the STS between their respective embeddings.\nPrecision (PBERT) measures the proportion of tokens in the LLM’s output that are relevant to \nthe ground truth [36]. It is calculated as follows:\nNemati et al. Page 11\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nPBERT = 1\nxˆ xˆ j ∈ xˆ\nmax xi ∈ xxi\n⊤xˆ j\n(5)\nThe F1-score (FBERT) is the harmonic mean of precision and recall, providing a balanced \nmeasure of the LLM’s performance [36]. It is calculated as follows:\nFBERT = 2 ⋅\nPBERT ⋅ RBERT\nPBERT + RBERT\n(6)\nIn our study, we calculate the F1-score, precision, and recall by applying the BERTScore \nmethodology to the LLM’s output and the corresponding ground truth data. Instead of using \nthe original BERT model, we employ the T5 model [37], which has been specifically \ndesigned for text-to-text tasks and has shown superior performance in various natural \nlanguage processing applications [28].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.8 Semantic Textual Similarity",
+      "level": 2,
+      "text": "To further evaluate the Semantic Textual Similarity (STS) between the ground truth data and \nthe LLMs’ outputs, we employ the Sentence Transformer library. Sentence transformers are \na set of pre-trained models that generate dense vector representations of sentences, capturing \ntheir semantic meaning [28]. These models have been shown to outperform traditional word \nembedding methods in various natural language processing tasks, including semantic textual \nsimilarity [28].\nIn our study, we utilize the “all-mpnet-base-v2” model, a state-of-the-art transformer \nmodel pre-trained on a large corpus of text data. This model has demonstrated excellent \nperformance in encoding sentences into semantically meaningful vectors [38]. By leveraging \nthe “all-mpnet-base-v2” model, we aim to capture the semantic proximity between the \nground truth and each LLM’s output effectively [39].\nThe process of calculating STS using Sentence Transformers involves the following steps \n[39]:\nEncoding the ground truth and LLM output: The “all-mpnet-base-v2” model is used \nto generate dense vector representations for each sentence in the ground truth and the \ncorresponding LLM output. These vectors are obtained by passing the sentences through \nthe pre-trained model, which learns to map semantically similar sentences to nearby points \nin the vector space. Once the vector representations are obtained, we calculate the STS \nbetween the ground truth and LLM output vectors. STS measures the cosine of the angle \nbetween two vectors in a multi-dimensional space. It ranges from −1 to 1, with higher values \nindicating greater semantic similarity. The semantic textual similarity between two vectors a \nand b is calculated as follows:\nNemati et al. Page 12\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nsemantic textual similarity = a ⋅ b\na b\n(7)\nwhere a · b denotes the dot product of the vectors, and |a| and |b| represent their Euclidean \nnorms.\nFigure 4 demonstrates how sentences with similar semantic content are positioned closer \ntogether in the embedding space, while unrelated sentences appear farther apart.\nAs an illustrative example (Figure 4) using sentence embeddings from the “all-MiniLM-L6-\nv2” model, we explored semantic relationships centered around the sentence “The new \nmovie is awesome for learning a new language”. This analysis revealed clear patterns: \nnotably, the sentence exhibited a robust similarity (similarity score: 0.9299) with “The new \nmovie is so exciting to learn a new language”, indicating a strong thematic alignment. In \ncontrast, sentences like “A man walks down the street” (similarity score: −0.0948) and \n“People are shopping in the mall” (similarity score: −0.0188) showed lower or negative \nsimilarities, highlighting distinct semantic contrasts. This example showcases the model’s \nability to discern and quantify semantic nuances effectively across different contexts.\nIn our framework, we used semantic similarity across all categories. The semantic similarity \nscores generated offer a quantitative assessment of how closely the LLM’s output aligns \nwith the ground truth. Scores near 1 denote a high level of semantic similarity, indicating \nthat the LLM has successfully captured the meaning and context of the ground truth [29]. \nConversely, lower scores suggest a semantic disparity between the two texts, indicating a \ngreater divergence in meaning and context between the ground truth and the LLM’s output \n[29].",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.9 Factual Consistency",
+      "level": 2,
+      "text": "Factual consistency is a crucial aspect of evaluating the performance of LLMs in extracting \npatient characteristics from free-text eligibility criteria descriptions [40]. Factual consistency \nmeasures the extent to which the information extracted by the LLM aligns with the factual \ndetails present in the ground truth data. This evaluation determines how factually correct an \nLLM application is based on the respective context as given by the evaluation dataset.\nTo assess factual consistency, we use automated methods that compare extracted entities \nindicating disease, age, gender, BMI, platelets count, and WBC count between the LLM’s \noutput and the ground truth. This comparison can be performed using string matching \nalgorithms or more advanced techniques like named entity recognition and normalization.\nThe factual consistency score is calculated as the proportion of correctly extracted factual \ndetails out of the total number of relevant facts present in the ground truth [41]. A higher \nfactual consistency score indicates that the LLM is able to accurately extract and represent \nthe key information from the eligibility criteria descriptions [42].\nNemati et al. Page 13\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.10 Coherence, Consistency, Fluency, and Relevance",
+      "level": 2,
+      "text": "In addition to the quantitative metrics discussed earlier, we also evaluate the qualitative \naspects of the analyzed LLMs’ (GPT3.5, GPT4, Bard, Llama2, Mistral) output, including \ncoherence, consistency, fluency, and relevance [31]. These factors are essential for ensuring \nthat the extracted patient characteristics are presented in a clear, understandable, and \ncontextually appropriate manner [31].\nCoherence refers to the logical flow and structure of the LLM’s output. It assesses whether \nthe extracted information is organized in a coherent and meaningful way, making it easy for \nreaders to comprehend [31,43,44].\nConsistency measures the uniformity of the extracted information across different parts of \nthe LLM’s output [31]. It ensures that the patient characteristics are represented consistently \nthroughout the generated text, without contradictions or discrepancies [44].\nFluency evaluates the linguistic quality of the LLM’s output. It assesses whether the \ngenerated text follows the grammatical and syntactic rules of the language, resulting in \nsmooth and natural-sounding sentences [45].\nRelevance gauges the extent to which the extracted patient characteristics are pertinent to \nthe specific eligibility criteria and the overall context of the clinical study. It ensures that the \nLLM captures the most important and relevant information from the free-text descriptions.\nTo evaluate these qualitative aspects, we employ a combination of human evaluation and \nautomated metrics. Human experts assess the coherence, consistency, fluency, and relevance \nof the LLM’s output using predefined rubrics or rating scales. Automated methods, such \nas language models trained on coherence and fluency datasets, can provide complementary \nscores.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.11 Multi-Criteria Decision Analysis to Select Top Rank",
+      "level": 2,
+      "text": "To determine the top-performing LLM for extracting patient characteristics from free-text \neligibility criteria descriptions, we employ Multi-Criteria Decision Analysis (MCDA) using \nthe Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS) [33].\nTOPSIS is a well-established Multi-Criteria Decision Analysis (MCDA) method that \nsystematically evaluates alternatives based on multiple criteria [46,47]. In our study, the \nalternatives are different large language models (LLMs) being evaluated, and the criteria \ninclude various evaluation metrics such as human validation scores, F1-scores, precision, \nrecall, semantic textual similarity, factual consistency, coherence, consistency, fluency, and \nrelevance. TOPSIS was chosen because it efficiently determines the relative performance of \nalternatives by measuring their closeness to an ideal solution. It provides a clear, objective, \nand mathematically grounded ranking of LLMs.\nThe TOPSIS methodology involves the following steps [48,49]:\nNemati et al. Page 14\nFuture Internet. Author manuscript; available in PMC 2026 May 20.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the process of evaluating clinical trial notes. Initially, a large dataset of"
+    },
+    {
+      "id": "f3",
+      "caption": "presents a multi-dimensional evaluation framework for large language models,"
+    },
+    {
+      "id": "f4",
+      "caption": "demonstrates how sentences with similar semantic content are positioned closer"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 7
+  }
+}

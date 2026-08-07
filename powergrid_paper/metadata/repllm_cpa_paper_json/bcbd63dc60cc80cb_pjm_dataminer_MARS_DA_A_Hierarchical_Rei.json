@@ -1,0 +1,455 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pjm_dataminer/pjm_dataminer__MARS-DA_A_Hierarchical_Reinforcement_Learning_Framework_for_Risk-Aware_Multi-Agent_Bidding__ca40aea11e.pdf",
+  "n_pages": 8,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Modern electricity bidding is a complex sequential decision\nproblem driven by price volatility and renewable intermit-\ntency. Two-settlement designs couple Day-Ahead (DA) com-\nmitments with Real-Time (RT) outcomes, exposing partici-\npants to significant intertemporal risk. While classical model-\nbased approaches using stochastic or robust optimization are\neffective under well-defined models, they lack scalability and\nadaptability in dynamic strategic environments. Conversely,\nrecent advances in reinforcement learning (RL) offer data-\ndriven alternatives, yet most current methods use flat struc-\ntures and fixed policies that are prone to overfitting and strug-\ngle with regime shifts.\nA critical challenge remains: bidding requires balancing\nconservative DA commitments for risk control with oppor-\ntunistic RT actions to exploit volatility. This tension neces-\nsitates hierarchical, risk-aware structures that can adapt to\nevolving market regimes.\nTo address this challenge, we proposeMARS-DA(M ulti-\nAgent R egime-Switching for D ay-Ahead markets), a hier-\narchical and risk-aware multi-agent reinforcement learning\nframework for strategic bidding in two-settlement electricity\nmarkets. MARS-DA employs a top-level Meta-Controller to\ndynamically blend the actions of specialized sub-policies, en-\nabling adaptive coordination between profit-seeking and risk\nmanagement behaviors. In addition, we introduce and open-\nsource a high-fidelity Gymnasium-compatible environment\ngrounded in empirical data from PJM Interconnection, ex-\nplicitly modeling the coupling between day-ahead commit-\nments and real-time deviations. Specifically, this paper makes\nthe following primary contributions:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 We develop an open-source, data-driven simulation en-",
+      "level": 1,
+      "text": "vironment that captures the two-settlement electricity\nmarket structure and explicitly models the interaction\nbetween day-ahead and real-time bidding decisions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 We propose a hierarchical multi-agent reinforcement",
+      "level": 1,
+      "text": "learning framework with adaptive risk-aware policy\nblending for strategic bidding under market uncertainty.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Extensive experiments demonstrate that MARS-DA",
+      "level": 1,
+      "text": "achieves superior risk-adjusted performance and im-\nproved stability compared to state-of-the-art baselines,\nparticularly during periods of extreme market volatility.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "Optimal bidding in electricity markets has been studied from\noptimization and learning perspectives. We review four re-\nlated areas: (i) model-based bidding under uncertainty, (ii)\ndeep reinforcement learning for market bidding, (iii) hierar-\nchical and risk-aware reinforcement learning, and (iv) simu-\nlation environments.\narXiv:2605.03142v1  [cs.MA]  4 May 2026",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Evolution of Bidding Strategies",
+      "level": 2,
+      "text": "Electricity markets typically operate under a two-settlement\nstructure with a Day-Ahead (DA) market followed by Real-\nTime (RT) balancing, creating a sequential decision prob-\nlem under price and system uncertainty. Classical model-\nbased approaches formulate bidding as optimization under\nuncertainty, including stochastic programming [Herediaet\nal., 2012; Herdinget al., 2023 ], robust optimization [Sun and\nLorca, 2017; Nematiet al., 2024 ], and rolling-horizon meth-\nods [Fenget al., 2023; Chenet al., 2024 ], with extensions to\ncoordinated participation across energy and reserve markets.\nDespite their effectiveness, these methods rely on explicit un-\ncertainty models and repeated re-optimization, limiting their\nadaptability to dynamic market environments.\nRecent advances in deep reinforcement learning (DRL)\nprovide a data-driven alternative, enabling agents to learn\nbidding strategies directly from market interactions. DRL\nhas been applied to DA bidding and joint energy-regulation\nmarket participation [Di Persioet al., 2025; Anwaret al.,\n2022], while multi-agent RL (MARL) addresses strategic in-\nteractions via Nash equilibrium approximation and knowl-\nedge transfer [Duet al., 2021; Wuet al., 2022 ]. However,\nmost existing DRL methods learn fixed policies that struggle\nunder regime shifts and offer limited control over risk-return\ntradeoffs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Hierarchical and Risk-Aware RL",
+      "level": 2,
+      "text": "Hierarchical reinforcement learning has recently been ex-\nplored for electricity market applications to address multi-\nstage decision-making and long planning horizons. Zhang\net al. [Zhanget al., 2025 ] show that hierarchical multi-\nagent reinforcement learning can improve profitability and\nstability in local electricity market arbitrage by separating\nhigh-level coordination from low-level trading actions. In\nthe financial domain, Chen et al. [Chenet al., 2025 ] pro-\npose MARS, a meta-adaptive framework that orchestrates\nheterogeneous risk-specialized agents through a high-level\ncontroller for portfolio management, demonstrating superior\ndrawdown control during market stress. Risk-sensitive rein-\nforcement learning incorporates risk measures (e.g., CVaR) to\naddress tail risks. Distributional RL and CVaR-based objec-\ntives have been shown to yield adjustable risk-averse policies,\nthough typically with fixed risk measures that limit adaptabil-\nity across regimes [Hˆecheet al., 2025; Lim and Malik, 2022;\nStanko and Macek, 2019].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Simulation Environments for Power Systems",
+      "level": 2,
+      "text": "Standardized environments are important for reproducible\nevaluation of learning-based methods in power systems.\nGrid2Op provides a realistic sequential decision-making\ntestbed for grid operations and has been widely adopted\n[Donnot, 2020]. RL2Grid builds on Grid2Op to offer stan-\ndardized benchmark tasks facilitating fair comparisons across\nRL algorithms [Marchesiniet al., 2025 ]. However, exist-\ning environments mainly focus on grid operations or single-\nmarket participation and typically do not model coordinated\nDA–RT bidding under a two-settlement market structure,\nwhich motivates the market environment design in our work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Problem Formulation",
+      "level": 1,
+      "text": "We consider a strategic generator participating in a two-\nsettlement wholesale electricity market comprising a Day-\nAhead (DA) market and a Real-Time (RT) market. The gener-\nator’s objective is to maximize cumulative risk-adjusted profit\nby optimizing its capacity allocation between these two mar-\nkets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Market Mechanics",
+      "level": 2,
+      "text": "The market-clearing process follows a standard two-stage set-\ntlement mechanism. Any capacity not committed to the DA\nmarket (q DA) is automatically made available to the Real-\nTime market (qRT =P max −q DA), representing the specu-\nlative portion of the bid.\nDay-Ahead (DA) Market\nIn the DA market, which clears 24 hours prior to the operat-\ning day, the generator submits a quantity offerq DA for each\nhourt. The Independent System Operator (ISO) clears the\nmarket, resulting in a Day-Ahead Locational Marginal Price\n(λDA\nt ). The generator is financially binding to this schedule\nand receives revenueλ DA\nt ·q DA.\nReal-Time (RT) Market\nThe RT market balances deviations between the DA schedule\nand actual real-time generation. Any capacity not committed\nto the DA market (q DA) is automatically made available to\nthe Real-Time market (q RT =P max −q DA), representing\nthe speculative portion of the bid. This quantity is settled at\nthe Real-Time Locational Marginal Price (LMP), denoted as\nλRT\nt .\nThe total financial profitπ t for hourtaccounts for rev-\nenues across both settlements, variable marginal costs, unit\ncommitment costs, and operational penalties:\nπt =(λDA\nt qDA +λ RT\nt qRT )−C marg(qDA +q RT )\n−C startup ·I start −Ω penalty\n(1)\nwhereC marg is the marginal fuel cost per unit of genera-\ntion,C startup represents the cost incurred when the generator\ntransitions from an offline to an online state withI start = 1,\nandΩ penalty represents financial fines for violating physical\nconstraints, such as ramping limits or minimum up/down time\nrequirements.\nThis formulation captures the strategic trade-off between\nlocked-in DA revenue and volatile RT arbitrage, while ac-\ncounting for the inter-temporal costs and physical risks of\npower generation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2 Markov Decision Process (MDP)",
+      "level": 2,
+      "text": "We model the strategic bidding problem as a finite-horizon\nMarkov Decision Process (MDP) defined by the tuple\n(S,A, P, R, γ).\nState Space (S)\nThe states t ∈ Scaptures market conditions and the physical\nstate of the generation asset, defined asst = [Mt, Ut, τt]. The\nMarket State(M t) includes the current Day-Ahead price\n(PDA), the 24-hour rolling volatility signal (σ 24h), and the\nFigure 1: The MARS-DA Hierarchical Framework. 1) During training, the Meta-Controller (Manager) observes the market states t to\ndynamically weight the proposals of the pre-trained Safe and Speculator agents (Workers). 2) The aggregated action is executed in the two-\nsettlement electricity market environment, where risk-adjusted rewards are computed and used to updateΠ meta. 3) During inference, the\nlearned policy adaptively blends sub-agent actions to produce the final day-ahead allocation decision.\nload forecast (L t). TheUnit State(U t) manages physical\nconstraints via the binary commitment status (u t ∈ {0,1}),\nduration counters for Minimum Up/Down time compliance,\nand the previous power output level. Finally,Time Features\n(τt) utilize cyclical sine/cosine encoding of the hour and day\nto capture seasonality.\nAction Space (A):\nThe agent outputs a continuous actiona raw ∈[−1,1],\nwhich is mapped to the Day-Ahead Allocation Ratioα t ∈\n[0,1]viaα t = (a raw + 1)/2. The physical quantities com-\nmitted to each market are then derived asq DA =α t ·P max\nandq RT = (1−α t)·P max. This strategic variable determines\nthe hedge ratio: any capacity not locked in the DA market is\nautomatically split into the RT market, representing the spec-\nulative portion.\nReward Function (R)\nThe environment calculates the raw financial profitπt at each\ntime steptaccording to Eq. (1), incorporating settlement rev-\nenues, marginal fuel costs (C marg), startup costs (C startup),\nand penalties (Ω penalty) for constraint violations. While\ndriven by this financial signal, MARS-DA utilizes specialized\nreward shaping:Base Agents(Safe and Speculator) optimize\nspecialized profit-share rewards to induce role specialization\n(see Section 4.3), while theMeta-Controlleroptimizes a\ngeneral risk-adjusted returnr meta =π t −λ risk ·Risk(π t). In\npractice, we instantiate this risk term using the concave utility\ndefined in Eq. (6). Here,λ risk is the risk aversion coefficient\ncontrolling the trade-off between maximizing profit and min-\nimizing return variance or downside risk. This formulation\nencourages consistent, reliable gains over volatile, high-risk\nstrategies.\n4 Methodology: The MARS-DA Framework\nWe propose the Multi-Agent Regime-Switching Day-Ahead\n(MARS-DA) framework, a hierarchical reinforcement learn-\ning system designed to optimize bidding strategies in two-\nsettlement electricity markets. The framework decouples the\ncomplexity of market participation into two distinct layers:\nspecialized base agents that propose regime-specific actions,\nand a Meta-Controller that dynamically blends these propos-\nals to maximize risk-adjusted returns.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 Overall Training Algorithm",
+      "level": 2,
+      "text": "The complete training and evaluation procedure for the\nMARS-DA framework is summarized in Algorithm 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.2 Hierarchical Architecture",
+      "level": 2,
+      "text": "The system operates as a hierarchical “Manager-Worker”\nstructure, where all components are trained using Proximal\nPolicy Optimization (PPO). At each time stept, the system\nobserves the market states t:\n1.Workers (Base Agents):Two independent agents,\ntrained to specialize in distinct market objectives, pro-\ncesss t and propose allocation actionsa (k)\nt .\n2.Manager (Meta-Controller):A higher-level policy\nnetworkΠ meta(st)outputs a blending weight vector\nwt = [wsaf e\nt , wspec\nt ]such thatw saf e\nt +w spec\nt = 1.\n3.Execution:The final action submitted to the environ-\nment is the weighted linear combination of the propos-\nals:\nAt =w saf e\nt ·a saf e\nt +w spec\nt ·a spec\nt (2)\nThis architecture allows the system to seamlessly transi-\ntion between conservative and aggressive postures without\nretraining the underlying policies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.3 Heterogeneous Base Agents",
+      "level": 2,
+      "text": "The base agents are trained in a pre-training phase (“Univer-\nsity Phase”) usingprofit-aware role enforcement. Unlike\npure behavior cloning, which only enforces volume alloca-\ntion, this method ensures that agents learn to beprofitable\nwithin their assigned market role. This prevents the ”blind\nvolume” problem, where an agent might secure market share\neven when it results in financial losses.\nThe Safe Agent (Day-Ahead Specialist)\nThe Safe Agent is trained to maximize profit specifically gen-\nerated through the Day-Ahead (DA) market. Its reward func-\ntion scales the realized financial profitπ t by the DA alloca-\ntion ratioα t, while heavily penalizing any utilization of the\nReal-Time (RT) market:\nrsaf e= (πt ·α t)−(|π t| ·(1−αt)·λ role)(3)\nFunctionally, this acts as a profit-seeking DA Machine. It is\nincentivized to trade only when profitable, but strictly within\nthe DA mechanism. The penalty term ensures that even if the\nRT market is profitable, the Safe agent is discouraged from\naccessing it, thereby enforcing role specialization during the\nUniversity Phase.\nThe Speculator Agent (Real-Time Specialist)\nThe Speculator Agent is trained to maximize profit specifi-\ncally derived from Real-Time (RT) exposure. Its reward func-\ntion scales the realized financial profitπt by the RT allocation\nratio(1−α t), penalizing any capacity locked in the DA mar-\nket:\nrspec = (πt ·(1−α t))−(|π t| ·αt ·λ role)(4)\nThis agent learns aggressive arbitrage strategies, effec-\ntively acting as an RT Machine. It is incentivized to withhold\ncapacity from the DA market—not just to withhold, but to\ncapture the higher value anticipated in the RT settlement. By\napplying the role penaltyλ role, the agent learns to prioritize\nspeculative opportunities while remaining profitable within\nits assigned market role.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.4 Meta-Adaptive Controller",
+      "level": 2,
+      "text": "The Meta-Controller is the strategic core of MARS-DA. It is\na PPO-based policy network that learns to blend the frozen\nbase agents to optimize a global financial objective.\nObjective Function\nThe Meta-Controller is trained using Proximal Policy Opti-\nmization (PPO) to maximize a risk-adjusted return objective.\nWe employ the clipped surrogate objective function to ensure\nstable policy updates:\nLCLIP(θ) =Et[min(rt(θ) ˆAt,clip(rt(θ),1−ϵ,1 +ϵ) ˆAt)] (5)\nwherer t(θ)is the probability ratio, ˆAt is the generalized\nadvantage estimate (GAE), andϵ= 0.2is the clipping hyper-\nparameter.\nAlgorithm 1MARS-DA Training Procedure\n1:Input:Training dataD train, max stepsT base, Tmeta\n2:Initialize:Workersπ saf e, πspec; ManagerΠ meta\nPhase 1: University Phase (Pre-train Workers)\n3:fork∈ {saf e, spec}do\n4: Trainπ k ons t ∈ Dtrain using specializedr k\nt (Eqs. 3-4)\nuntilT base.\n5: Freeze parameters ofπ k.\n6:end for\nPhase 2: Manager Phase (Train Meta-Controller)\n7:whilesteps< T meta do\n8: Get base proposalsa saf e\nt , aspec\nt and mixing weightsw t ∼\nΠmeta(st).\n9: ExecuteA t = P wk\nt ak\nt ; observeπ t and computer meta\nt\n(Eq. 6).\n10: Store(s t,w t, rmeta\nt ); updateΠ meta via PPO Clipped Ob-\njective.\n11:end while\n12:Output:TrainedΠ meta and frozen base agentsπ k.\nRisk-Adjusted Reward Shaping\nTo stabilize training and induce risk-averse behavior, we\nimplement a Concave Utility Reward rather than a simple\nlinear profit target. The reward functionr meta penalizes\nthe squared magnitude of the realized profit, effectively dis-\ncouraging “jackpot-seeking” strategies that often carry catas-\ntrophic downside risk:\nrmeta = πt\nSlinear\n− λrisk\n2 ·\n\u0012 πt\nSvar\n\u00132\n(6)\nwhereπ t is the realized profit at timet. We introduce two\nscaling factors:S linear = 1000normalizes the linear profit\nterm, whileS var = 100scales the profit within the quadratic\npenalty term. With the risk aversion coefficientλ risk set to\n5.0, this formulation penalizes themagnitudeof outcomes.\nBy subtracting a term proportional toπ 2\nt , the objective func-\ntion becomes concave, effectively serving as a proxy for min-\nimizing the variance of returns. This encourages the Meta-\nController to avoid “jackpot-seeking” behaviors—where high\nprofits are accompanied by high volatility—and instead favor\nconsistent, reliable gains typically provided by the Safe agent.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5 The MARS-DA Environment",
+      "level": 1,
+      "text": "A critical contribution of this work is the development of\nStrategicBiddingEnv, an open-source, Gymnasium-\ncompatible reinforcement learning environment designed to\nsimulate the dynamics of two-settlement electricity markets\nwith high fidelity. Unlike existing simplified benchmarks,\nthis environment integrates real-world historical data with a\nrealistic physical generator model, enabling the training of\nagents that can generalize to complex market regimes.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5.1 Data Pipeline and Reconstruction",
+      "level": 2,
+      "text": "The environment is built upon a comprehensive dataset of\nhistorical market conditions from the PJM Interconnection,\nspanning a five-year period from 2018 to 2022, and is fur-\nther augmented with a recent testing period from September\n2024 to September 2025. The data pipeline aggregates multi-\nple independent sources to construct a rich state space for the\nagent.\nData Sources\nWe utilize the PJM DataMiner API to ingest hourly time-\nseries data, including Day-Ahead (DA) and Real-Time (RT)\nLocational Marginal Prices (LMPs) to model price spreads\nand volatility. To provide demand-side context, we include\nmetered actual load and day-ahead load forecasts. This\ndataset is further augmented with external weather data (tem-\nperature and wind speed) from Open-Meteo and daily natural\ngas spot prices from the EIA, which serve as leading indica-\ntors of electricity price fluctuations.\nData Processing\nRaw data was reconstructed using linear interpolation for\nshort gaps (<4 hours) and seasonal averaging for longer inter-\nvals. To prevent leakage, we employed a strict chronological\nsplit: 2018–2021 for training, 2022 for Test Period 1, and\nSeptember 2024–September 2025 for Test Period 2.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.2 Simulation Logic",
+      "level": 2,
+      "text": "The simulation logic models the financial and physical clear-\ning of a single gas-fired generator participating in the market.\nGenerator Model\nThe agent controls a hypothetical unit defined by physical pa-\nrameters: capacity (Pmax = 100MW), minimum stable gen-\neration (Pmin), and ramp rates (RR). The unit has a marginal\ncostM Cderived from the daily gas price, simulating the\nvariable operating cost.\nMarket Clearing Process\nAt each stept, the environment emits a state vectors t con-\ntaining 24-hour historical LMPs, load forecasts, and unit sta-\ntus. The agent submits an allocationa t ∈[0,1], setting the\nDay-Ahead quantityq DA =a tPmax. Upon retrieving real-\nized DA and RT prices (λDA\nt , λRT\nt ), the system calculates the\nfinancial outcome:q DA is settled atλ DA\nt , while the remain-\nder (qRT =P max −q DA) is settled atλ RT\nt . Finally, the time\nindex advances (t←t+ 1) and the state buffer rolls forward.\nThis simulation explicitly models theopportunity costof\nlocking in DA prices versus exposing capacity to RT volatil-\nity, capturing the core risk-return trade-off of the merchant\ngeneration business.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "6 Experimental Setup",
+      "level": 1,
+      "text": "We evaluate the MARS-DA framework using a rigorous\nbenchmarking suite designed to test performance consistency,\nrisk management, and adaptability across distinct market\nregimes. Our experimental design includes a comprehensive\nablation study to isolate the contribution of each architectural\ncomponent.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "6.1 Dataset and Splitting",
+      "level": 2,
+      "text": "We utilize PJM Interconnection data (2018–2025) across\nthree periods.Training (2018–2021,N≈35,000)serves\nas the University Phase for training all agents.Test Period\n1 (2022,N= 8,760)provides a hold-out set characterized\nby high fuel prices and post-pandemic recovery.Test Period\n2 (Sep 2024–Sep 2025,N≈9,500)evaluates adaptation to\nrecent structural shifts, such as increased renewable penetra-\ntion, which were absent from the training distribution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "6.2 Baselines",
+      "level": 2,
+      "text": "We benchmark MARS-DA against four representative base-\nlines:\n•NNSF (Vanilla PPO):A monolithic agent trained end-\nto-end. Represents standard Deep RL without hierarchy.\n•Vanilla SAC:An off-policy Soft Actor-Critic agent\nmaximizing entropy. Benchmarks sample efficiency.\n•CVaR-PPO (Risk-Averse):A PPO variant optimizing\nConditional Value at Risk (α= 0.05). Benchmarks risk-\nsensitive RL.\n•RollingOpt (MPC Heuristic):A Model Predictive\nControl baseline using 24-hour moving average fore-\ncasts. Represents non-learning industry standards.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "6.3 Evaluation Metrics",
+      "level": 2,
+      "text": "Results are averaged over 10 independent runs (200 episodes\neach) per test period. We evaluate performance using the\nSharpe Ratiofor risk-adjusted returns,Sortino Ratiofor\ndownside-specific risk,Maximum Drawdown (MDD)to\nmeasure peak-to-trough portfolio declines, and aRegime\nAlignment Scoreto measure the correlation between the\nmeta-controller’s weights and the optimal ex-post strategy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "7 Results and Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "7.1 Comparative Performance",
+      "level": 2,
+      "text": "Table 1 presents performance metrics for MARS-DA com-\npared with baseline strategies across two distinct test peri-\nods. In Test Period 1 (2022), MARS-DA demonstrates supe-\nrior risk-adjusted performance, achieving the highest Sharpe\nRatio (0.978) and the lowest Maximum Drawdown (2.84%).\nThis result validates the Meta-Controller’s ability to pre-\nserve capital during market stress while capturing upside dur-\ning stable periods. In Test Period 2 (2024-2025), despite\nthe significantly higher market volatility, MARS-DA outper-\nformed all baselines. It achieved the highest cumulative re-\nturn ($4.45M) and Sharpe Ratio (0.270) while maintaining\na remarkably low maximum drawdown of 8.12%, compared\nto>55% for the baseline agents. This result highlights the\nMeta-Controller’s critical role in mitigating “tail risks” that\nare catastrophic for single-policy agents during regime shifts.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "7.2 Rolling Performance and Learning Dynamics",
+      "level": 2,
+      "text": "Figure 2 presents rolling Sharpe Ratio trajectories across both\ntest periods. In 2022 (top), MARS-DA consistently maintains\nthe highest values, while RollingOpt exhibits erratic step-\nlike behavior during mid-year volatility. In 2024-2025 (bot-\ntom), all methods face challenging out-of-distribution con-\nditions, with Sharpe ratios frequently dropping below zero,\nyet MARS-DA achieves the fastest recovery and the highest\npeaks (≈0.55).\nFigure 3 reveals the source of this advantage: MARS-\nDA exhibits rapid convergence and maintains higher Sharpe\nFigure 2: Rolling Sharpe Ratio comparison. Top: Test Period 1\n(2022). Bottom: Test Period 2 (2024-2025). MARS-DA (red) main-\ntains consistently higher risk-adjusted returns.\n(≈1.0–1.1) throughout training compared to baselines\n(≈0.85–0.95), demonstrating that the hierarchical architec-\nture enables efficient learning without sacrificing stability.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "7.3 Regime Alignment Analysis",
+      "level": 2,
+      "text": "To understand the source of MARS-DA’s superior risk-\nadjusted returns, we analyzed the Meta-Controller’s pol-\nicy dynamics using two key metrics: Allocation Entropy\n(measuring the diversity of agent usage) and Regime Align-\nment Score (measuring the correlation between the Specu-\nlator agent’s weight and market volatility). In Test Period\n1, MARS-DA exhibited a high Allocation Entropy of 0.517,\nconfirming that the system actively switched between theSafe\nandSpeculatoragents rather than collapsing to a single static\npolicy. Crucially, the Regime Alignment Score was -0.075.\nWhile a positive score would indicate a ”momentum” strategy\n(increasing risk during high volatility), this slightly negative\ncorrelation suggests sophisticated contrarian hedging behav-\nior. The Meta-Controller learned to dampen the Speculator’s\ninfluence during extreme volatility spikes—periods often as-\nsociated with unpredictable price crashes (negative skew-\nness)—thereby avoiding the catastrophic drawdowns suffered\nby the standalone Speculator-like baselines. Instead, it de-\nployed the Speculator primarily during moderate volatility\nregimes where price dispersion provided profitable arbitrage\nopportunities without excessive tail risk. Figure 4 visualizes\nthis behavior, showing the Meta-Controller rapidly shifting\nweights to the Safe agent (blue area) exactly as price volatil-\nity (red line) breaches critical thresholds, effectively acting as\nan automated “circuit breaker.”\nFigure 3: Sharpe Ratio learning curves (mean±stderr over 10\nseeds). MARS-DA achieves faster convergence and higher asymp-\ntotic performance.\nTable 1: Performance comparison across Test Period 1 (2022) and\nTest Period 2 (2024–2025).\nMethod Cum. Ret.($) Sharpe Sortino Max DD (%)\nPanel A: Test Period 1 (2022)\nMARS-DA$60.1M0.9783.1422.84%\nCVaR PPO $61.5M 0.697 3.126 3.99%\nRollingOpt $60.7M 0.646 3.520 36.78%\nVanilla SAC $62.4M 0.424 3.226 3.15%\nNNSF (PPO)$67.6M0.5453.5906.77%\nPanel B: Test Period 2 (2024–2025)\nMARS-DA $4.45M 0.270 1.808 8.12%\nCVaR PPO $2.86M 0.248 1.150 55.91%\nRollingOpt $1.15M 0.145 0.478 61.63%\nVanilla SAC $1.70M 0.126 0.713 55.48%\nNNSF (PPO) $1.46M 0.183 0.601 60.18%",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "7.4 Ablation Studies",
+      "level": 2,
+      "text": "To validate the architectural decisions of MARS-DA, we con-\nducted the following ablation experiments (results summa-\nrized in Table 2).\n1.Heterogeneity vs. Homogeneity:We compared the\nproposed heterogeneous ensemble (Safe + Specula-\ntor) against a homogeneous baseline of generic agents\n(represented here byVanilla SAC). The heterogeneous\nMARS-DA system achieved a Sharpe Ratio of0.978\ncompared to0.424for the homogeneous baseline. This\nconfirms that performance gains stem from functional\nrole specialization—allowing distinct policies to capture\ndifferent market regimes—rather than simple variance\nreduction from ensembling.\n2.Dynamic vs. Static Weighting:We replaced\nthe learned Meta-Controller with fixed equal weights\n(wsaf e = 0.5, w spec = 0.5), forming a static\nSafe–Speculator ensemble. While this static ensem-\nble achieved higher raw profit ($77.5M vs. $64.3M),\nits risk-adjusted performance was much worse (Sharpe\n0.458vs.0.920) and it suffered a larger maximum draw-\ndown (3.69%vs.0.90%). This shows thatMARS-\nDA’s learned, state-dependent regime switching is cru-\nFigure 4: Regime Alignment Dynamics. The Meta-Controller\n(stacked areas) dynamically reallocates weights between Safe (Blue)\nand Speculator (Orange) agents in response to Market Price V olatil-\nity (Red Line), acting as an automated risk-manager.\nTable 2: Ablation Analysis. The Heterogeneous, Dynamic, Hierar-\nchical system (MARS-DA) outperforms simplifications.\nAblation Configuration Sharpe Max Drawdown\nMARS-DA (Full System) 0.978 2.84%\nHomogeneous (Vanilla SAC) 0.424 3.15%\nStatic Weights (50/50) 0.458 3.69%\nEnsemble Size 3 0.601 4.04%\nBest-Single (CVaR PPO) 0.697 3.99%\ncial fordoubling risk-adjusted returns and sharply re-\nducing downside risk, rather than merely averaging ex-\npert policies.\n3.Ensemble Size:We extended the base architecture to\ninclude a third “Neutral” agent, forming a 3-agent en-\nsemble. The Neutral agent was designed to maintain\nbalanced DA/RT allocation, with a reward function that\npenalizes deviations exceeding 20% from a 50/50 split.\nAs shown in Table 2, the 3-agent configuration achieved\na Sharpe Ratio of 0.601 and a Maximum Drawdown\nof 4.04%, compared to 0.978 and 2.84% for the 2-\nagent system. The additional agent introduced optimiza-\ntion complexity, hindering convergence, as the Meta-\nController struggled to effectively coordinate three com-\npeting strategies. These results confirm that the 2-agent\n(Safe + Speculator) configuration provides the optimal\nbalance between strategic diversity and training stabil-\nity.\n4.Meta-Controller Necessity:We compared the full sys-\ntem against the single best-performing base agent (CVaR\nPPO, the “Best-Single” baseline). While the Best-\nSingle agent was robust (Sharpe 0.697), the full hier-\narchical system outperformed it (Sharpe 0.978). The\nMeta-Controller added value by accessing the “Spec-\nulator” agent’s aggressive yield during stable peri-\nods—upside that the conservative Best-Single agent sys-\ntematically missed.\nFigure 5 visualizes these ablation variants across four com-\nplementary metrics on Test Period 1. The Drawdown panel\n0\n20000\n40000Drawdown ($)\n2500\n5000",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "7500 Rolling 720h",
+      "level": 1,
+      "text": "Mean Profit ($/hr)\n2022-02 2022-04 2022-06 2022-08 2022-10 2022-122022-12\n0.5\n1.0\n1.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "2.0 Rolling Sharpe",
+      "level": 2,
+      "text": "(window=720)\nMARS-DA (2 agents)\nMARS-DA (3 agents)\nStatic 0.5/0.5\nVanilla SAC\nCVaR PPO\nFigure 5: Ablation study visualization on Test Period 1 (2022).\nFrom top to bottom: Cumulative Return, Drawdown, Rolling 720h\nMean Profit, and Rolling Sharpe Ratio. MARS-DA (2 agents)\nachieves optimal risk-return balance with consistently lower draw-\ndowns and higher Sharpe ratios.\nreveals that MARS-DA (2 agents) maintains consistently low\ndrawdowns throughout the year, while competing methods,\nparticularly the 3-agent variant and CVaR PPO, suffer pe-\nriodic spikes exceeding $30K–50K during volatile periods.\nThe Rolling Mean Profit (720h window) shows all meth-\nods track similar profit trajectories, yet the Rolling Sharpe\npanel demonstrates MARS-DA’s superior risk-adjusted per-\nformance, consistently achieving the highest values. Notably,\nthe 3-agent variant exhibits unstable behavior with a sharp\ncollapse near year-end, confirming that additional agents in-\ntroduce optimization complexity without proportional ben-\nefits. The static 0.5/0.5 baseline closely tracks homoge-\nneous methods, indicating that MARS-DA’s gains stem from\nlearned dynamic weighting rather than simple ensembling.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "8 Conclusion",
+      "level": 1,
+      "text": "This paper presented MARS-DA, a hierarchical reinforce-\nment learning framework that decouples bidding strategy\nlearning from market regime adaptation. By orchestrating\nspecialized base agents through a dynamic Meta-Controller,\nMARS-DA overcomes the brittleness of monolithic RL poli-\ncies and rigid optimization models. Extensive evaluations on\nPJM market data demonstrate that MARS-DA achieves supe-\nrior risk-adjusted returns.\nCrucially, the framework exhibited robust generalization\nduring out-of-distribution stress tests, where it was the only\nagent to avoid catastrophic losses. The analysis revealed that\nthis resilience stems from the Meta-Controller’s learned “con-\ntrarian” hedging strategy, which automatically reduces specu-\nlative exposure during extreme volatility. These results estab-\nlish MARS-DA as a viable path toward autonomous, safe, and\nprofitable participation in increasingly volatile renewable-\ndominated power markets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The MARS-DA Hierarchical Framework. 1) During training, the Meta-Controller (Manager) observes the market states t to"
+    },
+    {
+      "id": "f2",
+      "caption": "presents rolling Sharpe Ratio trajectories across both"
+    },
+    {
+      "id": "f3",
+      "caption": "reveals the source of this advantage: MARS-"
+    },
+    {
+      "id": "f4",
+      "caption": "Regime Alignment Dynamics. The Meta-Controller"
+    },
+    {
+      "id": "f5",
+      "caption": "visualizes these ablation variants across four com-"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "presents performance metrics for MARS-DA com-"
+    },
+    {
+      "id": "t2",
+      "caption": "Ablation Analysis. The Heterogeneous, Dynamic, Hierar-"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "MARS-DA Training Procedure"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Eq. (6)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 2,
+    "n_algorithms": 1,
+    "n_equations": 2
+  }
+}

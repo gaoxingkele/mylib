@@ -1,0 +1,184 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2024__enhancing_machine_learning_based_forecasting_of_chronic__5e6f5409a1.pdf",
+  "n_pages": 28,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 Computer Science Department, Northumbria University, Newcastle, United Kingdom",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3 Computer Science, University of London, London, United Kingdom",
+      "level": 1,
+      "text": "ABSTRACT\nChronic renal disease (CRD) is a significant concern in the field of healthcare,\nhighlighting the crucial need of early and accurate prediction in order to provide\nprompt treatments and enhance patient outcomes. This article presents an end-to-\nend predictive model for the binary classification of CRD in healthcare, addressing\nthe crucial need for early and accurate predictions to enhance patient outcomes.\nThrough hyperparameter optimization using GridSearchCV, we significantly improve\nmodel performance. Leveraging a range of machine learning (ML) techniques, our\napproach achieves a high predictive accuracy of 99.07% for random forest, extra\ntrees classifier, logistic regression with L2 penalty, and artificial neural networks\n(ANN). Through rigorous evaluation, the logistic regression with L2 penalty emerges\nas the top performer, demonstrating consistent performance. Moreover, integration of\nExplainable Artificial Intelligence (XAI) techniques, such as Local Interpretable Model-\nagnostic Explanations (LIME) and SHapley Additive exPlanations (SHAP), enhances\ninterpretability and reveals insights into model decision-making. By emphasizing\nan end-to-end model development process, from data collection to deployment,\nour system enables real-time predictions and informed healthcare decisions. This\ncomprehensive approach underscores the potential of predictive modeling in healthcare\nto optimize clinical decision-making and improve patient care outcomes.\nSubjects Artificial Intelligence, Data Mining and Machine Learning, Data Science, Neural\nNetworks\nKeywords Chronic renal disease, Machine learning, Explainable AI, GridSearchCV, Chronic\nkidney disease",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "Chronic renal disease (CRD) presents a formidable challenge in healthcare, characterized\nby compromised renal function affecting waste filtration and electrolyte balance. Its\nsocietal impact extends across individuals, families, and healthcare systems. Globally,\nCRD affects 10.4% of males and 11.8% of females, according to Chen, Zhang & Zhang\n(2016). Additionally, 13.3 million individuals experience acute kidney injury (AKI)\nannually, which can potentially culminate in CRD or kidney failure ( Charleonnan et al.,\nHow to cite this articleSingamsetty S, Ghanta S, Biswas S, Pradhan A. 2024. Enhancing machine learning-based forecasting of chronic\nrenal disease with explainable AI. PeerJ Comput. Sci. 10:e2291 http://doi.org/10.7717/peerj-cs.2291\n2016). Consequently, the financial burden associated with CRD, encompassing diagnosis,\ntreatment, and lifestyle adaptations, is considerable.\nAs CRD progresses, kidney function deteriorates, necessitating timely interventions to\nmitigate damage. This disease also places significant demands on healthcare systems, leading\nto decreased productivity and increased healthcare costs. Given the rising prevalence of\nCRD globally, the timely identification of individuals at risk and accurate prediction of\ndisease progression are crucial for effective management and improved patient outcomes.\nThe advent of machine learning (ML) methods has opened new avenues for analyzing\ncomplex medical data and aiding clinical decision-making, offering promise for the future\nof CRD management. However, concerns regarding the interpretability and reliability\nof ML models, often referred to as ‘‘black boxes’’, have prompted the integration of\nExplainable AI (XAI) approaches to enhance transparency ( Devam, Het Naik & Patel,\n2023).\nIn response to the above challenges, our study aims to bridge the gap between advanced\nML techniques and clinical practice by leveraging XAI methods to improve interpretability\nand transparency in CRD prediction. Our overarching goal is to empower healthcare\nprofessionals with data-driven insights while ensuring transparency and trust in machine-\ngenerated decisions. XAI techniques like Local Interpretable Model-agnostic Explanations\n(LIME) and SHapley Additive exPlanations (SHAP) provide actionable insights into model\ndecisions and feature contributions facilitating informed medical decisions.\nIn this article, we investigate the application of ML models in predicting CRD onset and\nprogression, with a focus on the utility of XAI techniques in supporting medical decision\nmaking. By employing SHAP and LIME, we aim to provide interpretable insights into\nthe key features influencing model predictions enabling personalized interventions. Our\nstudy encountered several challenges such as missing values, irregular data ranges, and\nclass imbalance. To address these, we employed strategies like missing value imputation,\ndata scaling, and Synthetic Minority Over-sampling Technique (SMOTE) to mitigate class\nimbalance respectively. Additionally, we optimized hyperparameters using GridSearchCV\nto enhance model performance.\nSeveral machine learning techniques are examined, including random forest, extra\ntrees classifier, light gradient boosting, decision tree, logistic regression with L2 penalty,\nand artificial neural networks (ANN). After rigorous testing, random forest, extra trees\nclassifier, logistic regression with L2 penalty, and ANN achieved the highest accuracy of\n99.07%. The models were evaluated using various other metrics including recall, precision,\nF1-score, and AUC to ensure robustness and reliability. We further used SHAP and LIME\nto improve model explainability and interpretability.\nFurthermore, for real-time chronic renal disease prediction, we developed a robust\nML framework along with a fully functional app using Hugging Face. The app is publicly\navailable at: https:/ / huggingface.co/ spaces/ sanjana04/ Chronic-Renal-disease-Prediction.\nThis app offers patients or medical practitioners a user interface where they can find all\nthe attributes contributing to CRD. The same attributes used in the dataset for model\nbuilding are included in the application. Details about the dataset and the list of attributes\nare included in the Methodology section. Users input their values or existing disease\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 2/27\nFigure 1 User interface for kidney disease predictor.\nFull-size\n DOI: 10.7717/peerjcs.2291/fig-1\nFigure 2 Sample CRD positive prediction from kidney disease predictor.\nFull-size\n DOI: 10.7717/peerjcs.2291/fig-2\nstatus for each attribute and click on ‘‘predict’’. The output returned is the class label\n‘‘Kidney disease’’ (class label 1) or ‘‘No Kidney disease’’ (class label 0) based on the\nprovided data. Figures 1 and 2 show the end-to-end application for CRD prediction.\nThis application easily incorporates the high-performing logistic regression model, which\nhas been upgraded with XAI approaches to deliver real-time predictions and actionable\ninsights to healthcare practitioners. We demonstrate the practical application of advanced\nmachine learning algorithms in clinical contexts by visualizing the model’s implementation\nsequence, facilitating informed decision-making and tuned patient care. The model’s\nimplementation sequence is depicted in the Fig. 3, and the code is publicly available in our\nGitHub repository at https:/ / github.com/ sanjana-singamsetty/ kidney_disease_prediction.\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 3/27\nLoad \nDataset\nHandle \nMissing \nvalues\nFeauture \nencoding\nDivide \nand \nStandardize \nthe \nData\nApply \nMachine \nLearning \nModels \nwith \nPossible \nParameters\nOptimize \nPerformance \nUsing       \nGrid \nSearch",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "NON",
+      "level": 1,
+      "text": "CRD\n \nCRD\nFigure 3 Proposed method for CRD prediction.\nFull-size\n DOI: 10.7717/peerjcs.2291/fig-3\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 4/27",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "RELATED WORK",
+      "level": 1,
+      "text": "The article builds on CKD with a particular emphasis on the application of machine\nlearning (ML) and deep learning (DL) techniques to advance predictive modeling and risk\nassessment. These computational approaches encompass a wide range of ML algorithms,\nincluding support vector machines (SVM), decision trees (DT), random forest (RF), logistic\nregression, naive Bayes (NB) and k-nearest neighbors (KNN) ( Sobrinho et al., 2020).\nThe authors Ganie et al. (2023) also considered XGBoost and other ensemble-boosting\nmethods for their study. In addition to machine learning models, extensive research\nhas been conducted employing diverse deep learning models, including artificial neural\nnetworks (ANN) ( Chittora et al., 2021), convolutional neural networks (CNN) ( Mizdrak\net al., 2022), and recurrent neural network architectures like long short-term memory\n(LSTM) networks, gated recurrent units (GRU), bidirectional LSTM, and bidirectional\nGRU (Akter et al., 2021), respectively.\nAuthors in this field employ a variety of assessment metrics, such as accuracy, precision,\nrecall, F1-score, area under the receiver operating characteristic curve (AUC-ROC), and\nmean absolute error (MAE) for unsupervised feature selection (UFS) and model evaluation.\nBy combining these computational techniques and rigorously assessing their performance,\nresearchers aim to enhance and strengthen prediction models for CKD ( Khan et al.,\n2020). The authors in ( Debal & Sitote, 2022) utilized RF, SVM, DT, and feature selection\nmethodologies to achieve an impressive 98.5% accuracy in CKD prediction. The authors\nin Alsekait et al. (2023) utilized stacking ensemble DL models, which include LSTM, CNN,\nGRU, and SVM, along with feature selection techniques to predict CKD. They integrated\nclinically confirmed data with AI-selected features to improve the prediction accuracy. The\nauthors in Arif, Mukheimer & Asif (2023) introduce an ML model for predicting chronic\nkidney disease (CKD) enhancing clinical decision-making by integrating preprocessing\nsteps, feature selection, and ML algorithms. Their research highlights the ML potential to\nimprove clinical support systems and reduce the uncertainty in chronic disorder prognosis.\nTable 1 summarises the varied variety of ML and DL approaches used by authors in their\nwork.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "METHODOLOGY",
+      "level": 1,
+      "text": "Data preprocessing\nDataset\nIn our work, we utilize the CRD dataset, readily available from the open data repository\ncurated by the University of California, Irvine (UCI) ( Rubini & Eswaran, 2015). There are\n400 instances in this dataset, 24 attributes, and 1 target class attribute. The first attribute\nis an ID and has been removed from the dataset since it is not required for the model.\nThe other 23 features include demographic and medical measurements like age, blood\npressure, specific gravity, albumin, sugar, red blood cells, pus cells, bacteria, blood glucose,\nblood urea, serum creatinine, sodium, potassium, haemoglobin, packed cell volume, white\nblood cell count, red blood cell count, hypertension, diabetes mellitus, coronary artery\ndisease, appetite, pedal edema, and anaemia. Each feature’s type varies, including integer,\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 5/27\nTable 1 Comparison of different approaches.\nAuthor Approach Additional description Accuracy\nChittora et al. (2021) Leveraged both ML and DL techniques, with the\nANN achieving the highest accuracy.\nInitially did not consider missing values\nand outliers.\n99.6%\nPolat, Danaei Mehr &\nCetin (2017)\nKNN and SVM had been employed and the SVM\nalgorithm, utilizing the FilterSubsetEval method\nwith the Best First search engine, produced the\nbest results.\nA total of 400 cases are included, with",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "150 cases not having CRD and 250 cases",
+      "level": 1,
+      "text": "having CRD.\n98.5%\nDebal & Sitote (2022) Three ML models, namely random\nforest, SVM, decision trees, were used\nalong with two feature selection methods\nincluding Recursive Feature Elimination with\nCross-Validated (RFECV), and Unsupervised\nFeature Selection (UFS). SVM and DT are their\nbest performing models\nThe dataset they used consists of chronic\nkidney disease patient records between\n2018 and 2019.\n99.8%\nWang, Chakraborty &\nChakraborty (2020)\nThey have considered random forest, XG\nBoost, and Residual Network (RESNET)\nin ML approaches. They compiled their\ndata by averaging the output from eight\npredictors to get better outcomes.\nThey used publicly available data from\nthe National Health Insurance Sharing\nService for this investigation.\n97%\nAkter et al. (2021) ANN, long short-term memory (LSTM),\nbidirectional LSTM, gated recurrent units (GRU),\nbidirectional GRU, multi-layer perceptrons\n(MLP), and simple recurrent neural networks\n(Simple RNN) have been used.\nTo combat overfitting, they have\nemployed three feature selection\ntechniques: filters, wrapper methods,\nand embedding methods.\n99%\nDritsas & Trigka\n(2022)\nNaive Bayes, SVM, logistic regression, ANN,\nKNN, logistic model tree, random tree, random\nforest, J48, and rotation forest were employed in\nthis investigation. AdaBoostM1, stochastic gradi-\nent descent, ensemble learning, and SMOTE were\nalso applied to the provided data, and rotation\nforest yielded the highest results.\nThere are 400 cases in the dataset which\nthey utilized in the research project, with",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "13 input characteristics and one target",
+      "level": 1,
+      "text": "class.\n99.2%\nSobrinho et al. (2020) J48 decision tree, random forest (RF), naive Bayes\n(NB), SVM, MLP, and KNN were among the ma-\nchine learning techniques used in the study.\nThe study presented limitations such as a\nsmall dataset size.\n95%\nMizdrak et al. (2022) Support vector machine (SVM) classifiers with\nlocal binary patterns and resilient speed-up\nfeatures are used in the study, also using a\nconvolutional neural network (CNN) model for\nraw pictures, deep features are obtained.\nThe article presents the Adaptive\nHybridised Deep Convolutional Neural\nNetwork (AHDCNN) for predictive\ndiagnosis of chronic renal illness.\n97.33%\nQin et al. (2019) The approach utilizes the ML models like random\nforest and logistic regression to diagnose chronic\nkidney disease, showcasing the potential for\naccurate early detection.\nFor missing values, KNN imputation was\nused.\n99.75%\nKhan et al. (2020) The approach involves employing seven machine\nlearning techniques, including NBTree, J48, and\nCHIRP, to classify CRD in a patient dataset.\nSeveral evaluation metrics are used, like\nmean absolute error (MAE), root mean\nsquared error (RMSE), recall, precision,\nand F-measure.\n99.75%\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 6/27\nFigure 4 Correlation matrix of data.\nFull-size\n DOI: 10.7717/peerjcs.2291/fig-4\ncontinuous, categorical, and binary, with some missing values. The target variable, ‘class’\nindicates the presence of CRD and contains no missing values. The dataset contains 250\ncases labeled as ‘yes’ (indicating CRD) and 150 instances labeled as ‘no’ (indicating no CRD).\nThe existence of missing values, a prevalent issue in real-world datasets, poses a serious\nbarrier for this dataset. Random imputation techniques are employed to address this issue.\nIt should be noted that out of the 400 instances in the dataset, only 158 instances contain no\nmissing values. Figure 4 illustrates the attribute correlation heatmap representation, using\nPearson correlation to provide insights into the relationships between various attributes.\nThe characteristics in this dataset are classified into two types: numerical features and\ncategorical features. Appetite, pus cell clumps, pus cells, diabetes mellitus, pedal edema,\nbacteria, red blood cells, hypertension, coronary artery disease, and anaemia are among\nthe categorical characteristics. These characteristics, combined with the class attribute,\ndetermine the presence of CRD. Conversely, the remaining characteristics are categorized\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 7/27\nas numerical attributes. The class attribures are specifically used to determine whether an\nindividual has CRD or not.\nMissing value imputation\nA random value imputation technique is used to address missing values for specific\nvariables such as ‘‘anaemia’’, ‘‘appetite’’, ‘‘bacteria’’, ‘‘coronary_artery_disease’’,\n‘‘diabetes_mellitus’’, ‘‘red_blood_cells’’, ‘‘pus_cells’’, ‘‘peda_edema’’, ‘‘pus_cell_clumps’’,\nand ‘‘hypertension’’. The requirement to manage missing data in these categorical variables\nmotivates the usage of ‘‘random value imputation’’ in the CRD prediction study. Here, for\na feature X with missing values, let N be the total number of missing values and Xobserved\nbe the set of observed (non-missing) values in feature X . Now, randomly sample N values\nfrom Xobserved, resulting in N random values, denoted as Ri, where i ranges from 1 to N .\nAssign these random values to the corresponding missing values in feature X .\nXmissing= RandomSample(Xobserved,N ). (1)\nIn summary, the random value imputation method is essential for dealing with missing\ndata. It helps ensure that the CRD prediction model is built using as much complete and\nrepresentative data as possible, particularly for categorical characteristics that play a role in\nthe analysis.\nAlgorithm 1 Proposed Method for CRD Prediction\nInput: CRD dataset\nOutput: Predicted class label\nBegin\nStep 1: Load the Dataset - Load the CRD dataset into a variable, such as ‘‘crd_data’’.\nStep 2: Handle Missing Values - Locate and handle missing data in the ‘‘crd_data’’ field.\nStep 3: Textual Data Encoding - Convert category text data in ‘‘crd_data\" to numerical\nformat.\nStep 4: Split and Scale the Data - Split the ‘‘crd_data’’ variable into subgroups for training\nand testing. If required, scale the data.\nStep 5: Hyperparameter tuning - Adjust the machine learning models’ hyperparameters.\nStep 6: Apply ML Models - Train and test the machine learning models.\nStep 7: Determine Validation Scores - Evaluate model performance using validation\nscores.\nStep 8: Interpreting ML models - Use SHAP and LIME explainability and interpretability\nto understand model decisions.\nEnd\nFeature encoding\nOnce the missing values have been addressed, the dataset undergoes a transformation\nprocess where textual data is converted into a numerical format. This transformation is\nachieved using a feature encoding method called as‘‘LabelEncoder’’.\nSingamsetty et al. (2024),PeerJ Comput. Sci., DOI 10.7717/peerj-cs.2291 8/27\nThe LabelEncoder method serves the following purposes:\n• Conversion of categorical to numeric: It is utilized to change categorical features, which\noriginally contained text-based categories into a numerical representation. Each category\nreceived a distinct numeric code.\n• Preservation of ordinal information: LabelEncoder maintains the relative order of the\ncategories. This ensures that the assigned numeric codes reflect the original order or\nranking of the categories. For instance, if the categories have a meaningful order like\n‘‘low’’, ‘‘medium’’, and ‘‘high’’, LabelEncoder retains this order when converting them\ninto corresponding numeric codes ( e.g., 0, 1, and 2).\nThe specific features that undergo this transformation include ‘‘pus_cell_clumps’’,\n‘‘red_blood_cells’’, and ‘‘pus_cell’’, which are transformed into two categories.\nAdditionally, ‘‘anaemia’’, ‘‘appetite’’, ‘‘bacteria’’, ‘‘diabetes_mellitus’’, ‘‘hypertension’’,\n‘‘coronary_artery_disease’’, and ‘‘peda_edema’’ are also transformed. The utilization\nof the LabelEncoder technique is crucial for converting this specific kind of data into\nnumerical representations. Regarding studies on CRD, this improvement facilitates further\ndata analysis, modeling, and forecasting operations. A numerical representation is being\nestablished for each of these attributes, simplifying data processing and enabling their\napplication to a diverse variety of data-driven activities.\nSplitting and scaling the data\nOut of the 400 instances, the models are trained on seventy percent of the dataset (280\ninstances) and their performance is assessed on the remaining thirty percent (120 instances).\nIn the training set, there are 180 ‘yes’ cases and 100 ‘no’ cases, while in the testing set, there\nare 70 ‘yes’ cases and 50 ‘no’ cases. The Standardisation and min-max scaling are two\nessential techniques that ensure the data features are centered around their respective\nmeans and maintain consistent scales. To create reliable and accurate projections, it is\nessential to engage in extensive information preparation. The MinMax Scaler is a data\ntransformation technique that scales attributes to a specified range, often between 0 and\n1. It maintains the arrangement of the initial distribution while modifying the data to a\ncertain extent.\nA= a− b\nc− b (2)\nwhere: A - is the scaled/normalized value of the feature. a - is the feature’s initial value. b -\nis the smallest score of the feature in the dataset. c - is the feature with the highest score in\nthe dataset.\nUsing this formula, MinMax Scaler rescales each data point within the range [0, 1]\ndepending on the dataset’s minimum and maximum values. It is frequently used to\nstandardize characteristics and scale them to make them appropriate for machine learning\ntechniques.\nStandard scalar: StandardScaler follows the Standard Normal Distribution (SND),\nadjusting the data to have a unit variance and setting the m",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "User interface for kidney disease predictor."
+    },
+    {
+      "id": "f2",
+      "caption": "Sample CRD positive prediction from kidney disease predictor."
+    },
+    {
+      "id": "f3",
+      "caption": "Proposed method for CRD prediction."
+    },
+    {
+      "id": "f4",
+      "caption": "Correlation matrix of data."
+    },
+    {
+      "id": "f5",
+      "caption": "Employment of SMOTE technique for balancing the data."
+    },
+    {
+      "id": "f6",
+      "caption": "A depiction of how Grid Search CV functions."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "summarises the varied variety of ML and DL approaches used by authors in their"
+    },
+    {
+      "id": "t2",
+      "caption": "Employing various parameters in every algorithm to avoid overfitting."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Proposed Method for CRD Prediction"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e2022",
+      "latex_or_text": "(2022)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 2,
+    "n_algorithms": 1,
+    "n_equations": 1
+  }
+}

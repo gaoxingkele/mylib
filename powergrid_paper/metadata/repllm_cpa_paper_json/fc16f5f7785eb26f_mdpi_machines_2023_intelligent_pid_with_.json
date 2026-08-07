@@ -1,0 +1,472 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-machines/mdpi-machines__2023__intelligent_pid_with_pd_feedforward_trajectory_tracking__eec8ede562.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Department of Mechatronics Engineering, Kocaeli University, Kocaeli 41001, Turkey",
+      "level": 1,
+      "text": "2 Department of Mechanical Engineering, Istanbul Technical University, Istanbul 34469, Turkey\n* Correspondence: zaferb@kocaeli.edu.tr\nAbstract: This paper investigates the model-free trajectory tracking control problem for an au-\ntonomous underwater vehicle (AUV) subject to the ocean currents, external disturbances, measure-\nment noise, model parameter uncertainty, initial tracking errors, and thruster malfunction. A novel\ncontrol architecture based on model-free control principles is presented to guarantee stable and\nprecise trajectory tracking performance in the complex underwater environment for AUVs. In the\nproposed hybrid controller, intelligent-PID (i-PID) and PD feedforward controllers are combined\nto achieve better disturbance rejections and initial tracking error compensations while keeping the\ntrajectory tracking precision. A mathematical model of an AUV is derived, and ocean current dynam-\nics are included to obtain better ﬁdelity when examining ocean current effects. In order to evaluate\nthe trajectory tracking control performance of the proposed controller, computer simulations are\nconducted on the LIVA AUV with a compelling trajectory under various disturbances. The results\nare compared with the two degrees-of-freedom (DOF) i-PID, i-PID, and PID controllers to examine\ncontrol performance improvements with the guaranteed trajectory tracking stability. The comparative\nresults revealed that the i-PID with PD feedforward controller provides an effective trajectory tracking\ncontrol performance and excellent disturbance rejections for the entire trajectory of the AUV .\nKeywords: model-free control; intelligent-PID control; 2 DOF i-PID; trajectory tracking control;\nautonomous underwater vehicle; AUV dynamics",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increasing interest of scientiﬁc researchers and industries in the underwater\nworld, autonomous underwater vehicle (AUV) systems have gained great importance\ndue to their potential to substantially reduce the possible risks and operational costs of\nunderwater missions. Since the technologies working with the data infrastructure have\nbecome widespread, underwater vehicles that can perform data collection and underwater\nobservation tasks without the need for human intervention have become essential devices\nfor both commercial and scientiﬁc uses.\nA fully autonomous vehicle must include guidance, navigation, and control (GNC)\nsoftware. GNC software architecture refers to the design and organization of software\nused for the control and navigation of autonomous systems such as AUVs, robots, and\nspacecraft. GNC software architecture typically includes modules for trajectory planning,\nstate estimation, guidance and control, and monitoring and fault detection [1,2]. Addition-\nally, autonomous vehicles are often capable of performing multiple missions through their\nmulti-mission management software which increases the ﬂexibility and versatility of the\nsystem and allows it to perform a wider range of tasks than a single-mission system [3,4].\nIn this study, the main focus will be on designing a novel model-free trajectory tracking\ncontroller for AUV systems.\nThe unpredictable, complex, and disruptive nature of the underwater environment,\nalong with the highly non-linear and cross-coupled system dynamics, causes disturbances\nMachines 2023, 11, 300. https://doi.org/10.3390/machines11020300 https://www.mdpi.com/journal/machines\nMachines 2023, 11, 300 2 of 21\nand uncertainties that must be considered in the AUV controller design. In order to perform\nsuccessful autonomous missions in the underwater environment, a trajectory tracking\ncontrol system must be utilized in the AUV system, with high precision, satisfactory\ndisturbance rejection, fault tolerance, and robustness properties.\nThe conventional PID controller is frequently employed by AUV applications, includ-\ning commercial and scientiﬁc uses, due to its simple and effective structure [5–8]. Despite\nthe cost-effectiveness and implementation simplicity of the PID algorithm, its control per-\nformance degradation, especially when the plant is highly non-linear and threatened by\nthe various environmental disturbances, has been reported by numerous studies. Hence,\nmore robust control algorithms are often preferred to guarantee the stable performance\nand robustness of the controllers. Sliding-mode control has become one of the most fa-\nvorable non-linear control algorithms for use in the AUV system due to its insensitivity\nagainst model uncertainties and external disturbances. Kim et al. [9] proposed an integral\nsliding-mode controller to stabilize the AUV suffering from the model uncertainties and\nunknown environmental disturbances, whereas Garcia et al. [10] proposed a model-free\nhigh order sliding-mode controller with ﬁnite-time convergence and compared it to the\nregular PID controller. Duan et al. [ 11] formulated the Hamilton–Jacobi–Isaac equation\nfor the AUV trajectory tracking problem, and designed a reinforcement learning-based\nmodel-free controller to obtain optimal trajectory tracking performance. Negahdaripour\net al. [12] introduced a sliding-mode controller based on estimated hydrodynamic coefﬁ-\ncients. Santos et al. [ 13] used the instantaneous power data provided by the propulsion\nsystem to tune the backstepping sliding-mode controller to achieve energy efﬁciency and\nrobust movement on the vehicle. Liang et al. [14] designed a novel nonlinear backstepping\ntechnique based on the virtual control variables. Gong et al. [15] designed a cascaded con-\ntrol loop wherein backstepping control is designed for the outer loop and a neural network\ncontroller is used in the inner loop to solve optimal trajectory tracking control problems\nof AUV systems. The model of predictive control has been extensively studied for AUV\nsystems in the literature due to its robustness and good handling of nonlinearities [16–18].\nShen et al. [19] developed a novel Lyapunov-based model predictive controller framework\nby utilizing online optimization to enhance trajectory tracking performance in the presence\nof environmental disturbances, and demonstrated the results comparatively. In order to\nrelieve the so-called chattering phenomenon of the control input of the AUV in the presence\nof the environmental disturbance and the initial tracking error, Liu et al. [ 20] proposed\na trajectory tracking control strategy based on a virtual closed-loop system. The virtual\nclosed-loop system is used to generate a virtual reference trajectory for the AUV to follow\ninstead of the originally desired trajectory in this study. Additionally, they stated that the\nnew design achieved obvious enhancements in terms of the smoothness of the control input\nand trajectory tracking precision when measurement noise is considered.\nThe model-free intelligent-PID control algorithm proposed by Fliess and Coin [ 21]\nuses continuously updated local modeling via the unique knowledge of the input–output\nbehavior in order to contribute to the control law used within. Therefore, it can handle\nthe non-linear, cross-coupled, and unmodeled dynamics of the controlled system without\nthe need for information about the plant parameters. That property makes the model-free\ncontrol a superior option to utilize on AUV control systems. The idea behind developing\nthe proposed i-PID with PD feedforward controller is improving the model-free i-PID\ncontrol proposed in [21] to have better trajectory tracking precision, external disturbance\nrejections, and initial tracking error compensations and therefore to overcome the disruptive\nnature of the underwater environment. The model-free i-PID control algorithm has been\nimplemented in various applications in the literature since it was ﬁrst introduced. Barth\net al. [22] designed a model-free control algorithm based on the model-free control technique\nproposed by [21] to stabilize the entire ﬂight envelope, including vertical take-off, landing,\ntransition, and forward ﬂight of hybrid UAVs. Effective control performance of the model-\nfree i-PD controller for the entire ﬂight envelope and excellent disturbance rejections during\nthe critical ﬂight phases are reported in this study. Agee et al. [23,24] designed a model-free\nMachines 2023, 11, 300 3 of 21\ni-PI controller to solve the trajectory tracking problem of the ﬂexible robot manipulators.\nBaciu and Lazar [ 25] presented a new method for tuning i-PID controllers based on an\niterative feedback tuning method, and they experimentally evaluated the performance of\nan i-PID controller tuned by the presented method. Since the high-ﬁdelity modeling of an\nAUV is a challenging process due to the complex and unpredictable operating environment,\nmodel-free control techniques are expected to become more popular in the underwater\nrobotics ﬁeld in the near future.\nIn this paper, a model-free i-PID control approach is developed for AUVs, and an\ni-PID with a PD feedforward (2 DOF i-PID) controller structure is constructed that utilizes\nthe extra PD feedforward controller on all six motion axes to achieve better disturbance\nrejections and initial tracking error compensation. However, due to the high cross-coupling\nin the internal dynamics of the AUV system, utilizing the extra PD feedforward loop on\nall six motion axes causes trajectory tracking precision loss, especially on the orientation\naxes. Therefore, a novel hybrid controller is developed by combining the i-PID with PD\nfeedforward and i-PID controllers for AUVs to solve the trajectory tracking problem. The\nproposed hybrid controller framework utilizes the i-PID with PD feedforward controller\non the linear motion axes (x, y, z), and the i-PID controller on the angular motion axes\n(Φ, Θ, Ψ). Since it does not involve a feedforward loop in the angu",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Mathematical Model",
+      "level": 1,
+      "text": "The mathematical model of an AUV can be examined in two separate parts as kine-\nmatics and dynamics. Kinematics considers the geometrical transformations of motion,\nMachines 2023, 11, 300 4 of 21\nwhile dynamics analyzes the forces and moments causing motion. Two reference frames\nin Figure 1 are utilized to deﬁne the six-DOF equations of motion of the AUV . The earth-\nﬁxed (NED) reference frame is deﬁned relative to the Earth’s reference ellipsoid, and can\nbe represented by{n} = (xn, yn, zn) and origin on [27]. The body-ﬁxed (body) refer-\nence frame is a moving coordinate frame that is ﬁxed to the craft and can be represented\nby{b} = (xb, yb, zb) and origin ob.\nMachines 2023, 11, x FOR PEER REVIEW 4 of 21",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Mathematical Model",
+      "level": 1,
+      "text": "The mathematical model of an AUV can be examined in two separate parts as kine-\nmatics and dynamics. Kinematics considers the geometrical transformations of motion, \nwhile dynamics analyzes the forces and moments causing motion. Two reference frames \nin Figure 1 are utilized to define the six-DOF equations of motion of the AUV. The earth-\nfixed (NED) reference frame is defined relative to the Earth’s reference ellipsoid, and can \nbe represented by {n}  =  ( 𝑥௡, 𝑦௡, 𝑧௡) and origin 𝑜௡ [27]. The body-fixed (body) reference \nframe is a moving coordinate frame that is  fixed to the craft and can be represented \nby {b}  =  ( 𝑥௕, 𝑦௕, 𝑧௕) and origin 𝑜௕. \n \nFigure 1. Earth-fixed and body-fixed reference frames.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Kinematics",
+      "level": 2,
+      "text": "The motions of the AUV are represented by  using the SNAME notation [28], where \nthe body frame velocity vector defined as 𝑣 = [ 𝜐௕/௡\n௕  𝜔௕/௡\n௕ ]், and where 𝜐௕/௡\n௕ = [ 𝑢 𝜐 𝑤]் is \nthe body frame linear velocity vector and 𝜔௕/௡\n௕ =[ 𝑝 𝑞 𝑟]் is the body frame angular ve-\nlocity vector. The position and orientations in the NED frame are defined as ƞ =\n[𝑝௕/௡\n௡  𝛩௡௕]், where 𝑝௕/௡\n௡ =[ 𝑁 𝐸 𝐷]் is the position and 𝛩௡௕ =[ 𝛷 𝜃 𝛹]் is the orientation \nvector [27]. \nThe linear velocity transformation can be performed between the NED and body \nframes by using (1). \n𝑝ሶ௕/௡\n௡ = 𝑅௕\n௡(𝛩௡௕)𝜐௕/௡\n௕  (1) \n𝑅௕\n௡(𝛩) is the linear motion transformation matrix, defined as follows: \n𝑅௕\n௡(𝛩) = ൥\n𝑐𝛹𝑐𝜃 −𝑠𝛹𝑐𝛷 + 𝑐𝛹𝑠𝜃𝑠𝛷 𝑠𝛹𝑠𝛷 + 𝑐𝛹𝑐𝛷𝑠𝜃\n𝑠𝛹𝑐𝜃 𝑐𝛹𝑐𝛷 + 𝑠𝛷𝑠𝜃𝑠𝛹 −𝑐𝛹𝑠𝛷 + 𝑠𝛹𝑐𝛷𝑠𝜃\n−𝑠𝜃 𝑐𝜃𝑠𝛷 𝑐𝛷𝑐𝜃\n൩ (2) \nwhere 𝑐 = 𝑐𝑜𝑠, and 𝑠 = 𝑠𝑖𝑛. The angular velocity transformation can be performed be-\ntween the NED and body frames as follows: \n𝛩ሶ௡௕ = 𝑇௵(𝛩௡௕)𝜔௕/௡\n௕  (3) \nwhere 𝑇௵(𝛩) is the angular motion transformation matrix, defined as follows. \n𝑇௵(𝛩)  = ൥\n1 𝑠𝑖𝑛𝛷𝑡𝑎𝑛𝜃 𝑐𝑜𝑠𝛷𝑡𝑎𝑛𝜃\n0 𝑐𝑜𝑠𝛷 −𝑠𝑖𝑛𝛷\n0 𝑠𝑖𝑛𝛷/𝑐𝑜𝑠𝜃 𝑐𝑜𝑠𝛷 /𝑐𝑜𝑠𝜃\n൩ (4) \nFigure 1. Earth-ﬁxed and body-ﬁxed reference frames.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Kinematics",
+      "level": 2,
+      "text": "The motions of the AUV are represented by using the SNAME notation [28], where the\nbody frame velocity vector deﬁned as v =\n[\nυb\nb/n ωb\nb/n\n]T\n, and where υb\nb/n = [u υ w]T is the\nbody frame linear velocity vector and ωb\nb/n = [p q r]T is the body frame angular velocity\nvector. The position and orientations in the NED frame are deﬁned as η =\n[\npn\nb/n Θnb\n]T\n,\nwhere pn\nb/n = [N E D ]T is the position and Θnb = [Φ Θ Ψ]T is the orientation vector [27].\nThe linear velocity transformation can be performed between the NED and body\nframes by using (1).\n.\npn\nb/n = Rn\nb (Θnb)υb\nb/n (1)\nRn\nb (Θ) is the linear motion transformation matrix, deﬁned as follows:\nRn\nb (Θ) =\n\n\ncΨcΘ −sΨcΦ + cΨsΘsΦ sΨsΦ + cΨcΦsΘ\nsΨcΘ cΨcΦ + sΦsΘsΨ −cΨsΦ + sΨcΦsΘ\n−sΘ cΘsΦ cΦcΘ\n\n (2)\nwhere c = cos, and s = sin. The angular velocity transformation can be performed between\nthe NED and body frames as follows:\n.\nΘnb = TΘ(Θnb)ωb\nb/n (3)\nwhere TΘ(Θ) is the angular motion transformation matrix, deﬁned as follows.\nTΘ(Θ) =\n\n\n1 sin Φ tan Θ cos Φ tan Θ\n0 cos Φ − sin Φ\n0 sin Φ/ cos Θ cos Φ/ cos Θ\n\n (4)\nMachines 2023, 11, 300 5 of 21\nUsing (1), (2), (3), and (4), the six-DOF kinematic equations can be expressed in\nvectorial form as follows [27]: .\nη = J(η)v (5)\n[ .\npn\nb/n.\nΘnb\n]\n=\n[Rn\nb (Θnb) 03×3\n03×3 TΘ(Θnb)\n][\nυb\nb/n\nωb\nb/n\n]\n(6)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Dynamic Model",
+      "level": 2,
+      "text": "The six-DOF dynamic equations of the AUV subject to ocean current disturbance are\nexpressed via the laws of Newton as follows [29]:\nMRB\n.\nv + CRB (v)v = τH (7)\nτH =−MA\n.\nv− CA(vr)vr− D(vr)vr− g(η) + τc (8)\nwhere τc is the control torque input, vr = v− vb",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "is the relative velocity of the vehicle and vb",
+      "level": 1,
+      "text": "c\nis the ocean current velocity deﬁned in the body frame. MRB is the rigid body mass matrix,\nCRB is the rigid body Coriolis and Centripetal matrix due to the rotation of body frame\nabout the NED frame, and MA and CA are the added mass matrix and the hydrodynamic\nCoriolis matrix, respectively. The hydrodynamic damping effects applied to the AUV\nare captured by the matrix D, which includes linear and quadratic damping terms. The\nrestoring forces and moments applied on the AUV are captured by the term g(η), and\nconsist of two elements called gravitational forces and buoyancy forces. The gravitational\nforces (W) act through the center of gravity whereas the buoyancy forces (B) act through the\ncenter of buoyancy. The AUV is designed such that the buoyancy forces are slightly larger\nthan the gravitational forces (i.e., B > W), to make the vehicle surface in the event of an\nemergency. Additionally, a distance between the center of gravity and center of buoyancy\nis left in the structural design of AUV to naturally contribute to the control of the roll (Φ)\nand pitch (Θ) axes. Considering the underactuated AUV , this property is important for\nstabilizing the vehicle in the presence of nonlinearities in the environment and the AUV\nitself [29]. The hydrodynamic forces are derived in (8) by assuming ocean current velocity\nis constant (i.e.,\n.\nvcn∼= 0) in the NED frame. However, even though the ocean current\nvelocity is assumed constant in the NED frame, the rotational motions of the AUV lead\nto a correspondingly changing body-ﬁxed current velocity (i.e.,\n.\nvcb̸= 0). Therefore, the\nacceleration of the ocean current induces a force on the AUV , which is captured by the term\nAc\n(\nvb\nc\n)\nvr in the dynamic Equation (13).\nThe ocean current speed magnitude Vc and its relative direction to the moving object\nare conveniently expressed in terms of angle of attack αc and sideslip angle βc. Thus,\na 3-D irrotational ocean current vector vn",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "can be formulated relative to the NED frame",
+      "level": 1,
+      "text": "as follows [27].\nvn\nc =\n\n\nVc cos(αc) cos(βc)\nVc sin(βc)\nVc sin(αc) cos(βc)\n03×1\n\n (9)\nThe ocean current vector in the NED frame vn",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "can be transformed to the body frame,",
+      "level": 1,
+      "text": "using the kinematic equation derived previously, for use in the dynamic equations of the\nAUV as given in (10).\nvb\nc = diag\n[\nRn\nb\nT(Θ), 03×3\n]\nvn\nc (10)\nThe acceleration of the ocean currents in body frame\n.\nvb\nc can be derived by deﬁning [29]:\nS\n(\nωb\nb/n\n)\n=\n\n\n0 −r q\nr 0 −p\n−q p 0\n\n =−ST\n(\nωb\nb/n\n)\n(11)\nMachines 2023, 11, 300 6 of 21\nwhere S is the skew-symmetric vector cross-product matrix. Thus, the following relation\ncan be deﬁned [29]:\n.\nvb\nc =−Sc\n(\nωb\nb/n\n)\nvb\nc (12)\nwhere Sc\n(\nωb\nb/n\n)\n= diag\n[\nS\n(\nωb\nb/n\n)\n, 03x3\n]\n=−ScT\n(\nωb\nb/n\n)\n. Hence,−MA\n.\nvb\nc = MASc\n(\nωb\nb\nn\n)\nvb\nc,\nand Ac\n(\nvb\nc\n)\nvr ≜ MASc\n(\nωb\nb/n\n)\nvb\nc [29]. The ﬁnal dynamic equation including ocean\ncurrents becomes:\nM\n.\nv + CRB (v)v =−CA(vr)vr− D(vr)vr− g(η) + Ac\n(\nvb\nc\n)\nvr + τc (13)\nM = MA + MRB (14)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Ocean Current Observer",
+      "level": 2,
+      "text": "The model-based ocean current observer proposed by Borhaug et al. [30] is adapted\nfor the AUV model to estimate unknown ocean current velocity vb",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "with the help of the",
+      "level": 1,
+      "text": "knowledge of the dynamical model and availability of the control torque input τc, AUV\nvelocities v and the orientation angles Θ [30].\nM\n.\nˆv =−CRB (ν)ν− g(η) + ˆτH + τc + K1(v− ˆv) (15)\n.\nˆvc =−Sc(ω) ˆvb\nc + K2(v− ˆv) (16)\nwhere K1 and K2 are observer gain matrices, ˆv is the estimation of the vehicle velocity and\nˆvb\nc is the estimation of the ocean current velocity. The hydrodynamic term in the observer\nmodel including ocean current velocity estimation becomes the following:\nˆτH =−CA\n(\nˆv− ˆvb\nc\n)(\nˆv− ˆvb\nc\n)\n− D\n(\nˆv− ˆvb\nc\n)(\nˆv− ˆvb\nc\n)\n+ Ac\n(\nˆvb\nc\n)(\nˆv− ˆvb\nc\n)\n(17)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.4 Experimental Platform",
+      "level": 2,
+      "text": "As an experimental platform, all simulations were carried out on LIVA AUV [ 31]\nshown in Figure 2 and it was developed at the Robotics and Automation Laboratory of the\nMechatronics Engineering Department at Kocaeli University.\nThe mathematical model parameters of the LIVA AUV that were used in the computer\nsimulations are listed in Table 1. The linear motion axis position information (x, y, z) is\nobtained through a mapping algorithm which uses the onboard camera data to calculate\nposition data of the vehicle with respect to the predeﬁned pool map. The angular motion\naxis orientation information (Φ, Θ, Ψ) is measured by using onboard IMU sensor which\nutilizes an internal extended Kalman ﬁlter algorithm to improve information precision.\nThe LIVA AUV is capable to perform autonomous target-following missions through its\nonboard computer, which utilizes an online image processing and trajectory generation\nalgorithms to track the predeﬁned object in the pool.\n2.5. Thruster Identiﬁcation\nThe correlation between the thrust force produced by a single thruster in the steady\nstate and the corresponding PWM duty cycle given to the electronic speed controllers\n(ESCs) must be identiﬁed to derive a thruster model. The derived correlation will then be\nused to map control signals to the corresponding thrust forces in the thruster model. A\ntesting setup shown in Figure 3 was prepared to measure the produced thrust forces under\nvarying PWM duty cycles. The instantaneous current drawn by the thruster motor has\nalso been measured to identify the most efﬁcient operating range of the thruster in order to\nachieve the smallest possible energy consumption by the vehicle.\nMachines 2023, 11, 300 7 of 21\nMachines 2023, 11, x FOR PEER REVIEW 6 of 21 \n \n \n𝑆൫𝜔௕/௡\n௕ ൯ = ൥\n0 −𝑟 𝑞\n𝑟 0 −𝑝\n−𝑞 𝑝 0\n൩ = −𝑆்൫𝜔௕/௡\n௕ ൯ (11) \nwhere 𝑆 is the skew-symmetric vector cross-product matrix. Thus, the following relation \ncan be defined [29]: \n𝑣ሶ௖\n௕ = −𝑆௖(𝜔௕/௡\n௕ )𝑣௖\n௕ (12) \nwhere 𝑆௖൫𝜔௕/௡\n௕ ൯ = 𝑑𝑖𝑎𝑔ൣ𝑆൫𝜔௕/௡\n௕ ൯,0 ଷ௫ଷ൧ = −𝑆௖\n்൫𝜔௕/௡\n௕ ൯ . Hence, −𝑀஺𝑣ሶ௖\n௕ = 𝑀஺𝑆௖ ൬𝜔್\n೙\n௕൰𝑣௖\n௕, \nand 𝐴௖(𝑣௖\n௕)𝑣௥ ≜  𝑀஺𝑆௖൫𝜔௕/௡\n௕ ൯𝑣௖\n௕ [29]. The final dynamic equation including ocean currents \nbecomes: \n𝑀𝑣ሶ + 𝐶ோ஻(𝑣)𝑣 = −𝐶஺(𝑣௥)𝑣௥ −𝐷 (𝑣௥)𝑣௥ −𝑔 (𝜂) + 𝐴௖(𝑣௖\n௕)𝑣௥ + 𝜏௖ (13) \n𝑀 = 𝑀஺ + 𝑀ோ஻ (14)",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.3 Ocean Current Observer",
+      "level": 2,
+      "text": "The model-based ocean current observer proposed by Borhaug et al. [30] is adapted \nfor the AUV model to estimate unknown ocean current velocity 𝑣௖\n௕ with the help of the \nknowledge of the dynamical model and availability of the control torque input  𝜏௖, AUV \nvelocities 𝑣 and the orientation angles  𝛩 [30].  \n𝑀𝑣ොሶ   = −𝐶ோ஻(𝜈)𝜈−𝑔 (ƞ) + 𝜏̂ு + 𝜏௖ + 𝐾ଵ(𝑣−𝑣ො) (15) \n𝑣ො௖ሶ = −𝑆௖(𝜔)𝑣ො௖\n௕ + 𝐾ଶ(𝑣−𝑣ො) (16) \nwhere 𝐾ଵ and 𝐾ଶ are observer gain matrices, 𝑣ො is the estimation of the vehicle velocity \nand 𝑣ො௖\n௕ is the estimation of the ocean current velocity. The hydrodynamic term in the ob-\nserver model including ocean current velocity estimation becomes the following: \n𝜏̂ு = −𝐶஺(𝑣ො−𝑣ො௖\n௕)(𝑣ො−𝑣ො௖\n௕) −𝐷 (𝑣ො−𝑣ො௖\n௕)(𝑣ො−𝑣ො௖\n௕) + 𝐴௖(𝑣ො௖\n௕)(𝑣ො−𝑣ො௖\n௕) (17)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.4 Experimental Platform",
+      "level": 2,
+      "text": "As an experimental platform, all simulations were carried out on LIVA AUV [31] \nshown in Figure 2 and it was developed at the Robotics and Automation Laboratory of \nthe Mechatronics Engineering Department at Kocaeli University. \n \nFigure 2. Different views of the LIVA AUV .\nTable 1. LIVA AUV mathematical model parameters.\nParameters Values SI Units\nm 12.9 kg\nW 126.55 N\nB 128.7 N\nrb\n[\n0 0 0\n]T m\nrg\n[\n0 0 0.04\n]T m\nIx 0.28 kg m2\nIy 0.24 kg m2\nIz 0.27 kg m2\nX .\nu −11.94 kg\nY .\nv −13.37 kg\nZ .\nw −13.37 kg\nK .\np 0 kg m2/rad\nM .\nq −0.0026 kg m2/rad\nN.\nr −0.0026 kg m2/rad\nXu −4.03 Ns/m\nYv −6.22 Ns/m\nZw −5.18 Ns/m\nKp −0.07 kg Ns /rad\nMq −0.07 kg Ns /rad\nNr −0.07 kg Ns /rad\nXu|u| −18.18 Ns2/m2\nYv|v| −21.66 Ns2/m2\nZw|w| −36.99 Ns2/m2\nKp|p| −1.55 Ns2/rad2\nMq|q| −1.55 Ns2/rad2\nNr|r| −1.55 Ns2/rad2\nMachines 2023, 11, 300 8 of 21\nMachines 2023, 11, x FOR PEER REVIEW 8 of 21 \n \n \n  \n(a) ( b) \nFigure 3. Thruster identification setup. (a) CAD view (b) real setup. \nThe produced thrust forces are calculated by using (18) after the measuring process \nis complete. \n𝐹்భ ∗𝑙 ଵ = 𝐹௠௘௔௦௨௥௘ௗ ∗𝑙 ଶ (18) \nAfter all the thrust forces are computed for the corresponding PWM duty cycles, the \nthrust force, PWM duty cycle, and the inst antaneous current drawn from the battery by \nthe motor chart are derived as shown in Figure 4. \n \nFigure 4. Thruster characteristics chart. \nThe thrust force fluctuation of PWM duty cycles within the range of 85% to 98% \nmight stem from both the nonlinearities of the drive components (i.e., battery, ESCs and \nBLDC motors) and the measurement errors. According to the revealed correlation be-\ntween the current consumption and force production of the propeller, the maximum \nthrust force produced by a single thruster in the efficient range is determined approxi-\nmately as 40 Newtons. Considering that the AUV has six identical thrusters and the \nthrust coefficients for individual thrusters are defined as 𝐾்ଵ-𝐾்଺, the thruster coefficient \nmatrix is derived as follows. \n𝐾் = 𝑑𝑖𝑎𝑔[𝐾்ଵ 𝐾்ଶ 𝐾்ଷ 𝐾்ସ 𝐾்ହ 𝐾்଺]  (19) \nFigure 3. Thruster identiﬁcation setup. ( a) CAD view (b) real setup.\nThe produced thrust forces are calculated by using (18) after the measuring process\nis complete.\nFT1∗ l1 = Fmeasured∗ l2 (18)\nAfter all the thrust forces are computed for the corresponding PWM duty cycles, the\nthrust force, PWM duty cycle, and the instantaneous current drawn from the battery by the\nmotor chart are derived as shown in Figure 4.\nMachines 2023, 11, x FOR PEER REVIEW 8 of 21 \n \n \n  \n(a) ( b) \nFigure 3. Thruster identification setup. (a) CAD view (b) real setup. \nThe produced thrust forces are calculated by using (18) after the measuring process \nis complete. \n𝐹்భ ∗𝑙 ଵ = 𝐹௠௘௔௦௨௥௘ௗ ∗𝑙 ଶ (18) \nAfter all the thrust forces are computed for the corresponding PWM duty cycles, the \nthrust force, PWM duty cycle, and the inst antaneous current drawn from the battery by \nthe motor chart are derived as shown in Figure 4. \n \nFigure 4. Thruster characteristics chart. \nThe thrust force fluctuation of PWM duty cycles within the range of 85% to 98% \nmight stem from both the nonlinearities of the drive components (i.e., battery, ESCs and \nBLDC motors) and the measurement errors. According to the revealed correlation be-\ntween the current consumption and force production of the propeller, the maximum \nthrust force produced by a single thruster in the efficient range is determined approxi-\nmately as 40 Newtons. Considering that the AUV has six identical thrusters and the \nthrust coefficients for individual thrusters are defined as 𝐾்ଵ-𝐾்଺, the thruster coefficient \nmatrix is derived as follows. \n𝐾் = 𝑑𝑖𝑎𝑔[𝐾்ଵ 𝐾்ଶ 𝐾்ଷ 𝐾்ସ 𝐾்ହ 𝐾்଺]  (19) \nFigure 4. Thruster characteristics chart.\nThe thrust force ﬂuctuation of PWM duty cycles within the range of 85% to 98%\nmight stem from both the nonlinearities of the drive components (i.e., battery, ESCs and\nBLDC motors) and the measurement errors. According to the revealed correlation between\nthe current consumption and force production of the propeller, the maximum thrust\nforce produced by a single thruster in the efﬁcient range is determined approximately as\n40 Newtons. Considering that the AUV has six identical thrusters and the thrust coefﬁcients\nMachines 2023, 11, 300 9 of 21\nfor individual thrusters are deﬁned as KT1− KT6, the thruster coefﬁcient matrix is derived\nas follows.\nKT = diag [KT1 KT2 KT3 KT4 KT5 KT6] (19)",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.6 Thrust Force Generation Model",
+      "level": 2,
+      "text": "The control system of the AUV produces six-DOF control signals relative to the\noperational space, and the AUV motions are generated by using the six onboard thrusters\nof the vehicle. A transformation matrix between the operational space and thruster space\nmust be derived to achieve optimum thrust force generation on the AUV system.\nThe thruster locations and the corresponding force directions in the positive propulsion\ncase are shown in Figure 5.\nMachines 2023, 11, x FOR PEER REVIEW 9 of 21",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.6 Thrust Force Generation Model",
+      "level": 2,
+      "text": "The control system of the AUV produces six-DOF control signals relative to the op-\nerational space, and the AUV motions are generated by using the six onboard thrusters of \nthe vehicle. A transformation matrix between the operational space and thruster space \nmust be derived to achieve optimum thrust force generation on the AUV system. \nThe thruster locations and the corresponding force directions in the positive propul-\nsion case are shown in Figure 5. \n \nFigure 5. Thrust force generation mechanism of the LIVA AUV. \nThe control forces and moments produced by the vehicle thruster system can be de-\nrived using (21): \n𝑖∈ (𝑥, 𝑦, 𝑧, Φ, θ, Ψ) (20) \n𝐹் = 𝑃ିଵ𝐾்𝑢௜ (21) \n−𝐹்௠௔௫௕ ≤𝐹 ் ≤𝐹 ்௠௔௫௙ (22) \nwhere 𝑃 =[ 𝑃ଵ 𝑃ଶ 𝑃ଷ 𝑃ସ 𝑃ହ 𝑃଺] 𝜖 𝑅଺௫଺  is the thruster configuration matrix and 𝑢௜  is the \ncontrol input vector produced by the corre sponding 6 DOF controller. Since the LIVA \nAUV contains six thrusters, the thrust force generated by the six thrusters of the AUV can \nbe represented as a vector 𝐹் =[ 𝐹்ଵ 𝐹்ଶ 𝐹்ଷ 𝐹்ସ 𝐹்ହ 𝐹்଺]்𝜖 𝑅଺௫ଵ, and it is saturated by \n𝐹்௠௔௫௙ and 𝐹்௠௔௫௕, which are the maximum producible thrust forces by a single thruster \nin forward and backward directions, respectively. \nThe control forces and moments demanded by the AUV control system in six DOF can be \nformulated as follows. \n𝜏௖ = 𝑃𝐹் = 𝑃𝑃ିଵ𝐾்𝑢௜ = 𝐾்𝑢௜ (23) \nThe orientation angles of the thrusters 𝑇ଵ to 𝑇ସ relative to the z-axis of the body \nframe are \nగ\nସ , −\nగ\nସ , −\nଷగ\nସ  and \nଷగ\nସ , respectively. The derivation of the configuration vector of \nthe thruster 𝑇ଵ is as given in (24). \nFigure 5. Thrust force generation mechanism of the LIVA AUV .\nThe control forces and moments produced by the vehicle thruster system can be\nderived using (21):\ni∈ (x, y, z, Φ, Θ, Ψ) (20)\nFT = P−1KTui (21)\n− FTmaxb≤ FT≤ FTmax f (22)\nwhere P = [P1 P2 P3 P4 P5 P6] ϵ R6×6 is the thruster conﬁguration matrix and ui is the\ncontrol input vector produced by the corresponding 6 DOF controller. Since the LIVA\nAUV contains six thrusters, the thrust force generated by the six thrusters of the AUV can\nbe represented as a vector FT = [FT1 FT2 FT3 FT4 FT5 FT6]Tϵ R6×1, and it is saturated by\nFTmax f and FTmaxb , which are the maximum producible thrust forces by a single thruster in\nforward and backward directions, respectively.\nThe control forces and moments demanded by the AUV control system in six DOF\ncan be formulated as follows.\nτc = PFT = PP−1KTui = KTui (23)\nMachines 2023, 11, 300 10 of 21\nThe orientation angles of the thrusters T1 to T4 relative to the z-axis of the body frame\nare π\n4 ,− π\n4 ,− 3π\n4 and 3π\n4 , respectively. The derivation of the conﬁguration vector of the\nthruster T1 is as given in (24).\nP1 =\n\n\ncos(π/4)\n− sin(π/4)\n0\nsin(π/4)∗ (−0.004)\ncos(π/4)∗ (−0.004)\n− sin(π/4)∗ lx1− cos(π/4)∗ ly1\n\n\n(24)\nwhere lx1 and ly1 are the x-axis and y-axis distances of the thruster T1 to the center of\ngravity, respectively. Thus, the thruster conﬁguration matrix P is obtained by calculating\nthe thruster conﬁguration vectors for all six thrusters.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3 Control Strategy",
+      "level": 1,
+      "text": "The model-free i-PID controller is developed for all six motion axes of the AUV system\nbased on the model-free control technique proposed by [21], hence it has no information\nabout the AUV plant model (e.g., mass, inertia, hydrodynamic coefﬁcients, etc.). After-\nward, the i-PID with PD feedforward (2 DOF i-PID) control framework is constructed by\nmodifying the developed i-PID controller to include an extra PD feedforward loop on all\nsix motion axes in the controller structure. Finally, a novel hybrid controller framework\nis developed for the AUVs by combining the developed i-PID with PD feedforward and\ni-PID controllers.\nThe idea behind developing the novel controller framework is to take the advantages\nof the disturbance rejection, initial tracking error compensation, and robustness capabilities\nof the two-DOF control architecture without experiencing loss of precision or instabilities\nin the cross-coupled and unactuated motion axes. In the novel controller framework,\nthe linear motion axes ( x, y, z) of the AUV are controlled by the three i-PID with PD\nfeedforward controllers, and the angular motion axes (Φ, Θ, Ψ) are controlled by the three\ni-PID controllers.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.1 Model-Free i-PID Controller Design",
+      "level": 2,
+      "text": "Writing reliable differential equations for mathematically representing a plant model\nis always difﬁcult and time-consuming. To summarize the main theoretical idea that the\nmodel-free control is based on, the model-free control uses continuously updated local\nmodeling via unique knowledge of the input–output behavior instead of using complex\ndifferential equations [21].\nAssuming that the relationship between the inputs and outputs of a given system is\nrepresented by an unknown ﬁnite order differential equation, in the model-free approach,\nthis mathematical model is represented by a structure called the ultra-local model, which is\nonly valid during very short time intervals [21].\ny(h) = F + au (25)\nParameter h is the derivation order which is greater than or equal to 1, and a is the\nnon-physical constant parameter. F is the quantity representing the real dynamics of the\nAUV as well as the external disturbances for each axis of six DOF. Hence, the accurate\nestimation of the F, deﬁned as ˆF, has great importance for achieving better model-free\ncontrol performance. The numerical value of F at any time instant is estimated by using the\nconstant a, control input u and the output y(h). Assuming h = 2 in (25) yields:\nˆF(t) =\n..\ny(t)− au(t) (26)\nMachines 2023, 11, 300 11 of 21\nThen, closing the loop via an intelligent PID, we obtain:\nu(t) =−\nˆF(t)\na +\n..\ny∗(t)\na + KPe(t) + KI\n∫\ne(t) + KD\n.\ne(t) (27)\nwhere:\n• y* is the reference trajectory,\n• e = y− y* is the tracking error, and\n• KP, KI, KD are the controller tuning gains.\nThe block diagram representation of the developed i-PID controller structure is given\nin Figure 6 to represent the key concepts of the model-free i-PID control approach visually.\nMachines 2023, 11, x FOR PEER REVIEW 11 of 21 \n \n \n• 𝑒 = 𝑦−𝑦 ∗ is the tracking error, and \n• 𝐾௉, 𝐾ூ, 𝐾஽ are the controller tuning gains. \nThe block diagram representation of the developed i-PID controller structure is given \nin Figure 6 to represent the key concepts of the model-free i-PID control approach visually. \n \nFigure 6. i-PID controller structure. \nIn the real-time implementation of the proposed control architecture, the trajectory \ngeneration, trajectory tracking control, ocean current observer and thruster model subsys-\ntems are on the software level. The force dem ands obtained by using (21) in the thruster \nmodel subsystem are converted into PWM signal s using the chart in Figure 4, and sent \ndirectly to ESCs of the thruster motors whic h are on the hardware level, to produce re-\nquired torques and moments. The explained relation applies for all controller structures \nin this paper.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.2 i-PID with PD Feedforward (2 DOF i-PID) Controller Design",
+      "level": 2,
+      "text": "Utilizing an extra feedforward loop in the trajectory tracking controller structure is a \nvery common method in the literature [26,32,3 3], especially when high external disturb-\nances are present in the operating environment. The main idea of using the feedforward \nstructure in trajectory tracking control is enhancing the strength of the feedback system \nagainst external disturbances and model uncertainties using a feedforward controller. \nThe PD feedforward control law can be derived for a SISO system as follows: \n𝐺(𝑡) = −𝛼𝐾\n௉𝑦∗(𝑡) −𝛽 𝐾஽𝑦∗ሶ (𝑡) (28) \nwhere 𝛼 and 𝛽 are the feedforward controller tuning parameters. Combining (27) and \n(28) yields the complete i-PID with PD feed forward control law. The control law is then \nextended by defining six SISO controllers for six motion axes of the AUV. Finally, the i-\nPID with PD feedforward controller is derived as follows for six-DOF AUV motion con-\ntrol. \n𝑢\n௜(𝑡) = − 𝐹෠௜(𝑡)\n𝑎௜\n+\n𝑦∗ሷ ௜(𝑡)\n𝑎௜\n+ 𝐾௉௜𝑒௜(𝑡)+ 𝐾ூ௜ න𝑒 ௜(𝑡)+ 𝐾஽௜𝑒ሶ௜(𝑡)+ 𝐺௜(𝑡) (29) \nThe developed control structure is summarized in Figure 7. \nFigure 6. i-PID controller structure.\nIn the real-time implementation of the proposed control architecture, the trajectory\ngeneration, trajectory tracking control, ocean current observer and thruster model subsys-\ntems are on the software level. The force demands obtained by using (21) in the thruster\nmodel subsystem are converted into PWM signals using the chart in Figure 4, and sent\ndirectly to ESCs of the thruster motors which are on the hardware level, to produce re-\nquired torques and moments. The explained relation applies for all controller structures in\nthis paper.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.2 i-PID with PD Feedforward (2 DOF i-PID) Controller Design",
+      "level": 2,
+      "text": "Utilizing an extra feedforward loop in the trajectory tracking controller structure is\na very common method in the literature [26,32,33], especially when high external distur-\nbances are present in the operating environment. The main idea of using the feedforward\nstructure in trajectory tracking control is enhancing the strength of the feedback system\nagainst external disturbances and model uncertainties using a feedforward controller.\nThe PD feedforward control law can be derived for a SISO system as follows:\nG(t) =−αKPy∗(t)− βKD\n.\ny∗(t) (28)\nwhere α and β are the feedforward controller tuning parameters. Combining (27) and (28)\nyields the complete i-PID with PD feedforward control law. The control law is then extended\nby defining six SISO controllers for six motion axes of the AUV . Finally , the i-PID with PD\nfeedforward controller is derived as follows for six-DOF AUV motion control.\nui(t) =−\nˆFi(t)\nai\n+\n..\ny∗\ni(t)\nai\n+ KPiei(t) + KIi\n∫\nei(t) + KDi\n.\nei(t) + Gi(t) (29)\nThe developed control structure is summarized in Figure 7.\nMachines 2023, 11, 300 12 of 21\nMachines 2023, 11, x FOR PEER REVIEW 12 of 21 \n \n \n \nFigure 7. i-PID with PD feedforward (two-DOF i-PID) controller block diagram.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.3 Hybrid Controller Design",
+      "level": 2,
+      "text": "An underwater vehicle encounters many different forces and disturbances when op-\nerating in the underwater environment; these are generally unexpected and nontrivial to \nmathematically represent. Therefore, considering these forces and disturbances to achieve \nrobust and stable motions of the AUV become s a must. However, obtaining these forces \nexperimentally is a difficult and expensive process. \nThe proposed hybrid controller framework is developed to satisfy the trajectory \ntracking control requirements of the AUV system in the presence of the disruptive condi-\ntions of the underwater environment. Since the proposed control algorithm has no infor-\nmation about the plant and external disturba nces, the possible expenses of plant model-\nling and experimenting with the external forces of the underwater environment are saved. \nThe proposed hybrid i-PID controller structure consists of two subparts as the position \n(𝑥, 𝑦, 𝑧), and the orientation ( 𝛷, 𝜃, 𝛹) controllers. The position controller consists of the \nthree i-PID with PD feedforward controllers which employ the i-PID controller as a feed-\nback controller and the conventional PD controller as a feedforward controller. The feed-\nforward structure provides better disturbance rejections on the axes wherein the motion \ngeneration is desired. Additionally, the axes on which the motion generation is undesired \nmust be kept stable on the AUV to avoid th e system becoming unst able. The instability \navoidance problem becomes more crucial when considering that the Euler transformation \nused in the kinematic equations involves singular points in its internal mathematics which \nmust be avoided during operations. Hence, the feedforward structure is not employed in \nthe orientation controller of the hybrid design to achieve better overall trajectory tracking \nprecision and to reduce the total tuning parameter number on the system. Consequently, \nthe orientation controller consists of the th ree i-PID controllers. Figure 8 shows the main \nideas of the proposed hybrid control architecture. \nConsidering the model-free control algori thms have been developed for single-in-\nput–single-output (SISO) systems and the LIVA AUV has been modelled by six inputs (6 \nthrusters) and six outputs ( 𝑥, 𝑦, 𝑧, 𝛷, 𝜃, 𝛹), the proposed hybrid control architecture com-\nprises six SISO controllers. \nFigure 7. i-PID with PD feedforward (two-DOF i-PID) controller block diagram.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "3.3 Hybrid Controller Design",
+      "level": 2,
+      "text": "An underwater vehicle encounters many different forces and disturbances when\noperating in the underwater environment; these are generally unexpected and nontrivial to\nmathematically represent. Therefore, considering these forces and disturbances to achieve\nrobust and stable motions of the AUV becomes a must. However, obtaining these forces\nexperimentally is a difﬁcult and expensive process.\nThe proposed hybrid controller framework is developed to satisfy the trajectory track-\ning control requirements of the AUV system in the presence of the disruptive conditions\nof the underwater environment. Since the proposed control algorithm has no information\nabout the plant and external disturbances, the possible expenses of plant modelling and\nexperimenting with the external forces of the underwater environment are saved. The\nproposed hybrid i-PID controller structure consists of two subparts as the position(x, y, z),\nand the orientation ( Φ, Θ, Ψ) controllers. The position controller consists of the three\ni-PID with PD feedforward controllers which employ the i-PID controller as a feedback\ncontroller and the conventional PD controller as a feedforward controller. The feedforward\nstructure provides better disturbance rejections on the axes wherein the motion generation\nis desired. Additionally, the axes on which the motion generation is undesired must be\nkept stable on the AUV to avoid the system becoming unstable. The instability avoidance\nproblem becomes more crucial when considering that the Euler transformation used in\nthe kinematic equations involves singular points in its internal mathematics which must\nbe avoided during operations. Hence, the feedforward structure is not employed in the\norientation controller of the hybrid design to achieve better overall trajectory tracking\nprecision and to reduce the total tuning parameter number on the system. Consequently,\nthe orientation controller consists of the three i-PID controllers. Figure 8 shows the main\nideas of the proposed hybrid control architecture.\nConsidering the model-free control algorithms have been developed for single-input–\nsingle-output (SISO) systems and the LIVA AUV has been modelled by six inputs\n(6 thrusters) and six outputs (x, y, z, Φ, Θ, Ψ), the proposed hybrid control architecture\ncomprises six SISO controllers.\nThe linear motion axes PD feedforward input Gj(t) can be deﬁned as follows:\nGj(t) =−αjKP jy∗\nj(t)− βjKD j\n.\ny∗\nj(t) (30)\nMachines 2023, 11, 300 13 of 21\nwhere j∈ (x, y, z). Combining (27) and (30) yields the complete i-PID with PD feedforward\ncontrol law uj for the linear motion axes (x, y, z) as follows:\nuj(t) =−\nˆFj(t)\naj\n+\n..\ny∗\nj(t)\naj\n+ KP jej(t) + KI j\n∫\nej(t) + KD j\n.\nej(t) + Gj(t) (31)\nBy utilizing (27), the complete i-PID control law for the angular motion axes(Φ, Θ, Ψ)\ncan be deﬁned by uk:\nuk(t) =−\nˆFk(t)\nak\n+\n..\ny∗\nk(t)\nak\n+ KPkek(t) + KI k\n∫\nek(t) + KDk\n.\nek(t) (32)\nwhere k∈ (Φ, Θ, Ψ), ˆFj =\n[ ˆFx, ˆFy, ˆFz\n]\nand ˆFk =\n[ ˆFΦ, ˆFθ, ˆFΨ\n]\n. The resulting ˆFj,k is the\namount representing the sum of the real dynamics of the AUV and external disturbances\nin each axis of the six DOF. Thus, we can deﬁne six-DOF hybrid control law in a vector\nrepresentation as follows.\nU =\n[\nux uy uz uΦ uθ uΨ\n]T (33)\nMachines 2023, 11, x FOR PEER REVIEW 13 of 21 \n \n \n \nFigure 8. Hybrid controller block diagram. \nThe linear motion axes PD feedforward input 𝐺௝(𝑡) can be defined as follows: \n𝐺௝(𝑡) = −𝛼௝𝐾௉௝ 𝑦∗\n௝(𝑡) −𝛽 ௝𝐾஽௝ 𝑦∗ሶ ௝(𝑡) (30) \nwhere 𝑗∈ (𝑥, 𝑦, 𝑧). Combining (27) and (30) yields the complete i-PID with PD feedfor-\nward control law 𝑢௝ for the linear motion axes (𝑥, 𝑦, 𝑧) as follows: \n𝑢௝(𝑡) = − 𝐹෠௝(𝑡)\n𝑎௝\n+\n𝑦∗ሷ ௝(𝑡)\n𝑎௝\n+ 𝐾௉௝ 𝑒௝(𝑡)+ 𝐾ூ௝ න𝑒௝(𝑡)+ 𝐾஽௝ 𝑒ሶ௝(𝑡)+ 𝐺௝(𝑡) (31) \nBy utilizing (27), the complete i-PID control law for the angular motion axes (𝛷, 𝜃, 𝛹) \ncan be defined by 𝑢௞: \n𝑢௞(𝑡) = − 𝐹෠௞(𝑡)\n𝑎௞\n+\n𝑦∗ሷ ௞(𝑡)\n𝑎௞\n+ 𝐾௉௞𝑒௞(𝑡)+ 𝐾ூ௞ න𝑒 ௞(𝑡)+ 𝐾஽௞𝑒ሶ௞(𝑡) (32) \nwhere 𝑘∈ (𝛷, 𝜃, 𝛹) , 𝐹෠௝ = [ 𝐹෠௫, 𝐹෠௬, 𝐹෠௭]  and 𝐹෠௞ = [ 𝐹෠஍, 𝐹෠஘, 𝐹෠ஏ] . The resulting 𝐹෠௝,௞  is the \namount representing the sum of the real dynamics of the AUV and external disturbances \nin each axis of the six DOF. Thus, we can define six-DOF hybrid control law in a vector \nrepresentation as follows. \n𝑈 =[ 𝑢௫ 𝑢௬ 𝑢௭ 𝑢஍ 𝑢஘ 𝑢ஏ]் (33)",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4 Results and Performance",
+      "level": 1,
+      "text": "To demonstrate control performance improvement achieved by the novel controller \nand inspect the resulting behavior under the different conditions and disturbances, the \ncomputer simulations were conducted for the PID, i-PID, 2 DOF i-PID, and hybrid con-\ntrollers. The control inputs and trajectory tracking errors for all controllers are shown, and \nthe tabulated results are discussed individually for all simulation cases in this section. \nTo evaluate and compare the performances of the controllers, some performance \nmetrics were used. These are the integral of absolute error (IAE), the integral of absolute \nerror multiplied by time (ITAE), the integral of the square of the control input (ISCI), and \nthe integral of variance of the control input (IVCI). The control performance indexes are \ngiven in Equations (34)–(37). \n𝐼𝐴𝐸 = න |𝑒\n௥௘௔௟| 𝑑𝑡\n௧\n଴\n (34) \n𝐼𝑇𝐴𝐸 = න𝑡 |𝑒௥௘௔௟| 𝑑𝑡\n௧\n଴\n (35) \nFigure 8. Hybrid controller block diagram.",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4 Results and Performance",
+      "level": 1,
+      "text": "To demonstrate control performance improvement achieved by the novel controller\nand inspect the resulting behavior under the different conditions and disturbances, the\ncomputer simulations were conducted for the PID, i-PID, 2 DOF i-PID, and hybrid con-\ntrollers. The control inputs and trajectory tracking errors for all controllers are shown, and\nthe tabulated results are discussed individually for all simulation cases in this section.\nTo evaluate and compare the performances of the controllers, some performance\nmetrics were used. These are the integral of absolute error (IAE), the integral of absolute\nerror multiplied by time (ITAE), the integral of the square of the control input (ISCI), and\nthe integral of variance of the control input (IVCI). The control performance indexes are\ngiven in Equations (34)–(37).\nIAE =\n∫ t\n0\n|ereal| dt (34)\nITAE =\n∫ t\n0\nt|ereal| dt (35)\nISCI = ∑\n6\n∑\ni=1\n|ui|2 (36)\nMachines 2023, 11, 300 14 of 21\nIVCI = ∑\n6\n∑\ni=1\n|∆ui| (37)\nwhere ereal denotes the real tracking error ereal = η− r, and ui denotes the control input\nproduced by the ith thruster. The reference trajectory used in the simulations was designed\nto be the hardest possible trajectory, and includes several maneuvering sequences to analyze\ncontroller performances when the torque demand and speed are transiently approaching\nthe physical limits of the AUV .\nIn computer simulations, the current speed was generated as a random number with\n0.5 m/s mean and±0.3 m/s variance. The ocean current angle components αc and βc were\nalso generated as a random number with 45 degrees mean and±45 degrees variance. Sam-\npling frequency and simulation times of 1 kHz and 100 s were used, respectively. The addi-\ntive measurement noise used here was set as zero-mean Gaussian noise, with a maximum\namplitude of±0.1 m in position and±2.3 degrees in orientation measurements. The K1 and\nK2 observer gain matrices were chosen as K1 = (I + MA + MRB )K2 and K2 = 2I6×6. The\nthruster limits are deﬁned as Fmax f , Fmaxb = 40 N, and the thruster coefﬁcient matrix\nas KT = diag [40 40 40 40 40 40]. The non-physical constant parameter a in (25) is found\nby trial and error by conducting computer simulations. The tuning parameters of the\ncontrollers, i.e., KP, KI, KD, α and β are found by performing optimization, as described\nin [26] in the MATLAB optimization toolbox, using a nonlinear programming solver such\nas the fmincon function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "4.1 Trajectory Tracking Control Simulation",
+      "level": 2,
+      "text": "The reference trajectory used in this simulation was deﬁned byr1 = [xd, yd, zd, 0, 0, 0] T,\nwhere xd = 2 sin(0.096t) + 2 sin(0.288t), yd = 2 sin(0.048t) + 2 sin(0.144t) and zd =−0.1t.\nThe trajectory tracking simulation was conducted only in the presence of random ocean\ncurrents. The measurement noise, external disturbances, thruster malfunction, and model\nparameter uncertainty were not considered in this case. The simulation results are given in\nFigures 9 and 10.\nMachines 2023, 11, x FOR PEER REVIEW 14 of 21 \n \n \n𝐼𝑆𝐶𝐼 = ෍෍ |𝑢௜|ଶ\n଺\n௜ୀଵ\n (36) \n𝐼𝑉𝐶𝐼 = ෍෍ |∆𝑢௜|\n଺\n௜ୀଵ\n (37) \nwhere 𝑒௥௘௔௟ denotes the real tracking error 𝑒௥௘௔௟ = ƞ−𝑟 , and  𝑢௜ denotes the control in-\nput produced by the 𝑖௧௛ thruster. The reference trajectory used in the simulations was \ndesigned to be the hardest possible trajecto ry, and includes several maneuvering se-\nquences to analyze controller performances when the torque demand and speed are tran-\nsiently approaching the physical limits of the AUV. \nIn computer simulations, the current speed was generated as a random number with \n0.5 𝑚/𝑠 mean and േ0.3 𝑚/𝑠 variance. The ocean current angle components  𝛼\n௖ and 𝛽௖ \nwere also generated as a random number with 45 𝑑𝑒𝑔𝑟𝑒𝑒𝑠 mean and േ45 𝑑𝑒𝑔𝑟𝑒𝑒𝑠 var-\niance. Sampling frequency and simulation times of 1 kHz and 100 s were used, respec-\ntively. The additive measurement noise used he re was set as zero-mean Gaussian noise, \nwith a maximum amplitude of േ0.1 𝑚  in position and േ2.3 𝑑𝑒𝑔𝑟𝑒𝑒𝑠 in orientation \nmeasurements. The 𝐾ଵ and 𝐾ଶ o b s e r v e r  g a i n  m a t r i c e s  w e r e  c h o s e n  a s  𝐾ଵ = (𝐼 + 𝑀஺ +\n𝑀ோ஻)𝐾ଶ and 𝐾ଶ =2 𝐼଺௫଺. The thruster limits are defined as 𝐹௠௔௫௙, 𝐹௠௔௫௕ = 40 𝑁, and the \nthruster coefficient matrix as 𝐾் = 𝑑𝑖𝑎𝑔[40 40 40 40 40 40]. The non-physical constant \nparameter 𝑎 in (25) is found by trial and error by conducting computer simulations. The \ntuning parameters of the controllers, i.e., 𝐾௉, 𝐾ூ, 𝐾஽, 𝛼 and 𝛽 are found by performing \noptimization, as described in [26] in the MATLAB optimization toolbox, using a nonlinear \nprogramming solver such as the fmincon function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "4.1 Trajectory Tracking Control Simulation",
+      "level": 2,
+      "text": "The reference trajectory used in this simulation was defined by 𝑟ଵ =\n[𝑥ௗ, 𝑦ௗ, 𝑧ௗ, 0,0,0] ் , where 𝑥ௗ =2 s i n(0.096𝑡) + 2sin (0.288𝑡) , 𝑦ௗ =2 s i n(0.048𝑡) +\n2sin (0.144𝑡) and 𝑧ௗ = −0.1𝑡. The trajectory tracking simulation was conducted only in \nthe presence of random ocean currents. The measurement noise, external disturbances, \nthruster malfunction, and model parameter uncertainty were not considered in this case. \nThe simulation results are given in Figures 9 and 10. \n \nFigure 9. Trajectory tracking control simulation performances in operational space.",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Earth-fixed and body-fixed reference frames."
+    },
+    {
+      "id": "f2",
+      "caption": "Different views of the LIVA AUV ."
+    },
+    {
+      "id": "f3",
+      "caption": "Thruster identification setup. (a) CAD view (b) real setup."
+    },
+    {
+      "id": "f4",
+      "caption": "Thruster characteristics chart."
+    },
+    {
+      "id": "f5",
+      "caption": "Thrust force generation mechanism of the LIVA AUV."
+    },
+    {
+      "id": "f6",
+      "caption": "i-PID controller structure."
+    },
+    {
+      "id": "f7",
+      "caption": "i-PID with PD feedforward (two-DOF i-PID) controller block diagram."
+    },
+    {
+      "id": "f8",
+      "caption": "Hybrid controller block diagram."
+    },
+    {
+      "id": "f9",
+      "caption": "Trajectory tracking control simulation performances in operational space."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "LIVA AUV mathematical model parameters."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e34",
+      "latex_or_text": "(34)"
+    },
+    {
+      "id": "e35",
+      "latex_or_text": "(35)"
+    },
+    {
+      "id": "e36",
+      "latex_or_text": "(36)"
+    },
+    {
+      "id": "e37",
+      "latex_or_text": "(37)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

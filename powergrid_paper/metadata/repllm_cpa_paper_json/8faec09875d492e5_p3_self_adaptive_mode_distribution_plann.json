@@ -1,0 +1,384 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__06__a_classification_based_global_optimization_appr__5b5b865830.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Background",
+      "level": 2,
+      "text": "The increasing penetration of distributed energy resources (DERs), capacitor banks\n(CBs), and electric vehicle charging stations (EVCSs) in modern power distribution systems\nEnergies 2026, 19, 3262 https://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 2 of 23\nis driven by the global transition toward sustainable and low-carbon energy infrastruc-\ntures. This transition directly supports several Sustainable Development Goals (SDGs),\nparticularly SDG 7 (Affordable and Clean Energy), SDG 9 (Industry, Innovation, and Infras-\ntructure), and SDG 11 (Sustainable Cities and Communities) [1,2]. Consequently, active\npower distribution networks (APDNs) are evolving from passive energy delivery systems\ninto intelligent and flexible networks capable of integrating renewable energy resources\nwhile maintaining reliable operation.\nThe integration of distributed generation (DG) units, CBs, and EVCSs offers significant\ntechnical and environmental benefits, including improved energy efficiency, reduced green-\nhouse gas emissions, enhanced voltage regulation, and increased system flexibility [3,4].\nHowever, the rapid growth of electric vehicles (EVs) introduces new operational challenges\ndue to the substantial and often concentrated charging demand imposed on distribution\nnetworks. High EV penetration levels can increase network loading, voltage deviations,\nand power losses, making coordinated planning and operation essential [5,6].\nTo address these challenges, several studies have investigated the concept of hosting\nfactors (HFs), which quantify the capability of distribution networks to accommodate\nadditional DERs and EV charging demand. In particular, the EV hosting factor (EV_HF)\nhas been identified as a critical parameter influencing network performance, power losses,\nand voltage profiles [7]. Previous research has demonstrated that incorporating EV_HF into\nplanning strategies can simultaneously reduce active power losses and improve voltage\nregulation throughout the network [8].\nVarious optimization approaches have been proposed to determine the optimal allo-\ncation and sizing of network components. For example, the Quantum-Behaved Gaussian\nMutational Dragonfly Algorithm (QGDA) was applied to solve complex planning prob-\nlems in distribution systems [9], while Harmony Search and Particle Swarm Optimization\n(PSO) techniques were employed to enhance voltage quality and overall network perfor-\nmance [10]. Furthermore, the coordinated integration of distributed generators (DGs),\ndistributed static synchronous compensators (DSTATCOMs), and EVCSs has been shown\nto improve system reliability and operational efficiency [11–13]. Other studies have focused\non minimizing electrical losses through the simultaneous placement of DGs and EVCSs\nwhile considering hosting factor constraints [12,13].\nAdditional optimization methods, including Differential Evolution (DE), Grey Wolf\nOptimizer (GWO), adaptive Particle Swarm Optimization (PSO), and Fuzzy Analytic Hi-\nerarchy Process (AHP), have been successfully utilized to minimize energy losses and\nimprove voltage profiles in distribution systems [14,15]. In some investigations, EV_HF\nwas assumed to be equivalent to the total load demand of the network [16], whereas other\nstudies concentrated on identifying optimal EVCS locations [17] or addressing EV charg-\ning uncertainties using probabilistic modeling approaches [18,19]. Moreover, integrating\nrenewable energy sources directly with EV charging stations has been reported to alleviate\nnetwork loading and enhance overall system performance [20].\nDespite the considerable progress achieved in literature, most existing studies focus\non optimizing individual components or specific operational objectives. The coordinated\nplanning of DGs, CBs, and EVCSs while simultaneously considering network losses, volt-\nage profile enhancement, and hosting factor constraints remains an active research area\nrequiring further investigation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Difficulties in Contemporary Distribution Systems",
+      "level": 2,
+      "text": "Radial distribution systems continue to face several operational challenges despite\ntheir widespread adoption. Due to their radial structure and unidirectional power flow\ncharacteristics, these systems are particularly vulnerable to voltage drops, increased active\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 3 of 23\nand reactive power losses, branch overloading, and reduced voltage stability margins.\nThe growing penetration of EVCSs further intensifies these issues because of the high and\nconcentrated charging demand associated with fast-charging facilities.\nIn addition, the intermittent nature of renewable-based DGs introduces uncertainty\nin power generation, which can complicate network operation, protection coordination,\nand power quality management. Without appropriate planning and control strategies,\nthe uncontrolled integration of EVCSs, DGs, and CBs may result in inefficient network\noperation, increased operating costs, and reduced system reliability. Therefore, coordinated\noptimization frameworks are essential to ensure secure, economical, and sustainable opera-\ntion of modern distribution networks while supporting future growth in renewable energy\nand electric vehicle adoption [21,22].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1.3 Current Methods and Restrictions",
+      "level": 2,
+      "text": "The best locations and sizes for EVCSs, DGs, and CBs in distribution networks have\nbeen extensively studied. To solve these planning issues, both conventional and meta-\nheuristic optimization approaches have been extensively used. The methods, goals, and\ninherent limitations of typical studies are compiled in Table 1. The table shows that most of\nthe current approaches rely on metaheuristic algorithms (such as PSO, GA, and Firefly),\nwhich have several serious drawbacks.\nTable 1. Comparison of existing studies.\nStudy Approach Objectives Limitations\n[23] Hybrid metaheuristic\n(PSO-GA)\nMinimize losses, improve\nvoltage\nNo EVCS integration,\nparameter sensitivity\n[24] Multi-objective PSO Loss reduction, voltage\nprofile\nBlack-box optimization, high\ncomputational time\n[25] Genetic Algorithm (GA) Optimal DG and CB\nplacement\nNo EVCS, prone to local\noptima\n[26] Fuzzy Firefly Algorithm DG allocation, loss\nminimization\nComplex tuning, lacks\nengineering insight\n[27] Systematic review Equity in EVCS distribution Technical optimization not\naddressed\n[28] (CGO)\nIntegrated DG, CB\nplacement; loss\nminimization, voltage\nstability, VDI reduction\nNo EVCS integration, no\nthermal capacity limits\nstudy, and no CO2 emission\ncalculation\nThis Study\nClassification-based\nGlobal Optimization\n(CGO)\nIntegrated DG, CB, EVCS\nplacement; loss\nminimization, voltage\nstability, VDI reduction,\nhosting factor analysis\n–\n1. Excessive computational load and algorithm parameter sensitivity.\n2. Interpretability issues brought on the black-box optimization techniques.\n3. Variations in network topology performance.\n4. Limited application of engineering concepts, resulting in solutions that could not be\ncompatible with realistic operating limitations.\n5. Seldom use of a single, deterministic framework to plan EVCSs, DGs, and CBs together\nunder different hosting conditions.\n6. Distribution branches’ thermal capacity limitations are not synchronized.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "1.4 Contributions of Manuscript",
+      "level": 2,
+      "text": "This study depends on the CGO optimization methodology to include electric vehicle\ncharging stations (EVCS) under multiple hosting factors (30%, 40%, and 50%) while coordi-\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 4 of 23\nnating the thermal capacity limits of distribution branches alongside the voltage profile\nimprovement and minimizing both the distribution power losses and the cost of energy\nlosses, while reducing the CO2 annual emissions. The work presented in this paper is based\non the Classification-based Global Optimization (CGO) framework for optimal DGs and\nCBs placement. The extended framework fills a gap in the literature by addressing the\nintegrated planning of EVCSs, DGs, and CBs. The following are the main contributions of\nthis study:\n1. The Optimization Scope: Incorporates EV charging stations under multiple hosting\nfactors into the existing CGO framework, enabling holistic planning of active and\nreactive power resources alongside EV infrastructure.\n2. Engineering-Driven Classification: Unlike purely algorithmic approaches, the pro-\nposed method classifies network buses based on voltage sensitivity, active power\ndemand, and reactive power demand, ensuring optimization is guided by electrical\nengineering principles.\n3. Deterministic Optimization Framework: A structured global optimization function\nis employed, eliminating randomness and parameter sensitivity associated with\nmetaheuristics while ensuring reproducible and interpretable solutions.\n4. Superior Performance and Scalability: The method is validated on IEEE 33-bus and\n69-bus systems, demonstrating significant improvements in loss reduction, voltage\nstability, and computational efficiency compared to existing techniques under high\nEV penetration.\n5. Sustainability Alignment: By enhancing grid efficiency and facilitating renewable and\nEV integration, the approach directly supports SDGs 7, 9, 11, and 13, contributing to\nsustainable energy transition goals.\nThe mentioned existing methods in Table 1 are optimization techniques used for radial\ndistribution networks, but the work in this manuscript is done under the assumption of a\nnetwork having two EVCS, two CBs and two DGs; these operating conditions may not be\nfound for other existing algorithms, but the drawbacks of these existing methods are listed\nin this table; the other tables in the manuscript show the obtained results of the proposed\napproach, which is compared with the base case study but the operation with the proposed\napproach is done with very high loading by addition of high EV penetration, although the\nproposed approach verifies the optimal solution as compared with base case operation that\noperates without any EV penetration.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "1.5 Problem Statement and Study Scope",
+      "level": 2,
+      "text": "The combined optimal planning challenge of identifying the optimal placement and\nsizing of EVCS, DGs, and CBs in radial distribution networks is the focus of this study to\nverify the following:\n1. Reduce power losses, including active and reactive;\n2. Improve voltage stability and voltage profiles;\n3. Uphold operating restrictions (power balance, temperature limits, and voltage limitations);\n4. Assess system performance at different EV penetration levels (30%, 40%, and 50%);\n5. Reduce annual CO 2 emissions;\n6. Assure the interpretability of the answer and computational efficiency.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "1.6 Organization of the Manuscript",
+      "level": 2,
+      "text": "The remainder of this paper is organized as follows: Section 2 details the proposed\nCGO methodology, objective functions, and the unified optimization algorithm. Section 3\ndescribes system modeling. The case study systems (IEEE 33-bus and 69-bus) are detailed\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 5 of 23\nin Section 4. Section 5 presents simulation results, comparative analysis, and discussion.\nFinally, Section 6 concludes the paper with key findings and future research directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "This section presents the proposed comprehensive planning methodology for optimal\nallocation and sizing of EVCSs, DGs, and CBs in radial distribution networks. The method-\nology integrates three stages: (1) EVCS planning, (2) DG planning, and (3) CB planning.\nFull-system evaluation including EVCSs, DGs, and CBs is implemented. The workflow\nuses multi-objective optimization supported by power-flow calculations and branch-based\nsearch strategies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.1 Overview of the Optimization Strategy",
+      "level": 2,
+      "text": "The algorithm begins with a base-case power flow analysis to capture the initial\noperating conditions, including losses, voltage profile, and total load demand. The radial\nnetwork is decomposed into branches from the radial tree, each ranked according to:\n1. Active power demand—for EVCS and DGs placement.\n2. Reactive power demand—for CBs placement.\nThis classification ensures that resources are allocated to branches with the highest\nneed, improving search efficiency and solution quality. Firstly, EVCSs are optimally deter-\nmined their placement and size based on the operating hosting factor, then DG units are\nplaced to address active power deficits, and finally CBs for reactive support. All placements\nrespect thermal limits, voltage constraints, and operational bounds.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2 Global Multi-Objective Function",
+      "level": 2,
+      "text": "The optimization is guided by a composite objective function that balances technical\nperformance, economic benefit, and environmental impact as shown by Equation (1), which\nrepresents the global objective function for this study.\nFt = min\n\u0012\nW1(PLoss + QLoss ) + W2 × VDI − W3 × CSaved Energy Loss + W4 ×\n\u0012 1\n∆QCO2\n\u0013\u0013\n(1)\nwhere PLoss: total active power loss (kW) and QLoss: total reactive power loss (kVAR).\nVDI : voltage deviation index, CSaved Energy Loss is the annual saving due to reduced losses\n($), ∆QCO2 is the annual CO2 emission reduction (kg/year), and W1, W2, W3, and W4 are\nweighting factors. The weighting factors were selected based on normalized objective\nfunctions and system priorities. Initially, equal weights were used, followed by tuning\nthrough sensitivity analysis. Increasing W1 emphasizes loss minimization, W2 improves\nvoltage profile, while W3 and W4 enhance economic and environmental benefits. Their\nvalues are as follows: W1 = 0.4, W2 = 0.25, W3 = 0.1, and W4 = 0.25. These values were chosen\nbased on the relative importance of minimizing power losses, improving voltage profile by\nreducing voltage deviation index, increasing the annual cost of the saved energy losses and\nminimizing the annual CO2 emissions. Additionally, several weight combinations were\ntested during preliminary simulations, and the selected values provided the best overall\ntrade-off among the considered objectives.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Unified Optimization Algorithm",
+      "level": 2,
+      "text": "The combined algorithm used in this work merges the three flowcharts into a single\nstructured routine. The unified pseudocode is provided below, corresponding to the flow\ndiagrams. The proposed approach aimed at minimizing the electrical losses, improving the\nvoltage level on the network buses, verifying economic operation on the network operation\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 6 of 23\nand minimizing the amount of CO2 emissions for improving the environmental condition.\nThese objectives are connected to each other and can be verified by reducing the current\nflows in the network lines. Each line current is dependent on the power flow in this line.\nThe power flow in any line depends on the loads supplied from this line so, if DGs and\nCBs are connected at suitable buses, that will inject both active and reactive power to the\nnetwork so the power flow in some lines are reduced and, consequently, the current flows\nin these lines are reduced also; then, all objectives are verified.\nThe proposed Classification-Based Global Optimization (CGO) method is charac-\nterized by improving the searching process by including only a small number of buses\nfrom the distribution network; these buses are in the high loaded branches of the radial\ndistribution network, so the number of iterations needed to obtain the optimal solution\nare reduced, and the time consumption for the final solution is minimized, and also the\nproposed approach is a cleared systematic method, while other existing methods, such as\nPSO, GA, or GWO, rely on stochastic search alone; as mentioned in Table 1, PSO is repre-\nsented as black-box optimization technique, GA may give local optima, and Fuzzy Firefly\nAlgorithm is dependent on a complex tuning of parameters. The results obtained using\nCGO in Tables 2–5 show how the performance of the distribution network is improved.\nThe proposed framework applies classification based on voltage sensitivity and power\ndemand. These two factors are determined related to the heavily loaded branches of the\nnetwork tree, which are known due to the known values of load power on each bus bar in\nthe network, so there is no probability of working on misclassification.\nTable 2. IEEE-33 bus with DGs and EVCSs.\nParameter Base Case HF of 30% HF of 40% HF of 50%\nPLoss (kW) 210.99 87.33 87.63 88.06\nQLoss (kVAR) 143.13 60.01 59.97 60.16\nVmin (p.u.) 0.9038 0.969 0.966 0.964\nVDI (×10−3) – 16.98 20.03 21.95\nSlack PF (lag) 0.8490 0.609 0.631 0.641\nTable 3. IEEE-33 bus with DGs, CBs, and EVCSs.\nParameter Base Case HF of 30% HF of 40% HF of 50%\nPLoss (kW) 210.99 28.67 28.84 29.19\nQLoss (kVAR) 143.13 20.70 20.56 20.70\nVmin (p.u.) 0.9038 0.981 0.980 0.98\nVDI (×10−3) – 1.49 2.00 2.42\nSlack PF (lag) 0.8490 0.904 0.913 0.917\nTable 4. IEEE-69 bus with DGs and EVCSs.\nParameter Base Case HF of 30% HF of 40% HF of 50%\nPLoss (kW) 225.00 72.13 72.28 73.02\nQLoss (kVAR) 102.17 36.13 36.28 36.65\nVmin (p.u.) 0.9092 0.979 0.977 0.9769\nVDI (×10−3) – 0.43 0.53 0.53\nSlack PF (lag) 0.8214 0.502 0.524 0.5428\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 7 of 23\nTable 5. IEEE-69 bus with DGs, CBs, and EVCSs.\nParameter Base Case HF of 30% HF of 40% HF of 50%\nPLoss (kW) 225.00 7.65 7.85 8.50\nQLoss (kVAR) 102.17 8.28 8.32 8.65\nVmin (p.u.) 0.9092 0.994 0.993 0.992\nVDI (×10−3) – 0.035 0.046 0.070\nSlack PF (lag) 0.8214 0.812 0.828 0.8412\nFigure 1 outlines the process for integrating EVCSs under varying penetration levels\n(30%, 40%, and 50% of total load). The total EVCS load is split between two candidate\nstations, and their locations are searched within the highest-demand branches. Sizes are\niteratively adjusted to minimize the global objective function Ft.\nFigure 1. Optimal placement and sizing of EVCSs.\nThe proposed approach is applied for EV penetrations (30%, 40% and 50%) as planning\nproblems for electrical distribution network and the obtained results show effective optimal\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 8 of 23\nsolutions for each penetration, so, for any additional simulations that may be at 70–100%\nEV penetration, the CGO will maintain system performance through optimal resource\nallocations. The method can be extended to stochastic EV behavior using probabilistic\nmodels as future work.\nThe EV charging load is assumed to be equally split between two charging stations at\nthe initial iteration but, for the final method, the EV load is distributed between the two\nstations with different sizes to obtain the optimal solution. The results of EV loading for\neach penetration will be obtained in Table 6 for 33-bus and Table 7 for 69-bus networks.\nTable 6. IEEE-33 bus optimal placement, sizing, and all objectives, with DGs, CBs, and EVCSs.\nParameter HF of 30% HF of 40% HF of 50%\nEVCSs rating\n(kW)\n459.3\n655.2\n612.3\n873.7\n765.4",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t5",
+          "t2",
+          "t6",
+          "t7",
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "1092.1 DGs ratings",
+      "level": 2,
+      "text": "(kW)\n1629.3\n1475.2\n1720.3\n1650.7\n1860.4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "1830.1 CBs ratings",
+      "level": 2,
+      "text": "(kVAR)\n1070\n420\n1070\n420\n1070\n420\n∆QCO2\n(ton/year) 11.8 × 103 13.2 × 103 14.4 × 103\nCDG + CCB\n(USD) 2.06 × 106 2.23 × 106 2.44 × 106\nCsaved energy\n(USD/year) 172.4 × 103 202.23 × 103 234.4 × 103\nPayback period\n(year) 11.94 11.02 10.41\nTable 7. IEEE-69 bus optimal placement, sizing, and all objectives, with DGs, CBs, and EVCSs.\nParameter HF of 30% HF of 40% HF of 50%\nEVCSs rating\n(kW)\n244\n896.7\n325.4\n1195.5\n406.8",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t7"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "1494.3 DGs ratings",
+      "level": 2,
+      "text": "(kW)\n2044\n1386.6\n2060.4\n1655.5\n2160.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "1850.3 CBs ratings",
+      "level": 2,
+      "text": "(kVAR)\n1280\n330\n1280\n330\n1280\n330\n∆QCO2\n(ton/year) 13.33 × 103 14.3 × 103 15.55 × 103\nCDG + CCB\n(USD) 2.27 × 106 2.45 × 106 2.65 × 106\nCsaved energy\n(USD/year) 195.7 × 103 227.7 × 103 261.6 × 103\nPayback period\n(year) 11.6 10.76 10.13\nFigure 2 focuses on DGs allocation. Branches are sorted by active power demand,\nand DG size is initialized to match branch demand. Candidate locations are evaluated\nwithin each branch, and sizes are incrementally tuned while respecting line thermal limits\n(Sij ≤ Sij,max) while Sij and Sij,max are the apparent power flow and the maximum allowable\nlimit of it in line between buses i, j. The process continues until Ft no longer improves.\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 9 of 23\nFigure 2. Optimal placement and sizing of DGs.\nThe applied DGs are solar panels that produce DC electric power; they connect to the\ndistribution network through three phase inverters with filters to convert the output to AC\npower; the inverter has rating power in kVA, so it can produce both active and reactive\npower but it is assumed to operate at unity power factor to supply its rating power as active\npower only. But, if it is supplying reactive power, the active power output will be reduced\nso the results may be affected. Generally, allowing the distributed generators (DGs) to\nprovide reactive power support while maintaining the same active power output further\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 10 of 23\nimproves the network performance. As a result, the network power losses are minimized\nand the voltage profile at the network buses is significantly improved.\nLike DG planning, CB allocation follows a reactive-power-driven approach. Branches\nare sorted by reactive demand, and CB size is initialized accordingly. Optimal locations are\nidentified within each branch, with incremental sizing subject to thermal constraints. The\nsearch terminates when Ft is minimized, as shown in Figure 3.\nFigure 3. Optimal placement and sizing of CBs.\nThe integrated planning routine consolidates the three stages into a single structured\nprocedure and is summarized in Figure 4 below.\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 11 of 23\nFigure 4. Unified planning pseudocode.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3 System Modeling",
+      "level": 1,
+      "text": "The technical model and constraint’s equations are as follows:\n• Power Losses Formulation\nEquation (2) illustrates how the calculation of both active and reactive power losses in\nthe distribution network are done [29].\nPLoss = ∑\nN−1\ni=1 I2\ns,iRs,i, QLoss = ∑\nN−1\ni=1 I2\ns,iXs,i (2)\nIn this study the reactive power losses were included in the objective function be-\ncause they directly influence voltage regulation, feeder loading, and overall distribu-\ntion network efficiency. Excessive reactive power flow increases current magnitude\nin distribution branches, which consequently increases both active and reactive power\nlosses and contributes to voltage drops along the feeder. Therefore, minimizing reactive\npower losses helps improve voltage profiles, release feeder capacity, and enhance system\noperational performance.\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 12 of 23\n• Power Balance Constraints\nEquations (3) and (4) show the power balance constraint for the whole distribution\nnetwork [29,30]:\nQS,b = ∑\nN\ni=2 Qld,i + QLoss − ∑\nmc\nj=1 QCB,j (3)\nPS,b = ∑\nN\ni=2 Pld,i + PLoss − ∑\nmg\ni=1 PDG,i (4)\n• DG and CB Operational Constraints\nEquations (5)–(7) illustrate operating constraints for the selected DG and CB:\nPDG,min < PDG,i < PDG,max (5)\n∑\nmg\ni=1 PDG,i < 0.9∑\nN\ni=2 Pld,i (6)\n∑\nmc\nj=1 QCB,j < 0.9∑\nN\ni=2 Qld,i (7)\n• Voltage Deviation Index (VDI)\nEquation (8) calculates the voltage deviation index and shows the constraint of voltage\nmagnitude at any bus in DN.\nVDI = ∑\nN\ni=1\n\u0010\n1 − Vi)2 ,0.95 ≤ Vi ≤ 1.05 (8)\n• Line Power Flow\nEquation (9) determines the power flow in branch between buses i, j. Also, it shows\nhow this power must be less than its maximum allowable limit.\nSij = Vi × I∗\nij,| Sij |≤ Sij,max (9)\nThe environmental impact model considering the reduction in CO 2 emissions is\nproportional to the decrease in energy supplied from the substation.\nEquation (10) calculates the annual saved amount of CO2 emissions due to the optimal\noperation using the proposed technique.\n∆QCO2 = fCO2 · ∆Eslack (10)\nwhere ∆Eslack is the annual reduction in substation-supplied energy (kWh/year) andfCO2 is\nthe emission factor (kg CO2/kWh), i.e., for Coal = 0.95, for Oil = 0.75, for NaturalGas = 0.45,\nand Grid average is between 0.5 and 0.9.\n• Capital Costs\nThe capital costs of both DGs and CBs are calculated using Equation (11) [30].\nCDG = ∑\n\u0000\nPDG,i · Cg\n\u0001\n,CCB = ∑\n\u0000\nQCB,j · Cc\n\u0001\n(11)\nwhere Cg is the cost per kW of DG installed and Cc is the cost per kVAR.\n• Annual Energy Loss Saving\nThe cost of annual saved energy losses is determined by applying Equation (12) [29,30].\nCSaved Energy Loss = Ce(Ploss ,base − Ploss ,new ) × t (12)\nwhere t = 8760 h/year and Ce = 0.03 $/kWh.\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 13 of 23\nThe annual energy loss calculation is based on a steady-state planning approach\nusing the peak loading scenario, which is commonly adopted in distribution system\nplanning studies. Therefore, multiplying the calculated power losses by 8760 h provides\nan approximate annualized energy loss indicator for comparative evaluation of different\nplanning alternatives. We acknowledge that actual annual energy losses depend on time-\nvarying load demand, EV charging behavior, and DG generation profiles.\n• Payback Period\nThe payback period for the capital cost of both DGs and CBs are obtained from\nEquation (13) [31].\nPayback = CDG + CCB\nCSaved Energy Loss\n(13)\nThe constraint satisfaction is checked for any EV loading condition using the proposed\napproach, and the obtained results show how the electrical losses are minimized and\nthe voltage level on the network buses are improved on the network buses within an\nacceptable range.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4 Case Study",
+      "level": 1,
+      "text": "To rigorously evaluate the effectiveness and scalability of the proposed CGO-based\nplanning framework, two widely recognized benchmark systems are employed: the IEEE\n33-bus and IEEE 69-bus radial distribution networks. These systems are extensively utilized\nin distribution system optimization studies due to their well-documented topologies,\nrealistic load profiles, and characteristic operational challenges. Their adoption enables a\nrobust assessment of the methodology under varying network scales and complexity levels,\nwhile facilitating direct performance comparison with existing optimization techniques.\nThe operation in this manuscript is done, assuming only two EVCSs, two CBs and two\nDGs because of small distribution networks and for lowering the initial cost of the CBs and\nDGs with verifying the objectives of optimal network performance. If the number of units\nincreases then performance will be improved, but the initial cost will also be increased.\nThe CGO is an optimization approach that can be applied to any electrical distribution\nnetwork. The approach is valid on 33-bus and 69-bus IEEE distribution networks to\ndemonstrate its effectiveness. Consequently, the proposed approach can be applied on\nlarge real-world distribution networks because the proposed method does not depend on\nthe network number of buses.\nThe planning problem for electrical distribution network is done under consideration\nof constant load power at each interval, which may be done for daily loading curve with\n24 intervals/day, but the EV load is initially assumed to be equal at the beginning of the\napproach, but, at the end of the program, the division of this load is at different levels.\nThe results for capacities of EVCS, DGs and CBs for each EV penetration are tabulated in\nTable 6 for 33-bus and in Table 7 for 69-bus distribution networks.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t6",
+          "t7"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.1 Base Case of IEEE 33-Bus System",
+      "level": 2,
+      "text": "The IEEE 33-bus test system represents a medium-scale radial distribution network\nwith 33 buses and 32 distribution sections, operating at a base voltage of 12.66 kV and a\nbase power of 10 MVA. The single-line diagram of the system is presented in Figure 5, with\nnetwork parameters, line impedances, and load data sourced from the literature [24–27].\nUnder base-case conditions—prior to any DG or CB integration—the system exhibits\nsignificant technical inefficiencies, including active power losses of 210.98 kW and reactive\npower losses of 143.14 kVAR. These losses, coupled with notable voltage deviations along\nthe feeder, underscore the need for optimized resource integration to enhance overall\nnetwork performance, voltage regulation, and energy efficiency.\nhttps://doi.org/10.3390/en19143262\nEnergies 2026, 19, 3262 14 of 23\nFigure 5. IEEE 33-bus distribution system.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.2 Base Case of IEEE 69-Bus System",
+      "level": 2,
+      "text": "To further validate the scalability and robustness of the proposed approach, the\nlarger IEEE 69-bus distribution network is analyzed. This system comprises 69 buses\nand 68 distribution sections, sharing the same base values as the 33-bus system (12.66 kV ,\n10 MVA). Its topology and corresponding load data are also obtained from [ 24–27], as\nillustrated in Figure 6. In its base configuration, the network experiences active power\nlosses of 225.0 kW and reactive power losses of 102.13 kVAR. The extended feeder length\nand higher number of load points introduce greater voltage drop and loss accumulation,\npresenting a more challenging test case for evaluating the optimization methodology’s\nability to maintain voltage stability and minimize losses in larger, more complex networks.\nFigure 6. IEEE 69-bus distribution system.\nBoth test systems serve as representative benchmarks for assessing the efficacy of\nthe proposed CGO-based planning framework. The progressive increase in network size\nfrom 33 to 69 buses allows for a comprehensive evaluation of the method’s computa-\ntional efficiency, solution quality, and practical applicability in real-world distribution\nplanning scenarios.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5 Results and Discussion",
+      "level": 1,
+      "text": "This section presents a detailed analysis of the proposed CGO methodology applied\nto the IEEE 33-bus and 69-bus distribution systems. Each scenario is tested under three EV\npenetration levels (Hosting Factors, HF = 30%, 40%, and 50%). Key performance metrics\nhttps://doi.org/10.3390/en19143262",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "outlines the process for integrating EVCSs under varying penetration levels"
+    },
+    {
+      "id": "f2",
+      "caption": "focuses on DGs allocation. Branches are sorted by active power demand,"
+    },
+    {
+      "id": "f3",
+      "caption": "Optimal placement and sizing of CBs."
+    },
+    {
+      "id": "f4",
+      "caption": "Unified planning pseudocode."
+    },
+    {
+      "id": "f5",
+      "caption": "IEEE 33-bus distribution system."
+    },
+    {
+      "id": "f6",
+      "caption": "IEEE 69-bus distribution system."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of existing studies."
+    },
+    {
+      "id": "t2",
+      "caption": "IEEE-33 bus with DGs and EVCSs."
+    },
+    {
+      "id": "t3",
+      "caption": "IEEE-33 bus with DGs, CBs, and EVCSs."
+    },
+    {
+      "id": "t4",
+      "caption": "IEEE-69 bus with DGs and EVCSs."
+    },
+    {
+      "id": "t5",
+      "caption": "IEEE-69 bus with DGs, CBs, and EVCSs."
+    },
+    {
+      "id": "t6",
+      "caption": "IEEE-33 bus optimal placement, sizing, and all objectives, with DGs, CBs, and EVCSs."
+    },
+    {
+      "id": "t7",
+      "caption": "IEEE-69 bus optimal placement, sizing, and all objectives, with DGs, CBs, and EVCSs."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation (11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 7,
+    "n_algorithms": 0,
+    "n_equations": 8
+  }
+}

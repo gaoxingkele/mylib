@@ -1,0 +1,70 @@
+name: Refresh star-history chart
+
+# Weekly regeneration of images/star-history{,-dark}.svg from the GitHub
+# stargazers API, committed straight to main.
+#
+# These SVGs replaced the api.star-history.com embeds, which shared one pool of
+# GitHub API tokens across every consumer of that service and 503'd with
+# "All GitHub API tokens are rate-limited, try again later" whenever the pool
+# ran dry — breaking the chart in all six entry documents at once. Generating
+# the curve here spends this repo's own quota instead.
+#
+# Only the two SVGs may change; the job refuses to commit anything else. No
+# untrusted user input is interpolated into any run step.
+
+on:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # persist-credentials: false is enforced repo-wide by
+      # scripts/validate-workflows.py, so the push below supplies the token
+      # explicitly rather than relying on a credential left in .git/config.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate star-history SVGs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/build-star-history.py
+
+      # A generator bug that touched anything beyond the two chart files would
+      # otherwise be committed to main unreviewed.
+      - name: Refuse to commit anything but the two charts
+        run: |
+          changed="$(git diff --name-only)"
+          echo "changed files: ${changed:-<none>}"
+          for f in $changed; do
+            case "$f" in
+              images/star-history.svg|images/star-history-dark.svg) ;;
+              *) echo "::error::unexpected file modified: $f"; exit 1 ;;
+            esac
+          done
+
+      - name: Commit if the curve moved
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- images/star-history.svg images/star-history-dark.svg; then
+            echo "star history unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/star-history.svg images/star-history-dark.svg
+          git commit -m "chore(images): refresh star-history chart"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "HEAD:${GITHUB_REF_NAME}"

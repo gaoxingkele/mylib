@@ -1,0 +1,358 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pandapower/pandapower__Leveraging_Large_Language_Models_for_Analysis_and_Control_of_Power_Transmission_Networks_C__cd7aab6295.pdf",
+  "n_pages": 8,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Elektroprijenos BiH/FSRE, Bosnia and Herzegovina",
+      "level": 1,
+      "text": "2 Correspondence email: alen.bernadic@elprenos.ba\n© 2025 Author(s). This is an open access article licensed under the Creative Commons Attribution License 4.0. (http://creativecommons.org/licenses/by/4.0/).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "Integrating artificial intelligence (AI) and machine learning \n(ML) technologies into power systems has gained \nsignificant attention in recent years [1]-[2]. As power grids \nbecome more complex and dynamic, traditional control \nand management approaches struggle to manage vast \namounts of data and rapidly changing conditions. Large \nLanguage Models (LLMs) , a subset of AI known for their \nimpressive capabilities in natural language processing \nand general problem-solving, offer a promising solution to \nthese challenges [3]. \nLLMs, such as GPT (Generative Pre-trained Transformer) \nmodels, have demonstrated their ability to understand \nand generate human-like text, perform complex reasoning \ntasks, and even write code. These capabilities make them \npotentially valuable tools for power system applications, \nAlen Bernadić1,2\nOriginal scientific paper\nAbstract: Use of Artificial intelligence in power systems is the mainstream theme in the scientific and engineering \ncommunities. The integration of renewable energy sources and the increasing demand for electricity have led to a \nsignificant increase in the complexity of modern power systems. To address this challenge, there is a need for advanced \ncontrol and analysing techniques that can ensure the stable and efficient operation of the power grids. This paper \nexplores the application of large language models (LLMs) for control of power transmission and distribution networks, \nspecifically focusing on the use of an LLM-based agent in the control and analysis power system networks. The paper \nbegins by reviewing the current state of LLMs and their potential applications in power systems. It then presents a \ndetailed description of the proposed Llama3-based agent, which is designed to interpret and execute control commands \nusing natural language processing (NLP) techniques. The agent can interface seamlessly with the Pandapower model, \nallowing it to monitor the network in real-time and make informed decisions to maintain the system’s stability and \nefficiency. To evaluate the effectiveness of the proposed approach, the paper presents case studies using simulated \npower transmission and distribution network models. The results demonstrate that the LLM agent can quickly and \naccurately respond to changes in the system, maintaining its stability and efficiency even under challenging conditions. \nSecond example is contingency analysis with llama3 based agent. AI agent gives recommendations for mitigation of \ncontingencies in the predefined system. The paper also discusses the potential, limitations and challenges of using LLMs \nfor the control and analysis of power systems and suggests directions for future research. Uncertainties of the LLMs are \nalso interesting topic and opens the new point of view on power system problems. Overall, this paper provides insights \ninto the potential of LLMs for control and analysis of power transmission and distribution networks and demonstrates \nthe feasibility of using LLM agents for this purpose. It highlights the benefits of this approach, including improved system \nstability and efficiency, and provides a foundation for further research in this rapidly evolving field.\n  \nKeywords: Power systems, LLM, Pandapower, Power system analysis and control\nLEVERAGING LARGE LANGUAGE MODELS \nFOR ANALYSIS AND CONTROL OF POWER \nTRANSMISSION NETWORKS: CASE STUDIES WITH \nTHE LLAMA3 LLM MODEL AND PANDAPOWER\nSubmitted: March 15, 2025\n   \nAccepted: October 11, 2025\nB&H Electrical Engineering, Volume 19, Issue 2, 2025\nISSN:2566-3143, eISSN:2566-3151, DOI: 10.2478/bhee-2025-0018\nwhere they could assist in tasks ranging from fault \ndiagnosis and predictive maintenance to real-time control \nand optimization of grid operations.\nThis paper explores the current state of research and \napplications of LLMs in power systems and presents a \npractical example of how an LLM agent can be implemented \nfor power system control. We begin with a comprehensive \nbackground on power systems and LLMs, followed by a \nreview of existing literature on the intersection of these two \nfields. We then present our methodology for implementing \nan LLM agent using Llama 3, a state-of-the-art language \nmodel, and integrating it with a power system model \ndeveloped in Pandapower, a widely used open-source tool \nfor power system modelling and analysis.\nOur practical examples illustrate how an LLM agent can be \nused to monitor system conditions, make decisions, and \nThis paper was submitted to the Conference of the South-East European Regional Council of CIGRE (SEERC 2025), held in Sarajevo, Bosnia and Herzegovina, on June 4–5, 2025.\n65\ncontrol various aspects of a power system. We discuss \nthe challenges encountered during implementation, \nthe performance of the LLM agent, and the potential \nimplications for future power system operations.\nOur aim is to contribute to the growing body of knowledge \non AI-driven power systems and inspire further research \nand development in this exciting field by bridging the gap \nbetween theoretical studies and practical applications. \nIntegrating LLMs into power systems can enhance grid \nresilience, improve energy efficiency, and support the \ntransition to a more sustainable and intelligent energy \ninfrastructure. \nPower Systems\nPower systems are complex networks designed to \ngenerate, transmit, and distribute electrical energy \nto consumers. These systems consist of various \ncomponents, including power plants, transformers, \ntransmission lines, substations, and distribution \nnetworks. The primary objective of a power system is \nto ensure a reliable and efficient supply of electricity \nwhile maintaining system stability and power quality. \nKey aspects of power systems include Generation, \nTransmission, and Distribution. Each part of the system \nincludes control and protection mechanisms, load \nmanagement, and techniques to balance electricity \nsupply and demand, such as demand response and load \nforecasting. These measures contribute to grid stability, \nensuring the system remains stable under various \noperating conditions and disturbances. The complexity \nof power systems has increased significantly in recent \nyears due to factors such as integrating renewable \nenergy sources, distributed generation, electric vehicles, \nand the need for greater energy efficiency. These \nchallenges have led to a growing interest in applying \nadvanced computational techniques, including AI and \nML, to improve power system management and control.\nLarge Language Models\nLarge Language Models are a class of artificial \nintelligence models designed to understand, generate, \nand manipulate human language [4]. These models \nare typically based on deep learning architectures, \nparticularly transformer models, and are trained on \nvast amounts of text data. Key characteristics of LLMs \ninclude:\na)  Scale: LLMs often have billions of parameters, \nallowing them to capture complex patterns and \nrelationships in language.\nb)  Self-attention mechanism: This enables the model \nto assess the importance of different parts of the \ninput when processing language.\nc)  Transfer Learning: LLMs can be fine-tuned for \nspecific tasks after being pre-trained on general \nlanguage data.\nd)  Few-shot Learning: The ability to perform new tasks \nwith minimal task-specific training examples.\ne)  Multi-task Capability: LLMs can perform a wide range \nof language-related tasks, including translation, \nsummarization, and question-answering.\nNotable examples of LLMs include GPT (Generative Pre-\ntrained Transformer) series by OpenAI, BERT (Bidirectional \nEncoder Representations from Transformers) by Google, \nand, more recently, open-source models like Llama \nby Meta AI. The capabilities of LLMs extend beyond \nsimple language processing. They have demonstrated \nproficiency in reasoning, problem-solving, and even code \ngeneration tasks.This versatility makes them potentially \npowerful tools for complex domains like power systems, \nwhere they cou",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "66 can be trained on regulatory documents and standards",
+      "level": 1,
+      "text": "to help ensure that power system operations comply \nwith evolving regulations. AI also shows great potential \nin areas such as capacity optimization, grid mapping, \nasset management, and predictive maintenance. \nAs research in this field progresses, we can expect to \nsee more sophisticated applications of LLMs in power \nsystems, potentially leading to more intelligent, efficient, \nand resilient grid operations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 METHODOLOGY",
+      "level": 1,
+      "text": "Our methodology for implementing an LLM agent for \npower system control involves several key steps:\n2.1. Power System Modelling:\nWe use Pandapower [8], an open-source Python library \nfor power system modelling and analysis. Pandapower \nenables the creation of a realistic power system model, \nincluding generators, loads, transmission lines, and \ntransformers. The model is easily manipulated and \nanalysed, providing an ideal environment for testing our \nLLM agent. \n2.2. LLM Selection and Implementation:\nDeveloping applications using Artificial Intelligence (AI) \nand Large Language Models (LLMs) are mainstream \nin the scientific community. In this work, the Llama",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 model is used, a state-of-the-art language model",
+      "level": 1,
+      "text": "developed by Meta AI [9]. Llama 3 offers an excellent \nbalance of performance and efficiency, making it well-\nsuited for our power system control application. For \nrun selected model locally on PC, we use Ollama [10], \nan open-source tool for running Llama models locally, \nwhich provides flexibility and control over the model’s \ndeployment. Ollama is a platform designed to simplify \nthe process of running and deploying large language \nmodels (LLMs) locally. Ollama allows users to download \nand run various open-source LLM models on their \nlocal machines, providing a more flexible and secure \nenvironment for interacting with AI models. It primarily \nfocuses on enabling AI models to be used directly on \npersonal or enterprise systems without the need for \ncontinuous cloud connectivity. Key features of Ollama \ninclude: \nLocal Model Execution: One of the features of Ollama is \nits ability to run AI models locally on user devices. \nMulti-Model Support: Ollama supports various types \nof large language models (LLMs) that can handle tasks \nsuch as text generation, summarization, and more. Its \nflexible architecture enables users to easily integrate and \nswitch between different models. \nCost-Effective: Running LLM models locally can lead \nto significant cost savings compared to cloud-based \nsolutions or commercial solutions, which often involve \nexpensive fees for computation and storage.\nOffline Capability: For applications where internet \nconnectivity is not guaranteed, such as in remote areas \nor high-security environments (which is often the case \nfor large power plants), Ollama’s ability to run AI models \noffline is highly valuable.\n2.3. Agent Design:\nOur LLM agent is designed to perform the following \ntasks:\n- Monitor system conditions by interpreting \nPandapower simulation outputs\n- Make decisions based on predefined criteria and \nlearned patterns\n- Generate control actions to maintain system stability \nand efficiency\n- Provide explanations for its suggestions to the \noperational stuff in natural language\n2.4. Integration:\nWe developed a Python script that integrates the \nPandapower model with the Llama 3 agent and \nthe Ollama interface. This script handles the flow of \ninformation between the power system simulation and \nthe LLM, as well as the execution of control actions. \nAll modules are part of the Python ecosystem and run \nwithin a single script. Python modules are installed using \nAnaconda in a conda-managed environment [11]. The \nonly requirement is that the Ollama server is installed and \nrunning on https://11434 local IP address [10]. \n3. PRACTICAL EXAMPLE 1: LLM AGENT FOR POWER  \n  SYSTEM ANALYSIS AND CONTROL\nExperiments on integrating LLMs with power system \ncontrol are progressing intensively [12]. Researchers \nare working on power system simulation cases involving \nLLM-based control and surveillance logic. This work \nfocuses on optimizing power system operations, as \npresented in [13]. This section provides a practical \nexample of implementing an LLM agent for power \nsystem control using Python and it’s divided into three \nmain parts: power system modelling with Pandapower, \nLLM agent implementation using Llama 3 and Ollama, \nand the integration of these components.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Power System Modelling with Pandapower",
+      "level": 2,
+      "text": "The complex configuration of the 400/110 kV power \nsystem network is selected for a practical case, \nrepresented by a single-line diagram in Figure 1. Using \nPandapower, the network is modelled with large-\nB&H Electrical Engineering, Volume 19, Issue 2, 2025\nISSN:2566-3143, eISSN:2566-3151, DOI: 10.2478/bhee-2025-0018",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "67 capacity, controllable PV plants and battery storage",
+      "level": 1,
+      "text": "added at several nodes to increase complexity.\nFigure 1: Single-line diagram of 400/110 kV power system\nFigure 2: Pandapower implementation of 400/110 kV system \nwith PV plants and battery storages\nPandapower implementation of 400/110 kV power network \nwith additional PV plants and battery storages is on Figure",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 Network is designed with additional PV plants and battery",
+      "level": 1,
+      "text": "storages for ability of injecting active and reactive power. \nPower system transformers are equipped with tap-changers \nfor local voltage regulations. Loads are also positioned on \nbuses and parametrized with reactive and active components. \nInitial conditions of power system is intentionally made for \nlarge overvoltages as input state for LLM agent which has \ntask to stabilize voltages and power system in overall. Initial \nis 8 – 9 buses with voltages out of desired range of 1.00-\n1.05 per unit (p.u.) which is complicated task to stabilize with \nset of simultaneous actions of tap-changers and active and \nreactive injections of PV plants inverters and battery storages \nwhich is LLM model task.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.2 LLM agent implementation",
+      "level": 2,
+      "text": "The 400/110 kV power system network model, shown \nin the single-line diagram in Figure 1, is created in \nPandapower for further integration into the overall \nPython ecosystem. An AI agent based on the Llama 3 \nopen-source LLM model is implemented via the Ollama \nplatform to analyze and control the power network. The \nLlama 3-based LLM agent, by controlling the tap-changer \nand injecting active and reactive power, aims to stabilize \nthe network and reduce overvoltages.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.2.1 Presumptions for model design",
+      "level": 3,
+      "text": "In the literature [14]-[16], transformer tap-changer \noperations and the injection of active and reactive power \nfrom PV plant inverters and battery storage systems \nhave been shown to stabilize voltages within the desired \noperational range. These are the physical and engineering \nassumptions used to guide the design of the Llama 3 LLM \nagent. The agent aims to stabilize bus voltages through a \nset of synchronized actions, including the manipulation of \ntransformer tap-changers and the injection of active and \nreactive power from PV plant inverters.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2.2 Prompt design",
+      "level": 3,
+      "text": "While Llama 3 is pre-trained on a large corpus of \ntext, it does not possess specific knowledge about \nFigure 3: Prompt designed for llama3 agent context of power \nsystem control\nA. Bernadić: LEVERAGING LARGE LANGUAGE MODELS FOR ANALYSIS AND CONTROL OF POWER TRANSMISSION \nNETWORKS: CASE STUDIES WITH THE LLAMA3 LLM MODEL AND PANDAPOWER\n68\nvoltage stabilization. In this initial model, we provide \nthe context through a detailed prompt, without fine-\ntuning or using RAG on power system operational \ndata, technical documentation, or example scenarios. \nThis specific prompt, as input to the LLM, helps the \nmodel understand the context and terminology specific \nto power systems.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2.3 Model execution",
+      "level": 3,
+      "text": "The Pandapower 400/110 kV transmission and \ndistribution network is simulated with overvoltages and \nloaded into a Python environment, where the Llama 3 \nmodel is run via the Ollama server. Initially, nine buses \nin the system have voltages outside the desired range \nof 1.00-1.05 per unit (p.u.).\nFigure 4: Initial state of the power network with overvoltages\nVisualization is created using the NetworkX [17] \nPython library, with nodes representing buses, and \novervoltage nodes are highlighted in red, as shown \nin Figure 4. In the model’s five steps, the Llama 3 \nagent optimizes the Pandapower 400/110 kV network \nparameters. After each step, the updated network \nstate is loaded into the LLM prompt for processing, \nthe network parameters are modified, and power flow \nis recalculated to assess overall network stability. \nAfter the five-step execution, the network state is \nsatisfactory, with only a small pair of overvoltages \nremaining, which can be further addressed through \nactions on lower voltage levels. [16]. \nFigure 5: Power network voltage profile after execution of five \naction sets of llama3 agent\nIt is evident from Figures 4 and 5 that with each action \nset of the Llama 3-based LLM agent, the power \nsystem’s voltage profile stabilizes within the desired \nrange of 1.00-1.05 p.u. After five sets of actions on \nthe tap-changers of transformers and the injection \nof active and reactive power from PV plants and \nbattery storage systems, the efficiency and stability \nof the observed network are significantly improved, \nalong with valuable comments and recommendations \ngenerated as LLM output.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2.4 Result analysis",
+      "level": 3,
+      "text": "For 20 model executions, we obtained a distribution of \nresults as shown in Figure 6. \nFigure 6: Analysis of model executions\nB&H Electrical Engineering, Volume 19, Issue 2, 2025\nISSN:2566-3143, eISSN:2566-3151, DOI: 10.2478/bhee-2025-0018\n69\nOver 70% of executions produced very good results, \nwith 0-2 overvoltages after the five-step model \nexecution. Considering that only prompt context was \nused for the LLM model, without fine-tuning or the \nuse of the Retrieval Augmented Generation (RAG) \nmechanism, the results are more than satisfactory for \nthe Llama 3 open-source model.\n4. PRACTICAL EXAMPLE 2: LLM AGENT FOR POWER  \n SYSTEM ANALYSIS AND CONTROL",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1 Power Systems Contingency analysis",
+      "level": 2,
+      "text": "Contingency analysis improves power system \nreliability by identifying potential risks and \nvulnerabilities associated with equipment failures \nor outages. It allows engineers to simulate various \n“what-if” scenarios, such as transmission line failures \nor generator trips, to assess the impact on system \nstability and security17. This process helps in \ndeveloping mitigation strategies like load shedding \nor network reconfiguration to prevent cascading \nfailures and ensure continuous electricity supply. \nAdditionally, contingency analysis aids in planning \nand scheduling maintenance outages to minimize \nrisks during routine maintenance. Overall, it enhances \nthe ability to anticipate and manage disruptions, \nthereby maintaining grid resilience and reliability. \nRecent advances in contingency analysis leverage \nAI-driven approaches to address complex power grid \nchallenges. As demonstrated in reference [16], which \nintroduced a dedicated power network configuration \noriginally analysed through reinforcement learning \n(RL) for optimal control strategies, this infrastructure \nnow serves as a critical testbed for next-generation \ncontingency management. Power system network in \n[16] is also modelled in Pandapower [8] simulation \ntool, easy to integrate in Python environment. Building \non citated paper [16] RL-optimized network topology, \nthe current work implements a LLaMA-3 agent to \nperform contingency analysis, replacing traditional RL \nmethods with large language model (LLM) capabilities. \nWhere [16] utilized RL agents to navigate equipment \nfailures and load imbalances through reward-based \npolicy optimization, our approach harnesses LLaMA-\n3’s natural language reasoning to interpret grid states, \ngenerate human-readable diagnostics, and propose \ncontext-aware mitigation strategies.\nBy applying the LLaMA-3 agent to network from \npaper [16] validated network model, we demonstrate \nhow LLM-enhanced analysis improves scenario \ngeneralization while maintaining compatibility with \nexisting power flow simulation tools.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.2 Methodology of example 2",
+      "level": 2,
+      "text": "Here’s a comprehensive explanation of the code’s key \ncomponents with special focus on the LLaMA3/Ollama \nintegration: This power grid management system \ncombines traditional power network modelling with \nmodern AI capabilities. The code uses Pandapower \nfor detailed electrical network modelling (buses, \ntransformers, lines, loads) and networkX for topology \nvisualization. The core innovation is the integration of \nLLaMA-3 via a local Ollama server for AI-driven grid \noptimization recommendations. Ollama is a local AI \nserver (running at http://localhost:11434) that hosts \nlarge language models. In this implementation, it serves \nthe LLaMA-3 model - Meta’s powerful open-source \nLLM specifically fine-tuned for technical domains. \nThe server acts as an AI co-pilot for grid operators, \nprocessing real-time grid data through its API endpoint \n(/api/generate).\nFigure 7: Power network configuration for Contingency analysis \n[16]\nThis setup and prompt design are designed for \ncontingency analysis of power network with LLM \nmodel. Script is in folder with visualizations files \nproduced after each contingency scenario.\nFigure 7: Technical parameters of LLM Llama3\nA. Bernadić: LEVERAGING LARGE LANGUAGE MODELS FOR ANALYSIS AND CONTROL OF POWER TRANSMISSION \nNETWORKS: CASE STUDIES WITH THE LLAMA3 LLM MODEL AND PANDAPOWER\n70",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3 Results of example 2",
+      "level": 2,
+      "text": "LLM agent’s actions are denoted on graphical \nrepresentation along with bolded lines on faulted or \noverloaded elements of analysed power system. \nModel generates graphical and textual representation \nfor each scenario and saves on working folder. The \nLlama3 model created four scenarios for the most \nimportant contingencies on the considered power \nnetwork. For each scenario, LLM results are displayed \non working screen of Spyder editor as on Figure 9.\nFigure 8: Output of LLM Contingency analysis – Llama3 agent’s \nactions\nFor each case a visualization of contingency analysis \nalong with action list is created with NetworkX with \nall important information - grid topography and llama3 \nactions for mitigations of faults and contingencies. \nAgent’s actions are divided into two categories - \nprompt actions for mitigations and strategic planning \nactions for the long-term securing of power system \nstability. Analysis of the suggested actions gives \napproximate 75% of quality suggestions in both \ncategories. It can be concluded that Llama3 is a high \nquality LLM model which is relatively usable in power \nsystem analysis without further contextualization such \nas RAG or fine-tuning. Visualizations are created using \nthe NetworkX [17] Python library for each considered \nscenario as on Figure 8.\nFigure 8: Output of LLM Contingency analysis of power network \nFig.7\nLLM agent’s actions are denoted on graphical representation \nalong with bolded lines on faulted or overloaded elements of \nanalysed power system. Model generates graphical and textual \nrepresentation for each scenario and saves on working folder.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 CONCLUSION AND FUTURE WORK",
+      "level": 1,
+      "text": "This study has demonstrated the potential of Large \nLanguage Models in enhancing power system control \nand decision-making processes. The LLM agent showed \nremarkable capabilities in analysing complex system \nstates, providing context-aware recommendations, and \ngenerating multi-step control strategies.\nIntegrating natural language processing with power \nsystem control opens new possibilities for intuitive \nhuman-machine interfaces in control rooms, automated \nreport generation, and knowledge management in power \nutilities. The ability of LLMs to process and synthesize \ninformation from diverse sources could prove invaluable \nin managing the increasingly complex and data-rich \nenvironment of modern power grids.\nHowever, the challenges identified in this study, \nparticularly those related to numerical precision, real-time \nperformance, and explainability, highlight the need for \nfurther research and development. Future work should \nfocus on:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 Developing hybrid systems that combine the",
+      "level": 1,
+      "text": "strengths of LLMs with traditional optimization and \ncontrol algorithms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "2 Investigating the use of reinforcement learning",
+      "level": 1,
+      "text": "techniques to allow the LLM agent to improve \nits decision-making over time-based on system \noutcomes.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3 Developing the Retrieval Augmented Generation",
+      "level": 1,
+      "text": "(RAG) mechanism to improve model accuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4 Developing a multi-agent system for effective",
+      "level": 1,
+      "text": "collaboration to achieve shared goals.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 Exploring the application of LLMs in other areas of",
+      "level": 1,
+      "text": "power system operation, such as long-term planning, \nrenewable energy integration, and cybersecurity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6 Investigating the potential of multi-modal LLMs that",
+      "level": 1,
+      "text": "can process not only textual data but also visual \nand time-series data, which are common in power \nsystem monitoring.\nSpecial attention will be given to the security issues \nassociated with LLM applications in power systems [18]. \nIn conclusion, while there are challenges to overcome, \nthe application of Large Language Models in power \nsystems represents a promising frontier in the ongoing \ndigital transformation of the energy sector [19]. As these \ntechnologies continue to evolve, they have the potential to \nplay a significant role in creating more intelligent, efficient, \nand resilient power grids of the future.\nRecent advances in contingency analysis leverage AI-driven \napproaches to address complex power grid challenges. \nAs demonstrated in [16], which introduced a dedicated \npower network configuration originally analysed through \nreinforcement learning (RL) for optimal control strategies, \nthis infrastructure now serves as a critical testbed for next-\nB&H Electrical Engineering, Volume 19, Issue 2, 2025\nISSN:2566-3143, eISSN:2566-3151, DOI: 10.2478/bhee-2025-0018\n71\ngeneration contingency management with LLM agents. \nThe current work implements a Llama3 agent to perform \ncontingency analysis, with large language model (LLM) \ncapabilities. our approach harnesses LLama3’s natural \nlanguage reasoning to interpret grid states, generate \nhuman-readable diagnostics, and propose context-\naware mitigation strategies. By applying the LLaMA-3 \nagent to validated network model, it is demonstrated how \nLLM-enhanced contingency analysis improves scenario \ngeneralization with open-source power flow simulation \ntools.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Single-line diagram of 400/110 kV power system"
+    },
+    {
+      "id": "f2",
+      "caption": "Pandapower implementation of 400/110 kV system"
+    },
+    {
+      "id": "f3",
+      "caption": "Prompt designed for llama3 agent context of power"
+    },
+    {
+      "id": "f4",
+      "caption": "Initial state of the power network with overvoltages"
+    },
+    {
+      "id": "f5",
+      "caption": "Power network voltage profile after execution of five"
+    },
+    {
+      "id": "f6",
+      "caption": "Analysis of model executions"
+    },
+    {
+      "id": "f7",
+      "caption": "Power network configuration for Contingency analysis"
+    },
+    {
+      "id": "f8",
+      "caption": "Output of LLM Contingency analysis – Llama3 agent’s"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

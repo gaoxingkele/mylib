@@ -1,0 +1,385 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2022__applying_simheuristics_to_minimize_overall_costs_of_an___8017bcb259.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "For manufacturing companies, an enterprise resource planning system (ERP) is the\ncentral system to plan and control production-related resources. Compared to the tech-\nnological development of ERP systems, the used planning algorithms have not changed\nthat much during the last decade. Most commercial ERP systems still use the hierarchical\nproduction planning approach of material requirements planning (MRP) to generate pro-\nduction orders [1]. The applicability in different industries and the straightforward and\nscalable logic—independent from the product complexity—fostered MRP’s importance\nin industry and also science. The three planning parameters to control MRP are lot size,\nplanned lead time, and safety stock. Many other parameters must be set up and deﬁned\nto get a production system on which an MRP can be applied, such as a bill of material\n(BOM), processing time, setup time, planning period, machine availability, and many more.\nThe master production schedule (MPS), which is based on the customer demands, deﬁnes\nthe quantities and time periods of the ordered materials and speciﬁes the gross require-\nments for the MRP algorithm. Even though the MRP logic is not complicated, keeping\nan MRP system up to date is a challenging task. Suppose raw material is available in\nthe ERP system, but cannot be handed to production. This type of misinformation can\nAlgorithms 2022, 15, 40. https://doi.org/10.3390/a15020040 https://www.mdpi.com/journal/algorithms\nAlgorithms 2022, 15, 40 2 of 18\nrequire updating the complete MRP system with re-planning, including scheduled receipts\nand planned order releases [1]. However, these are not sophisticated tasks compared to\nselecting optimal MRP planning parameters. To overcome a worsening service level, it is,\nfor example, possible to increase planned lead time with the consequence of increasing\nstocking level [ 2]. Considering the effects of changing the value of one MRP planning\nparameter is manageable, but doing this in a systematic way for lot size, planned lead time,\nand safety stock need to be supported by methods from the ﬁeld of production system\nsimulation and heuristics. Using production system simulation to evaluate the perfor-\nmance of a production system relying on an MRP provides interesting insights into the\nbehavior of the production system performance. In particular, the systematic exploration\nof suitable MRP parameter combinations will help ﬁnd optimal values with respect to\ngiven performance indicators, such as inventory and tardiness costs. Production systems\nare characterized by a high uncertainty level, which is associated with their planning.\nThis may be due to internal factors, such as stochastic processing times, machine failures,\nlimited availability of resources—either workers or raw materials—etc. It can also be\ndue to external factors associated with customers’ demand, such as required lead times,\nchanges in orders requested, or cancellations [3]. Given this complexity, the planning of\nthe MRP parameters in a production system requires the development of methodologies\ncapable of dealing with systems under uncertainty. The implementation of optimization\ntechniques based on hybrid methods between metaheuristic and simulation techniques\nhas proven to be a methodology with the potential to establish the stochastic MRP pa-\nrameters at near optimal levels [4]. Therefore, this paper proposes a simulation heuristic\n(simheuristic) to establish the values of the MRP parameters in a multi-stage, multi-item\nproduction system. A discrete event simulation model simulating a stochastic MRP system\nis combined with a metaheuristic using a daemon-like procedural criterion and simulation\nbudget management (SBM). The stochastic MRP mimics a production plant exposed to\nthe uncertainties associated with stochastic order amounts, the customer-required lead\ntimes, and machine setup times. Hereby, the focus of this article is to investigate how to\napply different simheuristic approaches to systematically ﬁnd the best MRP parameter\nsettings in order to minimize overall costs. From an algorithmic perspective, the challenge\nis to integrate the simheuristics into the used simulation framework. Data from the actual\niteration must be stored and provide the foundation for subsequent iterations. For SBM, it\nis necessary to keep track of previous solution quality. This information is used to decide\nif the remaining replications of an iteration are consumed. Production system modeling\nassociated challenges are the selection of appropriate starting parameters including the\nranges of the MRP parameters. The tackled problem is to identify the combination of MRP\nparameters providing the lowest overall costs by applying the developed simheuristics.\nHence, the performed simulation study is used to answer the following three research\nquestions. To answer these questions the developed simheuristics are evaluated using an\nMRP-based production system:\nQ1: Does the application of an intelligent simulation budget management (SBM)\nprovide lower overall costs compared to a ﬁxed number of replications?\nQ2: In the context of MRP parameters setting, can the use of simulated annealing (SA)\nhelp avoid getting trapped in a local minimum related to the overall costs?\nQ3: Is the combination of SBM and SA leading to lower minimum overall costs and, if\nso, what is the effect of increasing simulation budget?\nThe remainder of the article is structured as follows: Section 2 presents a literature\nreview on the use of simulation and simulation-based optimization methods to deal with\nstochastic MRP systems. Section 3 introduces the simulation-based optimization heuristic\nused to solve the problem. Section 4 explains the characteristics of the stochastic MRP\nsystem used in this work to test our methodology. Section 5 describes the simulation-\noptimization experiments performed. Section 6 discusses the results obtained. Finally,\nSection 7 concludes on the ﬁndings of this work and discusses future lines of research.\nAlgorithms 2022, 15, 40 3 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "Production systems are characterized by a high complexity given by the large number\nof parameters involved in their working processes. In general, MRP systems calculate\nthe lot size to be produced or ordered for each component in each period based on the\nitems’ demand. There is a BOM in which they are organized hierarchically as components,\nand it also includes the number of each part per ﬁnal product [3]. This section presents a\nreview of some of the works carried out about the optimization of the parameters studied\nin this work, which are associated with MRP . The objective is to identify the most studied\nparameters, their combination, and the analysis or solution methods. Please note, that the\nobjective function of the optimization problem discussed in this paper includes inventory\nand backorder costs. This includes service and time performance effects, i.e., low service\nlevel leads to high backorder costs and high production lead times lead to high inventory\ncosts (and probably to higher backorder costs). Consequently, the objective function in this\narticle is in line with a lot of MRP parameter optimization problems from the presented\nliterature.\nThe MRP in a production line is modeled to simplify the system with a set of as-\nsumptions. They include all those parameters that allow us to model the uncertainty\nand complexity of the system itself. The optimization of these models—either with exact,\nheuristic, metaheuristic, or even hybrid methods—enables us to ﬁnd near-optimal and\nefﬁcient solutions for the system. Among the most studied parameters under uncertainty\nin the MRP literature are the safety stock and the planned lead time [ 5]. The approach\nemployed to manage an MRP under uncertainty depends on the type of uncertainty, the\nsigniﬁcance of its effect, and the managers’ preferences [6]. Table 1 presents some of the\noptimization works on one or more of the MRP parameters studied in this paper, with\ntheir respective solution techniques. From the literature review, it can be concluded that\nthis article tackles the MRP parameter optimization problem, which is already treated by\nother authors.\nTable 1. Related work reviewed.\nAuthor\nApproach Parameters\nMethod of Analysis\nLead Time Safety Stock Lot Size Demand\nWhybark and Williams [7], Buzacott\nand Shanthikumar [8], Enns [9] X X X Simulation\nMolinder [10] X X X X Hybrid: simulated\nannealing & simulation\nAltendorfer [2] X X Heuristic\nAltendorfer et al. [11] X X Simulation\nTeo et al. [12] X X Non-linear optimization\nLiberopoulos and Koukoumialos [13] X X Simulation\nAltendorfer and Minner [14] X X General optimization\nmodel\nAltendorfer [15] X X X Heuristic\nBarrios et al. [4] X Hybrid: heuristic &\nsimulation\nGansterer et al. [5] X X X Hybrid: Variable neighbor\nsearch & simulation\nKarder et al. [16] X X X Hybrid: Genetic\nAlgorithm & simulation\nAmong the related work analyzed, it is found that simulation techniques have been\nwidely applied in MRP models since they allow us to observe the behavior of the supply\nAlgorithms 2022, 15, 40 4 of 18\nchain through the creation of experiments based on the model of the system under study.\nAt the same time, it allows us to observe the effects of changes in MRP parameters. It\noffers the possibility of planning and controlling the production systems and improving\nstrategies at different organizational levels. Likewise, discrete-event simulation mimics\nthe dynamics of systems in the real world, which has made it a very popular method for\nMRP modeling [17]. Whybark and Williams [7] have been among the ﬁrst to propose a\nframework to characterize and study the uncertainty that can affect inventory investment\nand service level performance in an MRP system. They used simulation to compare two\nparameters, safety stock and safety lead time. They also tested whether there is better\ninventory control that meets market uncertainty. In the same direction, Buzacott and\nShanthikumar [8], Enns [9] studied the inﬂuence of safety stock size and planned lead time.\nLikewise, these authors developed models that simultaneously decide on the lot size and\nplanned lead time in an environment with constant customer demand and stochastic lead\ntimes [18]. Other models are developed to address the risk generated by uncertainty in\nlead times and demand, while focusing on deciding which of these two parameters should\nbe used to make decisions [10]. The design of these simulation models to explore the effect\nof demand uncertainty on the system performance also varies depending on whether we\nare considering a single-stage manufacturing system [2] or a multi-item, multi-stage MRP\nproduction system [11].\nTypically, MRP simulation models are studied to know the responses (or outputs of\nthe system) to the initially deﬁned parameters [19,20]. However, this technique does not\nallow determining the optimal values of the parameters to achieve a given objective [21].\nParameter optimization to conﬁgure the systems and operate as efﬁciently as possible is\nrecommended [10]. In the literature, some models establish planned lead times based on\ncapacity requirements planning, using nonlinear optimization to ﬁnd the optimal values\nof the planning parameters minimizing production-related costs [12]. Other models rely\non simulation-based optimization to perform numerical explorations. The integration of\noptimization methods and simulation allows us to calibrate the parameters of the stochastic\nmodel. In this optimization process, the objective function has an associated measure of the\nexperimental simulation that is optimized [22]. For instance, it includes the optimization of\nplanned stock levels and lead time in production, as well as the optimization of inventory\nsystems with advanced demand information and some service level requirements [ 13].\nThere are also analytical models for the simultaneous optimization of capacity and planned\ndelivery time in a two-stage production system with different customer due dates [ 14].\nAnother work investigating the application of analytical methods and heuristics was\npresented in [ 15]. The inventory and the tardiness costs were analyzed. In addition,\na heuristic-based approach to solve the associated optimization problem was used. All\nthree MRP parameters with the limitation of only one production stage and capacity, were\ninvestigated.\nOne of the methods of simulation-based optimization is simheuristics. It is a solution\nmethod based on algorithms combining simulation methods within a heuristic/metaheuristic\noptimization framework. It allows to deal with stochastic combinatorial optimization prob-\nlems [23,24]. Barrios et al. [4] demonstrated that simheuristics are a promising approach\nto solve a two-stage stochastic MRP . They identiﬁed the safety stock level of each item\nto minimize the total expected manufacturing cost. Their results demonstrate that the\nuse of simheuristics provides advantages over the use of simulation approaches alone.\nSome approaches vary between them because of the proposed optimization heuristics and\nmetaheuristics. For example, Molinder [10] proposed to determine the safety lead time\nwith a hybrid approach combining simulation with optimization based on the simulated an-\nnealing algorithm. Gansterer et al. [5] presented a simulation-based optimization approach\nwith a search procedure based on variable neighborhood search with a robust production\nplanning as a result. They focused on the simultaneous optimization of three parameters,\nplanned lead time, safety stock, and lot sizes. In addition, Karder et al. [16] optimized\nthe MRP parameters, applied, and compared two different versions of efﬁcient global\nAlgorithms 2022, 15, 40 5 of 18\noptimization of single-objective and multi-objective functions. Their results demonstrate\nhow both approaches are competitive with each other.\nThus, some of the works related to the optimization of the MRP system have focused\nmainly on parameters such as lead time, followed by safety stock and lot size. The liter-\na",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Simulation Heuristic",
+      "level": 1,
+      "text": "In the context of MRP parameter setting, simheuristic algorithms [25] are a meaningful\napproach to evaluate a broad range of parameter combinations with a deﬁned objective\n(e.g., minimizing overall cost). A ﬁrst simple simheuristic with two extensions to minimize\noverall costs was presented in [26]. However, their approach is limited in the sense that it\nexcludes lot sizing. Their simheuristic is signiﬁcantly extended in this paper and applied\nalso for the lot sizing decision which has a major impact on the overall cost. In addition,\nthe new simheuristic algorithm is further integrated into a discrete-event simulation model,\nwhich implements a production system relying on MRP . During a simulation experiment,\nthe simheuristic is applied to compute new planning parameters for each planned material.\nThe next simulation iteration is then performed with the changed planning parameters.\nIn Section 3.1, three versions of the proposed simheuristic are described. They all rely on\nAlgorithm 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Initial Simheuristic Algorithm",
+      "level": 2,
+      "text": "The initial simheuristic depicted in Algorithm 1 allows us to develop different variants,\nnamed: static range (STR), exponential range reduction (ERR), and best solution-set base\nrange (BSBR). The initial simheuristic provides a description of the algorithmic ﬂow, and\nthis generic structure facilitates to subsequently integrate the aforementioned variants. The\nalgorithm starts by selecting the best solution of all previously ﬁnished iterations. The best\nsolution represents the minimum overall cost of all ﬁnished iterations and provides a list\nwith the used mode, lower bound (LB), and upper bound (UB).\nFor the STR version, a triangular distribution is used to compute new values using\nthe LB, the UB, and the mode given by the midpoint of the range. For all three variants,\nthe possible values for the MRP parameters (planned lead time and safety stock) lie within\nthe LB and the UB. While in [26] the lot size is not included, in this paper, we consider its\nparameter sampling for optimization in the same way as for the parameters planned lead\ntime and safety stock.\nThe second simheuristic version, named ERR, updates LB and UB using the best\nsolution. This makes it possible to reach a search space outside the original bounds. The\nsolution range is deﬁned as r0 = mode− UB for both MRP parameters. The new bounds\nfor the MRP parameters and for each item are computed as ri = (1− α)∗ ri−1, where, i is\nthe simulation iteration number and α is the range reduction level. The goal of the ERR\nvariant is to reduce the LB and UB when the number of iterations increase, so the possible\nsolution range is iteratively shrinking.\nIn the third version, named BSBR, the LB and the UB are computed using the minimum\nand maximum of the best n solutions.\nAlgorithms 2022, 15, 40 6 of 18\nAlgorithm 1 Base Simheuristic Algorithm.\n1: if Initialization then\n2: α← e.g., 0.025\n3: topN← e.g., 7\n4: initIterations ← e.g., 50\n5: initParameterRange (lb, ub, mode )\n6: n← 0\n7: endInitPhase ← f alse\n8: currentSolution ← TriangularDistribution (parameterRange )\n9: baseSolution ← currentSolution\n10: end if\n11: while n≤ maxReplications do\n12: cost (currentSolution )← Simulate MRP (currentSolution )\n13: if n > initIterations then\n14: endInitPhase ← true\n15: end if\n16: if cost (baseSolution ) < cost (currentSolution ) then\n17: baseSolution ← currentSolution\n18: end if\n19: baseSolution ← GetBestSolution ()\n20: if simheuristic = STR∨ endInitPhase = f alse then\n21: parameterRange .mode← baseSolution\n22: end if\n23: if simheuristic = ERR∧ endInitPhase = true then\n24: oldRange ← (parameterRange .ub− parameterRange .lb)/2\n25: newRange ← (1− α)∗ oldRange\n26: parameterRange .mode← baseSolution\n27: parameterRange .lb← parameterRange .mode− newRange\n28: parameterRange .ub← parameterRange .mode + newRange\n29: end if\n30: if simheuristic = BSBR∧ endInitPhase = true then\n31: bestNSolutions ← GetBestNSolutions (topN )\n32: parameterRange .mode← baseSolution\n33: parameterRange .lb← min(bestNSolutions )\n34: parameterRange .ub← max (bestNSolutions )\n35: end if\n36: baseSolution ← TriangularDistribution (parameterRange )\n37: n← n + replicationsPerIteration\n38: end while\nThe constant α is set for the ERR range reduction andtopN is required only for the BSBR\nversion. An initialization phase can be applied for both the ERR and BSBR versions. The\nnumber of iterations is represented by the constant initIterations. The variable endInitPhase\nis used to control the end of the initialization phase. Notice that, by design, ERR and BSBR\nare extensions of STR. Therefore, STR is applied during the initIterations. Thus, for example,\n50 iterations out of a maximum of 300 iterations can be used to ﬁnd starting values for\nrange reduction and the best n solutions. A key component in the algorithmic ﬂow is\nthe array parameterRange, as it represents the starting LB and UB values, as well as the\nmode for each MRP parameter and planned item. In addition, this array is continuously\nupdated during the simulation. The ﬁnal step of each iteration in each version is to pass\nthe adapted parameterRange to the triangular distribution. This allows us to generate new\nMRP parameter values and apply them during the MRP simulation. At the beginning of\neach iteration, the base solution is updated to the currentSolution in case this is the new\nbest-found solution. The best solution is represented by the minimum overall cost of the\nprevious iterations, computed using the average overall cost of the simulation runs. The\nobjective is to minimize overall costs. A limitation is that logistic objectives such as service\nAlgorithms 2022, 15, 40 7 of 18\nlevel and lead time are not considered. Even though the overall cost criteria are common\nin a lot of studies (see Section 2, e.g., [ 5,13,15]), this limitation implies that the effect of\nthe optimized planning parameters on other important key performance indicators is not\nanalyzed which restricts the discussion to one dimension.\nThe algorithm is repeated until a maximum number of runs ( maxReplications) is\nreached. Hence, for instance, for 100 iterations with 20 runs, the value for maxReplica-\ntions is 2000. The statement Simulate MRP is then performed 20 times per iteration.\nAs shown in [ 26], even basic versions of these concepts can be useful to identify\nparameter settings that minimize the overall cost. In this paper, we extend the initial\nconcepts to develop a holistic approach for MRP parameter optimization. Thus, the\nfollowing novel aspects have been considered in our study: (i) the MRP parameter lot size\nhas been added; (ii) the original heuristic has been extended into a full simheuristic; and\n(iii) an intelligent simulation budget management is included. The target of the simulation\nbudget management is to test solution quality after each run within an iteration. In other\nwords, for each parameter set, the overall cost is compared to the past results, and only if\nthe solution is sufﬁciently good, further runs of the current iteration are conducted. The\ntarget is to perform more iterations with the same overall number of runs—i.e., the same\nsimulation budget—by avoiding unnecessary runs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Simulated Annealing",
+      "level": 2,
+      "text": "Escaping a local minimum and exploring a new solution range requires a concrete\nstrategy. A biased-randomization algorithm [ 27] of triangular distribution mode is de-\nscribed in Algorithm 2. This algorithm applies aspects of the SA framework [ 28]. In\naddition, the freedom aspect of a demon algorithm is used. Such a demon-based behavior\nis explained in [29]. After each iteration, the costs of the base solution are compared to the\ncosts of the best solution. Each time the costs of the base solution are greater or equal to\nthe best solution, a reset counter is decreased by one. When the reset counter reaches 0,\nthe base solution is reset to the best solution. The reset to the best solution avoids wasting\nsimulation budget in a not promising solution space.\nAlgorithm 2 Reactive biased-randomization of triangular distribution mode.\n1: if Initialization then\n2: resetCounter ← initialValue e .g., 5\n3: bestSolution ← baseSolution\n4: end if\n5: δ = cost (baseSolution )− cost (currentSolution )\n6: if δ > 0 then\n7: credit← δ\n8: baseSolution ← currentSolution\n9: if cost (baseSolution ) < cost (bestSolution ) then\n10: bestSolution ← baseSolution\n11: end if\n12: else if−δ≤ credit then\n13: baseSolution ← currentSolution\n14: credit← 0\n15: end if\n16: if cost (currentSolution )≥ cost (bestSolution ) then\n17: resetCounter−−\n18: end if\n19: if resetCounter = 0 then\n20: baseSolution ← bestSolution\n21: resetCounter ← initalValue\n22: end if\nAlgorithms 2022, 15, 40 8 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Simulation Budget Management (Sbm)",
+      "level": 2,
+      "text": "Limiting the simulation experiment by a maximum number of iterations and runs per\niteration increases the probability to exclude potential good solutions, as they are excluded\ndue to the run out of simulation iterations. Always performing a constant number of\nruns per iteration will not necessarily increase the potential to ﬁnd a new best solution.\nConsequently, it would be more meaningful to introduce a constraint for skipping the\nactual iteration and invest the remaining simulation budget to explore new solutions with\nadditional iterations and a changed set of parameter values. A simple simulation budget\nmanagement pseudocode, which facilitates to run the simulation experiment, is described in\nAlgorithm 3. This algorithm allows as many iterations as budget is available, and will stop\nthe last iteration when the maximum number of runs is reached. The best solution always\nhas the maximum number of the given replications due to the stopping criteria. The average\ncost of the previous iterations (avgIterationOverallCosts) is equal to 1\nn ∑n",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a3"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "overallCosts i, with",
+      "level": 1,
+      "text": "n = maximum runs per iteration (maxReplicationsPerIteration). The avgIterationOverallCosts\nis compared to the percentile value of all past iterations, which depends on the replication\nnumber. The percentile value is computed using GetPercentilValue(setOfAllSolutions,β),\nwhich requires the previous overall cost to be equal to setOfAllSolutions, and a value\nreduced after each run from a UB, returning the value associated with the position in\nthe passed solutions. These values are represented by β and percentileStep. After each\nreplication, the overall cost is added to the values of the current iteration and the new\npercentile value is computed. Compared to the initial Algorithm 1, we do not always\nperform a ﬁxed number of runs. The SBM stops after the simulationBudget is exhausted.\nAlgorithm 3 Simulation budget management.\n1: if Initialization then\n2: totalReplicationCount ← 0\n3: simulationBudget ← maxIterations ∗ maxReplicationsPerIteration\n4: stopCurrentIteration ← f alse\n5: currentReplicationCount ← 1\n6: percentileStep ← 0.0175\n7: end if\n8: β← 0.4\n9: while currentReplicationCount ≤ maxReplicationsPerIteration ∧\n10: stopCurrentIteration = f alse do\n11: totalReplicationCount ++\n12: currentReplicationCount ++\n13: if avgIterationOverallCosts > GetPercentilValue (setO f AllSolutions , β)∧\ncurrentReplicationCount > 3 then\n14: stopCurrentIteration ← true\n15: end if\n16: β = β− percentilStep\n17: end while\n18: stopCurrentIteration ← f alse\n19: replicationsPerIteration ← currentReplicationCount",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1",
+          "a3"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Modeling a Stochastic Mrp-Based Production System",
+      "level": 1,
+      "text": "To model a stochastic MRP system, discrete event simulation can be used [30]. From\na technical perspective, this requires agents to simulate the customers’ orders behavior\nand a simulation framework capable of reading the given experiment planning parameters\nand change them after each iteration. The experiment planning parameters include start\nvalues and boundaries for the MRP-related planning parameters of lot size, planned lead\ntime, and safety stock. In addition, MRP related settings, such as planning horizon and\nadditionally technical parameters are required for the simulation experiments, such as\nthe number of simulation runs and algorithm iterations [ 31]. Customer’s order agents\nAlgorithms 2022, 15, 40 9 of 18\nare passed to a queue. Whenever a customer’s order cannot be completed before the\ndeadline, it is classiﬁed as ‘delayed’. The same logic is applied for the production orders.\nThe production orders are generated based on customer’s orders, which are the gross\nrequirements for the applied MRP run. The output of each MRP run is the production\norders, which provide the information on quantity, item, start and end date. After each\niteration the solution quality is evaluated, i.e., the average of all replications’ overall costs is\ncalculated, and the simheuristic is applied to set the new MRP planning parameter values\nfor the next iteration. The simulation results of each iteration (MRP parameters, backorder\ncosts, inventory costs, iteration count, replication count, . . .) are stored after each iteration\nin the linked in-memory database. These values are then available for the subsequent\niterations. The results of the current iteration including each replication are hold in the\nworking memory of the simulation computer, until the last replication is performed. The\nresults of the in-memory database are stored as database ﬁle and are the basis for the\nperformance analysis of the undertaken simulation study.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 Stochastic Mrp Setting",
+      "level": 2,
+      "text": "Our MRP simulation model can handle stochastic demands as well as random pro-\ncessing times, and provides the described standard MRP logic to treat customers’ orders.\nStochastic behavior is introduced and controlled using log-normal probability distributions\nwith expected values (µi) and variances (σ2\ni ) for machine setup time, customer required\nlead time and customer’s expected order amount. The random variables can be found in\nTable 2, which also includes the respective coefﬁcients of variation (CVi).\nTable 2. Random variables with log-normal behavior.\nParameter Item µi σ2",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "CVi",
+      "level": 1,
+      "text": "order amount 10 10 2 0.1414\norder amount 11 15 6 0.1633\ncustomer required lead time 10 6 9 0.5000\ncustomer required lead time 11 6 10 0.5270\nmachine setup time all 12 36 0.5000\nThe simulated production system is illustrated in Figure 1. The role of the developed\nsimheuristic is to set lot size, planned lead time and safety stock parameters in order to\nminimize the overall cost, which is the sum of inventory and tardiness costs. Despite being\na simple BOM that considers only three levels, the example allows to demonstrate how\nsimheuristics can be meaningfully integrated into an MRP system to optimize overall costs\nfor all three planning parameters. Two ﬁnal products, products 10 and 11, at low-level-code\n(LLC) 0 are produced on machine M2. The two semi-ﬁnished products, materials 20 and\n21, are produced on machine M1. For one unit of ﬁnal product 10, 1 semi-ﬁnished product\n20 is needed. One piece of semi-ﬁnished product 21 is needed for ﬁnal product 11. The raw\nmaterial 100, which is a purchased product, is needed for the semi-ﬁnished products 20\nand 21. This raw material is assumed to be always available. For this simple production\nsystem, 12 different parameters have to be optimized because during simulation for each\nof the materials (10, 11, 20 and 21), all three MRP planning parameters have to be tested\nfor optimality. Table 3 shows the start-up values and respective ranges for optimization\nparameters. Please note that the MRP planning parameter values are treated and evaluated\nas integer units. This means that in the simulation results, the increase or decrease of\noverall costs related to each individual MRP parameter can be tracked. Furthermore, the\ninterrelation between the single planning parameters is integrated in the simulation model,\ne.g., both a higher planned lead time and a higher safety stock lead to higher inventory costs\nand lower tardiness costs, also compare to Buzacott and Shanthikumar [8]. A decrease in\nlot size, for example, leads to higher setup efforts and, therefore, also affects the production\nAlgorithms 2022, 15, 40 10 of 18\nlead time. A higher safety stock increases inventory costs and also increases service level\nwhich leads to lower backorder costs.\nTable 3. Values of the simulation parameters employed.\nMaterial\nParameter 10 11 20 21\nFOQ: LB; UB; Mode 400; 800; 600 600; 800; 700 400; 500; 450 400; 500; 450\nSS: LB; UB; Mode 1; 5; 3 1; 5; 3 1; 5; 3 1; 5; 3\nPL: LB; UB; Mode 0; 4; 2 0; 4; 2 0; 4; 2 0; 4; 2\nProcessing time in h 0.17328 0.17328 0.17328 0.17328\nHolding costs per day 1 1 0.5 0.5\nTadiness costs per day 19 19\nAvg. demand per day 47 70 47 47\nFOQ = Fixed Order Quantity; LB = Lower Bound; UB = Upper Bound; SS = Safety stock; PL = Planned lead time\nFigure 1. A 3-level BOM applied during stochastic MRP simulation.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 Mrp Procedure",
+      "level": 2,
+      "text": "During the execution of the MRP logic, the netting, lot-sizing, backward scheduling,\nand BOM explosion steps are subsequently performed for the speciﬁed planning horizon.\nFor the netting step, the outputs are the items to produce, which are not yet organized as\nproduction lots. For the subsequent lot sizing step, the required information is a lot sizing\npolicy, i.e., the ﬁxed order quantity (FOQ) and the associated parameter value representing\nthe amounts for the production lot. One of the targets is to reduce setup times by selecting\nefﬁcient lot sizes. The process of machine setup plays an important role in the context of lot\nsizing. The planned lead time is the required input for the step of backward scheduling.\nWith backward scheduling, the start date of a production order is computed. The outputs\nof the last step (BOM explosion) are the required quantities for the subsequent BOM levels.\nThe items of BOM level 0 are processed, and followed by the process of higher BOM levels.\nNotice that level 0 provides the gross requirements for subsequent levels: the required\nquantities for BOM level n are passed to BOM level n + 1. Our actual research activities are\nfocused around MRP and it is, therefore, the selected production planning approach for\nthis publication. MRP is still widely applied in industry and the target of current research\nactivities. Therefore, this article will contribute to MRP-related research activities and\nprovides also input for practitioners of systematically setting MRP planning parameters\nwith respect to minimizing inventory and backorder costs.\nAlgorithms 2022, 15, 40 11 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.3 Simulation Model with Simheuristics",
+      "level": 2,
+      "text": "The proposed simheuristic versions are integrated into the simulation model of a\nstochastic MRP-based production system. The computation of all three MRP parameters is\nconsidered, and SA is used to set a new base solution. In addition, SBM can be activated\nfor the simulation process to consume the available simulation budget only for promising\nsolutions. One of the goals of the numerical experiments will be to test the performance\nof the SA and SBM procedures as an extension of the STR, ERR and BSBR. A simulation\nexperiment starts at time 0 and lasts until tn. In a rolling-horizon manner, the customer’s\norders are updated and integrated into the MRP procedure. The planning frequency and\nplanning horizon must be set for MRP . The planning frequency determines how often the\nMRP execution is applied, while the planning horizon determines how far in the future\nthe MRP planning is performed. The frequency was set to 1 day, and the horizon to\n70 days. A complete MRP re-planning is possible and suitable in the developed simulation\nframework. From ti until ti+70, the gross requirements are used to compute production\norders. If an initialization phase is set, the selected simheuristic version is applied after\nthe initialization iterations are consumed and until maxReplications is reached. For the\nsimulation experiment, a set of parameter values is required to provide the required\ninformation during the initialization of the simulation experiment. As illustrated in Table 3,\nthe parameterization of the simheuristic versions (including LB, UB and mode for the used\ntriangular distribution) must be deﬁned for all three MRP planning parameters. The used\nlot sizing policy is FOQ. The rows with LB, UB and mode represent the setup values which\nare passed to the simulation model at the starting time, which are therefore used in the\ninitialization phase. The mode is changed for all three versions, while the LB and the UB\nonly for ERR and BSBR.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5 Simulation Study",
+      "level": 1,
+      "text": "To evaluate the performance of the proposed approach, a computational study was\nperformed. During the simulation experiments, the simheuristic versions are applied to\nﬁnd and update the base and best solutions and set them for the remaining iterations.\nThe simulation results are stored in an in-memory database, and are afterwards used to\nanalyze the simulation results. To reduce the variance in the simulation results, outliers\n(runs with very high or very low costs of an iteration), were excluded from the average\noverall cost per iteration. The simulation time was set to 1800 days and 20 replications\nper iteration are applied when SBM is not activated. Different amounts of simulation\nruns were evaluated to compare the performance of the different simheuristics. Based on\nthe existing simheuristic versions, the developed SBM and SA extensions were evaluated\nduring the simulation study with 100, 200 and 300 iterations, i.e., a simulationBudget of\n2000, 4000 and 6000 runs. To get promising settings for the the remaining parameters,\na set of preliminary test simulations was performed. For the STR, no additional simulation\nparameter is required. For the ERR, the α value for the range reduction was set to 0.0025,\nthus avoiding a too quick convergence of the LB and UB. For the BSBR, the best 7 solutions\nare used to compute lower and upper parameter bounds.\nTo illustrate the simhueristic application, one optimization run is described here in\ndetail. The starting values for the MRP parameters are: item 10 [FOQ 600, SS 3, PL 2], item\n11 [FOQ 700, SS 3, PL 2], item 20 [FOQ 450, SS 3, PL 2] and item 21 [FOQ 450, SS 3, PL\n2]. These MRP parameter values are applied for the ﬁrst iteration within the optimization\nrun and lead to the initial overall costs. Note that all MRP parameter values generated by\nthe simheuristic are ﬁrstly calculated as double values and then rounded to be applicable\nfor the simulation model. In the presented example, the STR simheuristic is applied with\n100 iterations. The MRP parameters lead to initial overall costs of 7151 CU with inventory\ncosts of 1697 CU and backorder costs of 5454 CU. This is also our base and best solution\nused for the subsequent iteration. Applying the STR heuristic for the second iteration leads\nto the following MRP parameter values: item 10 [FOQ 778, SS 4, PL 2], item 11 [FOQ 678, SS\nAlgorithms 2022, 15, 40 12 of 18\n2, PL 3], item 20 [FOQ 452, SS 5, PL 1] and item 21 [FOQ 470, SS 3, PL 2]. These values result\nin deceasing overall costs of 6343 CU (1888 CU inventory costs, 4455 CU backorder costs).\nThis process of ﬁnding new base and best solutions with the associated MRP param-\neter values is done until the maximum number of iterations, i.e., 100 in this example, is\nreached. When SBM is applied, the number of iterations is limited by the overall number\nof simulation runs. Finally, the minimum overall costs can be computed and used for\ncomparison with other simulation results. In this example, the minimum overall costs are\n3490 (1899 CU inventory costs, 1591 CU tardiness costs) at iteration 55 with parameter\nvalues of item 10 [FOQ 539, SS 5, PL 2], item 11 [FOQ 615, SS 5, PL 3], item 20 [FOQ 478, SS\n3, PL 3], item 21 [FOQ 427, SS 4, PL 2]. Compared to the initial solution, this is a decrease of\nthe overall costs by 3661 CU, the inventory costs increased by 202 CU and the backorder\ncosts decreased by 3863 CU. Comparison of MRP parameters of the initial solution and the\nbest solution shows a decrease in the lot sizes, an increase in the safety stock for items 10,\n11 and 21 and an increase in the planned lead time for item 11 and 20. Please note that the\nsafety stock parameter is passed as factor to the MRP run and multiplied by associated\nstock units.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "6 Results of the Simulation Study",
+      "level": 1,
+      "text": "In order to investigate the performance of the proposed simheuristic versions, a sim-\nulation study was performed. The target was to identify the impact of SBM and SA on\nthe minimum overall cost that can be achieved. Each simheuristic version (STR, ERR, and\nBSBR) was evaluated using 100, 200 and 300 iterations, while each combination of SBM and\nSA was tested. The 36 possible experiment combinations and their associated minimum\noverall costs are shown in Table 4. Each result represents a unique and not completely\nreproducible simulation experiment. Each experiment was performed four times to get\ncomparable results and to lower the impact of outliers. For example, from Table 4, the\nexperiment E = {STR with SBM = NO, SA = YES, Iterations= 100} was run four times to\nget the value of 3159 cost units (CU). This value represents the average minimum overall\ncost of this four experiments. The result of the previous experiment used the simulation\nbudget of 2000 runs. In detail, for 100 iterations the simulation budget is 2000 runs, for\n200 iterations the budget is 4000 runs, etc. In total, 768,000 runs were performed to get the\nresults described below.\nTo analyze the effects of setting values for lot size, the STR, ERR and BSBR versions\nare evaluated using a simulation experiment with 200 iteration, 20 runs and simulation\nexperiment run time of 1800 days. The results of the associated simulation experiments\nare illustrated in Figure 2 and represent the applied basic heuristics setting from [26] with\nall three MRP parameters optimized. In the scenario comparison, Table 4, the results\ncorrespond to experiment F = {SBM = NO, SA = YES, Iterations = 100}. Notice that the\nERR line was cut to get a comparable diagram with STR and BSBR. Consequently, the\nminimum overall costs are higher than 26,000 CU in the ﬁrst iterations. Even though ERR\nhas clearly a higher minimum overall cost at the beginning of the optimization experiment,\nafter 200 iterations, it leads to the lowest overall costs. Looking at STR, the minimum\noverall cost gradually decreases over all 200 iterations. Similarly, considering BSBR from\niteration 100 to 200, the minimum overall cost changes only slightly. These results ﬁt\nto the expected behavior of the three simheuristic versions. The STR always uses the\ncomplete solution space between the lower and upper bounds of the MRP parameters for\nthe whole simulation experiment run time. In contrast, for ERR, the LB and UB are updated\nand scaled down each time a new best solution was found. For BSBR, the decreasing\nperformance can be argued due to the ﬁxed set of top n solutions deﬁning LB and UB for\nthe MRP parameters. If the setting of the top n solutions is not changed, the same LB and\nUB are used.\nAlgorithms 2022, 15, 40 13 of 18\nTable 4. Scenario comparison using minimum overall costs per simulation experiment.\nSBM NO SBM NO\nIterations Simheuristic SA NO Iterations Simheuristic SA YES",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "100 STR 3482 100 STR 3159",
+      "level": 1,
+      "text": "ERR 2265 ERR 2409\nBSBR 3201 BSBR 3184",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "200 STR 3155 200 STR 3228",
+      "level": 1,
+      "text": "ERR 2173 ERR 2073\nBSBR 3066 BSBR 2909",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "300 STR 3286 300 STR 3026",
+      "level": 1,
+      "text": "ERR 2308 ERR 2253\nBSBR 3257 BSBR 2828\nSBM YES SBM YES\nIterations Simheuristic SA NO Iterations Simheuristic SA YES",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "100 STR 3100 100 STR 3022",
+      "level": 1,
+      "text": "ERR 2125 ERR 2081\nBSBR 3458 BSBR 2767",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "200 STR 2798 200 STR 2970",
+      "level": 1,
+      "text": "ERR 2225 ERR 2180\nBSBR 3284 BSBR 2549",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "300 STR 2830 300 STR 2720",
+      "level": 1,
+      "text": "ERR 2118 ERR 1947\nBSBR 3222 BSBR 2525\nFigure 2. Minimum overall cost per simheuristic version for all MRP planning parameters.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "6.1 Sbm Application",
+      "level": 2,
+      "text": "Our ﬁrst research question (Q1) investigates the performance when applying SBM.\nThe idea of SBM is to stop an iteration if the computed average costs of the current\niteration’s run is higher than a speciﬁed threshold based in the prior available results.\nAlgorithms 2022, 15, 40 14 of 18\nThe wasting of simulation budget, represented by additional non-promising runs, should\nbe avoided. The leftover runs are shifted to the next iteration and, consequently, allow\nmore iterations per optimization experiments with different parameter settings. To answer\nQ1, the results without SBM {SBM = NO and SA = NO} and applying SBM {SBM = YES\nand SA = NO} in Table 4 are compared. For the STR procedure, the application of SBM\nand an increasing simulation budget indicates a lowering overall cost. At 100 iterations,\nthe overall cost decreased from 3482 CU to 3100 CU, which is a performance increase of\n10.95%. Likewise, at 200 and 300 iterations, a cost reduction of 11.31% and 13.89% can be\nobserved, respectively. For ERR, at 100 iterations a better performance of 6.18% is possible.\nAt 300 iterations, a performance increase of 8.21% (from 2173 CU down to 2118 CU) is\nobserved. For simheuristic BSBR, the application of SBM with SA = NO does not show a\nconsistent behavior, although costs for 300 iterations slightly decrease. Note that the BSBR\nversion is outperformed by the ERR one in all of the aforementioned scenarios. For Q1,\nit can be concluded that the SBM application leads to a performance increase, when the\nsearch space is focused on a single best solution and a constantly decreasing parameter\nspace leads to an additional performance increase.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "6.2 Sa Application",
+      "level": 2,
+      "text": "The second research question (Q2) addresses the problem of getting stuck in a local\nminimum. The application of SA should help escape a local minimum by exploring other\nregions of the solution space. The pseudocode described in Algorithm 2 facilitates this\nby computing the delta between current and base solution. Only when delta is positive,\na new best solution can be found. To test the performance of applying only SA, the\nresults without SBM and SA {SBM = NO and SA = NO} are compared to results with SA\n{SBM = NO and SA = YES}, which can be found in Table 4. For the simheuristic STR with\n100 iterations, an improvement of 9.26% (3482 CU vs. 3159 CU) is obtained. In addition,\nwith 300 iterations, an improvement of 7.90% (3286 CU vs. 3026 CU) could be obtained.\nFor ERR with 200 iterations, the overall cost decreases by 4.59%, while for 300 iterations, it\ndecreases by 2.36%. For each maximum iteration set in BSBR, the overall cost decreases\nstep-wise by 0.53% (3201 CU vs. 3184 CU) for 100 iterations, by 5.12% (3066 CU vs. 2909 CU)\nfor 200 iterations, and by a remarkable 13.17% (3257 CU vs. 2828 CU) for 300 iterations.\nHence, for Q2, the conclusion is that the application of SA leads to decreasing overall costs\nwith an increasing simulation budget. In addition, the combination with SBM may support\nthis trend. The results in Table 5 support this ﬁnding, with the lowest average of 2693 CU\nfor a simulation budget of 300. The columns STR, ERR and BSBR represent the average\nminimum overall cost over the same simulation budget for each simheuristic, while the\nlast column shows the average per simulation budget.\nTable 5. Average performance comparison of simulation budget.\nSimulation Budget STR ERR BSBR Avg\n100 3191 2220 3152 2854\n200 3038 2163 2952 2717\n300 2965 2156 2958 2693",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6.3 Combination of Sbm and Sa",
+      "level": 2,
+      "text": "The third research question (Q3) investigates the joint application of SBM and SA\nto compute the minimum overall cost. The joint application of SBM and SA led to the\nlowest overall costs of all experiments, with a value of 1947 CU and a performance increase\nof 15.64% for ERR (from a value of 2308 CU, without SBM and SA), as shown in Table 4.\nThe highest decrease of 22.47% of the overall cost (compared to the experiments without\napplying SA and SBM) could be obtained with300 iterations and BSBR (from3257 CU down\nto 2525 CU). For STR with 300 iterations, it was possible to lower the overall cost by 17.22%",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "A 3-level BOM applied during stochastic MRP simulation."
+    },
+    {
+      "id": "f2",
+      "caption": "Minimum overall cost per simheuristic version for all MRP planning parameters."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Related work reviewed."
+    },
+    {
+      "id": "t2",
+      "caption": ", which also includes the respective coefﬁcients of variation (CVi)."
+    },
+    {
+      "id": "t3",
+      "caption": "Values of the simulation parameters employed."
+    },
+    {
+      "id": "t4",
+      "caption": "Scenario comparison using minimum overall costs per simulation experiment."
+    },
+    {
+      "id": "t5",
+      "caption": "Average performance comparison of simulation budget."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "3.1. Initial Simheuristic Algorithm"
+    },
+    {
+      "id": "a2",
+      "caption": "Reactive biased-randomization of triangular distribution mode."
+    },
+    {
+      "id": "a3",
+      "caption": "This algorithm allows as many iterations as budget is available, and will stop"
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 5,
+    "n_algorithms": 3,
+    "n_equations": 0
+  }
+}

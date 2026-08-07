@@ -1,0 +1,190 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/tsp-cmc/cmc_2025_llm_finetune_payloads.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1.1 DevelopedWebApplicationforSimplePayloadGeneration",
+      "level": 2,
+      "text": "As part of this research, a specialized web application was developed using the Flask framework to\nfacilitatetheautomaticgenerationofsyntheticpayloadsforvariousattacktypes,suchasXSS,SQLInjection,\nandCommandInjection.Thisapplicationintegratesafine-tunedGPT-2modeltrainedonadatasettailored\nfor generating malicious payloads. Through a user-friendly interface, penetration testers and cybersecurity\nexperts can specify the type of attack and instantly receive corresponding payloads [3]. This approach\ndrastically streamlines the penetration testing process, reduces the time required for test preparation, and\nenhancestheaccuracyofvulnerabilityidentification.\nUnliketraditionaltools,thiswebapplicationlevera gesadvancedlanguagemodelcapabilities,providing\na level of automation and precision that has not been previously explored in penetration testing. It was\ndesigned exclusively for research purposes and is not publicly available, ensuring controlled use. The\nmethodology section of this paper provides a detailed explanation of the functionality of the application,\nincludinganexampleofthefunctionusedtoloadthemodelandgeneratemaliciouspayloads.Thefigurein\nthismanuscriptwillillustratetheapplication’suserinterfacestructure,whichenablestheefficientdefinition\nandgenerationofpayloads.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.2 ContributionoftheResearch",
+      "level": 2,
+      "text": "This paper significantly contributes to the field of cybersecurity by pioneering the application of\nadvanced language models in the context of web application penetration testing. It addresses a critical gap\nincurrentmethodologiesbyintroducingautomationinpayloadgeneration,whichistraditionallyamanual\nanderror-proneprocess[ 4].Themethodologypresentedherefortrainingandfine-tuningLLMs,alongwith\nthe results confirming their ability to generate synthetic payloads that identify and exploit vulnerabilities,\nshowcasesthepracticalpotentialofthesemodelstoenhancewebapplicationsecurity.\nFurthermore, this study explores the broader implications of using LLMs for penetration testing,\nemphasizing how the developed web application empowers penetration testers to conduct more efficient,\nscalable, and accurate assessments. By automating and optimizing payload generation, this approach not\no n l ye n h a n c e st e s t i n gc a p a b i l i t i e sb u ta l s os e t st h es t a g ef o rf u t u r ea d v a n c e m e n t si nc y b e r s e c u r i t yt o o l s\nandmethodologies.\nGPT-2\nGPT-2,introducedbyOpenAIin2019,representsasignificantadvancementoverpreviousmodelslike\nBERTduetoitsuniqueautoregressivetransformerarchitecturebasedsolelyonthedecoder.Thisarchitecture\nisspecificallydesignedfortaskssuchastranslation,textgeneration,andquestionanswering.UnlikeBERT,\nwhich uses bidirectional context analysis within a sentence, GPT-2 is a unidirectional model, meaning it\nprocessestextinonedirection—fromthebeginningtotheend.Duringtraining,GPT-2masksfuturetokens\nto prevent the model from using context that comes after the current token, ensuring that the prediction\nof the next word in a sentence is based solely on the preceding words. The GPT-2 architecture includes\nself-attentionlayers,attentionbetweenencoderanddecoder(encoder-decoderattention),andfeed-forward\nlayers,enablingthemodeltoefficientlyprocesscontextandpredictthenexttokeninasequence[ 5].\nComputMaterContin. 2025;82(3) 4411\nAccording to [6], GPT-2 excels in generating coherent and relevant textual responses, making it a\nsignificanttoolforvariousapplicationsinNLP.\nT oclearlyillustratethedifferencebetweentheBERTandGPT-2models, Fig.1 showsasimplifiedviewof\ntheirarchitectures. Fig.1 displaysBERT’sencodermodelwithlayersthatenablebidirectionaltextprocessing,\nwhiletheGPT-2modelisbasedsolelyonadecoderarchitecture,whichprocessestextunidirectionally.This\nfigure visually highlights the key differences in how the two models process text and understand context,\ntherebyfurtherexplainingtheirspecificapplicationsinNLPtasks.\nFigure1: DifferencebetweenBERTandGPT-2models[ 5]\nIn this research, the GPT-2 model was used instead of BERT due to differences in the architecture and\nprimarygoalsofthesemodels.WhileBERTisoptimizedfortextunderstandingtasks,suchasclassification\nandentityextraction,itsbidirectionalarchitectureisnotidealforgeneratingtextsequences,whichiscrucial\nfortheneedsofthisresearch.\nThechoiceof GPT-2over newerversionsof theGPT model isbased on thefollowing reasons:\nFirst, GPT-2 is an openly available model that does not require API access, which allows for complete\ncontrolandprivacyduringuse.Thisaspectisparticularlyimportantinresearchinvolvingthegenerationof\nmaliciouspayloads,whereensuringahighle velofsecurityandprivacyisessential.\nSecond,althoughGPT-2isnotthelatestversionintheGPTseries,itsautoregressivedecoderarchitec-\nture allows for the generation of high-quality text sequences. These sequences are sufficiently complex and\nvariable for identifying vulnerabilities in web applications, making it a suitable and practical choice for the\npurposes of this research. Due to these characteristics, GPT-2 was selected as the most appropriate option\nforpenetrationtestingofwebapplicationsinthisstudy.\n4412 ComputMaterContin. 2025;82(3)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 LiteratureReviewandComparisonofRelatedResearch",
+      "level": 1,
+      "text": "The literature review plays a crucial role in laying the groundwork for any research, especially in the\nfield of web application security, where the dynamics of threats and protective measures are constantly\nevolving.Thispaperfocusesonanalyzingsecuritychallengesinwebapplications,withparticularemphasis\non penetration testing, the security of LLMs, and the use of specific tools and techniques for preventing\nand detecting attacks. The goal is to identify existing methodologies and highlight the innovation of\nthis approach, which differs from traditional methods of attack detection and classification presented in\nthesestudies.\nThe study of Happe et al. [7] explores the use of LLMs, such as GPT-3.5, in the context of penetration\ntesting.TheauthorsanalyzehowLLMscanbeutilizedforhigh-leveltaskplanningduringsecuritytestsand\nfor detecting lower-level vulnerabilities within a vulnerable virtual machine. Although this paper provides\nsignificantinsightintothepotentialofLLMs,itislimitedtoapplicationsinplanninganddetection,without\nexploringthepossibilityofgeneratingnew,sophisticatedattacks.\nOntheotherhand,authorsin[ 8]examinedthedifferencesbetweenautomatedandmanualapproaches\ntopenetrationtesting,focusingonscenarioswhereoneapproachmaybemoreeffectivethantheother.The\nauthorsinvestigatevarioustypesofvulnerabilities,includingthoseontheOWASPTop10list,todetermine\nthe advantages and disadvantages of both approaches. This paper offers a substantial analysis but deals\nexclusively with the detection of existing threats, whereas this research advances further by exploring the\npotentialforgeneratingnewattacksusingLLMs.\nPaper[9]focusesonthesecuritychallengesassociatedwithfine-tuningLLMs,suchasMetaLlamaand\nGPT-3.5Turbo.Theauthorshighlighthowevenminimalfine-tuningcanseriouslycompromisethesecurity\nof the model. This paper raises an important question about security during the customization of LLMs,\nbut, like the previous papers, it addresses detection and protection, whereas this research investigates the\ngeneration of new attackscenarios.\nPaper [10] analyzes the OWASP Security Shepherd technology as a tool for developing manual pene-\ntrationtesting,particularlyinthecontextofprotectionagainstXSSattacks.Whilethisresearchisimportant\nfor education and prevention of XSS attacks, its focus is exclusively on existing threats, whereas this paper\nconcentratesoncreatingnewpayloadsusingLLMsforattackingwebapplications.\nPaper [11] provides a comprehensive review of methods for preventing and detecting SQL injection\nattacks, with an analysis of techniques such as input validation, parameterized queries, and intrusion\nd e t e c t i o ns y s t e m s .Th i ss t u d yi d e n t i fi e st h em o s te ff e c t i v ec o m b i n a t i o n so fm e t h o d sf o rp r o t e c t i n gw e b\napplications but, like the previous papers, mainly deals with detection, whereas this paper introduces\ninnovationingeneratingattacks.\nPaper [12] of OWASP dedicated to Command Injection attacks provides a detailed description of how\nattackerscanexploitthisvulnerabilitytoexecuteunauthorizedcommandsonaserver.Thegoalistoeducate\nabout attack methods and preventive measures that can help protect web applications from such security\nthreats.Thepagecoversvariousattacktechniques,examples,andrecommendedbestpracticesformitigation.\nPenetrationtestingservesasanessentialapproachforuncoveringvulnerabilitiesbymimickingreal-life\ncyberattacks to evaluate the robustness of systems and networks. Although primarily a defensive strategy,\nsome malicious actors exploit open-source tools to conduct pen tests for harmful purposes. The study of\nLackhov et al. [13] outlines the stages and methodology of penetration testing, offering guidance and a\ndemonstration of simulated attacks to assist IT administrators and cybersecurity experts in safeguarding\ntheirnetworks.\nComputMaterContin. 2025;82(3) 4413\nKarlsenetal.[ 5]investigatetheeffectivenessofdifferentLLMs(BERT,RoBERTa,DistilRoBERTa,GPT-\n2, GPT-Neo) in analyzing log files to improve cybersecurity. The authors show that fine-tuned models,\nparticularlyDistilRoBERTa,achieveexceptionalresultsinloganalysis,withanaverageF1-scoreof0.998,and\nintroduceanewexperimentalframework,LLM4Sec,foroptimizingandevaluatingthesemodels.\nThe subsequent paper from Yao et al. [14] explores the impact of LLMs such as ChatGPT and Bard on\nsecurity and privacy. Through a comprehensive literature review, the paper analyzes the positive aspects of\nLLMsinthe field of security,suchas improved vulnerability detection incode and dataprivacy protection,\nbut also potential risks and threats, including the use of LLMs for attacks. The authors identify key areas\nrequiringfurtherresearch,suchasattacksonmodelsandsecureinstructiontuning,andemphasizetheneed\nforcontinuedstudyoftheseissues.\nAuthors Latif et al. [6] investigate the application of fine-tuned ChatGPT (GPT-3.5) for automatic\ngradingofstudent-writtenresponsesinthefieldofscience.AlthoughGPT-3.5hasshownexceptionalresults\ninnaturallanguagegeneration,thestandardmodelisnotpreciseenoughforgrading,asstudentsusespecific\nlanguage different from the material the model was trained on. This study fine-tuned GPT-3.5 using data\nfromspecifictasksandexpertgrading.Theresultsshowthatfine-tunedGPT-3.5achievessignificantlyhigher\naccuracy in automatic grading compared to the BERT model, with an average accuracy increase of 9.1%.\nThisstudyconfirmstheeffectivenessoffine-tunedGPT-3.5ineducationforautomaticgradingandprovides\npublicaccesstofine-tunedmodels.\nPaper [15] explores the use of LLMs in automated penetration testing, demonstrating that LLMs can\nefficientlyperformspecifictasksbutstrugglewithmaintainingoverallcontext.ItintroducesPENTESTGPT,\naframeworkthatusesLLMstoenhancethepenetrationtestingprocess,andshowsthatPENTESTGPTsig-\nnificantlyoutperformspreviousmodelswithatasksuccessincreaseof228.6%anddemonstrateseffectiveness\ninreal-worldchallenges.\nIn [16], the authors investigate the application of LLMs for code review automation using fine-tuning\nand prompt engineering methods. By studying variations of GPT-3.5 and Magicoder, they found that fine-\ntuningsignificantlyimprovesaccuracycomparedtountrainedapproaches,whilefew-shotlearningprovides\nsubstantialimprovementswhentrainingdataisnotavailable.Theconclusionisthatfine-tuningprovidesthe\nbestperformance,whilefew-shotlearningcanbeusefulinsituationswithlimiteddata.\nThe paper [17] examines the evolution of vulnerabilities in web applications through a detailed\ncomparative analysis of the OWASP Top 10 lists from 2017 and 2021. It addresses changes in threat\nrankings,vulnerabilitydescriptions,andidentifiesnewtrends,providingorganizations,securityexperts,and\ndeveloperswithinsightsintocontemporarychallengesandshiftsinwebapplicationsecurity.\nThestudy[ 18]exploresadvancementsinartificialintelligencesincetheintroductionoftheTuringtestin\nthe1950s,focusingonthedevelopmentoflanguagemodelsfromstatisticaltoneuralmodels,withparticular\nemphasis on transformers and large language models like ChatGPT. The paper provides an overview of\ntechnological achievements and the contributions of LLMs in natural language processing, as well as the\ntransition to large multimodal models that integrate various data types such as text, images, and sound,\ndemonstratingadvancedcapabilitiesinunderstandingandgeneratingcontent.\nThe paper [19] introduces an innovative approach to developing customized chatbots that focuses\non efficiency and functionality. By combining three key technologies: LangChain, RAG, and LLMs, along\nwith performance-enhancing techniques such as LoRA and QLoRA, the paper enables precise tailoring of\nchatbotstospecificuserneeds.Thisapproachimprovesaccuracy,userexperience,andaccesstoinformation,\nallowingchatbotstoefficientlyprocessqueriesandprovideusefulresponses.\n4414 ComputMaterContin. 2025;82(3)\nInpaper[ 20],authorspresentthatLLMshavedemonstratedsignificantproficiencyinsoftwaretesting.\nThis paper conducts evaluation of LLMs applied to error tracing, test case generation, ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 TheoreticalFoundations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 LargeLanguageModel(LLM)",
+      "level": 2,
+      "text": "LLMs are advanced neural networks trained using vast datasets. The performance of these models\nlargelydependsontheircomplexity,whichistypicallymeasuredbythenumberofparameters.ModernLLMs\nvaryinparametersizefromseveralbillion,suchasLLaMAwith7billionparameters,toseveraltrillion,such\nas Wu Dao or GPT-4. Although larger models can exhibit unpredictable behaviors, there is ongoing debate\naboutwhetherfurtherexpansionofmodelsissustainableduetodiminishingreturnsinscalingefficiency[ 7].\nTraininganentirelynewLLMisoftenfinanciallyprohibitiveformostresearchers,butexistingmodels\ncanbefine-tunedorfurthertrainedforspecificpurposesatamoremanageablecost.Thispracticehasledto\nthe concept of “base models” [7].\nAccordingtorecentresearch,LLMshaveundergonesignificantevolutioncomparedtoearlierlanguage\nmodels.Earliermodelswerestatisticalinnatureandla idthegroundworkforcomputationallinguistics,while\ntransformersenabledsubstantialadvancementsinscalability[ 14].ModernLLMsundergoextensivetraining\non massive datasets to understand and generate text that closely mimics human language. These models,\nwith hundreds of billions or even trillions of parameters, have made significant strides in NLP and find\napplicationsinvariousfields,includingriskassessment,programming,vulnerabilitydetection,medicaltext\nanalysis,andsearchengineoptimization[ 14].\nUsing LLMs for generating and optimizing prompts can significantly enhance the efficiency of pene-\ntrationtestingbyprovidingopportunitiestodevelopbetterquestionsthatpenetrationtesterscanask.These\nmodelsrepresentapowerfultoolwithvastpotentialforimprovingthesecurityofinformationsystems,but\nethicaluseofLLMsisoffundamentalimportance[ 14].\n3.1.1BERT\nThe BERT model, introduced by Google in 2018, significantly advanced NLP using a bidirectional\ntransformerarchitecture.TheBERTmodelprocessestextinbothdirections—lefttorightandrighttoleft—\nenablingittodetectandunderstandcontextualrelationshipsfrombothsidesofawordinasentence[ 14].The\nmodelwastrainedonalargecorpuscontainingover3.3billionwords,applyingtechniquessuchasmasked\nlanguagemodelingandnextsentencepredictiontofurtherenhancetextcomprehension.BERT’sarchitecture\nincludes12layersoftransformerencoders,eachwith768hiddenstates,andutilizestheWordPiecealgorithm\nfor tokenization. This powerful framework allows BERT to be fine-tuned for specific domains, providing\nsignificantembeddingrepresentationsforvariousNLPtasks[ 5].\n3.2 PenetrationTestingwithLLMs:GeneratingPayloads\nPenetration testing, or “pen-testing,” is a critical process in assessing the security of information sys-\ntems[8].Inthetraditionalpenetrationtestingprocess,securityprofessionalsanalyzethetargetsystemusing\nautomated tools through five key phases: reconnaissance, scanning, vulnerability assessment, exploitation,\n4416 ComputMaterContin. 2025;82(3)\nand post-exploitation. These phases allow for a comprehensive understanding of the system, identification\nofvulnerabilities,andtheirexploitationtogainaccesstothesystem[ 15].\nUsing LLM for this purpose represents an innovative approach that enables the automation and\nenhancement of this process. One of the most critical aspects of penetration testing is generating payloads,\ni.e.,maliciouscodeordatausedtoexploitvulnerabilitiesinthetargetsystem.\nLLMmodels,suchasGPT-2andBERT,providethecapabilitytogeneratesophisticatedandcustomized\npayloadsthroughlearningfromlargeamountsofdata.Thesemodelscanbefine-tunedforspecificdomains,\nthereby increasing their effectiveness in various security scenarios. This study focuses on testing web\napplications, which allows for the use of LLM models to automate payload generation and enhance the\nefficiencyofpenetrationtesting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Tokenization",
+      "level": 2,
+      "text": "TokenizationisacrucialstepinpreparingtextualdataforworkingwithLLMs.Duringthetokenization\nprocess,textisbrokendownintosmallerunitsknownastokens.Thesetokenscanbewholewordsorpartsof\nwords,dependingonthespecificarchitectureofthemodel.Thisprocessallowsmodelstoaccuratelyanalyze\nandinterprettextualinformation,enhancinglearningandlanguagegenerationefficiency.Tokenizationthus\nplaysakeyroleinenablingmodelstohandlecomplexlinguisticstructuresandproducerelevantresults[ 19].\nBy correctly applying tokenization, textual data can be transformed into a format that allows LLMs\nto learn more efficiently. This process contributes to the development of robust and efficient solutions for\ngenerating advanced synthetic payloads. As researchers in this field, it is essential to continuously evaluate\ntheeffectivenessofthesemethodsandexploreinnovativeapproachestoimprovedatapreparation,withthe\ngoalofbuildingadvancedsystemsforapplicationsecuritytesting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.4 Fine-Tuning",
+      "level": 2,
+      "text": "Fine-tuning is a method used to adapt pre-trained LLMs to specific tasks and applications. This\ntechniqueinvolvesdirectlyupdatingthemodel’sparametersbasedonsmallerdatasets,allowingforimproved\nperformance on particular tasks. There are many approaches that focus on optimizing the efficiency of this\nprocess,aimingtoachieveabetterbalancebetweenqualityandspeed[ 16].Thisprocessenhancesthemodel’s\nabilitytounderstandandexecutecomplextextualinstructions,significantlyincreasingthemodel’sflexibility\nand enabling it to efficiently perform various tasks according to the specific requirements of users [18].\nAlthoughmethodslikecontextlearningandpromptqueriesdonotrequireparameterchanges,fine-tuning\nis often still preferred as it reduces additional burdens during the inference process and generally provides\nbetterandmorestableresults[ 9].\nInthisstudy,fine-tuningwasappliedtotheGPT-2modelduetothespecificadvantagesitoffers.Once\nthe GPT-2 model is pre-trained, it becomes a completely private resource, eliminating the need for API\naccess.ThischaracteristicmakestheGPT-2modelparticularlysuitableforapplicationsthatrequiregreater\nprivacyandcontroloverdata,asitallowsoperationwithoutrelyingonexternalservices.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.5 OWASP",
+      "level": 2,
+      "text": "The OWASP is a global non-profit organization focused on improving software application security.\nOWASP provides organizations with the resources and tools needed to develop, purchase, and manage\nsecure software. Through a wide range of free and open resources, OWASP grants access to security\nstandards, testing and secure coding books, as well as code analysis [17]. The organization offers reports,\nvideo materials, optional security tests, repositories, and support through local chapters around the world.\nComputMaterContin. 2025;82(3) 4417\nOWASP is also known for organizing major international conferences and advancing scientific research\nrelated to cybersecurity. The goal of OWASP is to educate professionals, including developers, designers,\narchitects,andbusinessleaders,abouttherisksarisin gfromincreasinglycommonsecurityvulnerabilitiesin\nweb applications. It is particularly known for its “Top 10” list, which identifies the most dangerous security\nthreats in web applications and provides guidelines for mitigating them [10].\n3.5.1XSS\nXSS is a well-known attack on web applications thatoccurs when malicious web code, usually in the\nform of a script, is sent and executed through the victim’s browser using their web applications. This attack\nallows attackers to filter personal information or steal cookies from users to hijack session identities. XSS\nattackscanleadtothetheftofconfidentialdataoreventakecontrolofothercomputers.Accordingtodata,\nXSSaccountsfor40%ofattackattemptsonwebapplications,makingitthemostcommonformofattackin\nthisfield[ 10].\n3.5.2SQLInjection\nSQL injection is a serious security threat in web applications that use databases. This attack allows\nattackerstoinsertmaliciousSQLcodeintoanapplication,gainingunauthorizedaccesstoconfidentialdata.\nSQLinjectionattacksoftenoccurwhenapplicationsinadequatelyvalidateuserinputs,allowingmanipulation\nofdatabasequeries.Themosteffectivedefenseincludesacombinationofpreventionmethods,suchasinput\nvalidation and parameterized queries, with detection techniques like intrusion detection systems. Despite\nadvanced protective methods, SQL injections remain one of the most common and dangerous forms of\ncyber-attacks on web applications [11].\n3.5.3CommandInjection\nCommandInjectionisatypeofattackwhereanattackerexploitsavulnerablewebapplicationtoexecute\narbitrary commands on the operating system. These attacks occur when the application passes unsafe data\nprovided by users, such as form inputs, cookies, or HTTP headers, to the system shell. The attacker sends\ncommandsthatarethenexecutedwiththeprivilegesofthevulnerableapplication.Themaincauseofthese\nattacksisthelackofadequateinputvalidation[ 12].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.6 PerformanceMetrics",
+      "level": 2,
+      "text": "When fine-tuning a LLM for text generation, such as for creating new payloads for cybersecurity, it’s\nimportant to use appropriate performance metrics to assess the model’s effectiveness. Two key metrics for\nevaluatingthemodelinthiscontextareevaluationlossandevaluationperplexity.Thesemetricshelpassess\nhow well the model generates coherent and relevant text. Evaluation loss measures the model’s accuracy in\npredictingthecorrectwords,whileperplexityprovidesinsightintohow“natural”themodelisatgenerating\ntext,withlowervaluessuggestingabetterabilitytoproducecoherentcontent.\n3.6.1EvaluationLoss\nEvaluation loss measures how much the model’s predictions differ from the actual results in the\nevaluation dataset. In the context of text generation models, this loss indicates how well the model predicts\nthenextwordinasequencebasedonthepreviouswords.Mathematically,evaluationlossismeasuredusing\nthecross-entropylossfunction,whichisdefinedbythefollowing Eq.(1):\n4418 ComputMaterContin. 2025;82(3)\nLoss=− 1\nN∑\nN\ni=1 logp(yi∣xi),( 1 )\nwhere\nN—thenumberofwordsintheevaluationdataset.\np(xi∣yi)—theprobabilityassignedbythemodeltothecorrectword yi giveninput xi.\n3.6.2EvaluationPerplexity\nEvaluation perplexity measures how “confused” the model is by the evaluation data; lower perplexity\nindicates that the model is better at predicting words. Perplexity is an exponential function of evaluation\nloss and provides a better understanding of the quality of the generated text. Mathematically, perplexity is\ndefinedas( 2):\nPerplexity = e\nLoss , (2)\nwhereLoss—evaluationlossfromthepreviousformula.\nPerplexity is often used to compare performance between different models and configurations. Lower\nperplexityindicatesthatthemodelbetterpredictsthenextwordsinasequenceandgenerallyproducesmore\ncoherenttexts.\n4M e t h o d o l o g y\nInthisresearch,anLLMwasusedtogeneratesyntheticpayloadsforattackssuchasXSS,SQLInjection,\nandCommandInjection.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1 Dataset",
+      "level": 2,
+      "text": "ThedatasetusedinthisresearchwasobtainedfromKaggle[ 26]andcontainsatotalof199,797records\ninCSVformat.Thisdatasetcoversthreemaintypesofattacks:SQLInjection,XSS,andCommandInjection\n(see Table 1). Each record includes a unique identifier, the text content of the payload, the type of attack,\nand a binary label indicating whether the payload is anattack or normal. This dataset is carefully designed\nto enable the analysis and recognition of different attacks, providing support for training machine models\nand exploring patterns in payloads. By using this dataset, the research focuses on developing methods for\nautomatic detection and prevention of vulnerabilities in web applications, thereby enhancing the security\nand efficiency of protective systems. In this study, the dataset was used for fine-tuning LLMs with the goal\nofgeneratingnewpayloadstoenrichthepenetrationtestingprocess.\nTable 1:Thedatasetonattacktypes\nSentence SQL\nInjection\nXSS Command\nInjection\nNormal\nfindtrunk-typef-execcurl–useruser:pass... 0.0 0.0 1.0 0.0\nzˆnˆ$hˆr3]21%g96$bu{)d1{y+o-x9x`()q),9u7v7l~a... 1.0 0.0 0.0 0.0\nItisastoryasoldasman.Thejealousyfor... 0.0 0.0 0.0 1.0\nI’mrackingmybrain,butIcan’tseemtothin... 0.0 0.0 0.0 1.0\nMJ7whfind-typef-printf“%s%p\\n” ∣sort-nr... 0.0 0.0 1.0 0.0\n(Continued)\nComputMaterContin. 2025;82(3) 4419\nTable 1 (continued)\nSentence SQL\nInjection\nXSS Command\nInjection\nNormal\n<multicolid=xtab index=1o nbefo r edeactiva te=a... 0.0 1.0 0.0 0.0\n-2992%’)))or4493 =utl_inaddr.get_ho... 1.0 0.0 0.0 0.0",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 Fine-TuningProcess",
+      "level": 2,
+      "text": "Fig.2 shows the comprehensive workflow for fine-tuning a pre-trained LLM to generate synthetic\npayloadsthatcanbeusedforpenetrationtestingofwebapplications.Theprocessinvolvesseveralkeystages,\neach contributing to the development and implementation of a robust model capable of generating realistic\nandeffectiveattackvectors[ 27].\nFigure2: Workflowforfine-tuningapre-trainedlanguagemodel\n• DataCollection\nThisinitialphaseinvolvesgatheringrelevantdatasetscontainingexamplesofpayloadsforwebapplica-\ntions, such as XSS, SQL Injection, and Command Injection. The dataset used in this research is detailed in\ntheprevioussection.\n• DataProcessing\nAfter collection, the raw data is carefully processed to prepare it for model training. This step involves\nseveral key processes: cleaning the data to remove faulty or unnecessary information, tokenizing the text\n4420 ComputMaterContin. 2025;82(3)\nto convert it into sequences of tokens, and formatting the data into formats that the model can efficiently\nuse.Dataprocessingensureshigh-qualityinput,enablingprecisemodeltraining.Allnormalpayloadswere\nremoved from the dataset as this work focuses on generating attacks rather than detecting them. The data\nwassplitinto80%fortrainingthemodeland20%fortesting,andplacedintotwo.txtfiles—onefortraining\nandonefortesting.Dataformattingincludesexamplessuchas:SQLInjection- >‘OR‘1’=‘1’;\n• Pre-trainedLLM\nInthisprocess,apre-trainedlanguagemodel,suchasGPT-2inthiscase,isused.Thismodelwasinitially\ntrained on a large corpus of general text. This pre-trained model provides a solid foundation with a broad\nunderstandingoflinguisticpatternsandstructures.\n• Fine-Tuning\nInthiscriticalphaseoftheresearch,thepre-trainedGPT-2modelwasfurtherfine-tunedonaspecific\ndatasetrelatedtowebapplicationpayloads.Thisfine-tuningprocessallowsthemodeltoadjustitsparameters\ntomoreaccuratelyunderstandandgeneratetextthatmimicsthestructureandcontentofthegivenpayload\nexamples.ThetrainingwasconductedonaHuaweiAtlas3010server,utilizing36Intel(R)Xeon(R)Gold6240\nCPUcoresat2.60GHz,withatotalof125.31GiBofmemory.Duringthetraining,15%oftheRAMand50%of\ntheCPUresourceswereused.Efficientmanagementofcomputationalresourcesenabledoptimizedtraining\nwithabatchsizeof2andatotalof1epoch,ensuringanoptimalbalancebetweenlearningdepthandmodel\ngeneralization. The training lasted 43 h, with logs recorded every 200 steps, while models were saved every\n10,000steps,withamaximumoftwomodelssavedtomanagestorageefficiently.Thissystematicapproachto\nfine-tuningallowedtheGPT-2modeltogeneraterealisticandprecisepayloads,leadingtoimprovedaccuracy\nandreliabilityinpenetrationtesting.\n• ModelEvaluation\nAfterfine-tuning,themodelundergoesevaluationtoassessitsperformance.MetricssuchasEvaluation\nLoss and Evaluation Perplexity are crucial for assessing the LLM’s effectiveness in generating realistic and\ndiversepayloads.Theevaluationensuresthatthemodelmeetsthedesiredstandardsbeforeimplementation.\nTheobtainedevaluationresultsarepresentedinthechapteronresultsandinterpretations.\n• ModelDeployment\nThefine-tunedmodelisimplementedonaRaspberryPi5platform,whichservesastheserver,making\nit available for generating synthetic payloads in real time. This phase involves integrating the model into a\nwebapplicationframework,suchasFlask,whichenablesinteractionwiththemodelthroughauserinterface.\n• Flask-BasedWebApplication\nTheapplicationwasdevelopedusingtheFlaskframework,whichprovidesaflexibleandsimplewayto\nimplement web applications. Flask serves as the backend for integrating with the fine-tuned GPT-2 model,\nallowinguserstogeneratesyntheticpayloadsthroughanintuitiveinterface.Thepayloadgenerationfunction\nutilizes the GPT-2 model by first loading the model and the corresponding tokenizer, which converts the\ninput prompt into a format the model can process. The function then generates multiple text sequences\nrepresentingpotentialpayloads,usingsamplingmethodswithtop-kandtop-pparameterstoensurediversity\nandcoherenceintheresults.Thegeneratedsequencesaredecodedandreturnedasalistofpossiblemalicious\ntexts,enablinguserstoobtainappropriatepayloadsinrealtime.\nComputMaterContin. 2025;82(3) 4421\nPythoncode\n# Loading the model and tokenizer\nmodel_path = “./fine_tuned_gpt2”\nmodel = GPT2LMHeadModel.from_pretrained(model_path)\ntokenizer = GPT2Tokenizer.from_pretrained(model_path)\n# Payload generation function\ndef generate_payload(prompt, model, tokenizer, max_length =60,\nnum_return_sequences=5):\ninputs = tokenizer(prompt, return_tensors=“pt”)\noutputs = model.generate(\ninputs[“input_ids”],\nmax_length=max_length,\nnum_return_sequences=num_return_sequences,\ndo_sample=True,\ntop_k=50,\ntop_p=0.95,\ntemperature=0.7,\n)\nreturn [tokenizer.decode(output, skip_special_tokens =True) for\noutput in outputs]\nThefrontendshownin Fig.3 isdesignedtobeuser-friendly,makin gtheprocessofgeneratingmalicious\npayloads simple and efficient. The user interface is directly connected to the model, allowing users to input\nthedesiredattacktype(XSS,SQLInjection,CommandInjection)andreceivethecorrespondingpayloadsin\nreal time. This functionality enables penetration testers and cybersecurity experts to effectively use the tool\nintheirworkwithoutneedingdeeptechnicalknowledgeaboutthemodeloritstraining.\nFigure3: Displayofthemaliciouspayloadgenerationapplication\n• UserAccessWebApplication\nEnd users, including penetration testers and cybersecurity experts, access this web application.Fig.3\nshows a simple and intuitive application that allows the generation of malicious payloads for three specific\ntypesofattacks:XSS,SQLInjection,andCommandInjection.TheapplicationusestheGPT-2model,which\nhasbeenfine-tunedonadatasetspecifictotheseattacks.Thisdatasetincludesvariousexamplesofmalicious\npayloads,enablingthemodeltocreatenew,potentiallydangerouspayloadsbasedonuser-inputparameters.\nFollowingthestepsinthemethodologyshownin Fig.2,thefine-tunedlanguagemodel caneffectively\ngenerate synthetic payloads that mimic real attacks. This process not only enhances the accuracy and\n4422 ComputMaterContin. 2025;82(3)\nreliabilityofthemodelbutalsoprovidesapracticaltoolforcybersecurityexpertstoimprovewebapplication\nsecurity. This methodology and its systematic implementation highlight the significance and potential\nof advanced language models in the field of cybersecurity, demonstrating their usefulness in generating\nhigh-quality synthetic data for penetration testing.\n5R e s u l t sa n dI n t e r p r e t a t i o n",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5.1 TrainingResults",
+      "level": 2,
+      "text": "During the model fine-tuning process, performance was evaluated using two key metrics: Evaluation\nLossandEvaluationPerplexity,calculatedbasedonthemathematicalexpressionsshownin Eqs.(1) and(2).\nEvaluation Loss, shown inFig.4, is calculated using the formula inEq.(1), which defines the loss\nfunctionasthenegativelogarithmicprobabilityofthemodel’soutputrelativetotheactualdata.Thismetric\nmeasures the accuracy of the model’s predictions, with lower values indicating better performance. In this\nexperiment,EvaluationLossrangesfrom1.42to1.58,suggestingthatthemodelachievedastableandreliable\nlevelofaccuracy.Thelackofsignificantvariationsinlossindicatesstablemodelperformanceduringtraining,\nwhich is crucial for avoiding overfitting and ensuring good generalization to new data. Although current\nresultsaresatisfactory,furtherhyperparameteroptimizationcouldpotentiallyreducethelossvalue,thereby\nimprovingthemodel’sperformance.\nFigure4: Evaluation loss\nPerplexity, calculated according toEq.(2), represents the logarithmic measure of the average number\nof possible outputs the model considers when generating sequential data. As shown inFig.5,E v a l u a t i o n\nPerplexityrangesfrom47to53,indicatingstableperformancewithroomforimprovement.Lowerperplexity\nvalues,closertothelowerendofthisrange,suggestthatthemodelhasabetterabilitytopredictsequences,\nwhich is crucial for tasks such as language modeling and text generation. The stability of perplexity within\nthese bounds can be considered acceptable for many applications, but further model optimization could\npotentiallyreducethesevalues,therebyenhancingtheaccuracyandreliabilityofthemodel’spredictions.\nTheevaluationresultsprovideabasisforfurtheranalysisandoptimizationtoachieveevenbettermodel\nperformance,includingconsideringdifferenttrainingstrategies,modificationstothemodelarchitecture,or\nhyperparameteroptimizationtoachievesignificantimprovementsinEvaluationLossandPerplexitymetrics.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Thedatasetonattacktypes"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq.(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq.(2)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

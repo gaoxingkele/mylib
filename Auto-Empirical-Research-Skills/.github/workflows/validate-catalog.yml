@@ -1,0 +1,35 @@
+name: Validate catalog and repo structure
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: actions/setup-python@v7
+        with:
+          # Bumped 3.11 -> 3.12 to match the rest of the workflows
+          # (sync-aer-skills, sync-statspai-skill, quality matrix) and to
+          # unblock Dependabot's numpy>=2.5.1 bump, which requires
+          # Python >= 3.12.
+          python-version: "3.12"
+
+      - name: Install scientific stack for Paper-WorkFlow demo gate
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Validate repository structure and generated artifacts
+        run: make validate

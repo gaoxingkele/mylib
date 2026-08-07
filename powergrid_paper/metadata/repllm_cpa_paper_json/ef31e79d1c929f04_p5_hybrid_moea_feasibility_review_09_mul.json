@@ -1,0 +1,389 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p5_hybrid_moea_feasibility_review/p5_hybrid_moea_feasibility_review__09__multi_objective_optimization_for_the_low_carbon_operation__d95461af17.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increasing severity of global climate change and energy security challenges,\nadvancing low-carbon energy systems has become an urgent priority [1]. China has pro-\nposed the “dual-carbon” goal, which aims to peak carbon emissions before 2030 and achieve\ncarbon neutrality before 2060. To achieve this goal, driving the low-carbon transformation\nof energy systems is crucial. Integrated energy systems (IESs), which integrate multiple\nenergy forms such as power grids, heating networks, flexible load [2,3], and natural gas\nnetworks [4,5], can improve energy utilization efficiency, reduce energy consumption and\nenvironmental pollution, and thus become an important means to achieve the “dual-carbon”\nEnergies 2025, 18, 2283 https://doi.org/10.3390/en18092283\nEnergies 2025, 18, 2283 2 of 20\ngoal. Through optimization, IES can achieve coordinated utilization of different energy\nforms, reduce waste, and promote low-carbonization and sustainable development. There-\nfore, researching and developing low-carbon scheduling optimization methods for IES has\nsignificant theoretical and practical value.\nWith the increasing awareness of environmental protection and energy conservation,\ncountries around the world are gradually implementing more scientific and rational energy\npricing mechanisms, such as tiered electricity pricing [6], tiered carbon emission pricing [7],\nand tiered natural gas pricing [8]. These policies encourage users to conserve energy and re-\nduce carbon emissions through differential pricing, promoting a low-carbon economy and\nthe efficient utilization of energy resources. The scheduling of IES typically involves mul-\ntiple objective functions, variables, and constraints, and these tiered pricing mechanisms\nmake the optimization problem more complex. Traditional optimization methods struggle\nto solve this problem effectively. Therefore, the development of optimized scheduling\nalgorithms for IES has become more important.\nRef. [9] proposed a low-carbon economic operation scheme for IESs that establishes\nan optimization model that considers both carbon emission and economic factors and\nformulates it as a mixed-integer linear programming problem. Ref. [10] presented a novel\nIES scheduling model, which considers two objective functions: energy efficiency and\ntotal cost, and used multi-objective optimization to solve the proposed model. Ref. [ 11]\nproposed a model to address the high operating costs and low energy efficiency of IESs,\nemploying an interior point method based on the Hessian matrix iteration to solve the\nmodel. Ref. [12] developed a multi-objective optimization model to address the economic\nand environmental protection issues of rural IESs and used NSGA-II with the dynamic\ncrowding distance to solve the model. Ref. [13] proposed a stochastic optimization model\nfor IES, considering network dynamic characteristics and psychological preferences, to\nimprove the flexibility of IES and promote the adoption of clean energy. Ref. [14] presented\nan optimization strategy for IES, considering the volatility of renewable energy, the in-\ndependence of different energy sources, and profits to maximize economic benefits and\nimprove the operational flexibility of IESs. Ref. [ 15] proposed an optimization planning\nmodel for IESs, considering the coupling relationship between the energy system and\nproduction system with uncertainties. A multi-objective stochastic programming model\nwas established, and a Monte Carlo simulation-based NSGA-II algorithm was proposed to\nsolve the model.\nAt present, heuristic algorithms are predominantly used in the multi-objective op-\ntimization research of IESs. Equality constraints represent the balance between thermal\nand electrical loads in IESs. Most heuristic algorithms handle equality constraints using\npenalty functions [16], treating them as soft constraints, which may lead to solutions that\nviolate the equality constraints, affecting the normal operation of the system and causing an\nimbalance between the supply and demand of electrical and thermal energy. Additionally,\nmost current studies do not account for the tiered structures of energy prices and carbon\nemission prices found in real-world applications.\nTo address the issues mentioned above, this paper proposes a day-ahead low-carbon\nscheduling optimization method for IESs based on an Improved Genetic Algorithm (IGA).\nBy improving the crossover, mutation, and offspring selection mechanisms of the GA, the\nalgorithm’s optimization capability and the reasonableness of the solution are significantly\nenhanced while ensuring that the equality constraints do not produce excessive deviations.\nThis method not only guarantees the feasibility of the scheduling results but also achieves\neconomic operation, effectively solving the optimization problem of day-ahead low-carbon\nscheduling for IESs.\nEnergies 2025, 18, 2283 3 of 20",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Modeling for IES Operation",
+      "level": 1,
+      "text": "Figure 1 illustrates the operational diagram of an IES in a certain region, including\nthe transmission processes of electricity, natural gas, and heat. The renewable energy is\ngenerated from wind power and solar power [17] and is allocated to electrical devices [18].\nExcess electricity is stored in a battery energy storage system (ESS) [ 19] and can also be\nused to generate electricity through a combined heat and power (CHP) unit. Natural gas\nis transmitted through pipelines and serves as fuel for the CHP unit and gas boilers (GB),\nproducing electricity and heat. The heat is distributed to thermal load devices through\npipelines and is reused through a waste heat recovery unit (WHU). The flue gas generated\nby the system is emitted through a chimney.\nFigure 1. Diagram of IES.\n2.1. Electricity–Heat–Gas IES Modeling",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1.1 Mathematical Modeling of CHP Units",
+      "level": 3,
+      "text": "A CHP unit is a type of power generation equipment that simultaneously produces\nelectricity and heat. It operates by burning natural gas to drive a generator [20], producing\nelectricity, while utilizing the waste heat to provide thermal energy to users. This allows\nthe CHP unit to meet both the electrical and thermal energy demands of users, improving\nenergy utilization efficiency and reducing energy waste. The expression for its electricity\ngeneration is:\nPCHP\nt = VCHP\nt ηCHP LNG (1)\nwhere PCHP\nt is the electricity generation power of the CHP unit at time slot t, VCHP\nt is the\nvolume of natural gas consumed by the CHP unit at time slot t, ηCHP is the efficiency of\nthe CHP unit, and LNG is the lower heating value of natural gas.\nEnergies 2025, 18, 2283 4 of 20\nThe expression for the heat energy produced by the CHP unit is:\nQCHP\nt = PCHP\nt\n1 − ηCHP\nηCHP (2)\nwhere QCHP\nt represents the heat generation power of the CHP unit at time slot t.\nThe constraints for the operation of the CHP unit are:\nPCHP ,min\nt ≤ PCHP\nt ≤ PCHP ,max\nt (3)\n0 ≤ QCHP\nt ≤ QCHP ,max\nt (4)\nwhere PCHP ,min\nt and PCHP ,max\nt represent the upper and lower limits of the power genera-\ntion of the CHP unit, respectively, while QCHP ,max\nt represents the upper limit of the heat\nproduction of the CHP unit.\nThe WHU can improve energy utilization efficiency, reduce the waste heat emissions\nfrom the CHP unit, decrease greenhouse gas emissions and air pollutant emissions, and\nprovide a stable heat supply, thereby enhancing the reliability of heat supply. Additionally,\nthe WHU can save fuel costs and operating costs, increasing economic benefits. The\nmathematical model of the WHU system can be represented as:\nQWHU\nt = QCHP\nt ηWHU (5)\n0 ≤ QWHU\nt ≤ QWHU,max\nt (6)\nwhere QWHU\nt and ηWHU represent the recovered thermal power and recovery efficiency\nof the WHU at time slot t, respectively, and QWHU,max\nt is the upper limit of the recovered\nthermal power.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1.2 Mathematical Modeling of GB",
+      "level": 3,
+      "text": "A GB is a type of boiler equipment that uses natural gas as fuel to produce steam or\nhot water. It generates high-temperature and high-pressure steam or hot water through the\ncombustion of natural gas, which is then used for industrial production, heating, or other\npurposes. The working principle of a GB is to mix the natural gas with air, then burn it to\nproduce high-temperature and high-pressure steam, which is transported to the user’s end\nthrough pipelines to meet their thermal energy demands. The mathematical model of a GB\ncan be represented as follows:\nQGB\nt = VGB\nt ηGBLNG (7)\n0 ≤ QGB\nt ≤ QGB,max\nt (8)\nwhere QGB\nt , VGB\nt , and ηGB represent the heat generation power, natural gas consumption\nvolume, and efficiency of the boiler at time slot t, respectively, and QGB,max\nt represents the\nupper limit of its heat generation power.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.3 Mathematical Modeling of Photovoltaic and Wind Power",
+      "level": 3,
+      "text": "Wind power generation and solar power generation are two important renewable\nenergy generation methods in IESs. Wind power generation utilizes wind energy to drive\nwind turbines, producing electricity, while solar power generation uses solar energy to\ndrive photovoltaic panels, also producing electricity. Both can provide IESs with clean\nEnergies 2025, 18, 2283 5 of 20\nelectricity. The model of wind power generation and solar power generation in IESs is\nshown below:\n0 ≤ PWT\nt ≤ PWT,max\nt (9)\n0 ≤ PPV\nt ≤ PPV,max\nt (10)\nwhere PPV\nt and PPV,max\nt represent the power output and upper limit of photovoltaic (PV)\ngeneration at time slot t, respectively, while PWT\nt and PWT,max\nt represent the power output\nand upper limit of wind power generation at time slot t, respectively.\nThe curtailment cost of renewable energy refers to the economic loss caused by the\namount of electricity generated from renewable energy sources that is forcibly abandoned.\nIt reflects the economic benefits of renewable energy generation. The calculation formula\nfor curtailment cost is as follows:\nCcur =\nT\n∑\nt=0\nh\u0010\nPPV ,max\nt − PPV\nt\n\u0011\n+\n\u0010\nPWT,max\nt − PWT\nt\n\u0011i\n(LMPt + Mcur + Ncur) (11)\nwhere Ccur represents the cost of abandoned electricity, LMPt is the locational marginal\nprice of electricity purchased by the IES at time slot t, Mcur is the maintenance cost of\nabandoned electricity, and Ncur is the environmental cost of abandoned electricity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.4 Mathematical Model of ESSs",
+      "level": 3,
+      "text": "ESSs play a crucial role in IESs. They can provide a stable power supply to the system,\nhelping it to cope with fluctuations in electricity demand. By storing electrical energy , battery\nESSs can release energy during peak demand periods, helping the system to meet electricity\ndemand. At the same time, ESSs can also store energy during off-peak periods, helping the\nsystem to balance power supply and demand. This improves the reliability and flexibility of\nthe IES. The mathematical model for the operation of the ESS is shown as follows:\nSOCBE\nt = SOCBE\nt−1 + ηchzch\nt−1\nPch\nt−1∆t\nEBE − zdch\nt−1\nPdch\nt−1∆t\nEBE (12)\n0 ≤ zch\nt Pch\nt ≤ zch\nt Pch,max\nt (13)\n0 ≤ zdch\nt Pdch\nt ≤ zdch\nt Pdch,max\nt (14)\n0 ≤ zch\nt + zdch\nt ≤ 1 (15)\nzch\nt , zdch\nt ∈ {0, 1} (16)\n0 ≤ SOCBE\nt ≤ 1 (17)\nSOCBE\n1 = SOCBE\n24 (18)\nwhere SOCBE\nt represents the state of charge of the ESS at time slot t, Pch\nt and Pdch\nt represent\nthe charging and discharging power of the ESS at time slott, respectively,ηch is the charging\nefficiency, zch\nt and zdch\nt are binary variables (0 or 1) that indicate whether the ESS is charging\nor discharging, respectively, EBE is the capacity of the ESS, and Pch,max\nt and Pdch,max\nt are the\nmaximum charging and discharging power of the ESS, respectively. In order for the ESS\nto participate in the scheduling of the IES from the next day, the ESS needs to return to its\ninitial capacity at the start of the scheduling day after the end of the scheduling day.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Operational Optimization Modeling of IES",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.1 Tiered Electricity Pricing Mechanism",
+      "level": 3,
+      "text": "Assuming a two-tiered electricity pricing structure, when the user’s electricity con-\nsumption is below E0, the electricity charge is calculated based on the locational marginal\nEnergies 2025, 18, 2283 6 of 20\nprice. If the user’s electricity consumption exceeds E0, according to the Hong Kong Electric\nCompany [21], the excess consumption is billed at 120% of the locational marginal price.\nWhen adopting this tiered electricity pricing structure, the expression for the total electricity\npurchase cost of the IES is as follows:\nCgrid =\nT\n∑\nt=0\nh\nmin\n\u0010\nPgrid\nt ∆t, E0\n\u0011\nLMPt + max\n\u0010\n0, Pgrid\nt ∆t − E0\n\u0011\n× 1.2LMPt\ni\n(19)\nwhere Cgrid represents the daily electricity purchase cost, Pgrid\nt is the amount of electricity\npurchased from the grid at time slot t, ∆t is the time interval, and LMPt is the locational\nmarginal price of electricity at time slot t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.2 Tiered Carbon Emission Pricing Mechanism",
+      "level": 3,
+      "text": "Under the tiered carbon emission pricing mechanism, the IES is divided into different\ntiers based on its carbon emissions, with each tier corresponding to a different carbon\nemission standard and price. The tiered carbon emission cost expression is as follows:\nCCO2 (e) =\n\n\n\ncCO2\nl1 e 0 ≤ e ≤ e1\ncCO2\nl1 e1 + cCO2\nl2 (e − e1) e1 ≤ e ≤ e2\ncCO2\nl1 e1 + cCO2\nl2 (e2 − e1) +cCO2\nl3 (e − e2) e2 ≤ e\n(20)\nwhere CCO2 is the total carbon emission cost, cCO2\nl1 , cCO2\nl2 , and cCO2\nl3 are the unit prices of\ncarbon emissions for the first, second, and third stages, respectively, e1 and e2 are the\nemission thresholds, and e is the total carbon emission of the system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2.3 Tiered Natural Gas Pricing Mechanism",
+      "level": 3,
+      "text": "Similar to tiered electricity pricing, tiered natural gas pricing implements different\npricing policies based on the user’s natural gas consumption and price gradient. If users can\ncontrol their consumption within a lower price tier, they can enjoy a lower price; however,\nif their natural gas consumption exceeds a certain tier, they will have to pay a higher price.\nFollowing the same tiered pricing principle as electricity, we apply a 120% surcharge to\nnatural gas consumption that exceeds predetermined usage tiers. The expression for the\nnatural gas purchasing cost of the IES is as follows:\nCgas =\nT\n∑\nt=0\nh\nmin\n\u0010\nVgas\nt , V0\n\u0011\ncgas\nt + max\n\u0010\n0, Vgas\nt − V0\n\u0011\n× 1.2cgas\nt\ni\n(21)\nwhere Cgas represents the daily natural gas purchasing cost, V gas\nt represents the natural gas\npurchasing volume at time slot t, and cgas\nt represents the natural gas price at time slot t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.2.4 Optimization Modeling of IES Operation",
+      "level": 3,
+      "text": "In summary, the low-carbon optimization of IES operation aims to minimize the total\noperating cost and total carbon emissions while ensuring the normal operation of both\nelectrical and thermal loads. The operating cost includes the cost of purchasing electricity,\nthe cost of purchasing natural gas, the cost of carbon emissions, and the cost of abandoning\nrenewable energy. The costs of abandoning renewable energy, purchasing electricity, and\npurchasing natural gas are shown in Equations (11), (20), and (21), respectively. The carbon\nemissions include the emissions from the CHP unit, the emissions from the GB, and the\nEnergies 2025, 18, 2283 7 of 20\nemissions corresponding to the electricity purchased from the power grid, which are shown\nas follows:\ne = eCHP + eGB + egrid (22)\neCHP =\nT\n∑\nt=0\nγh\n \nPCHP\nt\nεeh\n+ QCHP\nt\n!\n(23)\neGB =\nT\n∑\nt=0\nγhQGB\nt (24)\negrid =\nT\n∑\nt=0\nγePgrid\nt (25)\nwhere e, eCHP , eGB, and egrid represent the total carbon emissions of the IES, the carbon\nemissions of the CHP unit, the carbon emissions of the GB, and the carbon emissions corre-\nsponding to the electricity purchased from the upstream grid, respectively.γh represents\nthe relationship between unit heat supply and carbon emissions, ϵeh is the conversion coef-\nficient for converting electrical power to thermal power in the CHP unit, and γe represents\nthe relationship between unit electricity purchase and carbon emissions.\nThe objective function for the low-carbon operation of the IES is:\nObjective 1: min C = Cgrid + Cgas + Cco2(e) +Ccur (26)\nObjective 2: min e = eCHP + eGB + egrid (27)\nwhere C represents the total operating cost of the IES, and Cgrid, Cgas, Cco2(e), and Ccur\nrepresent the costs of purchasing electricity, purchasing gas, carbon emissions, and cur-\ntailment of renewable energy, respectively. e represents the total carbon emissions of the\nIES, and eCHP , eGB, and egrid represent the carbon emissions from the CHP unit, GB, and\ngrid-purchased electricity, respectively.\nThe operational constraints of the IES are as follows:\nVgas\nt = VCHP\nt + VGB\nt (28)\nPCHP\nt + Pgrid\nt − zch\nt Pch\nt + ηdchzdch\nt Pdch\nt + Pgrid\nt + PPV\nt + PWT\nt = Pload\nt (29)\nQCHP\nt + QWHU\nt + QGB\nt = Qload\nt (30)\n(1)–(10), (12)–(18)\nThe decision variables are as follows: VCHP\nt , VGB\nt , PPV\nt , PWT\nt , Pgrid\nt , Pch\nt , Pdch\nt .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3 Improved Multi-Objective Genetic Algorithm",
+      "level": 1,
+      "text": "The GA is an optimization algorithm inspired by natural selection and evolution\ntheory [22]. It is a population-based search algorithm that simulates the process of survival\nof the fittest and elimination of the weakest in a natural environment. By iteratively evolving\nindividuals in the population, new populations are generated to search for the optimal\nsolution. The five key elements of the GA are chromosome representation, selection,\ncrossover, mutation, and fitness calculation. Chromosome representation refers to the\nencoding of a solution as a sequence of numbers, known as an individual. Selection\ninvolves choosing parent individuals based on their fitness values, with higher fitness\nvalues resulting in a higher probability of being selected. Crossover involves combining the\nchromosomes of two parent individuals to produce new offspring individuals. Mutation\ninvolves randomly altering the chromosomes of an individual to increase population\ndiversity. Fitness calculation involves evaluating the quality of an individual, serving\nEnergies 2025, 18, 2283 8 of 20\nas the basis for selection and crossover. The IGA proposed in this paper improves upon\nthe crossover, mutation, and fitness selection, enhancing the algorithm’s computational\nefficiency and search efficiency while also minimizing the violation of equality constraints.\nFigure 2 illustrates the flow chart of the proposed IGA for IES optimization, where\nthe aforementioned IES operational parameters serve as inputs to the algorithm. The\nprocess begins with population initialization and determination of the maximum generation\ncount. The parent selection strategy described in Section 3.2 is then applied to identify\nmating candidates. The process continues with the cyclic crossover operation outlined\nin Section 3.3 and the polynomial mutation operation detailed in Section 3.4 to generate\noffspring solutions. Subsequent solution evaluation employs the methodologies from\nSections 3.5 and 3.6 to rank solutions, preserve elite individuals, and eliminate infeasible or\npoor-performing solutions, with the optimization process terminating upon reaching the\nmaximum generation limit and outputting the optimal solution from the final population.\nFigure 2. Research Flow chart of the proposed IGA.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.1 Population Initialization",
+      "level": 2,
+      "text": "The initial population, Xi, consists of a set of decision variables randomly selected\nwithin their maximum and minimum boundary limits. The selection of the initial popula-\ntion provides a diverse starting point for the subsequent evolutionary process. In this initial\npopulation, each individual represents a set of decision variable values that vary randomly\nwithin their maximum and minimum boundary limits. This random selection method\nensures that the initial population has sufficient diversity, providing a good starting point\nfor the subsequent evolutionary process. The population initialization is as follows:\nX0\ni,j ∼ U(Xmin\nj , Xmax\nj ) (31)\nwhere X0\ni,j represents the jth element of the ith individual in the initial population (0th\ngeneration), and Xmin\nj and Xmax\nj are the minimum and maximum values of the jth element,\nrespectively. U denotes a uniform random distribution. Subsequently, the objective function\nvalues (o1, o2) are calculated for each individual.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2 Parent Selection",
+      "level": 2,
+      "text": "This paper employs a binary tournament selection method to select parents from the\nmating pool. The specific implementation process is as follows: two chromosomes are\nrandomly selected from the population, and their objective function values and constraint\nviolation situations are compared. According to the selection principle proposed in this\nEnergies 2025, 18, 2283 9 of 20\npaper, the winning chromosome is retained in the mating pool. This process is repeated\nuntil the mating pool is filled with chromosomes.\nThe selection principle for individuals in this paper is based on the following three prin-\nciples: (1) Among the individuals that do not violate the constraints, the fast non-dominated\nsorting algorithm is used to sort the individuals. (2) When compared to individuals that vi-\nolate the constraints, individuals who do not violate the constraints are considered winners.\n(3) Among individuals that violate the constraints, the individuals with smaller constraint\nviolation degrees are considered winners.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.3 Cyclic Crossover Operation",
+      "level": 2,
+      "text": "This paper employs cyclic crossover operation to generate new offspring from the par-\nents. This method creates a cyclic chain to exchange genes between the parent individuals.\nFirst, two parent individuals are selected, and a gene is randomly chosen as the starting\npoint. This gene is copied from parent 1 to offspring 1. Then, the gene in parent 2 that is\nidentical to the starting point gene is found and copied to offspring 2. If this gene already\nexists in offspring 2, the gene in parent 1 that is identical to this gene is found and copied\nto offspring 1. This process is repeated until all genes have been copied to the offspring\nindividuals. Finally, the remaining genes are copied from parent 1 to offspring 2 and from\nparent 2 to offspring 1. A schematic illustration of the cyclic crossover is shown in Figure 3.\nFigure 3. Diagram of cycle cross.\nThe cyclic crossover operation can preserve part of the genetic structure of the parent\nindividuals and generate new offspring individuals. Compared to other crossover methods,\nthe advantage of cyclic crossover lies in its ability to preserve the genetic structure of the parent\nindividuals, making better use of their excellent genes. Additionally , cyclic crossover can avoid\nproducing duplicate gene combinations, thereby increasing the diversity of the population.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.4 Polynomial Mutation Operation",
+      "level": 2,
+      "text": "This paper employs a polynomial mutation operation to introduce new genetic varia-\ntions. The operation involves randomly mutating the genes of an individual according to a\npolynomial distribution, which allows the mutation amplitude to be adaptively adjusted\nbased on the individual’s fitness. This advantage enables the avoidance of the problems\nassociated with traditional mutation methods, where the mutation amplitude is either too\nlarge or too small. Additionally, polynomial mutation can preserve the excellent genes of\nan individual, preventing the loss of good genes during the mutation process. The specific\noperation of polynomial mutation is as follows:\nGenerate a random number a between 0 and 1. Calculate the parameter σ according\nto the following formula.\nσ =\n\n\n\nh\n2a + (1 − 2a)(1 − ψ)(βm+1)\ni1/(βm+1)\n− 1 if a ≤ 0.5\n1 −\nh\n2a + (1 − 2a)(1 − ψ)(βm+1)\ni1/(βm+1)\nif a > 0.5\n(32)\nEnergies 2025, 18, 2283 10 of 20\nThe intermediate populations, xp1 and xp2, are calculated as follows:\nxp1 = 0.5[x1 + x2 − γ(|x1 − x2|)] (33)\nxp2 = 0.5[x1 + x2 + γ(|x1 − x2|)] (34)\nψ = min[(xp1 − xmin), (xmax − xp2)]\n(xmax − xmin) (35)\nwhere x1 and x2 are the two parent individuals, and γ is a random number that follows\na polynomial probability distribution. The parameter βm is the distribution index of the\nmutation, which can take any non-negative value. In this paper, it is initially set to 1, as\nthis value provides a balanced mutation distribution that neither overly favors large-scale\nexploration nor restricts the search to fine-tuned exploitation. A value of βm = 1 often\ncorresponds to a symmetric and uniform-like distribution, ensuring a reasonable initial\nexploration capability while maintaining stability in early iterations. The value of βm can\nthen be iteratively adjusted using the following formula:\nβm = βmin\nm + n (36)\nwhere βmin\nm is the initial value of the mutation distribution index, and n is the number\nof iterations.\nThen, the objective function values and constraint violation situations are calculated\nfor each offspring.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.5 Selection Between Parents and Offspring",
+      "level": 2,
+      "text": "In contrast to other heuristic algorithms, which often use penalty functions to guide\nthe algorithm to comply with constraints, the IGA introduces the concept of population\nfitness, seeking the optimal solution through the evolution of the population. According to\nthe selection principle proposed in this paper, the winning chromosomes are retained, and\nindividuals that violate the constraints are eliminated. This ensures that the subsequent\noffspring can inherit the excellent genes from their parents, gradually reducing the degree\nof constraint violation and ultimately yielding a feasible solution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.6 Fast Non-Dominated Sorting",
+      "level": 2,
+      "text": "Fast Non-Dominated Sorting (FNS) is the core mechanism enabling our IGA to simulta-\nneously minimize operating costs and carbon emissions in IES. The algorithm achieves this\nthrough a structured four-step process that maintains and evolves high-quality solutions\nacross both objectives.\nIn the initialization phase, each solution in the population is evaluated against both\nobjective functions: total operating cost (26) and carbon emissions (27). The algorithm\nthen performs non-dominated sorting by systematically comparing solutions to identify\nthose that are Pareto-optimal. A solution is considered non-dominated if there exists no\nother solution in the population that is better in both objectives. For our specific problem,\nthis means identifying solutions where no alternative solution exists that has both lower\noperating costs and lower carbon emissions. These non-dominated solutions form the first\nPareto front (rank 1).\nThe crowding distance calculation according to ref. [23] then ensures diversity preser-\nvation along both objective dimensions. For operating costs, we measure the normalized\ndistance between adjacent solutions when sorted by cost values. Similarly, for emissions, we\ncalculate the normalized distance between neighbors when sorted by emission values. The\ncrowding distance is the sum of these individual objective distances. This dual-objective\nEnergies 2025, 18, 2283 11 of 20\ndistance metric is crucial—it prevents the algorithm from clustering solutions that excel in\njust one objective (e.g., very low cost but high emissions), instead maintaining a diverse\nspread of trade-off solutions across the Pareto front.\nThe sorting process explicitly considers the relationship between our two optimization\ntargets. When comparing two solutions, Solution A dominates Solution B only if A’s\noperating cost ≤ B’s cost and A’s emissions ≤ B’s emissions, with at least one strict\ninequality. This strict dual-criteria comparison ensures that the evolutionary process\nconsistently moves the population toward solutions that genuinely improve both objectives,\nrather than just one.\nThrough iterative application of this non-dominated sorting and crowding distance\ncalculation across generations, the IGA progressively builds a Pareto front representing the\noptimal trade-offs between cost and emissions. The final selection from this front using\nthe weighted sum in (37) then provides operators with solutions that achieve the desired\nbalance between economic and environmental performance for their specific integrated\nenergy system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.7 Weight-Based Pareto Solution Selection",
+      "level": 2,
+      "text": "Since the multi-objective optimization algorithm yields a set of non-dominated solu-\ntions distributed on the Pareto front, further selection is required. This paper employs a\nweight-based method to select the Pareto solutions. We assume that a total of n solutions\nare obtained, and (ok\n1, ok\n2) represents the kth solution. Suppose that the operator of the\nIES considers minimizing operating costs and minimizing carbon emissions to be equally\nimportant, so the weight coefficients w1 and w2 are both set to 1. The score of the kth\nsolution can be calculated as:\nsk = w1ok\n1 + w2ok\n2 (37)\nwhere sk is the score of the kth solution. The solution with the lowest score is considered\nthe optimal solution chosen by the operator of the IES.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4 Case Study",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.1 Case Study Setup",
+      "level": 2,
+      "text": "The operational parameters of various IES components serve as inputs for the IGA,\nwhich have been adapted from ref. [ 24]. Key optimization-sensitive parameters—like\nthe output boundaries of the CHP unit and GB—have been modified to better suit our\ncase study. For practical applications, these parameters can be configured with actual\noperational values to optimize real-world IES performance. The parameter settings of the\nIES in this paper are as follows: the efficiency of the CHP unit is ηCHP = 0.9, the efficiency\nof the WHU is ηW HU = 0.6, and the efficiency of the boiler isηGB = 0.85. The lower heating\nvalue of natural gas is LNG = 9.7 kWh/m3. The upper and lower limits of the electrical\npower of the CHP unit are PCHP ,min\nt = 50 kW and PCHP ,max\nt = 250 kW, respectively, and\nthe upper limit of the thermal power of the CHP unit is QCHP ,max\nt = 125 kW. The upper\nlimit of the boiler’s heat production is QGB,max\nt = 150 kW. The maximum charging and\ndischarging power of the ESS are Pch,max\nt = Pdch,max\nt = 30 kW, and its initial state of charge\nis SOCESS\n1 = 50%. The capacity of the ESS is EESS = 200 kWh, and the critical values for\nthe tiered electricity price are E0 = 175 kWh. The critical values for the tiered carbon price\nare e1 = 5000 m3, e2 = 6000 m3, and e3 = 6500 m3, and the critical value for the tiered gas\nprice is V0 = 50 m3. The relationship between unit heat supply and carbon emissions is\nγh = 0.6, and the conversion coefficient for the electrical and thermal power of the CHP\nunit is ϵeh = 3.6. The conversion coefficient for the unit electricity purchase and carbon\nEnergies 2025, 18, 2283 12 of 20\nemissions is γe = 0.997, and the unit gas price is cgas\nt = 2.5 CNY/m3. The tiered carbon\nemission prices are cco2\nl1 = 0.2 CNY/m3, cco2\nl2 = 0.3 CNY/m3, and cco2\nl3 = 0.4 CNY/m3,\nand the maintenance and environmental costs of abandoned electricity are Mcur = 1.5\nCNY/kWh and Ncur = 1 CNY/kWh, respectively.\nFigure 4 illustrates the research framework of the case study, where the aforementioned\nIES operational parameters serve as inputs to the algorithm, while four comparative\nalgorithms—Multi-Objective Genetic Algorithm (MGA), Multi-Objective Particle Swarm\nOptimization (MPSO), Single-Objective Genetic Algorithm (SGA), and Multi-Objective\nArtificial Bee Colony Algorithm (MABC)—are employed for performance benchmarking.\nFollowing optimization, the obtained optimal solutions across all scenarios are analyzed\nbased on three key metrics: (1) degree of constraint violation, (2) objective function 1 value\n(IES operational cost), and (3) objective function 2 value (IES carbon emissions), thereby\ncomprehensively evaluating each algorithm’s performance.\nFigure 4. Research framework of proposed IGA in IES optimization.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.2 Optimization Results of the IES in Scenario 1",
+      "level": 2,
+      "text": "In Scenario 1, both PV and wind power systems operate normally . The optimized results\nof the IES operator’s electricity and gas purchases are shown in Figure 5, and the thermal\nload and electrical load are shown in Figure 6. Analysis indicates that after optimization\nusing the IGA, the operator reduces electricity purchases during peak hours to minimize costs.\nMeanwhile, to meet the electrical and thermal load demands, the operator makes rational use\nof renewable energy sources and purchases gas for the CHP unit and gas boiler at appropriate\ntimes, while also purchasing electricity from the grid. This achieves optimal energy allocation\nand cost minimization, ensuring a stable supply of electrical and thermal loads. Figure 7\nillustrates the operation of the ESS in Scenario 1, which, after optimization, operates according\nto economic demands and maintains its state of charge within the permitted range.\nFigure 5. Power and gas purchase in IES in Scenario 1.\nEnergies 2025, 18, 2283 13 of 20\nFigure 6. Electric load and heat load in IES in Scenario 1.\nFigure 7. Operation of ESS in IES in Scenario 1.\nIn the IES optimization problem, there are 49 equality constraints, including the\nbalance constraints of electrical and thermal loads for 24 h, as well as the initial SOC\nconstraints of the ESS. Figure 8 shows the violation of the 49 equality constraints after\noptimization using the IGA. It can be seen that the IGA exhibits significant advantages\nin handling equality constraints. Despite the large numerical values of the load balance\nconstraints (both electrical and thermal loads are on the order of hundreds of kW), the\nalgorithm is able to control the deviation within 0.2 kW, which is already a very small error\nin practical applications. This indicates that IGA is not only effective in solving the IES\noptimization problem but also maintains high precision in handling equality constraints.\nThis demonstrates the reliability and practicality of the algorithm proposed in this paper.\nFigure 8. Violation of equality constraints in Scenario 1.\nEnergies 2025, 18, 2283 14 of 20",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4.3 Optimization Results of the IES in Scenario 2",
+      "level": 2,
+      "text": "In Scenario 2, the load curves of electricity and heat were modified, and the impact\nof rainy days was considered, resulting in a power shortage due to the inability of the\nPV system to operate normally. Additionally, the electricity price was higher than usual.\nUnder these extreme conditions, the question arises as to whether the IGA can maintain\nthe economic and reliable operation of the IES. Figures 9 and 10 show the optimized results\nof the IES’s electricity and gas purchases, as well as the electricity and heat load profiles\nin Scenario 2. From the figures, it can be seen that after optimization using the IGA, the\nsystem operator still avoided purchasing electricity during peak price hours and reasonably\nallocated the natural gas distribution between the CHP unit and the gas boiler. Moreover,\nthe algorithm efficiently utilized wind energy, avoided wind curtailment, and ensured a\nstable supply of electricity and heat to meet the demand.\nFigure 9. Power and gas purchase for the IES in Scenario 2.\nFigure 10. Electric load and heat load for the IES in Scenario 2.\nFigure 11 shows the optimization results of the ESS in Scenario 2. After optimization\nusing the proposed IGA, the ESS charges during periods of low electricity prices and\ndischarges during periods of high electricity prices, thereby alleviating the operational\npressure on the IES.",
+      "refs": {
+        "figures": [
+          "f9",
+          "f11",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the operational diagram of an IES in a certain region, including"
+    },
+    {
+      "id": "f2",
+      "caption": "illustrates the flow chart of the proposed IGA for IES optimization, where"
+    },
+    {
+      "id": "f3",
+      "caption": "Diagram of cycle cross."
+    },
+    {
+      "id": "f4",
+      "caption": "illustrates the research framework of the case study, where the aforementioned"
+    },
+    {
+      "id": "f5",
+      "caption": "Power and gas purchase in IES in Scenario 1."
+    },
+    {
+      "id": "f6",
+      "caption": "Electric load and heat load in IES in Scenario 1."
+    },
+    {
+      "id": "f7",
+      "caption": "Operation of ESS in IES in Scenario 1."
+    },
+    {
+      "id": "f8",
+      "caption": "Violation of equality constraints in Scenario 1."
+    },
+    {
+      "id": "f9",
+      "caption": "Power and gas purchase for the IES in Scenario 2."
+    },
+    {
+      "id": "f10",
+      "caption": "Electric load and heat load for the IES in Scenario 2."
+    },
+    {
+      "id": "f11",
+      "caption": "shows the optimization results of the ESS in Scenario 2. After optimization"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "(32)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 11,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

@@ -1,0 +1,47 @@
+# CPA lit_table — `mdpi-applied-sciences`
+
+`pdf` | pages | sections | figs/tabs/algs | idea | house | baseline | ablation | DAS | code
+---|---:|---:|---|---|---|:---:|:---:|:---:|:---:
+`applsci-13-11074.pdf` | 14 | 35 | 3/7/0 | generative_process_redesign,algebraic_equivalence_unification | named_stack_plus_case,survey_or_review_synthesis | Y | n | n | n
+`applsci-13-12690.pdf` | 17 | 12 | 16/2/0 | structural_prior_encoding,algebraic_equivalence_unification | survey_or_review_synthesis,named_stack_plus_case | n | n | n | n
+`applsci-14-06486.pdf` | 24 | 26 | 4/3/0 | generative_process_redesign,decompose_and_delegate | named_stack_plus_case,power_system_planning_ops | Y | n | n | n
+`applsci-14-10368.pdf` | 17 | 25 | 5/5/0 | generative_process_redesign,algebraic_equivalence_unification | power_system_planning_ops,named_stack_plus_case | Y | n | n | n
+`applsci-14-11797.pdf` | 27 | 6 | 10/1/0 | algebraic_equivalence_unification,relax_discrete_search_to_continuous | power_system_planning_ops,hardware_or_field_validation | n | n | n | n
+`applsci-15-02435.pdf` | 24 | 13 | 4/0/0 | unify_into_shared_representation,generative_process_redesign | named_stack_plus_case,hardware_or_field_validation | n | n | n | n
+`applsci-15-04498.pdf` | 15 | 18 | 6/4/0 | reframe_as_solvable_object | power_system_planning_ops | n | n | Y | n
+`applsci-15-07003.pdf` | 34 | 22 | 6/3/0 | heterogeneous_decomposition,unify_into_shared_representation | named_stack_plus_case,hardware_or_field_validation | n | n | n | Y
+`applsci-16-00466.pdf` | 24 | 6 | 6/0/0 | relax_discrete_search_to_continuous,heterogeneous_decomposition | named_stack_plus_case | n | n | Y | n
+`applsci-16-04476.pdf` | 31 | 13 | 3/5/0 | generative_process_redesign,algebraic_equivalence_unification | named_stack_plus_case | n | n | n | n
+`applsci-13-01165.pdf` | 21 | 17 | 6/1/0 | heterogeneous_decomposition,controlled_diagnostic_design | named_stack_plus_case | n | Y | n | n
+`applsci-13-06831.pdf` | 14 | 25 | 5/1/0 | outside_taxonomy | systems_security_or_iot_stack,named_stack_plus_case | n | n | Y | n
+`applsci-13-12946.pdf` | 22 | 30 | 9/3/0 | generative_process_redesign | named_stack_plus_case,survey_or_review_synthesis | n | n | n | n
+`applsci-14-01077.pdf` | 23 | 13 | 4/4/0 | reframe_as_solvable_object,structural_prior_encoding | named_stack_plus_case,power_system_planning_ops | n | n | n | n
+`applsci-14-02286.pdf` | 15 | 35 | 13/1/0 | heterogeneous_decomposition | named_stack_plus_case,survey_or_review_synthesis | Y | n | n | n
+`applsci-14-03253.pdf` | 24 | 23 | 1/6/1 | generative_process_redesign | storage_or_energy_device_review,power_system_planning_ops | n | n | n | n
+`applsci-14-03682.pdf` | 16 | 29 | 10/1/1 | heterogeneous_decomposition | storage_or_energy_device_review,power_system_planning_ops | Y | n | n | n
+`applsci-14-09480.pdf` | 19 | 172 | 6/4/1 | outside_taxonomy | power_system_planning_ops,named_stack_plus_case | Y | n | n | n
+`applsci-15-01773.pdf` | 22 | 8 | 1/0/0 | outside_taxonomy | systems_security_or_iot_stack,power_system_planning_ops | n | n | n | n
+`applsci-15-05628.pdf` | 14 | 25 | 11/5/0 | controlled_diagnostic_design,heterogeneous_decomposition | named_stack_plus_case,hardware_or_field_validation | Y | Y | Y | n
+`applsci-15-08656.pdf` | 14 | 13 | 9/5/1 | outside_taxonomy | storage_or_energy_device_review | n | n | Y | n
+`applsci-15-08993.pdf` | 22 | 23 | 2/5/0 | heterogeneous_decomposition,generative_process_redesign | power_system_planning_ops,storage_or_energy_device_review | n | n | n | n
+`applsci-15-09578.pdf` | 22 | 11 | 9/0/0 | heterogeneous_decomposition,generative_process_redesign | named_stack_plus_case | Y | Y | n | n
+`applsci-15-10646.pdf` | 30 | 18 | 5/4/0 | algebraic_equivalence_unification,generative_process_redesign | storage_or_energy_device_review,power_system_planning_ops | n | n | n | n
+`applsci-16-04667.pdf` | 23 | 10 | 5/5/0 | algebraic_equivalence_unification | named_stack_plus_case | n | n | n | n
+`applsci-16-05054.pdf` | 29 | 24 | 2/2/0 | algebraic_equivalence_unification,relax_discrete_search_to_continuous | power_system_planning_ops,named_stack_plus_case | Y | n | n | n
+`applsci-16-05815.pdf` | 22 | 15 | 5/6/0 | generative_process_redesign,unify_into_shared_representation | named_stack_plus_case,power_system_planning_ops | n | n | n | n
+`applsci-16-05952.pdf` | 27 | 30 | 3/5/1 | controlled_diagnostic_design,generative_process_redesign | power_system_planning_ops,storage_or_energy_device_review | Y | Y | n | n
+`applsci-16-06059.pdf` | 26 | 31 | 6/2/0 | outside_taxonomy | named_stack_plus_case | n | n | n | n
+`applsci-16-06581.pdf` | 24 | 34 | 3/4/2 | unify_into_shared_representation,heterogeneous_decomposition | storage_or_energy_device_review,power_system_planning_ops | n | n | n | n
+`p1_twin_gru_dispatch__03__a_repair_based_improved_whale_optimization_algorithm_for_low_carbon_ec__a4ef78a832.pdf` | 27 | 30 | 3/5/1 | controlled_diagnostic_design,generative_process_redesign | power_system_planning_ops,storage_or_energy_device_review | Y | Y | n | n
+`p1_twin_gru_dispatch__04__analysis_of_heuristic_optimization_technique_solutions_for_combined_he__298b27049c.pdf` | 19 | 178 | 6/5/0 | outside_taxonomy | named_stack_plus_case | n | n | n | n
+`p1_twin_gru_dispatch__05__optimal_dispatch_of_multi_coupling_systems_considering_molten_salt_the__10ff400301.pdf` | 29 | 26 | 4/0/0 | generative_process_redesign,unify_into_shared_representation | power_system_planning_ops,named_stack_plus_case | Y | n | n | n
+`p2_hyperbolic_gcn_smart_dispatch__06__short_term_power_load_forecasting_using_an_improved_model__7b1dda50cf.pdf` | 34 | 22 | 6/3/0 | heterogeneous_decomposition,unify_into_shared_representation | named_stack_plus_case,hardware_or_field_validation | n | n | n | Y
+`p2_hyperbolic_gcn_smart_dispatch__09__power_grid_load_forecasting_using_a_cnn_lstm_network_based__b308f09e9b.pdf` | 24 | 13 | 4/0/0 | unify_into_shared_representation,generative_process_redesign | named_stack_plus_case,hardware_or_field_validation | n | n | n | n
+`p4_resilience_distribution_planning__07__real_time_short_circuit_current_calculation_in_electric__d874b25c24.pdf` | 22 | 21 | 8/3/0 | heterogeneous_decomposition,algebraic_equivalence_unification | power_system_planning_ops,survey_or_review_synthesis | n | n | n | n
+`p4_resilience_distribution_planning__12__multi_stage_stochastic_milp_framework_for_renewable_mic__d34dd8332a.pdf` | 20 | 12 | 9/2/0 | reframe_as_solvable_object,generative_process_redesign | storage_or_energy_device_review,power_system_planning_ops | Y | n | n | n
+`p5_hybrid_moea_feasibility_review__06__optimal_planning_and_investment_return_analysis_of_grid_s__c063931595.pdf` | 31 | 35 | 0/1/0 | unify_into_shared_representation,reframe_as_solvable_object | named_stack_plus_case | Y | n | n | n
+`p5_hybrid_moea_feasibility_review__10__interruption_cost_estimation_for_value_based_reliability__74f1b41184.pdf` | 17 | 10 | 8/12/0 | algebraic_equivalence_unification | survey_or_review_synthesis,named_stack_plus_case | n | n | n | n
+`p5_hybrid_moea_feasibility_review__11__multi_stage_coordinated_planning_for_transmission_and_ene__b1f7d8b067.pdf` | 24 | 26 | 4/3/0 | generative_process_redesign,decompose_and_delegate | named_stack_plus_case,power_system_planning_ops | Y | n | n | n
+`p6_nsga_bls_feasibility_review__02__optimal_planning_and_investment_return_analysis_of_grid_side__c063931595.pdf` | 31 | 35 | 0/1/0 | unify_into_shared_representation,reframe_as_solvable_object | named_stack_plus_case | Y | n | n | n
+`p6_nsga_bls_feasibility_review__08__comprehensive_energy_analysis_of_vehicle_to_grid_v2g_integra__403dde93d4.pdf` | 18 | 26 | 5/3/0 | architectural_operator_substitution,algebraic_equivalence_unification | storage_or_energy_device_review,named_stack_plus_case | n | n | n | n
+`p6_nsga_bls_feasibility_review__09__multi_stage_coordinated_planning_for_transmission_and_energy__b1f7d8b067.pdf` | 24 | 26 | 4/3/0 | generative_process_redesign,decompose_and_delegate | named_stack_plus_case,power_system_planning_ops | Y | n | n | n

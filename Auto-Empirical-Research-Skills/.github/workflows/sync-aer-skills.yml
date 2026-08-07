@@ -1,0 +1,83 @@
+name: Sync AER-skills from upstream
+
+# Weekly mirror of brycewang-stanford/AER-skills (whole repo, excluding .git
+# and .gitignore) into skills/50-brycewang-aer-skills/. Opens a PR on drift;
+# does nothing on parity. No untrusted user input (issue/PR/commit fields) is
+# interpolated into any run step, so command-injection attack surface is zero.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install scientific stack for Paper-WorkFlow demo gate
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Run sync script
+        id: sync
+        run: |
+          set +e
+          bash scripts/sync-aer-skills.sh
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+          elif [ "$rc" -eq 1 ]; then
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Sync script failed with exit code $rc" >&2
+            exit "$rc"
+          fi
+
+      # Regenerate catalog/docs from the synced tree, then run the same full
+      # gate a human PR must pass (`make check`), so an upstream snapshot that
+      # breaks repo invariants cannot be merged unnoticed. PRs opened by
+      # GITHUB_TOKEN do not trigger CI, so this in-job gate is the only
+      # pre-merge signal.
+      - name: Regenerate catalog and run full gate
+        id: gate
+        if: steps.sync.outputs.drift == 'true'
+        run: |
+          set +e
+          make catalog && make check
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Open PR on drift
+        if: steps.sync.outputs.drift == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/sync-aer-skills
+          commit-message: "chore(skills/aer-skills): sync from upstream"
+          title: "chore(skills/aer-skills): sync from upstream AER-skills"
+          body: |
+            Automated sync from
+            [`brycewang-stanford/AER-skills`](https://github.com/brycewang-stanford/AER-skills).
+
+            **Local full gate (`make catalog && make check`):** ${{ steps.gate.outputs.status == '0' && '✅ passed — review the diff and merge if intended' || '❌ FAILED — do NOT merge until fixed; see the run log (PR labelled needs-fix)' }}
+
+            Triggered by `.github/workflows/sync-aer-skills.yml`.
+          labels: ${{ steps.gate.outputs.status == '0' && 'sync,skills' || 'sync,skills,needs-fix' }}
+
+      - name: Fail the run if the synced tree breaks the gate
+        if: steps.sync.outputs.drift == 'true' && steps.gate.outputs.status != '0'
+        run: |
+          echo "::error::Synced upstream fails 'make check' (exit ${{ steps.gate.outputs.status }}). A PR was opened and labelled needs-fix; do not merge until the gate passes."
+          exit 1

@@ -1,0 +1,323 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/uci_household_power/uci_household_power__PatchTST_A_Time_Series_is_Worth_64_Words__ebf6166a71.pdf",
+  "n_pages": 24,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 I NTRODUCTION",
+      "level": 1,
+      "text": "Forecasting is one of the most important tasks in time series analysis. With the rapid growth of deep\nlearning models, the number of research works has increased signiﬁcantly on this topic (Bryan &\nStefan, 2021; Torres et al., 2021; Lara-Ben ´ıtez et al., 2021). Deep models have shown excellent\nperformance not only on forecasting tasks, but also on representation learning where abstract rep-\nresentation can be extracted and transferred to various downstream tasks such as classiﬁcation and\nanomaly detection to attain state-of-the-art performance.\nAmong deep learning models, Transformer has achieved great success on various application ﬁelds\nsuch as natural language processing (NLP) (Kalyan et al., 2021), computer vision (CV) (Khan et al.,\n2021), speech (Karita et al., 2019), and more recently time series (Wen et al., 2022), beneﬁting from\nits attention mechanism which can automatically learn the connections between elements in a se-\nquence, thus becomes ideal for sequential modeling tasks. Informer (Zhou et al., 2021), Autoformer\n(Wu et al., 2021), and FEDformer (Zhou et al., 2022) are among the best variants of the Transformer\nmodel successfully applying to time series data. Unfortunately, regardless of the complicated design\nof Transformer-based models, it is shown in the recent paper (Zeng et al., 2022) that a very simple\nlinear model can outperform all of the previous models on a variety of common benchmarks and it\nchallenges the usefulness of Transformer for time series forecasting. In this paper, we attempt to an-\nswer this question by proposing a channel-independence patch time series Transformer (PatchTST)\nmodel that contains two key designs:\n• Patching. Time series forecasting aims to understand the correlation between data in each dif-\nferent time steps. However, a single time step does not have semantic meaning like a word in a\nsentence, thus extracting local semantic information is essential in analyzing their connections.\nMost of the previous works only use point-wise input tokens, or just a handcrafted information\n∗Equal contribution.\n1\narXiv:2211.14730v2  [cs.LG]  5 Mar 2023\nPublished as a conference paper at ICLR 2023\nModels L N patch method MSE\nChannel-independent\nPatchTST\n96 96 0.518380 96 down-sampled 0.447336 336 0.397336 42 ✓ 0.367336 42 ✓ self-supervised0.349\nChannel-mixing FEDFormer 336 336 0.597DLinear 336 336 0.410\nRunning time (s) withL= 336Dataset w. patch w.o. patch Gain\nTrafﬁc 464 10040 x 22Electricity 300 5730 x 19Weather 156 680 x 4\nTable 1: A case study of multivariate time series forecasting on Trafﬁc dataset. The prediction hori-\nzon is 96. Results with different look-back window L and number of input tokens N are reported.\nThe best result is in bold and the second best is underlined. Down-sampled means sampling every\n4 step and adding the last value. All the results are from supervised training except the best result\nwhich uses self-supervised learning.\nfrom series. In contrast, we enhance the locality and capture comprehensive semantic informa-\ntion that is not available in point-level by aggregating time steps into subseries-level patches.\n• Channel-independence. A multivariate time series is a multi-channel signal, and each Trans-\nformer input token can be represented by data from either a single channel or multiple channels.\nDepending on the design of input tokens, different variants of the Transformer architecture have\nbeen proposed. Channel-mixing refers to the latter case where the input token takes the vec-\ntor of all time series features and projects it to the embedding space to mix information. On\nthe other hand, channel-independence means that each input token only contains information\nfrom a single channel. This was proven to work well with CNN (Zheng et al., 2014) and linear\nmodels (Zeng et al., 2022), but hasn’t been applied to Transformer-based models yet.\nWe offer a snapshot of our key results in Table 1 by doing a case study on Trafﬁc dataset, which\nconsists of 862 time series. Our model has several advantages:\n1. Reduction on time and space complexity: The original Transformer has O(N 2) complexity\non both time and space, where N is the number of input tokens. Without pre-processing, N\nwill have the same value as input sequence length L, which becomes a primary bottleneck\nof computation time and memory in practice. By applying patching, we can reduce N by a\nfactor of the stride: N≈ L/S, thus reducing the complexity quadratically. Table 1 illustrates\nthe usefulness of patching. By setting patch length P = 16 and stride S = 8 with L = 336 ,\nthe training time is signiﬁcantly reduced as much as 22 time on large datasets.\n2. Capability of learning from longer look-back window: Table 1 shows that by increasing look-\nback window L from 96 to 336, MSE can be reduced from 0.518 to 0.397. However, simply\nextending L comes at the cost of larger memory and computational usage. Since time series\noften carries heavily temporal redundant information, some previous work tried to ignore parts\nof data points by using downsampling or a carefully designed sparse connection of attention\n(Li et al., 2019) and the model still yields sufﬁcient information to forecast well. We study the\ncase when L = 380 and the time series is sampled every 4 steps with the last point added to\nsequence, resulting in the number of input tokens being N = 96 . The model achieves better\nMSE score ( 0.447) than using the data sequence containing the most recent 96 time steps\n(0.518), indicating that longer look-back window conveys more important information even\nwith the same number of input tokens. This leads us to think of a question: is there a way\nto avoid throwing values while maintaining a long look-back window? Patching is a good\nanswer to it. It can group local time steps that may contain similar values while at the same\ntime enables the model to reduce the input token length for computational beneﬁt. As evident\nin Table 1, MSE score is further reduced from 0.397 to 0.367 with patching when L = 336.\n3. Capability of representation learning: With the emergence of powerful self-supervised learn-\ning techniques, sophisticated models with multiple non-linear layers of abstraction are re-\nquired to capture abstract representation of the data. Simple models like linear ones (Zeng\net al., 2022) may not be preferred for that task due to its limited expressibility. With our\nPatchTST model, we not only conﬁrm that Transformer is actually effective for time series\nforecasting, but also demonstrate the representation capability that can further enhance the\nforecasting performance. Our PatchTST has achieved the best MSE (0.349) in Table 1.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "We introduce our approach in more detail and conduct extensive experiments in the following sec-\ntions to conclusively prove our claims. We not only demonstrate the model effectiveness with super-\nvised forecasting results and ablation studies, but also achieves SOTA self-supervised representation\nlearning and transfer learning performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 R ELATED WORK",
+      "level": 1,
+      "text": "Patch in Transformer-based Models. Transformer (Vaswani et al., 2017) has demonstrated a sig-\nniﬁcant potential on different data modalities. Among all applications, patching is an essential\npart when local semantic information is important. In NLP, BERT (Devlin et al., 2018) considers\nsubword-based tokenization (Schuster & Nakajima, 2012) instead of performing character-based\ntokenization. In CV , Vision Transformer (ViT) (Dosovitskiy et al., 2021) is a milestone work that\nsplits an image into 16×16 patches before feeding into the Transformer model. The following inﬂu-\nential works such as BEiT (Bao et al., 2022) and masked autoencoders (He et al., 2021) are all using\npatches as input. Similarly, in speech researchers are using convolutions to extract information in\nsub-sequence levels from raw audio input (Baevski et al., 2020; Hsu et al., 2021).\nTransformer-based Long-term Time Series Forecasting. There is a large body of work that tries\nto apply Transformer models to forecast long-term time series in recent years. We here summarize\nsome of them. LogTrans (Li et al., 2019) uses convolutional self-attention layers with LogSparse\ndesign to capture local information and reduce the space complexity. Informer (Zhou et al., 2021)\nproposes a ProbSparse self-attention with distilling techniques to extract the most important keys\nefﬁciently. Autoformer (Wu et al., 2021) borrows the ideas of decomposition and auto-correlation\nfrom traditional time series analysis methods. FEDformer (Zhou et al., 2022) uses Fourier enhanced\nstructure to get a linear complexity. Pyraformer (Liu et al., 2022) applies pyramidal attention module\nwith inter-scale and intra-scale connections which also get a linear complexity.\nMost of these models focus on designing novel mechanisms to reduce the complexity of original\nattention mechanism, thus achieving better performance on forecasting, especially when the pre-\ndiction length is long. However, most of the models use point-wise attention, which ignores the\nimportance of patches. LogTrans (Li et al., 2019) avoids a point-wise dot product between the key\nand query, but its value is still based on a single time step. Autoformer (Wu et al., 2021) uses auto-\ncorrelation to get patch level connections, but it is a handcrafted design which doesn’t include all\nthe semantic information within a patch. Triformer (Cirstea et al., 2022) proposes patch attention,\nbut the purpose is to reduce complexity by using a pseudo timestamp as the query within a patch,\nthus it neither treats a patch as a input unit, nor reveals the semantic importance behind it.\nTime Series Representation Learning. Besides supervised learning, self-supervised learning is\nalso an important research topic since it has shown the potential to learn useful representations for\ndownstream tasks. There are many non-Transformer-based models proposed in recent years to learn\nrepresentations in time series (Franceschi et al., 2019; Tonekaboni et al., 2021; Yang & Hong, 2022;\nYue et al., 2022). Meanwhile, Transformer is known to be an ideal candidate towards foundation\nmodels (Bommasani et al., 2021) and learning universal representations. However, although people\nhave made attempts on Transformer-based models like time series Transformer (TST) (Zerveas et al.,\n2021) and TS-TCC (Eldele et al., 2021), the potential is still not fully realized yet.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 P ROPOSED METHOD",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 M ODEL STRUCTURE",
+      "level": 2,
+      "text": "We consider the following problem: given a collection of multivariate time series samples with look-\nback window L : ( x1, ..., xL) where each xt at time step t is a vector of dimension M, we would\nlike to forecast T future values (xL+1, ..., xL+T ). Our PatchTST is illustrated in Figure 1 where the\nmodel makes use of the vanilla Transformer encoder as its core architecture.\nForward Process. We denote a i-th univariate series of length L starting at time index 1 as\nx(i)\n1:L = ( x(i)\n1 , ..., x(i)\nL ) where i = 1 , ..., M. The input (x1, ..., xL) is split to M univariate series\nx(i)∈ R1×L, where each of them is fed independently into the Transformer backbone according to",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Input Univariate SeriesInstance Norm + Patching\n𝑥∈ℝ!×#\nChannel-independence\nTransformer Backbone\nConcatenate\n𝑥(%)∈ℝ'×#,𝑖=1,…,𝑀 +𝑥(%)∈ℝ'×(,𝑖=1,…,𝑀\n+𝑥∈ℝ!×(\n𝑥(\")∈ℝ$×&\nProjection + Position Embedding\nTransformer Encoder\nFlatten + Linear HeadOutput Univariate Series$𝑥(\")∈ℝ$×'\nInput Univariate SeriesInstance Norm + Patching\nProjection + Position Embedding\nTransformer Encoder\nLinear Layer\n(a) PatchTSTModel Overview\n(b) Transformer Backbone (Supervised)(c) Transformer Backbone (Self-supervised)\nReconstructed Masked Patches\nMulti-Head Attention\nAdd & Norm\nFeed Forward\nAdd & Normn×\n𝑥((\")∈ℝ)×*\n𝑧(\")∈ℝ)×*\n𝑥+(\")∈ℝ,×*\nFigure 1: PatchTST architecture. (a) Multivariate time series data is divided into different chan-\nnels. They share the same Transformer backbone, but the forward processes are independent. (b)\nEach channel univariate series is passed through instance normalization operator and segmented into\npatches. These patches are used as Transformer input tokens. (c) Masked self-supervised represen-\ntation learning with PatchTST where patches are randomly selected and set to zero. The model will\nreconstruct the masked patches.\nour channel-independence setting. Then the Transformer backbone will provide prediction results\nˆx(i) = (ˆx(i)\nL+1, ..., ˆx(i)\nL+T )∈ R1×T accordingly .\nPatching. Each input univariate time series x(i) is ﬁrst divided into patches which can be either\noverlapped or non-overlapped. Denote the patch length as P and the stride - the non overlapping\nregion between two consecutive patches asS, then the patching process will generate the a sequence\nof patches x(i)\np ∈ RP ×N where N is the number of patches, N =⌊ (L−P )\nS ⌋ + 2. Here, we pad S\nrepeated numbers of the last value x(i)\nL ∈ R to the end of the original sequence before patching.\nWith the use of patches, the number of input tokens can reduce from L to approximately L/S.\nThis implies the memory usage and computational complexity of the attention map are quadrati-\ncally decreased by a factor of S. Thus constrained on the training time and GPU memory, patch\ndesign can allow the model to see the longer historical sequence, which can signiﬁcantly improve\nthe forecasting performance, as demonstrated in Table 1.\nTransformer Encoder .We use a vanilla Transformer encoder that maps the observed signals to the\nlatent representations. The patches are mapped to the Transformer latent space of dimensionD via a\ntrainable linear projection Wp∈ RD×P , and a learnable additive position encodingWpos∈ RD×N\nis applied to monitor the temporal order of patches: x(i)\nd = Wpx(i)\np + Wpos, where x(i)\nd ∈ RD×N\ndenote the input that will be fed into Transformer encoder in Figure 1. Then each head h = 1, ..., H\nin multi-head attention will transform them into query matrices Q(i)\nh = ( x(i)\nd )T WQ\nh , key matrices\nK (i)\nh = ( x(i)\nd )T WK\nh and value matrices V (i)\nh = ( x(i)\nd )T WV\nh , where WQ\nh , WK\nh ∈ RD×dk and",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "WV\nh ∈ RD×D. After that a scaled production is used for getting attention output O(i)\nh ∈ RD×N :\n(O(i)\nh )T = Attention(Q(i)\nh , K(i)\nh , V (i)\nh ) = Softmax( Q(i)\nh K (i)\nh\nT\n√dk\n)V (i)\nh\nThe multi-head attention block also includes BatchNorm 1 layers and a feed forward network with\nresidual connections as shown in Figure 1. Afterwards it generates the representation denoted as\nz(i)∈ RD×N . Finally a ﬂatten layer with linear head is used to obtain the prediction result ˆx(i) =\n(ˆx(i)\nL+1, ..., ˆx(i)\nL+T )∈ R1×T .\nLoss Function. We choose to use the MSE loss to measure the discrepancy between the prediction\nand the ground truth. The loss in each channel is gathered and averaged over M time series to get\nthe overall objective loss:L = Ex 1\nM\n∑M\ni=1∥ ˆx(i)\nL+1:L+T− x(i)\nL+1:L+T∥2\n2.\nInstance Normalization. This technique has recently been proposed to help mitigating the distri-\nbution shift effect between the training and testing data (Ulyanov et al., 2016; Kim et al., 2022).\nIt simply normalizes each time series instance x(i) with zero mean and unit standard deviation. In\nessence, we normalize each x(i) before patching and the mean and deviation are added back to the\noutput prediction.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 R EPRESENTATION LEARNING",
+      "level": 2,
+      "text": "Self-supervised representation learning has become a popular approach to extract high level abstract\nrepresentation from unlabelled data. In this section, we apply PatchTST to obtain useful represen-\ntation of the multivariate time series. We will show that the learnt representation can be effectively\ntransferred to forecasting tasks. Among popular methods to learn representation via self-supervise\npre-training, masked autoencoder has been applied successfully to NLP (Devlin et al., 2018) and\nCV (He et al., 2021) domains. This technique is conceptually simple: a portion of input sequence is\nintentionally removed at random and the model is trained to recover the missing contents.\nMasked encoder has been recently employed in time series and delivered notable performance on\nclassiﬁcation and regression tasks (Zerveas et al., 2021). The authors proposed to apply the multi-\nvariate time series to Transformer, where each input token is a vector xi consisting of time series\nvalues at time step i-th. Masking is placed randomly within each time series and across different\nseries. However, there are two potential issues with this setting: First, masking is applied at the level\nof single time steps. The masked values at the current time step can be easily inferred by interpo-\nlating with the immediate proceeding or succeeding time values without high level understanding\nof the entire sequence, which deviates from our goal of learning important abstract representation\nof the whole signal. Zerveas et al. (2021) proposed complex randomization strategies to resolve the\nproblem in which groups of time series with different sizes are randomly masked.\nSecond, the design of the output layer for forecasting task can be troublesome. Given the repre-\nsentation vectors zt∈ RD corresponding to all L time steps, mapping these vectors to the output\ncontaining M variables each with prediction horizon T via a linear map requires a parameter matrix\nW of dimension (L· D)× (M· T ). This matrix can be particularly oversized if either one or all\nof these four values are large. This may cause overﬁtting when the number of downstream training\nsamples is scarce.\nOur proposed PatchTST can naturally overcome the aforementioned issues. As shown in Figure 1,\nwe use the same Transformer encoder as the supervised settings. The prediction head is removed and\na D× P linear layer is attached. As opposed to supervised model where patches can be overlapped,\nwe divide each input sequence into regular non-overlapping patches. It is for convenience to ensure\nobserved patches do not contain information of the masked ones. We then select a subset of the\npatch indices uniformly at random and mask the patches according to these selected indices with\nzero values. The model is trained with MSE loss to reconstruct the masked patches.\nWe emphasize that each time series will have its own latent representation that are cross-learned via\na shared weight mechanism. This design can allow the pre-training data to contain different number\nof time series than the downstream data, which may not be feasible by other approaches.\n1Zerveas et al. (2021) has shown that BatchNorm outperforms LayerNorm in time series Transformer.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 E XPERIMENTS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.1 L ONG -TERM TIME SERIES FORECASTING",
+      "level": 2,
+      "text": "Datasets. We evaluate the performance of our proposed PatchTST on 8 popular datasets, including\nWeather, Trafﬁc, Electricity, ILI and 4 ETT datasets (ETTh1, ETTh2, ETTm1, ETTm2). These\ndatasets have been extensively utilized for benchmarking and publicly available on (Wu et al., 2021).\nThe statistics of those datasets are summarized in Table 2. We would like to highlight several large\ndatasets: Weather, Trafﬁc, and Electricity. They have many more number of time series, thus the\nresults would be more stable and less susceptible to overﬁtting than other smaller datasets.\nDatasets Weather Trafﬁc Electricity ILI ETTh1 ETTh2 ETTm1 ETTm2\nFeatures 21 862 321 7 7 7 7 7\nTimesteps 52696 17544 26304 966 17420 17420 69680 69680\nTable 2: Statistics of popular datasets for benchmark.\nBaselines and Experimental Settings. We choose the SOTA Transformer-based models, includ-\ning FEDformer (Zhou et al., 2022), Autoformer (Wu et al., 2021), Informer (Zhou et al., 2021),\nPyraformer (Liu et al., 2022), LogTrans (Li et al., 2019), and a recent non-Transformer-based model\nDLinear (Zeng et al., 2022) as our baselines. All of the models are following the same experimental\nsetup with prediction length T ∈{ 24, 36, 48, 60} for ILI dataset and T ∈{ 96, 192, 336, 720} for\nother datasets as in the original papers. We collect baseline results from Zeng et al. (2022) with the\ndefault look-back window L = 96 for Transformer-based models, and L = 336 for DLinear. But in\norder to avoid under-estimating the baselines, we also run FEDformer, Autoformer and Informer for\nsix different look-back window L∈{ 24, 48, 96, 192, 336, 720}, and always choose the best results\nto create strong baselines. More details about the baselines could be found in Appendix A.1.2. We\ncalculate the MSE and MAE of multivariate time series forecasting as metrics.\nModel Variants. We propose two versions of PatchTST in Table 3. PatchTST/64 implies the\nnumber of input patches is 64, which uses the look-back window L = 512. PatchTST/42 means the\nnumber of input patches is 42, which has the default look-back window L = 336 . Both of them\nuse patch length P = 16 and stride S = 8 . Thus, we could use PatchTST/42 as a fair comparison\nto DLinear and other Transformer-based models, and PatchTST/64 to explore even better results on\nlarger datasets. More experimental details are provided in Appendix A.1.\nResults. Table 3 shows the multivariate long-term forecasting results. Overall, our model outper-\nform all baseline methods. Quantitatively, compared with the best results that Transformer-based\nmodels can offer, PatchTST/64 achieves an overall 21.0% reduction on MSE and 16.7% reduction\non MAE, while PatchTST/42 attains an overall 20.2% reduction on MSE and 16.4% reduction on\nMAE. Compared with the DLinear model, PatchTST can still outperform it in general, especially\non large datasets (Weather, Trafﬁc, Electricity) and ILI dataset. We also experiment with univariate\ndatasets where the results are provided in Appendix A.3.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 R EPRESENTATION LEARNING",
+      "level": 2,
+      "text": "In this section, we conduct experiments with masked self-supervised learning where we set the\npatches to be non-overlapped. Otherwise stated, across all representation learning experiments the\ninput sequence length is chosen to be 512 and patch size is set to 12, which results in 42 patches.\nWe consider high masking ratio where 40% of the patches are masked with zero values. We ﬁrst\napply self-supervised pre-training on the datasets mentioned in Section 4.1 for 100 epochs. Once\nthe pre-trained model on each dataset is available, we perform supervised training to evaluate the\nlearned representation with two options: (a) linear probing and (b) end-to-end ﬁne-tuning. With (a),\nwe only train the model head for 20 epochs while freezing the rest of the network; With (b), we\napply linear probing for 10 epochs to update the model head and then end-to-end ﬁne-tuning the\nentire network for 20 epochs. It was proven that a two-step strategy with linear probing followed\nby ﬁne-tuning can outperform only doing ﬁne-tuning directly (Kumar et al., 2022). We select a few\nrepresentative results on below, and a full benchmark can be found in Appendix A.5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "6 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "ModelsPatchTST/64PatchTST/42DLinear FEDformerAutoformerInformer PyraformerLogTrans\nMetric MSE MAEMSE MAEMSE MAEMSE MAEMSE MAEMSE MAEMSE MAEMSE MAE\nWeather\n96 0.149 0.1980.1520.1990.176 0.2370.238 0.3140.249 0.3290.354 0.4050.896 0.5560.458 0.490\n192 0.194 0.2410.1970.2430.220 0.2820.275 0.3290.325 0.3700.419 0.4340.622 0.6240.658 0.589\n336 0.245 0.2820.2490.2830.265 0.3190.339 0.3770.351 0.3910.583 0.5430.739 0.7530.797 0.652\n720 0.314 0.3340.3200.3350.323 0.3620.389 0.4090.415 0.4260.916 0.7051.004 0.9340.869 0.675\nTrafﬁc\n96 0.360 0.2490.3670.2510.410 0.2820.576 0.3590.597 0.3710.733 0.4102.085 0.4680.684 0.384\n192 0.379 0.2560.3850.2590.423 0.2870.610 0.3800.607 0.3820.777 0.4350.867 0.4670.685 0.390\n336 0.392 0.2640.3980.2650.436 0.2960.608 0.3750.623 0.3870.776 0.4340.869 0.4690.734 0.408\n720 0.432 0.2860.4340.2870.466 0.3150.621 0.3750.639 0.3950.827 0.4660.881 0.4730.717 0.396\nElectricity\n96 0.129 0.2220.1300.2220.140 0.2370.186 0.3020.196 0.3130.304 0.3930.386 0.4490.258 0.357\n192 0.147 0.2400.1480.2400.153 0.2490.197 0.3110.211 0.3240.327 0.4170.386 0.4430.266 0.368\n336 0.163 0.2590.1670.2610.169 0.2670.213 0.3280.214 0.3270.333 0.4220.378 0.4430.280 0.380\n720 0.197 0.2900.2020.2910.203 0.3010.233 0.3440.236 0.3420.351 0.4270.376 0.4450.283 0.376\nILI\n24 1.319 0.7541.5220.8142.215 1.0812.624 1.0952.906 1.1824.657 1.4491.420 2.0124.480 1.444\n36 1.5790.8701.430 0.8341.963 0.9632.516 1.0212.585 1.0384.650 1.4637.394 2.0314.799 1.467\n48 1.553 0.8151.6730.8542.130 1.0242.505 1.0413.024 1.1455.004 1.5427.551 2.0574.800 1.468\n60 1.470 0.7881.5290.8622.368 1.0962.742 1.1222.761 1.1145.071 1.5437.662 2.1005.278 1.560\nETTh1\n96 0.3700.4000.3750.3990.3750.3990.376 0.4150.435 0.4460.941 0.7690.664 0.6120.878 0.740\n192 0.413 0.4290.4140.4210.405 0.4160.423 0.4460.456 0.4571.007 0.7860.790 0.6811.037 0.824\n336 0.4220.4400.4310.4360.439 0.4430.444 0.4620.486 0.4871.038 0.7840.891 0.7381.238 0.932\n720 0.4470.4680.4490.4660.472 0.4900.469 0.4920.515 0.5171.144 0.8570.963 0.7821.135 0.852\nETTh2\n96 0.2740.3370.274 0.3360.289 0.3530.332 0.3740.332 0.3681.549 0.9520.645 0.5972.116 1.197\n192 0.3410.3820.339 0.3790.383 0.4180.407 0.4460.426 0.4343.792 1.5420.788 0.6834.315 1.635\n336 0.3290.3840.3310.3800.448 0.4650.400 0.4470.477 0.4794.215 1.6420.907 0.7471.124 1.604\n720 0.379 0.4220.379 0.4220.605 0.5510.412 0.4690.453 0.4903.656 1.6190.963 0.7833.188 1.540\nETTm1\n96 0.293 0.3460.290 0.3420.2990.3430.326 0.3900.510 0.4920.626 0.5600.543 0.5100.600 0.546\n192 0.333 0.3700.3320.3690.3350.3650.365 0.4150.514 0.4950.725 0.6190.557 0.5370.837 0.700\n336 0.3690.3920.3660.3920.3690.3860.392 0.4250.510 0.4921.005 0.7410.754 0.6551.124 0.832\n720 0.416 0.4200.420 0.4240.4250.4210.446 0.4580.527 0.4931.133 0.8450.908 0.7241.153 0.820\nETTm2\n96 0.1660.2560.165 0.2550.167 0.2600.180 0.2710.205 0.2930.355 0.4620.435 0.5070.768 0.642\n192 0.2230.2960.220 0.2920.224 0.3030.252 0.3180.278 0.3360.595 0.5860.730 0.6730.989 0.757\n336 0.274 0.3290.2780.3290.281 0.3420.324 0.3640.343 0.3791.270 0.8711.201 0.8451.334 0.872\n720 0.362 0.3850.3670.3850.397 0.4210.410 0.4200.414 0.4193.001 1.2673.625 1.4513.048 1.328\nTable 3: Multivariate long-term forecasting results with supervised PatchTST. We use prediction\nlengths T ∈{ 24, 36, 48, 60} for ILI dataset and T ∈{ 96, 192, 336, 720} for the others. The best\nresults are in bold and the second best are underlined.\nModels PatchTST DLinear FEDformer Autoformer InformerFine-tuning Lin. Prob. Sup.Metric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nWeather\n96 0.144 0.193 0.158 0.209 0.152 0.199 0.176 0.237 0.238 0.314 0.249 0.329 0.354 0.405192 0.190 0.236 0.203 0.249 0.197 0.243 0.220 0.282 0.275 0.329 0.325 0.370 0.419 0.434336 0.244 0.280 0.251 0.285 0.249 0.283 0.265 0.319 0.339 0.377 0.351 0.391 0.583 0.543720 0.320 0.335 0.321 0.336 0.320 0.335 0.323 0.362 0.389 0.409 0.415 0.426 0.916 0.705\nTrafﬁc\n96 0.352 0.244 0.399 0.294 0.367 0.251 0.410 0.282 0.576 0.359 0.597 0.371 0.733 0.410192 0.371 0.253 0.412 0.298 0.385 0.259 0.423 0.287 0.610 0.380 0.607 0.382 0.777 0.435336 0.381 0.257 0.425 0.306 0.398 0.265 0.436 0.296 0.608 0.375 0.623 0.387 0.776 0.434720 0.425 0.282 0.460 0.323 0.434 0.287 0.466 0.315 0.621 0.375 0.639 0.395 0.827 0.466\nElectricity\n96 0.126 0.221 0.138 0.237 0.130 0.222 0.140 0.237 0.186 0.302 0.196 0.313 0.304 0.393192 0.145 0.238 0.156 0.252 0.148 0.240 0.153 0.249 0.197 0.311 0.211 0.324 0.327 0.417336 0.164 0.256 0.170 0.265 0.167 0.261 0.169 0.267 0.213 0.328 0.214 0.327 0.333 0.422720 0.193 0.291 0.208 0.297 0.202 0.291 0.203 0.301 0.233 0.344 0.236 0.342 0.351 0.427\nTable 4: Multivariate long-term forecasting results with self-supervised PatchTST. We use prediction\nlengths T∈{ 96, 192, 336, 720}. The best results are in bold and the second best are underlined.\nComparison with Supervised Methods. Table 4 compares the performance of PatchTST (with\nﬁne-tuning, linear probing, and supervising from scratch) with other supervised method. As shown\nin the table, on large datasets our pre-training procedure contributes a clear improvement compared\nto supervised training from scratch. By just ﬁne-tuning the model head (linear probing), the fore-\ncasting performance is already comparable with training the entire network from scratch and better\nthan DLinear. The best results are observed with end-to-end ﬁne-tuning. Self-supervised PatchTST\nsigniﬁcantly outperforms other Transformer-based models on all the datasets.\nTransfer Learning. We test the capability of transfering the pre-trained model to downstream\ntasks. In particular, we pre-train the model on Electricity dataset and ﬁne-tune on other datasets. We\nobserve from Table 5 that overall the ﬁne-tuning MSE is lightly worse than pre-training and ﬁne-\ntuning on the same dataset, which is reasonable. The ﬁne-tuning performance is also worse than\nsupervised training in some cases. However, the forecasting performance is still better than other",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "7 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Models PatchTST DLinear FEDformer Autoformer InformerFine-tuning Lin. Prob. Sup.Metric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nWeather\n96 0.145 0.195 0.163 0.2160.152 0.199 0.176 0.237 0.238 0.314 0.249 0.329 0.354 0.405192 0.193 0.243 0.205 0.2520.197 0.243 0.220 0.282 0.275 0.329 0.325 0.370 0.419 0.434336 0.244 0.280 0.253 0.2890.249 0.283 0.265 0.319 0.339 0.377 0.351 0.391 0.583 0.543720 0.321 0.3370.320 0.336 0.320 0.335 0.323 0.362 0.389 0.409 0.415 0.426 0.916 0.705\nTrafﬁc\n96 0.388 0.273 0.400 0.2880.367 0.251 0.410 0.282 0.576 0.359 0.597 0.371 0.733 0.410192 0.400 0.277 0.412 0.2930.385 0.259 0.423 0.287 0.610 0.380 0.607 0.382 0.777 0.435336 0.408 0.280 0.425 0.3070.398 0.265 0.436 0.296 0.608 0.375 0.623 0.387 0.776 0.434720 0.447 0.310 0.457 0.3170.434 0.287 0.466 0.315 0.621 0.375 0.639 0.395 0.827 0.466\nTable 5: Transfer learning task: PatchTST is pre-trained on Electricity dataset and the model is\ntransferred to other datasets. The best results are in bold and the second best are underlined.\nModels IMP. PatchTST BTSF TS2Vec TNC TS-TCCTransferredSelf-supervised\nMetrics MSE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nETTh1\n24 42.3% 0.312 0.362 0.322 0.369 0.541 0.519 0.599 0.534 0.632 0.596 0.653 0.610\n48 44.7% 0.339 0.378 0.354 0.385 0.613 0.524 0.629 0.555 0.705 0.688 0.720 0.693\n168 34.5% 0.424 0.437 0.419 0.424 0.640 0.532 0.755 0.636 1.097 0.993 1.129 1.044\n336 48.5% 0.472 0.472 0.445 0.446 0.864 0.689 0.907 0.717 1.454 0.919 1.492 1.076\n720 48.8% 0.508 0.507 0.487 0.478 0.993 0.712 1.048 0.790 1.604 1.118 1.603 1.206\nTable 6: Representation learning methods comparison. Column name transferred implies pre-\ntraining PatchTST on Trafﬁc dataset and transferring the representation to ETTh1, while self-\nsupervised implies both pre-training and linear probing on ETTh1. The best and second best results\nare in bold and underlined. IMP. denotes the improvement on best results of PatchTST compared to\nthat of baselines, which is in the range of 34.5% to 48.8% on various prediction lengths.\nmodels. Note that as opposed to supervised PatchTST where the entire model is trained for each\nprediction horizon, here we only retrain the linear head or the entire model for much fewer epochs,\nwhich results in signiﬁcant computational time reduction.\nComparison with Other Self-supervised Methods. We compare our self-supervised model with\nBTSF (Yang & Hong, 2022), TS2Vec (Yue et al., 2022), TNC (Tonekaboni et al., 2021), and TS-\nTCC (Eldele et al., 2021) which are among the state-of-the-art contrastive learning representation\nmethods for time series 2. We test the forecasting performance on ETTh1 dataset, where we only\napply linear probing after the learned representation is obtained (only ﬁne-tune the last linear layer)\nto make the comparison fair. Results from Table 6 strongly indicates the superior performance of\nPatchTST, both from pre-training on its own ETTh1 data (self-supervised columns) or pre-training\non Trafﬁc (transferred columns).",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.3 A BLATION STUDY",
+      "level": 2,
+      "text": "Patching and Channel-independence. We study the effects of patching and channel-independence\nin Table 7. We include FEDformer as the SOTA benchmark for Transformer-based model. By com-\nparing results with and without the design of patching / channel-independence accordingly, one can\nobserve that both of them are important factors in improving the forecasting performance. The moti-\nvation of patching is natural; furthermore this technique improves the running time and memory con-\nsumption as shown in Table 1 due to shorter Transformer sequence input. Channel-independence, on\nthe other hand, may not be as intuitive as patching is in terms of the technical advantages. Therefore,\nwe provide an in-depth analysis on the key factors that make channel-independence more preferable\nin Appendix A.7. More ablation study results are available in Appendix A.4.\nVarying Look-back Window.In principle, a longer look-back window increases the receptive ﬁeld,\nwhich will potentially improves the forecasting performance. However, as argued in (Zeng et al.,\n2022), this phenomenon hasn’t been observed in most of the Transformer-based models. We also\ndemonstrate in Figure 2 that in most cases, these Transformer-based baselines have not beneﬁted\nfrom longer look-back window L, which indicates their ineffectiveness in capturing temporal in-\nformation. In contrast, our PatchTST consistently reduces the MSE scores as the receptive ﬁeld\nincreases, which conﬁrms our model’s capability to learn from longer look-back window.\n2We cite results of TS2Vec from (Yue et al., 2022) and{BTSF,TNC,TS-TCC} from (Yang & Hong, 2022).",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t7",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "8 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Models PatchTST FEDformerP+CI CI P Original\nMetric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nWeather\n96 0.152 0.199 0.164 0.2130.168 0.2230.177 0.2360.238 0.314\n192 0.197 0.243 0.205 0.2500.213 0.2620.221 0.2700.275 0.329\n336 0.249 0.283 0.255 0.2890.266 0.3000.271 0.3060.339 0.377\n720 0.320 0.335 0.327 0.3430.351 0.3590.340 0.3530.389 0.409\nTrafﬁc\n96 0.367 0.251 0.397 0.2710.595 0.376 - - 0.576 0.359\n192 0.385 0.259 0.411 0.2760.612 0.387 - - 0.610 0.380\n336 0.398 0.265 0.423 0.2820.651 0.391 - - 0.608 0.375\n720 0.434 0.287 0.457 0.309 - - - - 0.621 0.375\nElectricity\n96 0.130 0.222 0.136 0.2310.196 0.3070.205 0.3180.186 0.302\n192 0.148 0.240 0.164 0.2630.215 0.323 - - 0.197 0.311\n336 0.167 0.261 0.168 0.2620.228 0.338 - - 0.213 0.328\n720 0.202 0.291 0.219 0.3120.244 0.345 - - 0.233 0.344\nTable 7: Ablation study of patching and channel-independence in PatchTST. 4 cases are included:\n(a) both patching and channel-independence are included in model (P+CI); (b) only channel-\nindependence (CI); (c) only patching (P); (d) neither of them is included (Original TST model).\nPatchTST means supervised PatchTST/42. ’-’ in table means the model runs out of GPU memory\n(NVIDIA A40 48GB) even with batch size 1. The best results are in bold.\nFigure 2: Forecasting performance (MSE) with varying look-back windows on 3 large\ndatasets: Electricity, Trafﬁc, and Weather. The look-back windows are selected to be L =\n24, 48, 96, 192, 336, 720, and the prediction horizons are T = 96 , 720. We use supervised\nPatchTST/42 and other open-source Transformer-based baselines for this experiment.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t7"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 C ONCLUSION AND FUTURE WORK",
+      "level": 1,
+      "text": "This paper proposes an effective design of Transformer-based models for time series forecasting\ntasks by introducing two key components: patching and channel-independent structure. Compared\nto the previous works, it could capture local semantic information and beneﬁt from longer look-back\nwindows. We not only show that our model outperforms other baselines in supervised learning, but\nalso prove its promising capability in self-supervised representation learning and transfer learning.\nOur model exhibits the potential to be the based model for future work of Transformer-based fore-\ncasting and be a building block for time series foundation models. Patching is simple but proven to\nbe an effective operator that can be transferred easily to other models. Channel-independence, on\nthe other hand, can be further exploited to incorporate the correlation between different channels. It\nwould be an important future step to model the cross-channel dependencies properly.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "9 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "PatchTST architecture. (a) Multivariate time series data is divided into different chan-"
+    },
+    {
+      "id": "f2",
+      "caption": "Forecasting performance (MSE) with varying look-back windows on 3 large"
+    },
+    {
+      "id": "f3",
+      "caption": "Here, we predict 192 steps ahead on Weather and Eletricity datasets and60 steps ahead on"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "A case study of multivariate time series forecasting on Trafﬁc dataset. The prediction hori-"
+    },
+    {
+      "id": "t2",
+      "caption": "Statistics of popular datasets for benchmark."
+    },
+    {
+      "id": "t3",
+      "caption": "Multivariate long-term forecasting results with supervised PatchTST. We use prediction"
+    },
+    {
+      "id": "t4",
+      "caption": "Multivariate long-term forecasting results with self-supervised PatchTST. We use prediction"
+    },
+    {
+      "id": "t5",
+      "caption": "Transfer learning task: PatchTST is pre-trained on Electricity dataset and the model is"
+    },
+    {
+      "id": "t6",
+      "caption": "Representation learning methods comparison. Column name transferred implies pre-"
+    },
+    {
+      "id": "t7",
+      "caption": "Ablation study of patching and channel-independence in PatchTST. 4 cases are included:"
+    },
+    {
+      "id": "t8",
+      "caption": "summaries the results of univariate forecasting on ETT datasets. There is a target feature"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 8,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

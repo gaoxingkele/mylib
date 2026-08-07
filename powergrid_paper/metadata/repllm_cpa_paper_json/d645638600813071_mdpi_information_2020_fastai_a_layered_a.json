@@ -1,0 +1,407 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2020__fastai_a_layered_api_for_deep_learning__79aa813b82.pdf",
+  "n_pages": 27,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 University of San Francisco",
+      "level": 1,
+      "text": "† These authors contributed equally to this work.\nAbstract: fastai is a deep learning library which provides practitioners with high-level components that\ncan quickly and easily provide state-of-the-art results in standard deep learning domains, and provides\nresearchers with low-level components that can be mixed and matched to build new approaches. It aims\nto do both things without substantial compromises in ease of use, ﬂexibility, or performance. This is\npossible thanks to a carefully layered architecture, which expresses common underlying patterns of many\ndeep learning and data processing techniques in terms of decoupled abstractions. These abstractions can\nbe expressed concisely and clearly by leveraging the dynamism of the underlying Python language and\nthe ﬂexibility of the PyTorch library. fastai includes: a new type dispatch system for Python along with a\nsemantic type hierarchy for tensors; a GPU-optimized computer vision library which can be extended\nin pure Python; an optimizer which refactors out the common functionality of modern optimizers into\ntwo basic pieces, allowing optimization algorithms to be implemented in 4-5 lines of code; a novel\n2-way callback system that can access any part of the data, model, or optimizer and change it at any\npoint during training; a new data block API; and much more. We have used this library to successfully\ncreate a complete deep learning course, which we were able to write more quickly than using previous\napproaches, and the code was more clear. The library is already in wide use in research, industry, and\nteaching.\nKeywords: deep learning; data processing pipelines",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "fastai is a modern deep learning library, available from GitHub as open source under the Apache 2\nlicense, which can be installed directly using the conda or pip package managers. It includes complete\ndocumentation and tutorials, and is the subject of the book Deep Learning for Coders with fastai and PyTorch:\nAI Applications Without a PhD [1].\nfastai is organized around two main design goals: to be approachable and rapidly productive, while\nalso being deeply hackable and conﬁgurable. Other libraries have tended to force a choice between\nconciseness and speed of development, or ﬂexibility and expressivity, but not both. We wanted to get\nthe clarity and development speed of Keras [2] and the customizability of PyTorch. This goal of getting\nthe best of both worlds has motivated the design of a layered architecture. A high-level API powers\nready-to-use functions to train models in various applications, offering customizable models with sensible\ndefaults. It is built on top of a hierarchy of lower-level APIs which provide composable building blocks.\nThis way, a user wanting to rewrite part of the high-level API or add particular behavior to suit their needs\ndoesn’t have to learn how to use the lowest level.\narXiv:2002.04688v2  [cs.LG]  16 Feb 2020",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 of 27",
+      "level": 1,
+      "text": "Figure 1. The layered API from fastai\nThe high-level of the API is most likely to be useful to beginners and to practitioners who are mainly\nin interested in applying pre-existing deep learning methods. It offers concise APIs over four main\napplication areas: vision, text, tabular and time-series analysis, and collaborative ﬁltering. These APIs\nchoose intelligent default values and behaviors based on all available information. For instance, fastai\nprovides a single Learner class which brings together architecture, optimizer, and data, and automatically\nchooses an appropriate loss function where possible. Integrating these concerns into a single class enables\nfastai to curate appropriate default choices. To give another example, generally a training set should be\nshufﬂed, and a validation does not. So fastai provides a single DataLoaders class which automatically\nconstructs validation and training data loaders with these details already handled. This helps practitioners\nensure that they don’t make mistakes such as failing to include a validation set. In addition, because the\ntraining set and validation set are integrated into a single class, fastai is able, by default, always to display\nmetrics during training using the validation set.\nThis use of intelligent defaults–based on our own experience or best practices–extends to incorporating\nstate-of-the-art research wherever possible. For instance, transfer learning is critically important for training\nmodels quickly, accurately, and cheaply, but the details matter a great deal. fastai automatically provides\ntransfer learning optimised batch-normalization [3] training, layer freezing, and discriminative learning\nrates [4]. In general, the library’s use of integrated defaults means it requires fewer lines of code from the",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 of 27",
+      "level": 1,
+      "text": "user to re-specify information or merely to connect components. As a result, every line of user code tends\nto be more likely to be meaningful, and easier to read.\nThe mid-level API provides the core deep learning and data-processing methods for each of\nthese applications, and low-level APIs provide a library of optimized primitives and functional and\nobject-oriented foundations, which allows the mid-level to be developed and customised. The library\nitself is built on top of PyTorch [5], NumPy [6], PIL [7], pandas [8], and various other libraries. In order\nto achieve its goal of hackability, the library does not aim to supplant or hide these lower levels or this\nfoundation. Within a fastai model, one can interact directly with the underlying PyTorch primitives; and\nwithin a PyTorch model, one can incrementally adopt components from the fastai library as conveniences\nrather than as an integrated package.\nWe believe fastai meets its design goals. A user can create and train a state-of-the-art vision model\nusing transfer learning with four understandable lines of code. Perhaps more tellingly, we have been able\nto implement recent deep learning research papers with just a couple of hours work, whilst matching the\nperformance shown in the papers. We have also used the library for our winning entry in the DawnBench\ncompetition [9], training a ResNet-50 on ImageNet to accuracy in 18 minutes.\nThe following sections describe the main functionality of the various API levels in more detail and\nreview prior related work. We chose to include a lot of code to illustrate the concepts we are presenting.\nWhile that code made change slightly as the library or its dependencies evolve (it is running against fastai\nv2.0.0), the ideas behind stay the same. The next section reviews the high-level APIs \"out-of-the-box\"\napplications for some of the most used deep learning domains. The applications provided are vision, text,\ntabular, and collaborative ﬁltering.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Applications",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Vision",
+      "level": 2,
+      "text": "Here is an example of how to ﬁne-tune an ImageNet [10] model on the Oxford IIT Pets dataset [11]\nand achieve close to state-of-the-art accuracy within a couple of minutes of training on a single GPU:\nfrom fastai . vision . a l l import *\npath = untar_data ( URLs . PETS )\ndls = ImageDataLoaders . from_name_re ( path =path , bs =64 ,\nfnames = get_image_files ( path /\" images \" ) , pat = r ' /([^/]+) _\\d+. jpg$ ' ,\nitem_tfms =RandomResizedCrop ( 4 5 0 , min_scale = 0 . 7 5 ) ,\nbatch_tfms =[ * aug_transforms ( size =224 , max_warp = 0 . ) , Normalize . from_stats ( * imagenet_stats ) ] )\nlearn = cnn_learner ( dls , resnet34 , metrics =error_rate )\nlearn . fit_one_cycle ( 4 )\nThis is not an excerpt; these are all of the lines of code necessary for this task. Each line of code does\none important task, allowing the user to focus on what they need to do, rather than minor details. Let’s\nlook at each line in turn:\nfrom fastai . vision . a l l import *\nThis ﬁrst line imports all the necessary pieces from the library. fastai is designed to be usable in a\nread–eval–print loop (REPL) environment as well as in a complex software system. Even if using the\n\"import *\" syntax is not generally recommended, REPL programmers generally prefer the symbols they\nneed to be directly available to them, which is why fastai supports the \"import ∗\" style. The library is\ncarefully designed to ensure that importing in this way only imports the symbols that are actually likely to\nbe useful to the user and avoids cluttering the namespace or shadowing important symbols.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 of 27",
+      "level": 1,
+      "text": "path = untar_data ( URLs . PETS )\nThe second line downloads a standard dataset from the fast.ai datasets collection (if not previously\ndownloaded) to a conﬁgurable location ( ~/.fastai/data by default), extracts it (if not previously\nextracted), and returns a pathlib.Path object with the extracted location.\ndls = ImageDataLoaders . from_name_re ( . . . )\nThis line sets up the DataLoaders object. This is an abstraction that represents a combination of\ntraining and validation data and will be described more in a later section. DataLoaders can be ﬂexibly\ndeﬁned using the data block API (see 3.1), or, as here, can be built for speciﬁc predeﬁned applications\nusing speciﬁc subclasses. In this case, the ImageDataLoaders subclass is created using a regular expression\nlabeller. Many other labellers are provided, particularly focused on labelling based on different kinds of\nﬁle and folder name patterns, which are very common across a wide range of datasets.\nOne interesting feature of this API, which is also shared by lower-level fastai data APIs, is the\nseparation of item level and batch level transforms. Item transforms are applied, in this case, to individual\nimages on the CPU. Batch transforms, on the other hand, are applied to a mini-batch, on the GPU if available.\nWhile fastai supports data augmentation on the GPU, images need to be of the same size before being\nbatched. aug_transforms() selects a set of data augmentations that work well across a variety of vision\ndatasets and problems and can be fully customized by providing parameters to the function. This is a\ngood example of a simple \"helper function\"; it is not strictly necessary, because the user can list all the\naugmentations that they require using the individual data augmentation classes. However, by providing a\nsingle function which curates best practices and makes the most common types of customization available\nthrough a single function, users have fewer pieces to learn in order to get good results.\nAfter deﬁning a DataLoaders object the user can easily look at the data with a single line of code:\ndls . show_batch ( )\nFigure 2. A DataLoaders object built with the fastai library knows how to show its elements in a meaningful\nway. Here the result on the Oxford IIT Pets image classiﬁcation dataset.\nlearn = cnn_learner ( dls , resnet34 , metrics =error_rate )\nThis fourth line creates a Learner, which provides an abstraction combining an optimizer, a model,\nand the data to train it – this will be described in more detail in 4.1. Each application has a customized\nfunction that creates a Learner, which will automatically handle whatever details it can for the user. For\ninstance, in this case it will download an ImageNet-pretrained model, if not already available, remove\nthe classiﬁcation head of the model, replace it with a head appropriate for this particular dataset, and set\nappropriate defaults for the optimizer, weight decay, learning rate, and so forth (except where overridden\nby the user).",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 of 27",
+      "level": 1,
+      "text": "learn . fit_one_cycle ( 4 )\nThe ﬁfth line ﬁts the model. In this case, it is using the 1cycle policy [ 12], which is a recent best\npractice for training and is not widely available in most deep learning libraries by default. It is annealing\nboth the learning rates, and the momentums, printing metrics on the validation set, displaying results in\nan HTML table (if run in a Jupyter Notebook, or a console table otherwise), recording losses and metrics\nafter every batch to allow plotting later, and so forth. A GPU will be used if one is available.\nAfter training a model the user can view the results in various ways, including analysing the errors\nwith show_results():\nlearn . show_results ( )\nFigure 3. A Learner knows from the data and the model type how to represent the results. It can even\nhighlight model errors (here predicted class at bottom and actual at top).\nHere is another example of a vision application, this time for segmentation on the CamVid dataset [13]:\nfrom fastai . vision . a l l import *\npath = untar_data ( URLs . CAMVID )\ndls = SegmentationDataLoaders . from_label_func ( path =path , bs =8 ,\nfnames = get_image_files ( path /\" images \" ) ,\nlabel_func = lambda o : path / ' l a b e l s ' /f ' { o . stem } _P { o . s u f f i x } ' ,\ncodes = np . loadtxt ( path / ' codes . t x t ' , dtype = s t r ) ,\nbatch_tfms =[ * aug_transforms ( size = ( 3 6 0 , 4 8 0 ) ) ,Normalize . from_stats ( * imagenet_stats ) ] )\nlearn = unet_learner ( dls , resnet34 , metrics =acc_segment )\nlearn . fit_one_cycle ( 8 , pct_start = 0 . 9 )\nThe lines of code to create and train this model are almost identical to those for a classiﬁcation model,\nexcept for those necessary to tell fastai about the differences in the processing of the input data. The\nexact same line of code that was used for the image classiﬁcation example can also be used to display the\nsegmentation data:\nFigure 4. In this case, fastai knows that the data is for a segmentation task, and therefore it color-codes and\noverlays, with transparency, the segmentation layer on top of the input images.\nFurthermore, the user can also view the results of the model, which again are visualized automatically\nin a way suitable for this task:",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "6 of 27",
+      "level": 1,
+      "text": "Figure 5. For a segmentation task, the ground-truth mask is laid at the right of the predicted mask.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2 Text",
+      "level": 2,
+      "text": "In modern natural language processing (NLP), perhaps the most important approach to building\nmodels is through ﬁne-tuning pre-trained language models. To train a language model in fastai requires\nvery similar code to the previous examples (here on the IMDb dataset [14]):\nfrom fastai . text . a l l import *\npath = untar_data ( URLs . IMDB_SAMPLE )\ndf_tok , count = tokenize_df ( pd . read_csv ( path / ' t e x t s . csv ' ) , [ ' t e x t ' ] )\ndls_lm = TextDataLoaders . from_df ( df_tok , path =path ,\nvocab =make_vocab ( count ) , text_col = ' t e x t ' , is_lm =True )\nlearn = language_model_learner ( dls_lm , AWD_LSTM , metrics =Perplexity ( ) ] )\nlearn . fit_one_cycle ( 1 , 2 e−2, moms = ( 0 . 8 , 0 . 7 , 0 . 8 ) )\nFine-tuning this model for classiﬁcation requires the same basic steps:\ndls_clas = TextDataLoaders . from_df ( df_tok , path =path\nvocab =make_vocab ( count ) , text_col = ' t e x t ' , label_col = ' l a b e l ' )\nlearn = text_classifier_learner ( dls_clas , AWD_LSTM , metrics =accuracy )\nlearn . fit_one_cycle ( 1 , 2 e−2, moms = ( 0 . 8 , 0 . 7 , 0 . 8 ) )\nThe same API is also used to view the DataLoaders:\nFigure 6. In text classiﬁcation, the batches are shown in a DataFrame with the tokenized texts.\nThe biggest challenge with creating text applications is often the processing of the input data.\nfastai provides a ﬂexible processing pipeline with predeﬁned rules for best practices, such as handling\ncapitalization by adding tokens. For instance, there is a compromise between lower-casing all text and\nlosing information, versus keeping the original capitalisation and ending up with too many tokens in your\nvocabulary. fastai handles this by adding a special single token representing that the next symbol should be\ntreated as uppercase or sentence case and then converts the text itself to lowercase. fastai uses a number of",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "7 of 27",
+      "level": 1,
+      "text": "these special tokens. Another example is that a sequence of more than three repeated characters is replaced\nwith a special repetition token, along with a number of repetitions and then the repeated character. These\nrules largely replicate the approaches discussed in [4] and are not normally made available as defaults in\nmost NLP modelling libraries.\nThe tokenization is ﬂexible and can support many different organizers. The default used is Spacy. A\nSentencePiece tokenizer [15] is also provided by the library. Subword tokenization [16] [17], such as that\nprovided by SentencePiece, has been used in many recent NLP breakthroughs [18] [19].\nNumericalization and vocabulary creation often requires many lines of code, and careful management\nhere fails and caching. In fastai that is handled transparently and automatically. Input data can be provided\nin many different forms, including: a separate ﬁle on disk for each document, delimited ﬁles in various\nformats, and so forth. The API also allows for complete customisation. SentencePiece is particularly useful\nfor handling multiple languages and was used in MultiFIT [20], along with fastai, for this purpose. This\nprovided models and state-of-the-art results across many different languages using a single code base.\nfastai’s text models are based on AWD-LSTM [21]. The user community have provided external\nconnectors to the popular HuggingFace Transformers library [22]. The training of the models proceeds in\nthe same way as for the vision examples with defaults appropriate for these models automatically selected.\nWe are not aware of other libraries that provide direct support for transfer learning best practices in NLP ,\nsuch as those shown in [4]. Because the tokenisation is built on top of a layered architecture, users can\nreplace the base tokeniser with their own choices and will automatically get support for the underlying\nparallel process model provided by fastai. It will also automatically handle serialization of intermediate\noutputs so that they can be reused in future processing pipelines.\nThe results of training the model can be visualised with the same API as used for image models,\nshown in a way appropriate for NLP:\nFigure 7. In text classiﬁcation, results are displayed in a DataFrame with the tokenized texts.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.3 Tabular",
+      "level": 2,
+      "text": "Tabular models have not been very widely used in deep learning; Gradient boosting machines\nand similar methods are more commonly used in industry and research settings. However, there have\nbeen examples of competition winning approaches and academic state-of-the-art results using deep\nlearning [23]. Deep learning models are particularly useful for datasets with high cardinality categorical\nvariables because they provide embeddings that can be used even for non-deep learning models [ 24].\nOne of the challenges is there has not been examples of libraries which directly support best practices for\ntabular modelling using deep learning.\nThe pandas library [8] already provides excellent support for processing tabular data sets, and fastai\ndoes not attempt to replace it. Instead, it adds additional functionality to pandas DataFrames through\nvarious pre-processing functions, such as automatically adding features that are useful for modelling with\ndate data. fastai also provides features for automatically creating appropriate DataLoaders with separated",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "8 of 27",
+      "level": 1,
+      "text": "validation and training sets, using a variety of mechanisms, such as randomly splitting rows, or selecting\nrows based on some column.\nThe code to create and train a model suitable for this data should look familiar, there is just information\nspeciﬁc to tabular data requires when building the DataLoaders object.\nfrom fastai2 . tabular . a l l import *\npath = untar_data ( URLs . ADULT_SAMPLE )\ndf = pd . read_csv ( path / ' adult . csv ' )\ndls = TabularDataLoaders . from_df ( df , path ,\nprocs =[ Categorify , FillMissing , Normalize ] ,\ncat_names =[ ' workclass ' , ' education ' , ' marital −s t a t u s ' , ' occupation ' , ' r e l a t i o n s h i p ' , ' race ' ] ,\ncont_names =[ ' age ' , ' fnlwgt ' , ' education −num ' ] ,\ny_names = ' s a l a r y ' , valid_idx = l i s t ( range ( 1 0 2 4 , 1 2 6 0 ) ) ,bs =64)\nlearn = tabular_learner ( dls , layers = [ 2 0 0 , 1 0 0 ] ,metrics =accuracy )\nlearn . fit_one_cycle ( 3 )\nAs for every other application, dls.show_batch and learn.show_results will display a DataFrame\nwith some samples.\nfastai also integrates with NVIDIA’s cuDF library, providing end-to-end GPU optimized data\nprocessing and model training. fastai is the ﬁrst deep learning framework to integrate with cuDF in\nthis way.\n2.4. Collaborative ﬁltering\nCollaborative ﬁltering is normally modelled using a probabilistic matrix factorisation approach [25].\nIn practice however, a dataset generally has much more than just (for example) a user ID and a product ID,\nbut instead has many characteristics of the user, product, time period, and so forth. It is quite standard\nto use those to train a model, therefore, fastai attempts to close the gap between collaborative ﬁltering\nand tabular modelling. A collaborative ﬁltering model in fastai can be simply seen as a tabular model\nwith high cardinality categorical variables. A classic matrix factorisation model is also provided. Both\nare trained using the same steps that we’ve seen in the other applications, as in this example using the\npopular Movielens dataset [26]:\nfrom fastai2 . collab import *\nratings = pd . read_csv ( untar_data ( URLs . ML_SAMPLE ) / ' r a t i n g s . csv ' )\ndls = CollabDataLoaders . from_df ( ratings , bs =64 , seed =42)\nlearn = collab_learner ( dls , n_factors =50 , y_range = [0 , 5 . 5 ] )\nlearn . fit_one_cycle ( 3 )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.5 Deployment",
+      "level": 2,
+      "text": "fastai is mostly focused on model training, but once this is done you can easily export the PyTorch\nmodel to serve it in production. The command Learner.export will serialize the model as well as the\ninput pipeline (just the transforms, not the training data) to be able to apply the same to new data.\nThe library provides Learner.predict and Learner.get_preds to evaluate the model on an item or\na new inference DataLoader. Such a DataLoader can easily be built from a set of items with the command\ntest_dl.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "9 of 27",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3 High-level API design considerations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.1 High-level API foundations",
+      "level": 2,
+      "text": "The high-level API is that which is used by people using these applications. All the fastai applications\nshare some basic components. One such component is the visualisation API, which uses a small number\nof methods, the main ones being show_batch (for showing input data) and show_results (for showing\nmodel results). Different types of model and datasets are able to use this consistent API because of fastai’s\ntype dispatch system, a lower-level component which will be discussed in 5.3. The transfer learning\ncapability shared across the applications relies on PyTorch’s parameter groups, and fastai’s mid-level API\nthen leverages these groups, such as the generic optimizer (see 4.3).\nIn all those applications, the Learner obtained gets the same functionality for the model training. The\nrecommended way of training models using a variant of the 1cycle policy [12] which uses a warm-up and\nannealing for the learning rate while doing the opposite with the momentum parameter:\nFigure 8. The hyper-parameters schedule in the 1cycle policy.\nThe learning rate is the most important hyper-parameter to tune (and very often the only one since\nthe library sets proper defaults). Other libraries often provide help for grid search or AutoML to guess\nthe best value, but the fastai library implements the learning rate ﬁnder [27] which much more quickly\nprovides the best value for this parameter after a mock training. The command learn.lr_find() will\nreturn a graph like this:\nFigure 9. The learning rate ﬁnder does a mock training with an exponentially growing learning rate over\n100 iterations. A good value is then the minimum value on the graph divided by 10.\nAnother important high-level API component, which is shared across all of the applications, is the\ndata block API. The data block API is an expressive API for data loading. It is the ﬁrst attempt we are aware",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "10 of 27",
+      "level": 1,
+      "text": "of to systematically deﬁne all of the steps necessary to prepare data for a deep learning model, and give\nusers a mix and match recipe book for combining these pieces (which we refer to as data blocks). The steps\nthat are deﬁned by the data block API are:\n• Getting the source items,\n• Splitting the items into the training set and one or more validation sets,\n• Labelling the items,\n• Processing the items (such as normalization), and\n• Optionally collating the items into batches.\nHere is an example of how to use the data block API to get the MNIST dataset [28] ready for modelling:\nmnist = DataBlock (\nblocks =( ImageBlock ( cls =PILImageBW ) , CategoryBlock ) ,\nget_items =get_image_files ,\nsplitter =GrandparentSplitter ( ) ,\nget_y =parent_label )\ndls = mnist . databunch ( untar_data ( URLs . MNIST_TINY ) , batch_tfms =Normalize )\nIn fastai v1 and earlier we used a ﬂuent instead of a functional API for this (meaning the statements to\nexecute those steps were chained one after the other). We discovered that this was a mistake; while ﬂuent\nAPIs are ﬂexible in the order in which the user can deﬁne the steps, that order is very important in practice.\nWith this functional DataBlock you don’t have to remember if you need to split before or after labelling\nyour data, for instance. Also, ﬂuent APIs, at least in Python, tend not to work well with auto completion\ntechnologies. The data processing can be deﬁned using Transforms (see 5.2). Here is an example of using\nthe data blocks API to complete the same segmentation seen earlier:\npath = untar_data ( URLs . CAMVID_TINY )\ncamvid = DataBlock ( blocks =( ImageBlock , ImageBlock ( cls =PILMask ) ) ,\nget_items =get_image_files ,\nsplitter =RandomSplitter ( ) ,\nget_y =lambda o : path / ' l a b e l s ' /f ' { o . stem } _P { o . s u f f i x } ' )\ndls = camvid . databunch ( path /\" images \" ,\nbatch_tfms =[ * aug_transforms ( ) , Normalize . from_stats ( * imagenet_stats ) ] )\nObject detection can also be completed using the same functionality (here using the COCO\ndataset [29]):\ncoco_source = untar_data ( URLs . COCO_TINY )\nimages , lbl_bbox = get_annotations ( coco_source / ' t r a i n . j s o n ' )\nlbl = d i c t ( zip ( images , lbl_bbox ) )\ncoco = DataBlock ( blocks =( ImageBlock , BBoxBlock , BBoxLblBlock ) ,\nget_items =get_image_files ,\nsplitter =RandomSplitter ( ) ,\ngetters =[ noop , lambda o : lbl [ o . name ] [ 0 ] , lambda o : lbl [ o . name ] [ 1 ] ] ,\nn_inp =1)\ndls = coco . databunch ( coco_source , item_tfms =Resize ( 1 2 8 ) ,\nbatch_tfms =[ * aug_transforms ( ) , Normalize . from_stats ( * imagenet_stats ) ] )\nIn this case, the targets are a tuple of two things: a list of bounding boxes and a list of labels. This\nis why there are three blocks, a list of getters and an extra argument to specify how many of the blocks\nshould be considered the input (the rest forming the target).\nThe data for language modeling seen earlier can also be built using the data blocks API:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "11 of 27",
+      "level": 1,
+      "text": "df = pd . read_csv ( untar_data ( URLs . IMDB_SAMPLE ) / ' t e x t s . csv ' )\ndf_tok , count = tokenize_df ( df , ' t e x t ' )\nimdb_lm = DataBlock ( blocks =TextBlock ( make_vocab ( count ) , is_lm =True ) ,\nget_x =attrgetter ( ' t e x t ' ) ,\nsplitter =RandomSplitter ( ) )\ndls = imdb_lm . databunch ( df_tok , bs =64 , seq_len =72)\nWe have heard from users that they ﬁnd the data blocks API provides a good balance of conciseness\nand expressivity. Many libraries have provided various approaches to data processing. In the data science\ndomain the scikit-learn [ 30] pipeline approach is widely used. This API provides a very high level of\nexpressivity, but is not opinionated enough to ensure that a user completes all of the steps necessary to get\ntheir data ready for modelling. As another example, TensorFlow [31] provides the tf.data library, which\ndoes not as precisely map the steps necessary for users to complete their task to the functionality provided\nby the API. The Torchvision [ 32] library is a good example of an API which is highly specialised to a\nsmall subset of data processing tasks for a speciﬁc subdomain. fastai tries to capture the beneﬁts of both\nextremes of the spectrum, without compromises; the data blocks API is how most users transform their\ndata for use with the library.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.2 Incrementally adapting PyTorch code",
+      "level": 2,
+      "text": "Users often need to use existing pure PyTorch code (i.e. code that doesn’t use fastai), such as their\nexisting code-bases developed without fastai, or using third party code written in pure PyTorch. fastai\nsupports incrementally adding fastai features to this code, without requiring extensive rewrites.\nFor instance, at the time of writing, the ofﬁcial PyTorch repository includes a MNIST training example1.\nIn order to train this example using fastai’sLearner only two steps are required. First, the 30 lines in the\nexample covering the test() and train() functions can be removed. Then, the 4 lines of the training loop\nis replaced with this code:\ndata = DataLoaders ( train_loader , test_loader ) . cuda ( )\nlearn = Learner ( data , Net ( ) , loss_func =F . nll_loss , opt_func =Adam , metrics =accuracy )\nlearn . fit_one_cycle ( epochs , lr )\nWith no other changes, the user now has the beneﬁt of all fastai’s callbacks, progress reporting,\nintegrated schedulers such as 1cycle training, and so forth.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.3 Consistency across domains",
+      "level": 2,
+      "text": "As the application examples have shown, the fastai library allows training a variety of kinds of\napplication models, with a variety of kinds of datasets, using a very consistent API. The consistency\ncovers not just the initial training, but also visualising and exploring the input data and model outputs.\nSuch consistency helps students, both through having less to learn, and through showing the unifying\nconcepts across different types of model. It also helps practitioners and researchers focus on their model\ndevelopment rather than learning incidental differences between APIs across domains. It is of particular\nbeneﬁt when, for instance, an NLP expert tries to bring their expertise across to a computer vision\napplication.\nThere are many libraries that provide high-level APIs to speciﬁc applications, such as Facebook’s\nTorchvision [32], Detectron [ 33], and Fairseq [ 34]. However, each library has a different API, input\n1 https://github.com/pytorch/examples/blob/master/mnist/main.py",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "12 of 27",
+      "level": 1,
+      "text": "representation, and requires different assumptions about training details, all of which a user must learn\nfrom scratch each time. This means that there are many deep learning practitioners and researchers who\nbecome specialists in speciﬁc subﬁelds, partially based on their understanding of the toiling of those\nsubﬁelds. By providing a consistent API fastai users are able to quickly move between different ﬁelds and\nreuse their expertise.\nCustomizing the behaviour of predeﬁned applications can be challenging, which means that\nresearchers often end up \"reinventing the wheel\", or, constraining themselves to the speciﬁc parts which\nthere tooling allows them to customize. Because fastai provides a layered architecture, users of the\nsoftware can customize every part, as they need. The layered architecture is also an important foundation\nin allowing PyTorch users to incrementally add fastai functionality to existing code bases. Furthermore,\nfastai’s layers are reused across all applications, so an investment in learning them can be leveraged across\nmany different projects.\nThe approach of creating layered APIs has a long history in software engineering. Software\nengineering best practices involve building up decoupled components which can be tied together in\nﬂexible ways, and then creating increasingly less abstract and more customized layers on top of each part.\nThe layered API design is also important for researchers and practitioners aiming to create best in\nclass results. As the ﬁeld of deep learning matures, there are more and more architectures, optimizers, data\nprocessing pipelines, and other approaches that can be selected from. Trying to bring multiple approaches\ntogether into a single project can be extremely challenging, when each one is using a different, incompatible\nAPI, and has different expectations about how a model is trained. For instance, in the original mixup\narticle [35], the code provided by the researchers only works on one speciﬁc dataset, with one speciﬁc set\nof metrics, and with one speciﬁc optimizer. Attempting to combine the researchers’ mixup code with other\ntraining best practices, such as mixed precision training [36], requires rewriting it largely from scratch. The\nnext section will look at the mid-level API pieces that fastai provides, which can be mixed and matched\ntogether to allow custom approaches to be quickly and reliably created.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4 Mid-level APIs",
+      "level": 1,
+      "text": "Many libraries, including fastai version 1 or earlier, provide a high-level API to users, and a low-level\nAPI used internally for that functionality, but nothing in between. This has two problems: the ﬁrst is that\nit becomes harder and harder to create additional high-level functionality, as the system becomes more\nsophisticated, because the low-level API becomes increasingly complicated and cluttered. The second\nproblem is that for users of the system who want to customize and adapt it, they often have to rewrite\nsigniﬁcant parts of the high-level API, and understand the large surface area of the low-level API in order\nto do so. This tends to mean that only a small dedicated community of specialists can really customize the\nsoftware.\nThese issues are common across nearly all software development, and many software engineers have\nworked hard to ﬁnd ways to deal with this complexity and develop layered architectures. The issue in the\ndeep learning community, however, is that these practices have not seemed to be widely understood or\nadopted. There are, however, exceptions; most relevant to this paper, the PyTorch library [5] has a carefully\nlayered design and is highly customizable.\nMuch of the innovation in fastai is in its new mid-level APIs. This section will look at the following\nmid-level APIs: data, callbacks, optimizer, model layers, and metrics. These APIs are what the four fastai\napplications are built with and are also fully documented and available to users so that they can build\ntheir own applications or customize the existing ones.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "13 of 27",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4.1 Learner",
+      "level": 2,
+      "text": "As already noted, a library can provide more appropriate defaults and user-friendly behaviour by\nensuring that classes have all the information they need to make appropriate choices. One example of\nthis is the DataLoaders class, which brings together all the information necessary for creating the data\nrequired for modelling. fastai also provides the Learner class, which brings together all the information\nnecessary for training a model based on the data. The information whichLearner requires, and is stored as\nstate within a learner object, is: a PyTorch model, and optimizer, a loss function, and a DataLoaders object.\nPassing in the optimizer and loss function is optional, and in many situations fastai can automatically\nselect appropriate defaults.\nLearner is also responsible (along withOptimizer) for handling fastai’s transfer learning functionality.\nWhen creating a Learner the user can pass a splitter. This is a function that describes how to split the\nlayers of a model into PyTorch parameter groups, which can then be frozen, trained with different learning\nrates, or more generally handled differently by an optimizer.\nOne area that we have found particularly sensitive in transfer learning is the handling of\nbatch-normalization layers [ 3]. We tried a wide variety of approaches to training and updating the\nmoving average statistics of those layers, and different conﬁgurations could often change the error rate by\nas much as 300%. There was only one approach that consistently worked well across all datasets that we\ntried, which is to never freeze batch-normalization layers, and never turn off the updating of their moving\naverage statistics. Therefore, by default, Learner will bypass batch-normalization layers when a user asks\nto freeze some parameter groups. Users often report that this one minor tweak dramatically improves\ntheir model accuracy and is not something that is found in any other libraries that we are aware of.\nDataLoaders and Learner also work together to ensure that model weights and input data are all on\nthe same device. This makes working with GPUs signiﬁcantly more straightforward and makes it easy to\nswitch from CPU to GPU as needed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "4.2 Two-way callbacks",
+      "level": 2,
+      "text": "In fastai version 0.7, we repeatedly modiﬁed the training loop in Learner to support many different\ntweaks and customizations. Over time, however, this became unwieldy. We noticed that there was a core\nsubset of functionality that appeared in every one of these tweaks, and that all the other changes that were\nrequired could be refactored into a speciﬁc set of customization points. In other words, a wide variety of\ntraining methods can be represented using a single, universal training system. Once we extracted those\ncommon pieces, we were left with the basic fastai training loop, and the customisation points that we call\ntwo-way callbacks.\nThe Learner class’s novel 2-way callback system allows gradients, data, losses, control ﬂow, and\nanything else to be read and changed at any point during training. There is a rich history of using callbacks\nto allow for customisation of numeric software, and today nearly all modern deep learning libraries\nprovide this functionality. However, fastai’s callback system is the ﬁrst that we are aware of that supports\nthe design principles necessary for complete two-way callbacks:\n• A callback should be available at every single point that code can be run during training, so that a\nuser can customise every single detail of the training method ;\n• Every callback should be able to access every piece of information available at that stage in the\ntraining loop, including hyper-parameters, losses, gradients, input and target data, and so forth ;\nThis is the way callbacks are usually designed, but in addition, there is a key design principle:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "14 of 27",
+      "level": 1,
+      "text": "• Every callback should be able to modify all these pieces of information, at any time before they are\nused, and be able to skip a batch, epoch, training or validation section, or cancel the whole training\nloop.\nThis is why we call these 2-way callbacks, as the information not only ﬂows from the training loop to\nthe callbacks, but on the other way as well. For instance, here is the code for training a single batch b in\nfastai:\nt r y :\nself . _split ( b ) ; self . cb ( ' begin_batch ' )\nself . pred = self . model ( * self . x ) ; self . cb ( ' a f t e r _ p r e d ' )\ni f len ( self . y ) == 0 : return\nself . loss = self . loss_func ( self . pred , * self . y ) ; self . cb ( ' a f t e r _ l o s s ' )\ni f not self . training : return\nself . loss . backward ( ) ; self . cb ( ' a f t e r _ b a c k ' )\nself . opt . step ( ) ; self . cb ( ' a f t e r _ s t e p ' )\nself . opt . zero_grad ( )\nexcept CancelBatchException : self . cb ( ' a f t e r _ c a n c e l ' )\nf i n a l l y : self . cb ( ' a f t e r _ b a t c h ' )\nThis example clearly shows how every step of the process is associated with a callback (the calls to\nself.cb() and shows how exceptions are used as a ﬂexible control ﬂow mechanism for them.\nIn fastai v0.7, we did not follow these three design principles. As a result, we had to frequently change\nthe training loop to support additional functionality, and new research papers. On the other hand, with\nthis new callback system we have not had to change the training loop at all, and have used callbacks to\nimplement mixup augmentation, generative adversarial networks, optimized mixed precision training,\nPyTorch hooks, the learning rate ﬁnder, and many more. Most importantly, we have not yet come across\nany cases where mixing and matching these callbacks has caused any problems. Therefore, users can\nuse all the training features that they want, and can easily do ablation studies, adding, removing, and\nmodifying techniques as needed.\n4.2.1. Case study: generative adversarial network training using callbacks\nA good example of a fastai callback is GANTrainer, which implements training of generative\nadversarial networks [37]. To do so, it must complete the following tasks:\n• Freeze the generator and train the critic for one (or more) step by:\n– getting one batch of \"real\" images ;\n– generating one batch of \"fake\" images;\n– have the critic evaluate each batch and compute a loss function from that, which rewards\npositively the detection of real images and penalizes the fake ones;\n– update the weights of the critic with the gradients of this loss.\n• Freeze the critic and train the generator for one (or more) step by:\n– generating one batch of \"fake\" images;\n– evaluate the critic on it;\n– return a loss that rewards positively the critic thinking those are real images;\n– update the weights of the generator with the gradients of this loss.\nTo do so, it relies on a GANModule that contains the generator and the critic, then delegates the input\nto the proper model depending on the value of a ﬂag gen_mode and on a GANLoss that also has a generator\nor critic behavior and handles the evaluation mentioned earlier. Then, it deﬁnes the following callback\nmethods:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The layered API from fastai"
+    },
+    {
+      "id": "f2",
+      "caption": "A DataLoaders object built with the fastai library knows how to show its elements in a meaningful"
+    },
+    {
+      "id": "f3",
+      "caption": "A Learner knows from the data and the model type how to represent the results. It can even"
+    },
+    {
+      "id": "f4",
+      "caption": "In this case, fastai knows that the data is for a segmentation task, and therefore it color-codes and"
+    },
+    {
+      "id": "f5",
+      "caption": "For a segmentation task, the ground-truth mask is laid at the right of the predicted mask."
+    },
+    {
+      "id": "f6",
+      "caption": "In text classiﬁcation, the batches are shown in a DataFrame with the tokenized texts."
+    },
+    {
+      "id": "f7",
+      "caption": "In text classiﬁcation, results are displayed in a DataFrame with the tokenized texts."
+    },
+    {
+      "id": "f8",
+      "caption": "The hyper-parameters schedule in the 1cycle policy."
+    },
+    {
+      "id": "f9",
+      "caption": "The learning rate ﬁnder does a mock training with an exponentially growing learning rate over"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

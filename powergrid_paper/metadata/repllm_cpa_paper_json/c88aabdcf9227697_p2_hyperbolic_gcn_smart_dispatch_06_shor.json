@@ -1,0 +1,363 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__06__short_term_power_load_forecasting_using_an_improved_model__7b1dda50cf.pdf",
+  "n_pages": 34,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 School of Tourism, Hainan Normal University, Haikou 570228, China",
+      "level": 1,
+      "text": "* Correspondence: lyn08542025@163.com (Y.L.); cchuxin980627@126.com (C.C.)\nAbstract\nImproving the accuracy of power load forecasting is an important link in the optimization of\npower systems. Most of the existing studies in the short-term load forecasting task at present\nhave the problem of insufficient extraction of multi-scale features. Therefore, in order to\nimprove prediction accuracy, this study designs a short-term power load forecasting model\nintegrating multi-scale GCN and the improved Transformer, as well as the prediction\nmethod based on this model. First, multi-feature power load data were collected. Second,\nthe random forest algorithm was used to preprocess the data. Next, multi-scale GCN was\nutilized to model the multi-scale spatio-temporal features in the power load data. The\ndata processed by the multi-scale GCN were input into the improved Transformer module\nbased on MLLA to extract long-term temporal dependencies. Subsequently, comparative\nexperiments and ablation experiments were conducted on three public power datasets. The\nexperimental results show that, compared to the comparative model, for the ETTh1 dataset,\nthe RMSE index of this model decreased by up to 0.314, the MAE decreased by up to 0.304,\nand the R2 index result improved by up to 9.45%. For the ETTm1 dataset, the RMSE index\nof this model decreased by up to 0.266, the MAE decreased by up to 0.231, and the R2 index\nresult improved by up to 3.3%. For the Australian dataset, the RMSE index of this model\ndecreased by up to 494.366, the MAE decreased by up to 493.127, and the R2 index result\nimproved by up to 54%, verifying the superiority and effectiveness of the proposed model.\nKeywords: improved transformer; GCN; short-term power load forecast; multiple features",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Driven by the global wave of sustainable development, China has officially initiated\nthe implementation process of its “dual carbon” strategy, and the energy industry is\nundergoing profound transformation and reform. Against this backdrop, building an\naccurate energy demand forecasting system has become a core supporting element for\nenergy enterprises to optimize the supply structure, achieve efficient resource allocation,\nand control operating costs.\nElectricity, as the central carrier of the modern energy system, has special strategic\nvalue in demand forecasting. Different from other forms of energy, the physical charac-\nteristic of electricity being used immediately upon generation determines the extreme\nimportance of the balance between supply and demand. The dynamic evolution of social\nproduction and living patterns may cause instantaneous fluctuations in electricity demand,\nAppl. Sci. 2025, 15, 7003 https://doi.org/10.3390/app15137003\nAppl. Sci. 2025, 15, 7003 2 of 34\nand this characteristic amplifies the risk of resource waste caused by the mismatch between\nsupply and demand. Establishing a high-precision power load forecasting mechanism is\nbecoming a key approach for power enterprises to solve the problem of resource schedul-\ning: through forward-looking demand analysis, enterprises can formulate more refined\npower generation plans, implement differentiated resource allocation strategies, and es-\ntablish a demand-side response regulation mechanism, ultimately achieving a qualitative\nimprovement in the utilization efficiency of power resources.\nThe construction of this predictive ability is not only related to the operational ef-\nficiency of individual enterprises but will also reshape the value creation model of the\nentire power industry. When precise demand insight is deeply integrated with intelligent\ndispatching technology, the power supply system will have a stronger and flexible adapt-\nability, which can not only meet the dynamic demands of economic and social development\nbut also effectively reduce system redundancy costs, laying an important data foundation\nfor building a new type of power system. Power load forecasting refers to the process\nby which researchers predict the power demand at a certain future time through the use\nof mathematical models. According to the length of the prediction time step, the power\nload forecasting task can be divided into four types [1]: ultra-short-term predictions focus\non time granularities ranging from minutes to hours; short-term predictions are typically\nmade on a daily or weekly basis; medium-term predictions cover time spans from weeks to\nmonths; and long-term predictions are strategic judgments based on an annual basis. This\ntime–domain division system is deeply consistent with the operational characteristics of the\npower system. Compared to the fundamental supporting role of medium-term forecasts\nfor production plans, short-term forecast results directly affect the start-up and shutdown\ndecisions of generating units and the allocation of reserve capacity. In particular, the precise\nanalysis and judgment of short-term predictions have become the key basis for power\ngeneration enterprises to optimize fuel procurement strategies and reduce start–stop losses.\nAt the same time, it also provides important technical support for power grid dispatching\ninstitutions to implement peak-valley regulation and demand response.\nSince power load forecasting was proposed, the academic community has established\na diversified methodological system. Due to the typical multiple uncertainty character-\nistics of the power load sequence, the existing research mainly follows two technical\npaths: traditional statistical models and deep learning architectures [2]. At the traditional\nmethodological level, the Alberg team developed a non-seasonal prediction model and\na sliding window algorithm based on the ARIMA framework, which were successfully\napplied to the power demand prediction scenario [ 3]. Sadaei achieved the fitting and\noptimization of the load curve by improving the ARMA model [4]. Furthermore, several\nresearchers have attempted to use feature selection methods to conduct feature selection on\nmultiple sequences of exogenous variables in order to achieve prediction scenarios [5–7].\nHowever, studies in recent years have shown that due to better fitting of nonlinear fea-\ntures in power load data, modern methods based on deep learning models have more\nadvantages in accuracy when facing the task of power load forecasting. In the early years,\nRNN-series models were even the mainstream models in this task. In various studies of\npower load forecasting based on RNN system models, Vermaak [ 8] and Tang et al. [ 9]\nproposed two different methods for the power load forecasting task based on RNNs. Mao\nproposed a hybrid model for the task of power load forecasting. This model takes LSTM as\nthe main body and introduces integrated strategies such as Bagging and Boosting at the\nsame time [10]. The experimental results show that this method can effectively improve\nthe accuracy of power load forecasting. Sharma et al. developed a new model composed\nof Fitz-Hugh Nagumo(FHN), RNNs, and feedforward neural networks and applied it to\npower load forecasting [11]. The research showed that this model demonstrates excellent\nAppl. Sci. 2025, 15, 7003 3 of 34\nforecasting performance. In recent years, the research focus has shifted to graph neural\nnetworks (GNNs) and Transformer architectures [12–15]. Faisal Saecd et al. attempted to\nintegrate GNNs and Transformer for power load forecasting and achieved good results [16].\nAlthough the abovementioned methods continuously improve the prediction accuracy,\nexisting studies still lack systematic consideration of the multi-scale characteristics of load\ndata. The heterogeneous features presented by exogenous variables and load sequences in\ndifferent time dimensions have not been fully deconstructed, which provides an important\nbreakthrough for subsequent methodological innovation [17,18]. Therefore, in this paper,\nwith the aim of addressing this gap, a multi-scale graph Transformer method is proposed\nfor predicting short-term power load, mainly including the following research content:\n(1) A prediction method for short-term power load forecasting is proposed, including\nthe proposed multi-scale graph Transformer model. The model is composed of a\nmulti-scale graph convolution module and a Transformer mixed together, combining\nthe advantages of the two networks, and can effectively extract the spatio-temporal\nfeatures at different scales and the time dependence between scales.\n(2) The model introduces MLLA. The use of this attention enables the model to maintain\nits computational complexity while further modeling global features and processing\nlong time series data.\n(3) The performance of the method was evaluated through experiments on three datasets.\nCompared to the other methods, the method proposed in this paper shows bet-\nter performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "Power load forecasting essentially involves using data analysis methods to identify the\nkey factors that affect power load and construct models for prediction. Since the emergence\nof the power load forecasting task, a variety of methods have been used for this task.\nThe methods commonly used for power load forecasting in the early days were mainly\ntraditional methods. Due to the limitations of the equipment used for data collection\nand the power supply and demand relationship at that time, there was limited data and\nfew influencing factors. Researchers often used traditional and simple methods, such as\nARMA [19], ARIMA [20], and Exponential Smoothing [21], for prediction. These methods\nare simple to use and have low time complexity. However, with upgrades of data collection\nequipment and the complications related to power relationships, the traditional prediction\nmethods are no longer applicable. Therefore, people have gradually introduced new\nmethods, such as machine learning methods and wavelet transform. Li et al. proposed an\ninnovative power load forecasting method [22]. This method ingeniously utilizes wavelet\ntransform to decompose power data, then builds models for different component data,\nand finally fuses the results to obtain the final forecasting result. This method significantly\nimproves the accuracy of power load forecasting. Ervin made improvements based on the\nsupport vector regression (SVM) model and optimized the model parameters by using the\nPSO method, which also enhanced the prediction effect [23]. The work conducted by Hu\nis similar to that of Ervin [24]. Both used the PSO method to improve the SVM model to\nform a new power load forecasting method. However, the difference is that Hu adopted\nthe memory algorithm of the improved PSO to optimize the parameters of the SVM model.\nThe experimental results prove that this method significantly improves prediction accuracy.\nThe abovementioned methods have undoubtedly made considerable progress or\nperformed well in the field of power load forecasting. However, it is rather difficult\nto achieve precise feature mining and modeling when using them with an increasing\namount of power load data. Therefore, researchers have introduced deep learning methods.\nVermaak et al. and Tang et al. both used Recurrent Neural Networks (RNNs) for power load\nAppl. Sci. 2025, 15, 7003 4 of 34\nforecasting [8,9]. Their experimental results indicated that the use of RNNs could improve\nthe forecasting accuracy. Abunoheen et al. compared the results of various methods, such\nas Long Short-Term Memory (LSTM), Gate Recurrent Unit (GRU), and RNNs in power\nload forecasting, and found that GRU performed the best [25]. L‘Heureux et al. applied\nTransformer to power load forecasting [26]. The experimental results show that this method\nis superior to others. Liu et al. made improvements based on Temporal Convolutional\nNetworks (TCNs) and DenseNet and proposed the Densenet-iTCN model for power load\nforecasting [27]. The experimental results verified that this method was superior to the\nbaseline model. Zhu et al. effectively captured the influence of exogenous factors and\ntime steps on the peak value in power load forecasting by using dual attention [28]. Lin\net al. proposed an attention model that can adaptively select the characteristics of power\nload and explored the influence of time step size [ 29]. Niu et al. added self-attention\nto enhance information transfer based on Convolutional Neural Networks (CNNs) and\nBiGRU, which is helpful for finding the relationships among multiple factors in the power\nload dataset [30].\nThese methods have demonstrated strong performance and achieved good prediction\nresults. However, there are still deficiencies. Due to the failure to consider the internal\ndifferences within different time scales and the external long-term sequence relationships\nin the power load forecasting data, these methods are still not precise enough in the process\nof data learning and modeling. Therefore, this paper presents a power load forecasting\nmethod. This method is composed of MSGNet [ 31] and Transformer [ 32] as the basic\nmodel framework, and MLLA is introduced, making the model’s extraction of multi-scale\nspatio-temporal features of data more accurate, thereby improving the forecasting accuracy.\nThe structure of this article is as follows: Section 1 mainly provides an overview of\nthe research background and briefly summarizes the innovations of the research. Section 2\nsystematically reviews the relevant literature, explores the deficiencies of the existing\nresearch, and outlines the direction for the subsequent research. Section 3 introduces the\nmethod proposed in this paper and the knowledge about the models examined. Section 4\npresents a detailed analysis and interpretation of the results of parameter experiments and\ncomparative tests. Section 5 is the Results and Discussion section, which summarizes the\nconclusions and outlines future research directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Methods",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Preliminary Knowledge",
+      "level": 2,
+      "text": "To elaborate on the method proposed in this paper more clearly, in this section, we\nwill briefly explain the model examined.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1.1 MSGNet",
+      "level": 3,
+      "text": "MSGNet [31] is a multi-scale graph convolutional network proposed by Cai et al.\nin 2023. This model first performs embedding on the data to obtain the timestamp and\nlocation information within the data. Then, the embedded data are sent into the scale graph\nblock. First, the FFT operation is carried out to find the frequency of the data and confirm\nthe scale number. Then, corresponding spatio-temporal models are constructed for each\nscale to model the spatio-temporal characteristics of the data at each scale. The model also\nuses multi-head attention to learn the long-term dependencies between different scales.\nFinally, the data enter the prediction layer to output the final result. In the model, the\nformulas for confirming the scale and constructing the spatio-temporal graph are as follows,\nrespectively [31]:\nF = Avg(Amp (FFT (Xemb ))) (1)\nAppl. Sci. 2025, 15, 7003 5 of 34\nf1, . . . ,fk = argTopk f∗∈{1,..., L\n2 }(F), si = L\nfi\n(2)\nAi = So f tmax\n\u0012\nReLu\n\u0012\nEi\n1\n\u0010\nEi\n2\n\u0011T\u0013\u0013\n(3)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1.2 MLLA",
+      "level": 3,
+      "text": "Mamba-Like Linear Attention [33] (s a lightweight attention improvement mechanism\ninspired by the State Space Model (SSM) [34]. Its core idea is to combine selective state scan-\nning with linear attention calculation, significantly reducing the computational complexity\nwhile maintaining global modeling capabilities. This mechanism integrates the structural\ndesign of the Mamba block into the LA block of linear attention, reducing the complexity\nfrom quadratic to linear ((O(N))). Its advantage lies in maintaining the linear computational\ncomplexity while improving the global modeling ability and reasoning speed of the model.\nThe structure of MLLA is shown in Figure 1.\n \n \n \n \nFigure 1. MLLA structure.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1.3 Transformer",
+      "level": 3,
+      "text": "Transformer [32] was first proposed by Google’s research team in 2017; since then,\nmultiple variants, including Bert [ 35], Informer [ 36], and Reformer [ 37], have been de-\nveloped. Its architecture is entirely based on the self-attention mechanism, completely\nchanging the paradigm where traditional sequence modeling relies on RNNs or CNNs.\nIts core structure is composed of a stack of encoders and decoders. The encoder contains\nmulti-layer and multi-head attention modules and a feedforward layer, and it captures\nthe global dependencies of the input sequence through parallel computing. The decoder\nintroduces masked multi-head attention on the basis of the encoder to ensure that predic-\ntions rely only on known information. Each module adopts Residual Connection and Layer\nAppl. Sci. 2025, 15, 7003 6 of 34\nNormalization to optimize the training stability. Among them, the calculation formula of\nmulti-head attention is as follows [32]:\nAttention (Q, K, V) =So f tmax( QKT\n√dk\n)V (4)\nhead i = Attention\n\u0010\nXW Q\ni , XW K\ni , XW V\ni\n\u0011\n(5)\nMultihead (X) = Concact (head 1, . . . ,head h)WO (6)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.2 MSGNet-MLLA-T ransformer",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.2.1 Problem Formulation",
+      "level": 3,
+      "text": "This paper focuses on short-term power load forecasting. As a subtask of multivariate\ntime series forecasting, this problem can be described as follows: Let Xi\nt represent the state\nof the i-th influence sequence of power load at the t-th time step. Then, Xi =\n\b\nXi\n1, . . . , Xi\nT\n\t\nrepresents the data of the i-th influence sequence at all historical moments, and T is the\nhistorical time length. X =\n\b\nX1, . . . , Xn\t\nrepresents all the sequences affected by the\npower load, and n is the number of sequences. If the future values of the power load target\nsequence Y are predicted by using the model through the sliding time window of size\nw, then ˆY(t+1:t+l) = f\n\u0010\nX(t−w+1:t), Y(t−w+1:t); θ\n\u0011\n, where θ is the learnable parameter of the\nmodel, t is the observation moment, l is the prediction step size, X(t−w+1:t) and Y(t−w+1:t)\nare the historical moment influence sequence and target sequence data intercepted by the\nsliding time window, respectively, andf is the model examined in this paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2.2 Method Framework",
+      "level": 3,
+      "text": "The process of the prediction method proposed in this paper is shown in Figure 2.\nSpecifically, this method consists of ten steps.\nStep 1. Data collection. Collect weather data and power data in hourly or daily time\nunits to form a power load dataset.\nStep 2. Preprocess the collected data, which specifically includes handling missing\nvalues, feature selection, normalization, etc.\nStep 3. Data embedding. Perform timestamp and position embedding on the prepro-\ncessed data to extract the information within it.\nStep 4. Use the fast Fourier operation to determine the scale information in the data.\nThis step is achieved through Formulas (1) and (2).\nStep 5. Construct multi-scale spatio-temporal graphs: Based on the scales determined\nin Step 4, a spatio-temporal graph is constructed for each scale according to Formula (3),\nthereby modeling the data structure within different scales of the data.\nStep 6. Construct the MLLA-Transformer encoding layer: To model the long-term\nsequence dependency relationships existing among data at different scales, the MLLA-\nTransformer encoding layer is constructed. The specific structure is, in sequence, the multi-\nhead MLLA layer, the normalization layer, the feedforward layer, and the normalization\nlayer. Among them, the multi-head MLLA layer is used to learn the internal relationships\nwithin long sequences between data scales.\nStep 7. Construct the MLLA-Transformer decoding layer. The specific structure is as\nfollows: masked multi-head MLLA layer, normalization layer, multi-head MLLA attention\nlayer, normalization layer, feedforward layer, and normalization layer. The use of multi-\nhead MLLA helps the model extract the deep global information in the data and calculate\nthe similarity within the sequence without increasing the computational consumption.\nStep 8. The amplitudes corresponding to each scale obtained by the FFT are output\nafter being processed by the Softmax layer. They are multiplied pairwise by the outputs\nAppl. Sci. 2025, 15, 7003 7 of 34\nthat have passed through the corresponding multi-scale Transformers to obtain the final\nmodel result. The specific formula is as follows:\nOut = ∑\nk\ni=1 So f tmax Ffi\nTrans f ormeri\nout (7)\nIn the formula, Trans f ormeri\nout represents the Transformer output corresponding to\nthe i-th scale, and Ffi determines the amplitude corresponding to scale i, which is calculated\nby Formulas (1) and (2).\nStep 9. The model is trained and iterated N times, and the training results are verified\nand evaluated.\nStep 10. Test the model and output the final result.\nFigure 2. MSGNet-MLLA-Transformer method flow.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4 Analysis of Experimental Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.1 Data Source",
+      "level": 2,
+      "text": "A total of three datasets were used in the experiments of this paper, namely, the ETTh1\nand ETTm1 sub-datasets of the ETT dataset and the public power load dataset of a certain\nregion in Australia.\nETT Dataset (https://github.com/zhouhaoyi/ETDataset, accessed on 1 April 2025):\nThis dataset was collected from a certain area in Xinjiang, China, with a time period\nspanning from July 2016 to July 2018, and contains information such as power load and\noil temperature. There are two time granularity levels for sub-datasets in the dataset:\nhourly ETTh1 and ETTh2 and minute-level ETTm1 and ETTm2. The hourly sub-datasets\nall contain 17,420 pieces of data, while the minute-level sub-datasets contain 69,680 pieces\nof data. In this study, we selected ETTh1 and ETTm1 as the experimental datasets.\nAppl. Sci. 2025, 15, 7003 8 of 34\nAustralian Electricity Load Dataset (https://gitcode.com/qq_42998340/Australia,\naccessed on 1 April 2025): This dataset contains the electricity load of a certain region in\nAustralia. It contains six variable sequences (dry bulb temperature, dew point temperature,\nwet bulb temperature, temperature, electricity price, and electricity load). The time span of\nthis dataset is from 1 January 2006 to 1 January 2011. It is recorded once every 0.5 h, and\nthere are a total of 87,648 pieces of data.\nFor the three datasets in this paper, the training set, validation set, and test set are\ndivided in a ratio of 7:1:2.\nTable 1 presents each data source, including the prediction targets and the specific\ndivision of the dataset.\nTable 1. Dataset description.\nDataset Prediction Target Dataset Division (Training\nSet:Validation Set:Test Set)\nETTh1 OT 12,194:1742:3484\nETTm1 OT 48,776:6968:13,936\nAustralian Electricity Load Electricity Load 61,354:8765:17,529",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.2 Data Preprocessing",
+      "level": 2,
+      "text": "Before making predictions, it is necessary to preprocess the data first, which is helpful\nto improve the prediction performance. The commonly used data preprocessing steps\nmainly include missing value filling and data normalization processing. Since the MLLA\nin the method proposed in this paper can only accept the input of an even number of\nsequences, it is also necessary to perform feature selection and dimension reduction pro-\ncessing on the dataset containing an odd number of sequences.\nSince there are no missing data in the three datasets in this study, the data preprocess-\ning in this paper includes two steps: dimension reduction and normalization for datasets\ncontaining an odd number of sequences. In order to reduce the dimension of the data, the\nrandom forest method is adopted in this paper. The essence of the random forest method is\nto integrate decision trees for dimensionality reduction, calculate the correlation of data by\nusing the out-of-bag (OOB) error, and sort and filter the sequences [38].\nSpecifically, a decision tree is generated first to select the input sequence and the\nsegmentation points on the sequence. Therefore, the space containing the input sequence\ncan be divided into two regions by the selected sequence and the segmentation points\non the sequence. When the features are discrete, the two regions can be obtained by the\nfollowing formula: (\nK1(s, p) = {xm|xs\nm = p}\nK2(s, p) = {xm|xs\nm ̸= p} (8)\nWhen the features are continuous, the two regions can be obtained by the following formula:\n(\nK1(s, p) = {xm|xs\nm ≤ p}\nK2(s, p) = {xm|xs\nm ≥ p} (9)\nIn the above formulas, K1 and K2 represent the two regions obtained through division,\ns is the selected feature sequence, and p is the segmentation point.\nThe operation of dividing the area is achieved through the following formula:\nmin(s,p)[mind1 ∑\nxi∈K1(s,p)\n(yi − d1)2 + mind2 ∑\nxi∈K2(s,p)\n(yi − d2)2] (10)\nAppl. Sci. 2025, 15, 7003 9 of 34\nIn the formula, d1 and d2 are the predicted values of the data in the two regions.\nNext, the above operation is repeated for the divided areas until the value of the\nformula no longer continues to decrease, and then, the decision tree can be obtained.\nTherefore, the operation steps of feature selection by the random forest algorithm\nintegrated from decision trees are as follows:\n1. Calculate the importance of each sequence and sort them in descending order.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2 Determine the elimination ratio each time and perform elimination based on the",
+      "level": 1,
+      "text": "sequence importance calculated in step 1 to obtain a new sequence dataset.\n3. Repeat the above steps for the new set until only the number of feature sequences that\nhave been pre-imagined remains.\nSince both the ETTh1 and ETTm1 datasets contain an odd number of sequences,\nwe performed dimensionality reduction selection on the exogenous variable sequences,\ntransforming the odd-number sequence dataset into an even-number sequence dataset.\nThe sequences obtained from the ETTh1 and ETTm1 datasets after random forest\ndimensionality reduction are shown in Figure 3.\n \n(a) ( b) \n \n \n \n \n \n \nFigure 3. Sequences left after random forest feature selection processing based on the ETTh1 and\nETTm1 datasets, listed as (a) ETTh1 and (b) ETTm1.\nAs shown in Figure 3, among the six exogenous variables in the ETTh1 dataset,\nwe screened out the five exogenous variables that are of the highest importance for the\nprediction of the target sequence. Their ranking based on importance, from high to low, is\nHULL, MULL, LUFL, MUFL, and HUFL. Among the six exogenous variables in the ETTm1\ndataset, the five most important ones that were screened out, in sequence, are MUFL, HUFL,\nLUFL, HULL, and MULL. After feature screening, both the ETTh1 and ETTm1 datasets\ncontained 5 exogenous variables and 1 target variable, which can be further processed\nusing MLLA.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3 Experimental Setup",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.3.1 Baseline",
+      "level": 3,
+      "text": "To verify the superiority and effectiveness of the proposed method, we set up a com-\nparative experiment and selected four methods, namely, ARIMA, GRU [ 39], TCN [ 40],\nGRU-Attention [41], TCN-Attention [42], MSGNet [31], and MrCAN [43]. GRU is a multi-\nvariate time series prediction method proposed by Becerra-rico in 2020. It is a variant of\nRNNs and makes predictions by extracting the time features of time series. The TCN is a\ntemporal convolutional network. The dilated causal convolution in its structure can deal\nwith the scale changes of the sequence while extracting the temporal features of the time\nseries. The GRU-Attention model is a deep learning framework that integrates GRU and the\nAppl. Sci. 2025, 15, 7003 10 of 34\nattention mechanism (attention). Compared to the traditional GRU model, GRU-Attention\ncan not only capture local temporal patterns but also establish global dependencies. The\nTCN-Attention model integrates TCNs and the attention mechanism. It captures the tem-\nporal characteristics of sequence data through TCNs and then dynamically focuses on\nthe key information using the attention mechanism. MSGNet is a multi-scale prediction\nmethod. It uses FFT to process sequence data to extract frequency and determine scalek and\nconstructs spatio-temporal graph each scale to extract multi-scale spatio-temporal features.\nMrCAN utilizes the small sample learning module and the spatio-temporal relationship\nlearning module to learn the relationships among sample data and the temporal and spatial\nrelationships within the same sample.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.3.2 Loss Function",
+      "level": 3,
+      "text": "This paper selects MSE as the loss function, and its formula is as follows:\nMSE = 1\nm\nm\n∑\nt=1\n\u0010\nyt − ˆyt)2 (11)\nIn order to evaluate the experimental results, RMSE, MAE, and R2 are adopted as\nthe experimental evaluation indicators in this paper. The specific calculation methods are\nas follows.\nRMSE =\ns\n1\nm\nm\n∑\nt=1\n(yt − ˆyt)2 (12)\nMAE = 1\nm ∑\nm\nt=1|yt − ˆyt| (13)\nR2 = 1 − ∑t\n\u0000\nyt − ˆyt)2\n∑\nt\n(yt − yt)2 (14)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.3.3 Experimental Platform",
+      "level": 3,
+      "text": "This experiment was carried out using the PyTorch 1.13.1 library of the Python 3.9.18\nplatform. A laptop with an Intel i5 core processor, 16 GB of memory, and an NVIDIA\nRTX4060 graphics card was used as the experimental equipment.\nFor the model in this paper, the parameter settings for the load forecasting are shown\nin Table 2.\nTable 2. Model parameter settings.\nParameters Values\nLearning rate 0.001\nBatch size 128\nOptimizer Adam [44]\nEpochs 200\nDropout 0.2",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.4 Sliding Time Window Size Experiment",
+      "level": 2,
+      "text": "The size of the sliding time window is a variable parameter and has a significant\nimpact on the predictive performance of the model. Therefore, in order to obtain a better\nprediction effect, we set up the sliding time window size experiment. The size of the time\nwindow was increased successively according to the values of 6, 9, 12, 18, 24, 30, and 42.\nSingle-step prediction was conducted on the three datasets, and the changing trend of the\nresults was observed to find the optimal sliding window size.\nAppl. Sci. 2025, 15, 7003 11 of 34\nFigure 4 shows the influence of the sliding time window size on the model’s prediction\nperformance based on different datasets. For the ETTh1 dataset (Figure 4a), RMSE and MAE\nreach their lowest values when the window size is 12, while R2 reaches its highest value,\nindicating that 12 is the best prediction window. For the ETTm1 dataset (Figure 4b), RMSE\nand MAE are the lowest when the window size is 18, and R2 is the highest. It is determined\nthat 18 is the optimal window. For the Australian power load dataset (Figure 4c), RMSE\nand MAE are the lowest when the window size is 24, while R2 is the highest. Therefore,\n24 is selected as the best prediction window size. Overall, the optimal prediction window\nsizes corresponding to each dataset are 12, 18, and 24, respectively.\n  \n(a) (b) \n \n(c) \n \n \n \n \n \n \n \n \n \n \n \n \n6 9 12 18 24 30 42\n0.91\n0.92\n0.93\n0.94\n0.95\n0.96\n0.97\n R²\n RMSE\n MAE\nWindowsize\n0.65\n0.70\n0.75\n0.80\n0.85\n0.90\n0.95\n1.00\n1.05\n1.10\n0.45\n0.50\n0.55\n0.60\n0.65\n0.70\n0.75\n0.80\n0.85\n6 9 12 18 24 30 42\n0.955\n0.960\n0.965\n0.970\n0.975\n0.980\n R²\n RMSE\n MAE\nWindowsize\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.20\n0.25\n0.30\n0.35\n0.40\n0.45\n0.50\n0.55\n0.60\n0.65\n6 9 12 18 24 30 42\n0.960\n0.965\n0.970\n0.975\n0.980\n0.985\n R²\n RMSE\n MAE\nWindowsize\n100\n110\n120\n130\n140\n150\n160\n170\n180\n190\n80\n90\n100\n110\n120\n130\n140\n150\n160\nFigure 4. Plot of time window metrics results on three datasets, listed as (a) ETTh1, (b) ETTm1, and\n(c) Australian electricity load.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.5 Comparative Experiment",
+      "level": 2,
+      "text": "The goal of the comparative experiment was to verify the superiority and effectiveness\nof the proposed method. In this paper, we set up comparative experiments using three\ndatasets to verify and analyze the superiority and effectiveness of the proposed MSGNet-\nMLLA-Transformer method. Regarding the presentation of the results, since the test sets\nof the three datasets have a large amount of predicted data, the overall image cannot\nintuitively show the performance differences of each model. Therefore, we chose the\ninterval with more intuitive differences for the presentation of the results.\nThe visualization results of the target sequences of the three datasets are shown in\nFigure 5. From Figure 5, we can see that the target sequences of the three datasets have\ndifferent degrees of periodicity, and the periodicity is most obvious in the target sequence\nof the Australian electricity load dataset.\nAppl. Sci. 2025, 15, 7003 12 of 34\n \n(a) ( b) \n \n(c) \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 5. Visualization of the target sequences of the three datasets, listed as (a) ETTh1; (b) ETTm1;\nand (c) Australian electricity load.\nIn the experiments conducted below, in terms of the presentation of the results, since\nthe test sets of the three datasets have a large amount of predicted data, the overall images\ncannot intuitively show the performance differences of each model. Therefore, we chose\nthe intervals with more intuitive differences for the presentation of the results.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.5.1 ETTh1 Dataset Experiment",
+      "level": 3,
+      "text": "Table 3 shows the performance comparison of RMSE, MAE, and R2 between MSGNet-\nMLLA-Transformer and mainstream models under different prediction step sizes (1, 3,\n6, and 12 steps) in the ETTh1 dataset. The experimental data show that the model in\nthis paper has systematic advantages in all prediction scenarios. Its RMSE is, on average,\napproximately 0.04 lower than the optimal benchmark, and its R2 is, on average, 1.0% higher.\nThe ranking of model performance is as follows: Ours > MrCAN > MSGNet > GRU/TCN\n(GRU has the weakest performance) > ARIMA, and the visualization results in Figures 6–9\nfurther verify this ranking. In the visualization of the results, we present the models other\nthan ARIMA, which have relatively small differences. This advantage stems from the\nfact that MSGNet-MLLA-Transformer can collaboratively achieve multi-scale parsing and\nlong-term dependency capture of spatio-temporal features. In contrast, although MrCAN is\ngood at spatio-temporal joint learning and sample relationship modeling, the insufficiency\nof multi-scale decomposition leads to error accumulation. The MSGNet prototype has\nadvantages in spatial multi-scale feature extraction but is limited by the bottlenecks of\nsample relationship modeling and long-term dependency capture. However, traditional\nmodels such as GRU and TCN have obvious disadvantages in scenarios with strong spatio-\ntemporal coupling due to the lack of effective spatial feature extraction and cross-sample\nrelationship modeling capabilities (the performance is improved after adding the attention\nmechanism). These findings not only verify the necessity of multi-dimensional feature\njoint modeling for power prediction but also highlight the importance of collaborative\noptimization in dimensions such as spatio-temporal feature decoupling, long-term and\nshort-term dependency balance, and sample relationship mining.\nAppl. Sci. 2025, 15, 7003 13 of 34\nTable 3. RMSE, MAE, and R2 evaluation metrics of the ETTh1 dataset.\nMetrics Method\nPredicted Length\n1 3 6 12\nRMSE\nARIMA 1.900 2.418 2.732 3.348\nGRU 0.942 1.107 1.266 1.702\nTCN 0.806 1.206 1.511 1.968\nGRU-Attention 0.852 0.915 1.239 1.671\nTCN-Attention 0.730 1.015 1.313 1.736\nMrCAN 0.705 1.002 1.283 1.688\nMSGNet 0.741 0.931 1.210 1.662\nOurs 0.664 0.904 1.197 1.656\nMAE\nARIMA 1.691 2.112 2.493 3.016\nGRU 0.772 0.745 0.940 1.311\nTCN 0.601 0.946 1.143 1.542\nGRU-Attention 0.668 0.664 0.913 1.272\nTCN-Attention 0.517 0.758 1.031 1.383\nMrCAN 0.510 0.746 0.974 1.312\nMSGNet 0.559 0.677 0.887 1.263\nOurs 0.481 0.642 0.863 1.262\nR2\nARIMA 0.731 0.683 0.554 0.328\nGRU 0.925 0.913 0.865 0.756\nTCN 0.945 0.877 0.807 0.675\nGRU-Attention 0.939 0.929 0.871 0.767\nTCN-Attention 0.951 0.913 0.855 0.746\nMrCAN 0.958 0.915 0.861 0.760\nMSGNet 0.953 0.927 0.876 0.768\nOurs 0.963 0.931 0.880 0.769\n \n(a) ( b) \n \n(c) ( d) \nFigure 6. Cont.\nAppl. Sci. 2025, 15, 7003 14 of 34\n \n(e) ( f) \n(g) \n \n \nFigure 6. Comparison chart fitting the 1-step prediction experimental model of the ETTh1 dataset, listed\nas (a) GRU; (b) TCN; (c) GRU-Attention; (d) TCN-Attention; (e) MrCAN; (f) MSGNet; and (g) Ours.\n  \n(a) ( b) \n \n(c) ( d) \nFigure 7. Cont.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "MLLA structure."
+    },
+    {
+      "id": "f2",
+      "caption": "MSGNet-MLLA-Transformer method flow."
+    },
+    {
+      "id": "f3",
+      "caption": "Sequences left after random forest feature selection processing based on the ETTh1 and"
+    },
+    {
+      "id": "f4",
+      "caption": "shows the influence of the sliding time window size on the model’s prediction"
+    },
+    {
+      "id": "f5",
+      "caption": "From Figure 5, we can see that the target sequences of the three datasets have"
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison chart fitting the 1-step prediction experimental model of the ETTh1 dataset, listed"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "presents each data source, including the prediction targets and the specific"
+    },
+    {
+      "id": "t2",
+      "caption": "Model parameter settings."
+    },
+    {
+      "id": "t3",
+      "caption": "shows the performance comparison of RMSE, MAE, and R2 between MSGNet-"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

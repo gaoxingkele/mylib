@@ -1,0 +1,289 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/springer-discover-computing/springer-discover-computing__2026__common_tf_idf_variants_arise_as_key_components_in_the_t__d8e5af369d.pdf",
+  "n_pages": 29,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Term Frequency-Inverse Document Frequency (TF-IDF) is a classical term-weighting \nscheme that has become widespread in information retrieval and text analysis. It quanti-\nfies the extent to which a given term of interest stands out in any one given document \nout of many. Specifically, TF-IDF assigns each term in a document a weight equal to its \nraw frequency in that document multiplied by the negative logarithm of the proportion \nof documents in which the term occurs. The higher a term’s TF-IDF score in a docu -\nment, the better it may be considered to characterize the document’s content.\nWhile TF-IDF was initially conceived as a heuristic, considerable progress has been \nmade over the years in establishing theoretical foundations for its use, though most jus -\ntifications are oriented toward the information retrieval community [see 1–7]. In recent \nwork, however, Sheridan  et  al.  [8] took first steps to explicitly motivate TF-IDF from \na statistical perspective. But justifications aimed at the statistical community remain \nnascent. In this paper we build on this emerging line of research to fill that gap by \nPage 2 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nshowing how common TF-IDF variants arise as key components in the test statistic of \na penalized likelihood-ratio (PLR) testing framework comparing two statistical models \nof language, one of which explicitly captures a fundamental property of natural language \ncalled word burstiness.\nIn the context of a collection of textual documents, word burstiness, also known as \nword over-dispersion, refers to the tendency of certain words to appear in concentrated \nrepetitions within few documents rather than being independently scattered across \nall collection documents  [see 9, p. 284]. For instance, in a collection of news articles, \nsuch terms as “vote” and “candidate” are liable to appear repeatedly within the subset of \narticles pertaining to elections. This phenomenon violates the assumptions of the multi -\nnomial statistical model of language that is traditionally used in bag-of-words represen -\ntations of document collections.\nMadsen  et  al.  [10] addressed this shortcoming by modeling word burstiness using a \nfamily of Dirichlet-multinomial distributions to represent a collection of documents. \nElkan  [5] subsequently showed that TF-IDF-like components emerge from the Fisher \nkernel of this model. This marked a significant theoretical advance, establishing a formal \nconnection between TF-IDF and a statistical language model sophisticated enough to \naccount for the word burstiness phenomenon. In the process, Elkan elegantly resolved \nwhat we dub the Event Space Problem of Information Retrieval , as articulated by Rob -\nertson [ 11, 12], which encompasses the difficulty of treating TF-IDF within a probabi -\nlistic framework due to a mismatch in the event spaces of its TF and IDF components. \nNamely, the TF component is defined over the sample space of a single document, \nwhile the IDF component is defined over the sample space of documents in the entire \ncollection.\nSheridan et al. [ 8] showed how TF-IDF emerges from Fisher’s exact test of statistical \nsignificance under restrictive assumptions that enforce a contrived form of word bursti -\nness. They did not, however, model this phenomenon outright. Here, we pick up where \nSheridan et al. [8] left off by modeling word burstiness within a hypothesis testing frame-\nwork. In particular, we propose a PLR test statistic for quantifying word burstiness that \ncompares a binomial null model with a penalized beta-binomial alternative. The bino -\nmial null model, by definition, fails to account for word burstiness. In contrast, the beta-\nbinomial model, which is a special case of the Dirichlet-multinomial model, accounts \nfor word burstiness by accommodating for variability in term occurrences across docu -\nments. The likelihood ratio is penalized through the incorporation of a gamma-dis -\ntributed penalty term that breaks a ridge present in the unpenalized alternative model. \nNotably, in part by exploiting the very same resolution to the Event Space Problem as in \nElkan [5], we show that two common TF-IDF variants, BTF-IDF and TF-ICF, emerge as \nkey components of the resulting PLR test statistic.\nWe emphasize that our PLR construction does not constitute a test in the classical sta-\ntistical sense, as we do not advance a procedure for computing corresponding p-values. \nRather, our focus lies squarely on establishing a theoretical link between the resulting \ntest statistic and TF-IDF-like term-weightings.\nIn a simulated example, we found PLR test statistic scores to be strongly correlated \nwith the sum of TF-IDF weights across documents ( r =0 .9269). T erms with higher TF-\nIDF scores tended to have larger values of the test statistic. Buoyed by this finding, we \npropose a term-weighting scheme that is motivated by the PLR test statistic. In real data \nPage 3 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \ndocument classification tasks, we found that the proposed term-weighting scheme per -\nformed comparably to TF-IDF. On the 20 Newsgroups dataset [ 13], the proposed term-\nweighting scheme achieved an overall accuracy of 0.80, versus 0.81 for TF-IDF. Likewise, \non the R8 dataset [14], a subset of the Reuters-21578 text categorization collection [ 15], \nthe proposed term-weighting scheme performed comparably to TF-IDF, with both \nachieving  0.94 overall accuracy. Although TF-IDF did noticeably outperform the pro -\nposed scheme on highly imbalanced minority classes.\nThe primary contribution of this paper is to extend emerging theoretical justifica -\ntions for TF-IDF that are grounded in statistical hypothesis testing [See 8, 16]. In par -\nticular, we leveraged the Event Space Problem solution of Elkan [ 5] to demonstrate that \ntwo common TF-IDF variants emerge naturally as components of a PLR test statistic \nfor word burstiness, providing a direct connection between TF-IDF-like term-weight -\ning schemes and statistical hypothesis testing. This contribution is distinct from that \nof Elkan [ 5], who shows that the Fisher kernel associated with a Dirichlet-multinomial \nmodel of text yields TF-like and IDF-like components. In contrast, our framework yields \nTF-IDF variants as key components of a PLR test statistic. In addition, we demonstrate \nthat the term-weighting scheme given rise to by this test statistic performs comparably \nto TF-IDF in text classification settings. It is our aspiration that this work will inspire \nfuture investigations into the theoretical foundations of term-weighting schemes within \nthe hypothesis testing paradigm.\nThe remainder of the paper is organized as six sections. Section 2 provides preliminary \nbackground information. In Sect.  2.1 we introduce the notation for the bag-of-words \nmodel we use throughout the paper to model collections of documents. Section  2.2 \ndiscusses term-weighting schemes. Three members of the TF-IDF family are defined, \nnamely, TF-IDF, BTF-IDF, and TF-ICF. Section  2.3 introduces the Dirichlet-multino -\nmial statistical model of language. Outlined is the Dirichlet-multinomial framework for \nmodeling document collections and the associated term-generation process. Section  2.4 \nintroduces the beta-binomial statistical model of language as a special case of the Dirich-\nlet-multinomial model. Furthermore, we demonstrate the effect of changing the preci -\nsion parameter on the distribution of term counts within documents. In  Sect.  2.5 we \ndiscuss the Event Space Problem of Information Retrieval. Section  3 reviews prior work \non modeling word burstiness using the Dirichlet-multinomial model, and justifications \nof TF-IDF rooted in word burstiness-aware models. Section  3.1 outlines the key devel -\nopments in the Dirichlet-multinomial model of language. Section  3.2 presents existing \njustifications for TF-IDF using models that capture the word burstiness phenomenon. \nSec",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Background",
+      "level": 1,
+      "text": "This section establishes the notation used throughout the paper, defines TF-IDF and \nrelated term-weighting schemes, identifies a key complication in developing a probabi -\nlistic interpretation of TF-IDF, and presents the beta-binomial statistical language model \nfor document collections.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Bag-of-words modeling framework",
+      "level": 2,
+      "text": "Table 1 summarizes the bag-of-words model notation we use for representing a col -\nlection of d> 0 documents (denoted d1, ..., dd), each composed from a vocabulary \nof m> 0 distinct terms (denoted t1, ..., tm). Documents are treated as multisets of \ntheir constituent terms, meaning that term order is disregarded. Each document dj  \n(1 ≤ j ≤ d) is associated with a term frequency vector nj =( nij )m\ni=1, where nij ≥ 0 \nTable 1 Notation for the bag-of-words model representation of a collection of documents\nSymbol / expr. Name (Abbr.) Description\nC Collection Generic symbol for a collection of d> 0 documents com-\nposed of m> 0 distinct terms\nd> 0 Collection size Number of documents in the collection\nm> 0 Vocabulary size Number of distinct terms out of which collection docu-\nments are composed\nti (1 ≤ i ≤ m) i’th term Generic symbol for the i’th term in the vocabulary\ndj  (1 ≤ j ≤ d) j’th document Generic symbol for the j’th document in the collection\nbij Binary term frequency (BTF) Indicator function defined as 1 if the i’th term occurs in the \nj’th document, and 0 otherwise\nnij Term frequency (TF) Number of occurrences of the i’th term in the j’th document\nbi =\n∑d\nj=1 bij Document frequency Number of documents containing the i’th term\nbi/d Document proportion Proportion of documents containing the i’th term\nlog(d/bi) Inverse document frequency \n(IDF)\nNatural logarithm of the inverse document proportion d/bi\nni =\n∑d\nj=1 nij Collection frequency Number of occurrences of the i’th term in the collection\nni/n Collection proportion Proportion of occurrences of the i’th term in the collection\nlog(n/ni) Inverse collection frequency \n(ICF)\nNatural logarithm of the inverse collection proportion n/ni\nri N/A Shorthand for ni − bi +1\nnj =\n∑m\ni=1 nij Document length Total number of terms in the j’th document\nnj =( nij )m\ni=1 N/A Term frequency vector for the j’th document\nn =\n∑d\nj=1 nj Total collection frequency Total number of terms in the collection",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "Target-complement docu-",
+      "level": 1,
+      "text": "ment collection\nRepresentation of a collection C of d> 0 documents with \nthe vocabulary collapsed into two terms: the target ti and \nits complement t¬i\nPage 5 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nindicates the count of term ti in document  dj . In the paper, we use d1, ..., dd as generic \nsymbols denoting the documents themselves and  nj  for the term frequency vector rep -\nresentation of dj .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 TF-IDF and related term-weighting schemes",
+      "level": 2,
+      "text": "A term-weighting scheme is any function that assigns a nonnegative, real-valued weight \nto each term-document pair within a collection. The weight of a term in a document is \nmeant to quantify the term’s importance in characterizing the document’s content rela -\ntive to the collection as a whole. Term-weighting schemes have traditionally been a fun -\ndamental component of text analysis methods used for performing such tasks as text \nclassification, document retrieval, and topic modeling.\nTF-IDF is a long-established term-weighting scheme with a storied history  [see 17]. \nFormulated by Salton and Yang [18], TF-IDF is defined as the product of two factors\n TF − IDF (i, j)\ndef\n= nij log(d/bi), (1)\nwhere bi is the document frequency as defined in Table 1. Note that log x, here and else-\nwhere in paper, denotes the natural logarithm of a positive real number, x. The term fre-\nquency factor nij  quantifies the importance of the i’th term in the j’th document. The \ninverse document frequency term log(d/bi) downweights the i’th term according to \nhow frequently it appears across the documents in the collection. Terms with high TF-\nIDF scores appear frequently in a given document but infrequently across the collec -\ntion, making such terms effective for distinguishing that document from others in the \ncollection.\nTF-IDF is famously the template for numerous variants  [see 19, 20], two of which \nare particularly relevant to the present work. The first is a simple variation on TF-IDF \nknown as binary term frequency-inverse document frequency  (BTF-IDF), and is defined \nas\n BTF-IDF(i, j)\ndef\n= bij log(d/bi). (2)\nThe only change from TF-IDF is that the term frequency nij  is swapped out for the \nindicator variable bij , which, as we have seen in Table  1, accounts for the presence or \nabsence of the i’th term in the j’th document. BTF-IDF is found among the various term-\nweighting schemes evaluated by Salton and Buckley [ 21] in their highly influential study \nof document retrieval methods. The second is the term frequency-inverse collection fre -\nquency (TF-ICF), introduced by Kwok [22], and defined as\n TF-ICF(i, j)\ndef\n= nij log(n/ni). (3)\nThe ICF factor, also traceable to Kwok [22], is an IDF cousin that characterizes term rar -\nity across the entire collection without taking into account how terms are distributed \nacross individual documents.\nIn recent years, word embeddings have largely supplanted traditional term-weight -\ning schemes in text analysis by providing dense, low-dimensional representations that \ncapture semantic similarity and contextual usage  [see 23]. Word embeddings, which \nare trained on large textual corpora, have become foundational in state-of-the-art \nneural network models for such standard tasks such as text classification, translation, \nPage 6 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nand question answering. However, TF-IDF family term-weighting schemes remain \nfar from obsolete. They continue to offer interpretable, efficient, and effective base -\nlines. This is particularly the case in resource-constrained settings, classical informa -\ntion retrieval, and scenarios where transparency and simplicity are desired over model \ncomplexity [see 24].\n2.3 Modeling word burstiness with the Dirichlet-multinomial statistical model of language\nThe Dirichlet-multinomial distribution is a family of discrete distributions that arise \nnaturally in Bayesian modeling of overdispersed multinomial processes. In the context \nof language modeling, Madsen et al. [ 10] proposed the Dirichlet-multinomial statistical \nmodel of language which captures the word burstiness phenomenon.\nConsider a collection, C, of d documents composed from a vocabulary of m terms. \nUnder the Dirichlet-multinomial model, each document dj  ( 1 ≤ j ≤ d) is modeled \naccording to a Dirichlet-multinomial distribution with nj  trials, and vector of posi -\ntive concentration parameters α =( α1,...,α m) that is held in common by all docu -\nments. In this model, the multinomial parameter vector of term proportions for each \ndocument dj  is drawn as Θj ∼ Dir(α), and realized as  θj =( θ1j ,...,θ mj ). Given  θj\n, term frequencies are generated according to N j ∼ Mult(nj , θj ) with N j  realized as \nnj =( n1j ,...,n mj ). Estimation theory for this model was pioneered by Minka  [ 25]. \nThe resulting distribution over the term count vector N j  is\n \nPr(nj | α)=\nˆ\nθj\nMult(nj | θj ) Dir(θj | α) dθj  (4)\n \n= nj !∏m\ni=1 nij ! · Γ(α0)\nΓ(nj + α0) ·\nm∏\ni=1\nΓ(nij + αi)\nΓ(αi) ,  (5)\nwhere the sum α0 = ∑m\ni=1 αi denotes the precision parameter and Γ(·) the gamma \nfunction. For a derivation and further discussion we refer the reader to Minka [ 25] and \nMadsen  et  al.  [10]. It is this model that is commonly employed in language modeling \napplications [see 10, 26–28].\nThe Dirichlet-multinomial model allows for variability in θj  via the Dirichlet prior. The \nprecision parameter α controls the shape and concentration of the prior distribution \nover term proportions. In particular, the precision parameter α0 governs how sharply \nthe sampled multinomial parameters θj  are distributed. For a term ti, the ratio  αi/α0 \nrepresents the expectation of the term’s corresponding θij  value. When α0 is large, θij  \nbecomes concentrated around this expected value, leading to less variability in θij  across \ndocuments. In the limit as α0 −→ ∞, the distribution converges to the classical multino -\nmial model with variability in θij  eliminated across documents, ignoring word burstiness \noften present in typical textual documents. Conversely, when α0 is small, the sampled \nθij  values exhibit high variability, which captures word burstiness.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 The beta-binomial statistical model of language",
+      "level": 2,
+      "text": "The beta-binomial distribution is a family of discrete probability distributions that arise \nnaturally in Bayesian modeling of overdispersed binomial processes. It has a wide range \nPage 7 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nof applications and has been marshaled in such fields as ecology  [see 29], epidemiol -\nogy [see 30], and actuarial science [see 31] where success counts across multiple trials \nexhibit greater variability than afforded by a standard binomial model.\nWhen modeling a collection of textual documents, the beta-binomial distribution \nserves as a natural choice for capturing the word burstiness phenomenon in the frame -\nwork where each document is represented in terms of a target term ti and its comple -\nment t¬i. We call the set of such documents the target-complement collection, denoted \nby Ci.\nIn this modeling framework, we collapse the vocabulary to two terms by isolating a \nsingle target term ti and pooling all remaining terms into a single complement term t¬i\n. Under the beta-binomial model, each document dj  (1 ≤ j ≤ d) is modeled according \nto a beta-binomial distribution with nj  trials and concentration parameters αi > 0 and \nα¬i > 0, denoted in vector form as α =( αi,α ¬i), that are held in common by all docu -\nments. In this model, the binomial success probability θij  for the target term ti in docu-\nment dj  is drawn from a beta prior, Θij ∼ Beta(α), where Θij  is a random variable with \nrealization θij , Θ¬ij =1 − Θij  is the corresponding random variable for the comple -\nment term with realization θ¬ij . We denote the random vector of term proportions as \nΘj = (Θij , Θ¬ij ) and its realization as θj =( θij ,θ ¬ij ). The beta-binomial distribution \nfor any given document, dj , is a compound distribution in which the binomial distribu -\ntion success probability θij  is drawn from a beta distribution Θij ∼ Beta(α). Given θij , \nterm frequencies are generated according to Nij ∼ Bin(nj ,θ ij ) where nj =( nij ,n ¬ij ) \nis a realization of the term frequencies for document dj  under the target-complement \nrepresentation. Since n¬ij = nj − nij , the term frequency nij  alone needs to be gener -\nated by the model. The resulting probability mass function is given by\n \nPr(nij | α)=\nˆ\nθij\nBin(nij | θij ) Beta(θij | α) dθij  (6)\n \n=\n( nj\nnij\n)\n· B(nij + αi,n j − nij + α¬i)\nB(αi,α ¬i)  (7)\n \n= nj !\nnij ! n¬ij ! · Γ(α0i)\nΓ(nj + α0i) · Γ(nij + αi)\nΓ(αi) · Γ(n¬ij + α¬i)\nΓ(α¬i) ,  (8)\nwhere the sum α0i = αi + α¬i is the precision parameter, B(·, ·) denotes the beta func -\ntion, and Γ(·) the gamma function. Note that in standard formulations of the beta-bino -\nmial distribution, the concentration parameters are typically denoted as α and β. Here, \nhowever, we use the symbols αi and α¬i to emphasize the connection with its Dirich -\nlet-multinomial model generalization. Also note that the precision parameter α0i here \ndepends on how we collapse the vocabulary according to the target term ti, unlike the \nDirichlet-multinomial model’s precision parameter α0.\nSimilar to the Dirichlet-multiomial model, the parameters αi and α¬i jointly govern \nthe shape and concentration of the distribution. When α0i is large,  θij  is concentrated \naround its expected value  αi/α0i, resulting in behavior similar to the binomial model. \nWhen  α0i is small, there is more variability in θij  across documents, thus modeling \nburstiness in word usage. In the limiting case where the variability in  θij  is eliminated, \nthe beta-binomial distribution converges to the binomial distribution.\nPage 8 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nFigure  1 demonstrates the behavior of the beta-binomial distribution for different \ncombinations of  αi and α¬i. Each sample point represents a term count distribution \nfor a document. For a fixed ratio αi/α0i, we observe that when  α0i is small, the points \nexhibit high variability and are widely scattered. As  α0i increases, the points cluster \nmore tightly around the expected value, reflecting reduced variability.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.5 The event space problem of information retrieval",
+      "level": 2,
+      "text": "Robertson [11, 12] articulated a fundamental obstacle that hampers attempts to connect \nTF-IDF with probability theory, and by extension, with information theory and statisti -\ncal language modeling. Robertson described this complication as “an event space prob -\nlem” [see 11, p. 505].. For ease of exposition, we refer to it as the Event Space Problem of \nInformation Retrieval, or the Event Space Problem for short. In general, it concerns the \ndifficulty of defining compatible event spaces for probability distributions over queries, \ndocuments, and relevance. In this work, we focus on a specific aspect of the problem: the \nchallenge of integrating the term event space (i.e., the space of term occurrences within a \ndocument over which the TF component of TF-IDF is defined) with the document event \nspace (i.e., the space of documents within a collection over which the IDF component of \nTF-IDF is defined) into a coherent probabilistic modeling framework. We will see that \nthe estimation theory developed for the Dirichlet-multinomial model by Minka [ 25], as \napplied in an underappreciated work by Elkan  [ 5], offers an elegant resolution to this \nproblem by naturally incorporating IDF into the structure of statistical language model -\ning. We adopt this same approach within a beta-binomial modeling framework.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Related work",
+      "level": 1,
+      "text": "Previous work has exploited the Dirichlet-multinomial model for representing document \ncollections on account of its ability to capture word burstiness. In parallel, other research \nhas sought to justify the use of TF-IDF by establishing connections between it and statis-\ntical language models that explicitly account for the word burstiness phenomenon.\nFig. 1 Beta-binomial samples of target term ti counts in documents with fixed αi/α0i =0 .3 and increasing \nprecision α0i ∈{ 0.1, 1.0, 10, 100}. Each point represents the count of ti in a single document of length \nnj = 100\n \nPage 9 of 29\nAhmed et al. Discover Computing          (2026) 29:274",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1 Modeling word burstiness in text analysis",
+      "level": 2,
+      "text": "In an early application, Madsen et al. [ 10] showed that the Dirichlet-multinomial model \noutperforms its multinomial model counterpart when it comes to classification accu -\nracy on document classification tasks. Elkan [ 26] then introduced an exponential-family \napproximation to the Dirichlet-multinomial (EDCM) that reformulates the model in \na more analytically tractable form for analysis and training. The approximation makes \nmaximum-likelihood training much faster than for the Dirichlet-multinomial. Elkan \nfurther applied EDCM in document clustering algorithms, achieving strong empirical \nperformance. Cummins  [ 27] proposed the Smoothed Pólya Urn Document language \nmodel (SPUD) by smoothing a document specific Dirichlet-multinomial model with \na background Dirichlet-mutinomial model estimated from the whole collection, and \ndemonstrated improvements over standard multinomial language models in document \nretrieval tasks. Building on this, Cummins  [ 28] proposed a generalized multivariate \nPólya process, encompassing models like the multinomial and the Dirichlet-multinomial \nas special cases via a replacement matrix. This replacement matrix defines a particu -\nlar type of document language model depending on the diagonal entries of the matrix. \nIn this framework, the Dirichlet-multinomial is equivalent to the replacement matrix \nbeing the identity matrix assuming all terms are equally bursty, whereas the multinomial \nmodel is equivalent to the zero matrix. Cummins mainly focused on the generalized \nmatrix where the diagonal entries are either tuned or estimated based on the data using \na generalized SPUD language model.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.2 Justifications for TF-IDF rooted in word burstiness",
+      "level": 2,
+      "text": "Using this modeling background, several papers connected TF-IDF with word burstiness \naware models. Elkan  [ 5] derived the Fisher kernel of the Dirichlet-multinomial model \nand showed that it contains terms reminiscent of TF and IDF. Sunehag  [ 32] modeled \nword burstiness using a two-stage presence/abundance model that is equivalent to a \ngeneralized Pólya urn model, which is closely related to the Dirichlet-multinomial and \nits EDCM approximation. Sunehag showed that TF-IDF follows naturally from a cross-\nentropy coding argument in this framework. Recently, Sheridan  et  al.  [ 8] derived TF-\nIDF from Fisher’s exact test under restrictive conditions that enforce an extreme form of \nword burstiness, leaving an opening for a less ad hoc, more statistics based justification \nunder less restrictive assumptions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 The penalized beta-binomial language model for word burstiness and its",
+      "level": 1,
+      "text": "approximation\nIn this section we introduce an extension of the beta-binomial language model, which \nwe dub the penalized beta-binomial language model, that incorporates a gamma dis -\ntributed penalty term on the beta-binomial model precision parameter. We devise an \napproximation of this model that is tailored to the scenario in which the target term ti \nexhibits burstiness while the complement term t¬i does not. We moreover derive penal-\nized maximum likelihood estimates for the parameters of the approximate model and \ndemonstrate that the inclusion of the gamma penalty term is critical for breaking a ridge \nin the nonpenalized likelihood function.\nPage 10 of 29\nAhmed et al. Discover Computing          (2026) 29:274",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 An approximation to the beta-binomial language model",
+      "level": 2,
+      "text": "In this subsection, we secure an approximation to the beta-binomial language model \nthat captures the behavior of bursty terms in document collections under specific \nassumptions.\nClaim 1  Under the beta-binomial language model, the probability of a document, dj , \nwithin a target-complement collection, Ci, is closely approximated by\n \nPr(nij | α) ≈ nj !\nn¬ij !\n( αi\nnij\n)bij\nαn¬ij\n¬i\nαnj\n0i\n (9)\nprovided that the target term ti has a relatively small concentration parameter (i.e., \nαi ≪ 1), and the complement term t¬i has a relatively large concentration parameter \n(i.e., α¬i ≫ 1) and furthermore occurs in each document (i.e., b¬i = d).\nDerivation To begin, we rewrite the beta-binomial model probability mass function of \nEq. (8) as\n \nPr(nij | α)= nj !\nebij log nij ! · n¬ij ! · Γ(α0i)\nΓ(nj + α0i) · ebij log\nΓ(nij +αi )\nΓ(αi ) · Γ(n¬ij + α¬i)\nΓ(α¬i)  (10)\nwhere bij ∈{ 0, 1} is an indicator accounting for the target term ti appearing in docu -\nment dj . The corresponding indicator b¬ij  of the complement term t¬i does not appear \nin the equation since we assume b¬i = d (i.e., b¬ij =1 ∀j) which is a trivial condition \nsince we do not consider cases where a document only consists of the target term ti\n. The form of Eq.  ( 10) allows for the connection between the sample space of a single \ndocument and the sample space of documents in the collection when computing the \nlog-likelihood as we will show later. This form was inspired by Elkan [ 26] representing \nthe Dirichlet-multinomial in its exponential family representation.\nNext, we approximate each of the three gamma function quotients found to occur \nin Eq.  ( 10). Consider first the target term quotient Γ(nij + αi)/Γ(αi). Given that \n0 <α i ≪ 1, we can use the approximation Γ(αi)= 1\nαi\n− γ + O(αi) [33, (5.7.4)], where \nγ denotes the Euler-Mascheroni constant. Likewise since αi is small, the numera -\ntor Γ(nij + αi) can be approximated by Γ(nij )+O (αi) as detailed in Appendix  A.1. \nThis becomes (nij − 1)! + O(αi) since nij  is confined to take on positive integer val -\nues. The complement term quotient onneg Γ(n¬ij + α¬i)/Γ(α¬i) can be approximated \nas nα¬i\n¬ij + O(1/α¬i) since α¬i is large [ 33, (5.11.12)]. By the same reasoning, the preci -\nsion parameter quotient Γ(α0i)/Γ(nj + α0i) can be approximated by the reciprocal of \nnα0i\nj + O(1/α0i).\nUsing these approximations, along with basic properties of exponents and logarithms, \nwe isolate the main contributing terms in Eq.  ( 10) and simplify to obtain the exact \nrelation\n \nPr(nij | α)= nj !\nn¬ij !\n(( 1\nnij\n+ O(αi)\n) αi\n(1 − γαi + O(α2\ni ))\n)bij αn¬ij\n¬i\n(\n1+ O(α−1\n¬i )\n)\nαnj\n0i\n(\n1+ O(α−1\n0i )\n) . (11)\nHere, the exponential terms are simplified using the identity elog x = x, where x is a posi-\ntive real number.\nPage 11 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nAs a final step, we simplify Eq. ( 11) by dropping any big  O terms and recognizing that \n1 − γαi =1 −O (αi) ≈ 1 since αi ≪ 1, yielding the desired approximation of Eq.  ( 9). \nThis completes the derivation.  □",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.2 A gamma distributed penalty term for the beta-binomial model precision parameter",
+      "level": 2,
+      "text": "We will see shortly that leaving the beta-binomial language model precision parameter \nα0i unconstrained makes it difficult to maximize the objective. T o address this problem, \nwe introduce a gamma distributed penalty term for modeling α0i.\nTake A0i to be a random variable whose realizations correspond to instantiations \nof  α0i. We assume A0i ∼G (µ, σ2) follows a gamma distribution, parameterized by its \nmean E[A0i]= µ and variance V[A0i]= σ2, with probability density function\n \nf (α0i; µ, σ2)=\n( µ\nσ2\n)µ2 /σ2\nΓ\n(\nµ2\nσ2\n) α\nµ2\nσ2 −1\n0i e− µ\nσ2 α0i . (12)\nThe gamma distribution constitutes a natural choice for modeling such scale-related \nquantities as precision. Its support on the positive real line aligns with the domain of \nα0i, and its two-parameter form allows for sufficient flexibility represent uncertainty \nspanning several orders of magnitude. In addition, the parameters µ and σ2 are ame -\nnable to tuning. In subsequent numerical examples, we choose µ to be the mean docu -\nment length so that the precision α0i is centered around it. The choice of µ is motivated \nby empirical observations by Elkan  [ 5] which indicate that both the precision param -\neter and the average document length commonly take on values in the hundreds in the \nDirichlet-multinomial framework.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.3 Penalized beta-binomial language model definition and approximation",
+      "level": 2,
+      "text": "We define the penalized beta-binomial language model for a target-complement docu -\nment collection Ci, according to\n \nLpen(Ci)=\nd∏\nj=1\nPr(nij | α) · f (α0i; µ, σ2), (13)\nwhere Pr(nij | α), as set out in Eq. ( 8), denotes the beta-binomial probability of docu -\nment dj . We use the notation Lpen(Ci) instead of Pr(Ci) to emphasize that the inclusion \nof the penalty term means the resulting quantity is technically not a probability distribu-\ntion. The density f (α0i; µ, σ2) corresponds to the gamma penalty term of Eq. ( 12). It is \nimportant to emphasize that the gamma penalty term is defined at the collection level, \nrather than at the level of individual documents. The formula\n \nLpen(Ci) ≈\nd∏\nj=1\n(\nnj !\nn¬ij !\n( αi\nnij\n)bij\nαn¬ij\n¬i\nαnj\n0i\n)\n· f (α0i; µ, σ2) (14)\ndefines the penalized beta-binomial model approximation that will serve as our primary \nfocus from this point forward. The expression inside the product is the approximate \nbeta-binomial document-level probability mass function as specified in Eq. (9).\nPage 12 of 29\nAhmed et al. Discover Computing          (2026) 29:274",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.4 Penalized maximum likelihood estimation",
+      "level": 2,
+      "text": "It is now time to derive the maximum likelihood estimates for the parameters of our \napproximation to the penalized beta-binomial language model.\nClaim 2 The maximum likelihood estimates for the parameters αi and α¬i in the approx-\nimate penalized beta-binomial language model of a document collection Ci are given by\n \nˆαi =ˆα0i\nbi\nbi + n¬i\n, and ˆα¬i =ˆα0i\nn¬i\nbi + n¬i\n, (15)\nwhere ˆα0i = σ2\nµ\n(\nbi − ni − 1+ µ2/σ2)\n.\nDerivation From Eq. (9) the approximate log-likelihood of document dj  (1 ≤ j ≤ d) is\n ℓ(α | dj ) = log nj ! − log n¬ij !+ bij log αi − bij log nij + n¬ij log α¬i − nj log α0i. (16)\nThe log-likelihood of α for the collection Ci, including the penalty term on the precision \nquantity A0i, is\n \nℓ(α |C i)\ndef\n= ℓ(Ci)=\nd∑\nj=1\nℓ(α | dj ) + log f (α0i). (17)\nTaking partial derivatives of ℓ(Ci) with respect to αi and α¬i we get\n \n∂l(Ci)\n∂αi\n= bi\nαi\n− n\nα0i\n+ µ2 − σ2\nσ2α0i\n− µ\nσ2 , and ∂l(Ci)\n∂α¬i\n= n¬i\nα¬i\n− n\nα0i\n+ µ2 − σ2\nσ2α0i\n− µ\nσ2 . (18)\nSetting each expression to zero and solving for ˆαi and ˆα¬i, we obtain\n \nˆαi = biσ2 ˆα0i\nµˆα0i + nσ2 − µ2 + σ2 , and ˆα¬i = n¬iσ2 ˆα0i\nµˆα0i + nσ2 − µ2 + σ2 . (19)\nWe find ˆα0i by taking the sum ˆαi +ˆα¬i. Solving for ˆα0i gives\n \nˆα0i = σ2\nµ\n(\nbi − ni − 1+µ 2/σ2)\n. (20)\nSubstituting this value of ˆα0i back into Eq. (19) yields\n \nˆαi = biσ2 (\nbi − ni − 1+ µ2/σ2)\nµ (bi + n¬i) , and ˆα¬i = n¬iσ2 (\nbi − ni − 1+ µ2/σ2)\nµ (bi + n¬i) , (21)\nwhich leads to the expressions for ˆαi and ˆα¬i in Eq. (15) as was set out to show.  □\nObserve that the penalized maximum likelihood estimates from Eq.  ( 15) show ˆαi to \nbe roughly proportional to bi, and ˆα¬i to n¬i. Given that the model assumes αi ≪ 1\n, the fact that  ˆαi is tied to the number of documents in which the term appears (i.e., bi\n), rather that to its total frequency  ni, suggests that document-level presence provides \nmore information about αi than does its aggregate term count at the collection level. By \ncontrast, for the the complement term  t¬i, where the model assumes a corresponding \nα¬i ≫ 1, we find  ˆα¬i to be tied to the total number of its occurrences across the collec -\ntion, n¬i, suggesting that α¬i is predominantly recoverable from its collection-level term \ncount alone.\nPage 13 of 29\nAhmed et al. Discover Computing          (2026) 29:274 \nThe penalty on A0i plays a critical role in yielding a unique penalized maximizer. In its \nabsence, the penalized maximum likelihood estimates of αi and α¬i reduce to\n ˆαi =ˆα0i\nbi\nn and ˆα¬i =ˆα0i\nn¬i\nn , (22)\nrespectively. Since by definition α0i = αi + α¬i, adding the above estimates for ˆαi and \nˆα¬i yields\n ˆα0i =ˆα0i\nbi\nn +ˆα0i\nn¬i\nn , (23)\nwhich leaves ˆα0i as a free parameter. In this case, any ˆα0i would satisfy the equation. \nConsequently, the unpenalized approximate model of Eq.  ( 9) is unidentifiable with \nrespect to the precision parameter α0i. This further implies the pathological condition \nn = bi + n¬i, which holds if, and only, if the target term occurs exactly once in every \ndocument in which it occurs at all (i.e., bi = ni).\nWe note that ˆα0i in Eq. ( 20) must be positive to yield valid parameter estimates. This \nrequires µ2/σ2 >b i − ni − 1. In typical collections, this condition is generally satisfied \nwhen µ and σ2 are chosen as discussed in Sects.  5.2 and 6. We also show in Section  6 \nthat the proportion of terms that violate the penalized beta-binomial model assumptions \nis very small and we provide practical strategies to handle such terms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.5 Illustration of the effect of the gamma penalty term on parameter estimation",
+      "level": 2,
+      "text": "To illustrate the model issue, we simulate a collection of d = 40 documents, each con -\ntaining nj = 50 words drawn from the beta-binomial distribution with αi =0 .10 and \nα¬i = 49.90. We then generate log-likelihood surface and contour plots as functions of \nαi and α¬i, both with and without the gamma penalty term on the precision parameter \nα0i, and compare the resulting estimates ˆαi and ˆα¬i to the true underlying values. In \nevaluating the log-likelihood functions we set µ = 50 (i.e., the mean document length) \nand σ2 =4 . It is worth noting that the parameter σ2 controls the surface gradient steep-\nness of the gamma penalty term, and the value used here is chosen solely for visualiza -\ntion purposes to illustrate the breaking of the ridge from the unconstrained likelihood.\nFigure  2 presents this comparison. The top row shows the beta-binomial model \napproximation log-likelihood surface. A clear ridge appears along lines of roughly con -\nstant α0i, underscoring how this model is unidentifiable with respect to α0i and how \nit struggles to distinguish between different combinations of αi and α¬i that roughly \nsum to the same value. Without additional information, the true parameters αi and α¬i \ncannot be accurately recovered. The bottom row corresponds to our approximation \nto the penalized beta-binomial model. The resulting log-likelihood surface displays a \nwell-defined maximum, breaking the ridge yielding a unique penalized maximizer. The \ngamma penalty term effectively encourages values of α0i near the gamma distribution \nmean (set to the average document length), resolving the ambiguity in α0i. It can be seen \nthat the resulting penalized maximum likelihood estimates ˆαi ≈ 0.10 and ˆα¬i ≈ 49.77 \nclosely correspond to their respective true values.\nPage 14 of 29\nAhmed et al. Discover Computing          (2026) 29:274",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 A penalized likelihood-ratio test statistic for word burstiness",
+      "level": 1,
+      "text": "In this section, we introduce a PLR test statistic for quantifying word burstiness and \nshow that two variants of the TF-IDF term-weighting scheme arise as key components \nof this construction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.1 Penalized likelihood-ratio test formulation",
+      "level": 2,
+      "text": "The goal is to quantify the degree to which a target term, ti, exhibits burstiness (or equiva-\nlently is over-dispersed) across the documents of a collection, Ci, relative to what would be \nexpected by chance. T o this end, we define the following null and alternative hypotheses: \nH0 (ti is non-bursty): The target term ti’s document-level occurrences follow the binomial language model \nwith θi = ˆθi = ni/n.\nH1 (ti is bursty): The target term ti’s document-level occurrences follow the approximate penalized \nbeta-binomial model with αi =ˆαi and α¬i =ˆα¬i.\n Here, the binomial model serves as the null model. It assumes a single fixed probability \nof term occurrence across all documents. This model is too simplistic to capture bursti -\nness. In contrast, the penalized beta-binomial model explicitly allows the term prob -\nability to vary between documents, therefore capturing burstiness in term counts, by \nwhich we mean the term counts are over-dispersed relative to what would be expected \nunder the binomial model.The penalized beta-binomial model includes a gamma penalty \nterm on the precision parameter α0i to discourage deviations from the mean document \nlength, which is achieved by setting the gamma mean µ to the mean document length, as \nFig. 2 Comparison of the approximate beta-binomial and penalized beta-binomial language models on a simu -\nlated document collection of size d = 40, with all documents having equal length nj = 50(∀j), and true param-\neter values αi =0 .10 and α¬i = 49.90. The log-likelihood contour (upper left) and surface (upper right) plots for \nthe beta-binomial approximation show a pronounced ridge structure. In contrast, the corresponding plots for the \npenalized beta-binomial approximation (bottom left and bottom right) show that the gamma penalty term breaks \nthe ridge by regularizing the objective function. Gamma parameter values of µ = 50 and σ2 =4  were used to \ngenerate the plots. The choice σ2 =4  was made to make the breaking of the ridge visually apparent. However, \nalternative values of σ2 produce the same qualitative effect, differing only in the steepness of the surface gradient",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "demonstrates the behavior of the beta-binomial distribution for different"
+    },
+    {
+      "id": "f2",
+      "caption": "presents this comparison. The top row shows the beta-binomial model"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "summarizes the bag-of-words model notation we use for representing a col -"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Eq. (8)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "Eq. (19)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "Eq. (15)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 4
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p5_hybrid_moea_feasibility_review/p5_hybrid_moea_feasibility_review__08__a_hybrid_heuristic_benders_method_for_wind_hydrogen_inves__da1f9c84c8.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The global energy system is undergoing a profound transformation. To mitigate cli-\nmate change and support deep decarbonization, renewable generation is expanding rapidly\nworldwide [1]. According to IRENA, global installed renewable power capacity reached",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "4443 GW at the end of 2024, including 1133 GW of wind power, while the IEA reports",
+      "level": 1,
+      "text": "that global installed dedicated electrolyzer capacity reached about 1.4 GW by the end\nof 2023 [2,3]. These trends highlight the growing practical relevance of jointly planning\nrenewable generation and hydrogen conversion infrastructure. However, the power output\nof renewable energy sources is characterized by intermittency, volatility, and uncertainty.\nEnergies 2026, 19, 2172 https://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 2 of 23\nConsequently, their large-scale grid integration poses significant challenges to the real-time\nbalance and operational security of power systems [4,5].\nHydrogen energy, particularly green hydrogen produced by electrolyzing water\nwith surplus renewable energy, is regarded as a key enabler in addressing these chal-\nlenges and bridging the power sector with other energy sectors (i.e., power to gas, P2G),\nas shown in Figure 1 [ 6,7]. In large power systems with fast-growing renewable pene-\ntration, such as provincial power grids in China, renewable accommodation increasingly\nrequires the coordinated deployment of multiple storage technologies, including pumped\nstorage, electrochemical batteries, gravity storage, and hydrogen storage. Compared with\nshort-duration electrochemical storage, hydrogen can provide long-duration and cross-\nsector flexibility: surplus wind energy can be converted into hydrogen during off-peak\nhours; stored over longer periods; then consumed by industry, transport, or buildings\nor reconverted to electricity when economically justified. Therefore, hydrogen is not only\nan energy-storage carrier but also an energy-consumption pathway that links renewable\nelectricity with hard-to-electrify end uses [8,9].\nGridHydrogenElectricitySiginal\nGSOA--BendersEVECHSTHFCVFCWT\nLoad\nFigure 1. Overall schematic of the wind–hydrogen integrated energy system.\nConsequently, the planning and design of Wind–Hydrogen Integrated Energy Systems\n(WH-IESs)—integrating wind power generation, electrolyzers, hydrogen storage tanks,\nand fuel cells—have emerged as a critical research focus globally [10–12]. WH-IES compo-\nnents require substantial initial investments, while their operational benefits depend on\nuncertain wind resources, demand profiles, and market electricity prices over the project\nhorizon. Determining the trade-off between upfront investment and uncertain future\noperation is therefore a two-stage stochastic investment-planning problem.\nExisting studies have developed several important methodological streams. First,\nstochastic and robust planning models have been widely used for renewable-dominant\nmicrogrids and integrated energy systems [13–15]. In particular, column-and-constraint\ngeneration (C&CG) has become a powerful approach for explicit two-stage or tri-level\nrobust planning models. For example, recent work on bi-directional converter-based in-\nterconnection planning for renewable-dominant hybrid microgrids proposes a tri-level\nrobust planning framework and a fully parallel C&CG algorithm to handle renewable\nuncertainty and converter efficiency effects [16]. Such studies demonstrate the strength\nof decomposition when the uncertain recourse structure is explicitly modeled and can be\nreformulated or convexified. Second, monolithic solvers and MILP/MINLP reformulations\nremain highly effective when all investment and operation functions can be expressed ana-\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 3 of 23\nlytically [17–20]. Third, heuristic and surrogate-assisted optimization methods can search\nnon-convex landscapes without derivatives and have been applied to hybrid renewable-\nenergy planning [21–25].\nNevertheless, an important gap remains. In many engineering-planning tasks, part\nof the first-stage investment cost is not provided as a clean algebraic function. Examples\ninclude supplier quotation engines with hidden discount rules, site-specific civil-work costs\nfrom simulation software, safety-distance and land-acquisition adjustments, and trained\nmachine learning estimators. These cost evaluators may be queried for a candidate capacity\nvector but cannot always be reformulated reliably as a compact MILP or MINLP . At the\nsame time, the second-stage operational model is often linear and scenario-separable. This\ncreates a mixed structure: a black-box first-stage cost coupled with an explicit large-scale\nlinear recourse model.\nThe present paper addresses this specific structure. It does not claim that combining a\nmetaheuristic with Benders decomposition is fundamentally new in itself. Rather, the con-\ntribution lies in formulating and testing a WH-IES planning framework in which (i) the\nnon-analytical first-stage investment evaluator is isolated and searched by a derivative-\nfree algorithm, (ii) the expected second-stage operating cost is approximated by valid\nBenders cuts derived from linear recourse duals, and (iii) the convergence indicator is\ninterpreted as a stability gap rather than a strict global optimality certificate. This posi-\ntioning distinguishes the proposed framework from explicit C&CG/Benders models, pure\nsimulation-based heuristics, and surrogate-only approaches.\nThe main contributions of this paper are summarized as follows:",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 A hybrid GSOA-Benders framework is developed for a practically relevant class of",
+      "level": 1,
+      "text": "WH-IES planning problems with black-box first-stage investment costs and scenario-\nbased linear second-stage operation. The novelty is application-level and algorithmic\nintegration, not the first use of heuristic decomposition in the literature.\n2. The role and limitation of Benders cuts are clarified formally. The cuts provide\nvalid lower approximations for the convex expected recourse function, whereas the\nnon-convex black-box investment term is handled by a derivative-free master solver.\nTherefore, the reported convergence measure is defined as a stability gap and is not\noverstated as a rigorous global optimality gap.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 A transparent case study compares the proposed framework with monolithic,",
+      "level": 1,
+      "text": "reformulation-based, exhaustive simulation, and heuristic-decomposition bench-\nmarks. The discussion is deliberately balanced: commercial solvers remain preferred\nfor explicit models, while the proposed method is intended for cases where black-box\nfirst-stage costs prevent direct exact formulation.\n4. The revised model discussion explicitly addresses practical modeling issues raised by\nreviewers, including hydrogen losses, component lifetime and degradation, the styl-\nized nature of the sinusoidal tank-cost benchmark, scalability boundaries, and possible\nemission-reduction extensions.\nThe remainder of this paper is organized as follows. Section 2 presents the mathemati-\ncal formulation and clarifies its relation to explicit C&CG/Benders approaches. Section 3\ndetails the GSOA-Benders solution framework and the stability-gap definition. Section 4\npresents the case study, benchmark comparisons, sensitivity discussion, and operational\nanalysis. Section 5 concludes the paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Mathematical Formulation",
+      "level": 1,
+      "text": "The investment planning problem for the WH-IES investigated in this paper is for-\nmulated as a two-stage stochastic programming problem under uncertainty. In this paper,\n“stochastic” refers to the use of a finite scenario set with probabilities; the model is not\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 4 of 23\na classical two-stage robust optimization model with a worst-case uncertainty set. This\nclarification is important because some robust planning algorithms, including C&CG,\nsolve max–min or tri-level robust counterparts, whereas the present paper minimizes the\nexpected operating cost over representative scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Position Relative to C&CG and Classical Benders Decomposition",
+      "level": 2,
+      "text": "Classical Benders decomposition and C&CG methods are strongest when both the\nfirst-stage master problem and the second-stage recourse or adversarial subproblem can\nbe written explicitly. For a generic two-stage robust model, C&CG alternates between a\nmaster problem containing accumulated worst-case constraints and a subproblem that\nidentifies new worst-case realizations. This logic has been successfully applied to renewable-\ndominant microgrids, including the recent bi-directional-converter interconnection plan-\nning work in which converter-efficiency nonlinearity was convexified and solved within a\nfully parallel C&CG framework [16].\nThe present problem has a different computational bottleneck. The operational re-\ncourse model remains an LP and is therefore suitable for Benders cuts, but the first-stage\ninvestment cost may be available only through a black-box evaluator. If this evaluator\nis a compiled simulation, a supplier pricing service, or a trained neural network, an ex-\nact C&CG or MILP reformulation of the master problem may be unavailable. Therefore,\nthe proposed framework keeps the Benders logic only for the explicit recourse function\nand replaces the exact master solver with the GSOA. This is the reason the method is\ndescribed as a heuristic–Benders framework and why its convergence indicator is defined\nconservatively in Section 3 rather than being presented as a proof of global optimality.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Two-Stage Optimization Framework",
+      "level": 2,
+      "text": "The decision-making process is decomposed into two distinct stages:\n1. Stage I (Investment Decisions): These represent the here-and-now decisions. The plan-\nner determines the optimal installed capacities of the equipment, denoted by the\ndecision vector (x), prior to the realization of uncertainties (e.g., wind power availabil-\nity and load demand).\n2. Stage II (Operational Decisions): These correspond to the wait-and-see recourse\ndecisions. Once the uncertainty ( ξ, representing a specific operational scenario) is\nrealized, the system operator determines the optimal operational strategy (y) based\non the fixed capacity (x) under scenario ξ.\nUncertainty is characterized by a set of N discrete stochastic scenarios indexed by\ns ∈ S= {1, 2,. . ., N}. In this case study, N is set to 500. Each scenario (s) is associated with\na probability of occurrence (πs, where πs = 1/N).\nThe overarching objective is to minimize the aggregate cost, comprising the Stage I\nannualized investment cost and the Stage II expected annualized operational cost. The com-\npact mathematical formulation is expressed in Equation (1):\nminx F = Cinv (x) +Eξ[Q(x, ξ)]\n= Cinv (x) +\nN\n∑\ns=1\nπs · Q(x, ξs)\n(1)\nwhere Cinv (x) represents the investment cost function (Stage I) and Q(x, ξs) denotes the\noptimal operational cost (Stage II) under scenario s, given the investment decision (x).\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 5 of 23\n2.3. Master Problem (MP): Investment Decision Model\nThe Master Problem (MP) aims to determine the optimal investment vector (x) and\nthe minimized expected total cost (F). The formulation is given by\nmin\nx,ϑ\nFMP = Cinv (x) +ϑ (2)\ns.t. x ∈ Ω (3)\nϑ ≥ ϑmin (Lower bound proxy) (4)\nBenders Cuts (Detailed in Section 3) (5)\n(1) Decision Variables (x): The investment decision vector ( x = [xWT , PEL, EH2, PFC]⊤)\ncomprises the following:\n• xWT ∈ {0, 1}: Binary decision for wind farm construction (1 denotes construction;\n0 otherwise);\n• PEL ∈ R+: Installed capacity of the electrolyzer (MW);\n• EH2 ∈ R+: Capacity of the hydrogen storage tank (MWh);\n• PFC ∈ R+: Installed capacity of the fuel cell (MW).\n(2) Investment Cost Function: The annualized investment cost ( Cinv (x)) is calculated over\na lifespan of L = 10 years:\nCinv (x) = 1\nL\n\u0014\nCWT (xWT ) +CEL (PEL ) +CFC(PFC) +CH2(EH2)\n\u0015\n(6)\nThe specific cost components are defined as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3.1 Wind Power Cost (Binary)",
+      "level": 3,
+      "text": "CWT (xWT ) =κWT · xWT (7)\nwhere κWT represents the fixed turnkey cost ($75 million) for a wind farm with a fixed\ncapacity (e.g., Prated\nWT = 50 MW).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.3.2 Electrolyzer and Fuel-Cell Costs (Linear)",
+      "level": 3,
+      "text": "CEL (PEL ) =κEL · PEL, CFC(PFC) =κFC · PFC (8)\nwhere κEL and κFC denote the linear unit capacity costs ($/MW).\n2.3.3. Hydrogen Tank Cost (Complex Non-Convex Model) [26]\nThe investment cost of the hydrogen storage tank, denoted as CH2(EH2), is modeled\nusing a composite function that integrates a minimum investment threshold, economies of\nscale with discounted pricing tiers, and cyclic modularity costs [27]. As shown in Figure 2,\nthis formulation renders the problem intractable for standard convex solvers:\nCH2(EH2) =max\nn\nCmin, Cbase(EH2) +Ccyc(EH2)\no\n(9)\nwhere EH2 represents the rated capacity of the hydrogen tank (MWh). The function consists\nof two components:\n(1) Base Cost with Discount Scheme (Piecewise & Non-convex): Reflecting economies of\nscale, the base cost follows a power function (0.7). Furthermore, a step-wise discount\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 6 of 23\nis applied when the capacity exceeds a critical threshold (50 MWh), introducing a\ndiscontinuity in the marginal cost:\nCbase(EH2) =\n\n\n\nκH2 · (EH2)0.7, if 0 < EH2 ≤ 50\n\u0002\nκH2 · (EH2)0.7\u0003\n· 0.9, if EH2 > 50\n(10)\n(2) Cyclic Modularity Cost (Highly Non-convex): This component introduces a controlled,\nnon-convex perturbation to the cost surface. It is not claimed to be a first-principles\nengineering cost law for hydrogen tanks. Instead, it is used as a stylized numerical\nproxy to represent irregular cost perturbations that may arise from land constraints,\nmodular procurement, installation logistics, or supplier-specific pricing rules. The pur-\npose of this term is to construct a reproducible black-box benchmark on which the\nproposed algorithm can be tested:\nCcyc(EH2) =κcyc · sin\n\u0012 EH2\n10\n\u0013\n(11)\n(3) Parameter Settings: The coefficient expressed as κH2 = 500 × 103 $/MWh is selected\nto keep the tank cost on the same order of magnitude as the other investment terms.\nThe exponent of 0.7 is used to emulate economies of scale, a standard sub-linear\nbehavior in capacity–cost relationships, whereas the factor of 0.9 represents a styl-\nized bulk-purchase discount beyond 50 MWh. The perturbation amplitude is set to\nκcyc = 100 × 103 $, and the minimum entry cost is Cmin = 1 × 106 $. These values\nshould be interpreted as benchmark settings for methodological evaluation rather\nthan universally valid equipment prices.\n0 10 20 30 40 50 60 70 80 90 100\nHydrogen Tank Capacity (xh2) [MWh]\n0\n2\n4\n6\n8\n10\n12Investment Cost (Million USD)\nNon-convex / Non-monotonic (sin(x))\nDiscontinuous Discount (x>50)\nMin Threshold ($1M)\nCost Function (See Eq. 8)\nFigure 2. Black-box function.\n2.4. Sub-Problem (SP): Multi-Scenario Operational Model\nThe Sub-Problem (SP) is formulated as anexplicit Linear Programming (LP) problem. It\nis solved for each realized scenario (ξs), given the fixed investment decisions (x) determined\nin Stage I.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 7 of 23",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.4.1 Operational Decision Variables (ys)",
+      "level": 3,
+      "text": "For each scenario (s) and time interval (t ∈ T= {1, . . ., 24}), the operational vector\nincludes the following:\n• PWT\ns,t : Actual dispatched wind power (MWh);\n• PEL\ns,t : Power consumption of the electrolyzer (MWh);\n• mH2\ns,t : Hydrogen production rate (Nm3);\n• SH2\ns,t : State of Charge (SoC) of the hydrogen tank (Nm3);\n• Pgrid,buy\ns,t /Pgrid,sell\ns,t : Power purchased from/sold to the utility grid (MWh);\n• PFC\ns,t : Power generation from the fuel cell (MWh);\n• σs,t: Vector of slack variables for load shedding (ensuring feasibility).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.4.2 Objective Function",
+      "level": 3,
+      "text": "The objective is to minimize the annualized operational cost for scenario s, calculated\nas the daily cost extrapolated to a full year (365 days):\nQ(x, ξs) =365 ·\n24\n∑\nt=1\n\u0010\nλbuy\nt Pgrid,buy\ns,t − λsell\nt Pgrid,sell\ns,t + ρshedσload\ns,t\n\u0011\n(12)\nwhere λt represents the time-of-use electricity price and ρshed is the penalty coefficient for\nload shedding.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.4.3 Constraints",
+      "level": 3,
+      "text": "The optimization is subject to the following technical constraints for ∀t ∈ T:\n(1) Power Balance Constraint: The system must maintain real-time power equilibrium.\nThe sum of generation and imports must equal the sum of consumption and exports:\nPWT\ns,t + PFC\ns,t + Pgrid,buy\ns,t = PEL\ns,t + Pgrid,sell\ns,t + Pload\ns,t − σload\ns,t (13)\n(2) Hydrogen Mass Balance Constraint: The hydrogen storage level evolves according\nto production, fuel-cell consumption, exogenous hydrogen demand, and storage\nloss. ηEL and ηFC denote the energy-to-volume and volume-to-electricity conversion\ncoefficients, respectively. λloss is the hourly storage-loss coefficient:\nmprod\ns,t = ηEL PEL\ns,t , (14)\nmloss\ns,t = λloss SH2\ns,t−1, (15)\nSH2\ns,t = SH2\ns,t−1 + mprod\ns,t −\nPFC\ns,t\nηFC − DH2\ns,t − mloss\ns,t . (16)\nThe storage level must also satisfy the cyclic boundary condition (SH2\ns,0 = SH2\ns,24). In the\nnumerical base case, λloss is set to zero because reliable leakage data are not available;\nhowever, the mloss\ns,t variable is retained in the formulation so that boil-off, leakage,\nor purification losses can be activated directly when engineering data are available.\n(3) Investment Capacity Constraints: Operational variables are strictly bounded by the\ninstalled capacities determined in Stage I (x):\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 8 of 23\n0 ≤ PWT\ns,t ≤ ξwind\ns,t · PWT\nrated · xWT (17a)\n0 ≤ PEL\ns,t ≤ PEL (17b)\n0 ≤ SH2\ns,t ≤ ηvol · EH2 (17c)\n0 ≤ PFC\ns,t ≤ PFC (17d)\nNote: Equation (17c) includes ηvol to convert the decision variable (EH2, MWh) into\nstorage volume limits (Nm3). All operational variables are non-negative (ys ≥ 0).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.5 Assumptions, Scope, and Limitations",
+      "level": 2,
+      "text": "The proposed case study is designed to evaluate the solution strategy rather than to\ndeliver a full techno-economic or environmental assessment of a specific project. The main\nassumptions, their expected impacts, and possible extensions are summarized as follows.\n• System scope. The studied WH-IES includes wind generation, electrolyzer capacity,\nhydrogen storage, and fuel-cell conversion. Photovoltaic generation and other storage\ntechnologies are not included. This simplification isolates the wind–hydrogen invest-\nment trade-off, but it may underestimate the value of multi-energy complementarity\nin sites with strong solar resources.\n• Wind representation. The operational model uses scenario-based available wind\npower as exogenous input data. Detailed aerodynamic turbine modeling is omitted\nbecause the focus is planning under uncertainty and black-box investment costs, not\nturbine performance identification.\n• Hydrogen conversion and losses. Electrolyzer and fuel-cell processes are represented\nby linear conversion coefficients in the second-stage LP . This preserves tractability\nacross many scenarios and hourly periods, but it neglects part-load efficiency, start-up\ndynamics, temperature effects, and degradation. Hydrogen storage loss is represented\nby mloss\ns,t and λloss in the revised mass-balance equation; the base case sets λloss = 0\ndue to the absence of site-specific leakage data.\n• Component lifetime and cycling. The base case uses a 10-year economic recovery\nhorizon for comparability with the original numerical experiment. This is shorter than\nthe possible physical lifetime of wind assets, which can reach 20–30 years with proper\nmaintenance and life-extension decisions [28]. Electrolyzer and fuel-cell replacement is\nnot modeled explicitly. A practical extension is to introduce equivalent operating-hour\nor cycle constraints, for example,\n365\n∑\nd=1\n∑\nt∈T\nuEL\nd,t ∆t ≤ Hli f e\nEL , (18)\nwhere uEL\nd,t is the electrolyzer operating indicator and Hli f e\nEL is the allowable equivalent\noperating hours before stack replacement. Replacement costs can then be added to\nCEL (PEL ) through a component-specific replacement factor.\n• Financial scope. Taxes, inflation, salvage value, and detailed replacement schedules\nare not included. The sensitivity in Section 4.6 explains how the annualization horizon\naffects economic interpretation.\n• Environmental scope. The present manuscript focuses on economic planning and\nalgorithmic tractability. CO2 accounting, life-cycle impacts, LCOE/LCOH2, and social–\nenvironmental externalities are not included in the objective function. A simple exten-\nsion is to add an emission term or a carbon price to the operating cost, as discussed in\nSection 4.6.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 9 of 23\n• Methodological scope. The sinusoidal perturbation in the hydrogen-tank cost is\na stylized black-box benchmark. It should be interpreted as a proxy for irregular\nnon-analytical pricing, not as a universal engineering cost model.\n3. Solution Methodology: The GSOA-Benders Framework\nAs previously described, the investment cost function introduced in the Master Prob-\nlem (MP) constitutes an implicit, non-convex, and non-monotonic function characterized\nby sinusoidal terms. Such characteristics render the problem mathematically intractable for\ntraditional “monolithic” MINLP solvers (e.g., Gurobi [17]).\nTo address this computational challenge, this paper proposes a novel hybrid heuristic–\nBenders decomposition framework, denoted as GSOA-Benders. The fundamental philoso-\nphy of this framework is decoupling:\n1. Preservation of Explicit Sub-structures: The multi-scenario operational Sub-Problem\n(SP) remains an explicit, highly structured Linear Programming (LP) problem. Conse-\nquently, we retain the use of precise mathematical programming solvers (specifically,\nthe dual-simplex algorithm) to ensure computational efficiency and optimality for\nthis stage.\n2. Isolation of Implicit Complexity: The implicit “black-box” investment decision pro-\ncess within the master problem is isolated from the linear definitions. We employ\nthe General Soldiers Optimization Algorithm (GSOA)—a metaheuristic specifically\nengineered for such derivative-free landscapes—to solve the MP .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 Hybrid Heuristic Decomposition Framework",
+      "level": 2,
+      "text": "The iterative solution procedure of the proposed GSOA-Benders framework is illus-\ntrated in Figure 3. The core mechanism is theoretically grounded as follows:\nFigure 3. Overall flowchart of the GSOA-Benders framework.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 10 of 23\nClassically , Benders decomposition is applied to problems in which the master problem\ncan be solved exactly or to proven optimality within a convex or mixed-integer framework.\nThe present problem is different because the first-stage term (Cinv(x)) may be non-convex and\nblack-box in nature. Therefore, the theoretical role of Benders cuts must be stated carefully .\n• Recourse convexity. For a fixed scenario ( s), the operational subproblem can be\nwritten in the generic LP form:\nQs(x) =minys\nn\nc⊤\ns ys | Wsys ≥ hs − Tsx, ys ≥ 0\no\n. (19)\nUnder complete recourse or with sufficiently penalized slack variables, the subproblem\nis feasible for all x ∈ Ω. According to LP duality, Qs(x) is the pointwise maximum\nof affine functions in x and is therefore convex and piecewise linear. Consequently,\nthe expected recourse function, i.e.,\n¯Q(x) = ∑\ns∈S\nπsQs(x), (20)\nis also convex and admits supporting hyperplanes generated from optimal dual solutions.\n• Benders cut validity. Let λ(k)\ns be an optimal dual vector of scenario s at the incumbent\ninvestment vector (x(k)). A valid expected recourse cut is\nϑ ≥ ∑\ns∈S\nπs\n\u0014\nQs(x(k)) +\n\u0010\ng(k)\ns\n\u0011⊤\n(x − x(k))\n\u0015\n, g(k)\ns = −T⊤\ns λ(k)\ns . (21)\nThis cut lower-bounds only the expected second-stage operating cost ( ¯Q(x)). It does\nnot convexify the black-box investment function (Cinv (x)) and therefore does not, by\nitself, prove the global optimality of the total objective.\n• Stability-gap definition. Because GSOA is a derivative-free metaheuristic, the master\nproblem is not solved with a deterministic global optimality guarantee. We therefore\nreport a stability gap rather than a strict optimality gap. At iteration k, the best feasible\nupper bound is\nUBk = min\ni≤k\nn\nCinv (x(i)) + ¯Q(x(i))\no\n. (22)\nLet cLBk be the best master value found by the GSOA over the current cut approxima-\ntion. The stability gap is defined as\nGstab\nk = |UBk − cLBk|\nmax{1, |UBk|} . (23)\nThe stopping rule is Gstab\nk ≤ ε, together with no material improvement in UBk for\na fixed number of iterations. This criterion indicates that the incumbent solution is\nstable with respect to the accumulated cut-plane approximation, but it should not\nbe interpreted as a mathematical certificate of global optimality for a non-convex\nblack-box master problem.\n• Solution-quality safeguards. To improve reliability, the implementation uses bounded\ndecision domains, feasibility cuts when subproblem infeasibility is detected, repeated\nGSOA starts, and ex-post evaluation of the final investment vector by solving all\nscenario subproblems. These safeguards make the method suitable as an engineer-\ning decision-support procedure, while the limitation regarding global optimality is\nexplicitly acknowledged.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 11 of 23\n3.2. Master Problem Solver: The GSOA Algorithm\nThe pivotal innovation of the GSOA-Benders framework lies in the strategic selection\nof the solver for the Master Problem (MP).\nDiverging from the conventional reliance on commercial solvers such as Gurobi,\nthis study adopts the novel General Soldiers Optimization Algorithm (GSOA). The\nGSOA is a population-based metaheuristic designed to operate as a generic “black-box”\nsolver, offering distinct advantages in this context. The full pseudocode of the proposed\nGSOA–Benders framework is provided in Appendix A.\nInstead of relying solely on commercial solvers such as Gurobi, this study employs the\nGeneral Soldiers Optimization Algorithm (GSOA) to solve the black-box master problem.\nAs a population-based metaheuristic, GSOA can evaluate candidate investment decisions\nwithout requiring an explicit analytical reformulation of the cost function. The full pseu-\ndocode of GSOA is provided in Appendix A, as suggested by the reviewers, while the main\ntext summarizes only its role in the proposed GSOA–Benders framework.\n1. Model Agnosticism: The GSOA does not mandate the objective function to be differ-\nentiable, continuous, or convex. It requires solely a “Fitness Function” mechanism\nthat accepts an input decision vector (x) and evaluates it to return a scalar cost value.\n2. Superior Flexibility: This characteristic enables the fitness function to directly encap-\nsulate the “black-box” logic—specifically, the sinusoidal terms ( sin(x)) detailed in\nEquation (11). This represents a modeling capability that is fundamentally unattain-\nable by standard gradient-based solvers.\n3. Mixed-Integer Handling Capability: The GSOA seamlessly processes both binary\nvariables (e.g., xWT ∈ {0, 1}) and continuous variables (e.g., PEL) simultaneously,\nutilizing simple boundary constraints and discrete rounding mechanisms.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.3 Sub-Problem Solution and Expected Cut Generation",
+      "level": 2,
+      "text": "In Step 2 of each Benders iteration, the framework evaluates the expected operational\ncost of the candidate investment solution (x(k)) across all N uncertain scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.3.1 Sub-Problem (SP) Solution",
+      "level": 3,
+      "text": "The sub-problem maintains a standard LP structure. We iterate through all scenarios\n(s ∈ S), passing the fixed investment variables (x(k)) and the scenario-specific parameters\n(ξs) to the LP solver.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3.2 Expected Cut Generation",
+      "level": 3,
+      "text": "Upon solving N sub-problems, we obtain N sets of operational costs (Q(x(k), ξs)) and\ntheir corresponding dual-variable vectors (λs). We construct a single expected Benders cut\nvia probability-weighted averaging to provide feedback to the master problem:\n• Expected Operational Cost:\n¯Q(k) =\nN\n∑\ns=1\nπs · Q(x(k), ξs) (24)\n• Expected Dual Variables:\n¯λ(k) =\nN\n∑\ns=1\nπs · λs (25)\nThis “Average Cut” encapsulates the expected performance of the investment plan\n(x(k)) under all uncertainties, thereby guiding the GSOA to search towards statistically\nstable decision regions.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 12 of 23",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4 Case Study",
+      "level": 1,
+      "text": "To comprehensively validate the effectiveness, computational efficiency, and robust-\nness of the proposed GSOA-Benders framework in handling intractable black-box cost\nfunctions, this section presents two key comparative experiments.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.1 Experimental Setup",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.1.1 Uncertainty Scenario Generation",
+      "level": 3,
+      "text": "To effectively capture the stochastic nature of wind power generation and electri-\ncal load demand, we employed Monte Carlo simulation to generate an initial set of\nNinitial = 1000 stochastic operational scenarios [29]. Subsequently, the scenario-reduction\nprocedure illustrated in Figure 4, was applied to extract the N = 500 most representative\nscenarios for the optimization.\n0.36 0.38 0.4 0.42 0.44 0.46 0.48 0.5\nAverage Wind Power (p.u.)\n8.5\n9\n9.5\n10\n10.5\n11\n11.5\n12\n12.5Average Load (MW)\nGenerated Scenarios (N=1000)\nRepresentative Scenarios\nFigure 4. Scenario distribution and reduction.\nAs illustrated in Figure 4, the original scenario set (depicted as gray scatter points)\ncovers a broad wind-load distribution space, while the red points represent the selected\ntypical scenarios. This visualization validates the representativeness of the scenario genera-\ntion process.\nFigure 5a illustrates the temporal distribution of these 500 stochastic scenarios, where\nthe red and blue envelopes depict the fluctuation ranges for electrical load and wind power\ngeneration, respectively. Figure 5b presents the comparative profiles of the Time-of-Use\n(TOU) electricity tariff versus the Feed-in Tariff (FiT). Figure 5c specifies the inflexible\nhydrogen demand profile, which must be strictly satisfied during the daily operational\nwindow from 09:00 to 17:00.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 13 of 23\n(a)\n5 10 15 20\nTime (h)\n0\n50\n100\n150\n200\n250Price ($/MWh)\nBuy Price (TOU)\nSell Price (FiT)\n(b)\n5 10 15 20\nTime (h)\n0\n100\n200\n300\n400\n500Hydrogen Demand (Nm3)\n(c)\nFigure 5. Input data for the case study: (a) uncertainty scenarios; (b) grid price; (c) H2 demand.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f5a"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.1.2 Hardware Platform",
+      "level": 3,
+      "text": "All numerical experiments were conducted on a unified computing platform to ensure\nfair comparison. The hardware configuration consists of a 12th Gen Intel(R) Core(TM)\ni5-12490F processor (12 logical processors) and 16GB RAM, running MATLAB R2023b and\nGurobi 12.0.3.\nhttps://doi.org/10.3390/en19092172\nEnergies 2026, 19, 2172 14 of 23",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.1.3 Benchmark Algorithms",
+      "level": 3,
+      "text": "To provide a transparent evaluation, the proposed framework is benchmarked against\nseveral representative alternatives. These benchmarks are not claimed to exhaust the\ncurrent state of the art; instead, they are selected to contrast explicit-solver, reformulation-\nbased, exhaustive-heuristic, and heuristic-decomposition paradigms:\n• Algorithm A (Benchmark 1): Gurobi–Monolithic\nThe traditional “monolithic” approach consolidates the master problem and allN oper-\national sub-problems into a single, integrated Mixed-Integer Non-Linear Programming\n(MINLP) model and attempts to solve it directly using the Gurobi 12.0 solver.\n• Algorithm B (Benchmark 2): MILP-Benders (Reformulation) [20]\nThe “mathematical reformulation” approach attempts to approximate the black-box\ncosts (e.g., step-wise costs) by reformulating them into explicit Mixed-Integer Lin-\near Programming (MILP) constraints (e.g., via Big-M techniques) that are solvable\nby Gurobi.\n• Algorithm C (Benchmark 3): GSOA + Simulation (Exhaustive)\nThe “simulation-based optimization” approach, unlike the proposed framework, does\nnot utilize Benders cuts. Instead, for every fitness evaluation in the master problem,\nthe GSOA performs an exhaustive loop over all N scenarios by calling the subproblem\nroutine to compute the actual operational cost.\n• Algorithm D (Benchmark 4): SFOA-Benders [30]\nAs a comparative heuristic decomposition framework, this approach shares an iden-\ntical structural architecture with GSOA-Benders but substitutes the master problem\nsolver with the Starfish optimization algorithm (SFOA) [31] to evaluate the impact of\nthe specific heuristic engine.\n• Algorithm E (Proposed): GSOA-Benders\nThis approach comprises the novel hybrid heuristic decomposition framework estab-\nlished in Section 3.\n4.2. Experiment I: Explicit Non-Convex Problem (N = 1000)\nFirst, it is imperative to conduct an unbiased evaluation of all algorithms on an explicit,\nnon-convex problem that is mathematically modelable by commercial solvers.\nFor this baseline experiment, the scenario count is set to N = 1000. The investment\ncost function is configured as a standard analytical form: wind power involves binary\ndecisions ( xWT ∈ {0, 1}), while the hydrogen-tank cost follows an explicit, non-linear\npower function (C ∝ x0.6). The objective of this setup is to probe the performance limits\nof Gurobi and to benchmark the proposed GSOA-Benders framework against a solvable\nexplicit baseline.\nAs evidenced in Table 1, the Gurobi 12.0 solver demonstrated superior performance.\nDriven by its advanced presolve capabilities (eliminating one-quarter of the problem scale\nwithin 0.43 s) and its highly efficient MINLP branch-and-bound logic, Gurobi decisively\noutperformed all benchmark algorithms, completing the optimization task in just 36.58 s.\nTable 1. Comparison of algorithm performance.\nAlgorithm Variables/Constraints Time (s) Optimal Cost\nGurobi 240,005/192,000 36.58 −381,058.9\nGSOA-Benders 4/240 45.66 −342,939.52\nThis result corroborates a fundamental premise: for any explicit mathematical problem\ncapable of being formulated within the syntax of commercial solvers, the monolithic\nhttps://doi.org/10.3390/en19092172",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall schematic of the wind–hydrogen integrated energy system."
+    },
+    {
+      "id": "f2",
+      "caption": "Black-box function."
+    },
+    {
+      "id": "f3",
+      "caption": "Overall flowchart of the GSOA-Benders framework."
+    },
+    {
+      "id": "f4",
+      "caption": "Scenario distribution and reduction."
+    },
+    {
+      "id": "f5a",
+      "caption": "illustrates the temporal distribution of these 500 stochastic scenarios, where"
+    },
+    {
+      "id": "f5",
+      "caption": "Input data for the case study: (a) uncertainty scenarios; (b) grid price; (c) H2 demand."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of algorithm performance."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Eq. 8)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 8
+  }
+}

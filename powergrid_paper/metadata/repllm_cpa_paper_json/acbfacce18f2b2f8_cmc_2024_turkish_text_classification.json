@@ -1,0 +1,235 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2024_turkish_text_classification.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "NaturalLanguageProcessing(NLP)representstheefforttointerpretthecomplexityandrichness\nofhumanlanguagethroughcomputersystems.Inthisfield,aparticularlynotableissueinrecentyears\nhas been the extraction or classification of desired meaningful information from vast repositories\n2210 CMC, 2024, vol.79, no.2\nof documents. The task of extracting, analyzing, or categorizing information from texts has become\nincreasingly challenging due to the presence of large amounts of texts or documents. In this context,\ntext classification emerges as a pivotal approach within the ambit of Natural Language Processing,\nstrivingtosystematicallyassignlabelstotextualentitiessuchassentences,paragraphs,anddocuments.\nA sentence or expression is formed by the combination of the syntactic and semantic features of\nwords. Relationships between sentences create paragraphs, and relationships between paragraphs\ncreatetexts.Inthisprocess,thecompositionalpropertiesofdocumentsandheterogeneousinformation\npose a crucial challenge for Natural Language Processing. The unique structural complexity of each\ndocument and the variety of information types it contains significantly affect the ability of NLP\ntechniquestoextractmeaningfulinformationfromthesetexts.Therefore,understandingthesyntactic\nand semantic properties of texts, as well as how these properties come together to form a coherent\nmeaning, is critical for developing an effective text classification system [1].\nTexts, on the other hand, facilitate meaningful and regular communication in the exchange of\ninformationbyenablingindividualstoconveytheirknowledgeandthoughtstoothersinwriting.Due\nto the structural, regional, cultural, and temporal variations based on the unique grammar rules of\neach language, there may be differences in text processing steps across different languages. Therefore,\nthemethodsusedshouldbesuitableforthemorphologyofthelanguage,andtextsshouldbeprepared\naccordingly [2].\nStudies related to introducing the syntactic and semantic structure of natural language to\ncomputer systems have been conducted in the literature for many years. Information extraction,\nsummarization,question-answering,textclassification,andvariousothernaturallanguageprocessing\nproblems can be given as examples of these studies. The first step in solving these problems is to\nconvert texts into a format that artificial intelligence systems can use, which involves preprocessing\nthetexts.Agoodtextpreprocessingstagecanimpacttheperformanceofartificialintelligencesystems\n[3]. However, the development of models such as GPT-4 (generative pre-trained transformer) [4]\nand Llama2 [5], which can directly read web pages with complex tags without the need for text\npreprocessing, has diminished the significance of preprocessing. Particularly, these new-generation\nartificial intelligence systems can process the structural and semantic complexity of natural language\nwithouttheintensivepreprocessingstepspreviouslyrequired.Ontheotherhand,thedeepcleaningand\nstructuring provided by text preprocessing, especially for specific applications and complex language\nprocessing requirements, remains a valuable step.\nText datasets such as news articles, social media posts, and customer reviews can be utilized\nfor text classification. Tasks such as category determination, sentiment analysis, and classification\ncan be performed on these datasets. In recent years, deep learning-based text classifiers have shown\neffectiveness not only in text classification but also in natural language understanding tasks such\nas question-answering and natural language inference [6,7]. Deep learning (DL) models, including\nDeepNeuralNetworks(DNN),RecurrentNeuralNetworks(RNN),ConvolutionalNeuralNetworks\n(CNN), Graph Neural Networks (GNN), or hybrid neural network models, can be used in text\nclassifiers[8–10].Additionally,variousmachinelearningalgorithmssuchasSupportVectorMachines\n(SVM) and Decision Trees (DT) can also be employed as classification models [11].\nIn addition to various models for text classification, there are also several text vector representa-\ntion models in the literature. Methods such as TF-IDF (term frequency-based), Word2Vec (word to\nvector)[12],andGloVe(globalvectorsforwordrepresentation)[ 13]areexamplesofwordembedding\ntechniques used in text classification, where the ordering and semantic features of words are taken\nintoaccount[ 14].Inadditiontothat,languagemodel-basedapproachessuchasBERT(Bidirectional\nCMC, 2024, vol.79, no.2 2211\nEncoder Representations from Transformers) are widely used in text classification. BERT is a\npretrainingmodelthatlearnsgenerallanguageunderstandingbyleveraginglargeamountsoftextdata.\nIt can then be fine-tuned for specific tasks, including text classification, to achieve effective results\n[15]. By employing bidirectional attention mechanisms, BERT can capture a more comprehensive\nrepresentation of texts, enabling a better understanding of word context and relationships.\nTherearenumeroustextclassificationstudiesavailablethatoffervarioustechniquesandsolutions\nfor English texts [16,17]. Furthermore, the rapid development of pre-trained word representation\nmodelsanddeepneuralnetworkshasfacilitatedtheexplorationofnovelapproachesinNLPsubtasks.\nLiteraturealsoincludesresearchpapersonapproachesusedintextpreprocessing,wordrepresentation\nmodels, and text classifiers. These research publications focus on a detailed examination of text\nclassification steps and the introduction of existing works [14,18,19].\nInthisstudy,textclassificationperformanceisimprovedbyenrichingtextswithentitiesandtheir\nrelationships. BERT-based pre-trained models are used to detect entities within the text. After entity\ndetection, the relationships associated with these entities are queried in the Wikidata database using\nthe SPARQL (SPARQL Protocol and RDF Query Language) query language. The obtained entity-\nrelation information is integrated with the text dataset for classification, enriching the text data.\nDifferent machine learning algorithms (Linear SVM, Decision Tree) and deep learning algorithms\n(DNN, CNN, GNN) are employed to demonstrate the classification performance on Turkish and\nEnglish text datasets. The results indicate that enriching texts with entity-relation information yields\nsatisfactoryperformancefortextclassificationtasks.Thecontributionsofthisstudyarelistedbelow:\n• Relational text classification approach: This study aims to capture relationships within texts\nusing entity-relation information and examine their impact on classification performance.\nBERT-based pre-trained models are utilized for entity detection within the text, and the\nobtainedentity-relationinformationisretrievedfromtheWikidatadatabaseusingtheSPARQL\nquery language. These pieces of information are incorporated into the text content, enriching\nthe text data. Various machine learning and deep learning algorithms are applied to texts\nenrichedwithentityrelationstodemonstrateclassificationperformance.Consequently,anovel\nrelational text classification approach based on entity-relation information is introduced for\nTurkish text classification tasks.\n• Databasecreationanddistantsupervision:Inthescopeofthisstudy,entity-relationknowledge\nbases are created using the SPARQL query language and the Wikidata database. Entity-\nrelation information for English and Turkish is collected, providing resources for relational\ntext classification tasks through remote supervision in NLP studies. Moreover, automatic data\ncollection and updating mechanisms can be developed to obtain larger relational knowledge\nbases on broader sources.This enables continuousupdatingof entity-relation information and\nthe addition of new data.\n• Text classification performance: The introduced relational model in this study shows an\nimprovement in text classification performance on text datasets previously used for the same\ntask in the literature.\nWhen examining the contributions, it is observed that the use of entity-relation information can\nenhancetheperfor",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Literature Review",
+      "level": 1,
+      "text": "Text classification is an important research topic in the field of natural language processing\nand is widely used in various application domains. Specifically, the automatic assignment of texts\nto specific categories or labels holds significant importance in information management, sentiment\nanalysis, spam filtering, document classification, and many other areas. Literature has proposed\nnumerous methods and techniques in this regard. However, there are limited studies on the use of\nentity relationships in texts and their impact on text classification. Therefore, this study addresses the\nlack of utilization of entity relationships in Turkish text classification and comprehensively examines\ntheexistingliteratureintermsoftextclassification.Additionally,ourstudyleveragesmachinelearning\nand deep learning methods to enhance the performance of entity relationships in text classification.\nThis literature review summarizes the current state of Turkish text classification and emphasizes how\nthe use of entity relationships can contribute to improvements in this field. Within this scope, the\ninformationandperformanceoftextclassificationorrelationaltextstudiesintheliteraturehavebeen\nexamined. The classification method that shows the best result among the reviewed literature studies\nis presented in the table. Information about the studies examined in the literature is shown inTable 1.\nTable 1: Text classification studies in the literature\nRef. Dataset Classification Accuracy F1-score\n[20] TTC-3600 Random forest 91.03% –\n[21] Web News SVM – 90.10%\n[22] TTC-3600 Multinomial NB 90% –\n[23] TTC-3600, 20 Newsgroup SVM – 78.1%, 98.0%\n[24] TTC-3600 CNN 93.3% –\n[25] 20 Newsgroup DNN 82.6% –\n[26] 20 Newsgroup CNN 79% –\nIn a study conducted by Kılınc et al., a new dataset named TTC-3600 was developed specifically\nfortextcategorizationresearchinvolvingTurkishnewsarticles.Theresearchersevaluatedfivedifferent\ntextclassifiersandtwofeatureselectionmethodsonTTC-3600.TheresultsindicatedthattheRandom\nForest classifier, combined with feature ranking-based feature selection, achieved an accuracy of\n91.03% [20].\nCMC, 2024, vol.79, no.2 2213\nThestudyconductedbyFlisaretal.aimedtoenhancetheperformanceofshorttextclassification\nby enriching the short text document representation model with the DBpedia knowledge base. They\nimplemented text enrichment methods using the DBpedia Spotlight framework and evaluated their\neffectiveness. The experiments conducted in this study demonstrated that this approach outperforms\nbaseline methods across various datasets using different classifiers [21].\nIn the study conducted by Kuyumcu et al., the Turkish TTC-3600 dataset was used for text\nclassificationusingtheFastTextwordvectorrepresentationmodel[ 27]andclassicalmachinelearning\nalgorithms. Approximately 90% accuracy was achieved using Multinomial NB classification [22].\nInthestudybyParlak,thecontributionsofpreprocessingtechniquestoclassificationperformance\nwere evaluated. The effect of two preprocessing techniques on different news datasets was examined.\nThe highest F1-score was 0.781 for the Turkish dataset (TTC-3600), while the highest F1-score was\n0.980 for the English dataset (20Newsgroup) [23].\nThetextclassificationstudyconductedbyAcietal.wasconductedontheTTC-3600datasetusing\nConvolutionalNeuralNetworksandtheWord2Vecmethod,andthetextswerepreprocessedusingthe\nZemberek software. The proposed method achieved a performance accuracy of 93.3% [24].\nPittaras et al. [25] conducted a study exploring methods to enrich the input with semantic\ninformation for text classification tasks using deep neural networks (DNNs). Semantic inferences are\nmade from texts using the WordNet semantic graph, forming weighted concept terms that constitute\nasemanticfrequencyvector.Conceptsareselectedusingvarioussemanticdisambiguationtechniques\nand merged with Word2Vec embeddings considering semantic relationships. Experimental results\ndemonstratethatthissemanticenrichmentsignificantlyenhancesclassificationperformance,withthe\nconcatenationmethodyieldingthebestresults.Thestudyalsoexaminestheimpactoftermfrequency-\ninverse document frequency normalization on semantic vectors and the potential for dimensionality\nreduction.\nLezamaetal.presentedanovelapproachbasedonextractingrelationshipsfromWikipedia.They\nfocused on extracting semantic relationships, including synonymy, hyponymy, and hyperonymy. The\nproposedrelationship-basedembeddingmodelswereevaluatedbyperformingtextclassificationusing\nCNN, and a maximum accuracy of 79% was achieved on the 20-Newsgroup dataset [26].\nK n o w l e d g eb a s e ss u c ha sY A G O[28], Freebase [29], DBpedia [30], and Wikidata [31]c a nb e\nused to extract entities and relationships from texts. Many studies have been conducted on these\nknowledge bases for various NLP tasks. These studies focus on entity and relationship extraction\nin texts [32] or labeling entities and relationships using distant supervision from a knowledge base\n[33,34]. The detection of entity and relationship information in texts through distant supervision can\nalso be beneficial for text classification (TC) tasks [35,36].\nAsseenin Table 1,varioustextclassificationtaskshavebeenperformedontheTurkishTTC-3600\ndatasetusingbothtraditionalmachinelearningalgorithmsanddeeplearningmodels.Additionally,for\nperformancecomparisonindifferentlanguages,the20NewsgroupandBBC-Newsdatasetsconsisting\nof English news articles are also utilized in the literature. In addition to these studies, academic\npublications also exist for relational text analysis.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Proposed Methods",
+      "level": 1,
+      "text": "This study focuses on the identification of entities within Turkish text datasets, the addition of\nentity relationships using distant supervision, and the classification of labeled texts using machine\nlearning and deep learning algorithms. A knowledge base containing entity-relationship information\n2214 CMC, 2024, vol.79, no.2\nextracted from Wikidata, a Wikipedia-based database [31], was obtained using Python tools. The\nidentified entities and relationships from this knowledge base were added to the texts used for\nclassification. Turkish pre-trained BERT model [37] and English pre-trained BERT models [15]\nwere utilized to convert the texts into vector representations. Subsequently, the text classification\nperformances of deep learning and machine learning algorithms were demonstrated.\nThis work addresses the lack of entity-relationship utilization in Turkish text classification\nmethods. The proposed classification model was also applied to English text datasets, allowing\nfor a comparison of Turkish-English text classification performance. According to the proposed\nclassificationmodelshownin Fig. 1,thefirststepinvolvespreprocessingTurkishtextsanddetermining\nthe entity relationships within the texts. In the text preprocessing stage, the texts undergo various\ncleaningstepstopreparethemforstandardizedandeffectiveuseinsubsequentstages.Entitieswithin\nthe cleaned texts are identified using a pre-trained Named Entity Recognition (NER) model, and the\nrelationships about these entities are searched in the Wikidata database using the SPARQL query\nlanguage. The identified entities and relationships are then utilized to enrich the texts. Subsequently,\nthe cleaned and entity-relationship labeled texts are transformed into vector form using a pre-trained\nBERT model. The vectorized texts are then classified using deep learning techniques and machine\nlearning algorithms, and the accuracy performances are measured. In addition to working with\nTurkish text datasets in this study, English text datasets from the literature were also used for model\nperformance comparison.\nFigure 1: Proposed Turkish relational text classification model",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Datasets",
+      "level": 2,
+      "text": "The text dataset can be obtained from various platforms such as social media, the web, business\ndomains,usercomments,andmore.Textsmaycontaindifferencesintermsofadheringtogrammatical\nrulesdependingontheenvironmentfromwhichtheyarecollected.Thedesiretoadheretogrammatical\nrules is more prominent in written language compared to spoken language. Therefore, text collected\nfrom social media, which is closer to spoken language, is more likely to contain grammatical errors.\nOn the other hand, texts in official documents are created with more attention to grammatical rules,\nresulting in fewer errors. The cleaning process of texts can also vary depending on the source from\nwhich they are obtained. In social media data, people may use abbreviations, slang, or nonsensical\nwords that are not part of the language’s characteristics. Many texts and documents may contain\nnumerous unnecessary words. In algorithms based on statistical and probabilistic learning, noise and\nirrelevant features can harm system performance. Preprocessing or cleaning the text is necessary to\nclassify such texts and correct these issues.\nCMC, 2024, vol.79, no.2 2215\nText data can be extracted from the internet using web scraping methods and then sorted and\nlisted.Texts,tags,links,andcategorydataonwebpagescanbeobtainedthroughacomputerprogram\nor Python libraries. Since text data obtained from news websites is more formal and likely to yield\nmore accurate results in finding entity relationships, it was selected as the training data for the\nproposed model. The Turkish TTC-4900 dataset [20], which is commonly used in the literature for\ntext classification tasks, was used for model training. Additionally, the widely used 20Newsgroups\ndataset [38] and the BBC dataset [39] in the literature for English text classification tasks were used\nfor model performance comparison.\nIn Table 2, the document counts and category numbers for each dataset are provided. The TTC-\n4900datasetconsistsof4900samplesin7differentcategories.TheBBC-Newsdatasetcomprises2224\nsamples in 5 different categories. The 20 Newsgroups dataset, although originally consisting of 18846\nsamplesin20differentcategories,wasreducedto6517samplesin7differentcategoriesforthisstudy.\nFig. 2illustrates the distribution of categories for the datasets.\nTable 2: Information on the used datasets\nDatasets Number of documents Number of categories\nTTC-4900 4900 7\nBBC-News 2224 5",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "20 Newsgroups 6517 7",
+      "level": 1,
+      "text": "Figure 2: (a) TTC-4900, (b) TRT-Haber, (c) 20Newsgroups datasets category ratios",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 Text Preprocessing",
+      "level": 2,
+      "text": "In text classification, preprocessing the dataset is an important step that can enhance the\nperformance of artificial intelligence models. Text preprocessing involves various stages such as\ncleaning the data from noise, correcting spelling mistakes, handling slang or abbreviations, ensuring\ntext consistency by converting to lowercase or uppercase, tokenization (breaking down text into\nsmaller units), and finding word roots through stemming and lemmatization. Removing frequently\nused words, known as stop words, is also necessary to reduce their impact on model performance.\nStandardizing capitalization is important for consistency in text representation. Preprocessing also\naddresses anomalies like slang and abbreviations by converting them to their formal counterparts.\nNoiseremovalandspellingcorrectionmaybeneededtoenhancehumanunderstandingofdocuments.\nStemmingandlemmatizationhelptounifywordformsanddeterminetherootofaword.ForEnglish\ntexts, Snowball Stemmer [40] and NLTK library [41] are commonly used, while for Turkish texts,\n2216 CMC, 2024, vol.79, no.2\nthe Snowball and Zemberek libraries [42] are popular choices. The preprocessing techniques have\nbeen studied and evaluated in various research works to observe their impact on text classification\nperformance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.3 Entity and Relations in Texts",
+      "level": 2,
+      "text": "Named Entity Recognition (NER) is the process of finding and classifying named entities in\ntext according to predefined entity categories. NER recognizes tagged entities in text fragments and\ncategorizesthemintopredefinedcategoriessuchasperson,location,andorganization.NERisbased\non a variety of natural language applications and can be used for tasks such as question answering,\ntext summarization, machine translation, and text classification. While NER systems are successful\nat producing reasonable recognition accuracy, they often require a lot of human effort to carefully\ndesign rules or features. There are corpus datasets labeled for English such as OntoNotes [43], and\nWiner[44].IthasbeenintroducedintheTurkishmulti-layeredcorpuspublication[ 45],whichincludes\n9600sentencesfromEnglish-Penn-Treebankandincludesthemorphologiesofwords,namedentities,\nsenses, and semantic role tags. In addition, there is also a CRF-based Turkish NER approach [46].\nIn recent years, the transfer learning approach, in which Transformer Neural Network-based BERT\nmodel[15]andpre-trainedmodelsareusedinNERapplications.Withthisapproach,arepresentation\ncontainingentitywordscanbemadeonadatasetbyusingtheBERTmodel.Usingapre-trainedNER\nmodel to obtain entities in texts saves performance and time costs.\nThe relation can be defined as the connection between two or more entities. For example, there\ncan be a marriage relationship between two individuals. There can be membership or ownership\nrelationships between a person and an organization. Relation Extraction is a method used to find the\nrelationshipsbetweenentitieswithinatext.Toidentifyrelationships,entitiessuchasperson,location,\norganization, object, and verb structures need to be extracted from the text. Objects can be a place\nname, an organization, or a person’s name. The goal is to establish connections between them.\nThe subject-relation-object (S-R-O) structure is used to indicate the relationship between the\nsubject and the object [47,48]. For example, in the sentence“ Ankara is the capital of Turkey” there\nisacapitalrelationshipbetweenAnkaraandTurkey.Thisrelationshipstructurecanberepresentedas\n(Ankara–Capital–Turkey).Obtainingaknowledgebasethatcontainsentityrelationshipsisnecessary\nto design a relational model.\nWith the help of a dataset consisting of relationships between entities, relationships can be\nautomatically assigned to entities within the text using the distant supervised learning method.\nWikipedia,whichisalibrarythatallowstheextractionofentitiesandrelationshipsinmanylanguages,\nincluding Turkish, is one of the most suitable examples for this purpose. Entities and relationships\ncan be obtained from the Wikidata database associated with Wikipedia using Python tools and the\nSPARQLquerylanguage.Forexample,informationrelatedtoentitiessuchas Description, Occupation,\nField of Work, Position Held, Hashtags, etc., can be obtained from Wikidata.\nThus, entities obtained from the text through a pre-trained NER model and their relationship\ninformation within Wikidata can be obtained using the SPARQL query language. These entities and\nrelationshipsarethenaddedtothepreprocessedtexttoenrichit.Itmayalsobenecessarytocleanand\ntrim relationships that are not relevant to the text. While BERT and similar models focus on specific\ncategories for Named Entity Recognition (NER), our work transcends this limitation by linking\nentitiesidentifiedbyNERwithacomprehensiveknowledgebaselikeWikidata,therebyaddingentity-\nlinkingfunctionality.ThismethodprovidesabroadercontextforentitiesidentifiedbyNER,allowing\nfor a more detailed analysis of entity information in texts. Through SPARQL queries, it searches for\nCMC, 2024, vol.79, no.2 2217\nentities in Wikidata that best match the terms (with the highest matching score), utilizing the unique\nidentifier (ID) of the found entity. This approach not only enables a better understanding of entities\nwithinabroadercontextintextsbutalsoovercomesthelimitationsofentityidentificationandlinking\nprocesses, contributing to the enrichment of entity and relationship information.\nOur proposed entity-relation detection and text integration method is shown inFig. 3.F i r s t ,t h e\ntexttokenizationandpreprocessingstepsdescribedin Section 3.2wereappliedtothedatasetsthatwill\nbeusedfortextclassification.TextcleaningprocesseswereperformedusingtheNLTKandZemberek\nlibraries. Then, the NER task was carried out to detect entities that could belong to individuals and\norganizations within the preprocessed texts.\nFigure 3: Finding entities in texts and Wikidata entity-relation detection\nFortheNamedEntityRecognition(NER)task,thepre-trainedtransformermodels “savasy/bert-\nbase-turkish-ner-cased” for Turkish texts and“Jean-Baptiste/roberta-large-ner-english” for English\ntexts have been utilized. These models are open-source and available for broad use. The “savasy/\nbert-base-turkish-ner-cased” model was trained using the WikiANN dataset, a multilingual dataset\navailable in 176 languages, consisting of entities with LOC (location), PER (person), and ORG\n(organization) labels extracted from Wikipedia pages. This dataset served as a knowledge base for\nacquiring entities in both Turkish and English languages. Therefore, both models used are not self-\ntrained but are existing open-source models trained with the widely used WikiANN dataset. This\napproach has allowed us to leverage well-known and reliable sources to achieve high accuracy and\nconsistency in the NER task [49].\nAfteridentifyingentitieswithinthetexts,weenrichedthemwithpotentialrelationshipsbycreating\na relationship knowledge base model using the SPARQL query language on Wikidata, a multi-\nlanguage corpus owned by Wikipedia. These entities, when queried against the Wikidata database,\nreturnaWikidataID,whichinturnprovidesaccesstoapagedetailingvariousattributerelationships,\nincluding occupation-specific ones for individuals. This process allows for the extraction of related\nentities via new SPARQL queries, effectively leveraging Wikidata as a knowledge base (KB) for\nobtaining entity relationships and enriching the detected entities with additional related entities\nfrom the Wikidata KB. Our methodology integrates structured information retrieved from Wikidata\nwith unstructured data, encompassing entities’ descriptions, related texts, and other explanatory\ninformation that goes beyond structured triples. This blend of structured and unstructured data\n2218 CMC, 2024, vol.79, no.2\nfollows an integration approach akin to the Kepler [50] model, enabling a deeper understanding of\nentities and relations. The Kepler model innovates by merging knowledge embedding and language\nmodeling techniques, facilitating the integration of structured knowledge base information with\nunstructured textual data, thus offering a comprehensive framework for enhancing the richness and\ncontext of entity-relationship data.\nIn our study, only those entities identified as ‘person’through Named Entity Recognition (NER)\nin texts are queried in the Wikidata database using SPARQL. This targeted approach focuses on\na limited set of relationships related to individuals specifically, their occupations, positions, and\ndescriptions—therebyreducingpotentialnoise.Whilethisprocessmayseemtolimitthescopeofdata\ncollectioninitially,itsignificantlyreducestheinclusionofirrelevantinformation,therebyaccelerating\nthe analysis process and facilitating the interpretation of results. Specifically, the use of the ‘person’\ntag allows for an in-depth examination of social dynamics, influence relations, and individuals’\nsocietal roles, clarifying the focus of our research and enabling more effective extraction of relevant\ninformation.\nDistant supervision is utilized as a method for automatic labeling through the use of databases\nlike Wikidata, enriching large datasets. This enables the labeling of entity relationships within texts.\nOn the other hand, ‘entity linking’ refers to the process of matching entities identified in texts with\ntheiruniqueident",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.4 Text V ector Representations",
+      "level": 2,
+      "text": "Text, entity, and relationship vector representations have been obtained using the pre-trained\nTurkish BERT (BERTurk) model [51] and the English BERT base model [15] as text vector repre-\nsentations.theBERTmodelishighlightedasafundamentaltoolforobtainingvectorrepresentations\nof texts, entities, and relationships. The BERTurk and English BERT models offer a deep learning-\nbasedapproachforTurkishandEnglishtexts,respectively.Trainedonlargeanddiversedatasets,these\nmodels produce powerful representations that capture the complex structure and semantic properties\nof language. Specifically, the BERTurk model was trained using a special corpus provided by Kemal\nOflazer, comprising the Turkish OSCAR Corpus, Turkish Wikipedia Dump, and OPUS corpora\nwhichtotals35GBandover44billiontokens.BERTmodelsfacilitaterobustvectorrepresentationsfor\ntexts, akin to their utility in natural language processing subtasks like part-of-speech tagging, named\nentity recognition, and question answering.\nFor each text, we utilize a BERT model to derive an n-dimensional vector representation. This\nrepresentation comprehensively reflects the linguistic and semantic features of the text. Simultane-\nously,m-dimensionalBERTvectorrepresentationsforeachentity-relationshipderivedfromWikidata\nare generated. This process ensures a thorough analysis of texts as well as associated entities and\nrelationships,therebycreatingarichvectorrepresentationthatincludesbothlinguisticandontological\nproperties of a text.\n2220 CMC, 2024, vol.79, no.2\nFor each text inEq. (1), we utilize a BERT model to obtain an n-dimensional vector representa-\ntion:\nVBERT = [v1, v2, ... , vn] (1)\nAdditionally, for each entity and its associated relations obtained from Wikidata in each text, we\nderive m-dimensional BERT vector representations inEq. (2):\nV\ni\nER =\n[\neri\n1 + eri\n2 + ... + eri\nm\n]\nfor i = 1,2, ... , j (2)\nThe average of these m-dimensional vectors (representing the average entity-relation vector) is\ncomputed inEq. (3):\nVER−avg = 1\nj\n∑ j\ni=1\nV",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "ER (3)",
+      "level": 1,
+      "text": "Thecombinedvectorforasingletextin Eq. (4),incorporatingboththetext’sn-dimensionalBERT\nrepresentation and the m-dimensional average entity-relation vector, is thus n+m dimensional:\nVcombined =\n[\nVBERT, VER−avg\n]\n(4)\nThis process is repeated for each of the k texts in the dataset, resulting inEq. (5):\nV\nk\ncombined =\n[\nV\nk\nBERT, V\nk\nER−avg\n]\n(5)\nHere, V\nk\nBERT represents the n-dimensional BERT vector representation of the kth text, andV\nk\nER−avg\ndenotestheaveragem-dimensionalentity-relationvectorforthekthtext.Eachcombined V\nk\ncombined thus\nrepresents then + mdimensional combined vector representation for the kth text in the dataset.\nConsequently, by combining the BERT representation of each text with the average entity-\nrelationship vector, ann + m dimensional combined vector representation is obtained for each text.\nThis combined representation encompasses both the linguistic features and the entity-relationship\ninformation of the text, enabling its application in various natural language processing tasks. This\napproach allows for a deeper understanding of inter-textual relationships, semantic similarities, and\ndifferences. Especially when working with large datasets, such combined vector representations offer\na powerful tool for modeling the complex structures and relationships of texts.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.5 Classification",
+      "level": 2,
+      "text": "Texts enriched with entity relationships were transformed into vector forms using pre-trained\nBERT models. In the final stage, these vector forms undergo text classification using machine\nlearning or deep learning classification models. For the classification process, the SVM (Support\nVector Machines) and Logistic Regression classification models from the Scikit-Learn library, a\nPython machine learning toolkit, were utilized. Additionally, text classification was performed using\nDeep Neural Network (DNN) and Convolutional Neural Network (CNN) models with the help of\nKeras (TensorFlow),aPython-baseddeeplearninglibrary.Theperformanceoftheclassificationwas\nmeasured using commonly used metrics such as Accuracy, F1-score, Precision, and Recall.\nSupport Vector Machine (SVM), developed by Vapnik [52], is a machine learning model used for\nclassification and regression tasks. SVM optimizes decision boundaries in high-dimensional feature\nspacesbyfocusingonaneffectiverepresentationofthedataset[ 53].LogisticRegression,ontheother\nCMC, 2024, vol.79, no.2 2221\nhand, is a classification method used to predict the probability of data belonging to a specific class. It\nexpresses the results as probability values using the sigmoid function [54].\nDeep Neural Network (DNN) is a model used in machine learning and artificial intelligence.\nInspiredbybiologicalneuralnetworks,thismodelconsistsofmulti-layerstructuresthatprocessinput\ndatatoproduceoutput.Thesenetworkscreatedata-drivenmodelsbyadjustingweightsandbiasvalues\nthrough the learning process. Deep neural networks can solve complex problems and often perform\nbetteron largedatasets.Theyare usedin variousfields such asimage and speech recognition,natural\nlanguage processing, and also in text classification tasks [55].\nConvolutional Neural Network (CNN) is a deep learning model used for text classification and\nother tasks. It is an effective type of neural network that utilizes convolutional, pooling, and fully\nconnected layers. The convolutional layers apply filtering operations to find specific features in text\ndata.Poolinglayersreducethefeaturemapswhilepreservingimportantinformation.Fullyconnected\nlayers compute the results for classification. CNN is a powerful tool for detecting and classifying\npatterns in texts. It achieves successful results in text-based applications such as natural language\nprocessing, sentiment analysis, and spam filtering [56].\nThe primary reason for preferring classification models like SVM, CNN, and DNN over deep\nlearning models such as BERT is their suitability for specific requirements and resource constraints.\nClassificationmodelslikeSVMaregenerallylesscomplexand,insomecases,maketheinterpretation\nof the model’s decisions easier. Specifically, these models have been utilized in this study for literature\ncomparisoninclassificationtasks.Thischoiceisbasedonfactorssuchastheirgoodperformancewith\nsmall datasets, lower requirements for updates and maintenance, and more interpretable results.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Experimental Results",
+      "level": 1,
+      "text": "In the study, the text preprocessing steps described inSection 3.2were carried out on the Turkish\nandEnglishtextclassificationdatasetsintheliteratureintroducedin Section 3.1.Then,withthesteps\nshownindetailin Section 3.3,thetaskoffindingtheentitiesandrelationshipsinthetextswascarried\nout.Thetextsinthedatasetsareenrichedbyaddingtheidentifiedentitieswiththehelpofpre-trained\nNER models and the relationships obtained from Wikidata related to these entities. A BERT-based\npre-trainedmodelwasusedasthevectormodel,andSVM,LogisticRegression,DeepNeuralNetwork\n(DNN),andConvolutionalNeuralNetwork(CNN)modelswereusedastheclassificationalgorithms.\nThe accuracy performance of each classifier, along with the improvements achieved, is summarized\nbelow.\nThe assessment of the TTC-4900 dataset, as detailed inTable 4, underscores the significant\nenhancements that the integration of relational information can bring to the performance of var-\nious classifiers in classification processes. Confusion matrixes, where classification performances\nperformed on the Turkish TTC-4900 dataset are displayed separately based on labels are shown in\nFig. 5.\nThe Linear SVM classifier, for instance, achieved a notable accuracy rate of 91.3% without\nconsidering relations. This rate modestly increased to 92.0% upon the inclusion of relations, marking\nanimprovementof0.77%.Incontrast,theCNNclassifiersawasubstantialjumpinperformance,from\nan accuracy rate of 86.0% without relations to 89.1% with them, translating into a significant gain of\n3.61%. Similarly, the DNN classifier improved from an accuracy rate of 91.3% without relations to\n92.1% with them, indicating an enhancement of 0.88%. A noteworthy observation was also made for\n2222 CMC, 2024, vol.79, no.2\nthe Logistic Regression classifier. It started with an accuracy rate of 87.8% without relations and rose\nto 90.8% with the inclusion of relations, resulting in a notable improvement of 3.42%.\nTable 4: Relational text classification results for TTC-4900 dataset\nWithout relations With relations Accuracy\nClassification Precision Recall F1-score Accuracy Precision Recall F1-score Accuracy Improve\nment (%)\nLogisticReg. 88.2 87.8 87.9 87.8 90.8 90.8 90.8 90.8 3.42\nLinearSVM 91.4 91.3 91.3 91.3 92.0 92.0 92.0 92.0 0.77\nCNN 86.8 86.0 86.0 86.0 89.2 89.1 89.1 89.1 3.61\nDNN 91.4 91.3 91.3 91.3 92.1 92.1 92.1 92.1 0.88\nFigure 5: Text classification confusion matrices for TTC-4900 dataset\nThis highlights how relational information can substantially increase the accuracy and efficacy\nof models in classification tasks. These findings provide valuable insights into how the integration\nof relational information can enhance the understanding and performance of various models in\nclassification processes.\nThe inclusion of relationships led to significant improvements in performance, particularly for\nthe Linear SVM, CNN, and DNN classifiers. The Linear SVM classifier demonstrated a noteworthy\nincreaseinaccuracybyincorporatingrelationships.Additionally,boththeCNNandDNNclassifiers\nexhibited substantial performance enhancements when relationships were considered.\nIn Table 5, moving on to the BBC News dataset, the Linear SVM classifier achieved an accuracy\nrate of 94.2% without considering relationships. However, after including relationships, the accuracy\nsignificantly increased to 98.7%, resulting in a notable improvement of 4.78%. Similarly, the CNN",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Proposed Turkish relational text classification model"
+    },
+    {
+      "id": "f2",
+      "caption": "(a) TTC-4900, (b) TRT-Haber, (c) 20Newsgroups datasets category ratios"
+    },
+    {
+      "id": "f3",
+      "caption": "Finding entities in texts and Wikidata entity-relation detection"
+    },
+    {
+      "id": "f4",
+      "caption": "Entity (Mustafa Kemal Ataturk) and relations"
+    },
+    {
+      "id": "f5",
+      "caption": "Text classification confusion matrices for TTC-4900 dataset"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Text classification studies in the literature"
+    },
+    {
+      "id": "t2",
+      "caption": "Information on the used datasets"
+    },
+    {
+      "id": "t3",
+      "caption": "Number of entities and relationships added to the datasets with the proposed model"
+    },
+    {
+      "id": "t4",
+      "caption": "Relational text classification results for TTC-4900 dataset"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq. (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Eq. (3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Eq. (4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Eq. (5)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

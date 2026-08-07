@@ -1,0 +1,377 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__10__a_short_term_power_load_forecasting_method_based_on_sboa_s__77aa7a9c07.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 Northeast Branch of State Grid Corporation of China, Shenyang 110179, China",
+      "level": 1,
+      "text": "3 Grid Jilin Electric Power Co., Ltd., Jilin Power Supply Company of State, Jilin 132011, China\n* Correspondence: chenyiming0205@163.com; Tel.: +86-15844159969\nAbstract: Short-term electricity load forecasting provides a basis for day-ahead energy scheduling.\nTo improve the accuracy of short-term electricity load forecasts and deeply explore the temporal\ncharacteristics of load sequences, a method is proposed to extract predictable components of load se-\nquences based on the secretary bird optimization algorithm (SBOA)-optimized successive variational\nmode decomposition (SVMD). This method decomposes the electricity load sequence into multiple\nsubsequences under different time series. The combined forecasting architecture of the temporal\nconvolutional network (TCN) and the bidirectional long short-term memory network (BiLSTM) is\nintroduced to mine the temporal characteristics of each load component, resulting in short-term load\nforecasting outcomes. A case study is conducted using the annual electricity load data for the year\n2018 from a specific region in Belgium. The experimental results show that the mean absolute error\n(MAE) of the TCN–BiLSTM model is reduced by 47.8%, 32.8%, and 11.5%, respectively, compared to\nother models. The root mean square error (RMSE) is reduced by 42.9%, 39.2%, and 11.3%, respectively,\nand the average goodness of fit R2 is reduced by 9.81%.\nKeywords: secretary bird optimization algorithm; temporal convolutional network; temporal feature\nextraction; short-term load forecasting",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Short-term electricity load forecasting refers to predicting the power demand for\nthe coming days [1,2]. With the rapid economic development in our country, electricity\ndemand has surged dramatically, and the distribution network, directly interfacing with\nusers, faces integration challenges from new elements such as distributed renewable energy\nand electric vehicles. These changes have significantly altered the load characteristics of\nthe distribution system, presenting substantial challenges to the safe and efficient operation\nof the power system. Accurate short-term load forecasting enables power departments to\neffectively formulate supply plans, optimize scheduling, and arrange electricity trading,\nthus ensuring a system balance and stability [3,4]. Therefore, there is an urgent need for\nmore effective methods to analyze and predict the behavioral characteristics of the new\ndistribution system.\nDue to the influences of seasonal changes, day–night alternation, and social activity\npatterns, the characteristics of electricity load at different times vary significantly, showing\nmultiple periodicities and random fluctuations over time [5]. Current short-term load fore-\ncasting methods mainly include traditional mathematical statistical methods and modern\nmachine learning methods. Traditional methods include time series methods [6], multiple\nlinear regression [7], and exponential smoothing [8]. These methods have simple modeling,\nfast computation, and a solid theoretical foundation, making them suitable for processing\nrelatively stable data with obvious periodicity. However, they often fall short in terms\nElectronics 2024, 13, 3441. https://doi.org/10.3390/electronics13173441 https://www.mdpi.com/journal/electronics\nElectronics 2024, 13, 3441 2 of 23\nof accuracy when handling real-time, dynamically changing data due to complex inter-\nnal nonlinear relationships. Modern machine learning methods, such as support vector\nmachines [9], random forests [10], extreme learning machine [11], traditional artificial neu-\nral networks [12], and deep learning neural networks [13], can handle complex nonlinear\nrelationships and generally offer high prediction accuracy and strong feature extraction\ncapabilities, especially suitable for big data and dynamically changing data. However, sup-\nport vector machines, random forests, extreme learning machines, and traditional artificial\nneural networks struggle to capture long-term dependencies and intrinsic sequences in\ntime series data, weakening the continuity of load sequences over time.\nTraditional forecasting methods have significant shortcomings in handling complex\nnonlinear relationships and long-term dependencies, failing to meet the needs of modern\npower systems. In recent years, deep learning neural networks have become a research\nhotspot in load forecasting due to their powerful data processing and feature extraction\ncapabilities. Convolutional neural networks (CNNs) [14] can capture local patterns well\nthrough convolution and pooling operations but have limitations in dealing with long-term\ndependencies. Recurrent neural networks (RNNs) [15], like typical deep learning models,\neffectively capture time dependencies in time series data. However, RNNs tend to suffer\nfrom gradient vanishing and exploding problems when handling long time sequences.\nTo address this issue, the long short-term memory network (LSTM) [16] was introduced.\nBy incorporating input, forget, and output gates, LSTMs effectively mitigate gradient\nproblems and significantly improve the ability to capture long-term dependencies. LSTMs\ncan remember and forget information, thus better handling complex time series data. Al-\nthough the LSTM performs well in many applications, its complex structure leads to longer\ntraining times. The gated recurrent unit (GRU) [17] neural network merges some gating\nmechanisms, reducing the number of parameters and improving computational efficiency.\nHowever, its simpler structure weakens the ability to capture dependencies among loads.\nThe literature [18,19] suggests that bidirectional long short-term memory network (BiL-\nSTMs) can more comprehensively capture time dependencies and complex features through\nthe bidirectional processing of sequence data, improving prediction accuracy and stability.\nHowever, BiLSTMs can incur significant computational and storage overhead when pro-\ncessing very long sequences, potentially leading to redundant information processing and\nunnecessary complexity. The temporal convolutional network (TCN), as an emerging deep\nlearning model, has gradually started to gain attention. The literature [20] suggests that\nTCNs, through their causal convolution and dilated convolution structures, can effectively\ncapture long-term dependencies in time series data. By employing convolutional opera-\ntions instead of recursive ones, TCNs overcome the gradient vanishing problem associated\nwith handling long sequences. However, since convolutional operations primarily focus on\nlocal patterns, TCNs may exhibit limitations in capturing global contextual information.\nTo better explore and capture complex temporal features in load data, sequence\ndecomposition techniques like empirical mode decomposition (EMD) [21] and variational\nmode decomposition (VMD) [ 22] have been introduced in recent years. EMD, a data-\ndriven decomposition method, can decompose complex time series into several intrinsic\nmode functions (IMFs). VMD, an improvement upon EMD, decomposes signals into\na set of sub-signals with finite bandwidth through a variational framework, enhancing\ndecomposition robustness and stability. The literature [23] has found that VMD excels in\nnoise suppression and mode mixing reduction, but its parameter selection is complex and\nrequires repeated tuning for optimal decomposition results. Some research has utilized\nthe advantage of CNNs in capturing local features to establish CNN–RNN combined\nforecasting models. The literature [24,25] uses CNNs to extract local features and RNNs to\ncapture temporal dependencies, thus improving prediction accuracy. However, excessive\nconvolution operations can reduce model efficiency in handling long-term dependencies,\nsignificantly increasing computational complexity and training time.\nDespite the advancements made by modern load forecasting methods in handling non-\nlinear relationships, challenges remain in capturing temporal continuity. The literature [26]\nElectronics 2024, 13, 3441 3 of 23\nsuggests that while deep learning methods perform well in many applications, their com-\nplex model architectures still limit their comprehensive utilization of temporal information,\nparticularly in effectively capturing the inherent multiple periodicities and stochastic fluc-\ntuations of the data. The literature [27] further points out that the long-term dependencies\nand evolving trends in load sequences are crucial for the stable operation of power systems.\nTherefore, how to more effectively capture and utilize the temporal continuity in load data\nremains a key focus and challenge in current research.\nAddressing the issue of weakened temporal continuity in electricity load, this pa-\nper proposes a short-term electricity load forecasting method based on SBOA-optimized\nSVMD and TCN–BiLSTM, integrating deeply mined load temporal features into the\nforecasting model.\nThe contributions of this paper are as follows:\n(1) A load sequence decomposition method based on SBOA-optimized SVMD is proposed\nto obtain more predictable load components while avoiding mode mixing;\n(2) A load multi-component sequence forecasting method based on TCN temporal feature\nextraction and BiLSTM is introduced to extract temporal features of load sequences.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Electricity Load Decomposition",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Successive Variational Mode Decomposition",
+      "level": 2,
+      "text": "VMD is a signal processing technique driven by data, which decomposes the original\nload data into K mode decomposition functions, achieving a multi-scale analysis of the\noriginal load data. When decomposing the original data, setting a large number of decom-\npositions can lead to over-decomposition, while setting too few can result in high residual\nerror Res. To address this issue, successive variational mode decomposition (SVMD) has\nbeen proposed. SVMD applies VMD multiple times, gradually removing the extracted\nmode components in each iteration, without the need to preset the value of K [28]. Com-\npared to VMD, SVMD significantly reduces computational complexity and better captures\nthe complex fluctuation characteristics in the electricity load. The method is as follows:\nAssuming the original input signal f (t) is decomposed into:\nf (t) = µL(t) +fr(t) (1)\nIn the equation, µL(t) is the L-th order mode; fr(t) is the residual signal, where fr(t)\nincludes the total processed modes\nL−1\n∑\ni=1\nui(t) and the unprocessed part fu(t).\nIn order to fulfill the aforementioned hypothesis, it is necessary to satisfy the\nfollowing conditions:\n(1) To ensure that each mode is compact around its center frequency, thereby avoiding\nover-decomposition and noise interference, the L-th order mode minimization constraint is\nconstructed as follows:\nJ1 =\n\r\r\r\r∂t\n\u0014\nδ(t) + j\nπt ∗ µk(t)\n\u0015\ne−jωLt\n\r\r\r\r\n2\n2\n(2)\nIn the equation, ωL represents the center frequency of theL-th order mode, ∗ represents\nthe convolution operation.\n(2) The spectral overlap between the residual signal and the L-th order mode should\nbe minimized. To satisfy this constraint, an appropriate filter ˆβL(ω) with the following\nfrequency response should be selected:\nˆβL(ω) = 1\nα(ω − ωL)2 (3)\nIn the equation, α is the bandwidth adjustment parameter of the modal function.\nElectronics 2024, 13, 3441 4 of 23\nBased on the selected filter, the constraint can be constructed as follows:\nJ2 = ∥βL(ω) × fr(t)∥2\n2 (4)\n(3) To effectively distinguish between the L-th order mode and the L − 1-th order\nmode, based on the J2 constraint, an appropriate filter ˆβi(ω) with the following frequency\nresponse should be selected:\nˆβi(ω) = 1\nα(ω − ωi)2 , i = 1, 2,· · ·, L − 1 (5)\nBased on the selected filter, the constraint is constructed as follows:\nJ3 =\nL−1\n∑\ni=1\n∥βi(ω) × µL(t)∥2\n2 (6)\n(4) To ensure that the signal can be fully reconstructed, the following constraint is\nconstructed:\nf (t) = µL(t) +fu(t) +\nL−1\n∑\ni=1\nui(t) (7)\nTherefore, the extraction of mode components can be simplified to the minimization\nproblem of the above constraints:\nmin{η J1 + J2 + J3}\ns.t. uL(t) +fr(t) = f (t) (8)\nIn the equation, η is the parameter that balances J1, J2, J3.\nThe SVMD decomposition process is illustrated in Figure 1:\nElectronics 2024, 13, x FOR PEER REVIEW  5  of  24 \n \n \nStart\nOriginal data\nInitialize SVMD \nparameters\nUse SVMD to decompose \nthe original data\nExtract global signal feature \nvalues to obtain the modal center \nfrequency\nDetermine whether the modal\ncenter frequency component is lower than the \nintrinsic mode component\nReconstruct the decomposed IMF \ncomponents by summation\nEnd\nY\nN\n \nFigure 1. SVMD Flowchart. \n2.2. Secretary Bird Optimization Algorithm \nWhen performing SVMD decomposition, it is necessary to determine the parameters. \nParameters with a minor impact on the decomposition are set to empirical values, while \nthe  mode  compactness  coefficient  (maxAlpha)  significantly  influences  the  compactness \nand fidelity of the modes, thus having a major impact on the decomposition. To ensure \nthat the SVMD algorithm can decompose clear characteristic information, this paper em‐\nploys SBOA to optimize maxAlpha, ensuring that the modes are neither too dispersed nor \ntoo concentrated, thereby avoiding mode mixing. \n2.2.1. Initial Preparation Phase \nSBOA operates as a population‐centric metaheuristic approach. Each secretary bird \nis regarded as a member of the algorithm’s solution set, and its position represents a po‐\ntential solution to the current problem [29]. In the initial phase, the positions of the secre‐\ntary birds in the search space are randomly initialized: \n, ( ) , 1 , 2 ,,, 1 , 2 ,,ij j j jX l l r u l l l iN jD i m         (9)\nIn the equation,  iX   denotes the location of the  i ‐th secretary bird, while  jll   signi‐\nfies the lower limit and  jul   signifies the upper limit.  r   is a random value ranging from \n0 to 1, and  Dim   represents the dimension of the problem variables. \nAs indicated in Equation (10), the optimization process of SBOA starts with a popu‐\nlation of candidate solutions, which are initialized within the  ul   and  ll  limits defined \nby the problem. \nFigure 1. SVMD Flowchart.\nElectronics 2024, 13, 3441 5 of 23\nThe SVMD process is illustrated in Figure 1. Initially, the parameters of SVMD are\nset and initialized. Using these initialized parameters, the original data is decomposed\nto extract the global characteristics of the signal and to compute the center frequencies of\neach mode. Subsequently, these modal center frequencies are evaluated to determine if\nthey are below a predefined intrinsic mode component. If the evaluation result is “yes”,\nthe extracted IMFs are summed to reconstruct the signal. If the result is “no”, the process\nreturns to the first step, where parameters are reinitialized, and data decomposition is\nperformed again until the specified conditions are met.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Secretary Bird Optimization Algorithm",
+      "level": 2,
+      "text": "When performing SVMD decomposition, it is necessary to determine the parameters.\nParameters with a minor impact on the decomposition are set to empirical values, while\nthe mode compactness coefficient (maxAlpha) significantly influences the compactness and\nfidelity of the modes, thus having a major impact on the decomposition. To ensure that\nthe SVMD algorithm can decompose clear characteristic information, this paper employs\nSBOA to optimize maxAlpha, ensuring that the modes are neither too dispersed nor too\nconcentrated, thereby avoiding mode mixing.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.1 Initial Preparation Phase",
+      "level": 3,
+      "text": "SBOA operates as a population-centric metaheuristic approach. Each secretary bird is\nregarded as a member of the algorithm’s solution set, and its position represents a potential\nsolution to the current problem [29]. In the initial phase, the positions of the secretary birds\nin the search space are randomly initialized:\nXi,j = ll j + r × (ulj − ll j), i = 1, 2,· · ·, N, j = 1, 2,· · ·, Dim (9)\nIn the equation, Xi denotes the location of the i-th secretary bird, while ll j signifies the\nlower limit and ulj signifies the upper limit. r is a random value ranging from 0 to 1, and\nDim represents the dimension of the problem variables.\nAs indicated in Equation (10), the optimization process of SBOA starts with a popu-\nlation of candidate solutions, which are initialized within the ul and ll limits defined by\nthe problem.\nX =\n\n\nx1,1 · · ·xi,j · · ·x1,Dim\n... ... ... ... ...\nxi,1 xi,j xi,Dim\n... ... ... ... ...\nxN,1 · · ·xN,j · · ·xN,Dim\n\n\nN×Dim\n(10)\nIn the equation, X represents a set of all secretary birds, Xi represents the i-th secretary\nbird, Xi,j denotes the j-th problem variable value of the i-th secretary bird, and N denotes\nthe total count of members in the population of secretary birds.\nThe objective function is evaluated based on the problem variable values of the\ncandidate solutions represented by each secretary bird, and the results are compiled into a\nvector F according to Equation (11).\nF =\n\n\nF1\n...\nFi\n...\nFN\n\n\n=\n\n\nF(X1)\n...\nF(Xi)\n...\nF(XN)\n\n\nN×1\n(11)\nElectronics 2024, 13, 3441 6 of 23\nIn the equation, Fi indicates the objective function value obtained by the i-th secretary\nbird. The optimal candidate solution for the given problem is identified by comparing\nthese objective function values.\nTwo different natural behaviors of secretary birds are used to update SBOA members.\nThese behaviors include:\n• Hunting strategy.\n• Escape strategy.\nTherefore, in each iteration, every candidate solution is updated in two distinct phases.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.2 Hunting Strategy of Secretary Birds",
+      "level": 3,
+      "text": "The hunting process is refined into three stages: searching, consuming, and attacking\nprey. The entire predation process is divided into three equal time intervals.\n(1) Searching for Prey Stage: In the first stage, a differential evolution strategy is\nadopted to enhance the algorithm’s diversity and global search capabilities. By incorpo-\nrating differential mutation mechanisms, it improves the likelihood of finding the global\noptimum while avoiding local optima. Therefore, the position update of secretary birds in\nthe search for prey stage can be modeled by Equations (12) and (13).\nxnewP1\ni,j = xi,j + (xrandom _1 − xrandom _2) × R1 , t < 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 T (12)",
+      "level": 1,
+      "text": "Xi =\n\u001a\nXnew,P1\ni , Fnew,P1\ni < Fi\nXi, else (13)\nIn the equations, t represents the current number of iterations, T represents the max-\nimum number of iterations. Xnew,P1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "denotes the updated state of the i-th secretary bird",
+      "level": 1,
+      "text": "during the initial phase, xrandom _1 and xrandom _2 are random candidate solutions. R1 repre-\nsents an array of dimension 1 × Dim randomly generated within the interval [0, 1]. xnewP1\ni,j\nrepresents the value of the j-th dimension, and Fnew,P1\ni represents its fitness value.\n(2) Consuming Prey Stage: In the second stage, Brownian motion (RB) and “ xbest”\n(individual historical best position) are introduced to simulate the random movement of\nsecretary birds. RB can be mathematically modeled by Equation (14). By using “ xbest”,\nindividuals can search near optimal positions, enhancing their local search capabilities. The\nintroduction of RB randomness effectively prevents local optima and helps find better solu-\ntions. Consequently, the position updates of secretary birds during the prey consumption\nstage can be modeled by Equations (15) and (16).\nRB = randn (1, Dim) (14)\nxnewP1\ni,j = xbest + exp((t/T) ∧ 4) × (RB − 0.5) × (xbest − xi,j) , 1\n3 T < t < 2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3 T (15)",
+      "level": 1,
+      "text": "Xi =\n\u001a\nXnew,P1\ni , Fnew,P1\ni < Fi\nXi , else (16)\nIn the equations, randn (1, Dim) is an array of dimension 1 × Dim generated randomly\nfrom a standard normal distribution (mean of 0, standard deviation of 1), whilexbest denotes\nthe current optimal value.\n(3) Attacking Prey Stage: Introducing the Levy flight strategy enhances the global\nsearch capability of the optimizer, and incorporating a nonlinear perturbation factor, de-\nnoted as (1 − t\nT )(2 × t\nT ), improves the algorithm’s performance. Therefore, the position of\nsecretary birds in the attacking prey stage is updated by Equations (17) and (18).\nxnewP1\ni,j = xbest + ((1 − t\nT ) ∧ (2 × t\nT )) × xi,j × RL , t > 2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 T (17)",
+      "level": 1,
+      "text": "Electronics 2024, 13, 3441 7 of 23\nXi =\n\u001a\nXnew,P1\ni , Fnew,P1\ni < Fi\nXi, else (18)\nThe calculation method for RL is as follows:\nRL = 0.5 × Levy(Dim) (19)\nIn the equations, s denotes the distribution function. The calculation method is\nas follows:\nLevy(D) = s × u × σ\n|v|\n1\nη\n(20)\nIn the equations, s and η are fixed values, with s set to 0.01 and η set to 1.5. u and v\nare random numbers between 0 and 1. The calculation method for σ is as follows:\nσ =\n \nΓ(1 + η) × sin( πη\n2 )\nΓ( 1+η\n2 ) × η × 2( η−1\n2 )\n! 1\nη\n(21)\nIn the equations, Γ represents the gamma function, and the value of η is 1.5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.2.3 Escape Strategy of Secretary Birds",
+      "level": 3,
+      "text": "When secretary birds encounter threats from other predators, they typically employ\nvarious camouflage or escape strategies to protect themselves or their food. These strategies\ncan be broadly divided into two categories:\n• Strategy C1: Camouflage;\n• Strategy C2: Escape.\nAssuming the probabilities of the two categories are equal:\nIn the escape strategy of secretary birds, the birds will first choose to camouflage.\nIf camouflage is not possible, they will choose to escape. Based on this premise, the\nintroduction of the perturbation factor (1 − t\nT )2 helps the algorithm select the optimal\nsolution from both new and existing solutions. In summary, the two escape strategies of\nsecretary birds can be represented by Equation (22), and the updated condition can be\nrepresented by Equation (23).\nxnew,P2\ni,j =\n(\nC1 : xbest + (2 × RB − 1) × (1 − t\nT )2 × xi,j, rand < ri\nC2 : xi,j + R2 × (xrandom − K × xi,j), else (22)\nXi =\n\u001a\nXnew,P2\ni , Fnew,P2\ni < Fi\nXi, else (23)\nIn the equations, ri is set to 0.5, R2 represents an array of dimension1 × Dim randomly\ngenerated from a normal distribution, xrandom represents the random candidate solution of\nthe current iteration, and K represents a random choice between the integers 1 or 2, which\ncan be calculated using Equation (24).\nK = round (1 + rand (1, 1)) (24)\nIn the equations, rand (1, 1) represents a random number generated between 0 and 1.\nThe optimization process of SBOA is shown in Figure 2:\nThe SBOA process is illustrated in Figure 2. It begins with the initialization of parame-\nters and the calculation of the fitness values of individuals to find the optimal position. In\nthe hunting phase of the secretary birds, the entire predation process (maximum number\nof iterations T) is divided into three equal intervals. The current iteration count t is used\nto determine which interval it belongs to, and the position Xi of the i-th secretary bird is\nupdated using Equations (12), (15) and (17). Subsequently, in the escape phase of the secre-\ntary birds, the value rand is assessed to see if it is greater than 0.5. If the evaluation result is\nElectronics 2024, 13, 3441 8 of 23\n“yes”, then parameter Xi is updated using the formula C1 in Equation (22). If the evaluation\nresult is “no”, then parameter Xi is updated using the formula C2 in Equation (22). The\noptimal value xbest for the problem is then updated from the results of each secretary bird.\nFinally, the algorithm checks whether the maximum number of iterations has been reached.\nIf this condition is satisfied, the optimal value is output; otherwise, the algorithm returns to\nthe hunting phase and continues iterating.\nElectronics 2024, 13, x FOR PEER REVIEW  9  of  24 \n \n \n \nFigure 2. SBOA optimization flowchart. \n3. Short‐Term Power Load Forecasting Model \n3.1. TCN Neural Network Structure \nTCN is a novel neural network based on the CNN architecture. TCN employs struc‐\ntures such as dilated causal convolutions and residual blocks. The structure of TCN’s di‐\nlated causal convolutions is illustrated in Figure 3. Compared to traditional CNN, causal \nconvolutions focus only on past and current information, without considering future data. \nThis means that the output value  ty   at time  t   is determined solely by the input values \nat time  t   and earlier, up to input   01 1,, ,  ttx xx x . Traditional CNN increases the re‐\nceptive field by  adding  pooling layers, which  can lead to  information  loss.  In  contrast, \nTCN introduces dilated convolutions to expand the receptive field, allowing it to capture \ndependencies  over  a  larger  range  without  losing  information.  The  operation  of  dilated \nconvolution is expressed as follows: \n1\n0() ()\n\n\nk\ntp iiFt f i x    (25)\nIn the equation,  t   represents the index of the sequence element,  p  denotes the di‐\nlation factor,   n\ntx R   refers to the sequence element,  ()Ft   is the dilated convolution of \nthe sequence element  tx , and  k  indicates the size of the convolution kernel. \nFigure 2. SBOA optimization flowchart.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Short-Term Power Load Forecasting Model",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 TCN Neural Network Structure",
+      "level": 2,
+      "text": "TCN is a novel neural network based on the CNN architecture. TCN employs struc-\ntures such as dilated causal convolutions and residual blocks. The structure of TCN’s\ndilated causal convolutions is illustrated in Figure 3. Compared to traditional CNN, causal\nconvolutions focus only on past and current information, without considering future data.\nThis means that the output valueyt at time t is determined solely by the input values at time\nt and earlier, up to input {x0, x1, · · ·xt−1, xt}. Traditional CNN increases the receptive field\nby adding pooling layers, which can lead to information loss. In contrast, TCN introduces\ndilated convolutions to expand the receptive field, allowing it to capture dependencies\nover a larger range without losing information. The operation of dilated convolution is\nexpressed as follows:\nF(t) =∑\nk−1\ni=0 f (i) ∗ xt−p∗i (25)\nElectronics 2024, 13, 3441 9 of 23\nElectronics 2024, 13, x FOR PEER REVIEW  10  of  24 \n \n \n \nFigure 3. TCN dilated causal convolution structure. \nThe TCN residual unit is shown in Figure 4. The residual connection adds the input \nx   to the output  ()f x .  ()f x   can be expressed as: \n() ()f xh xx    (26)\nDropout operation\nActivation function \nrule\nWeight normalization\nDilated causal \nconvolution\nNonlinear \nmapping\nx\n()f x\n()hx\nDropout operation\nActivation function \nrule\nWeight normalization\nDilated causal \nconvolution\n \nFigure 4. TCN residual unit. \nIn  Figure  4,  the  addition  of  causal  convolutions  in  TCN  ensures  that  information \nflows strictly from the past to the future, thereby preventing information leakage from \nfuture to past. Even with fewer layers, the application of dilated causal convolution (DCC) \nenables TCN to have a larger receptive field, allowing it to process longer time series data. \nFurthermore, DCC incorporates techniques such as the ReLU activation function, weight \nFigure 3. TCN dilated causal convolution structure.\nIn the equation, t represents the index of the sequence element, p denotes the dilation\nfactor, xt ∈ Rn refers to the sequence element,F(t) is the dilated convolution of the sequence\nelement xt, and k indicates the size of the convolution kernel.\nThe TCN residual unit is shown in Figure 4. The residual connection adds the input x\nto the output f (x). f (x) can be expressed as:\nf (x) = h(x) − x (26)\nElectronics 2024, 13, x FOR PEER REVIEW  10  of  24 \n \n \n \nFigure 3. TCN dilated causal convolution structure. \nThe TCN residual unit is shown in Figure 4. The residual connection adds the input \nx   to the output  ()f x .  ()f x   can be expressed as: \n() ()f xh xx    (26)\nDropout operation\nActivation function \nrule\nWeight normalization\nDilated causal \nconvolution\nNonlinear \nmapping\nx\n()f x\n()hx\nDropout operation\nActivation function \nrule\nWeight normalization\nDilated causal \nconvolution\n \nFigure 4. TCN residual unit. \nIn  Figure  4,  the  addition  of  causal  convolutions  in  TCN  ensures  that  information \nflows strictly from the past to the future, thereby preventing information leakage from \nfuture to past. Even with fewer layers, the application of dilated causal convolution (DCC) \nenables TCN to have a larger receptive field, allowing it to process longer time series data. \nFurthermore, DCC incorporates techniques such as the ReLU activation function, weight \nFigure 4. TCN residual unit.\nIn Figure 4, the addition of causal convolutions in TCN ensures that information\nflows strictly from the past to the future, thereby preventing information leakage from\nElectronics 2024, 13, 3441 10 of 23\nfuture to past. Even with fewer layers, the application of dilated causal convolution (DCC)\nenables TCN to have a larger receptive field, allowing it to process longer time series data.\nFurthermore, DCC incorporates techniques such as the ReLU activation function, weight\nnormalization, and dropout regularization. These methods not only enhance the model’s\nnonlinear representation capabilities but also improve its stability and generalization\nperformance, ultimately boosting the model’s effectiveness in time series forecasting tasks.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2 BiLSTM Neural Network",
+      "level": 2,
+      "text": "The structure of the LSTM neural network is shown in Figure 5:\nElectronics 2024, 13, x FOR PEER REVIEW  11  of  24 \n \n \nnormalization, and dropout regularization. These methods not only enhance the model’s \nnonlinear representation capabilities but also improve its stability and generalization per‐\nformance, ultimately boosting the model’s effectiveness in time series forecasting tasks. \n3.2. BiLSTM Neural Network \nThe structure of the LSTM neural network is shown in Figure 5: \n tanh \ntanh\ntx\n1th\n1tC tC\nth\nth\n \nFigure 5. LSTM model structure diagram. \nIn Figure 5, the input gate ( ti ) of the LSTM network determines whether new infor‐\nmation should be stored in the cell state, the forget gate ( tf ) selectively discards unneces‐\nsary information to prevent information overload, and the output gate ( to ) controls the \nstate output of the memory cell. The collaboration of these three gates allows the LSTM \nnetwork to effectively capture and maintain both long‐term and short‐term dependencies \nin time series data. \nThe computation formulas for the LSTM network are as follows: \n1()ti t i t iiW x U h b      (27)\n1()tf t f t ff Wx Uh b      (28)\n1()to t o t ooW x U h b      (29)\n1tanh( )tc t c t ccW x U h b      (30)\n1tt t t tci c f c      (31)\ntanh( )tt tho c    (32)\nIn the equation,  ti   is determined by the input  tx , the hidden layer output from the \nprevious  time  step  1th ,  and  the  activation  function   .  The  weights  and  biases  for  the \ngates are represented by  iW ,  iU ,  ib ,  fW ,  fU ,  fb ,  oW ,  oU , and  ob . \nBiLSTM adopts a bidirectional structure, which fully leverages both past and future \ncontextual information, enhancing the model’s ability to understand and predict sequen‐\ntial data. The structure of BiLSTM is shown in Figure 6. \nFigure 5. LSTM model structure diagram.\nIn Figure 5, the input gate (it) of the LSTM network determines whether new informa-\ntion should be stored in the cell state, the forget gate (ft) selectively discards unnecessary\ninformation to prevent information overload, and the output gate ( ot) controls the state\noutput of the memory cell. The collaboration of these three gates allows the LSTM network\nto effectively capture and maintain both long-term and short-term dependencies in time\nseries data.\nThe computation formulas for the LSTM network are as follows:\nit = σ(Wixt + Uiht−1 + bi) (27)\nft = σ(Wf xt + U f ht−1 + b f ) (28)\not = σ(Woxt + Uoht−1 + bo) (29)\nect = tanh(Wcxt + Ucht−1 + bc) (30)\nct = it · ect + ft · ct−1 (31)\nht = ot · tanh(ct) (32)\nIn the equation, it is determined by the input xt, the hidden layer output from the\nprevious time step ht−1, and the activation function σ. The weights and biases for the gates\nare represented by Wi, Ui, bi, Wf , U f , b f , Wo, Uo, and bo.\nBiLSTM adopts a bidirectional structure, which fully leverages both past and future\ncontextual information, enhancing the model’s ability to understand and predict sequential\ndata. The structure of BiLSTM is shown in Figure 6.\nIn Figure 6, ht represents the forward hidden state, hi represents the backward hidden\nstate, and each level of the hidden layer ht is composed of three parts: the existing input\nxt, the forward hidden state output from the previous time step ht−1, and the backward\nhidden state output from the previous time step hi−1.\nElectronics 2024, 13, 3441 11 of 23\nElectronics 2024, 13, x FOR PEER REVIEW  12  of  24 \n \n \n1ty ty 1ty\n1ih\n1tx tx 1tx\nih 1ih\n1thth1th\n \nFigure 6. BiLSTM model structure diagram. \nIn Figure 6,  th   represents the forward hidden state,  ih   represents the backward hid‐\nden state, and each level of the hidden layer  th   is composed of three parts: the existing \ninput  tx , the forward hidden state output from the previous time step  1th , and the back‐\nward hidden state output from the previous time step  1ih . \n3.3. Combined Prediction Model Based on TCN‒BiLSTM \nThe TCN‒BiLSTM combined prediction neural network model is shown in Figure 7. \n   \n输入 TCN BiLSTM Output \nlayer\nInput \nlayer\nHidden \nlayer\n \nFigure 7. TCN‐BiLSTM model structure diagram. \nAs shown in Figure 7, the model structure includes the following steps: \n(1) The input layer consists of IMF components obtained from the SVMD decomposi‐\ntion. \n(2) In the TCN layer, a 1‐layer residual unit is used. The residual unit is composed of 2 \nconvolution units and multiple nonlinear mappings. The ReLU function is used as \nthe activation function to normalize the weights. \n(3) The output vector of the TCN model serves as the input for the BiLSTM. \n(4) The output layer includes 1 fully connected layer, which contains 1 neuron, and its \noutput is the load prediction value for one time step. \nThe model architecture fully leverages the IMF components decomposed by SVMD, \ncapturing short‐term features in the time series through TCN, and further capturing long‐ \nand short‐term dependencies in the time series using BiLSTM. The residual units in the \nTCN enhance the model’s ability to extract complex features by introducing multiple non‐\nlinear mapping layers. The use of the ReLU activation function helps mitigate the vanish‐\ning  gradient  problem,  making  the  training  process  more  stable  and  efficient.  The  fully \nconnected layer maps the extracted complex features to load prediction values, enabling \nFigure 6. BiLSTM model structure diagram.\n3.3. Combined Prediction Model Based on TCN–BiLSTM\nThe TCN–BiLSTM combined prediction neural network model is shown in Figure 7.\nElectronics 2024, 13, x FOR PEER REVIEW  12  of  24 \n \n \n1ty ty 1ty\n1ih\n1tx tx 1tx\nih 1ih\n1thth1th\n \nFigure 6. BiLSTM model structure diagram. \nIn Figure 6,  th   represents the forward hidden state,  ih   represents the backward hid‐\nden state, and each level of the hidden layer  th   is composed of three parts: the existing \ninput  tx , the forward hidden state output from the previous time step  1th , and the back‐\nward hidden state output from the previous time step  1ih . \n3.3. Combined Prediction Model Based on TCN‒BiLSTM \nThe TCN‒BiLSTM combined prediction neural network model is shown in Figure 7. \n   \n输入 TCN BiLSTM Output \nlayer\nInput \nlayer\nHidden \nlayer\n \nFigure 7. TCN‐BiLSTM model structure diagram. \nAs shown in Figure 7, the model structure includes the following steps: \n(1) The input layer consists of IMF components obtained from the SVMD decomposi‐\ntion. \n(2) In the TCN layer, a 1‐layer residual unit is used. The residual unit is composed of 2 \nconvolution units and multiple nonlinear mappings. The ReLU function is used as \nthe activation function to normalize the weights. \n(3) The output vector of the TCN model serves as the input for the BiLSTM. \n(4) The output layer includes 1 fully connected layer, which contains 1 neuron, and its \noutput is the load prediction value for one time step. \nThe model architecture fully leverages the IMF components decomposed by SVMD, \ncapturing short‐term features in the time series through TCN, and further capturing long‐ \nand short‐term dependencies in the time series using BiLSTM. The residual units in the \nTCN enhance the model’s ability to extract complex features by introducing multiple non‐\nlinear mapping layers. The use of the ReLU activation function helps mitigate the vanish‐\ning  gradient  problem,  making  the  training  process  more  stable  and  efficient.  The  fully \nconnected layer maps the extracted complex features to load prediction values, enabling \nFigure 7. TCN-BiLSTM model structure diagram.\nAs shown in Figure 7, the model structure includes the following steps:\n(1) The input layer consists of IMF components obtained from the SVMD decomposition.\n(2) In the TCN layer, a 1-layer residual unit is used. The residual unit is composed of\n2 convolution units and multiple nonlinear mappings. The ReLU function is used as\nthe activation function to normalize the weights.\n(3) The output vector of the TCN model serves as the input f",
+      "refs": {
+        "figures": [
+          "f7",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4 Combined Prediction Model Based on SVMD-SBOA-TCN-BiLSTM",
+      "level": 1,
+      "text": "In this paper, the electrical load is decomposed using SVMD optimized by SBOA, and\nthe TCN–BiLSTM combined model is used for prediction. The model flowchart is shown\nin Figure 8. The specific steps are as follows:\n(1) A novel swarm intelligence optimization algorithm, SBOA, is used to optimize the\nkey parameter of SVMD.\n(2) The electrical load sequence is decomposed into multiple IMFs over different time\nscales using SVMD.\n(3) The decomposed IMFs are used as basic units and input into the TCN for feature\nextraction, outputting feature vectors containing rich information.\n(4) These feature vectors are then used as inputs to the BiLSTM for prediction, resulting\nin the forecasted values for each IMFs.\n(5) The final prediction result is obtained by integrating the predicted values ofdifferent IMFs.\nElectronics 2024, 13, x FOR PEER REVIEW  13  of  24 \n \n \nthe model to handle high‐dimensional inputs and provide accurate predictions. This de‐\nsign allows the model to better capture the intrinsic patterns in time series data, thereby \nimproving prediction accuracy and reliability. \n4. Combined Prediction Model Based on SVMD‐SBOA‐TCN‐BiLSTM \nIn this paper, the electrical load is decomposed using SVMD optimized by SBOA, \nand  the  TCN‒BiLSTM  combined  model  is  used  for  prediction.  The  model  flowchart  is \nshown in Figure 8. The specific steps are as follows: \n(1) A novel swarm intelligence optimization algorithm, SBOA, is used to optimize the \nkey parameter of SVMD. \n(2) The electrical load sequence is decomposed into multiple IMFs over different time \nscales using SVMD. \n(3) The  decomposed  IMFs  are  used  as  basic  units  and  input  into  the  TCN  for  feature \nextraction, outputting feature vectors containing rich information. \n(4) These feature vectors are then used as inputs to the BiLSTM for prediction, resulting \nin the forecasted values for each IMFs. \n(5) The final prediction result is obtained by integrating the predicted values of different \nIMFs. \nStart\nOriginal data\nSVMD decomposition \noptimized by SBOA\nIMF1 IMF2 IMF3 IMF4\nHybrid \ncomputation\nOutput predicted \nvalues\nEnd\nTCN‐BiLSTM TCN‐BiLSTM TCN‐BiLSTM TCN‐BiLSTM\n \nFigure 8. Prediction model flowchart. \nThe proposed model combines the precise decomposition capability of SVMD, the \noptimization advantages of SBOA, the feature extraction efficiency of TCN, and the bidi‐\nrectional sequential modeling capability of BiLSTM to significantly improve the extraction \nand  prediction  accuracy  of  the  power  load  sequence’s  temporal  features.  SVMD  accu‐\nrately decomposes power load data, allowing each IMF component to independently re‐\nflect specific fluctuation characteristics within the load data. These components better cap‐\nFigure 8. Prediction model flowchart.\nThe proposed model combines the precise decomposition capability of SVMD, the\noptimization advantages of SBOA, the feature extraction efficiency of TCN, and the bidirec-\ntional sequential modeling capability of BiLSTM to significantly improve the extraction\nand prediction accuracy of the power load sequence’s temporal features. SVMD accurately\ndecomposes power load data, allowing each IMF component to independently reflect spe-\ncific fluctuation characteristics within the load data. These components better capture the\ndata’s non-linearity and non-stationarity. The SBOA-optimized SVMD parameters further\nenhance the decomposition accuracy, making each IMF component more representative.\nWhen processing these IMF components, TCN efficiently extracts complex patterns and\nlong short-term dependencies from the time series through its convolutional structure,\nenhancing the feature vector’s expressive capability. BiLSTM, with its bidirectional net-\nwork structure, comprehensively understands the time series data, capturing the temporal\nrelationships both forward and backward, thereby further improving prediction perfor-\nElectronics 2024, 13, 3441 13 of 23\nmance. This multi-layered composite model not only enhances the accuracy of power load\nforecasting but also demonstrates advantages in handling complex temporal data.",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Experimental Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.1 Data Preparation",
+      "level": 2,
+      "text": "The raw power load dataset selected for this study is sourced from a region in Belgium.\nThe data collection spans from 1 January 2018 to 31 December 2018, with a sampling\nfrequency of every 15 min, resulting in a total of 35,040 data points. The data are split into a\ntraining set and a test set in a ratio of 5:1. A day-ahead forecasting method is adopted, with\nthe original dataset segmented into daily sequences of 96 data points each. Data from the\nfirst 10 months are used as the training set, while the remaining data are used for testing.\nDuring the model training, an Adam optimizer is used, and training is executed on a GPU\nto accelerate the process. The trained model is applied for day-ahead forecasting, with each\nday’s forecast based on the previous day’s data. The prediction results are denormalized\nand aggregated daily to produce a forecast curve for the next two months, which is then\ncompared with actual measured data to evaluate the model performance. The laboratory\nhardware configuration includes a computer with an Intel Core i9-13900HX CPU, 16 GB of\nmemory, and an NVIDIA GeForce RTX 4070 GPU for acceleration. The experiments are\nprogrammed using Matlab2024a.\nTo address issues such as missing data and abnormal fluctuations in the original\npower load dataset, this study employs the quartile method to detect outliers and convert\nthem to missing data, which are then filled using an interpolation function for upsampling.\nAdditionally, since the load IMFs obtained from SVMD decomposition have significant\nnumerical differences, directly using these decomposed data for prediction could adversely\naffect the overall mapping effect of the network. Therefore, it is necessary to normalize\nthe input sequence to prevent the problem of dimensional explosion during training. The\nnormalization method scales the data to the range of [0, 1] to improve the efficiency and\nstability of model training. The normalization equation used in this study is as follows:\nXnorm = X − Xmin\nXmax − Xmin\n(33)\nIn the equation, Xmin and Xmax represent the minimum and maximum values of the\ninput data matrix X. The normalized data Xnorm ensure that the input features are on the\nsame scale, which helps to accelerate the convergence speed of the model. To restore the\nnormalized data to the original scale after prediction, the inverse normalization equation is\nused as follows:\nXrestore = Xnorm · (Xmax − Xmin) +Xmin (34)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.2 Parameter Settings and Evaluation Metrics",
+      "level": 2,
+      "text": "To obtain the optimal structure of the deep learning model, this study configures\nthe TCN with 10 convolutional filters and a filter size of 2. Additionally, one residual\nblock is incorporated to mitigate the vanishing gradient problem and ensure the training\nstability of the deep network. To prevent overfitting, a dropout layer with a dropout rate\nof 0.02 is introduced in the TCN. The BiLSTM layer is configured with 60 hidden units,\na maximum of 100 epochs, and the ReLU activation function. To further enhance the\nmodel’s performance, the initial learning rate is set to 0.005 and is halved every 2 epochs\nthrough an automatic adjustment callback function. The training process utilizes the Adam\noptimizer. These parameter settings, determined through iterative experimentation and\noptimization, aim to improve the model’s prediction accuracy and generalization ability.\nThe choices of these settings have undergone multiple adjustments to ensure the model\ncan effectively extract local features from the time series data and perform excellently in\npractical applications. Table 1 shows the parameter settings for SVMD and SBOA.\nElectronics 2024, 13, 3441 14 of 23\nTable 1. Parameter settings for SVMD and SBOA.\nSVMD Parameters Value Type of Stopping Criteria 4\ncompactness of mode 19,990.25 SBOA Parameters Value\ntime step of the dual ascent 0 pop 30\ntolerance of convergence criterion 1 × 10−6 max_iteration 60\nTo evaluate the prediction accuracy of the SBOA–SVMD–TCN–BiLSTM prediction\nmodel, this paper utilizes MAE, RMSE, and goodness of fit R2 as evaluation metrics. The\ncalculation formulas are as follows:\nσMAE = 1\nn\nn\n∑\ni=1\n|yi − ˆyi| (35)\nσRMSE =\ns\n1\nn\nn\n∑\ni=1\n(yi− ˆyi)2 (36)\nσR2 = 1 −\nn\n∑\ni=1\n(yi − ˆyi)2\nn\n∑\ni=1\n(yi − yi)2\n. (37)\nIn the equation, ˆyi represents the predicted power load at time i, yi represents the\nactual power load at time i, and yi represents the average predicted power load. The\nsmaller the MAE and RMSE, the better the model’s prediction performance. The closer R2\nis to 1, the better the fit of the prediction model.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5.3 Power Load Sequence Decomposition",
+      "level": 2,
+      "text": "In this study, normalized load data were decomposed using the SVMD method op-\ntimized by SBOA. The data were selected from a region in Belgium, covering the first\ntwo months of spring and autumn, as well as the first three months of summer and win-\nter in 2018. For each of these months, data from the first seven days were selected at\n15-min intervals, resulting in a total of 6720 data points. The decomposition results are\nshown in Figure 9.\nElectronics 2024, 13, x FOR PEER REVIEW  16  of  24 \n \n \n \nFigure 9. SVMD decomposition diagram. \nThe  original  power  load  sequence  is  decomposed  into  four  single‐frequency  IMF \ncomponents: IMF1 to IMF4. Each IMF component has clear features and corresponds to \ndifferent central frequencies: \n IMF1: Exhibits weak volatility and does not cross the zero point, approximately rep‐\nresenting the trend of the original power load. \n IMF2: Has a relatively low frequency with evident periodicity, reflecting the regular‐\nity of the power load to some extent. \n IMF3 to IMF4: These components have relatively higher frequencies and weaker pe‐\nriodicity, representing both the regularity and the anomalies or sudden events in the \npower load. \nEach IMF component can represent the characteristics of the power load to a certain \nextent. This decomposition effectively solves the modal aliasing issue seen in other algo‐\nrithms, ensures the integrity of the decomposed signal, and enhances the accuracy of the \nmodel’s prediction. \nIn this study, the mode compactness parameter in SVMD is adjusted, using permu‐\ntation entropy as a metric to reflect the effectiveness of SVMD parameter optimization in \ncontrolling the complexity of the sequence. Permutation entropy is a key indicator of se‐\nquence complexity, with values ranging from 0 to 1. A lower permutation entropy indi‐\ncates lower complexity and higher predictability of the sequence, while values closer to 1 \nsuggest higher complexity and increased difficulty in prediction [30,31]. \nTable 2 presents the different mode compactness parameters in SVMD and their cor‐\nresponding permutation entropy values. It is evident that the optimized SVMD parame‐\nters achieved the lowest permutation entropy, indicating that the SVMD parameters op‐\ntimized by SBOA significantly reduced sequence complexity, thereby enhancing predic‐\ntion performance. \nTable 2. Permutation entropy corresponding to different mode compactness parameters in SVMD. \nSVMD Parameter (Compactness of Mode)  Permutation Entropy \n15,000  0.3462 \n17,500  0.2857 \n19,990.25 (Optimized)  0.1245 \n   \nFigure 9. SVMD decomposition diagram.",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "SVMD Flowchart."
+    },
+    {
+      "id": "f2",
+      "caption": "SBOA optimization flowchart."
+    },
+    {
+      "id": "f3",
+      "caption": "TCN dilated causal convolution structure."
+    },
+    {
+      "id": "f4",
+      "caption": "TCN residual unit."
+    },
+    {
+      "id": "f5",
+      "caption": "LSTM model structure diagram."
+    },
+    {
+      "id": "f6",
+      "caption": "BiLSTM model structure diagram."
+    },
+    {
+      "id": "f7",
+      "caption": "TCN‐BiLSTM model structure diagram."
+    },
+    {
+      "id": "f8",
+      "caption": "Prediction model flowchart."
+    },
+    {
+      "id": "f9",
+      "caption": "SVMD decomposition diagram."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Parameter settings for SVMD and SBOA."
+    },
+    {
+      "id": "t2",
+      "caption": "presents the different mode compactness parameters in SVMD and their cor‐"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation (11)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "Equation (22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "Equation (23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "Equation (24)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 10
+  }
+}

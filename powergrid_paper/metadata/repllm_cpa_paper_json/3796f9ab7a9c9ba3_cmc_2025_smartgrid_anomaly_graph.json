@@ -1,0 +1,242 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2025_smartgrid_anomaly_graph.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2.1 FaultDiagnosisinSmartGrids",
+      "level": 2,
+      "text": "Deeplearning-basedfaultdiagnosisinsmartgridsrepresentsanext-generationparadigmforpowersys-\ntem health management that integrates IIoT sensing technologies with AI-driven cognitive advancements,\nwhich leverages cutting-edge deep algorithms to perform intelligent analysis on massive IIoT-generated\ndatasets,thus achievingprecise identificationand predictive detection of grid anomalies [10].\nFor example, Park and Pandey [17] proposed a context-aware fault detection framework, GridCAL,\nwhichleveragescontext-agnosticlea rningtounifymeasurementsacrossvaryinggridoperatingconditions.\nGridCAL employs linear sensitivity factors, such as Power Transfer Distribution Factors and Line Outage\nDistributionFactors,totransformreal-timepowerflow measurementsintocontext-agnosticvalues,enabling\ntheaggregationofdatafromdiversegridcontextsintoaunifiedstatisticalmodelandsignificantlyreducing\nfalsepositivescausedbyanticipatedtopologychangesandload-generationshifts.Harrouetal.[ 18]proposed\na hybrid deep learning framework that integrates a gated recurrent unit-based stacked autoencoder with\nsemi-supervised fault detection algorithms to achieve fault detection in smart grids. Danilczyk et al. [19]\n5362 ComputMaterContin. 2025;85(3)\nproposed a deep learning-based digital twin framework for fault detection via leveraging a convolutional\nneuralnetworktoanalyzehigh-resolutionphasormeasurementunitdata,whichachievessimultaneousfault\ndetection and localization by mapping the three-phase voltage signals of power system buses to a CNN\narchitectureanalogoustoimageprocessing.Abdel-Bassetetal.[ 20]proposedaprivacy-preservingfederated\nsemi-supervised framework for fault detection in smart grids, integrating a block-structured temporal\nconvolutionalgenerativenetworktoaddressclassimbalanceandenhanceminoritysamplegeneration.\nIn recent years, stemming from the graph-structured nature of power systems, deep graph neural\nnetworks have emerged as a transformative solution for fault diagnosis in smart grids, offering capabilities\nto model the non-Euclidean relationships between grid components [12]. Chen et al. [11] designed an\nimprovedGraphSAGEmodelbasedontime-neighborfeaturestodetectpowersystemanomalies,effectively\nidentifying hidden anomalies by aggregating neighbor node features and considering time-series changes.\nvan Nooten et al. [21] proposed a graph isomorphic network-oriented architecture to assess the states of\nmedium-voltage grids under theN-1 contingency criterion by integrating both node features and edge\nfeaturesintoanovelmessage-passingprocedurewithintheinherentgraphstructureofpowersystems.Wang\netal.[ 22]proposedahybridshort-termvoltagestabilitypredictionframework,whereagraphconvolutional\nnetwork models spatial dependencies among grid nodes, and LSTM captures temporal dynamics. Gao\net al. [15] utilized a graph convolutional neural network to extract graph structure features and input these\nfeatures into a transformer-based encoder-decoder to achieve fault detection. Wang et al. [16] introduced\na graph representation learning framework by modeling power grids as graphs and generating node\nembeddings through parallelizable walks, which leverage biased random walks to capture both topological\nrelationshipsandnodefeatures.Furthermore,smartgriddataoftenhasatemporalnature[ 23].Forexample,\nQiu et al. [24] designed an graph neural network framework with spatia-temporal attention for time-series\nforecasting. The integration of temporal information with graph-based models can enhance the detection\nandpredictionoffaultsinpowersystemsbyleveragingbothspatialandtemporalpatternsinthedata[ 25].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.2 Long-TailedClassification",
+      "level": 2,
+      "text": "Thegoaloflong-tailedclassificationistosuppressthenuisancesofclassimbalanceinminingpatternsof\ndata,whichareclassifiedintothreebranches:re-sampling-basedmethods,re-weighting-basedmethods[ 26],\nandcollaborative-basedmethods[ 27].Re-sampling-basedmethodsadjustthesampledistributionofdiffer-\nent classes in the training dataset to mitigate the impact of class imbalance. For example, Zhao et al. [28]\nencoded node similarity in embedding space to ensure the authenticity of newly synthesized samples\nand simultaneously trained an edge generator to simulate relationship information, thereby improving\nimbalancednodepatternminingongraphs.Re-weighting-basedmethodsassigndifferentweightstosamples\nofdifferentclassesinthelossfunction,promptingthemodeltofocusmoreonminorityclasses.Forexample,\nZhong et al. [29] designed a sample-aware smoothing cross-entropy loss that smooths each class’s labels,\nenabling more precise confidence adjustments and alleviating overconfidence imbalances. Collaborative-\nbasedmethodsenhancetheminingoflong-taildatapatternsbyintegratingcomplementaryknowledgefrom\nmultiple experts. For example, Yi et al. [30] devised a multi-expert collaborative graph-level classification\nframework where gated selection and knowledge distillation aggregate complementary expert information\ntoenhancedecisionrobustness.MCIGbuildsonthestrengthsofcollaborative-basedmethods,focusingon\nfostering reliable decision-making and dynamic interaction among experts to enhance pattern mining of\nlong-taileddata.\nComputMaterContin. 2025;85(3) 5363\n3Th eP r o p o s e dM e t h o d",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3.1 ProblemDefinition",
+      "level": 2,
+      "text": "To capture the fault patterns and complex structure relationships in the power grid, we model the\npower grid fault diagnosis as a graph-level classification problem. Mathematically, the power grid can be\nrepresentedasagraph G=( X,E),wh er eX isthesetofnodes,representingtheelectricalnodesinthegrid\n(e.g., substations) andE is the set of edges, representing the transmission lines, transformers, and other\ndevicesthatconnectthenodes.Eachnode xj∈ X hasasetoffeatures,suchasactivepower,reactivepower,\nvoltage magnitude, and voltage angle; each edgeeij ∈ E has a set of features, including line admittance,\nreactance, and power flow. GivenN graphsG1,G2,..., GN,e a c hg r a p hGi contains node featuresXi,e d g e\nfeaturesEi,andalabel yi representingthestateofthepowergrid.Thegoalofgridfaultdiagnosisistolearna\nfunction f∶G→ RK,where K isthenumberofgridstates.Consideringthatthedatafornormalstatesinthe\npowergridismuchmoreabundantthanforabnormalstates,i.e.,thedatafollowsalong-taileddistribution,\nwe propose a novel multi-expert collaboration-based information graph learning method to address this\nchallenge(MCIG),whichcanbeexpressedasfollows:\nmin\nθ,ϕ,G\nEG∼Gℓθ(GNN(G))+ EG∼Gℓϕ(GNN(G)) (1)\nwhere the first term and the second term stand for graph-level representation learning and state decision\nobjectives, respectively.θ and ϕ stand for network parameters of graph representation extractor, repre-\nsentation learning, and pattern mining. Next, we show the information graph aggregation module and\nmulti-expertreliabledecisionmodule,respectively,asshownin Fig.1.Thesymboldescriptionsinvolvedare\nshownin Table 1.\nFigure1: TheoverallarchitectureofMCIG.MCIGutilizesdataaugmentationfunctiontogenerateaugmentationgraph\n¯G={ ¯X, ¯E} from G={ X, E}. Then, MCIG conducts the information graph aggregation to extract robust graph-level\nrepresentations of the power grid state, i.e.,Z and ¯Z, via the informative-driven contrastive graph neural network.\nAnd then, it leverages the multi-expert reliable decision module to mining fault patterns from long-tailed graph-level\nrepresentations\n5364 ComputMaterContin. 2025;85(3)\nTable 1:Listofsymbols\nSymbol Meaning\nG Power grid graph",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "Seto fnodesinthegra ph",
+      "level": 1,
+      "text": "E Seto fedgesinthegra ph\nxj Node in the graph\neij Edgeinthegraph\nz(l)\nj Noderepresentationinthe l-thlayer\nh(l)\nj Featureaggregationinthe l-thlayer\nN(j) N eighbo rseto fnodej\nmi Graph-level representation of graphGi\n¯Gj Augmentedgraphconstructedfrom Gj\nI(z,¯z) Mutualinformation betweenz and ¯z\nJS(p∥ q) Jensen-Shannondivergencebetweendistributions pandq\nLIGA Loss for information graph aggregation module\nq Credibilityofindividual-expertclassification\nDiri(s∣δ) Dirichletdistributionwithparameters δ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "Lossforindividual-expertclassifierlearning",
+      "level": 1,
+      "text": "Ls Simplexloss\nLe Totallossforsingle-expertclassifier( Lc+λLs)\nwv Active weight of expertv\nBv Two-consecutiveexpertgamefactor\nLm Lossformulti-expertclassifierlearning\nLd Complementaritylossamongexperts",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "OveralllossofMCIG",
+      "level": 1,
+      "text": "ui Finalclassificationresult(inference)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 InformationGraphAggregation",
+      "level": 2,
+      "text": "The Information Graph Aggregation (IGA) module is designed to address the challenge of long-\ntailed data distribution in smart grid fault diagnosis. It leverages a contrastive graph neural network\nframeworktolearnrobustgraph-levelrepresentationsbymaximizingmutualinformationbetweenoriginal\nand augmented graph data. This approach ensures that both common and rare fault patterns are effectively\ncaptured, providing a balanced representation for subsequent fault classification.\nGiven a power grid state graphG\ni, the feature aggregation process between nodes in thel-th layer of\nGNNisasfollo ws:\nz(l)\nj =GNN(l)(z(l−1)\nj ,h(l)\nj ), h(l)\nj = ∑\nv∈N(j)\nz(l−1)\nv (2)\nwhere h(l)\nj denotes is the feature aggregation in neighbor setN(j) of thej-th node in thel-th layer and\nz(0)\nj = xj.\nN(j)={ i∈ X∣ eij =1,eij ∈ E} (3)\nComputMaterContin. 2025;85(3) 5365\nThen, the graph-level representationmi of Gi are obtained via fusing all node representations in all\nlayers:\nzj=Fusion({z(l)\nj }N,L\nj=1,l=1)) (4)\nwhereFusion(⋅)isimplementedviatheadaptivepoolingoperations.Inspiredbycontrastiverepresentation\nlearning, IGA designs the graph perturbation function to construct augmentation graph for improving\nrepresentationgeneralization.Thegraphperturbationfunctionisdefinedas:\n¯G\nj∼Perturbation( ¯Gj∣Gj) (5)\nwhere Perturbation(⋅) denotes the modifications of edge structures or node semantics in the graph. The\nperturbationfunctionisimplementedasatwo-stage,physics-respectingaugmentationscheme.First,10%of\ntheexistingedgesarerandomlydropped,withprioritygiventothosecarryingthelowestactive-powerflow;\nsimultaneously,5%ofnewvirtualedgesareinsertedbetweennon-adjacentbuseswhosevoltagemagnitudes\ndiffer by less than 0.05 p.u. Second, every node’s feature vector (active power, reactive power and complex\nvoltage) is lightly noised: Gaussian noise scaled by 2% of the feature’s dataset standard deviation is added,\nthentheresultisclippedsothatvoltagemagnitudesremainbetween0.95and1.05p.u.andnetpowervalues\nstaywithinphysicallimits.\nGenerally, the augmentation does not change the category information of the original graph, i.e., the\nsemantic information of both the original and augmentation graph should remain consistent. Therefore, it\nisnaturetointroducethemutualinformationmaximizationbetweentherepresentationsoftheoriginaland\naugmenteddataforcapturinginformationinvariance.Themutualinformationmaximizationisformulated\nasfollows:\nmaxI(z,¯z)= H(¯z)− H(¯z∣z)=∬ p(¯z∣z)p(z)log(¯m∣z)\n(¯m) dzd¯z=KL(p(¯z∣z)p(z)∥ p(¯z)p(z)) (6)\nwhere I(⋅) and H(⋅) denote the mutual information and entropy functions, respectively. In this paper,\nIGA maximizes the mutual information between the graph-level representationz and the graph-level\naugmentationrepresentation ¯z.KLdenoteskullback-leiblerdivergencethatmeasuresthedifferencebetween\nthe distributionp(¯z∣z)p(z) and the distributionp(¯z)p(z). Maximizing this KL divergence is equivalent\nto maximizing the mutual informationI(z,¯z), thereby forcing the model to learn the strong correlation\nbetween z and ¯z. However, the KL divergence has issues of non-symmetry and numerical instability: when\nthe two distributions have no overlapping regions, the KL divergence tends towards infinity, leading to\ngradientexplosionorvanishing.Therefore,themoresymmetricandstableJensen-Shannon(JS)divergence\nisoftenusedasasubstitute:\nmaxI(z,¯z)= JS(p(¯z∣\nz)p(z)∥ p(¯z)p(z)) (7)\nAccordingtothevariationalinference,theJSdivergenceisexpandedinthefollowingform,\nJS(p∥ q)= 1\n2[Ex∼p[log p\np+q\n2\n]+ Ex∼q[log q\np+q\n2\n]] (8)\nHence, we have\nmaxI(z,¯z))= E(z,¯z)∼p(¯z∣z)p(z))[logρ(R(z,¯z))]+ E(z,¯z)∼p(¯z)p(z))[log(1−ρ(R(z,¯z)))] (9)\n5366 ComputMaterContin. 2025;85(3)\nwhere R(z,¯z)= 2p(¯z∣z)p(z)\np(¯z∣z)p(z)+p(¯z)p(z). IGA resorts to the negative sample estimation to obtain the numerical\nsolution of the mutual information where the graph-level representation projections of the original graph\nG\ni and its corresponding augmentation graph¯Gi is viewed as a positive pair and the combination ofGi\nwith other augmentation graphs{ ¯Gj,i≠ j} are viewed as negative pairs. Thus, the mutual information\nmaximizationisinstantiatedasthefollowinglossfunction:\nLIGA = H(T,ρ(z,¯z)) (10)\nwhere H(⋅)standsforthecrossentropy, T∈ RN×N istheindicatormatrixthatrepresentsthecorresponding\npairispositiveornegative. ρ(m, ¯m)isthesimilarityrelationshipbetweenrepresentations:\n[ρ(z,¯z)]ij = exp(s(zi,¯zj))\n∑n\nl=1 exp(s(zi,¯zl)) (11)\nwhere s(zi,¯zl)= zi⋅( ¯zl)T. IGA explores and learns local structures and global invariance between data\nwithinthecontrastivegraphnetworkarchitectureviaconductinganeffectiveinformationconstraint,which\nprovidessemantics-robustgraph-levelrepresentationsfordecision-makingofpowergridstatediagnosis.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Multi-ExpertReliableDecision",
+      "level": 2,
+      "text": "The Multi-Expert Reliable Decision (MRD) module tackles the issue of prediction uncertainty in fault\ndiagnosis.Itemploysamulti-expertcollaborativeframeworkwhereindividualexpertclassifiersaretrained\nusingtheDirichletdistributiontomodelthecredibilityofeachdecision.Adynamicintegrationrulebasedon\nevidence theory assigns active weights to experts, prioritizing those with higher certainty. This mechanism\nnotonlyimprovesthereliabilityoffaultrecognitionbutalsoprovidesquantifiableuncertaintyestimatesfor\neachdecision.\nIndividual-expert classifier learning: MRD utilizes Dirichlet function to measure the credibility\nof the individual-expert classification, which effectively alleviates the overconfidence problem of tradi-\ntional classifiers with the softmax-like function in forecasting probability assignment for long-tailed graph\ndata. Specifically, MRD defines the credibility estimation of the individual-expert classification asq=\n{{q\n1,q2,..., qK},c},w h e r e∑K\nk=1 qk≥0a n dc denotes the uncertainty estimation, with higher values\nindicatinglowerdecisioncertainty.\n∑\nK\nk=1 qk+c=1 (12)\nThen,MRDleveragestheDirichletfunction Diri(⋅)tomeasurethecredibilityestimation,asfollows:\nDiri(s∣ δ)=\n⎧⎪⎪⎨⎪⎪⎩\n1\nα(δ)∏K\ni=1 sδi−1\ni ifs∈ ΛK\n0o t h e r w i s e\n(13)\nwhere ΛK={ s∣∑K\ni=1 si=1, si>1} denotes the regular polytope of dimensionK,a n dδ=[ δ1,..., δK]\nrepresentsthecorrespondingparametersof Diri(⋅).Fromtheparameters δ,theprobabilityofagraphsample\nbeingdividedintothe k-thcategorycanbeobtainedas:\nqk= δk−1\n∑K\ni=1 δi\n(14)\nComputMaterContin. 2025;85(3) 5367\nTo implement the Dirichlet functionDiri(⋅), the multi-layer perceptron network with non-negative\nactivationfunctionisdesignasaclassifier:\nui= gϕ(zi),i=1,2,..., N (15)\nwhere ui is aK-dimensional vector andui≥0. Based on outputu of the classifier, the parametersδ of the\nDirichletfunction Diri(⋅)iscomputed,i.e.,\nδ=u+1, u={u1,..., uK} (16)\nBased on the learned graph-level representations{zi}N\ni=1, MRD conducts the classifiergϕ with non-\nnegativeactivationfunctionbasedonthemulti-layerperceptronnetworktogeneratecategoryassignment:\nIn the power grid fault diagnosis, we hope the model can not only provide classification results, but\nalso provide confidence estimates for the classificationresults.Thus,theempiricalBayesfunctionisusedto\noptimizeindividual-expertclassifierlearningbymaxim izingmarginallikelihood.Specifically,basedonthe\noutputui of the classifieandtrue one-hot labelsyi of thei-thgraph.\nLc=− log[∫\nK\n∏\nk=1\nsyik\nik\n1\nα(ui)\nK\n∏\nk=1\nsuik−1\nik dsi] (17)\nwhere 1\nα(ui)∏K\nk=1 suik−1\nik is the probability density function of the Dirichlet distribution, serving as a prior\ndistributionthatrepresentsthebeliefin si beforeobservingthedata. ∏K\nk=1 syik\nik isthemultinomiallikelihood\nfunction,representingtheprobabilityofobservingdata yi givensi.Thereexisttwoadvantagesfortheabove\nloss: (1) It ensures that the correct class will be assigned more evidence, thereby improving classification\naccuracy.(2)It models classificationuncertaintythroughtheDirichletprior, allowingthemodel toexpress\nconfidenceindifferentclasses.\nMeanwhile, in classification problems, the model is expected that can not only recognize the correct\ncategories,butalsorealizethatitspredictionsforincorrectcategorieslacksufficientevidencesupport.Ifthe\nmodel shows high confidence in predicting all categories, then this may hide the uncertainty of the model\nin certain situations. This underestimation of uncertainty may lead to the model being overly confident\nin practical applications, which may result in makingoverly deterministic decisions that may actually be\nunreliable. Toaddressthisissue,MRDintroduces asimplexlosstodistributionparametersof theDirichlet\nfunctionascloseaspossibletotheverticescorrespondingtothesimplex:\nL\ns= D(Diri(s∣˜δ)∣∣Diri(s∣[1,...,1 ])) (18)\nwhere ˜δ=1+(1− y)⊙ u. D(⋅) denotes a distance function. By minimizing the lossLs, we optimize the\nassignmentofincorrectclassesto0.Finallossofthe individual-expertclassifierlearningisobtained:\nLe= Lc+λLs (19)\nwhere λisthelosstrade-offparameter.\nMulti-expert complementary collaboration:In multi-expert frameworks, independent expert clas-\nsifiers collaboratively perform data classification tasks. While this architecture enhances classification\nperformance by leveraging complementary expert decisions, simply increasing the number of experts\nescalates computational complexity—particularly for easily classifiable samples where redundant expert\ninvolvement wastes resources. To address this, we propose a reliable-aware adaptive ensemble mechanism\nthatdynamicallyadjuststhenumberofactiveexpertsbasedondifficultyassessmentsofsampleclassification:\n5368 ComputMaterContin. 2025;85(3)\nFirst,MRDutilizesthecredibilityestimationtogenerateactiveweightsofeachexpert:\nw1=1,\nw2= c1,\nwv=wv−1⊕cv−1\n(20)\nwherewv⊕cv= 1\n1−Bc wvcv,v=3,4, ⋅⋅⋅ ,V.V denotesthenumberofexperts. Bv denotesthetwoconsecutive\nexpertgamefactor,withthehighestvalueindicatingconsensus.\nBv=∑\ni≠j\nqv\ni qv−1\nj (21)\nTheactiveweight wv servesasadynamicallyadjustedquantitativemetricthatcapturestheaggregated\ncredibility estimation of all preceding experts (expert 1 to expertv–1) before expertv makes predictions.\nThis cumulative measure of credibility facilitates dynamic adjustment of expert involvement in a multi-\nexpertsystem,especiallybyreducingunnecessaryexpertparticipationinhandlingsimplesamples,thereby\nenhancingcomputationalefficiency.\nNext,thelossofthemulti-expertclassifierlearningisdefinedasfollows:\nL\nm=\nN\n∑\ni=1\nV\n∑\nv=1\nO(wv\ni ,τ)Le, O(wv\ni ,τ)=\n⎧⎪⎪⎨⎪⎪⎩\n1i f wv\ni > τ,\n0o t h e r w i s e .\n(22)\nwhere O(wv\ni ,τ) is an indicator function that takes the value of 1 whenwv\ni > τ,a n d0o t h e r w i s e .Th i sl o s s\ncalculates the total sum of losses for each samplei from all active experts (i.e., those experts whose active\nweights exceed the thresholdτ). Meanwhile, to prevent the model from falling into local optima and to\nenhanceitsgeneralizationability,weneedtoimprovesufficientcomplementarityinopinionsamongdifferent\nexperts.Toaddressthis,weproposethecomplementaritylossthroughnormalizedDirichletdistribution:\nL\nd=− 1\nV\nV\n∑\nv=1\nD(Diri(si∣ δv\ni)∥ Diri(si∣ δi)) (23)\nwhere δi represents the average Dirichlet parameters of all experts for thei-th graph sample. This loss\nfunction encourages the model to learn more diverse expert opinions. By minimizing it, the model not\nonly learns accurate predictions from experts but also benefits from their differences, demonstrating better\nadaptabilityandaccuracy.\nThus, combining the information graph aggregation and the multi-expert complementary collabora-\ntio n,theo veralllosso fMCI Gisdefinedasfollo ws:\nL= LIGA +γLm+βLd (24)\nwhereγ and β denote trade-off parameters of losses, respectively. In the inference, the classification results\nareobtainedasfollows:\nui=∑V\nv=1 expwv⋅uv\ni\n∑V\nv=1 expwv\ni\n(25)\nIn MCIG, the information graph aggregation module and the multi-expert reliable decision module\noperate synergistically within an end-to-end framework, ensuring robust and interpretable fault diagnosis.\nThe graph-level representations generated by the contrastive graph neural network provide a unified and\nComputMaterContin. 2025;85(3) 5369\ndiscriminativeinputforthemulti-expertdecisionmodule.Theserepresentations,enrichedwithglobalstruc-\ntural invariance and local node relationships, serve as the foundation for expert evaluations. Concurrently,\nthe multi-expert module dynamically adjusts the weights of individual experts based on their credibility,\nquantified via the Dirichlet function and evidence theory, ensuring that high-confidence experts dominate\nthe final decision while suppressing unreliable opinions. This closed-loop interaction enables the system to\nadaptively refine graph representations through diagnostic feedback while leveraging these representations\ntoenhancedecisio nr eliab ili ty .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Experiment",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1 Setup",
+      "level": 2,
+      "text": "Dataset:TheperformanceofMCIGisevaluatedusingfourfaultdiagnosisdatasetswiththelong-tailed\nform, i.e., IEEE-24, IEEE-39, IEEE-118, and UK-29, with their statistical details summarized in theTable 2.\nForIEEE-24,thereare1200samplesincategory1,600samplesincategory2,and2400samplesinCategory\n4whereeachsampleisagraphwith24nodesand38edges.ForIEEE-39,thereare100samplesinCategory\n1, 200 samples in Category 2, 100 samples in category 3, and 800 samples in Category 4 where each sample\nis a graph with 39 nodes and 46 edges. For IEEE-118, there are 400 samples in Category 2, 400 samples in\ncategory 3, and 800 samples in category 4 where each sample is a graph with 118 nodes and 186 edges. For\nUK-29, there are 800 samples in Category 1, 1200 samples in Category 3, and 2400 samples in Category 4\nwhere each sample is a graph with 29 nodes and 99 edges. Category 1 denotes the failure to meet power\ngeneration demand with cascading failure. Category 2 denotes failure to meet power generation demand\nwithoutcascadingfailure.Category3denotesmeetingpowergenerationdemandwithcascadingfailure.And\nCategory4denotesmeetingpowergenerationdemandwithoutcascadingfailure.Inthefourdatasets,each\ngraph’s nodes represent power grid buses, which are connection points for multiple devices like generators\nandvoltageregulators.Thesebusescanbeseenasvirtualdeviceswithfunctionsofvariousequipment.Each\nnode’sfeaturesareP_net,S_net,andV.P_net =P_gen-P_load(netactivepower),whereP_genisgenerated\nactivepowerandP_loadisdemandedactivepower.S_net =S_gen-S_load(netapparentpower),withS_gen\nasgeneratedapparentpowerandS_loadasdemandedapparentpower.Visthecomplexvoltagevalue.Edges\nin each graph represent transmission branches or lines connecting different buses. Each edge’s features are\nactivepowerflow,reactivepowerflow,reactance,andmaximumpowercapacity.\nMetric: Following current works, accuracy (ACC), precision (Pre), f_score (F1), and recall (Rec) are\nusedtoevaluatedtheperformanceofMCIGinthefaultdiagnosisofsmartgrids.Accuracy:Theproportion\nof correctly predicted instances relative to the total number of instances. Precision: The ratio of correctly\npredicted positive instances to all instances predicted as positive. Recall: The ratio of correctly predicted\npositive instances to all actual positive instances. F1-score: The harmonic mean of precision and recall,\nbalancingbothmetricstoevaluateoverallmodelperformance.Thelargerthevaluesofthefourmetrics,the\nbettertheperformance.\nImplementation Details:The programming environment utilizes Python 3.6.10, with PyTorch 1.4.0\nas the core deep learning framework. GPU-accelerated computations are enabled through CUDA 10.1 on\ncompatible NVIDIA GPUs, optimizing training and inference efficiency. A 2-layer graph neural network\nis used as the extractor of the graph-level representations and a 2-layer MLP is used as the individual-\nexpertclassifier.Thenumbersofepochandbatchsizearesetto300and64fortrainingtheoverallnetwork,\nrespectively. The optimizer uses Adam with 0.0001 of the learning rate. In all four datasets, 80% of the data\nisselectedasthetrainingsetand20%asthetestset.\n5370 ComputMaterContin. 2025;85(3)\nTable 2:The statistical summarization of four datasets\nDatasets IEEE-24 IEEE-39 IEEE-118 UK-29\nCategory1 1200 100 0 800\nCategory2 600 200 400 0\nCategory3 0 100 400 1200\nCategory4 2400 800 800 2400\nTotalnumber 4200 1200 1600 4400\nNode 24 39 118 29\nEdge 38 46 186 99",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 PerformanceComparison",
+      "level": 2,
+      "text": "Tables 3and4showthecomparisonresultsonfourfaultdiagnosisdatasetswithsevenstate-of-the-art\nmethods, i.e., Grapg-GPS [31], GAT [32], PPG [33], CoMe [29], KDEX [27], CIEV [13], and Grid2Vec [16].\nGrapg-GPS, GAT, and PPG are common graph learning methods. CoMe and KDEX are graph learning\nmethod with long-tailed form. CIEV and Grid2Vec are graph learning methods for fault diagnosis. The\nfollowingobservationsareevidentuponscrutinyofthetable:(1)MCIGdemonstratessignificantsuperiority\nover seven baselines about four metrics. For instance, on the UK-29 datasets, MCIG exceeds the second-\nbest method with an improvement of 3.24%, 1.77%, 3.08% and 2.97% in terms of Acc, Pre, Rec, and F1.\nBesides, on the UK-29 datasets, DCGLC also outperforms the runner up GLCC by more than 14.00%\nacrossallmetrics.Theresultsstronglysuggestthatthesynergisticinteractionbetweentheinformationgraph\naggregation module and the multi expert reliable decision module within MCIG can significantly enhance\nrobustrepresentationlearningandimprovethereliabilityofabnormaldiagnosisforlong-taileddatainsmart\ngrids.(2)Empiricalresultsdemonstratethatgraph-le arningmethodsaccountingforlong-tailproperties in\ndatamarkedlyoutperformcommonones.Forexample.ontheUK-29datasets,MCIGexceedsthePPGwith\nanimprovementof14.15%,14.61%,12.88%and13.77%intermsofAcc,Pre,Rec,andF1.Theseresultshighlight\nthenecessityandvalueofspecializedmethodsforpowergridabnormalitydetectioninlong-taileddatasets.\nThey address the unique challenges of such data, which generic methods often fail to handle. Specialized\napproaches can capture subtle patterns in the data’s long tail, leading to more accurate models and analyses.\nThisprecisionisessentialforimprovingdiagnost icaccuracyandensuringsmartgridstability.\nTable 3:The results of comparisonmethodson two datasets\nMethod IEEE-24 IEEE-39\nAcc Pre Rec F1 Acc Pre Rec F1\nGraph-GPS 78.34 80.23 79.45 79.12 69.76 60.56 70.12 69.45\nGAT 75.43 74.32 76.54 75.23 73.45 72.34 74.56 63.21\nPPG 78.90 77.89 79.87 78.76 76.54 65.43 76.65 72.54\nCoMe 90.12 87.01 91.23 90.01 80.90 70.89 81.01 74.80\nKDEX 91.67 89.56 92.78 90.43 81.45 71.34 82.56 75.21\nCIEV 87.12 87.01 89.23 87.01 78.34 67.23 77.45 72.34\nGrid2Vec 89.65 86.54 90.76 89.54 80.67 68.56 80.78 72.67\nMCIG 93.92 90.39 94.26 91.93 82.50 72.65 83.41 76.57\nComputMaterContin. 2025;85(3) 5371\nTable 4:The results of comparisonmethodson two datasets\nMethod IEEE-118 UK-29\nAcc Pre Rec F1 Acc Pre Rec F1\nGraph-GPS 67.65 86.78 88.90 87.89 75.67 74.56 76.78 75.43\nGAT 81.23 80.12 82.34 81.09 79.87 78.76 80.12 79.56\nPPG 74.32 73.21 75.43 74.32 82.10 81.09 83.21 82.10\nCoMe 89.78 89.67 90.89 90.78 92.56 90.45 91.67 90.56\nKDEX 90.23 90.12 92.34 91.23 93.01 93.90 93.01 92.90\nCIEV 87.12 89.01 87.23 87.12 88.90 87.89 89.01 88.90\nGrid2Vec 88.45 88.34 88.56 88.45 90.23 89.12 92.34 91.23\nMCIG 92.81 92.74 93.05 92.82 96.25 95.67 96.09 95.87\nThe Nemenyi test inFig.2 is a post-hoc statistical test used to compare the performance of multiple\nalgorithms across multiple datasets. It helps determine if the observed differences in performance are\nstatisticallysignificant.MCIG’ssuperiorperformanceintheNemenyitest,asevidencedbythehighestrank,\nindicates that it consistently outperforms other methods across different datasets. This statistical validation\nreinforcesthepracticalsignificanceofMCIG’sperformanceadvantage.\n(a) IEEE-24 (b) IEEE-39\nFigure2: TheNemenyitestresultsonthetwodatasets:(a)IEEE-24;(b)IEEE-39",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.3 AblationStudy",
+      "level": 2,
+      "text": "This section conducts an ablation study on four datasets in terms of Acc and F1, containing the loss\nablationandthearchitectureablation.\nFor the loss ablation, there are four variants: (1) MCIG utilizes the mutual information maximization\nloss LIGA to learn graph-level representations, and then obtains classification results of fault diagnosis in\nthe power grid via the traditional weighted cross-entropy loss. (2) MCIG utilizes the mutual information\nmaximization lossL\nIGA to learn graph-level representations, and then utilizes the multi-expert classifier\nlearninglosstoobtainclassificationresultsoffaultdiagnosisinthepowergrid.(3)MCIGutilizesthemulti-\nexpert classifier learning lossLm to obtain classification results of fault diagnosis in the power grid. (4)\nMCIGutilizesthemulti-expertclassifierlearningloss Lm andtheexpertcomplementarityloss Ld toobtain\nclassification results of fault diagnosis in the power grid.Table 5s h o w sth ea b l a t i o nr e s u l t so ff o u rv a r i a n t s .\nMCIGthatjointlyoptimizes LIGA,Lm,and Ld achievesthebestoverallresults,demonstratingthesynergistic\nvalueofglobalrepresentationlearning,multi-expertcollaboration,andexpertcomplementarity.\nFor the architecture ablation, three are two variants: (1) MCIG w/o IGA denotes the remove of the\ninformation graph aggregation module. (2) (1) MCIG w/o MDR denotes the remove of the multi-expert\nreliabledecisionmodule.Theablationresultsareshownin Table 6.Itcanbeobservedthatthetwovariants\n5372 ComputMaterContin. 2025;85(3)\nproducesinferiorresultscomparedwithMCIGonfourdatasets.Thatis,theremovalofeachmodulecauses\nthedeceaseinanomalydiagnosisinsmartgrids,validatingtheeffectivenessofeachmodule.\nTable 5:Lossablationonfourdatasets\nIEEE-24 IEEE-39 IEEE-118 UK-29\nLIGA Lm Ld Acc F1 Acc F1 Acc F1 Acc F1\n√ 80.12 79.45 65.23 59.61 78.98 82.74 88.68 89.77√√ 90.42 88.98 78.34 74.28 89.33 90.45 95.12 95.22√ 92.50 90.08 79.74 73.24 86.65 87.77 94.05 92.56√√ 93.06 90.68 81.33 75.24 90.74 90.64 94.56 92.98√√ √ 93.92 91.93 82.50 76.57 92.81 92.82 96.25 95.87\nTable 6:Architectureablationon fourdatasets\nIEEE-24 IEEE-39 IEEE-118 UK-29\nAcc F1 Acc F1 Acc F1 Acc F1\nMCIGw/oIGA 85.27 83.47 76.87 72.11 87.33 86.92 86.82 86.62\nMCIGw/oMRD 79.78 77.38 72.25 68.68 83.75 82.92 75.13 74.74\nMCIG 93.92 91.93 82.50 76.57 92.81 92.82 96.25 95.87",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.4 ParameterStudy",
+      "level": 2,
+      "text": "ThissectionconductstheparameterstudyonIEEE-24datasetintermsofhyperparameters,numberof\nlayers,andnumberofexperts.\nHyperparameter study investigates the impact of two loss hyperparameters, i.e.,γ and β,o nt h e\nperformance of MCIG. The parameters are evaluated across a broad range of values spanning five orders\nof magnitude (γ,β∈{0.001,0.01,0.1,1,10,100 })t os y s t e m a t i c a l l ya n a l y z et h e i re ff e c t so nm o d e lb e h a v i o r .\nExperimentalresultsshownin Fig.3 demonstrate that model performance exhibits a clear sensitivityto the\nmagnitudeof γandβ.Specifically,excessivelylargevalues,e.g., γ,β≥1,leadtosuboptimalgeneralizationdue\nto over-regularization, while overly small values, e.g.,γ,β≤0.001, result in insufficient constraint enforce-\nment, degrading robustness. The optimal balance is achieved at moderate parameter magnitudes, where\nγ=0.01 and β=0.01 consistently yield the most stable and superior performance across all evaluation\nmetrics.\nNetworklayerstudyevaluatestheimpactofvaryinglayersintheinformationgraphaggregationmodule\nonMCIG’sperformance.Resultsacrossfourdatasetsin Fig.4a indicatethatperformancepeaksattwolayers,\ndemonstrating that this configuration effectively captures structural dependencies in grid data. Increasing\nlayersbeyondtwoleadstooverfittingandtrainingchallenges,reducingperformance.Thus,atwo-layersetup\noptimallybalancesmodelcomplexityandperformanceforsmartgridfaultdiagnosis.\nExpert number study evaluates the impact of the number of experts in the multi-expert reliable\ndecision module on MCIG’s performance. Evaluation results across four datasets inFig.4b indicate that\nthree experts achieve the highest performance. This suggests that three experts provide an optimal balance\nof complementary information and dynamic integration for reliable fault diagnosis. Increasing the number",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Listofsymbols"
+    },
+    {
+      "id": "t2",
+      "caption": "The statistical summarization of four datasets"
+    },
+    {
+      "id": "t3",
+      "caption": "The results of comparisonmethodson two datasets"
+    },
+    {
+      "id": "t4",
+      "caption": "The results of comparisonmethodson two datasets"
+    },
+    {
+      "id": "t5",
+      "caption": "Lossablationonfourdatasets"
+    },
+    {
+      "id": "t6",
+      "caption": "Architectureablationon fourdatasets"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

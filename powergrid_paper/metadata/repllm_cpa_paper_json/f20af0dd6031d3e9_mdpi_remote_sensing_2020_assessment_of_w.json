@@ -1,0 +1,380 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-remote-sensing/mdpi-remote-sensing__2020__assessment_of_workflow_feature_selection_on_forest_lai___16b0a8ca61.pdf",
+  "n_pages": 29,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Vegetation represents a primary component in Earth’s terrestrial carbon cycle, with respect to\nits role both as a source of CO2 through respiration and as a sink of CO2 through photosynthesis [1].\nIts photosynthetic capacity is a function of available leaf area, which can be quantiﬁed in terms of Leaf\nArea Index (LAI). LAI is the leaf area per horizontally projected ground area [2]. It was acknowledged\nas an Essential Climate Variable ( ECV) with high priority in the European Space Agency ( ESA)’s\nCopernicus program [3] and is a focus area of the Committee on Earth Observing Satellites (CEOS)\nWorking Group on Calibration and Validation (WGCV) Land Product Validation (LPV) subgroup [4].\nMulti-spectral Earth observation data are sensitive to the amount of canopy foliage, primarily\nin the NIR and SWIR spectral region [ 5]. In the NIR, the leaf mesophyll with its enclosed air and\nair–tissue interfaces results in high reﬂectance. In the SWIR, the water contained in the leaves leads\nto high reﬂectance. Denser leaf layers increase these effects on the canopy level. In this context,\nthe multi-spectral Landsat missions and especially its latest satellite Landsat 8 [6] have shown potential\nto estimate crop LAI [7–9], forest LAI [10] and in combination with Radiative Transfer Models (RTMs)’\ngeneric LAI [11]. However, the missions’ orbits deﬁnes the revisit time as 16 days, which may be\ninsufﬁcient to track fast vegetation changes such as spring leaf ﬂush. The Sentinel-2 mission was\nawaited for the purpose of estimation of biophysical parameters such as LAI. Its higher spatial\nresolution, higher revisit frequency and additional red edge bands are emphasised as potentials for\nperformance advances, when compared to the Landsat missions. Agricultural testing campaigns\nsuch as SEN3Exp and SicilyS2EVAL offered measurements to explore opportunities for estimating\nvegetation parameters with spectral observations from Sentinel-2 [12–15]. The SPOT5 Take5 satellite\ncampaign delivered a dataset with a 5-day revisit time to explore the temporal domain [16]. However,\nthe domain of forest remote sensing has not seen this extent of targeted preparation campaigns.\nNevertheless, approaches are advancing to make use of the Sentinel-2 open data in terms of biophysical\nparameter estimation [17,18]. All these campaigns and connected studies underlined that Sentinel-2\nhas high potential for estimation of LAI and Chlorophyll a and b (Cab) in diverse canopies.\nIn parallel with the advances in sensor technology and data availability, Machine Learning\nRegression Algorithms ( MLRAs) were introduced as retrieval techniques [ 14,19–23]. Their main\nadvantages are their ability to map the nonlinear relationship between canopy parameters and the\nreﬂectance signal, and their fast mapping speed, compared to look-up tables [23]. Especially Gaussian\nProcess Regression ( GPR)—a kernel-based MLRA—showed good results in terms of prediction\naccuracy and could achieve the 10% precision for Cab retrieval required by the Global Climate\nObserving System ( GCOS) [14]. Like traditional retrieval techniques, MLRAs require a database\nof biophysical parameters, and their associated reﬂectance signal to learn the mapping between\nspectral bands and biophysical parameters. This database can originate from ﬁeld observations,\nbut also from vegetation RTMs. RTMs simulate the spectral properties of vegetation based on a\nlimited set of biophysical parameters and the laws of radiative transfer, which makes them universally\napplicable. Verrelst et al. [23] conclude that MLRAs and RTMs combined in training workﬂows have a\npotential for implementation in operational processing chains for retrieving biophysical parameters.\nThese workﬂows are referred to as hybrid training workﬂows.\nTurbid medium RTMs, which approximate the vegetation canopy as one homogeneous layer,\ndominate inversion workﬂows (e.g., [ 19,24]). Among these RTMs, PROSAIL—a combination of\nthe PROSPECT leaf and the SAIL canopy model [ 5]—is one of the most widely used. The main\nreasons for the use of turbid medium models are their fast processing speed and the low number\nof input parameters. However, PROSAIL does not agree well with geometrically explicit RTMs\nin the case of heterogeneous scenes, i.e., scenes where natural objects such as trees are explicitly\nmodelled [ 25]. As modelling capabilities have outrun means to collect ground truth, a ﬁnal evaluation\nof the differences remains open [26]. Apart from this, so-called emulators make it possible to build fast\nsurrogates for complex models [27]. For that, a complex physical model is replaced with a statistical\nRemote Sens. 2020, 12, 915 3 of 29\nlearning model that was trained on input–output combinations of the physical model. This makes it\npractically possible to exploit heterogeneous RTMs in operational contexts.\nIn the context of hybrid training workﬂows, addition of noise to the RTM generated spectral\ndata has been a common practice [19,28–30]. This is typically achieved by adding an absolute term\nor multiplying with a multiplicative term across the RTM generated spectral bands following a\nGaussian distribution. The addition of noise has multiple purposes: it simulates errors of radiometric\ncalibration, atmospheric noise and residuals from the atmospheric correction, but to some extent also\nbridges between the simpliﬁed representation of the RTM and the actual radiometric behaviour of the\ncanopy [19]. Generally, noise prevents the inverse model from over-ﬁtting on the training database.\nHowever, an accurate quantiﬁcation of all error terms in the sensing process remains difﬁcult [ 19].\nAdditionally, the quantiﬁcation of the optimal noise level to be added has not been attempted for\nhybrid workﬂows yet.\nConsidering these developments together—decametric observations from Sentinel-2 and Landsat,\nfast mapping with MLRA algorithms and fast radiative transfer modelling with emulators—a\ndecametric LAI product would be possible. Such a product would offer better opportunities to\nmonitor ecosystems in fragmented landscapes than comparable products on hectometric scale such as\nthe MODerate-resolution Imaging Spectroradiometer (MODIS) [31] and CYCLOPES [19] LAI products.\nHowever, the discrete implementation of hybrid learning processing chains requires many decisions\nto be taken on—for example, the used RTM and MLRA. Often implemented, but rarely discussed in\ndepth so far, is the addition of noise to the synthetic spectral data.\nThe aim of this study was to compare different hybrid retrieval workﬂows that make combined\nuse of Sentinel-2A (S2A) MultiSpectral Instrument (MSI), Landsat 7 (L7) Enhanced Thematic Mapper\nPlus (ETM+) and Landsat 8 (L8) Operational Land Imager (OLI) observations for forest LAI retrieval.\nFeatures in the retrieval workﬂow were altered in a fully-factorised way to explore their effects.\nThe tested features were: (1) addition of prior knowledge of leaf chemistry, (2) the choice of RTM, (3)\nthe addition of Gaussian noise toRTM produced training data, (4) possibility of using Sun Zenith Angle\n(SZA) as an additional MLRA training feature, and (5) the choice of MLRA. Performance statistics\nfor the realisations were derived to identify the relevance of the features with respect to prediction\nperformance. Apart from this, features were analysed in terms of their ﬁrst degree interactions with\nother features.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Data",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Study Site",
+      "level": 2,
+      "text": "This study focussed on the Speulderbos Fiducial Reference site in the Veluwe forest area (N\n52◦15.15′ E 5◦42.00′), The Netherlands [ 32,33] (www.wur.eu/fbprv). In an earlier forest inventory,\nthe site was marked with a wooden pole grid with40 m spacing, which was geo-located with a LeicaTM\nRobotic Total Station (Leica Geosystems AG, Heerbrugg, Switzerland) and triangulation. This grid\nserved to deﬁne the ﬁve plots A to E used as validation for this study (Figure 1). The plot locations\nwere chosen with a distance of at least 80 m between them. This distance is four times the image\nregistration error according to S2A mission deﬁnition [34].\nThe stand is predominantly composed of European beech ( Fagus sylvatica). A few specimens\nof pedunculate oak ( Quercus robur) and sessile oak ( Quercus petraea) can be found as well. In the\nunderstorey, few specimens of evergreen European holly (Ilex aquifolium) can be found with heights\nof <7 m in plots A, B, and E. The stand was created as a plantation in 1835 and left unmanaged from\nthen on, so that dominant trees are of even age. Recruitment took only place in canopy openings\ncaused by falling trees as was the case in plot D. This was reﬂected by the total number of stems, which\nwas 1059 ha−1 in plot D compared to 280, 250, 280 and 202 ha−1 in plots A, B, C and E, respectively,\nas determined in a forest inventory in 2013/2014. Basal area was 43.0, 42.5, 31.4, 34.8 and 37.2 m ha−1\nfor plots A, B, C, D, and E, respectively.\nRemote Sens. 2020, 12, 915 4 of 29\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\nE\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\nE\nC\nB\nD\nA\n5°42'15\"E5°42'10\"E5°42'5\"E5°42'0\"E5°41'55\"E5°41'50\"E\n52°15'10\"N52°15'7\"N52°15'5\"N52°15'2\"N52°15'0\"N\n0 15075 m\n! TLS Positions\nE Reference Poles \n¯\nFigure 1. Speulderbos study site with TLS scan positions and polygons representing the ﬁve plots.\nBackground image is an airborne false-colour composite of 2013. The inset shows the location of the\nstudy site within the Netherlands.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Field Data",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2.1 Terrestrial Laser Scanning (TLS) Data",
+      "level": 3,
+      "text": "During a ﬁeld campaign in 2016, a TLS time series was acquired that followed the phenological\ndevelopment of the trees in the study site. The ﬁve plots were revisited 28 times with a RIEGL VZ-400\nscanner (RIEGL LMS GmbH, Horn, Austria). Samples were taken during the growing season, with an\nincreased intensity during leaf ﬂush and senescence. Rain events and wet canopy conditions were\navoided as wet canopy elements tend to absorb the laser pulses, thereby introducing a bias in the\nestimation of gap fraction. A comprehensive list of all sampling dates can be found in Table A1. In each\nplot, ﬁve scan positions were established that have been visited on each ﬁeld visit, resulting in a total\nof 25 positions per ﬁeld visit. The positions were arranged in a star shape with a centre position\ndetermined according to the wooden poles and four positions at the corners of imaginary squares with\n20 m edge length.\nThe individual point clouds were processed with the PyLidar package (http://pylidar.org) based\non the methodology developed by Calders et al. [ 35]. This method basically treats the TLS laser\npulses as virtual probes similar to point quadrats, which have been proposed for measuring LAI [36].\nThe underlying assumption is that the canopy is a random medium with a density proportional to\nits LAI. The canopy density is proportional to the TLS hit probability, while the TLS hit probability\nis the inverse of the gap fraction. In this aspect, the TLS gap fraction is similar to the gap fraction\nderived from digital hemispherical photography [37], which is a standard method to measureLAI [38].\nThe gap fraction was derived by counting pulses that exited the canopy without return versus all\npulses ﬁred in the hinge angle region, which was approximated by the zenith angle region between\n50◦ and 60◦. Terrain correction for vertical proﬁles as proposed by Calders et al. [ 39] was not used\nbecause only total canopy Plant Area Index ( PAI) values were required, which is indifferent to the\nterrain. Finally, PAI was derived as follows:\nPAI =−1.1 log(Pgap (57.5◦)) (1)\nRemote Sens. 2020, 12, 915 5 of 29\nwhere Pgap (57.5◦) is the gap fraction at the hinge angle. PAI is deﬁned as the one sided surface area\nof all plant material per unit area ground surface [ 35]. Alternatively, it can be deﬁned as PAI =\nLAI + WAI , where WAI is the wood area index. This is different from LAI, which only includes\nfoliage material [35].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.2 Littertrap Data",
+      "level": 3,
+      "text": "Additionally, 25 litter traps were installed in the area to directly measureLAI per season. In each\nplot, ﬁve litter traps were positioned close to the TLS sampling points. Their construction was based\non recommendations of the Center for Tropical Forest Science (CTFS) Global Forest Carbon Research\nInitiative Litterfall Monitoring Protocol, version March 2010 (https://forestgeo.si.edu/sites/default/\nﬁles/litterfall_protocol_2010.pdf). Each trap consisted of a PVC pipe bent to a circle with an area of\n0.7 m2 and holding a plastic net. The net allows water to drain and prevent decomposition of the litter\ncontent. For each trap, the pipe circles were levelled to assure correct surface area and are held in place\n1 m over the ground with four wooden poles.\nLitter was collected seven times in 2016 over the course of the season on 1 June, 12 August, 7\nand 21 October, 11 November , 2 December, as well as on 10 January in 2017 to collect the last fallen\nleaves of 2016. Sampling dates were chosen to account for the increased litter-fall in autumn. Litter\nwas collected with paper bags; sorted by species and components, i.e., leaves, twigs, and husks; dried\nfor at least 24 h at 65◦C; and weighted. For each litter collection, 100 leaves were randomly sampled,\nand their area determined with a leaf area meter (Licor Area Meter 3100, LI-COR, Inc., Lincoln, NE,\nUSA). Speciﬁc Leaf Area (SLA)—the unit area of leaf per unit mass—was estimated based on these\nsub-samples [40]. The total LAI per trap for the whole season was then inferred from the total collected\ndry leaf weights taking into account the litter trap surface area of0.79 m2. Plot level LAI was estimated\nas the mean of the single traps.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.3 Leaf Sampling Data",
+      "level": 3,
+      "text": "Apart from these canopy structural measurements, the leaf chemistry was monitored over the\ncourse of the year by inversion of leaf spectral samples. For this purpose, two beech trees between\nplot A and B were rigged with ropes and climbed four times at different points of leaf development.\nOn each tree, ﬁve branches were cut off at each sampling event from near the crown top. From each\nbranch, ﬁve leaves were sampled randomly when no differences in development stage were visible.\nEspecially during the last sampling event, the leaves showed different stages of senescence. In that\ncase, the leaves were sampled to represent the abundance of the respective senescence stage on the\nbranch. Leaf reﬂectance spectra were acquired with a Fieldspec Pro 3 (ASD Incorporated, Boulder, CO,\nUSA) equipped with an integration sphere. Additionally, the same leaves were sampled with a Minolta\nSPAD-500 chlorophyll meter (Spectrum Technologies, Inc., Plainﬁeld, IL, USA). For this, four SPAD\nmeasurements per leaf were averaged. The sampling resulted in a total of 173 reﬂectance spectra.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Satellite Data",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.3.1 Sentinel-2A MSI",
+      "level": 3,
+      "text": "S2A MSI was primarily designed for land cover and disaster monitoring, but also for retrieval\nof biophysical parameters such as Fraction Absorbed Photosynthetically Active Radiation (FAPAR),\nLAI and Fractional vegetation cover ( FCover) [34]. Operational products incorporate the Top Of\nAtmosphere (TOA) Bidirectional Reﬂectance Factor (BRF) and recently the Surface Reﬂectance (SR)\nBRF. Table 1 gives an overview of the MSI spectral bands.\nRemote Sens. 2020, 12, 915 6 of 29\nTable 1. Spectral band speciﬁcations for bands and missions used in this study (band centres and\nwidths in nm), bands used for atmospheric correction were omitted [34,41].\nDomain Landsat 7 ETM+ Landsat 8 OLI Sentinel-2A MSI\nName Center Width Name Center Width Name Center Width\nVIS B1 485 70 B2 482 60 B2 490 65\nB2 560 80 B3 561 57 B3 560 35\nB3 660 60 B4 654 37 B4 665 30\nNIR B4 835 130 B5 864 30 B5 705 15\nB6 740 15\nB7 783 20\nB8 842 115\nB8A 865 20\nSWIR B5 1650 200 B6 1608 84 B11 1610 90\nB7 2220 260 B7 2200 187 B12 2190 180\nS2A MSI TOA BRF products for tile T31UFT were downloaded from the Copernicus Open Access\nHub (https://scihub.copernicus.eu/) for the period of January 2016 until December 2016. The relative\norbits R008 and R051 both include the Speulderbos site, thereby doubling the number of observations\ncompared to single orbit observation. TOA BRF products were further processed with sen2cor 2.4.0\n(http://step.esa.int/main/third-party-plugins-2/sen2cor/) to derive SR BRF products. During further\nprocessing, 60 m bands (B01, B09, B10) were excluded because they are heavily affected by atmospheric\nconditions and, therefore, surface reﬂectance products were not provided for these bands. Cloud and\nquality screening was performed manually under consideration of the scene classiﬁcation delivered\nwith sen2cor. For this, Normalised Difference Vegetation Index (NDVI) time series for the extracted\nobservations were inspected. Potentially cloud free scenes were identiﬁed as high NDVI values in the\ntime series and, therefore, those images were accepted for further processing.\nOf the 64 dates in 2016 when MSI observations of the Speulderbos site were available, 21 dates\nyielded usable observations, which is 32.8% of all. Figure 2 shows the bands B04 and B8A, which are\nthe red and NIR spectral bands (Table 1) and hold most information on change in canopy characteristics.\nThe automatic scene classiﬁcation could identify most of the cloud affected conditions with an accuracy\nof 91.6%. It should be noted that all observations that were not clouds were further processed, no matter\ntheir assigned Scene Classiﬁcation (SCL) class. Overall, the time series depicted the start of season in\nApril and May: the red reﬂectance decreased over all plots from 0.059± 0.003 on May 1 to 0.022± 0.001\non May 11 due to absorption by chlorophyll. At the same time, reﬂectance in band B8A increased from\n0.188± 0.008 to 0.406± 0.014, which can be attributed to the leaves’ characteristic scattering behaviour.\nDuring late summer, the overall temporal course remained stable with a slightly decreasing trend. This\ntrend could also be observed in the validation time series (Figure 6). An exception was 17 July, when\nB8A reﬂectance jumped to 0.526± 0.023. There were no clouds over the plots on that day, but clouds\nclose by probably caused adjacency effects.\nRemote Sens. 2020, 12, 915 7 of 29\n●\n●\nMSI − B04MSI − B8A",
+      "refs": {
+        "figures": [
+          "f2",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "01 Mar 01 May 01 Jul 01 Sep 01 Nov 01 Jan",
+      "level": 1,
+      "text": "0.1\n0.2\n0.2\n0.3\n0.4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "0.5 BRF",
+      "level": 2,
+      "text": "SCL Class\n● Dark Area Pixel\nVegetation\nNot vegetated\nUnclassified\nObservations Used\n●\n●\n5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "1 to 4",
+      "level": 1,
+      "text": "Not usable\nFigure 2. Observed BRFs for S2A MSI red and NIR band over the year 2016 for the ﬁve Speulderbos\nplots (see Figure 1). Points represent average BRF over the ﬁve plots, error bars one standard deviation.\nColour codes the number of plots for which the observations were useful (clear sky). SCL class refers\nto the mode of all Scene Classiﬁcation (SCL) given by sen2cor over the ﬁve plots. Observations used\nrefers to how many of the BRF of the ﬁve plots were not affected by clouds and used for analysis.\n2.3.2. Landsat ETM+ and OLI\nSimilar to S2A, atmospherically corrected data are available from the Landsat Archive. For this\nstudy, L7 ETM+ and L8 OLI SR BRF products at Worldwide Reference System (WRS) row 24 and WRS\npath 197 and 198 were obtained as on-demand download products provided by the United States\nGeological Survey (USGS) Earth Resources Observation and Science (EROS) Center Science Processing\nArchitecture (ESPA) On Demand Interface (https://landsat.usgs.gov/landsat-surface-reﬂectance-high-\nlevel-data-products). Both Landsat time series proﬁted from two orbits from which Speulderbos can\nbe observed. Clouds and cloud shadows were identiﬁed in the same manner as for MSI and with the\nsupport of the pixel quality layer delivered with Landsat Collection 1 products.\nIn order to extract SR from the satellite SR products, the plots needed to be deﬁned in terms\nof geo-referenced polygons. For this, the circular ﬁeld of view of the TLS at the ﬁve scan positions\nwithin each plot (Figure 1) was considered. Each position was buffered with a circle of 14.4 m radius,\nwhich corresponds to the top of canopy of the approximated canopy height of 25 m and maximum\nobservation angle 60◦ of the TLS. The combined area of the circles represented the plots. The squareSR\nproduct pixels did not correspond exactly to the polygonal deﬁnitions of our plots. Therefore, pixels\noverlaying each plot were weighted according to their overlap area with the respective plot polygon in\norder to estimate the SR of the plot.\nIn case of the two Landsat missions, 41 and 42 observation dates were available of which 8 (17.1%)\nand 9 (15.8%) were usable for ETM+ and OLI, respectively (Figure 3). The pixel quality bits for cloud\noccurence indicated at least medium conﬁdence, which appeared to indicate clear sky conditions\nafter checking the corresponding images. As for MSI, these could mostly be found during the spring\ngreen-up and late summer periods. Cloud conditions, represented by bits set to high conﬁdence cloud,\nwere identiﬁed with an accuracy of 85.9%.\nRemote Sens. 2020, 12, 915 8 of 29\n●\n●\n●\n●\n● ●\n●\n●\n●\n●\n● ●\n●●\n●●\nETM+ − B4OLI − B5",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "01 Mar 01 May 01 Jul 01 Sep 01 Nov",
+      "level": 1,
+      "text": "0.1\n0.2\n0.3\n0.4\n0.1\n0.2\n0.3\n0.4BRF\nPixel QA\n● Cloud (medium conf)\nCloud (high conf)\nObservations Used\n●\n●\n5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "1 to 4",
+      "level": 1,
+      "text": "Not usable\nFigure 3. Observed BRFs for Landsat 7 ETM+ and Landsat 8 OLI MSI NIR bands over the year 2016\nfor the ﬁve Speulderbos plots (see Figure 1). Points represent average BRF over the ﬁve sites, error bars\none standard deviation. Colour codes the number of plots for which the observations were useful (clear\nsky). Pixel QA refers to the pixel quality bits. Six observations were discarded because they exceeded a\nreﬂectance of 1 (undetected clouds). Observations used refer to how many of the BRF of the ﬁve plots\nwere not affected by clouds and used for analysis.\nIn September, when multiple observations of MSI and OLI were available, they produced\ncomparable SR BRFs when excluding September 5: average per band BRFs showed differences of\nless than 5%, which is the S2A mission requirement for SR products. Only L7 ETM+ and S2A MSI\nshowed differences in the NIR of 7.4%, which can be explained by the wider spectral response curve\nof the ETM+ NIR band 4. These similarities give conﬁdence in comparable behaviour of SR BRFs\nand to combine observations from these sensors. However, for a detailed comparison the spectral\nresponse functions of the sensors and the used atmospheric processors need to be taken into account\n(e.g., [42]). In fact, for optimal inter-operability, the S2A and Landsat products should be harmonised\nbefore combined processing [43].",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3 Methods",
+      "level": 1,
+      "text": "The aim of this study was to modify features—or elements—of a hybrid retrieval workﬂow for\nLAI in order to test their impact on the prediction performance. The general order for a hybrid retrieval\nworkﬂow is as follows [23,44]:\n1. A vegetation RTM is run in forward mode to create a database of training samples, i.e., biophysical\nparameters serve as input for the RTM to predict spectral BRFs. The parameter values are altered\nto cover multiple canopy conditions.\n2. Gaussian noise is added to the spectra to prevent the MLRA from over-ﬁtting and simulate\nobservation noise.\n3. Multiple MLRAs are trained on the database to learn the inverse mapping, i.e., from spectral\nbands to biophysical parameter. Model hyperparameter tuning is performed on a part of the\ngenerated database, while the rest is used for testing the trained model.\n4. The MLRAs are applied to the observed spectra to predict the biophysical parameter of interest.\nMLRAs performance is compared.\nThe following list gives an overview of the modiﬁed features of this study and introduces\nreference terms under which the feature domains were treated. Figure 4 summarises the workﬂow\nand features visually.\nRemote Sens. 2020, 12, 915 9 of 29\n• Biochemical Prior: Using leaf biochemical parameters inferred from ﬁeld spectroscopy\nobservations to restrict the RTM input parameter space (label: prior knowledge) versus using\na free range (label: free) (two alternatives).\n• RTM: Two underlying, structurally contrasting RTMs were tested: turbid medium PROSAIL\n(SAIL 4 coupled with PROSPECT 5) and structurally-explicit Discrete Anisotropic Radiative\nTransfer (DART) (with PROSPECT 5) (two alternatives).\n• Noise scenario: Using multiple noise levels for two types of noise (four and ﬁve alternatives).\n• SZA: Using the SZA as an additional learning feature (label: SZA) or not (label: no SZA) (two\nalternatives).\n• MLRA: Using multiple MLRAs: Ordinary Least Squares (OLS), Multi-Layer Perceptron (MLP),\nRegression Tree (RT), Support Vector Regression (SVR), Kernel Ridge Regression (KRR), GPR (six\nalternatives).\nEach unique combination of these features is referred to as a realisation in the following, while\nrealisations with the same feature were summarised as ensembles. For example, a realisation may have\nused biochemical prior knowledge, DART, speciﬁc levels of noise, SZA, and OLS. All realisations that\nimplement DART make up the ensemble. All possible combinations of the list above were tested,\nresulting in 960 realisations. Model training was performed independently for each satellite mission,\nand model predictions were combined later to form one time series per realisation. A separate per\nmission performance assessment was not conducted because the effective number of observations\nvaried strongly between the missions and thus would not allow fair comparison.\nFigure 4. Flowchart of the applied workﬂow. Varied feature domains have orange background, LAI\nground truth green background. For abbreviations, the reader is referred to the text.\nRemote Sens. 2020, 12, 915 10 of 29",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.1 Leaf Biochemical Parameter Estimation",
+      "level": 2,
+      "text": "The spectral signature of vegetation canopies is sensitive to LAI mostly in the NIR, but to a\ncertain extent also in the VIS and red edge, and SWIR [ 5]. However, the VIS and red edge regions\nare also strongly affected by Cab, and the SWIR by leaf water content ( Cw) and leaf dry matter\ncontent (Cm). For LAI retrieval, this means having knowledge about leaf biochemistry allows restricting\nthe parameter range that the training database needs to cover, thereby improving the learning of the\nvariations that are caused by LAI. For this reason, a leaf biochemical prior was tested as a possible\nfeature of the training workﬂow, even though the retrieval of leaf biochemical compounds was not the\naim of this study.\nFor the retrieval of leaf chemical properties, the collected ﬁeld spectral samples (Section 2.2) were\ninverted with a gradient descent approach utilising the PROSPECT 5 model as implemented in the R\npackage hsdar (https://cran.r-project.org/web/packages/hsdar) [45,46]. The quasi-Newton method\nafter Byrd et al. [ 47] that allows box constraints was chosen. Box constraints allow for limiting the\nsearched parameter space to hyper-cubes according to given parameter ranges. The parameter ranges\ngiven in Table 2 were chosen as constraints. Results were inspected to identify biochemical compounds\nwhose abundance was stable over the season and could be assumed ﬁxed over the course of the year,\nor otherwise needed to be treated as variable.\nTable 2. RTM parameters with their symbols, units, ranges (in case offree realisations) and best-estimate\nvalues (in case of prior knowledge realisations; based on PROSPECT inversion of sampled leaf spectra,\nSection 3.1). The best-estimate values were used for the prior knowledge realisations.\nModel Parameter Unit Free Best Estimate\nLeaf parameters: PROSPECT-5B\nN Leaf structure index - 1–2.5 1.27\nCab Leaf chlorophyll content µg cm −2 0–80 -\nCar Leaf carotenoid content µg cm −2 0–20 8.60\nCm Leaf dry matter content g cm −2 0.001–0.025 0.00263\nCw Leaf equivalent water thickness cm 0.002–0.025 0.0053\nCbrown Brown pigment fraction - 0–1 -\nCanopy parameters: SAIL4 and DART\nLAI Leaf area index m 2 m−2 0–8 0–8\nθs Sun zenith angle ◦ 27.5–80 27.5–80\nθo View zenith angle ◦ 0 0\nφ Sun-sensor azimuth angle ◦ 0 0\nLAD Leaf angle distribution - Plagiophile Plagiophile\nCanopy parameters: SAIL4\nαsoil Soil wet/dry factor - 0 0\nhspot Hot spot parameter - 0 0\nCanopy parameters: DART\nTreeHeight Tree height m 20 -\nCrownDiameter Tree crown diameter m 5–9 -\nCrownHeight Tree crown height m 7 -",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.2 RTMs and Training Database Generation",
+      "level": 2,
+      "text": "Two contrasting canopy RTMs were used to represent different levels of canopy complexity.\nOne was PROSAIL, which is a turbid medium model, i.e., it treats the canopy as a homogeneous\nmedium. It is a combination of the PROSPECT leaf and the SAIL canopy bidirectional reﬂectance\nmodel [5]. It has been widely used in the ﬁelds of agriculture, plant physiology, and ecology, including\nestimation of biophysical parameters [16,19,48,49]. In this study, PROSAIL 5B, as implemented in the\nR package hsdar, was used.\nRemote Sens. 2020, 12, 915 11 of 29\nOn the other hand, the DART model is a voxel-based ﬂux-tracing model that allows building\ncomplex 3D scenes, including vegetation canopies [50,51]. DART contains a PROSPECT module to\nsimulate leaf reﬂectance and transmission. Applications of DART can be found in the ﬁelds of surface\nenergy budget studies [52] and forest biophysical parameter retrieval [53–55], where its advantages\nof explicitly modelling 3D structure were exploited. DART can be obtained from CESBIO with free\nlicences for publicly funded research and teaching (https://dart.omp.eu).\nAs both RTMs use PROSPECT 5 as the underlying leaf model, they have many common\nparameters. Table 2 gives an overview of the used parameter ranges. In the case of free realisations,\nparameters were allowed to vary within the ranges that adopted from the literature [44]. In case of prior\nknowledge realisations, the values were estimated with ﬁeld spectroscopy as described in Section 3.1.\nThe range of sun zenith angles is based on the geographic location of the Speulderbos site. Since\nETM+, OLI and MSI have narrow ﬁelds of view of 15◦, 15◦ and 21◦, respectively, view zenith angle\nand relative azimuth angles were assumed to be 0. This was found to be a reasonable assumption for\nmid and high latitudes [56]. Soil spectra were estimated from MSI barren and winter observations.\nBRFs were extracted as described above and averaged over all sites. Sensor spectral response curves\nwere approximated as Gaussian with centre wavelength and Full Width at Half Maximum (FWHM)\naccording to published speciﬁcations (Table 1). In summary, three models were trained, one for\neach sensor.\nThe DART scene was built up of ﬁve trees as squared, repetitive scene with 10 m edge length\nand grid size of 1 m horizontal and 0.5 m vertical cell size (Figure 5). This means that the scene was\nduplicated along the edges. The trees’ heights and diameters were roughly approximated withTLS\npoint clouds (Table 2, Section 2.2). However, the trees were based on generic forms consisting of\n8-faceted stems and ellipsoidal crowns. The stems had a diameter of 0.5 m below and 0.25 m within\nthe crown. The crown leaf volume was simulated as turbid medium cells. TLS was not used to build\nexplicit 3D tree models in order to keep the number of input parameters minimal. For fast computation,\nan emulator was built to replace actual DART simulations [27]. For this, 2500 samples of DART input\nparameters were drawn with Latin hypercube sampling [57] according to the free option in Table 2.\nThen, the same MLRAs as for the inversion were trained to predict the single spectral bands of ETM+,\nOLI and MSI. The best performing MLRA was identiﬁed according to the lowest Root Mean Square\nError (RMSE) in a ﬁve-fold cross-validation.\nIn total, 2500 parameter samples were drawn with Latin hypercube sampling using uniform\ndistributions to evenly cover the parameter space for all parameters with range speciﬁcations. Of these\n2500, 30% were modiﬁed to represent barren, winter conditions. This means that all leaf chemical\nparameters and LAI were set to 0.\nRemote Sens. 2020, 12, 915 12 of 29\nFigure 5. Nadir view of a DART sample scene that is used to represent the heterogeneous canopy.\nThe centre scene with ﬁve trees is replicated along the edges. Colour is reﬂectance with low values\nblack and high values white.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.3 RTM Sensitivity Analysis",
+      "level": 2,
+      "text": "In order to assess the importance of the RTM input parameters (Table 2) on the single spectral\noutputs, a global sensitivity analysis of theRTMs was conducted. Such an approach also helps to gauge\nhow good input parameters can be estimated from spectral outputs. The approach here generally\nfollowed the approach of Verrelst et al. [ 27] based on Sobol sensitivity indices [ 58,59] modiﬁed by\nSaltelli et al. [60] and as implemented in the R package sensitivity (https://cran.r-project.org/web/\npackages/sensitivity). Here, only the total effect indices were considered that describe the sensitivity\nof the model output to an input parameter and its interactions with other parameters. The sum of\nthe sensitivity indices with respect to all input parameters varies per spectral band output. Therefore,\nindices were normalised to sum up to 1 to ease comparison across spectral band outputs. Furthermore,\nonly bands of MSI were taken into account because they cover the same spectral domains as ETM+\nand OLI (Table 1).",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.4 Noise Scenarios",
+      "level": 2,
+      "text": "In this study, two types of noise were tested: multiplicative wavelength-independent (MI) and\nadditive wavelength-independent (AI) noise [ 61]. MI is dependent on the BRF. Its term is larger for\nNIR compared to red spectral bands for typical vegetation spectral responses. MI and AI were added\nto the RTM spectral bands:\nρ′ = ρRTM + ρRTM· ϵMI + ϵAI (2)\nwhere ρ′ is the noise contaminated spectral band, ρRTM is the RTM spectral band output, ϵMI the MI\nnoise term with ϵMI∼N (0, σMI ) and ϵAI the AI noise term with ϵAI∼N (0, σAI ). Apart from noise\nfree, realisations with MI noise of 0.05, 0.1, 0.2 and 0.3, and AI noise of 0.05, 0.1 and 0.2 were tested.\nThe 0.05 noise level was motivated by the Sentinel-2 mission requirement of 5% error on SR [34].\nThe other noise levels were pessimistic variations. However, as mentioned before, the noise term has\nmultiple purposes, so that the mission requirements can only be an indication.\nRemote Sens. 2020, 12, 915 13 of 29",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.5 Solar Zenith Angle",
+      "level": 2,
+      "text": "Illumination conditions greatly affect the reﬂectance of canopies [5,62,63]. As the SZA changes\nover the course of the year, the internal canopy shadowing varies. Furthermore, SZA is an easy to\nobtain feature, as it is solely a function of location and time. Therefore, SZA was incorporated in the\ntraining workﬂow to test if it improves LAI prediction. SZA was calculated for local overpass times\nof the respective missions with the R package RAtmosphere ([64], https://cran.r-project.org/web/\npackages/RAtmosphere). For the respective realisations, it was treated as an extra training feature\nnext to spectral bands.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.6 Machine Learning Regression Algorithms",
+      "level": 2,
+      "text": "Studies on MLRA typically test a range of algorithms to explore their respective (dis-)advantages\nand cross-comparison results. This was adopted in this study as well. All models were trained to\npredict LAI, while the independent variables depended on the learning realisation. Multi-variate\nOLS regression was chosen as a benchmark method. For neural networks, the classic MLP was used\n(e.g., [ 19]). In particular, this was the implementation of the Stuttgart Neural Network Simulator\nin the R package RSNNS (https://cran.r-project.org/web/packages/RSNNS). Networks with n + 1\nneurons in a single hidden layer were trained, where n corresponded to the number of independent\nvariables [19]. Random Forest was selected as an RT algorithm [65,66] and used as implemented in the\nR ranger package (https://cran.r-project.org/web/packages/ranger). The forests were grown with\n500 trees.\nFurthermore, three kernel-based methods were used. This type of regression methods translates\nthe—possibly nonlinear—regression problem from the parameter space into a higher dimensional\nfeature space, where it can be solved linearly. Kernel functions implement a notion of similarity\nfunction. SVR [67], KRR [14] and GPR [68] with Radial Basis Function (RBF) kernels were tested here.\nThe kernel σ hyperparameter was estimated with the sigest function from the kernlab package\n(https://cran.r-project.org/web/packages/kernlab/). Although developed to estimate σ for SVR,\nresults in initial tests were promising for KRR and GPR. For further reading on MLRAs in biophysical\nparameter estimation, the reader is referred to Verrelst et al. [23].\nThe general workﬂow for MLRA application typically involves splitting of the feature database\ninto training and validation sets to tune model parameters. Here, ﬁve-fold cross-validation was\nperformed during the tuning process. This was based on the training dataset, which held 2500 samples\nof the RTM-based database. Next, the model performance for the best tuned parameters was evaluated\nwith the test dataset, which held 500 samples of the RTM based database. This set was never seen by\nthe models during training. Finally, the models were applied on the actual sensor observations and\ncompared with the validation dataset (Section 3.7). However, as we inverted observations of three\ndifferent sensors, in fact, for each realisation, three separate models were trained.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.7 Ensemble Analysis and Validation",
+      "level": 2,
+      "text": "In order to analyse how well the MLRAs were able to learn the RTM-produced band- LAI\nrelationships, the test error was evaluated. However, this error represents only the theoretical\nperformance in case the RTM produces true results for the scene and the induced noise properties\ncorrespond to the noise of the actual spectral observations.\nFor validation purposes, the advantages of the TLS time series—i.e., high precision due to\nindependence of illumination conditions [ 69,70]—was combined with the direct estimation of LAI\nwith the litter-traps. Litter-traps are considered among the most accurate methods in terms of absolute\nLAI for forest canopies [71]. This approach follows the suggestion of Woodgate et al. [72] to calibrate\nTLS with other techniques. Speciﬁcally, the TLS time series was scaled with the litter-trap total LAI\nseparately for each plot:\nLAI i = PAITLS,i− min(PAITLS )\nmax (PAITLS ) · LAI LT (3)\nRemote Sens. 2020, 12, 915 14 of 29\nwhere LAI i is the LAI at time i, PAITLS is the TLS derived PAI time series and LAI LT is the litter-trap\nLAI. The observations were averaged per plot and linearly interpolated to obtain a continuous\ntime series.\nFor each realisation, the time series of predicted LAI was compared with this validation time\nseries. The performance metric was the RMSE:\nRMSE =\n√ 1\nt\nt\n∑\ni=1\n(LAI realisation ,i− LAI valid ,i)2 (4)\nwhere t is the length of the time series, and LAI realisation ,i and LAI valid ,i the realisation and validation\nLAI at time i, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4 Results and Discussion",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.1 Validation Time Series",
+      "level": 2,
+      "text": "Figure 6 shows the derived validation time series. The seasonal pattern with a fast spring leaf ﬂush\nin May and autumn leaf falling in November dominated the temporal behaviour. Calders et al. [35]\nobserved this speed in spring leaf ﬂush for a mixed oak forest in the Netherlands. Maximum LAI of\n6.1 m2 m−2 was reached on 26 May in plot A. Plots B and E showed LAI values just below 6.0 m2 m−2.\nPlot C had a larger gap in its centre so that overall LAI was lower there. Measured LAI for plot D was\nabout two units lower than for the other plots with a peak of 3.2 m2 m−2. This was due to the age\ncomposition of this plot, which was dominated by younger trees. The maximum LAI compares well\nwith the results of Leuschner et al. [73], who measured LAI by litter-traps in 23 mature Beech stands in\nGermany. They found an average LAI of 7.4 m 2 m−2 with a range between 5.6 to 9.5 m 2 m−2.\nAnother feature is the slow decrease in LAI starting in August that could be observed in all plots.\nAfter the 2016 growing season, few brown leaves were still remaining on the trees until new leaves\nﬂushed in 2017. Overall, the obtained time series show the expected dynamic behaviour of the canopy\nduring spring and autumn (Figure 6).\nWith respect to the uncertainty of the validation data, the standard deviation of the mean for\nthe litter-trap samples was calculated as 0.43, 0.25, 0.41, 0.32 and 0.24 m 2 m−2 for plots A to E,\nrespectively. GCOS speciﬁed an accuracy of 0.5 m2 m−2 as a target for LAI products for local and\nregional applications [38]. However, this is the requirement for the ﬁnal LAI products, so that the\nachieved uncertainties are rather high for a validation measurement. This affected especially the\nrealisation evaluations in terms of RMSE.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Speulderbos study site with TLS scan positions and polygons representing the ﬁve plots."
+    },
+    {
+      "id": "f2",
+      "caption": "Observed BRFs for S2A MSI red and NIR band over the year 2016 for the ﬁve Speulderbos"
+    },
+    {
+      "id": "f3",
+      "caption": "Observed BRFs for Landsat 7 ETM+ and Landsat 8 OLI MSI NIR bands over the year 2016"
+    },
+    {
+      "id": "f4",
+      "caption": "Flowchart of the applied workﬂow. Varied feature domains have orange background, LAI"
+    },
+    {
+      "id": "f5",
+      "caption": "Nadir view of a DART sample scene that is used to represent the heterogeneous canopy."
+    },
+    {
+      "id": "f6",
+      "caption": "shows the derived validation time series. The seasonal pattern with a fast spring leaf ﬂush"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Spectral band speciﬁcations for bands and missions used in this study (band centres and"
+    },
+    {
+      "id": "t2",
+      "caption": "RTM parameters with their symbols, units, ranges (in case offree realisations) and best-estimate"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

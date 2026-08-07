@@ -1,0 +1,651 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/monash_australian_demand/monash_australian_demand__Monash_Time_Series_Forecasting_Archive__7c18659739.pdf",
+  "n_pages": 33,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Accurate time series forecasting is important for many businesses and industries to make\ndecisions, and consequently, time series forecasting is a popular research area, lately in\nparticular in machine learning. A good benchmarking archive is essential for the growth of\nmachine learning research (Tan et al., 2020). Researchers gain the opportunity to perform\na rigorous evaluation of their newly proposed machine learning algorithms over a large\nnumber of datasets when there is a proper benchmarking archive available. The University\nof California Irvine (UCI) repository (Dua and Graﬀ, 2017) is the most common and well-\nknown benchmarking archive used in general machine learning, and it has supported the\n∗Corresponding author. Postal Address: Faculty of Information Technology, P.O. Box 63 Monash Uni-\nversity, Victoria 3800, Australia. E-mail address: rakshitha.godahewa@monash.edu\nPreprint submitted to Elsevier May 17, 2021\narXiv:2105.06643v1  [cs.LG]  14 May 2021\ndevelopment of many state-of-the-art algorithms. The UCI repository currently contains\n507 datasets from various domains.\nIn time series classiﬁcation, there exist two well-known publicly available dataset archives:\nUniversity of California Riverside (UCR) repository (Dau et al., 2019) and University of East\nAnglia (UEA) repository (Bagnall et al., 2018). The UCR repository was ﬁrst released in\n2002 with 16 datasets and at present, the number of datasets is 128, containing datasets\nof non-normalised time series, of varying lengths, and time series with missing values (Dau\net al., 2019). The UCR repository contains only univariate time series datasets. There-\nfore, recently a group of researchers from UEA released the ﬁrst multivariate time series\nclassiﬁcation archive which is known as UEA repository (Bagnall et al., 2018). Currently,\nit contains 30 datasets containing equal length multivariate time series without any miss-\ning values. Furthermore, Tan et al. (2020) recently released the ﬁrst time series extrinsic\nregression archive containing 19 multi-dimensional time series datasets.\nOn the other hand, there are many time series forecasting competitions which have\nadvanced the ﬁeld. The most popular forecasting competition series is the M-competition\nseries (Makridakis et al., 1982; Makridakis and Hibon, 2000; Makridakis et al., 2018, 2020a).\nThe latest competition of this series was the M5 competition (Makridakis et al., 2020b) which\nis the ﬁfth iteration of the series, and ﬁnished in July 2020. Other well-known forecasting\ncompetitions include the NN3 and NN5 Neural Network competitions (Ben Taieb et al.,\n2012), the CIF 2016 competition ( ˇStˇ epniˇ cka and Burda, 2017), and Kaggle competitions\nsuch as the Wikipedia web traﬃc (Google, 2017) and Rossmann sales forecasting (Kaggle,\n2015) competitions. The winning approaches of many of these competitions such as the\nwinning method of the M4 forecasting by Smyl (2020) and the winning method of the\nM5 forecasting competition based on gradient boosted trees, consist of global forecasting\nmodels (Januschowski et al., 2020) which train a single model across all series that need\nto be forecast. Compared with local models, global forecasting models have the ability\nto learn cross-series information during model training and can control model complexity\nand overﬁtting on a global level (Montero-Manso and Hyndman, 2020). By now, many\nworks have shown the superior performance of global models over per-series models in many\nsituations (Bandara et al., 2020; Hewamalage et al., 2020; Montero-Manso and Hyndman,\n2020; Flunkert et al., 2017; Trapero et al., 2015; Godahewa et al., 2020b,a,c).\nThis can be seen as a paradigm shift in forecasting. Over decades, single time series\nwere seen as a dataset that should be studied and modelled in isolation. Nowadays, we are\noftentimes interested in global models built on sets of series from similar sources, such as\nseries which are all product sales from a particular store, or series which are all smart meter\nreadings in a particular city or state. Here, time series are seen as an instance in a dataset\nof many time series, to be studied and modelled together.\nThough in the time series forecasting space there are a number of benchmarking archives,\nthey follow the paradigm of single series as datasets, and consequently contain mostly unre-\nlated single time series such as the Time Series Data Library (Hyndman and Yang, 2018),\nForeDeCk (Forecasting & Srategy Unit, 2019), the datasets of the M3 and M4 forecasting\ncompetitions, and others. These archives are of limited use to evaluate the performance of\nglobal forecasting models that typically are designed for, and perform better on, sets of series\n2\nfrom similar sources (a notable exception from the rule being here ES-RNN by Smyl (2020),\nthe winning method of the M4 competition). There are currently no comprehensive time\nseries forecasting benchmarking archives, to the best of our knowledge, that focus on such\ndatasets of related time series to evaluate the performance of such global forecasting algo-\nrithms. Our aim is to address this limitation by introducing such an archive. In particular,\nour paper has the following main contributions.\n• We introduce the ﬁrst comprehensive time series forecasting archive containing datasets\nof related time series, available athttps://forecastingdata.org/. This archive con-\ntains 20 publicly available time series datasets, with both equal and variable lengths\ntime series. Many datasets have diﬀerent versions based on the frequency and the\ninclusion of missing values, making the total number of dataset variations to 50. Fur-\nthermore, it includes both real-world and competition time series datasets covering\nvaried domains.\n• We introduce a new format to store time series data, based on the Weka ARFF ﬁle\nformat (Paynter et al., 2008) and overcoming some of the shortcomings we observe\nin the .ts format used in the sktime time series repository (L¨ oning et al., 2019). We\nuse a .tsf extension for this new format. This format stores the meta-information\nabout a particular time series dataset such as dataset name, frequency and inclusion\nof missing values as well as the series speciﬁc information such as starting timestamps,\nin a non-redundant way. The format is very ﬂexible and capable of including any other\nattributes related to time series as preferred by the users.\n• We analyse the characteristics of diﬀerent series to identify the similarities and diﬀer-\nences among them. For that, we conduct a feature analysis using tsfeatures (Hyndman\net al., 2020) and catch22 features (Lubba et al., 2019) extracted from all series of all\ndatasets. The extracted features are publicly available for further research use.\n• We evaluate the performance of a set of baseline forecasting models including both tra-\nditional univariate forecasting models and global forecasting models over all datasets\nacross eight error metrics. The forecasts and evaluation results of the baseline meth-\nods are publicly available for the beneﬁts of researchers that use the repository to\nbenchmark their forecasting algorithms.\n• Finally, all implementations related to the forecasting archive including code for load-\ning the datasets into the R and Python environments and code for feature calcula-\ntions and evaluation of baseline forecasting models are publicly available at: https:\n//github.com/rakshitha123/TSForecasting.\nWe also encourage other researchers to contribute time series datasets to our repository\neither by directly uploading them into the archive and/or by contacting the authors via email.\nThe remainder of this paper is organised as follows: Section 2 explains the datasets in the\narchive. Section 3 explains the details of the feature analysis. Section 4 presents results of\nthe baseline forecasting models over the datasets across eight error metrics. Finally, Section\n5 concludes the paper.\n3",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Datasets",
+      "level": 1,
+      "text": "This section details the datasets in our time series forecasting archive. The current\narchive contains 20 time series datasets. Furthermore, the archive contains in addition 6\nsingle very long time series. As a large amount of data oftentimes renders machine learning\nmethods feasible compared with traditional statistical modelling, and we are not aware of\ngood and systematic benchmark data in this space either, these series are included in our\nrepository as well. A summary of all primary datasets included in the repository is shown\nin Table 1.\nA total of 50 datasets have been derived from these 26 primary datasets. Nine datasets\ncontain time series belonging to diﬀerent frequencies and the archive contains a separate\ndataset per each frequency. Seven of the datasets have series with missing values. The\narchive contains 2 versions of each of these, one with and one without missing values. In\nthe latter case, the missing values have been replaced by using an appropriate imputation\ntechnique.\nDataset Domain No: of Min. Max. No: of Missing Competition\nSeries Length Length F req.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 M1 Multiple 1001 15 150 3 No Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 M3 Multiple 3003 20 144 4 No Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 M4 Multiple 100000 19 9933 6 No Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 Tourism Tourism 1311 11 333 3 No Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "5 NN5 Banking 111 791 791 2 Yes Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "6 CIF 2016 Banking 72 34 120 1 No Yes",
+      "level": 1,
+      "text": "7 Web Traﬃc Web 145063 803 803 2 Yes Yes",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "8 Solar Energy 137 52560 52560 2 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "9 Electricity Energy 321 26304 26304 2 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "10 London Smart Meters Energy 5560 288 39648 1 Yes No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "11 Wind Farms Energy 339 6345 527040 1 Yes No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "12 Car Parts Sales 2674 51 51 1 Yes No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "13 Dominick Sales 115704 28 393 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "14 FRED-MD Economic 107 728 728 1 No No",
+      "level": 1,
+      "text": "15 San Francisco Traﬃc Transport 862 17544 17544 2 No No",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "16 Pedestrian Counts Transport 66 576 96424 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "17 Hospital Health 767 84 84 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "18 COVID Deaths Nature 266 212 212 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "19 KDD Cup Nature 270 9504 10920 1 Yes Yes",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "20 Weather Nature 3010 1332 65981 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "21 Sunspot Nature 1 73931 73931 1 Yes No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "22 Saugeen River Flow Nature 1 23741 23741 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "23 US Births Nature 1 7305 7305 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "24 Electricity Demand Energy 1 17520 17520 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "25 Solar Power Energy 1 7397222 7397222 1 No No",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "26 Wind Power Energy 1 7397147 7397147 1 No No",
+      "level": 1,
+      "text": "Table 1: Datasets in the Current Time Series Forecasting Archive\nOut of the 26 datasets, 8 originate from competition platforms, 3 from Lai et al. (2017),\n4\n6 are taken from R packages, 1 is from the Kaggle platform (Kaggle, 2019), and 1 is taken\nfrom a Johns Hopkins repository (CSSEGISandData, 2020). The other datasets have been\nextracted from corresponding domain speciﬁc platforms. The datasets mainly belong to 9\ndiﬀerent domains: tourism, banking, web, energy, sales, economics, transportation, health,\nand nature. Three datasets, the M1 (Makridakis et al., 1982), M3 (Makridakis and Hibon,\n2000), and M4 (Makridakis et al., 2018, 2020a) datasets, contain series belonging to multiple\ndomains.\nFor all datasets, we introduce their key characteristics as well as the citations of the\nprior work where they have been used in the literature. Further details of these datasets\nare explained in the next sections, after describing the data format in which the series are\nstored.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "2.1 Data Format",
+      "level": 2,
+      "text": "We also introduce a new format to store time series data, based on the Weka ARFF ﬁle\nformat (Paynter et al., 2008). We use the ﬁle extension .tsf and it is comparable with the .ts\nformat used in the sktime time series repository (L¨ oning et al., 2019), but we deem it more\nstreamlined and more ﬂexible. The basic idea of the ﬁle format is that each data ﬁle can\ncontain 1) attributes that are constant throughout the whole dataset (e.g., the forecasting\nhorizon, whether the dataset contains missing values or not), 2) attributes that are constant\nthroughout a time series (e.g., its name, its position in a hierarchy, product information\nfor product sales time series), and 3) attributes that are particular to each data point (the\nvalue of the series, or timestamps for non-equally spaced series). An example of series in\nthis format is shown in Figure 1.\nThe original Weka ARFF ﬁle format already deals well with the ﬁrst two types of such\nattributes. Using this ﬁle format, in our format, each time series ﬁle contains tags describing\nthe meta-information of the corresponding dataset such as @frequency (seasonality), @hori-\nzon (expected forecast horizon), @missing (whether the series contain missing values) and\n@equallength (whether the series have equal lengths). We note that these attributes can be\nfreely deﬁned by the user and the ﬁle format does not need any of these values to be deﬁned\nin a certain way, though the ﬁle readers reading the ﬁles may rely on existence of attributes\nwith certain names and assume certain meanings. Next, there are attributes in each dataset\nwhich describe series-wise properties, where the tag @attribute is followed by the name and\ntype. Examples are series name (the unique identiﬁer of a given series) andstart timestamp\n(the start timestamp of a given series). Again, the format has the ﬂexibility to include any\nadditional series-wise attributes as preferred by users.\nFollowing the ARFF ﬁle format, the data are then listed under the @data tag after\ndeﬁning attributes and meta-headers, and attribute values are separated by colons. The\nonly extension that our format has compared with the original ARFF ﬁle format, is that\nthe time series then are appended to their attribute vector as a comma-separated variable-\nlength vector. As this vector can have a diﬀerent length for each instance, this cannot be\nrepresented in the original ARFF ﬁle format. In particular, a time series with m number of\nattributes and n number of values can be shown as:\n5\nFigure 1: An example of the ﬁle format for the NN5 daily dataset\n<attribute 1 >:<attribute 2 >:... :<attribute m >:<s 1,s 2,...,s n > (1)\nThe missing values in the series are indicated using the “?” symbol. Code to load datasets\nin this format into R and Python is available in our github repository. 1",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "2.2 Time Series Datasets",
+      "level": 2,
+      "text": "This section describes the benchmark datasets that have a suﬃcient number of series from\na particular frequency. The datasets may contain diﬀerent categories in terms of domain\nand frequency.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "2.2.1 M1 Dataset",
+      "level": 3,
+      "text": "The M1 competition dataset (Makridakis et al., 1982) contains 1001 time series with\n3 diﬀerent frequencies: yearly, quarterly, and monthly as shown in Table 2. The series\nbelong to 7 diﬀerent domains: macro 1, macro 2, micro 1, micro 2, micro 3, industry, and\ndemographic.\nResearch work which uses this dataset includes:\n1https://github.com/rakshitha123/TSForecasting\n6\nF requency No: of Series Min. Length Max. Length F orecast Horizon\nYearly 181 15 58 6\nQuarterly 203 18 114 8\nMonthly 617 48 150 18\nTotal 1001\nTable 2: Summary of M1 Dataset\n• Forecasting with artiﬁcial neural networks: the state of the art (Zhang et al., 1998)\n• Time series forecasting using a hybrid ARIMA and neural network model (Zhang,\n2003)\n• Automatic time series forecasting: the forecast package for R (Hyndman and Khan-\ndakar, 2008)\n• Exponential Smoothing: the state of the art (Gardner, 1985)\n• Neural network forecasting for seasonal and trend time series (Zhang and Qi, 2005)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "2.2.2 M3 Dataset",
+      "level": 3,
+      "text": "The M3 competition dataset (Makridakis and Hibon, 2000) contains 3003 time series of\nvarious frequencies including yearly, quarterly, and monthly, as shown in Table 3. The series\nbelong to 6 diﬀerent domains: demographic, micro, macro, industry, ﬁnance, and other.\nF requency No: of Series Min. Length Max. Length F orecast Horizon\nYearly 645 20 47 6\nQuarterly 756 24 72 8\nMonthly 1428 66 144 18\nOther 174 71 104 8\nTotal 3003\nTable 3: Summary of M3 Dataset\nResearch work which uses this dataset includes:\n• The theta model: a decomposition approach to forecasting (Assimakopoulos and\nNikolopoulos, 2000)\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• Out-of-sample tests of forecasting accuracy: an analysis and review (Tashman, 2000)\n• Metrics for evaluating performance of prognostic techniques (Saxena et al., 2008)\n7\n• Temporal link prediction using matrix and tensor factorizations (Dunlavy et al., 2011)\n• Forecasting time series with complex seasonal patterns using exponential smoothing\n(Livera et al., 2011)\n• Evaluating forecasting methods (Armstrong, 2001)\n• Exponential smoothing with a damped multiplicative trend (Taylor, 2003)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "2.2.3 M4 Dataset",
+      "level": 3,
+      "text": "The M4 competition dataset (Makridakis et al., 2018, 2020a) contains 100,000 time series\nwith 6 diﬀerent frequencies: yearly, quarterly, monthly, weekly, daily, and hourly, as shown\nin Table 4. The series belong to 6 diﬀerent domains: demographic, micro, macro, industry,\nﬁnance, and other, similar to the M3 forecasting competition. This dataset contains a subset\nof series available at ForeDeCk (Forecasting & Srategy Unit, 2019).\nF requency No: of Series Min. Length Max. Length F orecast Horizon\nYearly 23000 19 841 6\nQuarterly 24000 24 874 8\nMonthly 48000 60 2812 18\nWeekly 359 93 2610 13\nDaily 4227 107 9933 14\nHourly 414 748 1008 48\nTotal 100000\nTable 4: Summary of M4 Dataset\nResearch work which uses this dataset includes:\n• A hybrid method of exponential smoothing and recurrent neural networks for time\nseries forecasting (Smyl, 2020)\n• FFORMA: Feature-based Forecast Model Averaging (Montero-Manso et al., 2020)\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• LSTM-MSNet: leveraging forecasts on sets of related time series with multiple seasonal\npatterns (Bandara et al., 2019)\n• Are forecasting competitions data representative of the reality? (Spiliotis et al., 2020)\n• Averaging probability forecasts: back to the future (Winkler et al., 2018)\n• A strong baseline for weekly time series forecasting (Godahewa et al., 2020b)\n8",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "2.2.4 Tourism Dataset",
+      "level": 3,
+      "text": "This dataset originates from a Kaggle competition (Athanasopoulos et al., 2011; Ellis,\n2018) and contains 1311 tourism related time series with 3 diﬀerent frequencies: yearly,\nquarterly, and monthly as shown in Table 5.\nF requency No: of Series Min. Length Max. Length F orecast Horizon\nYearly 518 11 47 4\nQuarterly 427 30 130 8\nMonthly 366 91 333 24\nTotal 1311\nTable 5: Summary of Tourism Dataset\nResearch work which uses this dataset includes:\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• A meta-analysis of international tourism demand forecasting and implications for prac-\ntice (Peng et al., 2014)\n• Improving forecasting by estimating time series structural components across multiple\nfrequencies (Kourentzes et al., 2014)\n• Forecasting tourist arrivals using time-varying parameter structural time series models\n(Song et al., 2011)\n• Forecasting monthly and quarterly time series using STL decomposition (Theodosiou,\n2011)\n• A novel approach to model selection in tourism demand modeling (Akın, 2015)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "2.2.5 NN5 Dataset",
+      "level": 3,
+      "text": "This dataset contains 111 time series of daily cash withdrawals from Automated Teller\nMachines (ATM) in the UK, and was used in the NN5 forecasting competition (Ben Taieb\net al., 2012). The forecast horizon considered in the competition was 56. The original\ndataset contains missing values. Our repository contains two versions of the dataset: the\noriginal version with missing values and a modiﬁed version where the missing values have\nbeen replaced using a median substitution where a missing value on a particular day is\nreplaced by the median across all the same days of the week along the whole series as in\nHewamalage et al. (2020). Furthermore, Godahewa et al. (2020b) use the weekly aggregated\nversion of this dataset for their experiments related to proposing a baseline model for weekly\nforecasting. The aggregated weekly version of this dataset is also available in our repository.\nResearch work which uses this dataset includes:\n9\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• A strong baseline for weekly time series forecasting (Godahewa et al., 2020b)\n• Forecasting across time series databases using recurrent neural networks on groups of\nsimilar series: a clustering approach (Bandara et al., 2020)\n• Forecast combinations of computational intelligence and linear models for the NN5\ntime series forecasting competition (Andrawis et al., 2011)\n• Forecasting the NN5 time series with hybrid models (Wichard, 2011)\n• Multiple-output modeling for multi-step-ahead time series forecasting (Ben Taieb et al.,\n2010)\n• Recursive multi-step time Series forecasting by perturbing data (Ben Taieb and Bon-\ntempi, 2011)\n• Benchmarking of classical and machine-learning algorithms (with special emphasis on\nbagging and boosting approaches) for time series forecasting (Pritzsche, 2015)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "2.2.6 CIF 2016 Dataset",
+      "level": 3,
+      "text": "The dataset from the Computational Intelligence in Forecasting (CIF) 2016 forecasting\ncompetition contains 72 monthly time series. Out of those, 24 series originate from the\nbanking sector, and the remaining 48 series are artiﬁcially generated. There are 2 forecast\nhorizons considered in the competition where 57 series have a forecasting horizon of 12 and\nthe remaining 15 series consider the forecast horizon as 6 ( ˇStˇ epniˇ cka and Burda, 2017).\nResearch work which uses this dataset includes:\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• Forecasting across time series databases using recurrent neural networks on groups of\nsimilar series: a clustering approach (Bandara et al., 2020)\n• Improving time series forecasting: an approach combining bootstrap aggregation, clus-\nters and exponential smoothing (Dantas and Oliveira], 2018)\n• Time series clustering using numerical and fuzzy representations (Afanasieva et al.,\n2017)\n• An automatic calibration framework applied on a metaheuristic fuzzy model for the\nCIF competition (Coelho et al., 2016)\n10\n2.2.7. Kaggle Web Traﬃc Dataset\nThis dataset contains 145063 daily time series representing the number of hits or web\ntraﬃc for a set of Wikipedia pages from 01/07/2015 to 10/09/2017 used by the Kaggle\nweb traﬃc forecasting competition (Google, 2017). The forecast horizon considered in the\ncompetition was 59. As the original dataset contains missing values, we include both the\noriginal dataset in our repository and an imputed version. This dataset is intermittent and\nhence, we impute missing values with zeros. Furthermore, Godahewa et al. (2020b) use the\nweekly aggregated version of this dataset containing the ﬁrst 1000 series. Our repository\nalso contains this aggregated weekly version of the dataset for all series. The missing values\nof the original dataset were imputed before the aggregation. Research work which uses this\ndataset includes:\n• Recurrent neural networks for time series forecasting: current status and future direc-\ntions (Hewamalage et al., 2020)\n• A strong baseline for weekly time series forecasting (Godahewa et al., 2020b)\n• Web traﬃc prediction of Wikipedia pages (Petluri and Al-Masri, 2018)\n• Improving time series forecasting using mathematical and deep learning models (Gupta\net al., 2018)\n• Foundations of sequence-to-sequence modeling for time series (Mariet and Kuznetsov,\n2019)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "2.2.8 Solar Dataset",
+      "level": 3,
+      "text": "This dataset contains 137 time series representing the solar power production recorded\nevery 10 minutes in the state of Alabama in 2006. It was used by Lai et al. (2017), and origi-\nnally extracted from Solar (2020). Furthermore, Godahewa et al. (2020b) use an aggregated\nversion of this dataset containing weekly solar power production records. The aggregated\nweekly version of this dataset is also available in our repository.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "2.2.9 Electricity Dataset",
+      "level": 3,
+      "text": "This dataset represents the hourly electricity consumption of 321 clients from 2012 to\n2014 in kilowatt (kW). It was used by Lai et al. (2017), and originally extracted from UCI\n(2020). Our repository also contains an aggregated version of this dataset representing the\nweekly electricity consumption values.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "2.2.10 London Smart Meters Dataset",
+      "level": 3,
+      "text": "This dataset contains 5560 half-hourly time series that represent the energy consumption\nreadings of London households in kWh from November 2011 to February 2014 (Jean-Michel,\n2019). The series are categorized into 112 blocks in the original dataset. The series in our\nrepository are in the same order (from block 0 to block 111) as they are in the original\ndataset. The original dataset contains missing values and we impute them using the last\nobservation carried forward (LOCF) method. Our repository contains both versions: the\n11\noriginal version with missing values and the modiﬁed version where the missing values have\nbeen replaced. Research work which uses this dataset includes:\n• Predicting electricity consumption using deep Recurrent Neural Networks (Nugaliyadde\net al., 2019)\n• A single scalable LSTM model for short-term forecasting of disaggregated electricity\nloads (Alonso et al., 2019)\n• Deep learning based short-term load forecasting for urban areas (Maksut et al., 2019)\n• Smart grid energy management using RNN-LSTM: a deep learning-based approach\n(Kaur et al., 2019)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "2.2.11 Wind Farms Dataset",
+      "level": 3,
+      "text": "This dataset contains very long minutely time series representing the wind power pro-\nduction of 339 wind farms in Australia. It was extracted from the Australian Energy Market\nOperator (AEMO) online platform (AEMO, 2020). The series in this dataset range from\n01/08/2019 to 31/07/2020. The original dataset contains missing values where some series\ncontain missing data for more than seven consecutive days. Our repository contains both\nthe original version of the dataset and a version where the missing values have been replaced\nby zeros.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "2.2.12 Car Parts Dataset",
+      "level": 3,
+      "text": "This dataset contains 2674 intermittent monthly time series showing car parts sales from\nJanuary 1998 to March 2002. It was extracted from the R package expsmooth (Hyndman,\n2015). The package contains this dataset as “carparts”. As the original dataset contains\nmissing values, we include the original version of the dataset in the repository as well as a\nversion where the missing values have been replaced with zeros, as the series are intermittent.\nResearch work which uses this dataset includes:\n• Principles and algorithms for forecasting groups of time series: locality and globality\n(Montero-Manso and Hyndman, 2020)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "2.2.13 Dominick Dataset",
+      "level": 3,
+      "text": "This dataset contains 115704 weekly time series representing the proﬁt of individual\nstock keeping units (SKU) from a retailer.\nIt was extracted from the Kilts Center, University of Chicago Booth School of Business\nonline platform (James M. Kilts Center, 2020). This platform also contains daily store-level\nsales data on more than 3500 products collected from Dominick’s Finer Foods, a large Amer-\nican retail chain in the Chicago area, for approximately 9 years. The data are provided in\ndiﬀerent categories such as customer counts, store-speciﬁc demographics and sales products.\nResearch work which uses this dataset includes:\n• Principles and algorithms for forecasting groups of time series: locality and globality\n(Montero-Manso and Hyndman, 2020)\n12\n• The value of competitive information in forecasting FMCG retail product sales and\nthe variable selection problem (Huang et al., 2014)\n• Beer snobs do exist: estimation of beer demand by type (Toro-Gonz´ alez et al., 2014)\n• Downsizing and supersizing: how changes in product attributes inﬂuence consumer\npreferences (Jami and Mishra, 2014)\n• Reference prices, costs, and nominal rigidities (Eichenbaum et al., 2011)\n• Sales and monetary policy (Guimaraes and Sheedy, 2011)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "2.2.14 FRED-MD Dataset",
+      "level": 3,
+      "text": "This dataset contains 107 monthly time series showing a set of macro-economic indicators\nfrom the Federal Reserve Bank (McCracken and Ng, 2016) starting from 01/01/1959. It was\nextracted from the FRED-MD database. The series are diﬀerenced and log-transformed as\nsuggested in the literature. Research work which uses this dataset includes:\n• Principles and algorithms for forecasting groups of time series: locality and globality\n(Montero-Manso and Hyndman, 2020)\n2.2.15. San Francisco Traﬃc Dataset\nThis dataset contains 862 hourly time series showing the road occupancy rates on San\nFrancisco Bay area freeways from 2015 to 2016. It was used by Lai et al. (2017), and\noriginally extracted from (Caltrans, 2020). Godahewa et al. (2020b) use a weekly aggregated\nversion of this dataset, which is also available in our repository.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "2.2.16 Melbourne Pedestrian Counts Dataset",
+      "level": 3,
+      "text": "This dataset contains hourly pedestrian counts captured from 66 sensors in Melbourne\ncity starting from May 2009 (City of Melbourne, 2017). The original data are updated on\na monthly basis when the new observations become available. The dataset in our reposi-\ntory contains pedestrian counts up to 30/04/2020. Research work which uses this dataset\nincludes:\n• Enhancing pedestrian mobility in smart cities using big data (Carter et al., 2020)\n• Visualising Melbourne pedestrian count (Obie et al., 2017)\n• PedaViz: visualising hour-level pedestrian activity (Obie et al., 2018)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s43",
+      "title": "2.2.17 Hospital Dataset",
+      "level": 3,
+      "text": "This dataset contains 767 monthly time series showing the patient counts related to\nmedical products from January 2000 to December 2006. It was extracted from the R package\nexpsmooth (Hyndman, 2015). The package contains this dataset as “hospital”. Research\nwork which uses this dataset includes:\n• Principles and algorithms for forecasting groups of time series: locality and globality\n(Montero-Manso and Hyndman, 2020)\n13",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s44",
+      "title": "2.2.18 COVID Deaths Dataset",
+      "level": 3,
+      "text": "This dataset contains 266 daily time series that represent the total COVID-19 deaths\nin a set of countries and states from 22/01/2020 to 20/08/2020. It was extracted from the\nJohns Hopkins repository (CSSEGISandData, 2020; Dong et al., 2020). The original data\nare updated on a daily basis when the new observations become available.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s45",
+      "title": "2.2.19 KDD Cup 2018 Dataset",
+      "level": 3,
+      "text": "This competition dataset contains long hourly time series representing the air quality lev-\nels in 59 stations in 2 cities, Beijing (35 stations) and London (24 stations) from 01/01/2017\nto 31/03/2018 (KDD2018, 2018). The dataset represents the air quality in multiple mea-\nsurements such as PM 2.5, PM 10, NO 2, CO, O3 and SO2 levels.\nOur repository dataset contains 270 hourly time series which have been categorized using\ncity, station name, and air quality measurement.\nAs the original dataset contains missing values, we include both the original dataset and\nan imputed version in our repository. We impute leading missing values with zeros and the\nremaining missing values using the LOCF method. Research work which uses this dataset\nincludes:\n• AccuAir: winning solution to air quality prediction for KDD cup 2018 (Luo et al.,\n2019)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s46",
+      "title": "2.2.20 Weather Dataset",
+      "level": 3,
+      "text": "This dataset contains 3010 daily time series representing the variations of four weather\nvariables: rain, minimum temperature, maximum temperature and solar radiation, measured\nat weather stations in Australia. The series were extracted from the R package bomrang\n(Sparks et al., 2020). Research work which uses this dataset includes:\n• Principles and algorithms for forecasting groups of time series: locality and globality\n(Montero-Manso and Hyndman, 2020)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s47",
+      "title": "2.3 Single Long Time Series Datasets",
+      "level": 2,
+      "text": "This section describes the benchmark datasets which have single time series with a large\namount of data points.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s48",
+      "title": "2.3.1 Sunspot Dataset",
+      "level": 3,
+      "text": "The original data source contains a single very long daily time series of sunspot numbers\nfrom 01/01/1818 until the present (Sunspot, 2015). Furthermore, it also contains monthly\nmean total sunspot numbers (starting from 1749), 13-month smoothed monthly total sunspot\nnumbers (starting from 1749), yearly mean total sunspot numbers (starting from 1700),\ndaily hemispheric sunspot numbers (starting from 1992), monthly mean hemispheric sunspot\nnumbers (starting from 1992), 13-month smoothed monthly hemispheric sunspot numbers\n(starting from 1992), and yearly mean total sunspot numbers (starting from 1610). The\noriginal datasets are updated as new observations become available.\n14",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "An example of the ﬁle format for the NN5 daily dataset"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Datasets in the Current Time Series Forecasting Archive"
+    },
+    {
+      "id": "t2",
+      "caption": "Summary of M1 Dataset"
+    },
+    {
+      "id": "t3",
+      "caption": "Summary of M3 Dataset"
+    },
+    {
+      "id": "t4",
+      "caption": "Summary of M4 Dataset"
+    },
+    {
+      "id": "t5",
+      "caption": "Summary of Tourism Dataset"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "eq.\n1"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

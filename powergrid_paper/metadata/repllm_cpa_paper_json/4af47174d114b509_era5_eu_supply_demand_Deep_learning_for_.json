@@ -1,0 +1,267 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/era5_eu_supply_demand/era5_eu_supply_demand__Deep_learning_for_solar_irradiance_forecasting__66aa69555e.pdf",
+  "n_pages": 26,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "In constraint-based data cleaning, dependencies are used to specify data quality requirements. Data\nthat are inconsistent with respect to the dependencies are identified as erroneous, and updates to the\ndata are generated to re-align the data with the dependencies. Existing approaches use Functional\nDependencies (FDs) [10, 43], Inclusion Dependencies [10], Conditional Functional Dependencies\n[16], Denial Constraints [13], Order Dependencies [49], and Matching Dependencies [17] to define\nthe attribute relationships that the data must satisfy. However, these approaches are limited to\nidentifying attribute relationships based on syntactic equivalence (or syntactic similarity for Metric\nFDs [28, 43]), and unable to convey semantic equivalence, which is often necessary in data cleaning.\nExample 1.1. Table 1 shows a sample of clinical trial records containing patient country codes\n(CC), country (CTRY), symptoms (SYMP), diagnosis (DIAG), and the prescribed medication (MED).\nConsider two FDs: 𝐹1: [CC]→ [CTRY] and𝐹2: [SYMP, DIAG]→ [MED]. The tuples ( 𝑡1,𝑡 5,𝑡6,𝑡8−𝑡11)\ndo not satisfy 𝐹1 as America and USA are not syntactically equivalent (the same is true for ( 𝑡2,𝑡 4,\n𝑡7)). However, USA is synonymous with America, and (𝑡1,𝑡 5,𝑡6,𝑡8−𝑡11) all refer to the same country.\nSimilarly, Bharat in𝑡4 is synonymous with India as it is the country’s original Sanskrit name. For 𝐹2,\n(𝑡1−𝑡3), (𝑡4−𝑡6) and (𝑡8−𝑡11) are violations as the consequent values all refer to different medications.\nHowever, as shown in Figure 1, with domain knowledge from a medical ontology [ 1], we see that\nthe values participate in an inheritance relationship. Both ibuprofen and naproxen are non-steroidal\nanti-inflammatory drugs (NSAID), tylenol is an acetaminophen drug, which in turn is an analgesic,\nand both cartia and tiazac are diltiazem hydrochloride.\n∗Work done as an intern at McMaster University.\nAuthors’ addresses: Zheng Zheng, zhengz13@mcmaster.ca, McMaster University, Canada; Longtao Zheng, zlt0116@mail.ustc.\nedu.cn, University of Science and Technology of China, China; Morteza Alipourlangouri, alipoum@mcmaster.ca, McMaster\nUniversity, Canada; Fei Chiang, fchiang@mcmaster.ca, McMaster University, Canada; Lukasz Golab, lgolab@uwaterloo.ca,\nUniversity of Waterloo, Canada; Jaroslaw Szlichta, jarek@ontariotechu.ca, Ontario Tech University, Canada.\narXiv:2105.08105v4  [cs.DB]  13 Mar 2022\nTable 1. Sample clinical trials.\nid CC CTRY SYMP TEST DIAG MED\n𝑡1 US USA joint pain CT osteoarthritis ibuprofen\n𝑡2 IN India joint pain CT osteoarthritis NSAID\n𝑡3 CA Canada joint pain CT osteoarthritis naproxen\n𝑡4 IN Bharat nausea EEG migrane analgesic\n𝑡5 US America nausea EEG migrane tylenol\n𝑡6 US USA nausea EEG migrane acetaminophen\n𝑡7 IN India chest pain X-ray hypertension morphine\n𝑡8 US USA headache CT hypertension cartia\n𝑡9 US USA headache MRI hypertension tiazac (ASA)\n𝑡10 US America headache MRI hypertension tiazac\n𝑡11 US USA headache CT hypertension tiazac (adizem)\nFig. 1. Medical drug ontology.\nThe above example demonstrates that real data contain domain-specific relationships beyond\nsyntactic equivalence or similarity. It also highlights two common relationships that occur between\ntwo values𝑢 and𝑣: (1)𝑢 and𝑣 are synonyms; and (2)𝑢 is-a𝑣 denoting inheritance. These relationships\nare often defined within domain-specific ontologies. Unfortunately, traditional FDs and their\nextensions are unable to capture these relationships, and existing data cleaning approaches flag\ntuples containing synonymous and inheritance values as errors. This leads to an increased number\nof reported “errors”, and a larger search space of data repairs to consider.\nTo address these shortcomings, our earlier work proposed a novel class of dependencies called\nOntology Functional Dependencies (OFDs) that capture synonyms and is-a relationships defined in\nan ontology [6]. In this paper, we focus on synonyms, which are commonly used in practice, and\nwe study cleaning a relation and an ontology with respect to (w.r.t.) a set of synonym OFDs. What\nmakes OFDs interesting is the notion of senses, which determine how a dependency should be\ninterpreted for a given ontology; e.g., jaguar can be interpreted as an animal or as a vehicle, country\ncodes vary according to multiple standards (interpretations) such as the International Standards\nOrganization (ISO) vs. United Nations (UN). To make OFDs useful in practice, where data semantics\nare often poorly documented and change, we propose an algorithm to discover OFDs.\nOFDs serve as contextual data quality rules that enforce the semantics modeled in an ontology.\nHowever, application requirements change, data evolve, and as new knowledge is generated,\ninconsistencies arise between the data, OFDs, and ontologies. For example, the US Food and Drug\nAdministration (FDA) has a monthly approval cycle to certify new drugs. If downstream data\napplications do not update their data and ontologies, this leads to stale and missing values in the\nontology, and inconsistencies w.r.t. the data and the OFDs [1]. Similarly, changes to the data may\nbe required to re-align the data to the OFDs and the ontology. Consider the following example.\nExample 1.2. Consider Table 1 with updated values (shown in blue) in 𝑡9[MED] and 𝑡11[MED]\nto reflect changes in a patient’s prescribed medication. Tuples ( 𝑡8−𝑡11) are now inconsistent w.r.t.\nthe previously defined 𝐹2. If we augment 𝐹2 with additional semantics, provided by a medication\nontology as shown in Figure 1, tuple 𝑡11 continues to be problematic since adizem is not defined in\nthe ontology, and is not equivalent to cartia nor tiazac. The updated value in 𝑡9[MED] to ASA leads\nto an inconsistency since ASA is not semantically equivalent to cartia nor tiazac. We must find an\ninterpretation of the ontology, called a sense (denoted in bold in Figure 1), where the values {ASA,\ncartia, tiazac, adizem} are all equivalent. Unfortunately, there is no sense in which all these values\nare semantically equivalent. To resolve these violations, we can: (1) repair the ontology by adding the\nvalue adizem and ASA under the FDA sense; or (2) update tuples (𝑡8−𝑡11) to either cartia or ASA under\nthe MoH sense. In both cases, there now exists a sense where all MED values in ( 𝑡8−𝑡11) are equivalent.\nThe above example demonstrates that there are multiple options to resolve violations, namely,\nmodifying the ontology or the data. We study the repair problem that re-aligns the data, depen-\ndencies (OFDs), and an ontology via a minimal number of repairs to the data and to the ontology.\nState-of-the-art data cleaning solutions have taken a holistic approach to combine attribute rela-\ntionships with external knowledge bases and statistical methods to determine the most likely repair\n[43], and probabilistic models that learn from clean distributions in the data to minimally repair\ndirty values [52]. However, none of these techniques consider repairs to ontologies. We adopt a\nsimilar philosophy to prior work that consider repairs to the data and/or constraints [8, 12]. We\nmake the following contributions 1 :\n(1) We define OFDs based on synonym relationships. In contrast to existing dependencies, OFDs\ninclude attribute relationships that go beyond syntactic equality or similarity, and consider the\nnotion of senses that provide the interpretations under which the dependencies are evaluated.\nIn contrast to FDs, OFDs are not amenable to tuple-to-tuple comparisons and instead they\nmust be verified over equivalence classes of tuples.\n(2) We introduce a sound and complete set of axioms for OFDs. While the inference complexity\nof other FD extensions is co-NP complete, we show that inference for OFDs remains linear.\n(3) We propose the FastOFD algorithm to discover a complete and minimal set of OFDs to\nalleviate the burden of specifying them manually. We show that OFDs can be discovered\nefficiently by traversing a set-containment lattice with exponential worst-case complexity in\nthe number of attributes, the sam",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 PRELIMINARIES AND DEFINITIONS",
+      "level": 1,
+      "text": "Functional Dependencies. A functional dependency (FD)𝐹 over a relation𝑅 is represented as\n𝑋→𝐴, where𝑋 is a set of attributes and𝐴 is a single attribute in𝑅. An instance𝐼 of𝑅 satisfies\n𝐹 if for every pair of tuples𝑡1,𝑡 2∈𝐼, if𝑡1[𝑋 ] =𝑡2[𝑋 ], then𝑡1[𝐴] =𝑡2[𝐴]. A partition of𝑋 , Π𝑋 , is\nthe set of equivalence classes containing tuples with equal values in𝑋. Let𝑥𝑖 be an equivalence\nclass with a representative𝑖 that is equal to the smallest tuple id in the class, and|𝑥𝑖| be the size of\nthe equivalence class (in some definitions, we drop the subscript and refer to an equivalence class\nsimply as𝑥). For example, in Table 1, Π𝐶𝐶 = {{𝑡1,𝑡 5,𝑡 6}{𝑡2,𝑡 4,𝑡 7}{𝑡3}}.\nSense. An ontology𝑆 is an explicit specification of a domain that includes concepts, entities,\nproperties, and relationships among them. In this work, we consider tree-shaped ontologies for\nsimplicity. These constructs are often defined and applicable only under a given interpretation,\ncalled a sense. The meaning of these constructs for a given𝑆 can be modeled according to different\nsenses leading to different ontological interpretations. As mentioned previously, the value jaguar\ncan be interpreted under two senses: (1) as an animal, and (2) as a vehicle. As an animal, jaguar is\nsynonymous with panthera onca, but not with the value jaguar land rover automotive.\n1We note that the first three contributions are published in our earlier work [6].\nWe define classes𝐸 for the interpretations or senses defined in𝑆. Let synonyms(𝐸) be the set of\nall synonyms for a given class𝐸. For instance,𝑠𝑦𝑛𝑜𝑛𝑦𝑚𝑠(𝐸1) = {car, auto, vehicle},𝑠𝑦𝑛𝑜𝑛𝑦𝑚𝑠(𝐸2) =\n{jaguar, jaguar land rover} and𝑠𝑦𝑛𝑜𝑛𝑦𝑚𝑠(𝐸3) = {jaguar, panthera onca}. Let names(𝐶) be the set of\nall classes, i.e., interpretations or senses, for a given value𝐶. For example, names(𝑗𝑎𝑔𝑢𝑎𝑟) = {𝐸1,𝐸2,\n𝐸3} as jaguar can be an animal or a vehicle. Let𝑑𝑒𝑠𝑐𝑒𝑛𝑑𝑎𝑛𝑡𝑠(𝐸) be a set of all representations for the\nclass𝐸 or any of its descendants, i.e.,𝑑𝑒𝑠𝑐𝑒𝑛𝑑𝑎𝑛𝑡𝑠(𝐸) = {𝑠|𝑠∈ synonyms(𝐸) or𝑠∈ synonyms(𝐸𝑖),\nwhere𝐸𝑖 is-a𝐸𝑖−1, ...,𝐸1 is-a𝐸}, e.g.,𝑑𝑒𝑠𝑐𝑒𝑛𝑑𝑎𝑛𝑡𝑠(𝐸3) = {jaguar, peruvian jaguar,mexican jaguar}.\nOntology Functional Dependencies We define OFDs w.r.t. a given ontology𝑆. We consider\nthe synonym relationship on the right-hand-side of a dependency leading to synonym OFDs.\nDefinition 1. A relation instance 𝐼 satisfies a synonym OFD𝑋→𝑠𝑦𝑛 𝐴, if for each equivalence\nclass𝑥∈ Π𝑋(𝐼), there exists a sense (interpretation) under which all the 𝐴-values of tuples in 𝑥 are\nsynonyms. That is, 𝑋→𝑠𝑦𝑛 𝐴 holds, if for each equivalence class 𝑥,\nÙ\n𝑛𝑎𝑚𝑒𝑠(𝑎),𝑎∈{𝑡[𝐴]|𝑡∈𝑥}\n≠∅.\nExample 2.1. Consider the OFD [CC]→𝑠𝑦𝑛 [CTRY] from Table 1. We haveΠ𝐶𝐶 = {{𝑡1,𝑡 5,𝑡 6}{𝑡2,𝑡 4,𝑡 7}{𝑡3}}.\nThe first equivalence class, {𝑡1,𝑡 5,𝑡 6}, representing the value US, corresponds to three distinct values of\nCTRY. According to a geographical ontology, names(United States)∩ names(America)∩ names(USA)\n= United States of America. Similarly, the second class {𝑡2,𝑡 4,𝑡 7} gives names(India)∩ names(Bharat) =\nIndia. The last equivalence class {𝑡3} contains a single tuple, so there is no conflict. Since all references\nto CTRY in each equivalence class resolve to some common interpretation, the synonym OFD holds.\nSynonym OFDs subsume traditional FDs, where all values are assumed to have a single literal\ninterpretation (for all classes 𝐸,|synonyms(𝐸)| = 1). Similar to traditional FDs, we say that an\ninstance𝐼 satisfies a set of OFDs Σ, denoted𝐼|= Σ if and only if 𝐼 satisfies each OFD𝜙∈ Σ. Without\nloss of generality, we assume that the consequent (right side) of each𝜙∈ Σ consists of a single\nattribute𝐴 (this follows from the axioms that will be presented in Section 3). When we refer to an\nOFD𝜙:𝑋→𝑌 , we say𝐼|=𝜙 iff𝐼|=(𝑋→𝐴) for all𝐴∈𝑌 . That is, for each attribute𝐴∈𝑌 , all\nthe𝐴-values of tuples in𝑥 share a common sense (interpretation).\nOntological relationships are semantically meaningful on both sides of a dependency to capture\na greater number of true positive errors. However, due to the large search space of ontological\nrelationships on the left-hand side, since we must also consider all tuples outside of the partition\ngroup when checking for violations, we focus on the right-hand-side. This is similar to other\nseminal work [28, 43] that considers small variations only on the right-hand-side via metric FDs.\nRelationship to other dependencies. The notion of senses makes OFDs non-trivial and inter-\nesting. For each equivalence class, there must exist a common interpretation of the values. Checking\npairs of tuples, as in traditional FDs (and Metric FDs [28, 43], which assert that two tuples whose\nleft-hand side attribute values are equal must have syntactically similar right-hand side attribute\nvalues according to some distance metric), is not sufficient, as illustrated next.\nConsider Table 2, where the synonym OFD𝑋→𝑠𝑦𝑛 𝑌 does not hold (for each𝑌 value, we list its\npossible interpretations in the last column). Although all pairs of𝑡[𝑌] values share a common class\nTable 2. Defining OFDs\nid X Y Classes for Y\n𝑡1 u v {C,D}\n𝑡2 u w {D,F}\n𝑡3 u z {C,F,G}\n(i.e., {v,w}: D, {v,z}: C, {w,z}: F), the intersection of the classes is empty.\nFurthermore, OFDs cannot be reduced to traditional FDs or Metric\nFDs. Since values may have multiple senses, it is not possible to create\na normalized relation instance by replacing each value with a unique\ncanonical name. Furthermore, ontological similarity is not a metric since\nit does not satisfy the identity of indiscernibles (e.g., for synonyms).",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 FOUNDATIONS AND OPTIMIZATIONS",
+      "level": 1,
+      "text": "In this section, we provide a formal framework for OFDs. We give a sound and complete axiomati-\nzation for OFDs that reveals how OFDs behave; notably, not all axioms that hold for traditional FDs\ncarry over. We then use the axioms to design pruning rules that will be used by our OFD discovery\nalgorithm. Finally, we provide a linear time inference procedure that ensures a set of OFDs remains\nminimal.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Axiomatization for OFDs",
+      "level": 2,
+      "text": "We start with the closure of a set of attributes 𝑋 over a set of OFDs Σ, which will allow us to\ndetermine whether additional OFDs follow from Σ by axioms. We use the notation Σ⊢ to state that\n𝑋→𝑌 is provable with axioms from Σ.\nDefinition 2. (𝐶𝑙𝑜𝑠𝑢𝑟𝑒) The closure of 𝑋 , denoted as 𝑋+, with respect to the set of OFDs Σ is\ndefined as𝑋+ ={𝐴| Σ⊢𝑋→𝐴}.\nLemma 3.1. Σ⊢𝑋→𝑌 iff𝑌⊆𝑋+.\nProof. Let𝑌 ={𝐴1,...,𝐴𝑛}. Assume𝑌⊆𝑋+. By definition of𝑋+,𝑋→𝐴𝑖, for all𝑖∈{ 1,...,𝑛}.\nBy the Composition inference rule,𝑋→𝑌 follows. For the other direction, suppose𝑋→𝑌 follows\nfrom the axioms. For each𝑖∈{ 1,...,𝑛},𝑋→𝐴𝑖 follows by Decomposition, and𝑌⊆𝑋+. □\nA sound and complete axiomatization for traditional FDs consists of Transitivity (if 𝑋→𝑌\nand𝑌→𝑍 then𝑋→𝑍), Reflexivity (if 𝑌 ⊆ 𝑋 then𝑋→𝑌 ) and Composition. Since OFDs\nsubsume traditional FDs, all lemmas and theorems for OFDs apply to FDs, but not vice versa. For\nexample, Transitivity does not hold for OFDs. Consider a relation 𝑅(𝐴,𝐵,𝐶) with three tuples\n{(𝑎,𝑏,𝑑),(𝑎,𝑐,𝑒),(𝑎,𝑏,𝑑)}. Assume that 𝑏 is a synonym of 𝑐 and𝑑 is not a synonym of 𝑒. The\nsynonym OFD𝐴→𝑠𝑦𝑛 𝐵 holds since𝑏 and𝑐 are synonyms. In addition,𝐵→𝑠𝑦𝑛 𝐶 holds as𝑏 and𝑐\nare not equal. However, the synonym OFD:𝐴→𝑠𝑦𝑛 𝐶 does not hold as𝑑 and𝑒 are not synonyms\nTheorem 3.2 below presents a sound and complete set of axioms (inference rules) for OFDs. The\nIdentity axiom generates trivial dependencies that are always true.\nTheorem 3.2. These axioms are sound and complete for OFDs.\nO1 Identity:∀𝑋⊆𝑅,𝑋→𝑋\nO2 Decomposition: If 𝑋→𝑌 and𝑍⊆𝑌 then𝑋→𝑍\nO3 Composition: If 𝑋→𝑌 and𝑍→𝑊 then𝑋𝑍→𝑌𝑊\nPROOF. First we prove that the axioms are sound. That is, ifΣ⊢𝑋→𝑌 then Σ|=𝑋→𝑌 . The Identity\naxiom is clearly sound. We cannot have a relation with tuples that agree on 𝑋 yet are not in a\nsynonym relationship. To prove Decomposition, suppose we have a relation that satisfies 𝑋→\n𝑌 and𝑍 ⊆ 𝑌 . Therefore, for all tuples that agree on 𝑋 , they are in a synonym relationship on\nall attributes in𝑌 and hence, also on𝑍. Therefore,𝑋→𝑍. The soundness of Composition is an\nextension of the same argument.\nBelow we present the completeness proof, that is, if Σ|=𝑋→𝑌 then Σ⊢𝑋→𝑌 . Without\nloss of generality, we consider a table 𝐼 with three tuples shown in Table 3. We divide the\n𝑋+\n𝑋 𝑋+\\𝑋 Other attributes\n𝑣...𝑣 𝑣...𝑣 𝑣...𝑣\n𝑣...𝑣 𝑣′...𝑣′ 𝑤...𝑤\nTable 3. Table template for OFDs.\nattributes of 𝐼 into three subsets: 𝑋 , the set consisting of\nattributes in the closure𝑋+ minus attributes in𝑋 , and all\nremaining attributes. Assume that the values𝑣 and𝑣′ are\nnot equal (𝑣 ≠𝑣′ and𝑣′ ≠𝑣′′), but they are in a synonym\nrelationship. Also,𝑣 and𝑤 are not synonyms, and hence,\nthey are also not equal.\nWe first show that all dependencies in the set of OFDs Σ are satisfied by a table𝐼 (𝐼|=𝐹). Since\nOFD axioms are sound, OFDs inferred from Σ are true. Assume𝑉→𝑍 is in Σ, however, it is not\nsatisfied by𝐼. Therefore,𝑉⊆𝑋 because otherwise the tuples of 𝐼 disagree on some attribute of\n𝑉 since𝑣 and𝑣′ as well as𝑣 and𝑤 are not equal, and consequently an OFD𝑉→𝑍 would not be\nviolated. Moreover,𝑍 cannot be a subset of𝑋𝑟 (𝑍 ⊈𝑋+), or else𝑉→𝑍 would be satisfied by𝐼. Let\n𝐴 be an attribute of𝑍 not in𝑋+. Since,𝑉⊆𝑋 ,𝑋→𝑉 by Reflexivity. Also a dependency𝑉→𝑍 is\nin Σ, hence, by Decomposition,𝑉→𝐴. By Composition𝑋𝑉→𝑉𝐴 can be inferred, therefore,𝑋\n→𝑉𝐴 as𝑉⊆𝑋 . However, then Decomposition rule tells us that𝑋→𝐴, which would mean by\nthe definition of the closure that𝐴 is in𝑋+, which we assumed not to be the case. Contradiction.\nOur remaining proof obligation is to show that any OFD not inferable from a set of OFDs Σ\nwith OFD axioms (Σ ⊬𝑋→𝑌 ) is not true (Σ̸|=𝑋→𝑌 ). Suppose it is satisfied (Σ|=𝑋→𝑌 ). By\nReflexivity,𝑋→𝑋 , therefore, by Lemma 3.1,𝑋⊆𝑋+. Since𝑋⊆𝑋+, it follows by the construction\nof Table𝐼 that𝑌⊆𝑋+. Otherwise, the tuples of Table 𝐼 agree on 𝑋 but are not in a synonym\nrelationship on some attribute 𝐴 from𝑌 . Then, from Lemma 3.1 it can be inferred that 𝑋→𝑌 .\nContradiction. Thus, whenever𝑋→𝑌 does not follow from Σ by OFDs axioms, Σ does not logically\nimply𝑋→𝑌 . That is, the axiom system is complete, and this ends the proof of Theorem 3.2. □\nLemma 3.3. (𝑅𝑒𝑓𝑙𝑒𝑥𝑖𝑣𝑖𝑡𝑦 ) If𝑌⊆𝑋 , then𝑋→𝑌 .\nProof. 𝑋→𝑋 holds by Identity axiom. Therefore, it can be inferred by the Decomposition\ninference rule that𝑋→𝑌 holds. □\nUnion inference rule shows what can be inferred from two or more dependencies which have\nthe same sets on the left side.\nLemma 3.4. (𝑈𝑛𝑖𝑜𝑛) If𝑋→𝑌 and𝑋→𝑍 , then𝑋→𝑌𝑍 .\nProof. We are given𝑋→𝑌 and𝑋→𝑍. Hence, the Composition axiom can be used to infer𝑋\n→𝑌𝑍 . □\nDefinition 3. [30] A functional dependency𝑋→𝑌 with nulls called Null Functional Dependency\n(NFD) states that whenever two tuples agree on non-null values in 𝑋 , they agree on the values in 𝑌 ,\nwhich may be partial.\nTheorem 3.5. [30] These axioms are sound and complete for NFDs.\nN1 Reflexivity:∀𝑌⊆𝑋 ,𝑋→𝑌\nN2 Append: If 𝑋→𝑌 and𝑍⊆𝑊 , then𝑋𝑊→𝑌𝑍\nN3 Union: If 𝑋→𝑌 and𝑌→𝑍 , then𝑋→𝑍\nN4 Simplification: If 𝑋→𝑌𝑍 , then𝑋→𝑌 and𝑋→𝑍\nInterestingly, the definitions of OFDs and NFDs are semantically different, i.e., a satisfying OFD\ndoes not necessarily imply a corresponding NFD is true (e.g., in Table 1 an OFD [CC]→ [CTRY]\nholds, but a corresponding NFD [CC]→ [CTRY] does not hold), and vice versa. Also, while data\nverification for FDs and NFDs can be done on pairs of tuples, for OFDs it has to be performed\non an entire equivalence class over the left-hand-side attributes. Following Table 2, although all\npairs of𝑡[𝑌] values share a common class, (i.e., {v,w}: D, {v,z}: C, {w,z}: F), the intersection of these\nthree classes is empty. Hence,{𝑡1,𝑡 2}| = 𝑋 → 𝑌 ,{𝑡2,𝑡 3}| = 𝑋 → 𝑌 and{𝑡1,𝑡 3}| = 𝑋 → 𝑌 , but\n{𝑡1,𝑡 2,𝑡 3}̸| =𝑋→𝑌 . However, their logical inference is equivalent. Despite different bases for OFD\nand NFD axioms, one can show that the axiom systems are equivalent.\nTheorem 3.6. The axiom systems for OFDs in Theorem 3.2 and NFDs in Theorem 3.5 are equivalent.\nProof. To prove equivalency, we show that all OFD axioms can be proven from NFD axioms\nand vice versa.\n(1) O1.Identity: follows from N1.Reflexivity.\n(2) O2.Decomposition: can be inferred from N4.Simplification.\n(3) O3.Composition: since𝑋→𝑌 and𝑍→𝑊 , it follows from N2.Append that𝑋𝑍→𝑌 and𝑋𝑍\n→𝑊 . Hence, by N3.Union,𝑋𝑍→𝑌𝑍 is true.\nThe other direction:\n(1) N1.Reflexivity:𝑋→𝑋 follows by O1.Identity, thus, by O2.Decomposition it can be inferred\nthat𝑋→𝑌 .\n(2) N2.Append: since 𝑍⊆𝑊 , by O1.Identity and O2.Decomposition, it follows that 𝑊→𝑍.\nThus, by O3.Composition𝑋𝑊→𝑌𝑍 .\n(3) N3.Union: since 𝑋→𝑌 and𝑋→𝑍, it follows by O3.Composition that𝑋→𝑌𝑍 .\n(4) N4.Simplification: since 𝑌⊆𝑌𝑍 ,𝑍⊆𝑌𝑍 , by O2.Decomposition, we have𝑋→𝑌 ,𝑋→𝑍.\n□\nTheorem 3.6 enables us to apply existing algorithms for NFDs to determine whether an OFD holds.\nSimilar conclusions were reached for other classes of dependencies, such as FDs andpointwise order\nfunctional dependencies (POFDs). While FDs and POFDs are semantically different, the introduced\nPODs axioms are equivalent to FD axioms, leading to the same inference [38].\nAlgorithm 1 computes the closure of a set of attributes given a set of OFDs. The inference\nprocedure for NFDs, due to equivalency of inference systems, can be applied to discovered and\nsubsequently user-refined OFDs to ensure continued minimality.\nTheorem 3.7. [30] Algorithm 1 computes, in linear time, the closure 𝑋+,𝑋+ ={𝐴| Σ⊢𝑋→𝐴} ,\nwhere Σ denotes a set of OFDs.\nFor a given set of OFDs Σ, we can find an equivalent minimal set, as defined below.\nDefinition 4. A set Σ of OFDs is minimal if\n(1)∀𝑋→𝑌∈ Σ,𝑌 is a single attribute;\n(2) For no 𝑋→𝐴 and a proper subset 𝑍 of𝑋 is Σ\\{𝑋→𝐴}∪{ 𝑍→𝐴} equivalent to Σ;\n(3) For no 𝑋→𝑌∈ Σ is Σ\\{𝑋→𝐴} equivalent to Σ.\nIf Σ is minimal and equivalent to a set of OFDs Σ′, then we say Σ is a minimal cover of Σ′.\nProof. By the Union and Decomposition inference rules, it is possible to have Σ with only a\nsingle attribute in the right hand side. We can achieve conditions two other conditions by repeatedly\ndeleting an attribute and then repeatedly removing a dependency. We can test whether an att",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t2",
+          "t1"
+        ],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Optimizations",
+      "level": 2,
+      "text": "As we will show in Section 4, the search space of potential OFDs is exponential in the number of\nattributes, as with traditional FDs. To improve the efficiency of OFD discovery, we use axioms to\nprune redundant and non-minimal OFDs.\nLemma 3.8. (Opt-1) If𝐴∈𝑋 then𝑋→𝐴.\nProof. It follows from Reflexivity (Lemma 3.3) □\nIf𝐴∈𝑋 then𝑋→𝐴 is a trivial dependency (Reflexivity).\nAlgorithm 1 Inference procedure for OFDs\nInput: A set of OFDs Σ, and a set of attributes𝑋 .\nOutput: The closure of𝑋 with respect to Σ.\n1: Σ𝑢𝑛𝑢𝑠𝑒𝑑← Σ\n2: 𝑛← 0\n3: 𝑋𝑛←𝑋\n4: loop\n5: if∃𝑉→𝑍∈ Σ𝑢𝑛𝑢𝑠𝑒𝑑 and𝑉⊆𝑋 then\n6: 𝑋𝑛+1←𝑋𝑛∪𝑍\n7: Σ𝑢𝑛𝑢𝑠𝑒𝑑← Σ𝑢𝑛𝑢𝑠𝑒𝑑\\ {𝑉→𝑍}\n8: 𝑛←𝑛+ 1\n9: else\n10: return X𝑛\n11: end loop\nAlgorithm 2 FastOFD\nInput: Relation r over schema R\nOutput: Minimal set of OFDs Σ, s.t. r|= Σ\n1: 𝐿0 ={} , Σ ={}\n2: 𝐶+({}) = R\n3: 𝑙 = 1\n4: 𝐿1 ={𝐴|𝐴∈ R}\n5: while𝐿𝑙 ≠{} do\n6: computeOFDs(𝐿𝑙 )\n7: 𝐿𝑙+1 = calculateNextLevel(𝐿𝑙 )\n8: 𝑙 =𝑙+ 1\n9: return Σ\nLemma 3.9. (Opt-2) If𝑋→𝐴 is satisfied over 𝐼 , then𝑋𝑌→𝐴 is satisfied for all 𝑌⊆𝑅\\𝑋 .\nProof. Assume𝑋→𝐴. The OFD𝑋→{} follows from Reflexivity ((Lemma 3.3)). Hence, it can\nbe inferred by Composition that𝑋𝑌→𝐴. □\nIf𝑋→𝐴 holds in𝐼, then all OFDs containing supersets of𝑋 also hold in𝐼 (Augmentation), and\ncan be pruned. When we identify a key during OFD search, we can apply additional optimizations.\nLemma 3.10. (Opt-3) If𝑋 is a key (or superkey) in 𝐼 , then for any 𝐴,𝑋→𝐴 is satisfied in 𝐼 .\nProof. Since𝑋 is a super-key, partitionΠ𝑋 consists of singleton equivalence classes only. Hence,\nthe OFD𝑋→𝐴 is valid. □\nFor a candidate OFD𝑋→𝐴, if𝑋 is a key, then for all𝑥∈ Π𝑋 ,|𝑥| = 1, and𝑋→𝐴 always holds.\nOn the other hand, if𝑋\\𝐴 is a superkey but not a key, then clearly the OFD𝑋→𝐴 is not minimal.\nThis is because there exists𝐵∈𝑋 , such that𝑋\\𝐵 is a superkey and𝑋\\𝐵→𝐴 holds.\nLemma 3.11. (Opt-4) If all tuples in an equivalence class 𝑥∈ Π𝑋 have the same value of 𝐴, then a\ntraditional FD, and therefore an OFD, is satisfied in 𝑥.\nProof. Singleton equivalence classes over attribute set𝑋 cannot falsify any OFD𝑋→𝐴.\n□\nA stripped partition of Π𝑋 , denoted Π∗\n𝑋 , removes all the equivalence classes of size one. For\nexample, in Table 2, Π𝐶𝐶 ={{𝑡1,𝑡 5,𝑡 6},{𝑡2,𝑡 4,𝑡 7},{𝑡3}}, whereas the stripped partition removes the\nsingleton equivalence class {𝑡3}, so Π∗\n𝐶𝐶 ={{𝑡1,𝑡 5,𝑡 6},{𝑡2,𝑡 4,𝑡 7}}. If Π∗\n𝑋 ={}, then𝑋 is a superkey\nand Optimization 3 applies.\nLemma 3.12. Singleton equivalence classes over attribute set 𝑋 cannot violate any OFD 𝑋→𝐴.\nProof. Follows directly from the definition of OFDs. □",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [
+          "a1",
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 OFD DISCOVERY",
+      "level": 1,
+      "text": "We now present an algorithm to discover a complete and minimal set of OFDs from data. Based on\nour axiomatization for OFDs, we normalize all OFDs to a single attribute consequent, i.e.,𝑋→𝐴\nfor any attribute𝐴. An OFD𝑋→𝐴 is trivial if𝐴∈𝑋 by Reflexivity. An OFD𝑋→𝐴 is minimal if\nit is non-trivial and there is no set of attributes𝑌⊂𝑋 such that𝑌→𝐴 holds by Augmentation.\nThe set of possible antecedent (left side) and consequent (right side) values considered by our\nalgorithm can be modeled as a set containment lattice. Each node in the lattice represents an\nattribute set and an edge exists between sets𝑋 and𝑌 if𝑋⊂𝑌 and𝑌 has exactly one more attribute\nAlgorithm 3 calculateNextLevel(L𝑙)\n1: 𝐿𝑙+1 ={}\n2: for all{𝑌𝐵,𝑌𝐶 }∈ singleAttrDiffBlocks(𝐿𝑙) do\n3: 𝑋 =𝑌 Ð{𝐵,𝐶}\n4: Add 𝑋 to𝐿𝑙+1\n5: return 𝐿𝑙+1\nAlgorithm 4 computeOFDs(L𝑙)\n1: for all𝑋∈𝐿𝑙 do\n2: 𝐶+(𝑋) = Ñ\n𝐴∈𝑋𝐶+(𝑋\\𝐴)\n3: for all𝑋∈𝐿𝑙 do\n4: for all𝐴∈𝑋∩𝐶+(𝑋) do\n5: if𝑋\\𝐴→𝐴 then\n6: Add 𝑋\\𝐴→𝐴 to Σ\n7: Remove 𝐴 from𝐶+(𝑋)\nthan𝑋 . Let𝑘 be the number of levels in the lattice. A relation with𝑛 attributes generates a𝑘 =𝑛\nlevel lattice, with𝑘 = 0 representing the top (root node) level.\nAfter computing the stripped partitionsΠ∗\n𝐴, Π∗\n𝐵... for single attributes at level𝑘 = 1, we compute\nthe stripped partitions for subsequent levels in linear time by taking the product, i.e.,Π∗\n𝐴𝐵 = Π∗\n𝐴· Π∗\n𝐵.\nOFD candidates are considered by traversing the lattice in a breadth-first search manner. We\nconsider all𝑋 consisting of single attribute sets, followed by all 2-attribute sets, and continue level\nby level until (potentially) level𝑘 =𝑛, similarly as for other use cases of Apriori [5].\nAlgorithm 2 outlines the OFD discovery process. In level𝐿𝑙 of the lattice, we generate candidate\nOFDs with𝑙 attributes using computeOFDs(𝐿𝑙). FastOFD starts from singleton sets of attributes\nand works its way to larger attribute sets through the lattice, level by level. When the algorithm\nprocesses an attribute set𝑋 , it verifies candidate OFDs of the form (𝑋\\𝐴)→ 𝐴, where𝐴∈𝑋 . This\nguarantees that only non-trivial OFDs are considered. For each candidate, we check if it is a valid\nsynonym OFD. The small-to-large search strategy guarantees that only minimal OFDs are added to\nthe output set Σ, and is used to prune the search space. The OFD candidates generated in a given\nlevel are checked for minimality based on the previous levels and are added to a valid set of OFDs\nΣ if applicable. The algorithm calculateNextLevel(𝐿𝑙) forms the next level from the current level.\nNext, we explain how we check for minimality, and routines calculateNextLevel and computeOFDs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a4",
+          "a2",
+          "a3"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4.1 Finding Minimal OFDs",
+      "level": 2,
+      "text": "FastOFD traverses the lattice until all minimal OFDs are found. To check if an OFD is minimal, we\nneed to know if𝑋\\𝐴→𝐴 is valid for any𝑌⊂𝑋. If𝑌\\𝐴→𝐴, then by Augmentation𝑋\\𝐴→𝐴\nholds. An OFD𝑋→𝐴 holds for any relational instance by Reflexivity, therefore, considering only\n𝑋\\𝐴→𝐴 guarantees that only non-trivial OFDs are taken into account.\nWe maintain information about minimal OFDs, in the form of𝑋\\𝐴→𝐴, in the candidate set\n𝐶+(𝑋). If𝐴∈𝐶+(𝑋) for a given set𝑋 , then𝐴 has not been found to depend on any proper subset\nof𝑋 . Therefore, to find minimal OFDs, it suffices to verify OFDs 𝑋\\𝐴→𝐴, where𝐴∈ 𝑋 and\n𝐴∈𝐶+(𝑋\\𝐵) for all𝐵∈𝑋 .\nExample 4.1. Assume that𝐵→𝐴 and that we consider the set 𝑋 ={𝐴,𝐵,𝐶}. As𝐵→𝐴 holds,𝐴 ∉\n𝐶+(𝑋\\𝐶). Hence, the OFD{𝐵,𝐶}→ 𝐴 is not minimal.\nDefinition 5. 𝐶+(𝑋) ={𝐴∈ R|∀ 𝐴∈𝑋 𝑋\\𝐴→𝐴 does not hold}.\nSome of our techniques are similar to TANE [25] for FD discovery and FASTOD [48] for Order\nDependency (OD) discovery since OFDs subsume FDs and ODs subsume FDs. However, FastOFD\ndiffers from TANE and FASTOD in the optimizations, how nodes are removed from the lattice, and\napplying keys to prune candidates. FastOFD includes OFD-specific rules. For instance, for FDs if\n{𝐵,𝐶}→ 𝐴 and𝐵→𝐶, then𝐵→𝐴 holds; hence,{𝐵,𝐶}→ 𝐴 is non-minimal. However, this rule\ndoes not hold for OFDs, and therefore our definition of candidate set𝐶+(𝑋) differs from TANE.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.2 Computing Levels",
+      "level": 2,
+      "text": "Algorithm 3 explains calculateNextLevel(𝐿𝑙), which computes𝐿𝑙+1 from𝐿𝑙. It uses the subroutine\nsingleAttrDifferBlocks(𝐿𝑙) that partitions𝐿𝑙 into blocks (Line 2). Two sets belong to the same block if\nthey have a common subset𝑌 of length𝑙− 1 and differ in only one attribute,𝐴 and𝐵, respectively.\nTherefore, the blocks are not difficult to calculate as sets𝑌𝐴 and𝑌𝐵 can be expressed as sorted sets\nof attributes. Other usual use cases of Apriori [5] such as TANE [25] use a similar approach.\nThe level𝐿𝑙+1 contains those sets of attributes of size𝑙+ 1 which have their subsets of size𝑙 in𝐿𝑙.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a3"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.3 Computing Dependencies & Completeness",
+      "level": 2,
+      "text": "Algorithm 4 adds minimal OFDs from level𝐿𝑙 to Σ, in the form of𝑋\\𝐴→𝐴, where𝐴∈𝑋 . The\nfollowing lemma shows that we can use candidates𝐶+(𝑋) to test whether𝑋\\𝐴→𝐴 is minimal.\nLemma 4.1. An OFD𝑋\\𝐴→𝐴, where𝐴∈𝑋 , is minimal iff∀𝐵∈𝑋𝐴∈𝐶+(𝑋\\𝐵).\nProof. Assume first that the dependency 𝑋\\𝐴→ 𝐴 is not minimal. Therefore, there exists\n𝐵∈𝑋 for which𝑋\\{𝐴,𝐵}→ 𝐴 holds. Then,𝐴 ∉𝐶+(𝑋\\𝐵).\nTo prove the other direction assume that there exists𝐵∈𝑋 , such that𝐴 ∉𝐶+(𝑋\\𝐵). Therefore,\n𝑋\\{𝐴,𝐵}→ 𝐴 holds, where𝐴 ≠ 𝐵. Hence, by Reflexivity the dependency 𝑋\\𝐴→ 𝐴 is not\nminimal. □\nBy Lemma 4.1, the steps in Lines 2, 4, 5 and 6 guarantee that the algorithm adds to Σ only the\nminimal OFDs of the form 𝑋\\𝐴→ 𝐴, where𝑋 ∈ 𝐿𝑙 and𝐴∈ 𝑋. In Line 5, to verify whether\n𝑋\\𝐴→𝐴 is a synonym OFD, we apply Definition 1.\nThe worst case complexity of our algorithm isexponential in the number of attributes as there are\n2|𝑛| nodes in the lattice. The worst-case output size is also exponential in the number of attributes,\nand occurs when the minimal OFDs are in the widest middle level of the lattice. This means that a\npolynomial-time discovery algorithm in the number of attributes cannot exist. These results are\nin line with previous FD [25], inclusion dependency [42], and order dependency [48] discovery\nalgorithms. However, the complexity is polynomial in the number of tuples, although the ontological\nrelationships (synonyms) influence the complexity of verifying whether a candidate OFD holds.\nWe assume that values in the ontology are indexed and can be accessed in constant time.\nOntology FD candidate verification differs from traditional FDs. Following Definition 1 to verify\nwhether a candidate synonym OFD holds over𝐼, for each equivalence class𝑥∈ Π𝑋(𝐼), we need to\ncheck whether the intersection of the corresponding senses is not empty. This can be done in linear\ntime in the number of tuples by scanning the stripped partitions and maintaining a hash table\nwith the frequency counts of all the senses for each equivalence class. Returning to the example in\nTable 2, the synonym OFD𝑋→𝑠𝑦𝑛 𝑌 does not hold because for the single equivalence class in this\nexample, of size three, there are no senses (classes) for𝑌 that appear three times.\nLemma 4.2. Let candidates𝐶+(𝑌) be correctly computed∀𝑌∈𝐿𝑙−1.𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙 ) calculates\ncorrectly𝐶+(𝑋),∀𝑋∈𝐿𝑙 .\nProof. An attribute𝐴 is in𝐶+(𝑋) after the execution of the algorithm𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙) unless\nit is excluded from 𝐶+(𝑋) on Line 2 or 7. First we show that if 𝐴 is excluded from 𝐶+(𝑋) by\n𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙), then𝐴 ∉𝐶+(𝑋) by the definition of𝐶+(𝑋).\n- If𝐴 is excluded from𝐶+(𝑋) on Line 2, there exists 𝐵∈ 𝑋 with𝐴 ∉𝐶+(𝑋\\𝐵). Therefore,\n𝑋\\{𝐴,𝐵}→ 𝐴 holds, where𝐴 ≠𝐵. Hence,𝐴 ∉𝐶+(𝑋) by the definition of𝐶+(𝑋).\n- If𝐴 is excluded on Line 7, then 𝐴∈ 𝑋 and𝑋\\𝐴→ 𝐴 holds. Hence,𝐴 ∉𝐶+(𝑋) by the\ndefinition of𝐶+(𝑋).\nNext, we show the other direction, that if𝐴 ∉𝐶+(𝑋) by the definition of𝐶+(𝑋), then𝐴 is excluded\nfrom𝐶+(𝑋) by the algorithm𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙). Assume𝐴 ∉𝐶+(𝑋) by the definition of𝐶+(𝑋).\nTherefore, there exists𝐵∈𝑋 , such that𝑋\\{𝐴,𝐵}→ 𝐴 holds. We have following two cases.\n- 𝐴 =𝐵. Thus,𝑋\\𝐴→𝐴 holds and𝐴 is removed on Line 7, if𝑋\\𝐴→𝐴 is minimal; and on\nLine 2 otherwise.\n- 𝐴 ≠𝐵. Hence,𝐴 ∉𝐶+(𝑋\\𝐵) and𝐴 is removed on Line 2.\nThis ends the proof of correctness of computing the candidate set𝐶+(𝑋),∀𝑋∈𝐿𝑙. □\nTheorem 4.3. The FastOFD algorithm computes a complete and minimal set of OFDs Σ.\nProof. The algorithm𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙) adds to set of OFDs Σ only the minimal OFDs. The\nsteps in Lines 2, 4, 5 and 6 guarantee that the algorithm adds toΣ only the minimal OFDs of the form\n𝑋\\𝐴→𝐴, where𝑋∈𝐿𝑙 and𝐴∈𝑋 by Lemma 4.1. It follows by induction that𝑐𝑜𝑚𝑝𝑢𝑡𝑒𝑂𝐹𝐷𝑠 (𝐿𝑙)\ncalculates correctly 𝐶+(𝑋) for all levels 𝑙 of the lattice since Lemma 4.2 holds. Therefore, the\nFastOFD algorithm computes a complete set of minimal OFDs Σ. □",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [
+          "a4"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "5 DATA CLEANING WITH OFDS",
+      "level": 1,
+      "text": "Over time, misalignment may arise between a data instance𝐼, an ontology𝑆, and a set of OFDs\nΣ. In this section, we study the problem of how to compute repairs to re-align 𝐼,𝑆 with Σ. Data\nnaturally evolve due to updates and changes in domain semantics. These changes in semantics also\nlead to ontology incompleteness, as new concepts and ontological relationships are introduced. For\nexample, new uses of medical drugs lead to new prescriptions to treat new and different illnesses.\nWhile OFDs may also evolve, we argue that repairs to the data𝐼 and ontology𝑆 are more common\nin practice, and hence, our current focus. When stale OFDs do occur, FastOFD can be used to\ndiscover the latest set of OFDs that hold over the data. For approximate OFDs defined over a dirty\ninstance𝐼, violating values in𝐼 can be repaired, thereby transforming approximate OFDs to OFDs\nthat are satisfied over all tuples in𝐼. Formally, we modify𝐼 and𝑆 to produce𝐼′ and𝑆′, such that a\nrepaired version of𝐼,𝐼′|= Σ, w.r.t. a modified version𝑆′ of𝑆.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5.1 Scope of Repairs",
+      "level": 2,
+      "text": "OFDs interact when two or more dependencies share a common set of attributes, which may\ninvalidate already performed repairs. For simplicity, we assume that there does not exist an attribute\nthat occurs on the left side of one OFD and the right side of another. This simplifies the interaction\namong repairs to only consequent attributes without having to consider changes to antecedent\n(left-side) attributes of the dependency, i.e., the equivalence classes for an OFD remain fixed. In\nmany domains, attributes serve as either an independent or dependent role. For example, in health\ncare, demographic and prognosis characteristics are typically independent and dependent attributes,\nrespectively. However, our techniques can handle OFDs that share the same consequent attribute.\nData Repair. Consider a synonym OFD𝜙:𝑋→𝑠𝑦𝑛 𝐴, and an equivalence class𝑥∈ Π𝑋(𝐼) where\nthere exists at least two tuples𝑡1,𝑡 2∈𝑥, such that𝑡1[𝐴] and𝑡2[𝐴] are not synonyms under some\nsense𝜆. We consider repairs to values in the consequent attributes where the domain of repair\nvalues are values in𝑆. LetP(𝐼) denote the set of all possible data repairs of𝐼. For a repair𝐼′ of𝐼,\nwe use𝑑𝑖𝑠𝑡(𝐼,𝐼 ′) to denote the difference between𝐼 and𝐼′, which is measured by the number of\ncells whose values in𝐼 are different from the values of the corresponding cells in𝐼′.\nOntology Repair. A repair to an ontology𝑆 is the insertion of new value(s) to a node in𝑆 w.r.t. a\nsense𝜆. LetP(𝑆) denote the set of possible ontology repairs to𝑆. For a repair𝑆′ of𝑆, we define\ndistance𝑑𝑖𝑠𝑡(𝑆,𝑆′) as the number of new values (concepts) in𝑆′ that are not in𝑆.\nFig. 2. OFDClean framework.\nFig. 3. Sense assignment.\nMinimal Repair. The universe of repairs,𝑈 , represents all possible pairs (𝑆′,𝐼′) such that𝑆′∈P( 𝑆)\nand 𝐼′ ∈ P(𝐼) and 𝐼′ |= Σ w.r.t.𝑆′. We want to find minimal repairs in 𝑈 that do not make\nunnecessary changes to𝑆 or𝐼 in a Pareto-optimal sense.\nDefinition 6. (Minimal Repair). We are given an instance 𝐼 , OFDs Σ, and an ontology 𝑆, where\n𝐼̸|= Σ w.r.t.𝑆. A repair (𝑆′,𝐼′)∈𝑈 is minimal if ∄(𝑆′′,𝐼′′)∈ 𝑈 such that𝑑𝑖𝑠𝑡(𝑆,𝑆′′) <𝑑𝑖𝑠𝑡(𝑆,𝑆′)\nand𝑑𝑖𝑠𝑡(𝐼,𝐼 ′′) <𝑑𝑖𝑠𝑡(𝐼,𝐼 ′).\nFor example, suppose𝑈 contains three repairs: the first one makes two changes each to𝑆 and\n𝐼, the second one makes two changes to 𝑆 and three changes to𝐼, and the third one makes one\nchange to𝑆 and five changes to𝐼. Here, the first and the third repair are minimal.\nProblem: For a data instance 𝐼 , an ontology 𝑆, a set of OFDs Σ, where𝐼̸|= Σ, compute a repaired\ninstance𝐼′, and ontology 𝑆′, such that 𝐼′|= Σ w.r.t.𝑆′, and𝑑𝑖𝑠𝑡(𝐼,𝐼 ′) and𝑑𝑖𝑠𝑡(𝑆,𝑆′) are minimal.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5.2 OFDClean Overview",
+      "level": 2,
+      "text": "OFDs enrich the semantic expressiveness of FDs via ontological senses, which allow for multiple\ninterpretations of the data. In traditional FDs, senses do not exist, and there is only one interpretation.\nFor a set of OFDs Σ, the problem of finding a minimal repair to 𝑆 and to 𝐼 requires evaluating\ncandidate senses for each equivalence class w.r.t. each𝜙∈ Σ, and assigning a sense to each class.\nExisting constraint-based repair algorithms are insufficient as they do not consider senses [12, 21].\nWe therefore propose OFDClean, a framework that includes ontology and data repair with sense\nassignment to minimize the number of changes to𝐼, and𝑆. Intuitively, we consider ontology repairs\nof size𝑘, where𝑘 ranges from one to the total number of ontology repair values. For each candidate\nontology repair of size𝑘, we select the ontology repair𝑆′ such that𝑑𝑖𝑠𝑡(𝑆,𝑆′) is minimal. For each\nvalue𝑘, and the selected𝑆′, we compute a repair𝐼′ of𝐼 such that the number of updates is minimal,\nand less than a threshold𝜏, i.e.,𝑑𝑖𝑠𝑡(𝐼,𝐼 ′)≤ 𝜏 to achieve consistency with Σ. We call such repairs\n𝜏-constrained repairs. To generate a Pareto-optimal set of repairs, we select(𝑆′,𝐼′) that are minimal\nfor each𝑘 value.\nOFDClean takes a greedy, two-step approach. First, we compute an initial sense assignment for\neach equivalence class that minimizes the number of repairs to the ontology and to the data (locally)\nw.r.t. each OFD and each equivalence class. Secondly, we go beyond a single OFD to consider\npairwise interactions among𝜙∈ Σ where attribute overlap occurs, such that repairing values w.r.t.\n𝜙1 may increase or decrease the number of errors in𝜙2. We model the overlapping tuples between\n𝜙1 and𝜙2 as two distributions w.r.t. their assigned senses. We refine the sense assignment such that\nthe number of necessary updates to transform one distribution to the other is minimized. Lastly,\nwith a computed sense assignment, our problem reduces to finding a minimal repair of𝑆 and to𝐼\nsuch that it satisfies Σ. Figure 2 provides an overview of OFDClean. Given𝐼,𝑆 and Σ, OFDClean\nidentifies inconsistencies in𝐼 w.r.t. Σ and𝑆, and returns a set of minimal repairs (𝐼′,𝑆′) such that\n𝐼′|= Σ w.r.t.𝑆′. OFDClean execution proceeds along two main modules.\nSense Assignment. Let𝜙 : 𝑋 →𝑠𝑦𝑛 𝐴 be a synonym OFD, where for each equivalence class\n𝑥∈ Π𝑋 ,𝑥 is interpreted w.r.t. an assigned sense𝜆𝑥. Given 𝐼,𝑆 , and Σ, for each𝜙∈ Σ, we compute\n𝜆𝑥 for each 𝑥 ∈ Π𝑋 such that(𝐼′,𝑆′) is minimal and 𝐼′ |= 𝜙. We denote the set of all senses\nacross all𝑥 for𝜙 as Λ(𝜙)=∪𝑥∈Π(𝑋)𝜆𝑥. Intuitively, we compute𝜆𝑥 for every𝑥∈ Π𝑋 to obtain an\ninterpretation that can achieve a minimal repair. We take a local greedy approach to consider only𝜙\nwhen computing Λ(𝜙). We then model the interactions among the OFDs inΣ, via their overlapping\nequivalence classes, and refine the initial sense assignment. We quantify interactions and conflicts\nby comparing the difference between the distributions represented via a pair of equivalence classes.\nThe final assignment of senses for all𝜙∈ Σ is denoted as Λ(Σ) =∪𝜙 Λ(𝜙). We present our sense\nassignment algorithm in Section 6.\nCompute Repairs. Given Λ(Σ), Compute Repairs computes the set of minimal repairs by first\ngenerating the set of ontology repair candidates that appear in an equivalence class 𝑥, but not\nin𝑆. It then considers combinations of these candidates. We optimize lattice traversal using a\nbeam-search strategy that selects the top-𝑏 candidates to expand at each level of the lattice [33].\nWe consider data updates to the consequent attribute𝐴 from the domain of𝐴 and synonyms of𝐴\nin𝑆 under the selected sense. We then select candidate repairs that make at most𝜏 updates. We\npresent details of how ontology and data repairs are computed in Section 7.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "6 SENSE ASSIGNMENT",
+      "level": 1,
+      "text": "Given senses for an ontology𝑆, we compute𝜆𝑥 for each𝑥 and𝜙∈ Σ such that each repair(𝐼′,𝑆′)\nis minimal and𝜏-constrained. A naive approach evaluates all candidate senses against all𝑥∈ Π𝑋 ,\nleading to an exponential number of solutions, which is not feasible in practice.\nIn this section, we introduce a two-step greedy approach. First, we build an initial solution by\nconsidering all senses against each equivalence class 𝑥, and selecting the sense that minimizes\nthe number of repairs for each𝑥∈ Π𝑋 and for each𝜙 :𝑋→𝑠𝑦𝑛 𝐴, leading to a local minimum.\nThis evaluation greedily selects the sense that leads to the fewest repairs for a given𝑥, without\nconsidering interactions between the equivalence classes and their senses. In the second step, we\nconsider the interactions among pairs of equivalence classes 𝑥,𝑥′, where𝑥∈ Π𝑋,𝑥′∈ Π𝑋′ for\n𝜙,𝜙′∈ Σ, respectively, by performing a local search to improve the initial solution w.r.t. minimizing\nthe number of repairs. Our greedy search selects pairs of equivalence classes where the modeled\ndata distributions share the greatest distance, indicating a larger amount of conflict. We model\nthe interactions among all𝜙,𝜙′∈ Σ that share a common consequent attribute by constructing\na dependency graph , where nodes represent equivalence classes and edges represent a shared\nconsequent attribute. We traverse this dependency graph to refine the initial solution. We evaluate\nthe tradeoff between updating the initial sense assignment and a new assignment to𝑥 by estimating\nthe number of necessary data and ontology repairs to achieve alignment between 𝑥 and𝑥′. We\nvisit nodes𝑥′ within a neighbourhood of the current node𝑥 as defined via a distance function. We\nuse the Earth Mover’s Distance (EMD) to quantify the amount of work needed to transform the data\ndistributions modeled in𝑥 to the distribution represented in𝑥′ [47]. We visit nodes𝑥′ where the\nEMD values between𝑥 and𝑥′ are largest, indicating regions with the greatest amount of conflict,\nwhile avoiding exhaustive enumeration of all candidate assignments. We first describe our greedy\nalgorithm to generate an initial solution, followed by local neighbourhood refinement.\nAlgorithm 5 Initial_Assignment(𝑥,𝑆, Λ)\n1: let 𝑠𝑠𝑒𝑡(𝑣)←∅\n2: for each𝜆∈ Λ do\n3: for each value𝑣∈𝜆 do\n4: 𝑠𝑠𝑒𝑡(𝑣)← 𝑠𝑠𝑒𝑡(𝑣) Ð𝜆\n5: 𝑘′←𝑀𝐴𝐷(𝑥)\n6: 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥)←∅\n7: while𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥) is∅ do\n8: for each top-𝑘′{𝑓(𝑣1),...,𝑓 (𝑣𝑛)}∈ 𝑀𝐴𝐷(𝑥) do\n9: Λ′←𝑠𝑠𝑒𝑡(𝑣1) Ñ... Ñ𝑠𝑠𝑒𝑡(𝑣𝑛)\n10: if Λ′ ≠∅ then\n11: 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥)← 𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥) Ð Λ′\n12: 𝑘′←𝑘′− 1\n13: for each sense𝜆∈𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥) do\n14: 𝑐𝑜𝑣𝑒𝑟(𝜆)← the tuple coverage of𝜆 over𝑥\n15: 𝜆𝑥←𝜆∈𝑐𝑜𝑣𝑒𝑟(𝜆) with maximal tuple coverage\n16: return 𝜆𝑥\nAlgorithm 6 Local_Refinement(𝐺,𝑥, Λ)\n1: 𝑢1← BFS(𝐺)\n2: for each vertex𝑢2 connected to𝑢1 do\n3: if𝑤(𝑢1,𝑢 2) >𝜃 then\n4: compute 𝑚𝑖𝑛{C} repair\n5: if sense reassignment for𝑢2 to𝜆′ then\n6: if𝑤′(𝑢1,𝑢 2) <𝑤(𝑢1,𝑢 2) then\n7: Λ← Λ(𝐼)\\{ 𝑢2,𝜆}\n8: Λ← Λ(𝐼) Ð{𝑢2,𝜆′}\n9: continue until all all 𝑢1 visited\n10: return Λ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a5",
+          "a6"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "6.1 Computing an Initial Assignment",
+      "level": 2,
+      "text": "For𝜙 :𝑋→𝑠𝑦𝑛 𝐴,𝑥∈ Π𝑋 , we compute𝜆𝑥, an initial sense assignment for each𝑥. To compute a\nminimal repair, we seek senses𝜆𝑥 containing as many values as possible (maximal overlap) with\nvalues in𝑥. Let𝑡𝑢,𝑣𝑢 represent the number of distinct tuples and values, respectively, that are not\ncovered by𝜆𝑥. Let®𝑟𝜆𝑥 =(𝑡𝑢,𝑣𝑢) be a vector representing the number of necessary tuples and values\nthat must be updated in𝑥 under sense𝜆 to satisfy𝜙. We seek a sense𝜆′ such that®𝑟𝜆′𝑥≺®𝑟𝜆𝑥,∀𝜆𝑥.\nThe enumeration of all candidate senses to𝑥 is practically inefficient. We take a greedy approach\nthat finds a𝜆𝑥 with maximal overlap with values in 𝑥. We first construct an index of all senses\ncontaining each value𝑣∈𝑥, denoted by𝑠𝑠𝑒𝑡(𝑣). For example, Figure 3(c) shows𝑠𝑠𝑒𝑡(𝑐3) ={𝜆1,𝜆 4}.\nTo maximize the coverage of values, we naturally seek values with maximal frequency. However,\ngiven that values in𝑥 may contain errors, we seek an ordering of the values in 𝑥 that is robust\nto outliers. The Median Absolute Deviation (MAD) measure quantifies the variability of a sample,\nbeing more resilient to outliers than the standard deviation [46]. Let 𝑓(𝑣) denote the frequency\nof value𝑣. For a univariate dataset{𝑓(𝑣1),𝑓(𝑣2),...𝑓 (𝑣𝑛)}, MAD is defined as the median of the\nabsolute deviations from the median, i.e., MAD(𝑥) = median(|𝑓(𝑣𝑖)− 𝑓( ¯(𝑣))|) , where𝑓( ¯(𝑣)) is the\nmedian of all values in𝑥. We sort the values in𝑥 according to their decreasing MAD scores. We\niteratively search for a sense𝜆𝑥 containing as many values as possible from𝑥 with the highest MAD\nscores. We use𝑘′ as a (decreasing) counter to find such a sense covering𝑘′ values in𝑥, where𝑘′ is\ninitialized to𝑛, the number of unique values in𝑥. For each value 𝑣𝑖, we compute the intersection\nof their respective𝑠𝑠𝑒𝑡(𝑣𝑖). If there exists a non-empty intersection of senses, the algorithm ends,\nand returns these senses as an assignment for𝑥, denoted as𝑝𝑜𝑡𝑒𝑛𝑡𝑖𝑎𝑙 _𝑠𝑒𝑡(𝑥). We select the sense\n𝜆𝑥 covering the largest number of tuples in𝑥. Algorithm 5 provides the details.\nExample 6.1. Figure 3(a) shows a data instance 𝐼 for two synonym OFDs 𝜙1 : 𝐴 → 𝐶 and\n𝜙2 :𝐵→𝐶. Figure 3(b) shows seven senses and the corresponding synonym values for each sense. Let\n𝜆𝑥3 represent equivalence class𝑥3 = Π𝐵=𝑏2. Figure 3(c)) shows the index of senses for each value for\nall𝑥. We compute the MAD for values in 𝑥3, i.e.,𝑐1−𝑐4, and determine that the ranked ordering is\n{𝑐4,𝑐 2,𝑐 1,𝑐 3}. We intersect the senses in𝑠𝑠𝑒𝑡(𝑐2) and𝑠𝑠𝑒𝑡(𝑐4), resulting in𝜆2 as the initial sense for 𝑥3.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a5"
+        ],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Sample clinical trials."
+    },
+    {
+      "id": "t2",
+      "caption": "Defining OFDs"
+    },
+    {
+      "id": "t3",
+      "caption": "Table template for OFDs."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "computes the closure of a set of attributes given a set of OFDs. The inference"
+    },
+    {
+      "id": "a2",
+      "caption": "FastOFD"
+    },
+    {
+      "id": "a3",
+      "caption": "calculateNextLevel(L𝑙)"
+    },
+    {
+      "id": "a4",
+      "caption": "computeOFDs(L𝑙)"
+    },
+    {
+      "id": "a5",
+      "caption": "Initial_Assignment(𝑥,𝑆, Λ)"
+    },
+    {
+      "id": "a6",
+      "caption": "Local_Refinement(𝐺,𝑥, Λ)"
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 3,
+    "n_algorithms": 6,
+    "n_equations": 0
+  }
+}

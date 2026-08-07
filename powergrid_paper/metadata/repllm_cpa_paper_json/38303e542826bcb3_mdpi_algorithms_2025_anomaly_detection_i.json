@@ -1,0 +1,294 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2025__anomaly_detection_in_high_dimensional_time_series_data___b93cb9d736.pdf",
+  "n_pages": 34,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Anomaly detection (AD), also known as outlier detection, is the process of identifying \ndata points, patterns, or events that deviate significantly from the expected or normal \nbehavior within a dataset. Anomaly detection has a broad range of applications, including \nnetwork security (e.g., detecting unauthorized access or cybersecurity threats) [1], fraud \nThis article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license \n(https://creativecommons.org/licenses/by/4.0/).\n*Correspondence: haijun.gong@slu.edu; Fax: +1-314-977-1452.\nAuthor Contributions: Conceptualization, H.G.; methodology, Y .W., L.Z., T.S., G.B. and H.G.; formal analysis, Y .W. and L.Z.; \nwriting, Y .W., L.Z. and H.G.; funding acquisition, H.G. All authors have read and agreed to the published version of the manuscript.\nConflicts of Interest: The authors declare no conflicts of interest.\nDisclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual \nauthor(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to \npeople or property resulting from any ideas, methods, instructions or products referred to in the content.\nHHS Public Access\nAuthor manuscript\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nPublished in final edited form as:\nAlgorithms. 2025 February ; 18(2): . doi:10.3390/a18020062.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ndetection (e.g., unusual transactions in banking or insurance) [2], medical diagnostics (e.g., \nidentifying tumors in MRI scans) [3], quality control in manufacturing (e.g., equipment \nfaults), and healthcare and environmental monitoring (e.g., irregularities in vital signs of \npatients or unusual weather) [4]. Numerous anomaly detection methods based on statistical \nand machine learning algorithms have been developed and successfully applied across \nvarious fields [5,6]. These techniques aim to identify abnormal patterns within diverse types \nof datasets, including time series data.\nMost existing anomaly detection techniques are generally categorized into supervised, \nsemisupervised, and unsupervised approaches. The review by Salima et al. [7] provides a \ndetailed discussion of various methods. Here, we briefly introduce some popular techniques \nfor completeness. Supervised methods, also referred to as classification methods [8–10], \nrely on labeled training data to construct predictive models. Common supervised anomaly \ndetection algorithms include Support Vector Machines (SVMs), k-Nearest Neighbors (k-\nNN), Bayesian Networks, Decision Trees, and Neural Networks. For example, Mafra et \nal. [11] proposed an intrusion detection system using Kohonen Neural Networks and \nSVM to identify anomalous patterns in network traffic. Similarly, SVMs have been \ncombined with Decision Trees for intrusion detection [12] and Denial-of-Service (DoS) \nattack detection [13]. Neural Network-based approaches, such as Multi-Layer Perceptrons \n(MLPs) or Artificial Neural Networks, have also been employed to differentiate between \nnormal and abnormal behaviors. For instance, Radial Basis Function Neural Networks \n(RBF) [14] were utilized to learn multiple local clusters for well-known attacks. These \nmethods can also integrate results from multiple classifiers to enhance performance, \nmaking them particularly well suited for problems involving large datasets. Unsupervised \nanomaly detection methods identify anomalies based on the intrinsic characteristics of the \ndata, without requiring any labeled training data or prior knowledge of which points are \nanomalous. These methods are based on the assumption that the majority of data points \nare normal, while only a small fraction are anomalous. Common unsupervised anomaly \ndetection algorithms include clustering-based methods such as K-Means [15], Fuzzy C-\nMeans [16], and the unsupervised niche clustering-based anomaly detection algorithm [17], \nas well as probabilistic approaches like the Expectation-Maximization (EM) Meta algorithm \n[18]. Deep learning-based techniques, such as Generative Adversarial Network (GAN)-\nbased [19,20], variational autoencoder (V AE)-based [21–23], transformer-based [24–26], \nand diffusion model-based [27] anomaly detection approaches, have garnered significant \nattention due to their ability to model complex data distributions and identify subtle \nanomalies. Popular generative model-based tools for anomaly detection include MAD-GAN \n[20], V AE-GAN [23], UTRAD [26], etc. However, these methods often require a large \namount of data for effective training, which can be a significant limitation in scenarios \nwhere data availability is restricted. This reliance on extensive training data poses challenges \nin applications with limited labeled or high-quality datasets. The semisupervised anomaly \ndetection methods, for example, GANomaly [28], typically use a small set of labeled data, \nwhich provide information about normal or anomalous patterns, alongside a larger set of \nunlabeled data to learn the underlying data distribution and detect deviations.\nThough significant progress has been made in anomaly detection algorithms, several \nchallenges remain. Most existing anomaly detection methods require learning the underlying \nWang et al. Page 2\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ndistribution of the data to differentiate between normal and anomalous data, which is \nchallenging, particularly in cases where the data distribution is high-dimensional, non-\nstationary, or multimodal. Accurately capturing these distributions often demands complex \nmodels and large amounts of data, which may not always be available. Furthermore, the \nassumption of a specific distribution may not hold true for all datasets, potentially limiting \nthe effectiveness of these methods. Although directly estimating individual distributions \nis challenging in high-dimensional data, estimating the ratio of the densities between \ntraining and test data [29,30] is comparatively more feasible. Density ratio estimation-based \napproaches circumvent the need for explicit distribution estimation by focusing on the \nrelative likelihood of data points under different conditions. Techniques such as density \nratio estimation [30,31] and ratio matching [32] methods offer an alternative for anomaly \ndetection in complex, high-dimensional data since they simplify the problem by estimating \nthe ratio between normal and anomalous data distributions.\nDensity ratio estimation involves directly estimating the ratio between the probability \ndensities of two distributions, typically corresponding to normal (inlier) and anomalous \n(outlier) data. This approach avoids the explicit estimation of individual densities and \nfocuses on identifying deviations between two distributions. Several techniques have \nbeen developed for density ratio estimation, including the Kullback–Leibler Importance \nEstimation Procedure (KLIEP) [29], unconstrained least-squares importance fitting (uLSIF) \n[31], Relative uLSIF (RuLSIF) [30], Bregman divergence-based [33], RobustRealNVP [34], \nand Pearson-like scaled Bregman divergence-based (PLsBD) [35] methods. In the previous \nstudies [30,35,36], these approaches have been successfully applied to identify change \npoints in time series data, a problem closely related to anomaly detection. Change-point \ndetection, like anomaly detection, involves identifying significant shifts in data behavior \nover time. The existing density ratio estimation methods utilize various divergence measures \nsuch as the Kullback–Leibler (KL), Pearson, and α-relative Pearson divergence to quantify \nthe dissimilarity between data distributions and detect the change points or anomalies. For \nexample, Hido et al.’s w",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Materials and Methods",
+      "level": 1,
+      "text": "An anomaly, or outlier, is an observation that significantly deviates from the majority of the \ndata, often indicating that the distribution of data containing the anomaly differs from that \nof normal data. So, the anomaly detection aims to identify such patterns, which may signify \ncritical information, by modeling the underlying probability distributions of the data and \ndistinguishing anomalies from normal observations.\nWe use two datasets, a training set xj\ntr\nj = 1\nntr\nptr(x), which consists entirely of normal samples, \nand a test set xi\nte\ni = 1\nnte\npte(x), which may include both normal and anomalous samples, \nwhere ptr(x) and pte(x) are the respective probability density functions. The training set is \nused to learn model parameters that capture the distribution of normal data, under the \nassumption that they do not contain any anomalies. By comparing the test data distribution \nagainst the learned normal data distribution, anomalies can be identified as data points that \nsignificantly deviate from the expected normal distribution. Individual density estimation \nis often impractical in high-dimensional data. In this work, we focus on the density ratio \nbetween the training and test data, w(x) = ptr(x)\npte(x), which eliminates the need for the estimation \nof individual density functions. Next, we will discuss how to integrate the density ratio with \ndivergence functions to develop a more effective framework for anomaly detection.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Scaled Bregman Divergence-Based Dissimilarity Measure",
+      "level": 2,
+      "text": "Previous studies have employed divergence measures such as Kullback–Leibler (KL) \ndivergence and Pearson (PE) divergence to quantify the dissimilarity between two \ndistributions, ptr(x) and pte(x). For instance, the Kullback–Leibler Importance Estimation \nProcedure (KLIEP) [29] was developed for anomaly detection and change-point detection \nusing KL divergence. Similarly, Pearson divergence has been used in the unconstrained \nleast-squares importance fitting (uLSIF) method [31], which has been applied to detect \nanomalies [37] and change points [40]. Pearson divergence is defined as\nP E ptr pte = 1\n2∫ pte x ptr x\npte x − 1\n2\ndx .\n(1)\nHido et al.’s work [37] demonstrated that uLSIF outperforms other algorithms for anomaly \ndetection due to its unique global optimal solution. However, it has been observed in prior \nWang et al. Page 4\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nchange-point detection studies that the density ratio used in uLSIF can become unbounded \nunder certain conditions, potentially affecting the method’s stability.\nThe unboundedness problem commonly encountered when using KL and Pearson \ndivergences as dissimilarity measures poses significant challenges in many anomaly \ndetection and change-point detection applications [40]. To mitigate this issue, a RuLSIF \n(relative unconstrained least-squares importance fitting) method, which utilizes the α-PE \ndivergence, was developed for change-point detection [40], but has never been applied \nfor anomaly detection. Furthermore, our recent work [35] proposed a scaled Bregman \ndivergence for change-point detection, which has shown superior performance in addressing \nthese challenges. In this study, we extend and adapt this scaled Bregman divergence-based \nmethod for anomaly detection.\nGiven three measures P,Q and M on X with densities p,q and m, respectively, a scaled \nBregman divergence [41] is defined as\nD(p q; m =",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "f p x",
+      "level": 1,
+      "text": "m x − f q x\nm x − f′ q x\nm x\np x\nm x − q x\nm x m x dx,\n(2)\nwhere f : ℝ+ ℝ is a convex function, and f′ is its right derivative. Different choices of \nthe measure M and function f yield various well-known divergence functions. For instance, \nlet f(t) = 1\nn (t − 1)n; when n= 2, a novel divergence, termed the Pearson-like scaled Bregman \ndivergence (PLsBD), was derived in our recent work [35], which is expressed as\nP L ptr pte; m = 1\n2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "m(x) ptr(x)",
+      "level": 1,
+      "text": "m(x) − pte(x)\nm(x)\n2\ndx .\n(3)\nOur work [35] has theoretically proven several properties of PLsBD compared to other \ndivergences. For example, PLsBD is bounded, can be symmetric, and can serve as a metric \nmeasure under certain conditions. Consequently, in our change-point detection application, \nPLsBD has demonstrated superior performance compared to all density ratio estimation-\nbased methods. It is easy to verify that if the measure density m(x) = pte(x), the proposed \nPLsBD reduces to the Pearson divergence.\nTo address the unboundedness issue in the divergence measure, we typically introduce \na measure density mα(x) = αptr(x) + (1 − α)pte(x), where the parameter α ∈ (0,1) controls the \nmixing of the training and testing distributions. This balancing of contributions from \nboth distributions ensures stability in the divergence calculation and effectively mitigates \nunboundedness issues.\nTheorem 1. Given the measure mα(x) = αptr(x) + (1 − α)pte(x), where α ∈ (0,1), the Pearson-like \nscaled Bregman divergence between ptr and pte is defined as\nWang et al. Page 5\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nP L ptr pte; mα(x) = 1\n2∫ mα x ptr x\nmα x − pte x\nmα x",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 dx,",
+      "level": 1,
+      "text": "is bounded and can be expressed as [35]:\nP L ptr pte; mα(x) = 1\n2 Eptr wα(x) − 2 − α\n2(1 − α) Epte wα(x) + 1\n2(1 − α) ,\nwhere wα(x) = ptr(x)\nmα(x), and Ep⋅ denotes the expectation with respect to the density p(x).\nThe detailed proof of Theorem 1 can be found in our recent work [35]. The PLsBD \ndivergence P L ptr pte; mα(x)  can be approximately computed by the empirical average:\nP L ptr pte; mα(x) ≈ 1\n2ntr i = 1\nntr\nwˆ xi\ntr − 2 − α\n2(1 − α) i = 1\nnte\nwˆ xi\nte + 1\n2(1 − α) .\n(4)\nIt is worth noting that when n= 3, it is straightforward to derive another, more complex \ndivergence:\nP L ptr pte; m = 1\n3",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "m(x) ptr(x)",
+      "level": 1,
+      "text": "m(x) − pte(x)\nm(x)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 ptr(x)",
+      "level": 1,
+      "text": "m(x) + 2pte(x)\nm(x) − 3 dx .\nHowever, this divergence is not utilized in our work, not only due to our preference for the \nsimpler form obtained when n= 2, but also because this divergence is not symmetric under \nall conditions.\nThe α-relative Pearson (α-PE) divergence is another divergence commonly used to quantify \nthe discrepancy between two distributions. By replacing pte in the standard Pearson \ndivergence with pte, α(x) = αptr(x) + (1 − α)pte(x), which represents a mixture of the training and \ntest densities, we obtain the α-PE divergence, which can be viewed as a specific instance \nof the scaled Bregman divergence. This modification addresses the unboundedness problem \nassociated with the standard Pearson divergence. It is defined as\nP Eα ptr pte, α = 1\n2∫ pte, α x ptr x\npte, α x − 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2 dx,",
+      "level": 1,
+      "text": "= 1\n2 Eptr wα(x) − 1\n2 .\nThe α-PE divergence P Eα ptr pte, α  can be approximately computed by the empirical average:\nP E ptr pte; pte, α(x) ≈ 1\n2ntr i = 1\nntr\nωˆ xi\ntr − 1\n2 .\nWang et al. Page 6\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n(5)\nRuLSIF (relative unconstrained least-squares importance fitting) applied the α-PE \ndivergence in previous studies for change-point detection to overcome the unboundedness \nissue, but has not been applied for the anomaly detection. However, α-PE measures the \ndissimilarity between ptr and the mixture distribution pte,α, rather than between two distinct \ndistributions. Our work [35] has shown that the RuLSIF method is highly sensitive to the \nchoice of α, with large α values potentially introducing numerical instability. The PLsBD \ndirectly measures the disparity between two individual distributions, rather than a mixture, \nmaking it more robust and reliable in applications such as change-point detection. As \nshown by the empirical averages in Equations (4) and (5), PLsBD demonstrates greater \neffectiveness in anomaly detection by incorporating data from both training and test \ndistributions for divergence estimation. This approach enhances its ability to detect subtle \nanomalies arising from shifts in the test data, albeit at the cost of increased computational \ncomplexity. In contrast, the α-PE divergence relies predominantly on the training data, \nreducing its sensitivity to anomalies that emerge exclusively in the test distribution. In this \nwork, we will apply both PLsBD and RuLSIF methods for anomaly detection and compare \ntheir performance with the uLSIF-based anomaly detection method.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2 Parameter Learning by Least Squares and Least Absolute Deviation",
+      "level": 2,
+      "text": "The density ratio wα(x) = ptr(x)\npte, α(x) can be estimated by an estimator wˆ(x;θ), which is modeled \nas a Gaussian kernel regression [36]:\nwˆ x; θ =\nl = 1\nn\nθlKσ x, xl ,\n(6)\nwhere θ = θ1, θ2, …, θn\nT are parameters learned from the data, and Kσx,x′ is a Gaussian \nkernel expressed as Kσ x, x′ = exp − x − x′ 2\n2σ2  with kernel width σ( > 0). In this paper, the \nkernel width σ is determined using a cross-validation method. Next, we will discuss how to \nlearn the parameters θ using least absolute deviation and least squared loss methods.\n2.2.1. Least Absolute Deviation— The optimal θ can be learned by minimizing either \nthe absolute error/deviation or the squared loss between the true and estimated relative \nratios. The absolute error is defined as\nJL1 x = ∫ wα x − wˆ x; θ pte, α x dx,\n(7)\nwhich can be expressed as\nWang et al. Page 7\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nJL1 x = 1 − α∫ wˆ x ptr x dx − 1 − α ∫ wˆ x pte x dx .\n(8)\nMinimizing the absolute error loss is equivalent to solving the following convex \noptimization problem:\nθˆ = argmin\nθ ∈ ℝn\n1 − αhtr\n⊤\nθ − (1 − α)hte\n⊤\nθ ,\n(9)\nwhere htr and hte are n-dimensional vectors with the l-th element given by\nhtr l = 1\nntr i = 1\nntr\nKil\ntr; hte l = 1\nnte j = 1\nnte\nKjl\nte;\n(10)\nand Kil\ntr/te\n= K Y i\ntr/te\n, Y ℓ; σ  represents the Gaussian kernel evaluated for the training or test \nsamples.\nThe global optimal solution θˆ for the least absolute deviation problem can be obtained \nanalytically as\nθˆ = αhtr + (1 − α)hte\n−1 .\n(11)\n2.2.2. Least Squared Loss— The least squared loss method has been discussed in \nprevious works [35,40], and an analytical solution is available. For comparison, we will \nbriefly review the results. The squared loss is defined as\nJL2(x) = 1\n2∫ wα(x) − wˆ (x; θ) 2pte, α(x)dx .\n(12)\nIncluding an ℓ2-regularization term, minimizing the squared loss is equivalent to solving the \nfollowing convex optimization problem:\nθˆ = argmin\nθ ∈ ℝn\n1\n2 θ⊤Hθ − htr\n⊤\nθ + λ\n2 θ⊤θ ,\n(13)\nwhere H is an n×n matrix with the ℓ , ℓ′ -th element, same as the results in [35,40]:\nWang et al. Page 8\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n(H)ℓ, ℓ′ = α\nntr i = 1\nntr\nKil\ntrKil′\ntr + (1 − α)\nnte j = 1\nnte\nKjl\nteKjl′\nte .\n(14)\nThe global optimal solution θ for least squared loss can be analytically derived as\nθˆ = H + λIn\n−1htr′\n(15)\nwhere In denotes an n-dimensional identity matrix.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Algorithm and Computational Complexity Analysis",
+      "level": 2,
+      "text": "2.3.1. Anomaly Detection Algorithm— Algorithm 1 outlines the procedure for \nanomaly detection using the proposed PLsBD and α-relative Pearson divergence (α-PE), \nincorporating both L1 and L2 loss functions for parameter learning. This algorithm is \nadapted from the change-point detection method described in our recent work [35], with \na key difference: in anomaly detection, the training data window remains fixed, whereas \nin change-point detection, both the training and testing data windows slide simultaneously \nfrom left to right.\nThe anomaly detection process involves four main steps:\n1. Data Preparation: The dataset is divided into training and test sets. The training \nset consists only of normal samples, while the test set may include anomalies. \nThe algorithm computes distribution divergences between the training and test \nsamples by sliding a window from left to right.\n2. Parameter Optimization: Cross-validation is used to determine the optimal \nvalues of parameters, including kernel width (σ) and regularization term (λ).\n3. Density Ratio Estimation: Both the least absolute deviation L1 and least-\nsquares loss (L2) approaches employ kernel computations to compute the optimal \ncoefficients (θ), which are then used to estimate density ratios.\n4. Anomaly Identification: Divergence scores, either PLsBD or α-PE, are \ncalculated, and samples are flagged as potential anomalies if their scores exceed \na predefined percentile threshold of the maximum score. Then, the sliding \nwindow is moved to the right, and the procedure is repeated.\nNotably, setting α= 0 reduces the method to the unconstrained least-squares importance \nfitting (uLSIF), a state-of-the-art technique for density ratio estimation and anomaly \ndetection [37].\nWang et al. Page 9\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nAlgorithm 1\nAnomaly detection using PLsBD and αPE measures with both L1 and L2 loss functions\nInput: Training samples xjtrj= 1ntr, test samples xitei= 1nte, number of folds in cross-validation k, mixing parameter α, \nnumber of basis functions nb, threshold τ ∈ [0, 1].\nOutput: Anomaly candidates.\nStep 1: Optimal Parameter Selection via Cross-Validation\nFor each σ,λ value,\n• For each σ and λ, perform k-fold cross-validation:\n– Compute the kernel matrix Kσx,x′.\n– Calculate htr,hte, and H.\n• Apply nf-fold cross validation to identify optimal σ and λ.\nStep 2: Estimator Learning by Solving Optimization Problems\nUsing the optimal values of σ and λ,\n• For the L1 loss-based optimization, solve\nθ = αhtr + (1 − α)hte\n−1,\n• For the L2 loss-based optimization problem, solve\nθ = H + λIn\n−1htr,\nStep 3: Calculation of Divergence Score\n• Compute the estimated density ratio w(x) = ∑ i = 1\nntr θ iKσ x, xi\ntr\n.\n• Calculate the divergence between training and testing data:\n– PLsBD divergence:\nP L ptr pte; mα ≈ 1\n2ntr\n∑\ni = 1\nntr\nw xi\ntr − 2 − α\n2(1 − α) ∑\ni = 1\nnte\nw xi\nte + 1\n2(1 − α) .\n– α-relative PE divergence:\nαP E ptr pte; pte, α(x) ≈ 1\n2ntr\n∑\ni = 1\nntr\nw xi\ntr − 1\n2 .\nStep 4: Identify Anomaly Candidates\n• Identify the maximum divergence score: P Lmax or αP Emax.\n• An anomaly is detected if:\nWang et al. Page 10\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nP L ptr pte; mα(x)\nP Lmax\n> τ or αP E ptr pte; pte, α(x)\nαP Emax\n> τ .\n2.3.2. Complexity Analysis of Divergence Calculation— In the comparison \nbetween Equations (4) and (5), the computation of the empirical average for the PLsBD \nrequires O ntr + nte  operations, while the empirical estimation of the α-PE divergence requires \nonly Ontr operations. Although PLsBD incurs a slightly higher cost during empirical \naveraging, this overhead is negligible compared to the cost of density ratio estimation, which \nwill be analyzed below.\n2.3.3. Complexity Analysis of Density Ratio Estimation— Our method is based \non a kernel-based density ratio estimation framework, which has computational complexity \ncomparable to the uLSIF method analyzed by Kanamori et al. [42]. The optimization \nproblems can be solved using either L1 or L2 loss functions, which differ in computational \ncomplexities.\nComputational Complexity of L2 Loss:  The computational complexity of the L2 loss can \nbe broken down into the following components:\n• Kernel Matrix Computation: For ntr training samples, nte test samples, and an \nn×n kernel matrix, each kernel evaluation takes O(d), where d is the feature \ndimensionality in the data. The total complexity is\nO n ⋅ ntr + nte ⋅ d .\n• Matrix Inversion: Solving H + λIn\n−1 has a complexity of On3.\n• Vector Multiplication: Multiplying the inverted matrix with the n-dimensional \nvector htr requires On2.\nThus, the total computational complexity for L2 loss is dominated by the kernel matrix \ncomputation and matrix inversion:\nO n ⋅ ntr + nte ⋅ d + n3 .\nComputational Complexity of L1 Loss-based Method:  The L1 loss avoids matrix \ninversion, requiring only element-wise computations and vector additions. Its complexity \nis therefore determined solely by the kernel matrix computation:\nO n ⋅ ntr + nte ⋅ d .\nWang et al. Page 11\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nIn summary, the additional On3 term in L2 loss, arising from matrix inversion, renders it \nsignificantly more computationally expensive for large n, particularly in high-dimensional \nkernel setups. In contrast, the L1 loss provides a more efficient alternative while \nretaining comparable performance in many scenarios. Our subsequent real-world data \nanalysis confirmed this observation: the L2-loss-based method requires considerably more \ncomputation time than the L1-loss-based method, while the influence of divergences on \noverall performance is negligible.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3 Results",
+      "level": 1,
+      "text": "In this section, we will implement Algorithm 1 to evaluate the performance of the proposed \nand existing anomaly detection algorithms on both synthetic and real-world datasets. \nSpecifically, we compare the performance of uLSIF, RuLSIF, and PLsBD, using both the \nleast absolute deviation and least squared loss approaches.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.1 Parameter Configuration",
+      "level": 2,
+      "text": "In all experiments, the number of basis functions, represented by Gaussian kernels, is fixed \nat 50. Our preliminary studies indicated that 50 kernel functions are sufficient to effectively \nfit the model while maintaining a balance between computational cost and performance. \nThe centers of the basis functions are randomly initialized from the test dataset, and 5-fold \ncross-validation method is employed to determine the optimal values of σ and λ. The value \nof α is typically chosen in the range of 0.01 to 0.1. In our studies, we select α= 0.1 in \nmost cases because this choice achieves a good balance between the training and testing \ndistributions, ensuring stable and robust divergence calculations. Larger α values tend to \ndilute the algorithm’s ability to detect anomalies, as observed in the subsequent parameter \nsensitivity studies and consistent with Liu et al.’s findings [40].\nA sliding window approach is employed, with the window size for testing data fixed at \n3 and the step size at 1, based on our preliminary studies for consistency analysis. These \nparameters may be adjusted to suit specific datasets and application requirements. The \nthreshold τ is set to a value of 0.9, representing the percentile above which a score is \nclassified as a potential anomaly. The choice of τ depends on the specific application and \nthe acceptable trade-off between false positives and false negatives. A larger τ value results \nin fewer identified anomalies, focusing on high-confidence detections; therefore, it is often \npreferred in high-stakes scenarios to minimize false alarms. Conversely, a smaller τ value \nmay classify a larger number of points as anomalies, potentially increasing false positives. \nThis makes smaller τ values more suitable for exploratory or less critical analyses, where \ncapturing more potential anomalies for further investigation is a priority.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2 Simulation Dataset",
+      "level": 2,
+      "text": "Dataset 1: 1-dimensional data.—We generate 300 observations, in which 298 data \npoints were sampled from standard normal distribution, N(0,1), and 2 anomalies were \nintroduced at indices 34 and 68, which were generated from a shifted normal distribution, \nWang et al. Page 12\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nN(10,1), with values 15 and 20, respectively. The first ntr= 200 observations were taken as \ntraining data.\nFigures 1 and 2 illustrate the frequency of anomaly candidates and their mean dissimilarity \nscores across 100 repeated runs. The results are presented for the uLSIF (a, d), RuLSIF \n(b, e), and PLsBD (c, f) measures. Both the L1 (Figure 1) and L2 (Figure 2) loss function \nmethods are evaluated. The mixing parameter α is set to 0 for uLSIF, and 0.1 for RuLSIF \nand PLsBD. In the frequency plots, black bars indicate how often an observation in the \ntest dataset is flagged as an anomaly in 100 runs. Red dashed vertical lines mark the true \nanomaly indices (34, 68). In the mean dissimilarity score plots, the black curve shows the \nmean normalized anomaly scores for each candidate, with red dashed vertical lines marking \nthe true anomaly indices.\nFigure 1 demonstrates that when using the absolute error as the loss function, only the \nsecond anomaly is detected by the uLSIF, RuLSIF, and PLsBD methods. However, as shown \nin Figure 2, employing the squared error as the loss function enables uLSIF, RuLSIF, PLsBD \nto identify both anomalies. This highlights the superior performance of the scaled Bregman \ndivergence-based anomaly detection methods (PLsBD and RuLSIF), which successfully \ndetect the outliers at indices 34 and 68. The observations in Figures 1 and 2 suggest that \nthe L2 loss is more effective in detecting anomalies than the L1 loss. L1 loss can detect \nmore pronounced anomalies like the one at index 68, which appears less sensitive to subtle \noutliers such as the one at index 34. The squared error tends to yield larger values when \nanomalies are present compared to the absolute error, which enhances its sensitivity to \noutliers. This explains why the least squared loss has been widely adopted in anomaly \ndetection and change-point detection in prior studies.\nOur findings demonstrate that the performance of RuLSIF and PLsBD is sensitive to the \nchoice of the mixing parameter α. Figure 3 presents the dissimilarity scores computed using \nRuLSIF and PLsBD with α= 0.5. Notably, Figure 3c reveals significant fluctuations in the \ndissimilarity score when employing the L2 loss function with RuLSIF, whereas PLsBD \nexhibits comparatively greater stability under the same conditions. The introduction of the \nmixing distribution aims to address the unboundedness issue; however, a larger mixing rate \nindicates that the testing data contain too much influence from the training data, potentially \ndiluting the ability to detect anomalies or distributional differences effectively, eventually \nincreasing false positives. Therefore, we selected a smaller α value for our subsequent data \nanalysis to enhance performance.\nDataset 2: 2-dimensional data.—Similar to Dataset 1, we generate 300 samples of \n2-dimensional data drawn from a multivariate normal distribution N(0,I), where 0 is the zero \nmean vector, and I is the identity covariance matrix. Two anomalies are introduced at indices \n40 and 80 in the test set, with anomaly values shifted to 10 in both dimensions.\nFigure 4 illustrates the frequency of anomaly candidates and their mean dissimilarity scores \nacross 100 repeated runs using the uLSIF (a, d), RuLSIF (b, e), and PLsBD (c, f) measures, \nwith parameters learned via the L1 loss function. Figure 4a,d reveals that the uLSIF \nmethod exhibits the weakest performance in anomaly detection. Numerous data points are \nWang et al. Page 13\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nincorrectly identified as anomalies in the frequency plot, while the mean dissimilarity score \nremains flat and fails to provide meaningful insights. In contrast, the introduction of a small \nmixing parameter α= 0.01 in RuLSIF significantly enhances its performance. While PLsBD \nalso identifies the two true anomalies, RuLSIF outperforms PLsBD by producing fewer false \npositives. This is evident in Figure 4b,e, where RuLSIF displays two distinct peaks in the \nmean score plot, accurately corresponding to the true anomalies at indices 40 and 80.\nWhen using squared error as the loss function, as shown in Figure 5, all methods, uLSIF, \nRuLSIF, and PLsBD, demonstrate similar performance, consistently identifying the injected \nanomalies at indices 40 and 80 with minimal false positives. This result further supports the \nconclusion that the L2 loss is more effective for anomaly detection compared to the L1 loss. \nIt is important to note that, since we employ a sliding window approach, an outlier candidate \nis treated as successfully detected if it falls within the interval i − window size + 1, i . Our \nstudies also indicate that larger window sizes and step sizes can decrease the sensitivity and \noverall performance of all anomaly detection algorithms. Consequently, in our studies, we \nhave opted to use smaller window and step sizes to optimize detection sensitivity.\nIn summary, the findings from Figures 1–5 indicate that anomaly detection using the L2\nloss is generally more reliable than the L1 loss in most cases with both RuLSIF and PLsBD \nmethods. Our subsequent data analysis continues to reveal that when the dataset contains \nfewer anomalies, the L2 loss function outperforms the L1 loss. However, the performance \ngap between the two loss functions diminishes significantly when the data contain many \nanomalies. Furthermore, RuLSIF and PLsBD consistently outperform uLSIF, which is a \nstate-of-the-art anomaly detection method, in both scenarios, highlighting their superior \nperformance in anomaly detection tasks.\nOur next step is to apply Algorithm 1 to analyze real-world low- and high-dimensional data, \nand to evaluate their performance in more complex, practical settings.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.3 Real-World Datasets",
+      "level": 2,
+      "text": "Yahoo S5 A2Benchmark Dataset.—The Yahoo S5 benchmark dataset is widely used \nfor evaluating anomaly detection methods, focusing on trend analysis and identifying \ndeviations from normal patterns. It includes multiple one-dimensional time series datasets, \nand each dataset has three columns: timestamp (in Unix format), value (numerical \nmeasurements), and is.anomaly (binary label: 0 for normal, 1 for anomaly). In this \nexperiment, we focus on the synthetic data 11 from the A2Benchmark datasets, a subset \nof the Yahoo S5 benchmark. The values in synthetic data 11 exhibit a periodic cyclical trend \nwith regular fluctuations.\nIn our analysis, we use a subset of values from indices 450 to 550 as the training set, as \nit contains only normal data. The test set includes time points from indices 601 to 701, \nwith anomalies occurring at indices 624–626 and 659–661. Given their close proximity, we \ntreat indices 624–626 and 659–661 as two distinct anomaly intervals. The size of the sliding \nwindow is set to 3 and step size to 1, which are the same as the simulation data analysis, and \nall the experiments are repeated 50 times.\nWang et al. Page 14\nAlgorithms. Author manuscript; available in PMC 2025 February 03.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "demonstrates that when using the absolute error as the loss function, only the"
+    },
+    {
+      "id": "f4",
+      "caption": "illustrates the frequency of anomaly candidates and their mean dissimilarity scores"
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Anomaly detection using PLsBD and αPE measures with both L1 and L2 loss functions"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 15
+  }
+}

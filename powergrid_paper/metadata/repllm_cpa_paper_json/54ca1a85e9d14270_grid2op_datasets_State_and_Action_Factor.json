@@ -1,0 +1,168 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/grid2op_datasets/grid2op_datasets__State_and_Action_Factorization_in_Power_Grids__manual.pdf",
+  "n_pages": 13,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Distributing electricity from generation sources to end-users is an extremely\ncomplex task. Transmission System Operators (TSOs) across the world must\nensure a safe supply of electricity through power grids, meeting the demand at\nall times while preventing blackouts. Power grids are controlled from control\ncenters byhuman dispatchers, with remote observability to all transmission net-\nwork elements. Their role is to monitor the electricity network 24 hours per day,\n365 days per year. They must constantly keep the network within its thermal\nlimits, frequency ranges, and voltage ranges by takingremedial actionson net-\nwork elements such as lines and substations via remote control command (Kelly\net al., 2020). Nowadays, the increase of renewable energy generation towards the\nzero-emission target is making the problem of controlling power grids more and\nmore challenging. The energy production by renewable generators is constantly\nfluctuating due to weather conditions, making power grid operations a stochastic\ncontrol problem. Existing software, computational methods, and optimal power\narXiv:2409.04467v1  [eess.SY]  3 Sep 2024\n2 Losapio et al.\nflow solvers are not adequate for real-time network operations on short tempo-\nral horizons in a reasonable computational time (Kelly et al., 2020; Serré et al.,\n2022). In order to overcome these complexities, TSOs need new methods for con-\ntrolling power grids. Among emerging techniques, Reinforcement Learning (RL)\nhas been explored in several works over the last years with promising results\n(Dorfer et al., 2022; Chauhan et al., 2023; van der Sar et al., 2023; Lehna et al.,\n2024).\nRL is the special class of Machine Learning (ML) methods dealing with\nsequential decision-making problems (Sutton and Barto, 2018). Controlling a\npower grid with RL means learning an optimal control policy from data. The\nrecent success of RL in games (Silver et al., 2017), robotics (Haarnoja et al.,\n2024), and industrial processes (Luo et al., 2022) - just to name a few - is due to\nrecent algorithms powered by deep learning that can efficiently handle complex\nand heterogeneous data. The main advantage of using RL is that it can identify\nand capitalize on under-utilized, cost-effective actions that human dispatchers\nand traditional solution techniques are unaware of or unaccustomed to, result-\ning in more efficient control of the power grid by learning effective relations on\nstochastic data. In problems such as power grid control, there is a huge quantity\nof observed variables about the grid (e.g., power production, load consumption,\npower flow over transmission lines) and an impressive amount of control actions\nthat human dispatchers can take (e.g., topological changes, generator dispatch-\ning). With this large state and action space, RL algorithms suffer a problem\nknown as the curse of dimensionality, i.e., the amount of data/computation\nrequired to achieve a good solution may be out of reach.\nDistributed Reinforcement Learning (DRL) algorithms can be considered\nto mitigate this problem by distributing the learning process among multiple\nagents (Zhang et al., 2021). In this framework, each agent can observe just a\nlimited part of the state space and take only a small number of actions, but\nall the agents cooperate to achieve a common goal. The main idea of DRL is\nthus breaking the complexity of the original RL problem by creating smaller\nand simpler subproblems. Designing subproblems is, therefore, a crucial task\nthat may critically affect the performance of the learning algorithms. Obtaining\na factorization of the state and the action space of a power grid is an extremely\nchallenging task since localized actions may have side effects on a distant portion\nof the grid, thus requiring including in the observation/action space of an agent\ninformationaboutotherelementsofthegriddespitetheirspatialdistance(Marot\net al., 2018a).\nOriginal Contribution. In this work, we propose an algorithm for state and\naction factorization of the power grid control problem that can be used to ex-\nploit the benefits of DRL methods compared to traditional RL. The algorithm is\ndomain-agnostic, meaning that it can be applied to any complex decision-making\nproblem beyond power grids as it does not require anya priori knowledge of\nthe domain of the problem. Correlations between state and action components\nare entirely computed on data by using mutual information, an information-\ntheoretic measure that is used to assess how much a state or an action variable\nState and Action Factorization in Power Grids 3\n(input variables) can be used to predict the evolution of future values of the state\nvariables (target variables). Highly correlated state-action pairs are grouped to-\ngether to create simpler, possibly independent subproblems that can lead to dis-\ntinct learning processes, e.g., over different portions of the grid with fewer data\nrequirements. The algorithm is validated on a power grid benchmark obtained\nsimulating realistic production/consumption profiles with the open-source sim-\nulator Grid2Op1, showing that our algorithm, despite being domain-agnostic, is\nin line with domain-expert analysis. Based on these results, we propose to use\nthen DRL algorithms to solve subproblems identified by the computed factoriza-\ntion with the objective of improving the existing solutions for power grid control\nbased on traditional RL.\nPaper Structure. The paper is organized as follows: Section 2 presents related\nworks,Section3containsageneralformulationoftheproblemofstateandaction\nfactorization, Section 4 contains our algorithm with the associated pseudocode,\nSection 5 shows the experiments, and finally Section 6 concludes the paper with\npossible future work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "RL for power grids.The recent series of competitions Learning To Run a Power\nNetwork (L2RPN, Kelly et al., 2020; Serré et al., 2022) have encouraged the\nuse of RL for the assistance of human dispatchers in operating power grids.\nOriginally developed by Reseau de Transport d’Electricitée (RTE), the French\nTSO, its aim has been to promote investigation into the network operation prob-\nlem in a competitive context. For that purpose, RTE developed the open-source\nGrid2Op simulator to model and study a large class of power system-related\nproblems and facilitate the development and evaluation of agents that act on\npower grids. The Grid2Op simulator is a flexible tool, allowing researchers to ac-\ncurately simulate power system dynamics for different networks while interacting\nwith the environment through different types of actions.\nMost of the RL methods developed to control power grids are thus related to\nthe L2RPN competitions. An overview of the solutions proposed during the first\nedition is reported in (Marot et al., 2021). The winning solutions of the last two\neditions are presented in (Dorfer et al., 2022) and (Artelys, 2023), respectively.\nAll the solutions proposed so far severely restrict the action space and are based\non a single agent acting on the entire grid. For instance, the authors of (Dorfer\net al., 2022) and (Artelys, 2023) reduce the action space to a small set of topo-\nlogical actions (i.e., changing bus connections at a few substations) and rely on\nstandard optimization solvers for other types of actions such as generator redis-\npatching. RL is thus limited in its capacity, preventing the original intention of\nexploring the entire action space.\nSubsequent works have further explored RL algorithms beyond the scope\nof the competitions yet with the same limitations described above (Chauhan\n1 https://github.com/rte-france/Grid2Op\n4 Losapio et al.\net al., 2023; Lehna et al., 2024). On the other hand, (van der Sar et al., 2023)\nproposed for the first time a multi-agent RL approach as a solution to reduce the\naction space by creating an agent for each substation and specializing it on its\nown topological actions only. A rule-based method based on the line overloads\ndecides which agent has to act. Similarly, (Manczak et al., 2023) presents a\nhierarchy of agents with different combinations of high-level and low-level agents.\nFor instance, one possibility is having a low-level RL agent that uses action\nmasking to select a subset of actions dictated by a higher-level agent, which, in\nturn, is based on heuristics or RL algorithms. There are two main limitations of\nthese approaches: (i) the observation space is not reduced as each agent observes\nthe entire grid, (ii) the number of low-level agents is related to the number of\nconfigurable substations, thus requiring a large number of agents on grids of\nincreasing size.\nWith our method, we would like to overcome such limitations by distributing\nthe learning process across a smaller number of agents, each taking care of a\nspecific subproblem that has been identified in the data-driven decomposition\nof the original problem (for instance, controlling a zone of the power grid with\nseveral substations). Each agent has thus a reduced action space and, at the\nsame time, can only observe the relevant state variables of its own subproblem,\nresulting in a simpler learning problem.\nPower grid segmentation.The segmentation of large-scale power grids into zones\nis crucial for human operators when controlling the grid in real-time. Power grids\nare usually segmented into static zones that are redefined every year to study\nthe grid efficiently in real-time. Typically, the segmentation has been computed\nusing analytical methods that have been more extensively explored in the field\nof power systems (Marot et al., 2018b). Only recently, a data-driven approach\nusing machine learning has been proposed (Marot et al., 2018a). By simulating\nthe effects of a specific intervention of human operators (i.e., line disconnections\non the other lines), the authors were able to create an adjacency matrix of a\ndirected graph of lines on which they executed a graph clustering algorithm.\nThe resulting clusters were used to segment the power grid, showing interesting\nresults in different realistic scenarios.\nOur method has in principle a similar objective of power grid segmentation\nbut it is designed to be more general, i.e., to segment the entire state and the\naction spaces with respect to any kind of intervention and independently from\nthe physical configuration of the grid. Most notably, our method is meant to be\ndomain-agnostic and widely applicable to any complex decision problem.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Problem Formulation",
+      "level": 1,
+      "text": "A power grid is represented by an undirected graph with nodes being substations\nand edges being transmission lines. Generators and loads are directly connected\nto substations. Energy demand requested by loads must be satisfied by the pro-\nduction of generators at any time, but at the same time, each transmission line\nState and Action Factorization in Power Grids 5\ncan only carry a limited amount of energy. Human dispatchers constantly mon-\nitor the grid and remotely operateremedial actions that ensure safe working\nconditions of the grid, such as topology changes at the substations and dispatch-\ning of generators.\nAs a consequence, from the perspective of a dispatcher, power grid operations\ncan be modeled as a sequential decision-making problem. At each time step, the\ngrid is represented by a set of variables that we may call state (e.g., information\nabout generators, lines), and actions are taken causing the grid to transition to\na new state and producing an operational cost to the TSO related to different\nfactors (e.g., energy lost due to the Joule effect, cost of re-dispatched energy).\nMarkovDecisionProcesses(MDPs,Puterman1990)offerawell-studiedmath-\nematical framework to model sequential decision-making problems and are used\nfor the formulation of RL problems. An MDP is formalized as a tupleM :=\n⟨S, A, P, R, H⟩, where S is the set of states the environment can assume,A is\nthe set of actions the agent can execute,P : S × A × S →[0, 1] is the stochastic\ntransition function (P (s′|s, a) being the probability of moving to next states′\nwhen performing action a in state s), R : S × A →R is the reward function\n(R(s, a) being the reward the agent gets when performing actiona in state s),\nand H ∈ N is the planning horizon.\nIn MDPs, both the transition probability and the reward function depend\nonly on the current state and action, as the state and action histories are ir-\nrelevant (Markov property). The agent chooses actions according to a policy\nπ : S × A →[0, 1] that maps states to stochastic actions,π(a|s) being the proba-\nbility that the agent chooses actiona when the environment is in states. Finding\nan optimal solution to an MDP means searching for a policyπ∗ that maximizes\nthe expected sum of the rewards obtained by the agent during theH steps of\ninteraction with the environment, formallyπ∗ ∈ arg maxπ Eπ\nhPH\nt=1 R(st, at)\ni\n.\nRewards are here considered equally important over time (undiscounted finite-\nhorizon MDP).\nFactorizable Structure. In this work, we consider afactored structure for the\nMDP M in which the state and action vectors have components\ns = (s1, s2, . . . , sn) ∈ S,\na = (a1, a2, . . . , am) ∈ A.\nMoreover, we suppose that our MDPM can be seen as composed ofK inde-\npendent MDPs M = (Mk)K\nk=1, with each one being defined as:\nMk =\n\u0010\nSk, Ak, Pk, Rk, H\n\u0011\n.\nIn this formulation, each state spaceSk and action space Ak of the MDP\nMk are taken as a subset of the spaceS or A by combining the domains of only\nsome components of the vectors or a. 2\n2 In the case for exampleM = (M1, M2), we can suppose that the state ofM1 is\ncomposed by the first two components(s1, s2) of the state vectors and the action of\n6 Losapio et al.\nThis formulation seems to resemble the framework of Factored MDPs (Degris\net al., 2006). However, we assume a different factorization of the global transition\nprobability and of the global reward function. The underlying MDPs presents\ntransition probabilities Pk : Sk × Ak × Sk → [0, 1] and the reward functions\nRk : Sk × Ak → [0, 1]. The global transition probability and reward function of\nM are defined as:\nP (s′|s, a) =\nKY\nk=1\nPk(sk\n′ | sk, ak) ,\nR(s, a) =f (R1(s1, a1), R2(s2, a2), . . . , RK(sK, aK)) ,\nwhere the variables in boldsk ∈ Sk, ak ∈ Ak refer to the state/action vectors\nof the MDPMk (not to be confused with the scalar components of the vectors\ns, a of the original MDP M). The term f (·) refers to a fixed function that\ncombines the rewards of all the MDPs.\nIt is easy to show that with this formulation we can consider−without loss of\ngenerality − independent policies on each MDPMk to optimize the global MDP\nM. The main idea of this paper is therefore to find an algorithm that returns an\nestimate of the state and action factorization\n\u0000 bSk, bAk\n\u0001 bK\nk=1 that ideally matches\nthe true factorization\n\u0000\nSk, Ak\n\u0001K\nk=1. Then, we can use DRL algorithms on each\nof the MDPs defined by the estimated factorization and optimize the original\nproblem M.\nWe can start by defining a fully connected graphG = (V, E) in which\n• V is the set of nodes containing all the state and action components from\ns, a and all the next state components froms′\n• E is the set of edges representing the interactions among components\nE = {(xi, s′\nj) | xi, s′\nj ∈ V and c(xi, s′\nj) ≥ δ}, (1)\nwhere c(xi, s′\nj) is a metric that measures how much a variable xi (state\nor action component) is important to predict the variable s′\nj (next state\ncomponent), with δ being a suitable threshold.\nWith the above definition, the presence of an edge(xi, s′\nj) in the graph G\nmeans that the component of the next states′\nj can be predicted by the compo-\nnent xi of the state or action vector, thusxi and s′\nj belong to the same MDP. In\nthis formulation, we can discard the weak connections by means of the thresh-\nold δ, and we can obtain either an undirected or a directed graph if the metric\nis symmetric or asymmetric, respectively. On this graph, we can then run a\nclustering algorithm to divide the variables into communities\n\u0000 bSk, bAk\n\u0001 bK\nk=1.\nM1 is composed by the first component(a1) of the action vectora. The state space\nand the action space ofM1, namely S1 and A1, are thus obtained by combining the\ncorresponding domains of only those components.\nState and Action Factorization in Power Grids 7\nAlgorithm 1: State and Actor Factorization\nInput: MDP M, Explorative policyπe, Threshold δ\nOutput: Factorization\n\u0000 bSk, bAk\n\u0001 bK\nk=1\nAlgorithm:\n1. Collect a datasetD of transitions fromM with policy πe",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Compute the adjacency matrixbIG approximating the mutual information",
+      "level": 1,
+      "text": "on D and using δ as threshold",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Transform bIG into a pseudo-block diagonal matrix and define the set of",
+      "level": 1,
+      "text": "clusters\n\u0000 bSk, bAk\n\u0001 bK\nk=1 corresponding to diagonal blocks\nPerformance Evaluation. In order to evaluate the performance of the predicted\nfactorization\n\u0000 bSk, bAk\n\u0001 bK\nk=1 compared to the real factorization\n\u0000\nSk, Ak\n\u0001K\nk=1, we can\nsuppose there is a ground-truth adjacency matrix for the graphG denoted as IG\nthat we can compare to our predictionbIG (computed with Eq. 1) by means of\nsome suitable metricℓ, e.g., the Frobenius norm:\nℓ\n\u0010\nIG, bIG\n\u0011\n=\n\r\r\rIG − bIG\n\r\r\r\n2\nF\n=",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "i,j",
+      "level": 1,
+      "text": "\u0010\nIG[i, j] − bIG[i, j]\n\u00112\n. (2)\nTherefore, based on ℓ, it may be possible to quantify an approximation error\nthat gives the performance of the algorithm.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Algorithm",
+      "level": 1,
+      "text": "We propose an algorithm that uses an information-theoretic measure to build\nthe adjacency matrix bIG that describes the correlation among state and action\nvariables, and finds a factorization of the original MDPM. The pseudo-code of\nthe procedure is reported in Algorithm 1.\nThe first step is to collect a datasetD from M with a sufficiently exploratory\npolicy πe (see, e.g., Mutti et al. 2021):\nD =\n\b\n(s, a, s′)t\n\tT\nt=1\nwhere each entry is a transition that starts from states, plays an action a ∼\nπe(· |s) and reaches states′.\nWe define a random variableS′ that represents the next state vector and a\nrandom variable X that is the concatenation of the state vector and the action\nvector:\nS′ = (S′\n1, S′\n2, . . . , S′\nn),\nX = (S1, S2, . . . , Sn, A1, A2, . . . , Am),\n8 Losapio et al.\nEach entry of the datasetD is a joint realization ofX and S′. We can now define\nthe connectivity matrix bIG as a matrix of size(n × (n + m)) having a row for\neach component ofS′ and a column for each component ofX. Each entrybIG[i, j]\nis computed based on the Mutual Information (MI) between the componenti of\nthe next state vector,S′\ni, and the componentj of state-action vector,Xj,\nbIG[i, j] =\n(\n1 if MI(S′\ni, Xj) ≥ δ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "0 otherwise",
+      "level": 1,
+      "text": "where\nMI(S′\ni, Xj) :=E\n\"\nlog\n \np(s′\ni, xj)\np(s′\ni) p(xj)\n!#\nquantifies the amount of information (or, equivalently, reduction in uncertainty)\nthat knowing either variable provides about the other,δ is a suitable threshold.\nThe quantity MI(S′\ni, Xj) cannot be computed exactly as, in practice, we do not\nhave access to those probability distributions, but it is approximated using the\ndataset D.\nAt this point, the binary matrixbIG can be transformed into a pseudo-block\ndiagonal matrix, arranging the columns so that variablesXj that have an impact\non the same componentsS′\ni are close together. Based on such diagonal blocks,\nwe can define the set of clusters\n\u0000 bSk, bAk\n\u0001 bK\nk=1 and run a DRL algorithm on each\ncorresponding MDP.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 Experiments",
+      "level": 1,
+      "text": "Weperformedtwodifferentexperimentstotesttheeffectivenessofouralgorithm.\nIn the following, each experiment is presented in a separate paragraph, with\ndetails on data collection and evaluation metrics. The estimator proposed by\n(Gao et al., 2017) is used to compute the mutual information3. A recursive\ndepth-first search is called alternately on rows and columns ofbIG to obtain a\npseudo-block diagonal matrix in which the input variablesXj that influence the\nsame target variablesS′\ni are grouped together in the same block. The threshold\nδ is properly tuned to maximize the effectiveness of this block diagonalization.\nSynthetic data. The first experiment is conducted on synthetic data generated\naccording to a specific distribution. Each state vectors has n = 5components,\nwhereas each action vectora has m = 3components. All components are in the\nrange [0, 1]. The following state-action factorization is assumed:\n(1) : s1 = (s1, s3, s5), a1 = (a1, a2)\n(2) : s2 = (s2, s4), a2 = (a3)\n3 a bias correction is applied by computing the mutual information also on a modified\nversion of D in which existing correlations among variables are arbitrarily broken.\nState and Action Factorization in Power Grids 9\nStarting from a states, every interaction consists of selecting a random action\na and then taking each component of the next states′ as a copy of any state or\naction component of the same cluster with equal probability. For instance, the\nfirst component of the next states′\n1 will be a copy of any of{s1, s3, s5, a1, a2}\nsince the first component ofs belongs to cluster (1).\nWith a dataset of T = 105 samples, the original factorization is perfectly\nreconstructedwith δ computedasthe0.5 th quantileofeachcolumnofthematrix.\nThe corresponding approximation error ofbIG is 0.02, computed as the Frobenius\nnorm (Eq. 2) divided by the size ofbIG (i.e., only 1/40 elements of bIG is different\nfrom the ground truth matrix).\nPower grid simulation. The simulated power grid used in our experiment is\nshown in Figure 1. It is calledl2rpn_case14_sandbox in the Grid2Op simu-\nlator, and it is based on the IEEE case14 power grid benchmark. It counts 14\nsubstations, 20 lines, 6 generators (of which 3 renewables), and 11 loads.\nFig. 1. A layout of the grid used in the experiment with the Grid2Op simulator.\nThe state space of the Grid2Op includes much information about the grid,\nsuch as generators’ power production, loads power consumption, power line state\n(including the power flow as a fraction of capacity, denoted asρ), topology con-\nfiguration (bus configurations at each substation). The action space includes\nfour types of actions: topology modification (i.e., switching bus at substations,\nline connection/disconnection), redispatching (i.e., requesting a change in energy\nproduction in non-renewable generators), curtailment (i.e., reducing power pro-\nduction in renewable generators), storage actions (i.e., storing/retrieving energy\nfrom storage).\n10 Losapio et al.\nWe restrict the state space to the power flow of each power line as a frac-\ntion of its thermal capacity (variableρ) and the action space to the vector of\ntopological changes for each substation. This restriction simplifies the problem\nbut at the same time takes into consideration two fundamental aspects of the\npower grid: (i) ρ is the most significant variable for the real-time monitoring of\nthe grid because line overloading may potentially cause a cascading failure that\nleads to a blackout, requiring the immediate intervention of a human dispatcher;\n(ii) topological actions are the only non-costly available actions and are thus\npreferred by TSOs.\nWe considered only a small portion of the adjacency matrix bIG, i.e., the\ncolumns of the action components corresponding to the substations with more\nthan 3 connected elements4, with the objective of having a factorization of topo-\nlogical actions based on their direct influence on power lines. A random policy\nis used to collect a dataset of T ∈ [104, 105] transitions, separately for each\nsubstation. With a thresholdδ equal to the 0.7th quantile on each column, we\nobtained a factorization of two clusters, corresponding to a segmentation of the\npower grid shown in Figure 2.\nFig. 2. The factorization obtained in the Grid2Op experiment. (Right) Pseudo-block-\ndiagonalization of the estimated portion of the adjacency matrixbIG. (Left) Correspond-\ning power grid segmentation.\nIn this case, we cannot compute an approximation error since we do not\nhave a ground truth adjacency matrix, but we can observe that our results are\nin line with the domain-expert analysis presented in (Marot et al., 2018b,a) that\nproduces an analogous power grid segmentation.\n4 Topological actions on the remaining substations are not useful since they involve\ndisconnections of some of their elements (which may cause disruptions on the grid).\nState and Action Factorization in Power Grids 11",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "6 Conclusion",
+      "level": 1,
+      "text": "In this paper, we introduced an algorithm for state and actor factorization in\npower grids. The main advantage of our algorithm is that it is domain-agnostic\nin the sense that it is applicable not only to power grids but can also be extended\nto any complex decision-making problem as it does not require specific knowl-\nedge about the problem. In fact, the factorization is entirely based on mutual\ninformationestimatedondata,whichprovidestheoreticallygroundedinsightson\nhow much variables of state-action pairs are informative about each other. The\nresults of our algorithm are in line with domain-expert analysis on a power grid\nbenchmark obtained with an open-source simulator, demonstrating its potential\napplicability for power grid segmentation. Consequently, DRL algorithms can be\nused on the discovered subproblems to improve existing solutions for controlling\npower grids based on traditional optimization methods or standard RL.\nFuture works can include the use of correlation metrics different from mutual\ninformation, possibly reducing the number of samples required by its estimators.\nA theoretical analysis is also required to understand how the choice of the policy\nfor data collection influences the data distribution and how the choice of the\nthreshold for building the adjacency matrix can be automatized. Finally, in case\nthe discovered factorization produces some dependencies among subproblems, it\nmay be interesting to investigate efficient forms of communication among agents\nthat can be applied in distributed reinforcement learning algorithms.\nAcknowledgments.The authors acknowledge the project AI4REALNET that\nhas received funding from European Union’s Horizon Europe Research and Inno-\nvation programme under the Grant Agreement No 101119527. Views and opin-\nions expressed are, however, those of the authors only and do not necessarily\nreflect those of the European Union. Neither the European Union nor the grant-\ning authority can be held responsible for them. The authors also acknowledge\nthe project FAIR that has been funded by the European Union – Next Gener-\nation EU within the project NRPP M4C2, Investment 1.3 DD. 341 - 15 March\n2022 – FAIR – Future Artificial Intelligence Research – Spoke 4 - PE00000013 -\nD53C22002380006.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "State and Actor Factorization"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. 1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq. 2)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 2
+  }
+}

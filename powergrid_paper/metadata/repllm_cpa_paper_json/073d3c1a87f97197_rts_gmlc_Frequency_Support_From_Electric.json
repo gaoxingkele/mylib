@@ -1,0 +1,558 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/rts_gmlc/rts_gmlc__Frequency_Support_From_Electric_Vehicles_for_Advancing_Renewable_Energy_Integration__79bffc4b29.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Frequency Support from Electric Vehicles for",
+      "level": 1,
+      "text": "Advancing Renewable Energy Integration\nDilip Pandit, Student Member, Atri Bera, Member, Tu Nguyen, Senior Member, Raymond Byrne, Fellow,\nBabu Chalamala, Fellow, John Pierre, Fellow, Dongliang Duan, Senior Member, Nga Nguyen, Member, IEEE\nAbstract—The integration of renewable energy resources\n(RERs) in the modern power grid is increasing rapidly because\nof aggressive decarbonization goals, lower costs, and increased\ngovernment investment. However, higher penetrations of inverter-\nbased generation can lead to frequency stability issues because\nof reduced system inertia. This paper develops a framework for\nquantifying the contribution of electric vehicles (EVs) toward\nproviding frequency support to the grid and thus increasing the\npenetration limit of renewable energy resources (RERs). EVs\nare considered to provide both inertial response and primary\nfrequency response support to the grid. A stochastic approach\nincorporating the uncertainties associated with the behavior of\nEVs is developed to derive the discharge limit of EV aggregators.\nA multi-machine system frequency response (MM-SFR) model is\ndeveloped, which incorporates the dynamic virtual inertia and\ndroop coefficients of EV aggregators derived from the EV control\nmodules. Frequency security constraints are developed from\nthis MM-SFR model, which, along with the converter voltage\nsecurity and low voltage ride-through constraints, are integrated\nwithin a nonlinear optimization framework to determine the\nRER integration limit. The efficacy of the proposed approach\nis validated using the RTS-GMLC test system.\nIndex Terms —Electric vehicles, frequency security, inertia\nresponse, renewable energy resources, voltage security.\nNOMENCLATURE\nA. Sets and indices\ng ∈ G Set of conventional generators.\nn ∈ N Set of system nodes or buses.\n(k, l) ∈ L Set of transmission lines.\np ∈ P Set of PV farms, RTPV , and CSP.\nw ∈ W Set of wind farms.\ns ∈ S Set of energy storage systems (ESS).\ne ∈ Ea Set of EV aggregators.\nB. Decision variables of NLP\nP C\nn,t Load curtailment at node n.\nPg,t, Pp,t, Pw,t Power generation of generator g, PV farm\np, and wind farm w.\nP +\ns,t, P−\ns,t Charging and discharging power of energy\nstorage system (ESS) s.\nQg,t Reactive power generation of generator g.\nVn,t, δn,t V oltage magnitude and angle of node n.\nβt RER integration factor.\nHEV\ne,t Virtual inertia constant of aggregator e.\nREV,∗\ne,t Droop reciprocal corresponding to QSS fre-\nquency for EV aggregator e.\nREV,∗∗\ne,t Droop reciprocal corresponding to fre-\nquency nadir for EV aggregator e.\nP set\ne,t, Qset\ne,t Active and reactive power setpoints for EV\naggregator e.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "MMSFR parameters",
+      "level": 1,
+      "text": "Hg Inertia of generator g.\nDg Damping coefficient of generator g.\nKg Droop gain of generator g.\nRg Droop coefficient of generator g.\nTg Governor time constant of generator g.\nFg Fraction of power from high-pressure tur-\nbines of generator g.\n∆Pt Disturbance size at time t.\nγg,t Dispatch status of generator g obtained\nusing the capacity flow model.\nP max\ng , Pmin\ng Maximum and minimum generation capac-\nity of conventional generator g.\nξt System damping ratio for time t.\nωt Natural frequency for time t.\nτ max\nt Time of frequency nadir.\nD. EV aggregator and individual EV parameters\nfr Rated frequency ( 60 Hz in this paper).\nKIR\ne IR gain of the eth aggregator.\nREV\ne Rated droop of the eth aggregator.\nNEV Total number of EVs in the system.\nN ch\nt Total number of EVs in the charging station\nat time t.\nSoCev\ni,t−1 State-of-charge of ith EV at previous time-\nstep.\nP ev,+\ni,t , Pev,−\ni,t Charging and discharging power of ith EV .\nP ev,+\ni , P ev,−\ni Charging and discharging limits of ith EV .\nBev\ni , Bev",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Maximum and minimum battery capacity",
+      "level": 1,
+      "text": "of ith EV .\nBev\ni,t Remaining battery capacity of the ith EV .\nηev,+, ηev,− EV charging and discharging efficiencies.\ndev\ni,t Distance traveled (in miles) by the ith EV .\ncev Energy consumed per mile.\nLEV\ne,t Charging load imposed by aggregator e.\nP EV\ne,t Aggregated discharge limit of aggregator e.\nBEV\ne,t Total energy capacity of aggregator e.\nEe,t, δe,t V oltage and angle at converter PCC.\nxg Reactance of line connecting PCC and grid.\nE. Other parameters in NLP\nλc Large multiplier to penalize curtailed load.\nc+\ns , c−\ns Cost coefficient of sth ESS charging and\ndischarging.\nP D\nn,t, QD\nn,t Node n active and reactive power demand.\nGn,i, Bn,i Real and imaginary component of bus ad-\nmittance matrix component Yn,i.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "min",
+      "level": 1,
+      "text": "n , Vmax\nn Minimum and maximum voltage limits at\nnode n.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 ug,t, ukl,t Forced outage status (ON/OFF) of genera-",
+      "level": 1,
+      "text": "tor g and transmission line kl.\nP min\nkl , Pmax\nkl Power limits of transmission line connect-\ning buses k and l.\n|Yk,l| , θk,l Magnitude and angle of admittance matrix\ncomponent Yk,l.\nP max\np,t , Pmax\nw,t Maximum generation limits of PV farm p\nand wind farm w.\nP +s , P −s Charging and discharging limit of ESS s.\nEs, Es Minimum and maximum energy of ESS s.\nη+\ns , η−\ns Charging and discharging efficiencies of\nESS s.\n∆Ve V oltage sag at eth EV aggregator bus.\f\f\f d f\ndτ\n\f\f\f\nlim\nRoCoF safety limit.\n∆f ss,lim QSS frequency safety limit.\n∆f lim Frequency nadir safety limit.\nBEV\ne,t Lower capacity limit of EV aggregator e.\nρ Approximate ratio of frequency nadir and\nQSS frequency.\nηEV,− Discharge efficiency of aggregator e.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "A. Background\nPropelled by low-carbon energy policies, low costs of oper-\nation, and the goal of phasing out fossil fuels, the modern grid\nis experiencing rapid integration of renewable energy resources\n(RERs). The increasing penetration of RERs by replacement\nof conventional generation can lead to increased frequency\nstability issues in the grid due to their intermittent and low-\ninertia characteristics [1]. This issue may lead to system\noperators curtailing RER generation and planners investing\nin less RER-based generation, thus delaying the transition\nto a decarbonized grid. A potential solution to this problem\ncan be utilizing EVs to provide frequency support to the\ngrid. The integration of EVs has been increasing globally and\nis projected to increase from 30 million in 2022 to about\n240 million in 2030 [2]. EVs are capable of charging and\ndischarging at high power levels to provide inertia support\nto the grid. This capability is being enhanced as the power\nelectronic converters of EVs improve. This makes EVs good\ncandidates for providing frequency support to the grid, leading\nto increased penetration of RERs and thus accelerating the\ntransition to a decarbonized future.\nB. Relevant Literature & Research Gaps\nThe contribution of EVs toward frequency stability using\nvirtual inertia has been investigated extensively in recent years.\nAmong the different techniques used to extract frequency\nsupport from EVs, a popular approach is the inclusion of\nEVs in the system load frequency control (LFC) model.\nPlug-in EVs are included in the LFC model using derivative\ncontrol-based inertia emulators with tunable gain parameters\nin the approaches developed in [3], [4]. Another widely\nused approach for virtual inertia emulation is using different\ncontrol strategies to generate converter switching signals for\nthe primary converter in grid-to-vehicle connections [5], [6].\nRecently, model predictive control has been used in virtual\ninertia emulation due to its robustness under RER uncertainties\n[7], [8]. In addition to the inertia response (IR) based on\nsystem RoCoF, EVs can also support the grid in the frequency\nrecovery phase. Primary frequency response (PFR) using EVs\ncan be achieved using a droop gain parameter controlling\nthe amount of EV power injection after the V2G aggregators\ndetermine the discharging/charging limits [9]–[12]. Research\nin [9], [10] propose models for EVs to provide primary\nfrequency support under contingencies whereas [11], [12]\nillustrate the potential frequency support from EVs in real-\nworld grids. The aforementioned works that model the IR and\nPFR support from EVs deploy simulation models to assess the\nfrequency response. While the simulation-based models can\ncapture diverse operational characteristics, they are unsuitable\nfor planning analysis, where simulations are performed over\nlarge time horizons and require solving optimization problems.\nAlong with accurate modeling of system frequency dynam-\nics under EV integration, a significant interest of the research\ncommunity lies in leveraging the frequency support capabili-\nties of EVs and converter-based generation to enhance RER\npenetration. The simulation-based models mentioned above\nmostly focus on assessing the frequency response with IR and\nPFR support from EVs but do not assess the contribution of\nEVs on the integration limit of RERs. References [13]–[16]\npropose approaches to directly evaluate the integration limits\nof RERs and RER-based microgrids in bulk power systems\nwith respect to the system frequency response. These works,\nhowever, do not incorporate the frequency support from EVs\nor other converter-based generators into their models.\nFrequency security-constrained stochastic unit commitment\n(FSCUC) frameworks proposed in [17]–[19] incorporate the\nfrequency support from converter-based resources using the\nmulti-machine system frequency response model. They model\nthe IR from converter-based resources using the virtual syn-\nchronous machine control, while the PFR is modeled using\nthe droop control. Also, these works implicitly enforce a limit\non RER integration using the frequency security constraints.\nHowever, these studies deploy constant values for virtual iner-\ntia and droop gains, which leads to an overestimated support\nfrom converter-based generation under large disturbances [20].\nRecent works in [20], [21] implement virtual inertia param-\neters dependent on the unit-commitment decision variables\nwhile [22], [23] deploy variable droop gain parameters in\ntheir FSCUC models to incorporate the frequency support\nfrom converter-based generation more accurately. These works\neither only consider the IR [20], [21] or only the PFR [20],\n[21] from converter-based resources in their FSCUC models.\nIn addition, while the works mentioned consider various\naspects of frequency support from converter-based resources,\nthey do not consider the voltage stability or security constraints\non the converter interface. This is a major drawback of existing\nliterature since the step disturbances considered for frequency\nstability analysis are typically accompanied by voltage sags at\nthe converter point of connection. To ensure converter stabil-\nity under reduced grid voltage, the converters must readjust\nthe active and reactive power setpoints [24]. The readjusted\nsetpoints affect the frequency support from converter-based",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 resources and should be considered while estimating the RER",
+      "level": 1,
+      "text": "penetration limits. The research in [25]–[27] addresses the\nissue of steady-state voltage stability by incorporating the\nstatic voltage stability constraints and optimizing the active\nand reactive power outputs of converter-based resources as\ndecision variables in the FSCUC framework. However, the\nstability constraints in [25]–[27] are limited to steady-state and\ndo not ensure converter stability and low voltage ride-through\n(LVRT) compliance under grid voltage sags. In addition, none\nof the works mentioned incorporate EV aggregators as a po-\ntential converter-based resource in their FSCUC formulations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "Summary of Contributions",
+      "level": 1,
+      "text": "This paper develops a framework that not only quantifies\nthe frequency support from EVs but also derives an optimiza-\ntion framework for calculating RER penetration limits and\ndemonstrates how frequency support from EVs can enable\nincreased RER penetration. The contribution of EVs to system\ninertia and regulation is modeled using a modified multi-\nmachine system frequency response (MM-SFR) model. The\nvirtual inertia and droop gain of the EV aggregators are\nmodeled as decision variables, and their expressions in terms\nof the RER integration limit are derived using the control\nmodules for IR and PFR support. The penetration limit of\nRERs is then obtained using a non-linear programming (NLP)\noptimization framework that incorporates the AC power flow\nconstraints in addition to the IR and PFR support constraints\nof EV aggregators, frequency security constraints, converter\nvoltage security, and LVRT constraints formulated using the\nrequirements set forth by the IEEE-Standard 2800-2022 [28].\nDynamic simulations, 24-hour dispatches, and large time-\nhorizon stochastic simulations are performed to demonstrate\nthe efficacy of the proposed approach. The major contributions\nof the paper are listed as follows:\n1) Developing an improved MM-SFR model that incorporates\nfrequency support from plug-in EVs using dynamic virtual\ninertia and droop control of EV aggregators. We derive\nexpressions for the EV inertia and droop parameters in\nterms of the RER penetration limit, IR, and PFR control\nparameters and deploy them into the MM-SFR model to\nobtain the revised frequency security constraints.\n2) Formulating a NLP framework to determine the maxi-\nmum penetration limit of RERs while incorporating the\nfrequency support capabilities of EV aggregators. The\nframework is comprehensive as it considers the ACOPF\nconstraints, IR and PFR constraints of EV aggregators,\nconverter voltage security constraints, and LVRT con-\nstraints while evaluating the frequency support from EV\naggregators. Existing literature considers a subset of these\nconstraints while evaluating the RER penetration limit.\n3) Developing a stochastic approach to quantify the discharge\ncapacity of EV aggregators for providing frequency sup-\nport, a step not within the scope of existing works that\nconsider frequency support from converter-based genera-\ntion. The proposed approach uses probabilistic techniques\nto aggregate the charge and discharge characteristics of\nindividual EVs and derives the discharge limits of EV\naggregators.\nD. Organization\nThe remainder of the paper is organized as follows. Section",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "presents the MM-SFR model incorporating frequency sup-",
+      "level": 1,
+      "text": "port from EVs along with the models for IR and PFR support\nfrom EVs. Section III presents the random sampling approach\nto determine the total number of connected EVs. Section IV\ndevelops the converter voltage security criterion. Section V\ndevelops a NLP framework to determine the RER penetration\nlimit. It is followed by simulation and results in section VI\nand conclusion in section VII.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "F ORMULATION OF FREQUENCY SECURITY",
+      "level": 1,
+      "text": "CONSTRAINTS AND IR, PFR C ONSTRAINTS OF EV\nAGGREGATORS\nThis section describes the MM-SFR model deployed in this\nwork to incorporate the participation of EV aggregators for\nfrequency support. This model has been derived by improving\nthe basic model proposed in [29]. The modified MM-SFR\nmodel is illustrated in Fig. 1.\nFrom Fig. 1, the system frequency deviation under a step\nload disturbance ∆Pt is expressed as equation (1). Assuming\nthat the governor time constants for all conventional generators\nare identical Tg = Tr, and the EV time constants are 2-3 orders\nof magnitude smaller than that of conventional generators\nTr >> TEV\ne = 0 [17], the droop component of the EVs\nis added to the conventional generator equivalent damping\nDCV\nt . The resulting expression in (1) can then be simplified\nas follows:\n∆ft(s) = ∆Pt\ns\n\u0010\nDT\nt + 2H T\nt s + P\ng∈G\nKg(1+FgTrs)\nRg(1+Trs)\n\u0011 (2)\nThe equivalent damping and inertia constants in (2) are ex-\npressed as follows:\nDT\nt = βtDCV\nt + DEV\nt = βt\nX\ng∈G\nγg,tDgP max\ng + DEV\nt\nH T\nt = βtHCV\nt + HEV\nt = βt\nX\ng∈G\nγg,tHgP max\ng + HEV\nt\n∆ft(s) = ∆Pt\ns\n\n\nDCV\nt + 2HCV\nt s +\nX\ng∈G\n\u0012 Kg(1 + FgTrs)\nRg(1 + Tgs)\n\u0013\n| {z }\nconventional generators\n+ 2s\nX\ne∈Ea\nHEV\ne,t\n| {z }\nEV IR control\n+\nX\ne∈Ea",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "1 REV",
+      "level": 1,
+      "text": "e,t(1 + T EVe s)\n!\n| {z }\nEV PFR control\n\n\n(1)\n4\n+--\nSynchronous Generators  to \nEV Aggregators  to \nFig. 1: LFC model for a multi-machine system with EVs.\nIn the equations above, the RER integration factor βt denotes\nthe level of conventional generator displacement by RERs. It\nis a continuous decision variable that takes values between 0\nand 1, with βt = 0 meaning all the conventional generators\nare displaced by RERs. The frequency deviation in (2) can\nthen be expressed as follows:\n∆ft(s) = ∆Pt\n2H T\nt Tr\n1 + Trs\ns(s2 + 2ξtωts + ω2\nt ) (3)\nApplying Laplace transformation to (3), the time-domain\nfrequency deviation can be derived as:\n∆ft(τ ) = ∆Pt\n2H T\nt Trω2\nt\n \n1 − 1p\n1 − ξ2\nt\ne−ξtωtτ cos(ωt\nq\n1 − ξ2\nt\nτ − ϕt)\n\u0013\n+ ∆Pt\n2H T\nt ωt\np\n1 − ξ2\nt\ne−ξtωtτ cos(ωt\nq\n1 − ξ2\nt τ ) (4)\nwhere:\nξt = 0.5 × 2H T\nt + Tr(DT\nt + βtF T\nt )p\n2H T\nt Tr(DT\nt + βtRT\nt )\n,\nϕt = tan−1\n \nξtp\n1 − ξ2\nt\n!\n, ω t =\ns\nDT\nt + βtRT\nt\n2H T\nt Tr\n,\nF T\nt =\nX\ng∈G\nγg,tKgFgP max\ng\nRg\n, R T\nt =\nX\ng∈G\nγg,tKgP max\ng\nRg\n.\nA. System RoCoF with RERs and IR Support of EVs\nThe expression for system rate of change of frequency (Ro-\nCoF) is obtained by differentiating equation (4) with respect\nto τ. The system attains maximum RoCoF at τ = 0+ and it\nis expressed as follows:\n\f\f\f\f\nd f\ndτ\n\f\f\f\f\nmax\nt\n= ∆Pt\n2H T\nt\n= ∆Pt\n2\n\u0000\nβtHCV\nt + HEV\nt\n\u0001 (5)\nIt can be noticed that the RoCoF constraint is dependent\non the RER penetration limit βt and the EV virtual inertia\nHEV\nt . With a larger penetration of RERs (smaller βt), the\nsystem inertia reduces, and RoCoF increases. However, the EV\naggregators alleviate this issue with the virtual inertia support\nin the form of HEV\nt . The total inertia from all EV aggregators\nis expressed as follows:\nHEV\nt =\nX\ne∈Ea\nHEV\ne,t P EV\ne,t (6)\nThe total inertia from EV aggregators is dependent on the\nvirtual inertia constant HEV\ne,t and the discharge capability P EV\ne,t\nof all EV aggregators. In this work, instead of deploying static\nvalues of HEV\ne,t , they are set as decision variables in the opti-\nmization framework, and their values are updated dynamically\nalong with the RER integration limit. The derivative control\nstrategy in Fig. 2 is used to model the IR support from EVs and\nestablish the relation between the EV virtual inertia constant\nand the RER integration factor.\n1\n1 + 𝜏1𝑠\n𝑑𝑓\n𝑑𝜏\n1\n1 + 𝜏2𝑠 𝐾𝑒𝐼𝑅\n1\n𝑅𝑒\n𝐸𝑉 × 𝑓𝑟\n1\n1 + 𝑇𝑒\n𝐸𝑉𝑠\n−1\n+1\nDeadband\n𝑓𝑡(𝜏)\n𝑓𝑟\nPFR Switch\nIR Switch\n𝑝𝑒,𝑡\n𝐼𝑅\n𝑝𝑒,𝑡\n𝑃𝐹𝑅\n+\n+\n+−\nIR Control Module\nPFR Control Module\nFig. 2: Aggregated EVs participating in IR and PFR.\nDuring the maximum RoCoF at τ = 0+, the PFR switch in\nFig. 2 can be assumed to be open as the frequency deviation is\nnear zero. As a result, the power output of an EV aggregator e\nduring this time period can be solely attributed to the IR power\nsignal pIR\ne,t. Reformulating the swing equation, the relation\nbetween the virtual inertia constant and IR power for the EV\naggregator e at time t can be expressed as follows [30]:\nHEV\ne,t = pIR\ne,t\nfr\n2\n\u0012\f\f\f\f\nd f\ndτ\n\f\f\f\f\nmax,cv\nt\n\u0013−1\n(7)\nwhere\n\f\f\f d f\ndτ\n\f\f\f\nmax,cv\nt\nis the maximum RoCoF for dispatch hour\nt without frequency support from EVs. Within the analytical\nexpression of the virtual inertia constant representing the IR\nloop in equation (7), reference [30] uses a simulation-based\napproach to determine the maximum RoCoF term\n\f\f\f d f\ndτ\n\f\f\f\nmax,cv\nt\n.\nHowever, since the virtual inertia constant needs to be in-\ncluded in the NLP framework in the proposed work, using\na simulation model is impractical as it cannot be incorporated\ninto the MM-SFR model. Instead, we derive the virtual inertia\nconstant in terms of the renewable integration factor, which\nis a decision variable in the proposed work. From Fig. 2, the",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5 reference signal for IR corresponding to maximum RoCoF is",
+      "level": 1,
+      "text": "obtained as follows:\npIR\ne,t = KIR\ne\n1\n(1 + sτ1)(1 + sτ2)\n\f\f\f\f\nd f\ndτ\n\f\f\f\f\nmax,cv\nt\n(8)\nTwo cases exist as follows:\nCase I: When pIR\ne,t < 1, plugging the expression of pIR\ne,t into\n(7) and ignoring the filtering time constants, the EV inertia\nconstant is equal to the rated value and it is expressed as:\nHEV\ne,t = HEV ,rated\ne,t = KIR\ne\nfr\n2 (9)\nCase II: When pIR\ne,t ≥ 1, which can occur due to high RoCoF\nor a high KIR\ne setting, the saturation block limits pIR\ne,t to 1. In\nthis case, HEV\ne,t is expressed as follows:\nHEV\ne,t = fr\n2\n\u0012\f\f\f\f\nd f\ndτ\n\f\f\f\f\nmax,cv\nt\n\u0013−1\n(10)\nExpressing the EV virtual inertia constant in (10) in terms of\nthe RER integration factor:\nHEV\ne,t = frβtHCV\nt\n∆Pt\n(11)\nHence, the inertia constant for EV aggregator e can be\napproximated as follows:\nHEV\ne,t = min\n\u0012\nKIR\ne\nfr\n2 , frβtHCV\nt\n∆Pt\n\u0013\n(12)\nFrom the above equation and Fig. 3, it can be observed\nthat the virtual inertia constants HEV\ne,t of EV aggregators are\ndependent on static parameters such as the IR gain factor,\nrated frequency, and also the dynamic factors like the RER\nintegration factor, which is a decision variable in this work.\nIf static values of EV inertia constant are taken irrespective\nof the RER integration, then the IR contribution of EVs is\noverestimated, especially when βt is small. Hence, in this\nwork, HEV\ne,t are treated as decision variables and are evaluated\nwithin the optimization framework in section V.\n0 0.2 0.4 0.6 0.8 1\nRER Penetration ( t)\n0\n20\n40\n60\n80",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "100 Aggregator inertia (HEV",
+      "level": 1,
+      "text": "e,t )KIR\ne  = 1\nKIR\ne  = 2\nKIR\ne  = 3\nFig. 3: Effective inertia constant for aggregated EVs with\ndifferent values of IR gain.\nB. QSS Frequency with RERs and PFR Support of EVs\nThe quasi-steady-state (QSS) frequency deviation can be\nestimated by using the final value theorem on the frequency\ndeviation expression in equation (3). It is expressed as follows:\n∆f ss\nt = lim\ns→0\ns∆ft(s) = ∆Pt\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ DEV\nt\n(13)\nIt can be noticed that the system QSS frequency is dependent\non the RER integration limit βt, and the PFR contribution of\nall EV aggregators in the form of DEV\nt . The expression for\nDEV\nt can be further expanded as follows:\nDEV\nt =\nX\ne∈Ea\nP EV\ne,t\nREV\ne,t\n=\nX\ne∈Ea\nP EV\ne,t REV ,*\ne,t (14)\nThe PFR support from the EV aggregators is modeled using\nthe PFR control loop in Fig. 2. As opposed to the IR control\nthat acts on the system RoCoF, the PFR control loop acts on\nthe frequency deviation. At the QSS frequency, the IR switch\nin Fig. 2 can be assumed to be open as the RoCoF is zero at\nsteady-state. The value of REV\ne,t is determined using the rated\nvalue of droop constant, deadband setting, and the current QSS\nfrequency. This effect is illustrated in Fig. 4 which shows the\nchange in equivalent droop with the system QSS frequency.\n58.5 59 59.5 60 60.5 61 61.5\nQSS frequency (Hz)\n0.01\n0.015\n0.02",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "0.025 Aggregtor droop (REV",
+      "level": 2,
+      "text": "e,t )REV\ne  = 0.01\nREV\ne  = 0.015\nREV\ne  = 0.02\nDeadband\nFig. 4: Effective droop value for aggregated EVs with different\nvalues of rated droop and QSS frequency.\nTwo cases exist as follows:\nCase I: After the deadband, a constant droop provides PFR\nuntil pPFR\ne,t ≤ 1 as seen in Fig. 4. The value of pPFR\ne,t is less than",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "1 until the actual QSS frequency is smaller than the rated QSS",
+      "level": 1,
+      "text": "frequency. The EV droop constant for this case is equal to the\nrated droop, i.e. REV\ne,t = REV\ne .\nCase II : If the QSS frequency is larger than the rated QSS\nfrequency, the effective droop increases linearly since pPFR\ne,t\nsaturates to 1 p.u. Ignoring the time constant, the EV droop\nconstant for this case can be expressed as follows:\nREV\ne,t = ∆f ss\nt (15)\nThe value of the droop constant in case II is dependent on\nthe QSS frequency ∆f ss\nt , which in turn depends on the RER\nintegration, as seen in equation (13). Replacing the droop\nconstant REV\ne,t by its reciprocal REV ,*\ne and plugging equations\n(13) and (14), equation (15) can be expressed as:\nREV ,*\ne,t =\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ P\ni∈Ea,i̸=e P EV\ni,t REV ,*\ni,t\n∆Pt − P EV\ne,t\n(16)\nIn summary, the droop reciprocal REV ,*\ne of the eth EV aggre-\ngator during QSS frequency is expressed as follows:\nREV,∗\ne,t = min\n\n 1\nREVe\n,\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ P\ni∈Ea,i̸=e\nP EV\ni,t REV ,*\ni,t\n∆Pt − P EV\ne,t\n\n\n(17)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "6 From equation (16), it is clear that as the RER integration",
+      "level": 1,
+      "text": "level increases (βt decreases) or the disturbance size increases,\nthe droop reciprocal REV ,*\ne,t of the eth aggregator decreases.\nThis effect is counteracted by the PFR contribution from\nother EV aggregators (second term in the numerator) and the\ndischarge capability of the eth EV aggregator P EV\ne,t . Since\nthe droop reciprocals depend on other decision variables,\nthey are treated as decision variables, and their values are\nupdated dynamically with the changing RER integration and\nEV discharge capabilities.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "Frequency Nadir in the presence of RERs and EVs",
+      "level": 1,
+      "text": "For a given disturbance level ∆Pt, the maximum frequency\ndeviation (nadir) can be estimated at the first zero crossing of\nthe RoCoF. Hence, taking the derivative of (4) and equating\nit to zero, the frequency nadir can then be expressed as:\n∆f max\nt = ∆Pt\nβtRT\nt + DT\nt\n \n1 + e−ξtωtτ max\nt\ns\nTrβt(RT\nt − F T\nt )\n2H T\nt\n!\n(18)\nwhere,\nDT\nt = βt\nX\ng∈G\nγg,tDgP max\ng +\nX\ne∈Ea\nP EV\ne,t REV,∗∗\ne,t\nτ max\nt = 1\nωt\np\n1 − ξ2\nt\ntan−1\n \nωt\np\n1 − ξ2\nt\nξtωt − 1/TR\n!\nAll the other parameters are the same as equation (4). The\njoint contribution of IR and PFR from EV aggregators helps\nto arrest the frequency nadir. As a result, during frequency\nnadir, both the IR and PFR switches are assumed to be in a\nclosed state in Fig. 2. The expression for the EV virtual inertia\nconstant in equation (12) can be used for frequency nadir as it\nspecifies a strict lower bound on the IR contribution. However,\nthe lower bound of the droop reciprocal for QSS frequency in\n(13) is not applicable for frequency nadir. Since the frequency\nnadir is always greater than the QSS frequency, using the value\nof REV,∗\ne,t in equation (18) overestimates the PFR contribution\nof EV aggregators. Hence, we propose a droop reciprocal for\nfrequency nadir which is expressed as follows:\nREV,∗∗\ne,t = min\n\n 1\nREVe\n,\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ P\ni∈Ea,i̸=e\nP EV\ni,t REV ,**\ni,t\nρ∆Pt − P EV\ne,t\n\n\n(19)\nwhere ρ is an approximate ratio of frequency nadir to QSS\nfrequency (always greater than 1).\nUsing equations (5), (13), and (18), the frequency security\nconstraints can be formulated to assess the safe penetration\nlimit of RERs. By setting the frequency security limits to be\nequal to or less than the safety limits in the optimization\nframework, the optimal value of RER integration limit to\nensure frequency security can be determined. Also, the afore-\nmentioned equations show that the frequency nadir, maximum\nRoCoF, and QSS frequency are directly dependent on the\nRER integration factor βt, the EV aggregator virtual inertia\nconstant HEV\ne,t , and droop reciprocals REV,∗\ne,t , REV,∗∗\ne,t . Hence,\nthe expressions in equations (12), (17), and (19) are used to\nenforce the IR and PFR constraints for EV aggregators. It can\nalso be observed that the IR and PFR contribution from an EV\naggregator e is dependent on the discharge capacity P EV\ne,t . The\ndischarge capacity of the EVs depends on the total number\nof vehicles in the charging state, i.e., the number of vehicles\nat the charging stations/EV aggregators at the particular time\nstep. In the next section, a stochastic procedure to determine\nthe discharge capacity of EV aggregators is proposed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "D ISCHARGE CAPACITY OF EV A GGREGATORS",
+      "level": 1,
+      "text": "In this work, we consider the plug-in EVs to have Vehicle-\nto-Grid (V2G) technology. V2G enables EVs to respond\nrapidly to frequency fluctuations by feeding surplus power\ninto the grid or drawing power as needed [8]. With V2G, the\nEVs are equipped with bidirectional chargers, allowing them\nto charge from the grid and discharge power back into it. In\naddition to V2G, while considering frequency support from a\nmassive number of EVs, it is paramount to model the actual\nnumber of EVs participating in frequency support. If all the\nEVs in the system are assumed to participate in frequency\nregulation at any time step, the frequency support from EVs\nis significantly overestimated. Hence, in this work, only the\nEVs that are already at the charging stations are assumed to\nbe able to provide frequency support. To model the number\nof EVs present at the charging stations and eligible to provide\nfrequency support, we have developed a stochastic procedure\nin Algorithm 1. For each EV , the cumulative density function\nof the EV SoC at the charging start time extracted from\n[31] is compared against a random number from the uniform\ndistribution. Then, depending on the operation modes of EVs,\nthe actual number of EVs at the charging station, their charging\nload, and their discharge capability for frequency support are\nestimated. For EVs not at the charging station, their traveling\ndistance is randomly assigned using the NHTS database [32].\nAlgorithm 1 Operation of plug-in EVs at time-step t.\n1: i ← 1\n2: N ch\nt ← 0\n3: while i ≤ NEV do\n4: if rand[U (0, 1)] > cd f(SoCev\ni,t−1) then\n5: Set operation mode of EV i to charging.\n6: P ev,+\ni,t ← min(P ev,+, (Bev\ni − Bev\ni,t−1)/∆t)\n7: Bev\ni,t ← Bev\ni,t−1 + ηev,+P ev,−\ni,t ∆t\n8: N ch\nt ← N ch\nt + 1\n9: if frequency support required then\n10: Set operation mode of i to grid support.\n11: P ev,−\ni,t ← min(P ev,−, (Bev\ni,t−1 − Bev\ni )/∆t )\n12: end if\n13: else\n14: Set operation mode of EV i to discharging.\n15: Determine dev\ni,t using the NHTS travel database.\n16: Bev\ni,t ← Bev\ni,t−1 − dev\ni,t × cev/ηev,−\n17: end if\n18: i ← i + 1\n19: end while",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "7 In the charging state, the EVs connected to the grid consume",
+      "level": 1,
+      "text": "power to charge their batteries. The charging powers for all\nthe EVs in the charging state are summed to obtain the load\nimposed by the aggregator e as follows:\nLEV\ne,t =\nN ch\ntX\ni=1\nP ev,+\ni,t (20)\nSimilarly, in the discharge mode, the EV is not connected to\nthe grid and discharges based on the randomly selected travel-\ning distance for the given hour. In the event of a disturbance,\nthe EVs that are currently connected to the charging stations\nare in “grid support” mode and provide IR and PFR services.\nBy summing the discharge capacities of all EVs connected to\nthe aggregator e for a particular hour, the discharge power and\nenergy limits for EV aggregator e are obtained as follows:\nP EV\ne,t =\nN ch\ntX\ni=1\nP ev,−\ni,t , B EV\ne,t = P EV\ne,t ∆t (21)\nWhile this value of discharge limit can be used to evaluate\nthe frequency support, the converter voltage security criterion\ndictates that the converter’s active and reactive power set-\npoints must be altered depending on the grid voltage, further\nconstraining the value of P EV\ne,t . Hence, the converter voltage\nsecurity constraint is developed in the following section that\nconstrains the EV aggregator discharge capacity to obtain the\nactual frequency support capability of EV aggregators.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "C ONVERTER VOLTAGE SECURITY CONSTRAINTS",
+      "level": 1,
+      "text": "In this work, EV aggregators are assumed to interact with\nthe grid as grid-feeding converters. A brief overview of the\noperation of grid-feeding converters is presented in this paper.\nReaders are referred to [24] for detailed operation of grid-\nfeeding converters. Fig. 5 illustrates the structure of grid-\nfeeding converters used in this work.\nGrid AC\nDCPLL abc/dq\nCurrent\nlimit\nCurrent\ncontrol\nPWM\nPCC\nFig. 5: Control strategy for grid-feeding converter e.\nThe synchronization with the point of common coupling\n(PCC) is achieved via a phase-locked loop (PLL) where the\ndetected phase θ tracks the PCC phase δe,t. Since we assume\ncontinuous synchronization, the q-axis voltage is 0 while\ned =\n√\n2Ee,t. Due to this, the active and reactive power are\ndecoupled, and the power flow to the grid is equal to the active\nand reactive power setpoints. Since we assume the grid voltage\nas a reference, the phase of Ve,t is assumed to be zero. The\nactive and reactive converter-to-grid power are as follows:\nP conv\ne,t = Ee,tVe,t\nxg\nsin(δe,t), Q conv\ne,t = E2\ne,t\nxg\n− Ee,tVe,t\nxg\ncos(δe,t)\n(22)\nEliminating δe,t in (22), the PCC voltage with respect to\nthe active and reactive powers (PV and VQ curves) are:\nEe,t =\nvuut V 2\ne,t\n2 + Qconv\ne,t xg ±\ns\nV 4\ne,t\n4 − (P conv\ne,t )2x2g + Qconv\ne,t xgVe,t\n(23)\nFrom the equation above, the maximum deliverable power\nfrom the converter to the grid is obtained as follows:\nP conv\ne,t = 1 + sin(ϕe,t)\ncos(ϕe,t)\nV 2\ne,t\n2xg\nwhere, ϕe,t = tan−1\n\u0012 Qconv\ne,t\nP conv\ne,t\n\u0013\n(24)\nAs the grid voltage reduces, the value of P max\ne,t also reduces.\nHowever, if we keep the active power setpoint to a constant\nvalue, P conv\ne,t can be greater than the P max\ne,t . In such a scenario,\nthe converter will become unstable. Hence, it is important\nto determine appropriate power setpoints to ensure converter\nstability. The critical grid voltage for converter instability is\ndetermined by setting the active power setpoint equal to the\nmaximum deliverable power in (24).\nIn the proposed approach, the EV aggregator discharge\ncapacity is expressed in terms of the active and reactive\npower setpoints P EV\ne,t =\nq\n(P set\ne,t)2 + (Qset\ne,t)2. The active and\nreactive power setpoints replace the converter-to-grid active\nand reactive power in equation (24). Then, cos(ϕe,t) =\nP set\ne,t\nP EV\ne,t\nand rearranging (24), the critical grid voltage for instability is\nexpressed as follows:\nV cr\ne,t =\nvuut 2(P set\ne,t)2xg\nq\n(P set\ne,t)2 + (Qset\ne,t)2 + Qset\ne,t\n(25)\nAn example of the active and reactive power setpoints for\nvarying grid voltages obtained using (25) is illustrated in Fig.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "6 As the node voltage reduces, the active power setpoint",
+      "level": 1,
+      "text": "decreases, and the reactive power setpoint increases to ensure\nconverter stability. It can also be noticed that the node voltage\nat which the reactive power setpoint saturates to zero is\nlarger for the case with larger P EV\ne,t , which indicates a stricter\nvoltage security criterion for larger EV aggregators. Hence, to\nensure the voltage security of EV aggregators, we treat the\nactive and reactive power setpoints as decision variables and\nreplace the aggregated discharge capacity P EV\ne,t with the active\npower setpoint P set\ne,t. This change in the active power of EV\naggregators is reflected in their frequency support capability.\n0.1 0.2 0.3 0.4 0.5 0.6 0.7\nNode voltage (p.u.)\n0.2\n0.4\n0.6\n0.8\n1\n0\n0.2\n0.4\n0.6\n0.8\nFig. 6: Active and reactive power setpoints for P EV\ne,t = 0.857\np.u. (solid curves) and P EV\ne,t = 0.586 p.u. (dotted curves).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "8 In this paper, in addition to the converter voltage security",
+      "level": 1,
+      "text": "constraints, the EV active power setpoint is also constrained\nby the low-voltage ride-through (LVRT) requirements for grid\nvoltage sags. Depending on the critical voltage for converter\nstability, there is a certain amount of time the converter must\nremain online and supply reactive power to the grid to ensure\ngrid code compliance. The minimum ride-through time for\nthe converter grid voltage taken from Table 12 of the IEEE\nStandard 2800-2022 [28] is illustrated in Fig. 7. Let the ride-\nthrough time be a function of the critical grid voltage in\nequation (25), then the minimum amount of EV aggregator\nenergy required to satisfy the LVRT requirement is expressed\nas follows:\nBLVRT\ne,t = P set\ne,t × T\n\u0000\nV cr\ne,t\n\u0001\nηEV,− (26)\nwhere T\n\u0000\nV cr\ne,t\n\u0001\nis the minimum ride-through time correspond-\ning to the critical grid voltage for converter instability (blue\ncurve in Fig. 7). By setting the minimum energy required for\nLVRT to be greater than or equal to the lower capacity limit\nof EV aggregators, the LVRT constraint on P set\ne,t is enforced.\n0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9\nGrid voltage (p.u.)\n0\n1\n2\n3\n4\n5\n6Ride-through time (s)\nFig. 7: Minimum ride-through times under grid voltage sag.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "O PTIMIZATION FRAMEWORK FOR INTEGRATION LIMIT",
+      "level": 1,
+      "text": "OF RENEWABLE ENERGY RESOURCES\nIn this paper, a NLP framework is developed to evaluate the\nRER penetration limit while keeping the frequency security\nconstraints within limits. The framework also incorporates\nthe classical ACOPF constraints such as the nodal power\nbalance, generator, transmission line limits, and energy storage\noperation constraints. The NLP framework also incorporates\nthe IR and PFR contribution from aggregated EVs while\nenforcing the converter voltage security and LVRT constraints.\nThe optimization framework is structured as follows:\nmin\n\n X\nn∈N\nλcP C\nn,t +\nX\ng∈G\ncf\ng Pg,t +\nX\ns∈S\n(c−\ns P −\ns,t + c+\ns P +\ns,t)\n\n\n(27)\nsubject to\nPn,t =\nX\ng∈Gn\nPg,t +\nX\np∈Pn\nPp,t +\nX\nw∈Wn\nPw,t+\nX\ns∈Sn\n(P −\ns,t + P +\ns,t) −\nX\ne∈Ea,n\nLEV\ne,t + P C\nn,t − P D\nn,t (28a)\nQn,t =\nX\ng∈Gn\nQg,t − QD\nn,t (28b)\nPn,t = Vn,t\nX\ni∈N\nVi,t\n\u0010\nGnicos(δn,t − δi,t)\n+Bnisin(δn,t − δi,t)\n\u0011\n∀n ∈ N(28c)\nQn,t = Vn,t\nX\ni∈N\nVi,t\n\u0010\nGnisin(δn,t − δi,t)\n−Bnicos(δn,t − δi,t)\n\u0011\n∀n ∈ N(28d)\n0 ≤ P C\nn,t ≤ P D\nn,t ∀n ∈ N(28e)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "min",
+      "level": 1,
+      "text": "n ≤ Vn,t ≤ V max\nn ∀n ∈ N(28f)\nukl,tP min\nkl ≤ V 2\nk,t |Yk,l| cos(θk,l) − Vk,tVl,t |Yk,l| ×\ncos(δk,t − δl,t − θk,l) ≤ ukl,tP max\nkl ∀k, l∈ L(28g)\nug,tP min\ng ≤ Pg,t ≤ ug,tP max\ng ∀g ∈ G(28h)\nug,tQmin\ng ≤ Qg,t ≤ ug,tQmax\ng ∀g ∈ G(28i)\n0 ≤ Pp,t ≤ P max\np,t ∀p ∈ P(28j)\n0 ≤ Pw,t ≤ P max\nw,t ∀w ∈ W(28k)\nP +s ≤ P +\ns,t ≤ 0 ∀s ∈ S (28l)\n0 ≤ P −\ne,t ≤ P −s ∀s ∈ S(28m)\nEs ≤ Ee,t−1 −\n \nP −\ns,t\nη−s\n+ P +\ns,tη+\ns\n!\n∆t ≤ Es ∀s ∈ S(28n)\nX\np∈P\nPp,t +\nX\nw∈W\nPw,t +\nX\ns∈S\nP d\ns,t ≤ (1 − βt)\nX\nn∈N\nP D\nn,t (28o)\nβtHCV\nt +\nX\ne∈Ea\nHEV\ne,t P set\ne,t ≥ ∆Pt",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "2 d f",
+      "level": 1,
+      "text": "dτ\n\f\f\f\nlim (28p)\nβt(RT\nt + DCV\nt ) +\nX\ne∈Ea\nP set\ne,tREV,∗\ne,t ≥ ∆Pt\n∆f ss,lim (28q)\n∆Pt\nβt(RT\nt + DCV\nt ) + P\ne∈Ea P set\ne,tREV,∗∗\ne,t\n \n1 + e−ξtωtτ max\nt ×\ns\nTrβt(RT\nt − F T\nt )\n2(βtHCV\nt + P\ne∈Ea P set\ne,tHEV\ne,t\n!\n≤ ∆f lim (28r)\nHEV\ne,t ≤ KIR\ne fr\n2 , ∀e ∈ Ea (28s)\nHEV\ne,t ≤ frβtHCV\nt\n∆Pt\n, ∀e ∈ Ea (28t)\nREV,∗\ne,t ≤ 1\nREVe\n, REV,∗∗\ne,t ≤ 1\nREVe\n, ∀e ∈ Ea (28u)\nREV,∗\ne,t ≤\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ P\ni∈Ea,i̸=e\nP set\ni,t REV ,*\ni,t\n∆Pt − P set\ne,t\n, ∀e ∈ Ea\n(28v)\nREV,∗∗\ne,t ≤\nβt\n\u0000\nRT\nt + DCV\nt\n\u0001\n+ P\ni∈Ea,i̸=e\nP set\ni,t REV ,**\ni,t\nρ∆Pt − P set\ne,t\n, ∀e ∈ Ea\n(28w)vuut 2(P set\ne,t)2xg\nq\n(P set\ne,t)2 + (Qset\ne,t)2 + Qset\ne,t\n≤ Ve,t − ∆Ve, ∀e ∈ Ea (28x)\nq\n(P set\ne,t)2 + (Qset\ne,t)2 ≤ P EV\ne,t , ∀e ∈ Ea (28y)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "9 BEV",
+      "level": 1,
+      "text": "e,t − P set\ne,t × T (Ve,t − ∆Ve)\nηEV,− ≥ BEV\ne,t , ∀e ∈ Ea. (28z)\nIn the above formulation, objective (27) minimizes the load\ncurtailment while simultaneously minimizing the generator\nfuel costs. The ESS charging and discharging costs c−\ns , c+\ns\nare set such that ESS charge when the system generation is\nsurplus and discharge when the total generation cannot cater\nto the system demand. Equations (28c) and (28d) enforce\nthe equality constraints for nodal active and reactive power\nbalance. Equations (28e) and (28f) denote the limits for load\ncurtailment and node voltages. The transmission line limit\nconstraint is enforced using equation (28g), while the generator\nlimits are enforced using equations (28h)-(28k). The lower\nlimits of conventional generators are relaxed to avoid integer\nvariables in the NLP, which is a common procedure for solving\nACOPF in planning problems [33]. It should also be noted\nthat the generator and transmission line limits depend on their\nforced outage status ug,t and uij,t, which are determined and\ndeployed during the stochastic simulations. The ESS operation\nconstraints are enforced using equations (28l)-(28n).\nIn this paper, the RER limit is enforced using a linear\nconstraint in equation (28o) that emphasizes that the RERs can\nonly account for a certain percentage of system demand during\ntime t. The value of βt is majorly determined by the frequency\nsecurity constraints in equations (28p), (28q), and (28r), which\ncorrespond to the maximum RoCoF, QSS frequency, and\nfrequency nadir constraints, respectively. Depending on the\noutage statistics, a capacity flow model is solved to obtain\nthe values of γg,t, which are subsequently used to determine\nDCV\nt , HCV\nt , RT\nt , FT\nt . Details of the capacity flow model is\npresent in reference [34]. The capacity flow model is solved as\na workaround for introducing integer variables within the NLP.\nInteger variables convert the NLP into a mixed-integer NLP\n(MINLP), significantly increasing computation times. While\nthe optimization framework tries to minimize the value of βt\nto minimize the fuel costs, the frequency security constraints\nimpose a limit on the reduction of βt, resulting in a dispatch\nthat is frequency secure.\nThe eth EV aggregator’s contribution to frequency response\nis modeled using the setpoint active power and the EV inertia\nand droop reciprocals. The expression for the EV inertia\nconstant given by equation (12) is expressed as constraints in\n(28s) and (28t). Similarly, the QSS and frequency nadir droop\nreciprocals in (17) and (19) are enforced using constraints\n(28u), (28v), and (28w). Using the expression for the critical\nvoltage for converter stability from (25), constraint (28x) is\nformulated. Based on the grid voltage reduction ∆Ve, the\npower setpoints are controlled such that the critical operating\nvoltage for the converter remains does not exceed Ve,t − ∆Ve.\nThe aggregator’s power setpoints are dependent on the grid\nvoltage Ve,t at the node where the aggregator is connected.\nIt can also be noticed that the grid voltage Ve,t is a decision\nvariable whose steady-state limits are enforced using constraint\n(28f). The active and reactive power setpoints for the convert-\ners are further constrained by the hourly discharge limit for\nthe aggregator P EV\ne,t , obtained using equation (21). The LVRT\nconstraints for EV aggregators are enforced as equation (28z).\nIn this paper, for simplicity, the function T in constraint (28z)\nis approximated by a quadratic polynomial fit of the minimum\nride-through times in Fig. 7.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "S IMULATION AND RESULTS",
+      "level": 1,
+      "text": "The efficacy of the proposed approach is demonstrated\nusing the RTS-GMLC test system [35]. This system is well\nsuited for this work since it is one of the few available test\nsystems that incorporate RERs, including PV , wind, concen-\ntrated solar power (CSP), hydro, and also ESSs. The RER\nresource database consists of day-ahead forecasts recorded at\nhourly intervals for a year. The generation mix consists of 74\nconventional generation units, 20 hydro units, 25 PV farms,\n31 roof-top PV ,1 CSP, 4 winds farms, and one ESS. There are\n73 nodes distributed among three regions. Each area consists\nof distributed loads with a peak of 2850 MW.\nThe EV aggregator is assumed to be present in bus 313\nof the RTS-GMLC system since the particular bus already\nincludes an ESS. The traveling patterns of EV users are\nextracted using the national household travel survey (NHTS)\ndatabase [32]. The total aggregated EV power for IR and\nPFR at each hour is obtained using Algorithm 1. This work\nconsiders high EV integration scenario with the total number\nof EV users being 100,000. Each EV has a battery with a\nrated charging/discharging capacity of 15 kW and an energy\ncapacity of 60 kWh. Efficiencies for ESSs, individual EVs,\nand EV aggregators are taken as 0.85.\nThe generator inertia, fraction of power from high-pressure\nturbines, droop, and damping coefficient are extracted using\nthe procedure in reference [36]. The maximum RoCoF values\nobtained in this paper are evaluated considering a 50 ms time\ndelay of the RoCoF relay [30]. The NLP is solved using the\nIPOPT solver in pyomo [37]. The frequency security limits\nconsidered in this work are derived from Table 1 of the NERC\nstandard BAL-003-1 for ERCOT, USA [38], and they are\nimplemented as follows:\n• Disturbance size ( ∆Pt): The disturbance size is assumed\nto vary at all simulation hours, and it is considered to be\n10% of the load demand during that hour. This disturbance\nsize during peak demand roughly translates to the N-2\ncriterion for RTS-GMLC system, which is also the resource\ncontingency criterion in BAL-003-1.\n• Frequency nadir limits (∆f lim): It is set as 0.7 Hz according\nto the prevailing under-frequency load shedding (UFLS)\nlimit in BAL-003-1 for ERCOT.\n• RoCof limits (\n\f\f\f d f\ndτ\n\f\f\f\nlim\n): As reported by reference [39], under\ncritical inertia, it takes 0.416 seconds for ERCOT’s fre-\nquency to decrease from 59.7 Hz to 59.3 Hz, corresponding\nto the RoCoF of 0.96 Hz/s. To ensure that the system inertia\nremains above critical inertia, 0.96 is taken as the RoCoF\nlimit in this work.\n• QSS frequency limit ( ∆f ss,lim): It is set as 50% of the\nfrequency nadir limit.\nA. Validation of the modified MM-SFR model\nFirst, we have compared the performance of our proposed\nMM-SFR-based analytical model with IR and PFR constraints\nagainst the baseline simulation-based model and the virtual\n10\nsynchronous machine (VSM)-based models in the literature.\nThree models are formulated as follows:\n• Case I: The baseline model illustrated in Fig. 8 is simulated\nin MATLAB/Simulink and is used. The EV IR and PFR\nmodules are directly incorporated with the base MMSFR\nmodel. This model considers filtering time constants and\nsaturation blocks of IR and PFR modules. The IR gain\nKEV\ne = 2 and rated droop REV\ne = 0.01 are used.\n• Case II: The VSM strategy proposed in references [17]–\n[19] for emulating the frequency support of converter-based\nresources is integrated with the MMSFR model. Static\nvalues of virtual inertia constant (evaluated using (9)) and\nrated droop coefficient are used.\n• Case III: Proposed MMSFR model with IR and PFR con-\nstraints is deployed. We use equations (12), (17), and (19) to\ndynamically update the inertia and droop reciprocals based\non the varying disturbance sizes.\n1\n1 + 0.05𝑠\n𝑑𝑓\n𝑑𝜏\n1\n1 + 0.05𝑠 2\n1\n0.01𝑓𝑟\n1\n1 + 0.08𝑠\n−1\n+1\n0.02\n−0.02\nΔ𝑓𝑡(𝜏)\n𝑓𝑟\n𝑝𝑒,𝑡\n𝐼𝑅\n𝑝𝑒,𝑡\n𝑃𝐹𝑅\n+\n+\n+\n−\n1\n𝐷𝑡\n𝑐𝑣 + 2𝐻𝑡\n𝑐𝑣𝑠\n𝑅𝑡\n𝑇 + 𝐹𝑡\n𝑇𝑇𝑟𝑠\n(1 + 𝑇𝑟𝑠)\n𝑃𝑒,𝑡\n𝐸𝑉Δ𝑃𝑡\n+\n−−\n𝑓𝑟\nFig. 8: Baseline model for validation of modified MM-SFR.\nThe performance of the three models for varying disturbance\nsizes and EV penetration is illustrated in Fig. 9. It is clear that\nthe proposed MM-SFR model with IR and PFR constraints\nin case III has a better performance for all the frequency\nsecurity metrics, especially as the disturbance sizes get more\nsevere. In case II, the VSM models are reasonably accurate\nfor small disturbance sizes, after which they incur high errors.\nIt is due to the fact that the virtual inertia and droop values\nare at their rated values until the saturation blocks limit the IR\nand PFR power to 1 p.u. This effect is more severe when the\nEV penetration is higher, as seen in the dotted plots of Fig. 9.\nThe proposed analytical model in case III successfully models\nthe saturation blocks and accurately estimates the frequency\nsecurity indices, even under the high penetration of EVs.\nThese observations demonstrate that the proposed model can\nemulate the simulation-based baseline model in incorporating\nthe frequency support from the EVs, while being analytically\ntractable to be included in the NLP framework.\nB. One-day Dispatch Considering RER Penetration Limits\nThe variation in discharge capacity of EV aggregator for IR\nand PFR support is illustrated in Fig. 10. It can be observed\nthat the discharge capability of the EV aggregator peaks during\nthe evening. This occurs since the EVs mostly travel during\nthe day, leading to low SoC by the evening when they are\nplugged into the grid for charging by the users. It can also be\n5 10 15\n0.7\n1.1\n1.5\n1.9\n2.3\n2.7Max. RoCoF (Hz/s)\nCase I Case II Case III\n5 10 15\n0.2\n0.4\n0.6\n0.8\n1\nQSS Freq. (Hz)\n5 10 15\n0.4\n1\n1.6\n2.2\n5 10 15\nDisturbance size (percentage of peak demand)\n0.5\n1\n1.5\n2\n2.5Freq. nadir (Hz)\n5 10 15\n0.2\n0.4\n0.6\n0.8\n5 10 15\n0.5\n1\n1.5\n2\n2.5\nFig. 9: Model validation results (solid lines represent 50 MW\nEV power while dotted lines represent 200 MW EV power.)\nobserved that EV discharge capacity increases along with the\nsystem generation, thus leading to the availability of a larger\nnumber of EVs for frequency support during the most stressful\ndemand hours of the day. In addition, the increased load on\nthe grid due to the charging of EVs leads to the dispatch of\nmore generators for frequency support. This illustrates how\nthe increased number of EVs in the system can be used to the\nadvantage of operators to increase system frequency security.\n0 5 10 15 20 25\nTime (hours)\n4000\n5000\n6000\n7000\n8000\n9000Total Generation (MW)\n20\n40\n60\n80",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "100 EV Discharge Capacity (MW)",
+      "level": 1,
+      "text": "Fig. 10: 24-hour system dispatch and EV discharge capacity.\nNext, a 24-hour case study is performed to illustrate the\nproposed method. Four cases are analyzed as follows:\n• Case I: At every simulation hour, an ACOPF is simulated\nwithout considering the RER integration limit (constraints\n(28o)-(28z) are ignored).\n• Case II: In this case, the NLP is solved while considering the\nfrequency security constraints and RER integration factor.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "11 However, the frequency support from EVs is not considered",
+      "level": 1,
+      "text": "(constraints (28s)-(28z) are ignored and P set\ne,t = 0).\n• Case III: In this case, the frequency support of EVs is\nmodeled without considering the converter voltage security\nconstraints i.e. constraints (28x)-(28z) are not considered\nand P set\ne,t = P EV\ne,t .\n• Case IV: All the constraints in the NLP are considered. The\nvoltage drop in EV aggregator terminals is 0.8 p.u.\nIn the abovementioned cases, simulations are performed\nfor the peak demand day of the RTS-GMLC system, with\nfrequency response and RER penetration assessed every hour.\nThe frequency nadir, RER power, and βt for the 24-hour\ndispatch are summarized in Fig. 11.\n0 5 10 15 20 25\nTime (hours)\n0.5\n0.7\n0.9\n1.1Frequency nadir (Hz)\nCase I\nCase II\nCase III\nCase IV\nSafe limit\n(a)\n0 5 10 15 20 25\nTime (hours)\n0\n0.5\n1\n1.5\n2\n2.5Total RER power (GW)\nCase I\nCase II\nCase III\nCase IV\n(b)\n0 5 10 15 20 25\nTime (hours)\n0.7\n0.75\n0.8\n0.85\n0.9\n0.95RER integration factor\nCase II\nCase III\nCase IV\n(c)\nFig. 11: a) System frequency nadir, b) Total RER generation,\nand c) βt for the 24-hour dispatch.\nThe following can be observed from Fig. 11:\n• In case I, Fig. 11a shows that the system experiences\nfrequency nadir violations in multiple hours. This is because\nthe system dispatch prioritizes RER integration due to the\nlow production cost associated with these resources, as\nevident with the largest RER power for cases I in Fig.\n11b. This causes the inertia, regulation, and other parameters\nfrom conventional generators to reach low values, affecting\nthe frequency nadir. This effect is minimized in case II\nwhere the RER integration limits are enforced. Using the\nRER integration factors in Fig. 11c, the RER penetration\nin the system is limited to satisfy the frequency nadir\nconstraint. It should be mentioned that there is a minor nadir\nlimit violation in hour 21 of case II. This is due to the linear\nconstraint approximating the RER integration limit in (28o).\n• The contribution of EVs in promoting the RER integration\nis illustrated by the case III plots in Fig. 11. When the\nfrequency support from EVs is incorporated, the system\nexperiences higher penetration of RERs between hours 5-",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "16 while retaining a similar level of frequency security as",
+      "level": 1,
+      "text": "case II. As seen in Fig. 11c, there is a significant reduction\nin βt for case III during hours 5-16 compared to case II,\ncontributing to larger RER power in Fig. 11b.\n• Case IV illustrates the impacts of imposing the converter\nvoltage security constraints on the RER penetration limit.\nAs expected, when the voltage of the bus connected to\nthe aggregated EVs drops to Ve,t − ∆Ve, the active and\nreactive power setpoints are readjusted in proportion to the\nvoltage drop. The reduced active power setpoint affects the\nfrequency support from the EV aggregators and causes the\nsystem to impose heavier restrictions on the penetration of\nRERs to ensure frequency security. Due to this, the RER\npenetration is smaller in case IV compared to case III. This\nis also evident in Fig. 12 where the RER integration factor\nincreases with increased ∆Ve. Neglecting the converter\nvoltage security constraint causes an overestimation of the\nfrequency support from energy storage devices in case III,\nleading to an optimistic estimation of the RER penetration\nlimit. The proposed approach addresses this issue by in-\ncluding the voltage security constraint while determining\nthe RER penetration limit.\n0 5 10 15 20 25\nTime (hours)\n0.7\n0.75\n0.8\n0.85\n0.9\n0.95RER integration factor\n Ve = 0.7 p.u.  Ve = 0.8 p.u.  Ve = 0.9 p.u.\nFig. 12: RER integration limits for varying voltage sag levels.\nSince the proposed NLP is non-linear and non-convex,\nthe solution quality of the 24-hour dispatches generated by\nthe NLP is analyzed using the overall unscaled NLP error\nin Fig. 13. The overall NLP error is the maximum among\nprimal infeasibility (constraint violation), dual infeasibility,\nand complementarity, details of which are present in [40].\nThe NLP is solved using the overall error tolerance of 1e−4.\nHowever, the figure shows that the NLP errors are significantly\nsmaller than the tolerance in all simulation hours, indicating\nthat the problem constraints and optimality conditions are\nclearly satisfied. In addition, we also tested the possible\nglobal convergence of the algorithm with the “multistart”\nsolver with “midpoint guess and bound” strategy. With 1000\n12\niterations per dispatch hour in the “multistart” solver, the same\ndispatch results as Fig. 11 were obtained, indicating a strong\nconvergence performance of the proposed NLP.\n0 5 10 15 20 25\nTime (hours)\n0.5\n1\n1.5\n2\n2.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "3 Overall NLP error",
+      "level": 1,
+      "text": "10-5\nFig. 13: Overall NLP error for 24-hour dispatch in case IV .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "System Frequency Response and RER Penetration with",
+      "level": 1,
+      "text": "Stochastic Simulations\nIn this section, stochastic simulations are performed to as-\nsess the RER penetration under different simulation scenarios.\nStochastic simulations capture a vast range of uncertainties\nintroduced by the random generator and transmission line\noutages, RER inputs, and EV user charging/discharging char-\nacteristics. We simulate 1000 sample paths for cases I-IV , with\none sample path performing a yearly simulation. Within a\nsample path, the procedure in Algorithm 1 is initially run\nto obtain the EV aggregator load and discharge capability.\nThen, within the hourly simulation, the next event approach\nis used to simulate the forced outages of generators and\ntransmission lines. Details of the next event approach are\npresent in reference [34]. The RER integration and frequency\nsecurity indices obtained from the NLP dispatch are recorded\nover all the simulation hours and sample paths.\nInitially, the cumulative distributions of frequency security\nindices are presented in Fig. 14. Maximum RoCoF, frequency\nnadir, and QSS frequency limits are violated with a much\nhigher probability for case I when the RER integration limit is\nnot considered. In addition, the violations are extremely severe,\nup to three times the safety limit. In cases II-IV , the RER\nlimits imposed prevent the frequency nadir and QSS frequency\nfrom reaching extreme values, while some values violate the\nsafe limits due to the multiple forced outages of generators.\nThe IR and PFR support from the EV aggregator reduces the\nprobability of violating the safe limits in case III compared\nto case II, as they can provide frequency support during the\nforced outages of generators. However, the converter voltage\nsecurity constraints undermine the frequency support from\nthe EV aggregator, resulting in slightly increased frequency\nsecurity violations in case IV compared to case III. This is\nillustrated by the case IV curves being slightly lower than the\ncase III curves in Fig. 14.\nTable I illustrates the impacts of imposing the RER inte-\ngration limit constraint. In case II, the total energy over the\nsimulation year from RERs reduces significantly compared to\ncase I. It is because the only way for case II to keep the\nfrequency security constraints within limits is by curtailing\nthe RER power and increasing the number of conventional\ngenerators online. However, when frequency support from\n0.3 0.6 0.9 1.2 1.5\nMaximum RoCoF (Hz/s)\n0\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "1 Probability",
+      "level": 1,
+      "text": "Case I\nCase II\nCase III\nCase IV\nRoCoF limit\n(a)\n0.3 0.6 0.9 1.2 1.5\nFrequency nadir (Hz)\n0\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "1 Probability",
+      "level": 1,
+      "text": "Case I\nCase II\nCase III\nCase IV\nNadir limit\n(b)\n0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5\nQSS frequency (Hz)\n0\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "1 Probability",
+      "level": 1,
+      "text": "Case I\nCase II\nCase III\nCase IV\nQSS limit\n(c)\nFig. 14: Cumulative distributions of a) System maximum\nRoCoF, b) Frequency nadir, and c) QSS frequency.\nEVs is considered, the RER energy improves considerably in\ncases III and IV compared to case II. This signifies that since\nthe EV aggregators can assist in frequency support during a\ndisturbance, fewer conventional generators must be online,\nand more RERs can be integrated without compromising\nfrequency security. The computation times reported in Table I\nillustrate that the NLP in case II takes approximately twice the\ncomputation time of the default ACOPF, which is acceptable\nconsidering the NLP dispatches satisfy frequency security\nconstraints. Also, it is observed that although incorporating\nthe IR, PFR, and voltage security constraints increases the\ncomputational time in cases III and IV compared to case II,\nthe increment is not significant.\nTABLE I: RER integration results for all simulation cases.\nParameters Case I Case II Case III Case IV\nRER energy (GWh/yr) 13385 6587 .2 7953 .8 7544 .9\nComputation time (s/step) 1.7431 3 .0813 3 .1638 3 .1536\n13\nD. Discussion\nSimulation results show that the proposed method can\nestimate the RER penetration limit in power grids while\nincorporating frequency support from EVs. Initially, the dy-\nnamic simulations illustrated the importance of the proposed\ndynamic virtual inertia and droop coefficients, especially un-\nder increased RER penetration. One-day dispatch simulations\nhighlighted the efficacy of the proposed NLP in limiting the\nRER integration to satisfy the frequency security constraints.\nThe simulations also highlighted how the frequency support\nfrom EVs can elevate the RER penetration in the system\nwithout compromising frequency security. Stochastic simu-\nlations highlighted the system frequency security and RER\npenetration under random forced outages of system generators.\nThe key benefit of the proposed NLP framework is that it\nis computationally inexpensive and suitable for use in plan-\nning frameworks. This is primarily attributed to the approach\nnot requiring integer decision variables, removing the need\nto solve a MINLP problem. Regarding the applicability of\nthe proposed framework in real-world, as mentioned in the\nACOPF white paper issued by FERC in reference [41], “The\nACOPF problem must be solved weekly in 8 hours, daily\nin 2 hours, hourly in 15 minutes, every five minutes in 1\nminute and for self-healing post-contingency in 30 seconds.”\nThe computation times reported in Table I illustrate that the\nproposed NLP adheres to these limits for very short periods\n(such as 5-minute dispatch) and planning problems (hourly\nresolution). In this work, we have primarily focused on solving\nthe NLP hourly within a stochastic simulation to determine\nthe RER penetration in the system. However, the computation\ntimes in Table I indicate the applicability of the NLP for\nshorter time scales.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "C ONCLUSION",
+      "level": 1,
+      "text": "This paper formulates an improved approach to incorporate\nfrequency support of EVs to promote RER integration. The\ncontribution of EV aggregators to system frequency response\nis modeled using the dynamic virtual inertia and droop coef-\nficients, which in turn are determined using the IR and PFR\ncontrol modules. The resulting EV aggregator parameters are\nthen deployed in the modified multi-machine system frequency\nresponse (MM-SFR) model to obtain the frequency security\nindices. To determine the discharge limits of EV aggregators\nfor frequency support, a stochastic framework is developed.\nA non-linear optimization framework is then devised to deter-\nmine the maximum penetration limit of RERs in the system.\nThe framework incorporates frequency security constraints,\nIR and PFR constraints of EV aggregators, converter voltage\nsecurity, and LVRT constraints. Simulation results on the\nIEEE RTS-GMLC illustrate that the proposed framework\nincorporates the IR and PFR contribution of EVs and improves\nthe system frequency response and RER integration while\nalso illustrating the importance of considering voltage secu-\nrity constraints. The proposed model can be used in system\nplanning studies such as reliability analysis since the method\ndoes not require simulation models. Computation times show\nthat the model can also help system operators determine the\nRER penetration limits in near real-time with changes in EV\npenetration and system demand.\nACKNOWLEDGEMENT\nThis material is based upon work supported by the U.S.\nDepartment of Energy, Office of Science, Basic Energy\nSciences, Office of Electricity, under Award Number DE-\nSC0023422. This article has been co-authored by an em-\nployee of National Technology & Engineering Solutions of\nSandia, LLC under Contract No. DE-NA0003525 with the\nU.S. Department of Energy (DOE). The employee owns all\nright, title and interest in and to the article and are solely\nresponsible for its contents. The United States Government\nretains and the publisher, by accepting the article for publica-\ntion, acknowledges that the United States Government retains\na non-exclusive, paid-up, irrevocable, world-wide license to\npublish or reproduce the published form of this article or\nallow others to do so, for United States Government purposes.\nThe DOE will provide public access to these results of\nfederally sponsored research in accordance with the DOE\nPublic Access Plan https://www.energy.gov/downloads/doe-\npublic-access-plan. This paper describes objective technical\nresults and analysis. Any subjective views or opinions that\nmight be expressed in the paper do not necessarily represent\nthe views of the U.S. Department of Energy or the United\nStates Government.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Operation of plug-in EVs at time-step t."
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "equation (1)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "equation (4)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "equation (3)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "equation (15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "equation (28"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "equation (21)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 21
+  }
+}

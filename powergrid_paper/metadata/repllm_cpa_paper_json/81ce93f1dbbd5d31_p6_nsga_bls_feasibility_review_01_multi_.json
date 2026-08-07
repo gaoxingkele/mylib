@@ -1,0 +1,237 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p6_nsga_bls_feasibility_review/p6_nsga_bls_feasibility_review__01__multi_objective_optimization_of_offshore_wind_farm_configura__84ad7c978c.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 College of Electrical Engineering, Zhejiang University, Hangzhou 310027, China",
+      "level": 1,
+      "text": "4 School of Energy and Power Engineering, Huazhong University of Science and Technology,\nWuhan 430074, China; m202371299@hust.edu.cn\n* Correspondence: mengwc@csg.cn (W.M.); chenyingquan@hust.edu.cn (Y.C.)\nAbstract: The configuration of energy storage systems in offshore wind farms can effectively\nsuppress fluctuations in wind power and enhance the stability of the power grid. However,\nthe economic balance between the cost of energy storage systems and the fluctuations in\nwind power remains an urgent challenge to be addressed, especially against the backdrop\nof widespread spot trading in the electricity market. How to achieve effective wind power\nstabilization at the lowest cost has become a key issue. This paper proposes three different\nenergy storage configuration strategies and adopts the non-dominated sorting genetic\nalgorithm (NSGA-II) to conduct multi-objective optimization of the system. NSGA-II\nperformed stably in dual-objective scenarios and effectively balanced the relationship\nbetween the investment cost of the energy storage system and power fluctuations through\nthe explicit elite strategy. Furthermore, this study analyzed the correlation between the\nrated power and rated capacity of the energy storage system and the battery life, and\ncorrected the battery life of the Pareto frontier solution obtained by NSGA-II. The research\nresults show that when only considering the investment cost of the energy storage, the\noptimal configuration was a rated power of 4 MW and a rated capacity of 28 MWh,\nwhich could better balance the investment economy and power fluctuation. When further\nconsidering the participation of energy storage systems in the electricity spot market, the\neconomic efficiency of the energy storage systems could be significantly improved through\nthe fixed-period electricity price arbitrage method. At this point, the optimal configuration\nwas a rated power of 8 MW and a rated capacity of 37 MWh. The corresponding project\ninvestment cost was CNY 242.77 million, and the annual fluctuation rate of the wind power\noutput decreased to 17.84%.\nKeywords: offshore wind power; multi-objective optimization; NSGA-II; power fluctuation",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the active promotion of the offshore wind power industry in China, by 2023,\nChina had secured the leading position in the global offshore wind power market. Neverthe-\nless, the output characteristics of offshore wind power generation show significant volatility,\nwhich undoubtedly increases the risk of instability in its grid-connected operation [1,2].\nIn view of this, the National Development and Reform Commission (NDRC) issued the\nEnergies 2025, 18, 3061 https://doi.org/10.3390/en18123061\nEnergies 2025, 18, 3061 2 of 20\n“Guiding Opinions on Encouraging renewable energy power generation Enterprises to\nBuild or Purchase peak load Capacity to expand the scale of grid-connected operations” [3].\nThis policy aims to ensure that new energy power companies have a sufficient proportion of\nenergy storage systems to cope with unstable output situations [4]. Electrochemical energy\nstorage technology has become the preferred solution for the vast majority of offshore\nwind power enterprises due to its cost effectiveness, rapid deployment advantages [5], and\nrelatively unrestricted geographical conditions [6–9].\nDomestic and foreign scholars have carried out in-depth research on the configuration\nof electrochemical energy storage in offshore wind farms. Paul et al. [ 10] proposed a\nnovel multi-objective optimization framework to determine the optimal capacity of battery\nenergy storage systems (BESSs) in the collaborative operation of large offshore wind farms\n(OWFs) and BESSs, taking into account the battery cost and life, as well as the availability\nof wind turbines. Tian et al. [11] used a hybrid hydrogen energy storage system to smooth\nthe output volatility of offshore wind power and discussed the relationship between\nthe abandoned air volume, volatility, and economy. The results show that the addition of\nhydrogen energy storage system will greatly reduce the economy of energy storage systems.\nWu et al. [12] proposed a voltage control method based on the reactive power coordination\nand electrochemical energy storage of wind farms, which can well improve the stability of\nthe grid-connected voltage of offshore wind farms. Mokhtare et al. [13] considered the rated\ncapacity and rated power configuration of an optimal battery energy storage system that\ngives priority to meeting the grid-connected requirements of offshore wind farms in order\nto achieve the highest economy. Li et al. [14] integrated a large-scale offshore wind power\nsystem, coupled thermal power station, electrochemical energy storage system, and floating\nphotovoltaic system to improve the overall economy and system performance. Based on\nthe configuration of battery energy storage in offshore wind power, supercapacitor energy\nstorage was added to prevent the over-charge and over-discharge of the battery so as to\nimprove the service life of the battery [15]. Studies on the deployment of electrochemical\nenergy storage in offshore wind farms have well revealed the help of electrochemical\nenergy storage for the grid connection of offshore wind farms, but there are few studies\non the relationship between the output power volatility and investment cost of offshore\nwind farms.\nMost studies addressing both the volatility and investment cost in offshore wind power\nsystems have investigated hybrid energy storage solutions. For example, Lu et al. [16] com-\nbined lithium-ion batteries with supercapacitors and applied wavelet decomposition to\nallocate high-frequency fluctuations to supercapacitors and low-frequency variations to\nbatteries. This hybrid configuration reduced the daily energy storage input costs by 2.79%\nand 3.84%, respectively, compared with standalone battery or supercapacitor schemes,\nwhile meeting volatility requirements. In another study, Lu et al. [17] evaluated a 2 MW\nwind farm equipped with a hybrid storage system that comprised electrolytic cells, fuel\ncells, and supercapacitors; the optimization of this configuration achieved a 41.1% reduc-\ntion in the annualized cost. Li et al. [ 18] proposed an electric–hydrogen hybrid storage\nsystem controlled via deep reinforcement learning to coordinate the battery and hydro-\ngen production unit operation. Their method reduced the average daily wind power\nfluctuation range from 20.11 MW to 5.74 MW—a 71.5% decrease—while enhancing the\nstorage utilization efficiency. Chen et al. [19] combined lithium-ion battery storage with ex-\npanded transmission capacity to improve the wind power utilization and lower the overall\ninvestment; they demonstrated that compared with merely upgrading the transmission\ninfrastructure, adding appropriately sized storage could achieve equivalent consumption\nlevels at a reduced cost. Most of these studies focused on the parameter changes of wind\nEnergies 2025, 18, 3061 3 of 20\nfarms themselves, without considering the impact of energy storage on the policy changes\nof the electricity market and participation in real-time electricity trading.\nThis study combined the latest policies of China’s electricity market, introduced the\nspot trading model, proposed and compared three different schemes considering the in-\nvestment cost and output power volatility of energy storage, considered them from the grid\nside and the power generation side, and used the change in SOC after configuring energy\nstorage to evaluate the actual lifespan of the energy storage battery in this project. In order\nto improve the reliability of the calculation examples, this study conducted a comparative\nanalysis using NSGA-II and the MOPSO algorithm, selected the better solutions of the two,\nand presented the optimal configuration with both the investment cost and power volatility\nunder different circumstances.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Offshore Wind Farm Equipped with Energy Storage Model",
+      "level": 1,
+      "text": "Construction and Constraints",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Offshore Wind Farm Equipped with Energy Storage Model Construction",
+      "level": 2,
+      "text": "Due to the intermittent and unpredictable characteristics of offshore wind farms,\nenergy storage systems can be configured to smooth the power fluctuations of wind power\ngeneration and improve its grid-connected stability and reliability [20–22]. Figure 1 shows\nthe simplified structure diagram of energy storage systems configured for general offshore\nwind farms. Through the application of energy storage systems, wind power output\nfluctuations can be significantly buffered, thereby improving the overall power quality. The\ncharge and discharge processes of the energy storage system are mainly realized through\nelectrochemical reactions, and its working state can be characterized by the change in the\nstate of charge (SOC) [ 23]. The SOC is an important parameter to measure the current\nenergy level of the energy storage system, and it is crucial to maintain the stable operation\nof the power grid. Assuming no performance degradation of the energy storage battery\nthroughout its lifecycle, the charge and discharge behavior of the energy storage system\ncan be simplified by expressing it in terms of the variation in the state of charge (SOC).\nFigure 1. System structure diagram of energy storage configuration for offshore wind farm.\nThe SOC real-time status during battery charge:\nSOC(t) = SOC(t − 1) +ηcPc∆t\nE (1)\nEnergies 2025, 18, 3061 4 of 20\nThe SOC real-time status during battery discharge:\nSOC(t) = SOC(t − 1) − Pd∆t\nηdE (2)\nLet SOC(t) be the state of charge at time t; ηc and ηd represent the charging efficiency\nand discharge efficiency, respectively; Pc and Pd be the charging power and discharge\npower; t be the time step; and E be the battery capacity. The energy storage system charges\nwhen the output power of offshore wind power is significantly higher than the daily\naverage, and discharges when the output power of the wind power is low in order to\nsmooth out the overall volatility of the wind power.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Objective Functions and Constraints",
+      "level": 2,
+      "text": "This study aimed to balance the investment cost of an energy storage configuration\nand the volatility of the output power of wind farms to pursue the smoothest wind power\noutput curve under the lowest investment cost.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.1 Objective Function",
+      "level": 3,
+      "text": "Considering the two goals of minimizing the cost of the energy storage configuration\nand smoothest wind power output, the investment cost of the energy storage configuration\nis Ca:\nCa = C1 + C2 + C3 + C4 (3)\nwhere C1 represents the initial investment cost of the electrochemical energy storage,C2 rep-\nresents the operation and maintenance cost of the energy storage system, C3 represents the\nreplacement cost of the energy storage system, and C4 represents the waste disposal cost of\nthe energy storage system. The initial investment cost of the energy storage system consists\nof the energy conversion cost and the energy storage system cost, which is estimated as\nfollow according to the rated power and rated capacity of the energy storage [24]:\nC1 = kpPes + kqSes (4)\nwhere kp is the cost factor related to the energy storage power, kq is the cost factor related\nto energy storage capacity, Pes is the rated power of energy storage, and Ses indicates the\nrated capacity of energy storage. The annual operation and maintenance cost of the energy\nstorage system is composed of the operation cost and maintenance cost, in which the\noperation cost is determined by the electricity released by the energy storage system every\nyear, and the maintenance cost is generated by regular manual maintenance and manual\ninspection. The cost is calculated as follows [24]:\nC2 = kFPes + kVQ+\nann (5)\nwhere kF represents the unit price of the energy storage system operation and maintenance,\nkV is the discharge price of the energy storage system, and Q+\nann indicates the annual\ncumulative discharge of the energy storage system. The replacement cost refers to the sum\nof the costs generated by each replacement of energy storage when the energy storage life\ncycle is less than the operation cycle of the entire project, as shown below [24]:\nC3 = kqSes\nτ\n∑\nβ=1\n(1 − α)βα\n(1 + i)βα (6)\nwhere α is the annual decline rate of the energy storage installation costs; τ indicates the\ntotal number of energy storage replacements, τ = n/a − 1 and a stands for the storage\nEnergies 2025, 18, 3061 5 of 20\nlife, where if n/a − 1 is not an integer, τ is entered as an integer; and β is the order of the\nbattery body replacement times. The waste disposal cost refers to the cost to be paid for the\ntreatment of the energy storage equipment after the end of its life, including the residual\nvalue of the equipment and environmental protection costs. The cost can be calculated as\nfollows [24]:\nC4 = Cen\nτ\n∑\nβ=1\n1\n(1 + i)βα (7)\nwhere Cen stands for the environmentally sound disposal cost. The smoothness of the wind\npower output can be measured by the relative standard deviation as follows:\nσ = 1\nPN\nvuut 1\nN\nN\n∑\nt=1\n\u0000\nPt − P\n\u00012 (8)\nwhere N indicates the number of sampling points, and Pt represents the sampled value at\ntime t, which corresponds to the wind power at time t. P represents the mean of the sample\npoints and PN indicates the rated power of wind power. A smaller σ indicates a smoother\nwind power output.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.2 Condition of Constraint",
+      "level": 3,
+      "text": "In electrochemical energy storage systems, specific constraints must be followed to en-\nsure safety and efficiency, which are mainly divided into two aspects: SOC (state of charge)\nconstraints and power constraints. The SOC constraint equation ensures that the battery\noperates at a safe level of charge and discharge to avoid damage to the battery caused by\nexcessive charge and discharge. The SOC limits need to meet the following conditions:\nSOCmin ≤ SOC(t) ≤ SOCmax (9)\nwhere SOCmin and SOCmax represent the minimum and maximum allowable values of the\nbattery SOC, respectively. The power constraint equations define the maximum charge and\ndischarge power allowed by the battery system at a specific time to avoid overheating of\nthe system and potential damage, and the constraint equations are as follows:\n0 ≤ Pc(t) ≤ Pc,max (10)\n0 ≤ Pdc(t) ≤ Pdc,max (11)\nwhere Pc,max and Pdc,max are the maximum allowable charging power and maximum dis-\ncharging power, respectively . The active power change of the wind farm includes the active\npower change over 1 min and the active power change over 10 min. In order to meet the\nrequirements of the safe and stable operation of the power system when the wind power\nis connected to the grid, the power change of the wind farm should meet the requirements\nof Table 1.\nTable 1. Wind farm power change constraints.\nInstalled Capacity of Wind\nFarms PN/MW\nMaximum Change Limit of\nActive Power in 10 min/MW\nMaximum Change Limit of\nActive Power in 1 min/MW\nPN < 30 10 3\n30 ≤ PN ≤ 150 P N/3 P N/10\nPN > 150 50 15\nEnergies 2025, 18, 3061 6 of 20",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Configuration Schemes",
+      "level": 2,
+      "text": "In order to comply with the reform policies of China’s electricity market, various\nregions have actively promoted spot trading in the electricity market in recent years.\nBased on the spot trading prices in Guangdong Province in 2024, this paper proposes an\noptimization plan for the configuration of energy storage batteries in combination with the\nspot market and presents the following three specific schemes from the perspectives of the\npower grid side and the power generation side.\nScheme 1: Only the relationship between the investment cost and the volatility of\nenergy storage batteries was considered. The investment cost took into account the initial\ninvestment, battery replacement cost, and annual maintenance cost.\nScheme 2: While considering the investment cost of the energy storage batteries, we\ntook into account the annual electricity sales revenue of the batteries and wind power based\non real-time spot prices. We subtracted the revenue from the investment cost as the cost. If\nthe cost was negative, it indicated that the annual electricity sales revenue of the wind farm\nplus batteries could cover the investment cost of the energy storage batteries.\nScheme 3: Considering the peak–valley difference arbitrage ability of energy storage\nbatteries, and in combination with the trend of spot electricity prices, energy storage\nbatteries were only charged and not discharged during the low-electricity-price period, and\nonly discharged and not charged during the high-electricity-price period. This maximized\nthe peak–valley difference arbitrage ability of energy storage batteries and strived for the\nmaximum electricity sales revenue for power plants.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Methods",
+      "level": 1,
+      "text": "In this study, Python 3.8 was adopted, and the capacity optimization of offshore wind\npower equipped with electrochemical energy storage was carried out by using NSGA-II\nthrough the imported SYS module. In this study, NSGA-II was used to optimize the ca-\npacity of offshore wind power equipped with electrochemical energy storage. Based on\ngenetic algorithms, the algorithm significantly reduced the computational complexity and\nmaintained population diversity through a fast non-dominated sorting process, density es-\ntimation (using crowding distances), and an explicit selection mechanism [25]. In NSGA-II,\nthe crowding distance was used to measure the distribution density of individuals in the\nobjective space [26]. For the middle individual, the crowding distance is the sum of the dif-\nferences between the individual and the neighboring individuals in all objective functions.\nSpecifically, for the ith individual, the crowding distance is calculated as follows [27]:\ndi =\nM\n∑\nm=1\nfm(i + 1) − fm(i − 1)\nf maxm − f minm\n(12)\nwhere M is the number of objective functions; fm(i) is the value of individual i on the\nMth objective function; and f max\nm and f min\nm are the maximum and minimum values of this\nobjective function in the population, respectively. The introduction of the crowding distance\ntakes into account the distribution of individuals and avoids the selection of individuals too\nconcentrated in some areas so as to maintain the diversity of the population and improve\nthe search ability and convergence of the algorithm. Sun et al. enhanced NSGA-II to\noptimize the multi-objective configuration of wind and hydrogen systems, demonstrating\nthat the total system cost was reduced by CNY 18 million through the introduction of\nan elite strategy [ 28]. This study utilized NSGA-II to optimize the capacity of offshore\nwind power integrated with electrochemical energy storage. It thoroughly analyzed the\nperformance data of offshore wind farms and preliminarily established a potential range for\nenergy storage capacity, and thus, reduced the computational effort required in subsequent\nEnergies 2025, 18, 3061 7 of 20\noptimization steps. In this study, the energy storage power was randomly initialized\nwithin the range of 0 to 12 MW, and the rated capacity was randomly initialized within\nthe range of 0 to 48 MWh. An initial population of 20 individuals was generated, with\neach individual representing a potential energy storage configuration. In each generation,\n60 offspring were produced through genetic operations, and 20 individuals were selected\nto form the next generation to maintain a constant population size. The crossover and\nmutation probabilities were both set to 0.5, and the algorithm iterated for 300 generations.\nThe simplified procedural steps are illustrated in Figure 2 and described as follows:\nFigure 2. Flowchart of NSGA-II simplification.\nEnergies 2025, 18, 3061 8 of 20\nStep 1: The relevant parameters of the offshore wind power plant were input, the\nfeasible ranges for rated power and capacity of the energy storage system were defined,\nand these variables were encoded into two-dimensional individuals to form the initial\npopulation. Each individual was evaluated using the objective function and constraints to\nensure compliance with initial conditions.\nStep 2: Genetic operators were defined with crossover and mutation probabilities\nset at 0.5. Twenty energy storage configurations were randomly generated and their\nperformances and feasibilities were evaluated.\nStep 3: Evolutionary operations, including reproduction, evaluation, parent–offspring\nmerging, and selection, were conducted over 300 generations to derive a convergent and\ndiverse Pareto front.\nStep 4: The optimal solutions were extracted by analyzing the 20 sets of rated power\nand capacity data, along with their corresponding objective values. Configurations that\nmet the desired criteria were identified based on the relationship between the rated power\nand capacity, and the results were visualized.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 Results",
+      "level": 1,
+      "text": "This study selected a 40 MW wind farm in Wan’an County composed of 16 wind\nturbines with a single-unit power of 2.5 MW as the research object. The output power data\nof the wind turbines of this wind farm throughout 2023 was selected as the reference for\nthe energy storage configuration. In order to explore the relationship between the rated\npower and rated capacity of the energy storage configuration and the life of energy storage\nbatteries, first, we selected the typical weeks when the proportion of wind power output\ntime exceeds 80% for research according to Scheme 1 (the period from 9 to 15 December\nwas selected for this study). The cost parameters utilized in this analysis are detailed\nin Table 2. Given the significant regional variations in the electrochemical ESS disposal\ncosts, this factor was excluded from the current calculation, which potentially led to a\nconservative estimate of the investment costs. The operational lifespan of the ESS was set\nat 25 years. Considering that the typical cycle life of electrochemical storage equipment\nwas approximately 8000 cycles with a service life of around 10 years, it was anticipated\nthat the battery system will require two replacements over the entire operational period.\nIn this study, the volatility of the wind power output was analyzed by configuring an\nenergy storage system (ESS) to align the instantaneous wind power output with the daily\naverage power. The daily average power was calculated as the mean of 144 ten-minute\ninterval power recordings per day. For the period from 9 to 15 December, the output power\nsmoothness index σ0 of the wind farm without the ESS configuration was calculated to\nbe 27.23%. The reduction rate in the output power volatility λ achieved through the ESS\nconfiguration was calculated as follows:\nλ = σ0 − σ\nσ (13)\nTable 2. Wind farm power change constraints [24].\nParameter Value Unit\nCost factor related to energy storage power (kp) 5,000,000 CNY/MW\nCost factor related to storage capacity (kq) 6,000,000 CNY/MW\nUnit price of energy storage system operation and maintenance (kF) 500 CNY/MW\nThe discharge price of energy storage system (kV) 300 CNY/MW\nAnnual decline rate of energy storage installation costs (α) 5 %\nTotal number of energy storage replacements (τ) 2 times\nEnergy storage life (a) 10 years\nBattery cycle life (N) 8000 times\nEnergies 2025, 18, 3061 9 of 20\nFigure 3 shows the Pareto frontier obtained by NSGA-II, which reflected the opti-\nmal allocation of the energy storage capacity and power under different cost constraints.\nFigure 4 and Figure 5 respectively show the impacts of changes in the rated power and\nrated capacity of energy storage system on the overall investment cost of the energy storage\nsystem and the output power fluctuation of offshore wind power after storage. In this\nstudy, the rated power variation range of the energy storage system was set at 10–30% of\nthe rated power of wind farm. At the same time, the continuous working time of the energy\nstorage was changed from 1 h to 4 h. Through the analysis, it is found that with the increase\nin the power and capacity of the energy storage system, the output power volatility of the\nwind farm after the configuration of the energy storage decreased from 22.48% to 18.63%,\nthe volatility reduction rate increased from 5.29% to 21.18%, and the investment cost of\nthe energy storage system increased from CNY 67.04 million to CNY 520.45 million. This\ntrend suggests that in order to achieve better smoothing, more energy storage systems are\nneeded to smooth out the wind power output fluctuations and reduce its instability. In\naddition, with the increase in cost, we observed that the overall smoothness of the output\npower curve after the allocation of wind power storage was significantly improved.\nFigure 3. Pareto frontier of NSGA-II multi-objective optimization.\nHowever, in the process of optimizing the configuration of the energy storage system\nby NSGA-II, the potential impacts of the rated power and rated capacity on the life of\nthe energy storage battery must be carefully considered. Changes in these parameters\nwill directly affect the SOC state of the battery at various points in time, thus having a\ndecisive impact on its service life. Table 3 shows the cycle times of the energy storage battery\ncorresponding to each optimization solution on the Pareto front and its estimated life period,\nwhile Figure 6 reflects the distribution of the Pareto front after the life correction. The\nanalysis shows that in the case of a low-rated-power and low-rated-capacity configuration\nof the energy storage system, the charge and discharge frequency of the battery per unit\ntime will increase and the depth of charge and discharge will be intensified, which will\nundoubtedly accelerate the aging process of the battery and greatly reduce its service life.\nAs a result, the frequency of battery replacement will increase throughout the life cycle\nof the energy storage system, which will negatively affect the overall economic operating\nEnergies 2025, 18, 3061 10 of 20\nefficiency of the system. In order to quantify the specific effects of the rated power and\nrated capacity on the life of energy storage batteries, a multiple linear regression model\nwas used for the fitting analysis. The model was able to establish the statistical correlation\nbetween the storage battery life Y and its rated power Pes and rated capacity Ses:\nY = 3.73292 − 0.05076Pes + 0.22835Ses (14)\nFigure 4. Influence of rated power and rated capacity on energy storage investment cost.\nFigure 5. Influence of the rated power and rated capacity on the output power fluctuation of offshore\nwind power.\nEnergies 2025, 18, 3061 11 of 20\nTable 3. Comparison of cycle times and expected service life of energy storage batteries with different\nsolutions on Pareto front.\nLeading Edge Point Cycle Number Expected Service Life/Year\n(4, 4) 35 4.1\n(6, 6) 33 4.4\n(8, 8) 30 4.8\n(8, 11) 25 5.8\n(9, 13) 23 6.3\n(7, 16) 19 7.7\n(9, 21) 17 8.6\n(8, 25) 15 9.7\n(10, 27) 15 9.7\n(12, 33) 14 10.4\n(10, 37) 13 11.2\n(10, 40) 12 12\nFigure 6. Pareto front after life correction.\nWhen predicting the service life of the energy storage battery, the fitting degree\nR2 = 0.96965 shown by the multiple linear regression model indicates that the model had a\nhigh degree of agreement with the actual data, which provides strong confidence for our\nprediction. Through this model, we found that the service life of the energy storage battery\nwas mainly affected by the rated capacity, and this impact showed a positive correlation.\nSpecifically, when the rated capacity of the energy storage system was small, the actual cost\nwas often higher than the expected cost simulated by NSGA-II. When the rated capacity\nwas large, the actual cost could be lower than the cost of the algorithm simulation. This\nfinding reveals that in the process of optimal allocation, relying only on the Pareto frontier\nobtained by NSGA-II may lead to a biased estimation of the economy. Therefore, in order\nto ensure an economic evaluation closer to the real situation, the Pareto frontier generated\nby NSGA-II must be modified based on the energy storage battery life. The Pareto frontier\nafter the life correction is shown in Figure 6, which provides us with a more accurate and\npractical decision basis. Through in-depth analysis and correction of the energy storage\nbattery life, the impact of the rated capacity on the cost of the energy storage system could\nbe more comprehensively understood.\nEnergies 2025, 18, 3061 12 of 20\nFigure 7 and Figure 8 respectively show the comparison of the output power before\nand after the wind farm was configured with 10% energy storage and 25% energy storage.\nIt can be clearly seen that the overall output curve was smoother when the wind farm\nwas configured with a high proportion of energy storage. Figures 9 and 10 show the state\ncharge (SOC) change curve of the energy storage system batteries with different proportions\nof energy storage, ",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f8",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t3",
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "System structure diagram of energy storage configuration for offshore wind farm."
+    },
+    {
+      "id": "f2",
+      "caption": "Flowchart of NSGA-II simplification."
+    },
+    {
+      "id": "f3",
+      "caption": "shows the Pareto frontier obtained by NSGA-II, which reflected the opti-"
+    },
+    {
+      "id": "f4",
+      "caption": "and Figure 5 respectively show the impacts of changes in the rated power and"
+    },
+    {
+      "id": "f5",
+      "caption": "Influence of the rated power and rated capacity on the output power fluctuation of offshore"
+    },
+    {
+      "id": "f6",
+      "caption": "Pareto front after life correction."
+    },
+    {
+      "id": "f7",
+      "caption": "and Figure 8 respectively show the comparison of the output power before"
+    },
+    {
+      "id": "f8",
+      "caption": "Comparison of system output power before and after 10 MW/40 MWh storage."
+    },
+    {
+      "id": "f9",
+      "caption": "SOC change curve of energy storage system with rated power of 4 MW."
+    },
+    {
+      "id": "f10",
+      "caption": "SOC change curve of energy storage system with rated power of 10 MW."
+    },
+    {
+      "id": "f11",
+      "caption": "The annual Pareto frontier obtained by NSGA-II."
+    },
+    {
+      "id": "f12",
+      "caption": "The annual Pareto frontier obtained by MOPSO."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Wind farm power change constraints."
+    },
+    {
+      "id": "t2",
+      "caption": "Wind farm power change constraints [24]."
+    },
+    {
+      "id": "t3",
+      "caption": "Comparison of cycle times and expected service life of energy storage batteries with different"
+    },
+    {
+      "id": "t5",
+      "caption": "reports the ξ values on the Pareto front produced by NSGA-II, while Table 6"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 12,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

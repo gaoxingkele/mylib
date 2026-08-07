@@ -1,0 +1,243 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/elsevier-journal-of-energy-storage/elsevier-journal-of-energy-storage__2024__review_of_battery_state_estimation_methods_for_electric__3af63ecf1a.pdf",
+  "n_pages": 41,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2024 Document Version",
+      "level": 1,
+      "text": "Early version, also known as pre-print\nLink to publication from Aalborg University\nCitation for published version (APA):\nDemirci, O., Taskin, S., Schaltz, E., & Acar Demirci, B. (2024). Review of battery state estimation methods for\nelectric vehicles - Part I: SOC estimation. Journal of Energy Storage, 87, Article 111435.\nhttps://doi.org/10.1016/j.est.2024.111435\nGeneral rights\nCopyright and moral rights for the publications made accessible in the public portal are retained by the authors and/or other copyright owners\nand it is a condition of accessing publications that users recognise and abide by the legal requirements associated with these rights.\n            - Users may download and print one copy of any publication from the public portal for the purpose of private study or research.\n            - You may not further distribute the material or use it for any profit-making activity or commercial gain\n            - You may freely distribute the URL identifying the publication in the public portal -\nTake down policy\nIf you believe that this document breaches copyright please contact us at vbn@aub.aau.dk providing details, and we will remove access to\nthe work immediately and investigate your claim.\nDownloaded from vbn.aau.dk on: August 05, 2026\nReview of Battery State Estimation Methods for Electric Vehicles - Part I: SOC Estimation \nOsman Demircia*                    Sezai Taskinb                              Erik Schaltzc                     Burcu Acar Demircib \na*Department of Electronics & Automation, Manisa Vocational School of Technical Sciences, Manisa Celal Bayar \nUniversity, 45140, Manisa, Turkey, E-mail: osman.demirci@cbu.edu.tr  \nbDepartment of Electrical & Electronics Engineering, Manisa Celal Bayar University, 45140, Manisa, Turkey \nE-mail: sezai.taskin@cbu.edu.tr      E-mail: burcu.acar@cbu.edu.tr \ncDepartment of Energy, Aalborg University, 9220, Aalborg, Denmark, E-mail: esc@energy.aau.dk \n \n \nAbstract \nThis study presents a comprehensive review of State of Charge (SOC) estimation methods for Lithium-Ion (Li-Ion) \nbatteries, with a specific focus on Electric Vehicles (EVs). The growing interest in EVs and the need for efficient battery \nmanagement have driven advancements in SOC estimation techniques. Various approaches, including data-driven \ntechniques, advanced filtering methods, and machine learning algorithms have been explored to enhance SOC estimation \naccuracy. The integration of artificial intelligence and hybrid models has shown promising results in improving SOC \nestimation performance. However, challenges remain in dealing with non-linear battery behavior, temperature variations, \nand diverse operating conditions. Researchers are continuously studying to improve the robustness and adaptability of \nSOC estimation methods to address these challenges. The primary objective of this study is to provide an up-to-date \nsummary of the latest advancements in SOC estimation, offering insights into innovative approaches and developments \nin this field. All existing SOC methods, their advantages, challenges, and usage rates have been comprehensively \nexamined with a specific focus on EV battery management systems. As the EV market continues to expand, accurate \nSOC estimation will remain essential for optimal battery management and overall EV performance. Future research will \nfocus on refining existing algorithms, exploring new data-driven techniques, and integrating advanced sensor \ntechnologies to achieve real-time and reliable SOC estimation in EVs. \n \nKeywords: Battery management system (BMS), state of charge (SOC) estimation, lithium-ion, electric vehicles (EVs) \n \n \n \n \n \n \nNomenclature \nBMS Battery Management System \nSOC State of Charge \nLi-Ion Lithium-Ion  \nEVs Electric Vehicles  \nSOH State of Health",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "Coulomb Counting",
+      "level": 1,
+      "text": "OCV Open-Circuit Voltage \nEIS Electrochemical Impedance Spectroscopy \nECM Electrical Circuit Model \nEChM Electrochemical Model \nKF Kalman Filter \nRLS Recursive Least Squares Method \nH∞ H-Infinity \nEKF Extended Kalman Filter \nAEKF Adaptive Extended Kalman Filter \nSCKF Square Root Variant of the Cubature Kalman Filter \nIEKF Invariant Extended Kalman Filter \nANFIS Adaptive Neuro-Fuzzy Inference System \nGA Genetic Algorithm \nANN Artificial Neural Networks \nDL Deep Learning \nFL Fuzzy Logic \nSVM Support Vector Machine \nFNN Feedforward Neural Networks \nBPANN Backpropagation Artificial Neural Network \nRNN Recurrent Neural Networks \nLSTM Long Short-Term Memory \nRBFNN Radial Basis Function Neural Networks \nDNN Deep Neural Network \nTL Transfer Learning \nTCN Temporal Convolutional Network \nCNN Convolutional Neural Network \nBWGRU Bidirectional Weighted Gated Recurrent Unit  \nMARS Multivariate Adaptive Regression Splines \nPSO Particle Swarm Optimization \nSVSF Smooth Variable Structure Filter  \nSMO Sliding Mode Observer  \nMGLO Multi-Gain Luenberger-Based Observer \nHCOAG Hybridizing Coyote Optimization Algorithm  \nSMC Sequential Monte Carlo  \nPF Particle Filter \nSOT State of Temperature  \nRMSE Root Mean Square Error \nMAE Mean Absolute Error \nBESS Battery Energy Storage System",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Global warming, the adverse environmental effects of fossil fuels, sustainability policies, environmental concerns, \nzero carbon emission goals, and advancements in battery technologies have been driving increased interest in EVs. In the \nearly 2000s, EVs were still in the development stage. Limited progress in battery technologies resulted in low range \ncapacities and high battery pack costs, which, in turn, led to low interest in EVs [1]. However, since the 2010s, \nadvancements in battery technologies, longer-range capabilities, and fast charging technologies have further boosted the \nappeal of EVs. From the 2020s onwards, especially with the increase in range capacities, EVs have become a strategic \ntarget for automotive manufacturers. Many automotive companies have started to focus on EV models, leading to \naccelerated infrastructure development and an increase in the number of charging stations. According to the \"Global EV \nOutlook 2023\" report published by the International Energy Agency, there has been a notable increase in the total number \nof EVs worldwide between 2010 and 2022 [2]. \nEVs offer a cleaner and more sustainable transportation option, but ensuring the safe operation of the batteries, their \nreliability, and driving safety are of extreme importance [3]. Li-Ion batteries, a type of rechargeable battery that relies on \nthe movement of lithium ions between electrodes, have gained popularity due to their high energy density, lightweight, \nand fast charging and discharging capabilities [4]. As the EV market has grown and developed, the cost of Li-Ion batteries \nhas decreased while their efficiency has increased. As a result, Li-Ion batteries have become a widespread and effective \nenergy storage solution for EVs. EV manufacturers can produce vehicles with higher performance, longer range, and \nbetter driving experiences by using Li-Ion batteries. Based on data extracted from the Global Electric Vehicle Battery \nMarket for the year 2022, the market's dimensions in this domain stood at $50.5 billion. Projections suggest notable \ngrowth, with an anticipated substantial rise to $500 billion by 2032 [5].  \nLi-Ion batteries require electronic control systems known as Battery Management System (BMS) to operate efficiently \nand safely. BMS continuously monitors important parameters such as voltage, current, temperature, and capacity to assess \nthe battery's charging and health status [6]. It prevents the battery from encountering harmful conditions such as \novercharging, over-discharging, extreme temperatures, and overcurrent, which could lead to physical damage and \npremature end of life. In systems where multiple cells/batteries are connected in series and/or parallel, ensuring that the \nbatteries can charge, and discharge equally is crucial for effective energy usage and extended battery life [7]. BMS \nperforms various functions, including disabling the battery system and activating the cooling system when thermal and \nelectrical limits are exceeded to protect the safety of drivers and equipment’s [8]. It also balances the charge among \nbatteries/cells within the system [9]. Additionally, BMS communicates with other vehicle systems (e.g., vehicle control \nunits) through communication protocols such as CAN-Bus to transfer data about battery status, performance, and potential \nerrors [10].  \nBattery state estimation, also known as battery SOC and State of Health (SOH) estimation, refers to the process of \npredicting a battery's current state and its future performance [11]. Determining critical parameters like the battery's \ncharge level, capacity, voltage, internal resistance, and remaining life is crucial for safe and efficient battery use, extending \nits lifespan, and preventing undesirable situations [12]. SOC is defined as the amount of energy stored in the battery and \nshows the current charge level of the battery. SOC estimation is a critical indicator used to determine when to charge or \ndischarge the battery by monitoring its voltage, current, temperature, and other parameters [13]. SOH estimation is used \nto predict the battery's current capacity or energy storage capability [14]. Capacity estimation involves determining the \nactual capacity of the battery and assessing factors such as capacity degradation or changes, which are important for \nevaluating the battery's lifespan, performance, and reliability [15]. Battery state estimation is typically achieved using \nstatistical or mathematical models [16], filtering techniques [17], and data-driven methods [18]. It involves making \npredictions at both the cell and pack levels based on previous usage data, calibration data, and cell characteristics [19]. \nData-driven estimation methods offer higher accuracy in battery state estimation than traditional methods [20]. \nUndoubtedly, the growth of the EV market will result in a significant increase in demand for Li-Ion-based battery systems. \nConsequently, the utilization of BMSs, crucial for Li-Ion battery packs, is expected to enhance performance standards.  \nAs the EV market continues to growth, there will be a greater emphasis on developing more advanced and efficient \nBMS to guarantee the safe and optimal operation of Li-Ion battery packs. In the forthcoming years, advancements in \nbattery state estimation accuracy, real-time monitoring capabilities, thermal management, and overall system reliability \nwill be realized in the market. It is imperative to meet these elevated performance expectations, as it plays a pivotal role \nin facilitating the widespread adoption and success of EVs.  \nAccurate SOC estimation holds significant importance for several reasons: (i) it directly influences range estimation, \n(ii) it is essential for optimizing energy management, ensuring efficient power distribution and utilization, and (iii) it is \ncrucial for the health of the battery, preventing conditions such as overcharging or deep discharging. In summary, precise \nSOC estimation is paramount for range prediction, energy optimization, battery health, and overall safety, making it a \ncentral focus within the multifaceted functions of the BMS in EVs. \nThe main objective of this study is to present the latest assessments related to SOC estimation methods. This review \nincorporates recent studies and comprehensive literature on battery SOC estimation, emphasizing the latest approaches \nand advancements in this field. Considering existing studies in the literature, the primary contribution of this review is \nthe specific evaluation of battery SOC methods in BMSs, particularly in the context of EV systems. In line with this \nobjective, all existing SOC methods have been examined, and their advantages and challenges in the context of EVs have \nbeen compared. This study establishes a foundation for refining existing algorithms and developing new data-driven \ntechniques, shaping the trajectory of real-time SOC estimation advancements in the expanding EV market.  \n \nThe organization of the remaining part of the study is as follows: Section 2 details BMS functions and challenges, \nSection 3 systematically elaborates on different SOC estimation methods and their associated challenges, and Section 4 \nprovides various comparisons of SOC estimations. Section 5 includes concluding remarks and outlines future work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Battery Management Systems",
+      "level": 1,
+      "text": "BMS controls the battery’s charge and discharge processes [21]. The primary task of a BMS is to continuously monitor \nparameters such as current, voltage, temperature, and capacity of the battery to assess its SOC and SOH [22]. These \nfunctions ensure safe charging, protection from over-discharging, optimum performance, and safe, efficient, and long-\nlasting operation of batteries [23]. The fundamental functions of BMSs in EVs and the challenges in this field are outlined \nbelow.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Functions of a BMS",
+      "level": 2,
+      "text": "The BMS plays a significant role in overseeing and optimizing the performance of battery systems. By monitoring \nvarious parameters and ensuring safe operation, it is essential for the efficient functioning and longevity of batteries in a \nwide range of applications [24]. Furthermore, the BMS is responsible for estimating the SOC, SOH, and managing the \noverall safety of the battery pack [25]. \nThe BMS takes measures for overcharging, over-discharging, and abnormal temperature changes in the battery pack. \nIts aim is to mitigate dangers such as short circuit and overcurrent, ensuring battery safety. By closely supervising and \ncontrolling, the BMS acts as a protective measure, reducing risks and maintaining battery integrity effectively [26]. The \nBMS is instrumental in facilitating efficient charging and discharging processes, thereby enabling optimal performance, \nextended battery life, and improved energy efficiency [27]. Additionally, the BMS is required to balance the charge and \ndischarge of series or parallel-connected cells evenly, minimizing voltage differences between cells to ensure cell voltage \nbalance. It achieves cell balancing through various techniques such as active and passive balancing or hybrid methods \n[28]. Passive balancing involves dissipating excess charge from higher voltage cells as heat, utilizing resistors or other \nelectronic components. Active balancing transfers charge between cells using switching circuits to achieve a balanced \ncondition [29].  \nThe BMS should continuously monitors the some parameters including temperature, current, and voltage of each cell, \nconducting necessary evaluations for the healthy operation of cells [30]. The BMS also should monitor the battery's \ntemperature and activate cooling systems, such as air or liquid cooling, to protect the battery from excessive heat [31].  \nThe BMS should possess the capability to communicate with other systems, such as the vehicle control system, allowing \nbidirectional data transfer [32]. Its remote access and diagnostics feature allows monitor the battery's status in real-time \n[33]. When issues are detected, remote intervention can prevent overcharging, disable faulty cells, or plan maintenance \nand repairs [34]. The design of the BMS can be customized based on specific application requirements, priorities, and the \ninclusion of additional features. An example of a BMS functions for EVs is illustrated in Figure 1. \n \n \nFig.1. An example of a BMS functions for a Battery Energy Storage System (BESS).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Challenges in BMS",
+      "level": 2,
+      "text": "The BMS plays a crucial role in ensuring the safe and efficient operation of batteries. However, it also encounter \nseveral challenges that need to be addressed for optimal performance [26]. Achieving accurate and reliable state \nestimation is a challenging task due to battery characteristics' variations, aging, and environmental conditions [35]. \nBalancing the charge across individual battery cells to prevent overcharging or undercharging can be a complex task, \nparticularly in large battery packs with varying cell characteristics [36].  \nOvercharging can damage cells, leading to improper functioning or failure. If certain cells in the setup have lower \ncapacity than others, they may experience overcharging, ultimately resulting in system failure [37]. Fast charging \ngenerates a significant amount of heat, which can degrade the battery if not managed properly. BMS must regulate the \ncharging rate and temperature to maximize charging speed while maintaining safety and longevity [38]. Establishing \nreliable communication between the BMS and other vehicle systems or external devices may pose challenges, especially \nin complex and interconnected architectures. The BMS must seamlessly integrate with other vehicle systems, including \nthe motor controller and regenerative braking system. Effective communication ensures smooth operation and energy \nrecovery [39].  \n\nThe BMS should estimate for battery aging and degradation over time, ensuring accurate monitoring and \ncompensation for reduced capacity [40]. Addressing these challenges is important in the development of resilient and \nreliable BMSs. The most significant challenges related to BMS are summarized in Figure 2.  \n \nFig.2. The important challenges in BMS for EVs \nThe enumerated functions in the Figure 2 collectively constitute integral facets of the BMS for EVs. State estimation \naccuracy serves as the foundational cornerstone, facilitating precise energy monitoring, while strategies pertaining to \naging mechanisms significantly contribute to the extension of battery lifespan. The imperative function of cell balancing \nlies in ensuring the uniform distribution of energy, while steadfast adherence to regulatory and standards ensures not \nonly safety but also compliance with industry benchmarks. Thermal management meticulously optimizes temperature \nconditions, and the seamless facilitation of communication and networking enhances interaction. Remote access and \ndiagnostics elevate monitoring and troubleshooting capabilities, while scalability and flexibility accommodate diverse \nconfigurations. Safety and fault management proactively address potential hazards, with energy management standing as \nthe overarching function orchestrating efficient power utilization.  Accurate SOC estimation is crucial for BMS \ndevelopment, ensuring optimal energy management and overall battery health.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 State of Charge Estimation Methods",
+      "level": 1,
+      "text": "SOC represents the maximum discharge capacity of a battery under specific temperature and discharge rate conditions, \nensuring the battery remains undamaged. Typically, it is expressed as a percentage (%), indicating the remaining capacity \nrelative to the rated capacity [41]. \n𝑆𝑂𝐶 (𝑡) =  ொೝ (௧)\nொ೘ೌೣ (௧)  ×  100  [%]                                                                                                                                                (1) \n\nwhere Qr is the remaining capacity of a battery, and Qmax is the maximum possible discharge capacity at rated temperature \nand C-rate. This capacity decreases as the battery ages. Due to the influence of factors such as charge rate, discharge rate, \ntemperature, self-discharge, efficiency factor, and battery aging, the definition of SOC requires adjustments in practical \napplications. Based on this definition, the SOC equation is derived as follows: \n𝑆𝑂𝐶(𝑡)=  𝑆𝑂𝐶଴−\nఎ ∫ ௜ (௧)ௗ௧೟\n೟బ\nொ೙\n                                                                                                                                             (2) \nIn the Eq.2, SOC0 represents the initial value of 𝑆𝑂𝐶(𝑡), and 𝑖(𝑡) denotes the real-time current. The symbol 𝜂 \nrepresents the efficiency factor, accounting for the energy losses during charging and discharging processes in a battery. \nIt is a dimensionless parameter typically ranging from 0 to 1, where 1 represents perfect efficiency (no energy losses). \nValues below 1 account for the actual efficiency of the battery system, considering factors such as heat dissipation and \ninternal resistances.  The Eq.2 shows that the SOC estimation method relies on idealized estimations grounded in ampere-\nhour measurements. However, obtaining the precise initial value of SOC in this method proves challenging, causing \ninconvenience in its practical application [42]. Accurate SOC estimation is one of the most critical components of a BMS, \nas it performs tasks such as informing the user about the expected usage until the next charge, keeping the battery within \na safe operating range, implementing control strategies, and ensuring efficient utilization of battery life [41,43,44]. The \ndetermination of battery SOC is a complicated procedure influenced by both the battery's type and its application context \n[45]. In recent years, numerous research and development efforts have been conducted to improve the accuracy of SOC \nprediction [46–48]. The SOC estimation in the literature can be categorized into two main groups: (i) direct measurement, \nand (ii) indirect analysis methods. SOC estimation methods for EVs are given in Figure 3.  \n \nFig.3. SOC estimation methods for EVs",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1 Direct Measurement Methods",
+      "level": 2,
+      "text": "Direct battery SOC estimation aims to determine the charge level of the battery using its physical properties or \ncharacteristics [49]. In this approach, SOC is estimated by using measurable factors, including voltage, current, and \ntemperature. There are three main methods for direct SOC estimation: (i) Coulomb Counting (CC), (ii) Open-Circuit \nVoltage (OCV), and (iii) Electrochemical Impedance Spectroscopy (EIS).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1.1 Coulomb Counting (CC)",
+      "level": 3,
+      "text": "In this method, the SOC of a battery is estimated by counting the amount of electric charge (coulombs) entering or \nleaving the battery. In the CC method, while the battery is being charged, the total incoming current is accumulated, \nleading to an increase in the battery's SOC. Similarly, during discharging, the total outgoing current is accumulated, \nresulting in a decrease in the battery's SOC. The SOC value is then calculated by integrating the charge or discharge \ncurrent over time. For accurate predictions using this method, the initial SOC of the battery needs to be known [50]. The \nestimation equation using the coulomb counting method can be expressed as: \n𝑆𝑂𝐶(𝑡)=  𝑆𝑂𝐶(𝑡଴)+ ଵ\n஼೙\n ×∫ 𝑖௕௔௧(𝑑𝑡)×  100 %௧బା௧\n௧బ                                                                                                  (3) \nThe SOC(t) represents the estimated SOC, SOC (t0) is the initial SOC, Cn denotes the nominal capacity, and ibat \nrepresents the charge/discharge current of the battery. The CC method is a commonly preferred approach for SOC \nestimation due to its low cost and ease of implementation [51], [52]. However, one of the main challenges with the method \nis the requirement for high precision in current measurements. Small errors or measurement deviations can significantly \nimpact the accuracy of the estimated value [53]. Additionally, this method does not consider the real health status of the \nbattery, such as aging or performance degradation, leading to reduced prediction accuracy over time-based on usage. \nTherefore, in many studies, the prediction accuracy has been attempted to be improved using  Enhanced Coulomb \nCounting (ECC) techniques [53–55].  In [53], the proposed ECC technique utilizes voltage thresholds to determine battery \nstates, resetting SOC and Depth of Discharge (DOD) at specific points like cut-off and full charge. In [54], a novel SOC \nreset algorithm that utilizes estimated OCV during brief rest intervals is presented. The proposed method encompasses \nSOC error prediction, attenuate rest periods, and SOC reset error compensation, ensuring highly precise SOC estimation. \nFurthermore, the study integrates an ECC method with adaptive SOC reset time for estimating OCV, contributing to \nenhanced precision in the estimation process. In [56], ECC method for accurate SOC estimation in Lithium-Ion Batteries \n(LIBs) is developed. This method incorporates Peukert equation expansion, Coulombic efficiency, and accounts for the \nrate- and temperature-dependence of battery capacity. It also includes a SOC mapping strategy and frequency-adjustable \ncurrent sampling solution, demonstrating its effectiveness and generalization ability through experiments conducted under \nvarious conditions and battery chemistries.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1.2 Open-Circuit Voltage (OCV)",
+      "level": 3,
+      "text": "In this method, the battery's OCV is measured for different states of charge, and the measurements are listed in a \nlookup table. The measured OCV is used to determine the corresponding SOC based on its position on the OCV-SOC \ncurve [57,58]. Figure 4 illustrates a graphical representation of the relationship between OCV and SOC. The correlation \nbetween SOC and OCV may vary depending on the inherent characteristics and type of the battery. However, Equation \n4 provides a comprehensive expression to understand the relationship between a battery's SOC and OCV. The equation \nserves as a practical mathematical tool for determining the SOC of a battery based on its OCV. Battery manufacturers \ncommonly establish and distribute such equations, offering users mathematical models that can be applied to calculate \nthe SOC for a specific battery. \n𝑆𝑂𝐶 =  𝑓(𝑂𝐶𝑉)                                                                                                                                                         (4) \n \nFig.4. Fitting function curve for OCV-SOC \nThis method is popular due to its simplicity and low cost. It can also be applied to various battery types since there is \na general correlation between the battery's nominal voltage and SOC. In [58], three methods are suggested to improve the \naccuracy of battery SOC estimation for Li-Ion batteries. (i) A new parameter backtracking strategy using the Recursive \nLeast Square (RLS) algorithm is proposed for constant OCV identification, reducing jitters in OCV results. (ii) An \nExtended Kalman Filter (EKF) is employed as a state observer, using historical experimental data to estimate SOC for \nbatteries that have not been evaluated. (iii) The OCV-SOC curve is analyzed using a cumulative online parameter \nidentification and SOC estimation approach. This reconstruction remains effective even when data is available for only a \nlimited SOC range, rendering it applicable for EV operational scenarios. However, factors such as battery aging and \n\ntemperature variations can impact the linear relationship between OCV and SOC, thereby reducing the accuracy of the \nestimation [57].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1.3 Electrochemical Impedance Spectroscopy (EIS)",
+      "level": 3,
+      "text": "In this approach, the estimation of SOC is accomplished through the measurement of electrochemical impedance at \nvarious frequencies. A sinusoidal AC voltage is applied to the battery, and the resulting current responses are recorded to \nacquire the electrochemical impedance spectrum. This spectrum represents the voltage and current responses of the \nbattery as a function of frequency [59]. EIS is a technique used to examine and characterize the electrochemical behavior \nof the battery. EIS analysis can be utilized to estimate the battery's SOC by measuring its impedance spectrum [60]. \nHowever, this method is not very practical as it requires laboratory settings and involves calibration and modeling \nprocedures.  \nIn [61], a method is introduced that explicitly characterizes the nonlinear relationship between circuit parameters and \nSOC through analytical polynomial functions. The impact of polynomial order on the prediction accuracy is \nsystematically investigated, and the proposed model's effectivity is demonstrated through EIS measurements of 20 Ah \ncommercial LIBs. The results indicate that a seventh-order polynomial function effectively captures the nonlinear impact \nof SOC on circuit parameters. Furthermore, the proposed polynomial function-based equivalent circuit model surpasses \nthe performance of a common interpolation-based model in leave-one-out cross-validation predictions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Indirect Analysis Methods",
+      "level": 2,
+      "text": "Indirect estimation methods are techniques where the battery's SOC value is predicted using mathematical models and \nalgorithms [62]. Indirect analysis methods can be categorized into five subgroups: model-based, adaptive filter-based, \nadaptive artificial intelligence-based, advanced algorithms, and other methods. In indirect analysis methods, the \nestimation accuracy is higher compared to direct measurement-based methods [50].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2.1 Model-Based Methods",
+      "level": 3,
+      "text": "Model-based methods are based on sophisticated algorithms to create a mathematical representation of the battery's \nelectrical behavior and its characteristics [63]. The Electrical Circuit Model (ECM) and the Electrochemical Model \n(EChM) are widely popular models used for SOC estimation and serve as the basis for various other battery modeling \ntechniques.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2.1.1 Electrical Circuit Model (ECM)",
+      "level": 4,
+      "text": "The ECM is based on a mathematical model that defines the electrical behavior of batteries and represents the battery \nusing components found in electrical circuits. For lithium-ion batteries, considering their dynamic performance, first-\norder, and second-order Thevenin models are commonly used. Figure 5, presents the equivalent circuits for battery models \n[50]. \n \na)                                                                       b) \nFig. 5. a) First order and b) Second order Thevenin battery model [50] \nContinuous-time analysis of the first-order Thevenin equivalent circuit is given by equations (5) and (6), where the \ncircuit consists of a voltage source VOCV, internal resistance Ro, and transient responses during charging and discharging \nrepresented by R1 and C1, respectively. The variable  𝑉ଵ  represents the voltage across a circuit component, presumably \nlinked to a capacitor. The mathematical expression formulates a first-order linear ordinary differential equation, \ndescribing the dynamic response of the voltage across specified component. On the other hand, discrete-time analysis of \nthe same circuit is presented in equations (7) and (8), where i1 represents the battery current acquired from measurements, \nVt  denotes the measured battery voltage, Ts is the sampling period, and 𝜏p represents the time constant.  \n𝑉ଵ =  ିଵ\nோభ ×஼భ\n𝑉ଵ+  ଵ\n஼భ\n𝑖ଵ                                                                                                                                                  (5) \n𝑉௧ = 𝑉௢௖௩−  𝑉ଵ− 𝑅଴ 𝑖ଵ                                                                                                                                                 (6) \n𝑉ଵ,௞ାଵ=  𝑉ଵ,௞𝑒\nష೅ೞಜ೛ + 𝑅ଵ൬1 − 𝑒\nష೅ೞಜ೛൰𝑖ଵ,௞                                                                                                                       (7) \n𝑉௧,௞ = 𝑉௢௖௩(𝑆𝑂𝐶) −  𝑉ଵ,௞ − 𝑅଴ 𝑖ଵ,௞                                                                                                                               (8) \nBy using a simple ECM, such as the Thevenin ECM, SOC can be directly calculated through the transformation of \nmodel equations. Utilizing a simplified ECM like the Thevenin model involves a systematic process of voltage \ntransformation and current integration. During charging and discharging cycles, the ECM equations capture the battery's \nbehavior, considering energy storage and release dynamics. By integrating the current over time, the total charge passing \nthrough the battery is calculated, providing a measure of the utilized capacity. The relationship between voltage and SOC \nis established through calibration processes, allowing for a direct mapping of voltage levels to SOC values. This \nrelationship, combined with the integrated current information, enables precise real-time SOC calculation. Hence, the \nsimplicity of the Thevenin ECM, coupled with accurate voltage-SOC calibration, facilitates direct SOC estimation by \n\ntransforming model equations, providing a valuable tool for efficient battery management. The advantage of this approach \nlies in its simplicity, making it easy to implement on a low-cost target microcontroller.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2.1.2 Electrochemical Model (EChM)",
+      "level": 4,
+      "text": "The EChM is a battery modeling method employed to depict the electrochemical processes occurring within batteries. \nIn this modeling approach, the chemical reactions within the battery and the behavior of electrodes are mathematically \ndefined. Parameters such as the electrochemical potential difference between electrodes and ion flows are computed in \nthis model, and these parameters are then utilized to predict the battery's SOC, voltage, and current responses [64]. The \nEChM parameters are directly linked to specific degradation types, such as capacity fade and power fade, making it the  \npreferred modeling choice [65]. The EChM enables the representation of more complex electrochemical behaviors and \ninteractions within batteries, facilitating a more detailed analysis of battery performance. However, it  is important to note \nthat this modeling requires more computational power and data due to its complexity. Electrochemical modeling finds \ndiverse applications in fields such as battery design, control, optimization, and lifetime prediction. Additionally, it serves \nas a vital tool for battery energy management systems, contributing to the enhancement of overall battery performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.2.2 Adaptive Filter-Based Methods",
+      "level": 3,
+      "text": "Adaptive techniques refer to systems that integrate both direct and model-based approaches, demonstrating the \ncapability to autonomously adapt to changes within the system. These systems commonly utilize feedback data to \ncontinuously update the current output in response to varying inputs. Noteworthy among the adaptive filter-based methods \nfrequently employed in the literature are Kalman Filter (KF) Based Methods, Recursive Least Squares Method (RLS), \nand H-Infinity-Based Estimation (H∞).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.2.2.1 Kalman Filter-Based Methods (KF)",
+      "level": 4,
+      "text": "The KF is a widely used method for battery SOC estimation. It utilizes measurements of battery voltage, current, and \ntemperature to estimate the SOC in real time. The KF statistically models the battery's internal state and the relationship \nbetween measurements to provide the best estimate [66]. The measured voltage and current values are used as state \nvariables, and a system model is applied. Firstly, the KF uses the battery model and previous SOC estimations to predict \nthe next SOC. Then, the differences between the real measurements and the predicted SOC are analyzed, and an update \nprocess adjusts the estimated SOC, taking measurement errors into account to obtain the best possible value [67]. \nThe KF offers a real-time and adaptive approach for SOC estimation, effectively overseeing noise, errors, or \nuncertainties in the system measurements to yield a more dependable estimate. The fundamental mathematical equations \nfor the battery model are presented in equations (9) and (10), where uk represents the system inputs (current, voltage,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation \n4"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

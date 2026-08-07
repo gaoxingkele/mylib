@@ -1,0 +1,187 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p4_resilience_distribution_planning/p4_resilience_distribution_planning__08__enhancing_distribution_network_resilience_using_genetic__8659a94551.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "15780 Athens, Greece",
+      "level": 1,
+      "text": "3 Department Fundamentals of Electrical Engineering, Technical University of Sofia, 8 Kliment Ohridski Blvd.,\nBlock 12, 1000 Sofia, Bulgaria; valerim@tu-sofia.bg\n* Correspondence: christodoulou@power.ece.ntua.gr\nAbstract\nEnsuring the resilience and efficiency of modern distribution networks is increasingly\ncritical in the presence of distributed energy resources (DERs). This study presents a multi-\nobjective optimization framework based on a Genetic Algorithm (GA) to improve voltage\nprofiles, minimize active power losses, and enhance resilience in a radial distribution net-\nwork. A simplified 6-bus radial test system with DERs at buses 2, 3, and 4 is considered as a\nproof-of-concept case study. The GA optimizes control variables, including DER setpoints\nand network reconfiguration, under operational and thermal constraints. The optimiza-\ntion employs a weighted objective function combining voltage profile improvement, loss\nminimization, and a resilience penalty term that accounts for bus voltage collapse and\nbranch overloads during DER contingencies. Simulation results demonstrate that the GA\nsignificantly improves network performance: the minimum bus voltage rises from 0.92 pu\nto 0.97 pu, while the total real power losses decrease by 46% (from 55.3 kW to 29.7 kW).\nMoreover, in the event of a DER outage, the optimized configuration preserves 100% load\ndelivery, compared to 89% in the base case. These findings confirm that GA is an effective\nand practical tool for enhancing distribution network operation and resilience under high\nDER penetration. Future work will extend the approach to larger IEEE benchmark systems\nand time-series scenarios.\nKeywords: distribution networks; resilience; genetic algorithms",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "To ensure the security and quality of electrical supply, as well as the reliable operation\nof the overall power grid, modern power systems are transitioning from traditional unidi-\nrectional power flow structures to multidirectional configurations. This transformation is\nlargely driven by the increasing integration of Distributed Energy Sources (DERs), which\nsignificantly influences system operation. Moreover, the performance of active distribution\nnetworks is continually challenged by unforeseen events and extreme weather conditions.\nThe resilience of power systems has emerged as a paramount concern for engineers\nand system designers, particularly in the face of increasingly frequent and severe weather-\nrelated events. While there is no universally agreed-upon definition, resilience is generally\nunderstood as the capacity of a power system to endure, adapt to, and recover from a\nwide range of disruptions, including natural disasters, cyber incidents, and operational\nElectronics 2025, 14, 4324 https://doi.org/10.3390/electronics14214324\nElectronics 2025, 14, 4324 2 of 14\nmalfunctions. Enhancing system resilience serves to minimize both economic losses and\nsocietal disruption while maintaining continuity of electrical service [1–3].\nHistorically, the design of electrical distribution networks has prioritized reliability—\ndefined as the ability to maintain consistent power supply under standard operating\nconditions. However, the growing incidence of weather-induced disturbances has under-\nscored the need to shift the focus toward resilience. This involves not only mitigating\nthe adverse effects of disruptive events but also ensuring the rapid restoration of service\nfollowing such occurrences [4–7].\nIt is important to distinguish resilience from other related concepts in the context of\npower distribution systems; resilience refers to a system’s ability to sustain performance\nduring multiple component failures (as per the N-k criterion) and to facilitate rapid recovery\nfollowing extreme events. Reliability concerns the system’s capacity to cope with one or two\nconcurrent faults (N-1 or N-2 criteria), as well as frequent, low-impact disturbances often\ncharacterized as Low Impact High Frequency (LIHF) events [5,8–13]. Robustness denotes\nthe system’s resistance to operational stress using its existing infrastructure. However,\nrobustness does not inherently include the ability to recover post-failure, which is a defining\nfeature of resilience. While enhancing robustness can contribute to resilience, full-scale\nequipment upgrades are typically neither economically viable nor logistically feasible\nduring crisis conditions [10]. Finally, security, particularly in the realm of cybersecurity,\nhas become increasingly critical due to the digitization and interconnectivity of modern\nElectric Power Systems. Security measures aim to prevent and deter malicious intrusions.\nUnlike resilience, which emphasizes recovery, security is predominantly concerned with\nthreat prevention [5,11].\nResilience thus represents a distinct and vital characteristic of power systems, aimed\nat the cost-effective management of extreme events and the prompt restoration of function-\nality. Strategies to bolster resilience include the deployment of smart-grid technologies,\nsuch as real-time system monitoring, automated control mechanisms, and the integration\nof DERs [14–16]. Moreover, the application of predictive analytics and artificial intelligence\n(AI) facilitates the identification of system vulnerabilities and enhances response optimiza-\ntion [5]. A comprehensive approach that combines physical infrastructure reinforcement\nwith robust cybersecurity protocols offers the most effective means of safeguarding modern\npower distribution systems. In addition, sustained regulatory support and active stake-\nholder engagement are crucial to the successful development and maintenance of resilient\nelectric distribution networks [6,7].\nIn response to these evolving challenges, it is essential to develop and implement\nadvanced resilience strategies that enhance both the adaptability and robustness of distri-\nbution networks. Emphasis is placed on the network’s ability to achieve rapid recovery and\nmaintain operational stability following major disturbances. Central to this objective is the\noptimal utilization of available resources to reinforce system resilience. In this context, in\nthe current work a genetic algorithm will be employed to optimize network configuration,\nvoltage regulation, and the integration of DERs, thereby enhancing the overall efficiency\nand resilience of the distribution network.\nThis work introduces a Genetic Algorithm–based optimization framework designed\nfor distribution networks with high penetration of distributed energy resources (DERs).\nThe approach explicitly integrates resilience as an objective, alongside the traditional\ngoals of voltage support and loss minimization. A multi-objective function is developed\nthat combines voltage regulation, active power loss reduction, and a resilience-oriented\npenalty, thereby linking conventional power flow optimization with resilience assessment.\nThe framework is demonstrated through a proof-of-concept implementation on a 6-bus\nradial distribution network with DER integration, highlighting its effectiveness compared\nElectronics 2025, 14, 4324 3 of 14\nto baseline operation. Results show that the optimized configuration improves both\nsteady-state performance—through enhanced voltage profiles and reduced losses—and\ncontingency performance, by maintaining full load service during DER outages. This\nconfirms the value of Genetic Algorithms as a practical tool for enhancing resilience in\nmodern distribution systems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Resilience",
+      "level": 1,
+      "text": "In recent years, the rising frequency and severity of extreme weather events, coupled\nwith the growing energy demands of modern societies, have placed significant stress on\nthe infrastructure of electric power systems—particularly on distribution networks. These\nconditions have led to system malfunctions and widespread power outages. As a result,\nthe development and operation of resilient distribution networks has become imperative to\nmitigate the impact of such disruptions and to ensure uninterrupted, high-quality electricity\nsupply for end users.\nThe growing reliance of modern societies on an uninterrupted and reliable power\nsupply underscores the critical importance of electric power system resilience [17]. In the\ncontext of ongoing climate change, the need for resilient power networks infrastructure\nhas become more urgent than ever. Climate-induced phenomena—including hurricanes,\nheatwaves, wildfires, floods, and heavy snowfall—pose increasing operational challenges\nand cause extensive damage to the grid [18]. As a fundamental component of distribution\nnetworks are particularly vulnerable to these environmental stressors [19,20]. Key climate-\nrelated impacts on distribution systems include elevated temperatures [21], extended heat\nand drought periods [22], flooding and landslides [ 23], humidity, snow, ice [22], strong\nwinds [24] and sea level rise [22].\nIn more detail, climate-related factors significantly impact the reliability and efficiency\nof electrical distribution networks. Elevated ambient temperatures increase the electrical\nresistance of network components, thereby reducing power transfer efficiency and con-\ntributing to greater energy losses. Prolonged periods of heat and drought exacerbate this\nissue by encouraging the accumulation of pollutants on equipment, which heightens the\nrisk of electrical discharges such as arcing across insulators. These conditions also lead to\nincreased cooling demands, further straining the grid. Geophysical events like flooding\nand landslides pose additional threats by causing substantial damage to both underground\nand overhead infrastructure—such as submerged substations and poles toppled due to\nunstable soil. Similarly, environmental factors including high humidity, snow, and ice can\ncompromise the structural integrity and operational reliability of network components,\npotentially leading to mechanical failures. Strong winds are another significant hazard,\nfrequently damaging overhead lines either directly or indirectly through the falling of trees\nand branches, which may result in short circuits or the physical destruction of conductors.\nFurthermore, rising sea levels increasingly threaten coastal infrastructure, especially substa-\ntions supporting new generation facilities, as seawater intrusion and tidal surges become\nmore common in low-lying areas.\nIn addition to environmental hazards, electric power infrastructure is also vulnerable\nto a range of non-climatic threats. These include natural disasters such as earthquakes, and\nhuman-induced risks such as cyberattacks [23,25]. Furthermore, geopolitical conflicts and\nacts of terrorism increasingly target energy infrastructure through both physical attacks\n(e.g., missile or drone strikes) and digital interference, aiming to inflict widespread societal\nand economic disruption [26].\nThe implementation of advanced smart grid technologies, coupled with AI applica-\ntions, equips Distribution System Operators (DSOs) with enhanced capabilities for real-time\nfault detection, analysis, and response. During severe weather events, a key objective is\nElectronics 2025, 14, 4324 4 of 14\nto optimize the utilization of locally generated power from Renewable Energy Sources\n(RES), thereby minimizing the extent of service disconnections and unpowered areas. This\napproach ensures the uninterrupted supply of electricity to critical loads and provides a\ntime buffer necessary for executing permanent repair and restoration activities, reducing\ndependence on temporary or stopgap measures.\nA universally accepted definition of resilience within electric power networks remains\nelusive, primarily due to the complexity and multidimensionality of the concept. This\ncomplexity arises from its intersection with related attributes such as reliability, the inherent\nunpredictability of disruptive events, and the wide range of performance metrics and\nindicators used to evaluate it [27,28]. Despite this ambiguity, the concept of resilience has\nbecome increasingly prominent within the domain of Power Distribution Networks.\nAccording to the Intergovernmental Panel on Climate Change (IPCC), resilience is\ndefined as a system’s capacity to anticipate, absorb, and recover from adverse conditions\nor shocks [29]. In contrast, the U.S. Federal Energy Regulatory Commission (FERC) places\nparticular emphasis on the system’s ability to facilitate rapid recovery following a disrup-\ntion [30]. Historically, distribution networks were primarily designed with reliability in\nmind—aimed at ensuring consistent energy delivery in the face of routine disturbances.\nHowever, the evolving threat landscape, characterized by a transition from High-Impact\nLow-Frequency (HILF) to High-Impact High-Frequency (HIHF) events, particularly those\ndriven by climate change, has underscored the growing importance of designing for re-\nsilience [31].\nThe need for resilient power distribution infrastructure is further amplified by its\ncritical role in supporting essential services, including telecommunications, emergency\nresponse systems, and healthcare facilities. In the digital era, the uninterrupted delivery of\nelectricity has become indispensable to societal functioning and economic stability [32].\nTo effectively visualize the influence of resilience on Electric Power Systems (EPSs),\nresilience curves have been developed. These graphical representations illustrate the tem-\nporal evolution of system performance using key metrics such as the amount of energy\ndelivered or the proportion of consumers served [ 33–36]. The principal advantage of\nthese curves lies in their intuitive interpretability. However, they exhibit limitations in\naccurately capturing the full complexity of system behavior, including the detailed pro-\ngression through various operational states and the precise magnitude of service quality\ndegradation [37].\nWhile the “triangular” resilience curve is the most widely adopted format in the\nliterature, this study utilizes the “trapezoidal” variant (Figure 1) [21,38]. This version offers\na more nuanced depiction of the stages of degradation and recovery in the aftermath of\na disturbance.\nThe implementation of resilience-enhancing strategies within distribution networks\nfacilitates a comprehensive understanding of system response. Specifically, it enables the\nidentification of major disturbances, assessment of damage severity, localization of affected\nareas, estimation of impact duration, evaluation of recovery speed, and analysis of the\nfull restoration process. Due to the diversity in network configurations and operational\ndynamics, different systems respond uniquely to external disruptions, resulting in distinct\nresilience curve profiles [33].\nElectronics 2025, 14, 4324 5 of 14\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 1. Trapezoidal Resilience Curve.\nBased on the foregoing discussion, resilience in power distribution systems can be\nbroadly categorized into two interrelated dimensions: Operational Resilience and Infras-\ntructure Resilience [29]. The trapezoidal resilience curve presented in Figure 1 distinctly\nillustrates the sequential stages experienced by the distribution grid during and after a\ndisturbance. The initial phases—spanning from the onset of the disturbance to the point of\npartial service restoration—are indicative of Operational Resilience, reflecting the system’s\ncapability to maintain core functionalities and adapt dynamically. The subsequent period,\nextending from partial to complete restoration,",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 Network Under Examination",
+      "level": 1,
+      "text": "In the current work a typical 6-bus radial network is examined (Figure 3).\n \n \n \n \n \n \n \n \n \n \nFigure 3. Network under examination.\nA 6-bus radial distribution network is a simplified representation of an electrical\ndistribution system in which six nodes, or buses, are connected in a radial configuration. In\nsuch a setup, there is a single power source—typically at Bus 1—which acts as the substation\nor feeder supplying the entire network. The remaining buses, labeled Bus 2 through Bus\n6, are load buses that represent various consumers such as residential, commercial, or\nindustrial facilities. Power flows unidirectionally from the substation outward through\nthe network branches, with each bus being connected to its upstream neighbor by a single\ndistribution line. This tree-like structure ensures there is only one path for electricity to\ntravel from the source to each load, which simplifies operation and protection schemes.\nElectronics 2025, 14, 4324 8 of 14\nLoads are distributed across the network, typically connected to Buses 2 through",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "6 These loads may vary in magnitude and type and can be modeled as constant power",
+      "level": 1,
+      "text": "demands. Because of its simplicity, the 6-bus radial distribution network is frequently used\nto analyze voltage profiles, optimize power flows, evaluate loss minimization strategies,\nand assess the integration of distributed energy resources such as rooftop solar or battery\nstorage. In more advanced models, monitoring and control equipment, such as sensors,\nsmart meters, or switches, can be included at various buses to simulate the behavior of a\nmodern smart grid.\nEach line is characterized by resistance R, reactance X, and thermal capacity Imax. The\nadopted values are shown in Table 1.\nTable 1. Line data.\nLine From–To R (pu) X (pu) Thermal Limit (A)\nL1 1–2 0.010 0.020 200\nL2 2–3 0.015 0.030 200\nL3 3–4 0.020 0.040 200\nL4 4–5 0.025 0.050 200\nL5 5–6 0.030 0.060 200\nThe system includes residential, commercial, and industrial loads, modeled as constant\npower. Table 2 summarizes the active (P) and reactive (Q) demand.\nTable 2. Load data.\nBus P (kW) Q (kV AR)\n2 100 60\n3 120 70\n4 90 50\n5 80 40\n6 70 30\nDER units are integrated at Buses 2, 3, and 4. They are modeled as controllable\nsources with specified maximum capacities. DERs can provide both real and reactive\npower within their inverter limits. For simplicity, PV units are assumed dispatchable, but\nfuture work will incorporate variability and stochastic profiles. Power flow calculations\nand GA optimization were implemented in MATLABR2025 and PowerFactory 2024.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "5 Objective Function",
+      "level": 1,
+      "text": "In this study, a GA is applied to a 6-bus radial distribution network to optimize power\nlosses and improve the overall voltage profile. The primary objective of the optimization\nwas twofold:\n• To minimize the total active power losses in the network;\n• To maintain bus voltages within acceptable operational limits, ideally as close to the\nnominal value (1 pu) as possible;\n• To enhance the resilience under high DER penetration.\nTo achieve this, the genetic algorithm was employed to determine the optimal con-\nfiguration of control variables, including reactive power injections, tap settings of voltage\nregulators, and possible reconfiguration actions within the constraints of a radial structure.\nElectronics 2025, 14, 4324 9 of 14\nThe test system consists of 6 buses and 5 branches L1–L5, with DERs connected at buses 2,\n3, and 4. Bus 1 is the main substation. The objective function to be minimized is:\nF = w1· f1 + w2· f2 + w3· f3\nwhere\nf 1 corresponds to the voltage profile improvement f1 = ∑6\ni=1\n\f\fVi − 1pi\n\f\f2.\nf 2 corresponds to the power loss minimization f2 = ∑5\nk=1 I2\nk ·Rk.\nf 3 is introduced by penalizing configurations that lead to voltage collapse or overloads\nduring DER faults.\nw1, w2, w3 weight factors equal to 0.4, 0.4 and 0.2, respectively.\nIk is the current of each line.\nRk is the resistance of each line.\nThe constraints taken into consideration are:\n• 0.95 ≤ Vi ≤ 1.05\n• Line thermal limits\n• DER limits: 0 ≤ PDER,i ≤ Pmax,i, |QDER,i| ≤ Qmax,i\nThe GA was implemented with a population size of 50 individuals, a crossover\nprobability of 0.8, and a mutation rate of 0.05. The algorithm was run for 100 generations.\nThe fitness function incorporated a weighted sum of the total power loss and a penalty for\nvoltage deviations outside the 0.95–1.05 pu range.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "6 Results",
+      "level": 1,
+      "text": "In this study, a Genetic Algorithm (GA) was applied to a six-bus radial distribution\nnetwork with distributed energy resources connected at buses 2, 3, and 4. The primary\nobjectives were to improve the voltage profile across the system, reduce real power losses\nand enhance the system resilience under conditions of high DER penetration.\nThe results showed a marked improvement in the voltage profile (Table 3, Figure 4).\nIn the base case, the voltage at the farthest bus dropped to 0.92 per unit, indicating poor\nvoltage regulation. After optimization using GA, the minimum bus voltage improved\nsignificantly to 0.97 per unit. This enhancement brought the overall voltage levels closer\nto the nominal value of 1.00 per unit, ensuring more stable and reliable operation of\nthe network.\nFigure 4. Voltage Profile Comparison.\nElectronics 2025, 14, 4324 10 of 14\nTable 3. Voltage Profile.\nBus Base Case Voltage (pu) Optimized Voltage (pu)\n1 1.00 1.00\n2 0.97 1.01\n3 0.95 1.00\n4 0.94 0.99\n5 0.93 0.98\n6 0.92 0.97\nReal power losses were also substantially reduced. Initially, the system experienced\ntotal losses of 55.3 kilowatts (Table 4, Figure 5). After optimization, these losses dropped to\n29.7 kilowatts, representing a reduction of approximately 46.3 percent. The convergence pat-\ntern of the GA demonstrated a consistent and smooth decline in losses over successive gen-\nerations, reflecting the effectiveness of the algorithm in identifying optimal configurations.\nTable 4. Power Losses.\nScenario Real Power Loss (kW)\nBase Case (No DER) 55.3\nOptimized Case 29.7\n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 5. GA convergence curve for power loss.\nThese improvements in voltage regulation and power loss minimization directly\ncontributed to enhancing the system’s resilience. With improved voltage stability and re-\nduced energy dissipation, the network became more robust against disturbances and better\nequipped to maintain critical functions under varying load and generation conditions. The\nresults affirm that GA is a powerful tool for optimizing distribution networks, particularly\nin scenarios with high penetration of distributed energy resources.\nThe optimized real and reactive power outputs of DER units at buses 2, 3, and 4 reflect\nan effective allocation strategy achieved through the GA (Table 5). Higher real power injec-\ntion at bus 3 aligns with its central location, which benefits power flow balance across the\nnetwork. The slight absorption of reactive power (negative Q values) contributes to voltage\nsupport by compensating for inductive loads and line reactance. This coordinated DER\nElectronics 2025, 14, 4324 11 of 14\ndispatch ensures both loss reduction and improved voltage regulation without exceeding\ninverter capacity constraints.\nTable 5. Optimal DER Dispatch.\nBus P DER,i (kW) Q DER,i (kV AR)\n2 110 −20\n3 130 −30\n4 90 −15\nThe network’s response to a fault-induced DER trip at bus 3 highlights the resilience\ngains achieved through optimization. In the base case, such an event led to significant\nvoltage drops and branch overloads, resulting in a loss of load supply (Table 6). In contrast,\nthe optimized configuration maintained all bus voltages within acceptable limits and\navoided overloads, preserving full load delivery. This outcome indicates that the GA not\nonly optimizes normal operating conditions but also enhances the network’s capacity to\nabsorb and recover from disturbances, a key characteristic of a resilient system.\nTable 6. Resilience Assessment.\nMetric Base Case Optimized\nMin Voltage (pu) 0.88 0.94\nOverloaded Branches 2 0\nLoad Served (%) 89% 100%\nSummarizing the above results, resilience in distribution networks can be quantified\nusing performance indicators that capture both steady-state operation and response to\ndisturbances. In this study, three key metrics were applied: the minimum bus voltage, the\nload served ratio, and the number of overloaded branches. The minimum bus voltage\nindicates the depth of service degradation, while the load served ratio measures continuity\nof supply during contingencies. The number of overloaded branches reflects the structural\nrobustness of the network under stress. In the base case, a DER outage reduced the\nminimum voltage to 0.88 pu, caused overloads, and limited supply to 89% of the total\nload. After optimization with the GA, the minimum voltage rose to 0.94 pu, no branches\nwere overloaded, and 100% of the load was served. These results can be mapped to\nthe trapezoidal resilience curve, where the optimized configuration shows a shallower\ndegradation and faster recovery. The analysis confirms that embedding a resilience penalty\nterm in the optimization function strengthens both reliability and recovery capability.\nOverall, the metrics demonstrate that the proposed approach enhances the network’s\ncapacity to maintain and restore service under adverse events.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [
+          "t5",
+          "t6",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "7 Conclusions",
+      "level": 1,
+      "text": "The application of a Genetic Algorithm (GA) for optimizing the operation of a radial\ndistribution network with high DER penetration has demonstrated clear improvements in\nnetwork performance. By tuning the real and reactive power outputs of DERs connected\nat critical buses, the GA successfully enhanced voltage stability, reduced system losses,\nand increased the network’s resilience to disturbances. The optimized voltage profile\nshowed significantly reduced deviation from nominal values, eliminating potential voltage\nviolations under normal and perturbed conditions. The total real power loss in the system\nwas reduced by approximately 46 percent, indicating a substantial improvement in energy\nElectronics 2025, 14, 4324 12 of 14\nefficiency. This not only leads to operational cost savings but also supports sustainable grid\noperation. Furthermore, the network’s ability to withstand and recover from DER outages\nimproved markedly, with post-disturbance voltages and load service levels remaining\nwithin acceptable thresholds. These results validate the use of evolutionary algorithms as a\npractical and robust approach for managing complex, multi-objective optimization tasks\nin distribution systems. As the share of distributed generation continues to grow, such\ntechniques become essential for ensuring reliable, resilient, and efficient power delivery. It\nis worth mentioning that while the test system is a simplified 6-bus network, the results\nconfirm the effectiveness and practicality of GA for distribution system optimization\nunder high DER penetration. Future work will extend this methodology to standard IEEE\ntest feeders (13-bus, 33-bus) and incorporate time-series simulations to capture dynamic\nresilience performance under variable renewable generation and load conditions.\nOverall, the study highlights that Genetic Algorithms offer a robust, flexible, and\nefficient tool for improving both the steady-state and contingency performance of distri-\nbution networks, thus contributing to the development of more resilient and sustainable\npower systems.\nAuthor Contributions: Conceptualization, C.C.; Methodology, T.I.M.; Software, V .M.; Investigation,\nT.I.M.; Writing—original draft, T.I.M.; Writing—review & editing, V .M.; Supervision, C.C. All authors\nhave read and agreed to the published version of the manuscript.\nFunding: This research received no external funding.\nData Availability Statement: The original contributions presented in this study are included in the\narticle. Further inquiries can be directed to the corresponding author.\nConflicts of Interest: The authors declare no conflict of interest.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Trapezoidal Resilience Curve."
+    },
+    {
+      "id": "f2",
+      "caption": "Block diagram of a GA."
+    },
+    {
+      "id": "f3",
+      "caption": "Network under examination."
+    },
+    {
+      "id": "f4",
+      "caption": "Voltage Profile Comparison."
+    },
+    {
+      "id": "f5",
+      "caption": "GA convergence curve for power loss."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Line data."
+    },
+    {
+      "id": "t2",
+      "caption": "Load data."
+    },
+    {
+      "id": "t3",
+      "caption": "Voltage Profile."
+    },
+    {
+      "id": "t4",
+      "caption": "Power Losses."
+    },
+    {
+      "id": "t5",
+      "caption": "Optimal DER Dispatch."
+    },
+    {
+      "id": "t6",
+      "caption": "Resilience Assessment."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

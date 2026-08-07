@@ -1,0 +1,193 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/grid2op_datasets/grid2op_datasets__Power_Grid_Control_with_Graph-Based_Distributed_Reinforcement_Learning__ae73e0489a.pdf",
+  "n_pages": 16,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Power grids across the world are controlled from control centers byhuman dis-\npatchers, who monitor the electricity network 24 hours per day, 365 days per\nyear. They must constantly keep the network within its thermal limits, frequency\nranges, and voltage ranges by takingremedial actionson network elements such\nas lines and substations via remote control command (Kelly et al., 2020).\nModern power grids are undergoing a strong transformation due to the intro-\nduction of renewable energy sources. Unlike conventional non-renewable genera-\ntors, renewable energy sources (such as solar and wind) introduce high variability\nand limited dispatchability in the energy production since they depend on the\natmospheric conditions.\nTraditional power grid control systems, strongly reliant on human-in-the-\nloop and optimization-based algorithms, are unable to cope with the increasing\narXiv:2509.02861v1  [cs.LG]  2 Sep 2025\n2 Fabrizio et al.\ncomplexity of such control problems. In order to overcome this complexity, it\nis required to develop new methods. Among emerging techniques, Reinforce-\nment Learning (RL) has been explored in several works over the last years with\npromising results (Dorfer et al., 2022; Chauhan et al., 2023; van der Sar et al.,\n2023; Lehna et al., 2024).\nInordertoinvestigatethepotentialuseofRLmethodswithinnext-generation\npower grid controllers, the French electricity network management company\nRTE (Réseau de Transport d’Électricité) developed a series of challenges called\n“Learning to Run a Power Network” (L2RPN, Marot et al., 2020). These chal-\nlenges were designed to simulate realistic sequential decision-making environ-\nments, in which agents must maintain the power grid operative under different\nconditions of uncertainty. The challenges were offered over the Grid2Op frame-\nwork, developed by RTE. Specifically, the Grid2Op framework provides realistic\nsimulations of power grids and supports a wide range of control actions and\ninterventions (Donnot, 2020).\nThe main advantage of using RL is that it can identify and also capitalize\non under-utilized, cost-effective actions that human dispatchers and traditional\nsolutiontechniquesareunawareoforunaccustomedto,resultinginmoreefficient\ncontrol of the power grid by learning effective relations in a data-driven way.\nIn parallel, the growing size of power grids, i.e., the increasing number of\ncontrollable elements and complex interconnections, results in a combinatorial\nexplosion of potential control configurations. With this large state and action\nspaces, RL algorithms suffer a problem known as thecurse of dimensionality,\ni.e., the amount of data/computation required to achieve a good solution may\nbe out of reach. Distributed Reinforcement Learning (DRL) algorithms can be\nconsidered to mitigate this problem by distributing the learning process among\nmultiple agents (Zhang et al., 2021).\nOriginal Contribution. In this work, we propose a DRL algorithm for power\ngrid control. In our solution, each agent uses a state representation based on\na Graph Neural Network (GNN, Wu et al., 2020). GNNs are a class of neural\nnetworks designed to work directly with graph-structured data. In a graph, data\nis represented as nodes (entities) and edges (relationships), which makes GNNs\nwell-suited for problems where the structure or connections between elements\nare important, such as power grids. The combination of RL and GNNs allows\nto learn a control strategy that captures dependencies and interactions between\nconnected nodes and efficiently handles large-scale graphs using message passing,\nwhere nodes iteratively aggregate information from their neighbors. This work\nfocuses on a specific class of control actions named topology-based control, which\nare particularly relevant in power grid operations due to their zero operational\ncost. These actions operate by altering the electrical connectivity of controllable\ncomponents within the grid. Unlike interventions on generators – which incur\nin financial costs – topology reconfigurations offer a cost-free alternative for\nredirecting power flows and maintaining grid stability. However, the complexity\nof such actions lies in their discrete, combinatorial nature and their non-local\neffects on the grid.\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 3\nThis work proposes a scalable distributed graph-based RL architecture for\nlarge-scale power grids. The main contributions can be summarized as follows:\n– Graph-Based Representation:Development of an effective homogeneous\ngraph representation of the power grid, enabling informative encoding of the\nsystem’s topology.\n– Modular Control Architecture:Design and implementation of a two-\nlayer distributed architecture, consisting of low-level agents acting on power\nlines and a high-level controller coordinating their behavior, promoting mod-\nularity and scalability.\n– Observation Space Decomposition:Integration of GNNs to perform fea-\nture extraction and implicitly decompose the observation space, allowing\nagents to operate on partial but informative views of the grid.\n– Imitation Learning for Accelerated Training:Implementation of Deep\nQ-Learning from Demonstrations (DQfD, Hester et al., 2018) to inject expert\nbehavior into the training process, significantly accelerating convergence.\n– RewardDecomposition: Designofabootstrappedpotential-basedreward\nshaping strategy (Adamczyk et al., 2025) aimed at improving credit assign-\nment and learning efficiency, particularly in large-scale power grid scenarios.\nPaper Structure.The paper is organized as follows. Section 2 provides the prob-\nlem formulation and discusses the learning objective. Section 3 contains a de-\ntailed description of our proposed solution. Section 4 shows the experimental\nresults. Section 5 presents related works, while Section 6 concludes the paper\nwith possible future work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Problem Formulation",
+      "level": 1,
+      "text": "The work was conducted over the Grid2Op simulation environment, which is de-\nsigned to simulate realistic power grids for a given period, usually several days,\nat 5-minute intervals. At each timestep, the agent is called to take an action\non the simulator, leading to the next simulator’s state. The power grid is repre-\nsented as a graph of connected elements: nodes and edges represent, respectively,\nsubstations and power lines. The simulator also models other elements, specifi-\ncally, generators and loads. Generators produce electricity while loads consume\nit. Substations can be viewed as routers within the power network: they encom-\npass two internal buses to which their elements (loads, generators, or power lines)\ncan be connected. Substations have no other role than controlling their internal\nconnections, affecting the overall flow of energy. Among the various interventions\nsupported by the simulator, topology-based actions are undoubtedly the most\ninteresting and extensively studied. This is because they have no operational\ncost and are highly complex due to their combinatorial nature, making them\nparticularly challenging for humans to execute effectively. These actions allow\nmodifications to the internal connectivity within substations. Thus, a substation",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "controlling Ni elements can perform up to 2Ni actions, corresponding to all",
+      "level": 1,
+      "text": "4 Fabrizio et al.\npossible configurations of its elements across the two buses. To ensure system\nstability, Grid2Op allows only one substation to be controlled at each time step,\nas simultaneous interventions may cause unpredictable interactions and insta-\nbilities. The simulation runs for at mostT time steps, but it ends prematurely\nin case of a blackout. A blackout can occur if the energy demand (load requests)\nis not satisfied by the current configuration. The primary cause of a blackout is\nknown as “line overload”. When the current flow of a specific power line exceeds\na certain threshold, the simulator automatically disconnects the power line. This\ncan potentially lead to a grid configuration that violates the load requirements.\nGrid2Op offers a large number of features at each time step to describe the envi-\nronment’s state, more details can be found in (Donnot, 2020). The objective of a\ncontrol algorithm is to keep the power grid stable despite the unknown evolution\nof energy production and consumption. As a performance metric, we consider\nthe so-called “survive time”, which corresponds to the number of time steps the\ngrid remains operational before a blackout occurs during an episode. The goal\nof an algorithm in this scenario is to maximize the survive time.\nNotably, as the size of the power grid grows, the action space grows with the\nnumber of controllable elements. Moreover, the state representation becomes\nhard to be learned effectively due to the expanding grid’s graph structure and\nincreasing number of complex interconnections. An efficient control algorithm\nmust therefore handle an extremely large action space while leveraging graph-\nstructured data to generate informative observations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Proposed Solution",
+      "level": 1,
+      "text": "In this section, we present the proposed solution, detailing the key components\nand procedures. First, an overview of the learning components is provided, fol-\nlowed by a description of the procedure used to convert the power grid state into\na homogeneous graph.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Distributed RL Module",
+      "level": 2,
+      "text": "The core idea of the proposed solution is to design a two-layer distributed model\nthat decomposes the large combinatorial action space into subsets, allowing each\nto be managed almost independently. Rather than relying on a full global view\nof the system, the approach uses local observations. To make these observations\nmore informative, the model leverages graph-structured data, allowing agents\nto extract meaningful features from their local neighborhood and better cope\nwith the partial observability inherent in such distributed settings. The proposed\ncontrol system is composed of:\n1. Low-Level Agents: Deep Dueling Double Q-learning agents with Priori-\ntized Experience Replay buffer (Wang et al., 2016) in charge of managing the\npower lines. Each agent controls a distinct power line, performing only the\ntopology actions associated with that specific line. Moreover, each agent per-\nceives only its power line, receiving a local observation composed exclusively\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 5\nby the subset of features related to that power line. Therefore, from a single\nagent’s perspective, all the other agents belong to the environment, which\nbecomes complex and partially observable. Although common reinforcement\nlearning multi-agent approaches for power grid management assign agents to\nsubstations (Yoon et al., 2021; van der Sar et al., 2023; de Mol et al., 2025),\nwe chose to assign agents to power lines instead, which more naturally aligns\nwith the objective of controlling the grid stability, avoiding lines’ overloads.\n2. Shared GNN: all low-level agents share a common GNN, which processes\na graph-based representation of the power grid to enrich the information\navailable to the single agents. The GNN acts as a feature extractor that\nenhances the informativeness of the single line observation by incorporating\nneighborhood information. The Graph Neural Network aims to reduce the\ndegree of partial observability of the environment from each low-level agent’s\nperspective. Moreover, since the GNN is shared among agents, it implicitly\npromotes cooperation and possibly enhances generalization capabilities. This\nprocedure potentially allows graph-neural transfer learning, where a model\ntrained on a smaller grid can be used to initialize the model on a larger one,\npossibly improving convergence.\n3. High-Level Controller: an RL controller that manages the agents, decid-\ning which agent has to act on a specific situation. It receives as input the\npower lines’ thermal limits and current flow information, and a binary topol-\nogy vector. In a dangerous situation, the controller selects which agent has\nto act. Differently from many of the distributed solutions, which involve a\nrule-based selection procedure called CAPA (Yoon et al., 2021; van der Sar\net al., 2023), this work enables a more flexible solution by means of an RL\ntop-level agent, following a new promising research direction as (Manczak\net al., 2023; de Mol et al., 2025). In this case, the high-level controller is a\nDeep Dueling Double Q-learning agent with Prioritized Experience Replay\nBuffer (Wang et al., 2016).\nSince convergence in such a two-layer Multi-Agent setting is hard to achieve,\nboth low-level and top-level agents are pre-trained to learn expert demonstra-\ntions deriving from an Expert simulation-based algorithm (Marot et al., 2018),\nby means of Deep-Q-Learning from demonstrations (Hester et al., 2018). More-\nover, in such a multi-agent collaborative setting, the use of a global reward may\nlead to instabilities or difficulties during learning, therefore, a potential-based\nreward-shaping technique (Adamczyk et al., 2025) is implemented, yielding in-\nteresting results.\nTo better illustrate the computational steps required to produce an action,\nAlg. 1 outlines the flow executed by the architecture when called to act on the\nenvironment. An abstract high-level representation of the model is provided in\nFig. 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 Graph-Based Observation Construction",
+      "level": 2,
+      "text": "The raw simulator observation has been pre-processed to obtain graph-like data\nbefore passing it to the Graph Neural Network. Both the Grid2Op simulator\n6 Fabrizio et al.\nAlgorithm 1:Action computation flow.\n1: i ← Manager.select_agent(st|µt)\n2: gt ← convert_graph(st)\n3: ot ← GNN(gt|ϕt)[i]\n4: at ← Agenti.policy_play(ot|θt\ni , αt\ni, βt\ni )\n5: return at\nFig.1. Abstract high-level representation of the model.\nand the research community have proposed methods for representing the power\ngrid as a graph; however, each approach presents certain limitations. All of the\nexisting methods work by considering each element as a node (e.g., load, gener-\nator, power line, bus), raising the problem of graph heterogeneity: nodes present\ndissimilar features or belong to different classes. In general, the problem of graph\nheterogeneity strongly affects the performance of GNNs (Zhu et al., 2020), which\nusually fails to generalize in that setting. Therefore, the common approach to\nhandling heterogeneous graphs with Graph Neural Networks is to employ mod-\nels specifically designed for such structures, which inevitably increases model\ncomplexity (Li et al., 2025; Zhu et al., 2020; Mao et al., 2023).\nMoreover, most of the existing methods represent buses in the graph but\nomit substations, meaning that the two buses belonging to the same substation\nare not connected. This leads to what is known as “bus-bar information asym-\nmetry”, where each bus lacks access to information about potential connections\noriginating from its counterpart within the same substation. The preprocessing\nprocedure of this work is novel, returns a homogeneous graph representation and\nnaturally handles the problem of busbar information asymmetry without using\nheterogeneous graphs as in (de Jong et al., 2025).\nInitially, every element of the grid, except for substations, is directly repre-\nsented as a vector. Then, the vectors of the elements connected to the same bus\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 7\nFig.2. Example of substations embedding.\nFig.3. Example of lines embedding.\nare summed to create the bus embedding. To represent a substation, the embed-\ndings of its buses, including the bus of disconnected elements, are concatenated\nto form the substation embeddings. Finally, the power lines’ embeddings are\nobtained by concatenating the embeddings of their two terminal substations.\nEach element (power line, load, generator, or bus) is represented as a feature\nvector using a one-hot-like encoding, where the vector is zero in all positions\nexcept for the subset of dimensions reserved for its specific type. In this way, it\nis possible to represent a substation by considering the vectors of the elements\nconnectedtoit.Bysummingthevectorsbus-wise,weobtainthebusembeddings,\nwhich are then concatenated to construct the substation embeddings, as shown\nin Fig. 2. Finally, the line embedding is created as the concatenation of the\nembeddings of its origin and extremity substations as illustrated in Fig. 3.\nAt this point, each line is represented by a vector that captures the informa-\ntion from both substations it connects. To build the graph, each power line is\ntreated as a node, and two nodes are connected if their corresponding power lines\nshare a common substation. This transformation converts the original power grid\ninto a line graph, where power lines (originally edges) become nodes, and substa-\ntions (originally nodes) become edges. With this procedure, a sequence of power\ngrid observations is turned into a sequence of undirected homogeneous graphs.\n8 Fabrizio et al.\nFig.4. Representation of the Grid2Op“l2rpn_case14_sandbox” power grid.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "In this section, we empirically validate our model on the Grid2Op environment.\nThe code used to run the experiments presented in this section is available at:\nhttps://github.com/Carlo000ml/RL4PG.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.1 Environment Description",
+      "level": 2,
+      "text": "The analysis was conducted on the“l2rpn_case14_sandbox” environment of the\nGrid2Op simulator (Fig. 4). It represents a power grid counting 14 substations,\n20 lines, 6 generators, and 11 loads, and it encompasses 1004 different episodes.\nEach episode is represented as a set of time series (referred to as a chronics),\nwhich models the behavior of generators and loads over time. The agent must\nkeep the power grid stable despite the unknown evolution of energy production\n(time series on generators) and consumption (time series on loads). The simula-\ntion runs for a maximum of 8064 time steps. If the agent survives until the end,\nthe simulation terminates regardless of whether a blackout has occurred.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.2 Training Configuration",
+      "level": 2,
+      "text": "Each power line is controlled by a dedicated low-level agent, resulting in 20 such\nagents operating in parallel. Including the RL manager, the system consists of\n21 learning agents. Each agent maintains a pair of neural networks – a main\nnetwork and a target network. A GNN is employed as a feature extractor, with\nboth main and target versions. Overall, 44 neural networks are simultaneously\nloaded on the computing device, with 22 actively trained and the remaining 22\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 9\nkept frozen for target computation. Carefully chosen strategies were necessary\nto ensure stable and effective learning. To this end, gradient clipping and soft\nmain-targetsynchronizationwereadoptedtoachievestablelearningandeffective\ntraining. Each main neural network was optimized using the ADAM optimizer\n(Kingma and Ba, 2015). Inspired by the original DQN work (Mnih et al., 2015),\ngradients were clipped in the range[−3, 3]. In addition, soft updates between the\nmain and target networks were employed, as this is a widely adopted practice\nfor enhancing training stability in Deep Q-learning methods (Lillicrap et al.,\n2016). Nevertheless, the most significant contribution to training stability came\nfrom increasing the synchronization interval. Synchronizing the main and target\nnetworks too frequently was indeed observed to cause an exponentially growing\nloss. The most straightforward and easily configurableϵ decay strategy based on\nhalf-life was selected for all experiments. In this approach, the value ofϵ decays\naccording to an exponential schedule defined by a half-life parameter, which\nrepresents the number of steps required for ϵ to be reduced by half (Paszke,\n2024).\nThe proposed architecture is evaluated and tested against theDo-Nothing\nbaseline. This baseline represents a passive control strategy where the agent\ntakes no action throughout the episode, regardless of the system’s state. The\nstrength of this policy lies in the design of the environment itself. By design, the\ninitial configuration, where all components in the grid are connected to bus 1 of\ntheir respective substations, is a stable configuration. This setup allows the sys-\ntem to maintain safe operation for a considerable duration without intervention,\nespecially under moderate or favorable chronics. As a result, the Do-Nothing pol-\nicy often achieves non-trivial survival times and serves as a meaningful reference\nfor evaluating learned strategies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.3 Results",
+      "level": 2,
+      "text": "As shown in Fig. 5, the proposed architecture outperforms theDo-Nothing base-\nline on both validation and test sets. Thex-axis denotes the id of the specific\nchronic (10 in total for both validation and test sets), while they-axis reports\nthe survive time.\nForadeeperunderstandingofthemodel’scomponents,anablationstudywas\nconducted. The contribution of the components of the proposed architecture\nwas analyzed by removing them one at a time and observing the impact on\nperformance. A summary of the results is provided in Tab. 1.\nThe ablation study highlights that components such as DQfD and the GNN\nare essential to achieve competitive performance within a limited amount of\ntime. In contrast, the impact of bootstrapped reward shaping is less evident\nin the current environment. However, it is reasonable to expect that in larger\nand more complex grid topologies, where reward signals may be highly diluted,\nreward shaping could play a more critical role in stabilizing and accelerating the\nlearning process.\nFinally, the learned weights of the first GNN layer are analyzed to provide\ninsights about the generalization capabilities of the model. Fig. 6 displays a\n10 Fabrizio et al.\nFig.5. Comparison of the performance of our RL agent against the Do-Nothing base-\nline over the validation set (top) and the test set (bottom).\nTable 1.Ablation study results: average survival time on validation and test sets. The\nbest result per column is in bold. The first row (Do-Nothing) reports the performance\nof the baseline.\nConfiguration Validation Perf. Test Perf.\nDo-Nothing (baseline) 997.7 646.6\nNo DQfD 1985 1878\nNo GNN 1206.4 785.2\nNo Reward Shaping 5667.1 5324.3\nComplete System 5452.2 6114.4\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 11\nFig.6. Heatmap of the weights in the first GNN layer.\nTable 2.Inference Time Comparison: Proposed approach against Expert agent.\nModel Inference Time (avg ± std) [s]\nProposed Model 0.187 ± 0.145\nExpert Agent 2.56 ± 0.223\nheatmap of these weights, providing a qualitative perspective on how the model\nprocesses structured power grid information.\nRecall that the input vector processed by the GNN is formed by concatenat-\ning the feature vectors of the origin and extremity substations of each power line.\nThis structural symmetry is reflected in the heatmap, which displays a clearly\nsymmetrical pattern with respect to the column indices corresponding to these\ntwo segments. This symmetry suggests that the GNN has effectively learned the\nstructure of its input representation, potentially indicating strong generalization\ncapabilities.\nComputational Complexity. To analyze the efficiency of the model, the compu-\ntational requirements of the proposed approach were investigated. In general,\nsimulating a power grid is, by nature, a computationally intensive task. The\nplain power grid simulation takes on average 0.1097 seconds to simulate a single\nstep. Thus, it takes almost 15 minutes to simulate all the 8064 time steps of\nan episode. The inference time of the proposed approach is compared against\nthe one of the Expert agent used to collect expert demonstrations. The results,\nprovided in Tab. 2, reveal the computational efficiency of the proposed model\ncompared to the one of the simulation-based expert agent.\n12 Fabrizio et al.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5 Related Works",
+      "level": 1,
+      "text": "Distributed RL. Most of the RL methods developed to control power grids are\nrelated to the L2RPN competitions (Kelly et al., 2020; Serré et al., 2022). An\noverview of the solutions proposed during the first edition is reported in (Marot\net al., 2020). The winning solutions of the last two editions are presented in\n(Dorfer et al., 2022) and (Artelys, 2023), respectively. All the solutions proposed\nsofarseverelyrestricttheactionspaceandarebasedonasingleagentormultiple\nagents acting on the entire grid.\nThe first approach that introduced multi-agent solutions within the power\ngrid topology management problem was presented in (Manczak et al., 2023). The\nsolution is a two-layer distributed RL model: a single RL-manager and multiple\nlow-level agents (one for substation). When it is time to play, the manager selects\nthe low-level agent that consequently plays on its controlled substation. Another\nMulti-Agent approach for the power grid topology management problem was\nimplemented by (van der Sar et al., 2023). In this work, each substation is\nmanaged by a different agent trained with PPO (Schulman et al., 2017). The\nhigh-level logic deciding which agent comes to play upon a critical situation is a\nrule-based logic called CAPA, which was first introduced by (Yoon et al., 2021)\nbut for a different scope. When a line is in overload, the CAPA logic selects as\ncandidate agents the two substations extremities to the overloaded power line,\nand later, the substation with the highest average line utilization is selected\namong the two candidates. The CAPA logic presents an important limitation\nin the performance of such a distributed architecture: it becomes difficult for\nthe agents to develop long-term cooperative strategies. The two previous works\nhave been joined together in the recent work (de Mol et al., 2025). Here, the\nauthorscompareseveraltwo-layerRLsolutions.Inparticular,theeffectofCAPA\nhigh-level logic against an RL manager. The results show that the RL manager\noutperforms the system with a CAPA high-level manager in large power grids.\nThisworkaimstogoonestepfurtherbyaddressingboththeobservation-and\naction-space dimensions of the scalability challenge. We propose a distributed\nframework in which every agent can observe just a limited part of the state space\nand take only a small number of actions, but all the agents cooperate to achieve\na common goal.\nGraph Neural Networks.There is no well-established and standard framework to\nuse GNNs within the context of power grid management via topology changes.\nMany approaches have been proposed over the years, differing in many aspects\nof the procedures, even in the representation of the power grid as a graph. A\ncomprehensive survey about the use of GNN within power grids is provided in\n(Hassouna et al., 2024). The first work to introduce GNNs for power grid topol-\nogy control was Xu et al. (2020), where the GNN was used as a feature extractor\nfor a standard DQN agent. This solution represented the power grid as a het-\nerogeneous graph in which the nodes were generators, loads and ends of power\nlines, with two elements linked if connected to the same bus. The same graph\nrepresentation was adopted in several subsequent works (Taha et al., 2022; Xu\net al., 2022). The first solution, introducing a new graph representation, is the\nPower Grid Control with Graph-Based Distributed Reinforcement Learning 13\nwinning solution of the L2RPN 2020 challenge (Yoon et al., 2021). It represented\nthe power grid as a graph in which nodes are substations, thus using a homo-\ngeneous graph representation. Notably, a heterogeneous graph representation of\nthe power grid raises two important problems: the so-called “bus-bar informa-\ntion asymmetry” and the need for heterogeneous GNN models. The former high-\nlights the fact that, within heterogeneous graph representation, elements linked\nto different buses on the same substation are not connected together. Therefore,\ninformation about potential connection is lost. The latter, instead, underlines a\ncommon problem of using standard GNNs with heterogeneous graphs: they fail\nto generalize. This topic has been analyzed by de Jong et al. (2025) that solved\nboth problems by slightly improving the heterogeneous graph representation and\nby using a heterogeneous GNN model. However, the adoption of a heterogeneous\nGNN inevitably increases the model’s complexity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "In this work, we introduced a novel distributed graph-based RL algorithm to\nperform power grid operation control. The method consists of a network of dis-\ntributedlow-levelagents,eachcontrollingadifferentpowerline,coordinatedbya\nhigh-level manager. Each low-level agent operates solely on its associated power\nline and receives a local observation preprocessed by a shared graph neural net-\nwork. This procedure makes it possible to decompose the action space and the\nobservation space simultaneously, enabling a fully scalable solution. To further\nimprove learning efficiency and stability, the framework incorporates Deep Q-\nLearning from Demonstrations and potential-based reward shaping techniques.\nThe results obtained in the Grid2Op simulation environment demonstrate the\neffectiveness of the proposed graph-based framework. The method significantly\noutperforms the standard Do-Nothing baseline in terms of survival time, while\nalso showing much lower inference time compared to the Expert System. These\noutcomes confirm the scalability and efficiency of the architecture, particularly\nin scenarios requiring rapid decision-making across large-scale networks.\nThe main contribution of this work lies in the novel application of Graph\nNeural Networks to decompose the observation space while constructing infor-\nmative local observations for the decentralized agents. Both the conversion of the\nenvironment’s observation into a homogeneous graph structure and the use of a\nshared Graph Neural Network at the base of all distributed agents are carefully\nmotivated design choices. Together, they contribute significantly to the strength\nand coherence of the proposed approach, enabling structured local observations\nand efficient information sharing. The combination of Deep Q-Learning from\nDemonstrations and potential-based reward shaping also plays an important\nrole in the proposed framework. Deep Q-Learning from Demonstrations proved\nto be essential for reaching competitive performance within a limited amount of\ntime, while potential-based reward shaping appears to be a promising research\ndirection for addressing the problem of diluted rewards in large-scale power net-\nworks.\n14 Fabrizio et al.\nLimitations and Future Works.Despite its strengths, the proposed approach\nstill presents some limitations. Firstly, although the low-level agents receive lo-\ncal observations, the manager needs access to a complete global view of the\nenvironment to make decisions. This global view limits the scalability of the\noverall architecture. To overcome this limitation, multi-layer architectures rep-\nresent a promising research direction. In these architectures, multiple high-level\nmanagers control different, independent portions of the power grid, identified\nthrough power grid decomposition methods. Secondly, applying imitation learn-\ning assumes the availability of a dataset of expert demonstrations, which is not\nalways the case. This is particularly problematic when dealing with large, un-\nmanageable power grids for which expert strategies are unknown. Lastly, while\nthe model effectively decomposes the action space, it still relies on a single-step\nsimulation at runtime to perform a greedy action-space reduction. This step\nlikely helps achieve good performance in a shorter amount of time, but it may\nnot be strictly necessary. Alternative action space reduction techniques should\nbe explored. A promising direction is the N-1 criterion proposed by (de Mol\net al., 2025; van der Sar et al., 2025). This criterion statically reduces the action\nspace by nearly half by retaining only those actions that preserveN-1 stability,\nensuring that the power grid remains operational even if a random power line is\ndisconnected.\nFuture developments should focus on addressing some of the mentioned lim-\nitations. The development of multi-layer solutions, with multiple region-based\nhigh-level managers coordinated by a top-level rule-based logic, represents a\npossible approach to avoid using complete global views of the environment.\nAdditionally, alternative action space reduction techniques, as the previously\nmentioned N-1 criterion, should be explored in order to significantly reduce the\ninference time. Lastly, an interesting research direction, introduced by the use\nof a single shared GNN, is GNN-based transfer learning. This involves using\na GNN trained on a smaller power grid as initialization for a model operat-\ning on a larger grid. This approach could significantly accelerate convergence in\nlarge-scale scenarios.\nAcknowledgments.The authors acknowledge the project AI4REALNET that\nhas received funding from European Union’s Horizon Europe Research and Inno-\nvation programme under the Grant Agreement No 101119527. Views and opin-\nions expressed are, however, those of the authors only and do not necessarily\nreflect those of the European Union. Neither the European Union nor the grant-\ning authority can be held responsible for them.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Ablation study results: average survival time on validation and test sets. The"
+    },
+    {
+      "id": "t2",
+      "caption": "Inference Time Comparison: Proposed approach against Expert agent."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Action computation flow."
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 2,
+    "n_algorithms": 1,
+    "n_equations": 0
+  }
+}

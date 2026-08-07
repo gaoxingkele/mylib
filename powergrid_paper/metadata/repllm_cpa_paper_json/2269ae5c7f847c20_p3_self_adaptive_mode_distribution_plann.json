@@ -1,0 +1,297 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__10__reliability_oriented_distribution_system_reinfo__ddbacfa370.pdf",
+  "n_pages": 27,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Rapid population growth and increasing industrial activity have led to a sustained\nrise in electricity demand. Distribution system planning is essential to meet this demand\nby adding reliable and affordable components to the power grid [1]. Renewable energy\nresources such as wind and photovoltaic (PV) systems are increasingly integrated into\ndistribution networks because of their significant impact on enhancing system operation\nand improving reliability indices, including SAIFI, SAIDI, and energy not supplied (ENS).\nRecent studies indicate that coordinated scheduling of photovoltaic, wind, and energy\nstorage-based microgrids combined with network reconfiguration can substantially re-\nduce interruption frequency and duration while enhancing self-healing capabilities [ 2].\nDespite the inherent intermittency of renewable sources, stochastic reliability assessments\ndemonstrate that distributed energy resources and electric vehicle charging stations can\nEnergies 2026, 19, 1581 https://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 2 of 27\nimprove overall system reliability when supported by energy storage systems [3]. However,\nwhile advanced distribution automation and communication infrastructures significantly\nenhance the coordinated reliability benefits of renewable integration [4], modern inverter-\nbased resources (IBRs), particularly those compliant with IEEE 1547 standards, also provide\nautonomous grid-support functionalities such as voltage regulation and ride-through\ncapabilities, enabling local reliability support even in less automated networks. There-\nfore, comprehensive reliability-oriented planning frameworks are required to consider\nrenewable generation, and system uncertainties.\nPower distribution planning employs simulation and optimization-based models\nto identify the most cost-effective reinforcement alternatives for meeting system demand\ngrowth while maintaining acceptable reliability levels imposed by regulators. These models\nevaluate various planning alternatives using different objective functions that may focus\non minimizing investment and operational expenditures, including operation and mainte-\nnance costs and system losses, while maximizing reliability levels. This approach enables\nplanners to assess the economic and reliability implications associated with integrating\nrenewable energy resources into distribution networks.\nDistribution system reliability is important to everyone involved in the electricity\nindustry, from planners and operators to regulators, because it measures how well the\nsystem is serving its customers. Reliability assessment in power systems is frequently\nconducted using failure-oriented analytical techniques, including failure mode and effect\nanalysis (FMEA), where system performance is examined under single-component outage\nscenarios commonly referred to as N-1 contingencies, and it requires that the system\nbe capable of operating and catching all demand and service requirements even if one\ncomponent fails. An analytical reliability assessment framework based on N-1 contingency\nconditions is detailed in reference [5]. Distribution planning relies on energy-oriented and\ncustomer-oriented reliability indices to quantitatively assess system performance under\ncontingency conditions. These indices help identify vulnerable network components and\nevaluate alternative reinforcement strategies, thereby supporting cost-effective investment\ndecisions that enhance service continuity and overall grid resilience.\nWhen a fault-induced outage occurs within a distribution network—such as phase-\nto-ground or phase-to-phase faults caused by vegetation contact, equipment aging, or\ncustomer-side failures—protective devices operate to isolate the affected feeder section\nfrom the main grid. In systems equipped with distributed generation, the isolated section\nmay subsequently operate in an intentional islanded configuration, provided that local\ngeneration can sustain the connected load within operational limits. Under these circum-\nstances, an assessment must be conducted to verify the ability of distributed generation\nresources to sustain the local demand for the entire duration of the outage. This evalua-\ntion, commonly referred to as generation adequacy assessment, is strongly influenced by\nthe inherent variability of DG power output as well as fluctuations in system demand to\naddress this issue, a range of analytical frameworks and simulation techniques have been\ndeveloped to assess supply adequacy during islanded operating conditions.\nMany studies on distribution system reliability utilize diverse modeling techniques\nto capture the stochastic nature of demand and renewable generation. Monte Carlo\nSimulation (MCS) is widely adopted for its detailed probabilistic insights; for instance,\nref. [6] used a time-sequential MCS with ARMA models for wind speed, while [7,8] applied\nit to urban grid planning and smart grid islanding. However, the high computational\nburden of MCS often limits its use in complex optimization.\nTo improve efficiency, analytical methods like the Probability Outage Table (POT)\nhave been employed in [9,10] to assess load shedding and islanding safety policies. Simi-\nlarly, ref. [11] combined automation planning with reliability metrics to minimize opera-\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 3 of 27\ntional costs. To further reduce complexity, ref. [12,13] utilized representative clustering of\nhourly data, though this often sacrifices the granularity of annual variations. Conversely,\nref. [14,15] utilized sequential MCS and Markov chain modeling to capture time-varying\nbehaviors, though these models scale poorly as system states increase. To mitigate this,\nreduction-based methods were proposed in [16,17] to simplify generation and load levels.\nDespite these advancements, a significant gap remains. While frameworks in [18–21]\nexplore operational limits, restoration, and dispatchable DGs, they often overlook the\ncombined impact of DG intermittency and synchronized grid connectivity during re-\ncovery. Maintaining synchronization can mitigate hardware overheating during load\ntransfers—a factor largely missing from current simulation-based models. To bridge this,\nref. [22] integrated analytical cut-set techniques with chronological MCS to evaluate power\ntransfer capacities efficiently.\nThe transition toward active distribution networks (ADNs) has recently shifted the\nfocus of reinforcement planning from simple capacity expansion to integrated reliability-\noriented frameworks that account for high distributed generation (DG) penetration\nand evolving regulatory standards. Recent studies highlight a move toward bridg-\ning the gap between infrastructure investment and operational flexibility; for instance,\nKarafotis, P .A et al. [23]and Villarreal, M.I.Z. et al. [24] demonstrated that integrating relia-\nbility indicators like SAIDI and ENS into expansion models facilitates more efficient switch\nplacement and infrastructure prioritization.\nAddressing the stochastic nature of renewables, Aguila Téllez, A. [ 25] developed\na weather-aware probabilistic framework to capture the non-monotonic impact of PV\npenetration on system reliability, while He, Chuan, et al. [26] proposed a distributionally\nrobust expansion planning approach to ensure stability even under worst-case renewable\noutput scenarios. Furthermore, the shift from passive restoration to active “self-healing”\nis emphasized by Konar, S. [27], who explored using DERs as black-start units to assess\nresource participation and generate valid switching sequence during sequential restora-\ntion of distribution grid. Complementing these strategies, advanced metaheuristics have\nbeen developed to solve the resulting NP-hard optimization problems, most notably the\nimproved particle swarm optimization (IPSO) framework by A. Alanazi and T. Alanazi\nin [28], which utilizes chaotic inertia weights to optimize switch and DG placement. While\nrecent studies",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Research Design and Modeling",
+      "level": 1,
+      "text": "This section introduces a modeling framework for assessing the reliability of distribu-\ntion networks under uncertainty. Probabilistic approaches are used to capture variations in\nload demand and the intermittent output of PV and wind generation, producing discrete\noperating scenarios. These scenarios serve as the foundation for a reliability-oriented\nplanning model that assesses system performance and identifies cost-effective strategies to\nmaintain acceptable service quality.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Probabilistic Operating Scenarios for Integrating Uncertainty into Systems",
+      "level": 2,
+      "text": "The variations in load demand, together with the inherent intermittency of PV- and\nwind-based DGs driven by solar irradiance and wind speed, are recognized as dominant\nfactors affecting distribution system planning and reliability assessments. Given that\nreliability planning addresses long-term operating conditions, probabilistic modeling ap-\nproaches based on probability density functions (PDFs) are adopted, as they are well suited\nto capturing such uncertainties. A detailed description of the DG output modeling, load\nrepresentation, and formulation of system operating scenarios can be found in [29].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1.1 Load Modeling",
+      "level": 3,
+      "text": "To identify the most appropriate PDF for representing system demand, a data-driven\nevaluation process was conducted. Historical load measurements were examined and\ntested against several candidate PDFs using the Kolmogorov–Smirnov (K–S) test. The\nresults indicated that the normal distribution provides the closest match to the observed\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 5 of 27\ndemand behavior. Subsequently, the selected distribution was discretized into multiple\ndemand states, and the occurrence probability associated with each state was calculated.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.2 PV- and Wind-Based DG Modeling",
+      "level": 3,
+      "text": "Historical records of solar irradiance and wind speed for the studied system are\ncollected and statistically analyzed to identify suitable probability density functions for\nmodeling their inherent randomness. Based on the K–S test results, solar irradiance is best\ncharacterized by a beta distribution, while wind speed follows a Weibull distribution. The\nselected distributions are discretized into a set of representative states, with the probability\nof occurrence assigned to each state. The corresponding multistate power output of wind-\nbased distributed generators is obtained using the wind turbine power curve described\nin [29], and the wind output power for each state will be acquired from the equation below\nin (1):\nPw(vi) =\n\n\n\n0, 0 < v < vcin and v > vout\nPrated\n\u0010\nvi−vcin\nvrated −vin\n\u0011\n, vcin < v < vrated\nPwr vr < v < vco\n(1)\nwhere vcin, vrated , and vco are the cut-in speed, rated speed, and cut-out speed of the wind\nturbine, respectively, and their values in Table 2;Pw(v) is the output power during state i;\nand vi is the average speed of state i.\nTable 2. Wind turbine parameters [30].\nCut-in Speed (vcin ) m/s 3\nRated speed ( vrated ) m/s 12\nCut-out speed (vco) m/s 25\nSimilarly, the multistate power production of photovoltaic units is calculated using\nstandard PV power equations in conjunction with voltage–current (V–I) characteristics\nof the PV modules as described in [ 29]. As solar irradiance is divided into states, the\nPV output power for each state will be acquired from equations below in (2)–(6).\nTcy = TA + say\n\u0012 NOT − 20\n0.8\n\u0013\n(2)\nIy = say(Isc + ki(Tc − 25)) (3)\nVy = VOC − kv × Tcy (4)\nFF = VMMP × IMMP\nVOC × Isc\n(5)\nPVsy\n\u0010\nSsy\n\u0011\n= Nm × FF × Vy × Iy (6)\nwhere the following are defined: Tcy: cell temperature C during state y; TA: ambient temper-\nature C; kv: voltage temperature coefficient V/C; ki: current temperature coefficient A/C;\nNOT: nominal operating temperature of cell in C; FF: fill factor; Nm: number of modules;\nIsc: short circuit current in A; VOC: open circuit voltage in V; IMMP : current at maxi-\nmum power point in A; VMMP : voltage at maximum power point in V; PVsy( Ssy\n\u0011\n: output\npower during state y, and Ssy: average irradiance of state y. Table 3 details the PV module\ntechnical specifications.\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 6 of 27\nTable 3. PV module technical specifications [30].\nParameter Value\nNominal Power (+/ −5%) 75.0 W\nVoltage at Pmax 46.9 V\nCurrent at Pmax 1.6 A\nOpen Circuit Voltage 60.1\nShort Circuit Current 1.82\nTemperature Coeff. of Voc (−0.2%/C)\nTemperature Coeff. of Isc (+0.04%/C)\nNominal Cell Operating Temp. 43 C",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.3 Developing the Probabilistic Operating Scenario",
+      "level": 3,
+      "text": "After defining the discrete states associated with wind generation, photovoltaic gener-\nation, and system demand, a comprehensive scenario matrix is constructed. This matrix\nconsists of three columns that enumerate all possible combinations of wind power output,\nsolar power output, and load demand states, thereby representing the complete set of oper-\nating scenarios considered in the analysis. The number of rows in this matrix is the result of\nmultiplying the number of wind, solar, and load states. Each state’s probability is calculated\nby multiplying the probabilities of the corresponding wind, solar, and load states.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Proposed Model for the Reliability-Based Reinforcement Planning",
+      "level": 2,
+      "text": "Reliability-oriented planning models for distribution systems do not seek to maximize\nservice continuity without constraint. Instead, they aim to achieve acceptable levels of ser-\nvice quality by defining specific reliability performance targets and fulfilling these require-\nments in a cost-effective manner. The subsequent sections present a detailed description of\nthe problem formulation and describe the approach used to evaluate system reliability.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.1 Problem Formulation",
+      "level": 3,
+      "text": "In this section, the reinforcement planning problem for the distribution system is\nformulated as a reliability-constrained optimization model. The objective is to minimize the\ntotal net present value (NPV) of investment and interruption-related costs while ensuring\nthat regulatory reliability targets are satisfied at all load points throughout the planning\nhorizon. The main objective of the planning framework is to reduce the overall costs related\nto energy not supplied (CENS), tie line investments (CTL), the installation of normally\nopen switches (CNOS), and the upgrading of existing feeders and substations (CUPG).\nMathematically, the objective function can be expressed as:\nMinZ = ∑\nt∈T\n\"\nCENS (t) + CLT(t) + CNOS (t) + CUPG (t)\n(1 + τ)(t−1)K\n#\n+ Pf\nnc\n∑\nc\nµc (7)\nIn this formulation, the binary parameter µc is assigned to each reliability constraint c\nwith nc representing the cumulative count of these requirements. Furthermore, a penalty\nconstant Pf is utilized; it is assigned a significant magnitude if a constraint is breached and\nremains at zero otherwise. The specific algebraic formulations for every segment of the\nprimary objective function are detailed in the following set of equations:\nCENS (t) = ∑\nt∈N\nENS i,tIC (8)\nCLT(t) = ∑\nf ∈T f\nITC f ,t × Nf ,t (9)\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 7 of 27\nCNOS (t) = ∑\nNO∈NOS\nINOC NO,t × NNO,t (10)\nCUPG (t) = ∑\ni∈ΩES\n∑\nu∈ΩU\nCUS\nu × σi,u,t + ∑\ni∈ΩEL\n∑\na∈Ωa\nCUF\na Li,jβi,j,a (11)\nwhere:\n• ENS denotes the energy not served at bus i during stage t, and IC represents the\nassociated interruption cost penalty in $/MWh.\n• ITC f ,t is the investment cost of tie line f at stage t, while INOC NO,t represents the\ninvestment cost of normally open switch NO at stage t.\n• Nf ,t is a binary variable equal to 1 if tie line f is selected at stage t, and 0 otherwise.\nSimilarly, NNO,t equals 1 if switch NO is selected at stage t, and 0 otherwise.\n• CUS\nu and CUF\na correspond to the costs of upgrading existing substations and feed-\ners, respectively, with u and a representing the chosen alternatives for substations\nand feeders.\n• Li,j represents the length of feeder (i, j) in kilometers.\n• σi,u,t and βi,j,a are binary variables associated with substation and feeder upgrade\ndecisions, respectively.\n• N denotes the set of system buses, Tf the set of candidate tie lines, and NOS the set of\nnormally open switches.\n• ES and EL represent the sets of existing substations and feeders, respectively.\n• ΩU and Ωa correspond to the sets of available upgrade alternatives for substations\nand feeders.\nThe system’s total energy not supplied cost (CENS) is determined by summing the\nenergy not served (ENS) across all buses and multiplying each by its respective interruption\ncost per MWh.\nAlthough the objective function minimizes the total net present value (NPV) of invest-\nment and interruption-related costs, the proposed framework is fundamentally reliability-\noriented. This is because system reliability indices are imposed as binding constraints\nthroughout the planning horizon. Specifically, the planning decisions must ensure that the\nservice continuity indicators at each load point remain within predefined regulatory limits.\nTherefore, cost minimization is performed subject to satisfying reliability performance re-\nquirements, ensuring that economic efficiency does not compromise system dependability.\nThe ENS for individual buses can be determined using Equation (13). Optimization is\nsubject to the following system constraints:\nSAIDI i,t ≤ SAIDI targeted\ni (12)\nENS i,t ≤ ENS targeted\ni (13)\nHere, SAIDI targeted",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "and ENS targeted",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "represent the mandated performance benchmarks",
+      "level": 1,
+      "text": "for the System Average Interruption Duration Index and energy not served. Beyond\nmeeting these goals, the network must adhere to several technical requirements, such\nas maintaining the supply–demand equilibrium and staying within voltage and thermal\nthresholds for buses and substations. These operational boundaries, which are detailed later\nin this paper, are applied to every individual contingency case. Because system architecture\nsignificantly influences reliability tuning, metaheuristic techniques are frequently used to\nsolve these complex problems. This research utilizes a genetic algorithm (GA) to facilitate\nreinforcement planning based on reliability metrics. The process begins with an initial\ngroup of potential solutions known as chromosomes, which are formed by various genes.\nEach generation involves assessing the fitness of these chromosomes and ranking them\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 8 of 27\nbased on how effectively they minimize the objective function. To handle non-compliant\nsolutions, an external penalty mechanism is integrated directly into the main objective\nfunction. Prior to the GA execution, data strings are structured to meet the algorithm’s\nspecific format. Each chromosome serves as a digital map for a potential solution, detailing\nthe placement of normally open (NO) switches, tie line configurations, and necessary\ninfrastructure upgrades. Consequently, the optimization decision vector uses binary values\nfor component selection and integer values to represent the scheduled years for investment.\nA typical chromosome encoding for this planning problem is illustrated in Figure 1, while\nFigure 2 provides a visual summary of the optimization workflow.\nFigure 1. Typical chromosome encoding structure for the planning problem [31].\nFigure 2. Flowchart illustrating the proposed GA-based implementation of the proposed planning\nframework [31].\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 9 of 27",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.2.2 Distribution System Reliability Assessment with DGs",
+      "level": 3,
+      "text": "This section focuses on evaluating the reliability of the distribution system considering\nDG units. The assessment is performed using the N −1 contingency principle, which\nrequires that the system remains capable of supplying the demand and maintaining service\nstandards even if any single component becomes unavailable. The analysis takes into\naccount the impact of both component outages and the presence of DGs, ensuring that the\nsystem can either restore the affected loads or operate in islanded mode if necessary. Every\nsystem component’s unavailability is taken into account in the N−1 analysis. This study\nonly considers outages or failures in substations and in lines. Incorporating dispatchable\nor renewable DGs into distribution networks highlights their ability to improve overall\nsystem reliability. During occurrence of disturbance, protection devices disconnect the\naffected parts of the system, enabling the rest of the network to function normally. As a\nresult, this action causes the formation of islands within the system. DGs improve system\nreliability primarily by supplying power to all or part of the loads within the formed islands\nor by supporting the system in maintaining operational limits during load restoration. The\nproposed reliability assessment approach starts by defining three fundamental sets:\n1. Sequence-Path Set for each Bus (SPi): This set includes every element situated on the\ndirect series route that links the main substation to a specific bus. A bus’s operational\nstatus is fundamentally governed by the availability of the components within this\ntrajectory. Consequently, a malfunction in any single component along this sequence\npath triggers a bus outage. This state of inactivity persists until the faulty item is\nrestored, causing a transient loss of power to all associated loads. In other words,\nif any element in the sequence path fails, the bus experiences downtime until the\ncomponent is repaired, resulting in a temporary interruption of the connected load.\n2. Affected Bus Set for Each Contingency (ABC): In the event of a contingency, protec-\ntion devices isolate the faulty section of the network, causing sustained interruptions\nfor all downstream loads. This set contains only the buses that are impacted by the\nspecific contingency.\n3. Potential Solutions for Restoration per Contingency (PRC): In the event of a system\noutage, the protection devices may isolate a portion of the network, forming an island.\nThe restoration process involves repairing the fault and reconnecting the affected loads.\nHowever, if alternative restoration paths exist, customers in the isolated section can\nbe reconnected to the main source via switching operations, reducing their downtime\nfrom the full repair time to the switching duration.\nTo illustrate the formation of these sets, let us study the 11-bus system illustrated in\nFigure 3. If line 4 experiences an outage, the affected buses are Bus 4, Bus 5, and Bus 6,\nas shown in Figure 4. There are two possible restoration paths available for these buses,\nassociated with tie lines 1 and 2, which can be employed to re-energize the impacted\nbuses. Table 4 provides a comprehensive breakdown of the sequence-path sets associated\nwith each bus, and Table 5 outlines the affected buses along with their associated potential\nrestoration paths for each contingency. The restoration framework follows a standard FLISR\n(Fault Location, Isolation, and Service Restoration) sequence. In the event of a permanent\nfault (e.g., Line 4), the simulation logic first identifies the faulted branch and opens the near-\nest upstream and downstream sectionalizing switches to achieve isolation. Subsequently,\na feasibility check for feeder-to-feeder transfer is conducted, ensuring that the adjacent\nfeeder has sufficient capacity to support the un-faulted but isolated load. Only after these\nsteps are confirmed, the tie line switch (Tie 1 or Tie 2) closed to restore service. Tie lines\nare strategically placed to facilitate power transfer between independent feeders, ensuring\nthat service restoration effectively offloads the primary feeder during peak demand or\ncontingency events. This aligns with current industry trends toward self-healing grid\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 10 of 27\narchitectures and smart grid schemes. These sets ensure that the mathematical formulation\nof the Affected Bus Set (ABC) remains deterministic and aligned with the physical bound-\naries of the faulted segment. By isolating the fault at its nearest terminals, the framework\ncan precisely quantify the reliability improvements—such as the reduction in energy not\nserved (ENS) and System Average Interruption Duration Index (SAIDI)—offered by the\ndeployment of DGs and the activation of hierarchical restoration modes. By integrating\nthese considerations of fault isolation and device coordination, the proposed framework\nprovides a realistic platform for evaluating the economic and technical trade-offs of differ-\nent reliability-enhancing investments. This contextualization ensures that the analysis of\nunserved load and the assessment of DG competitiveness reflect the evolving operational\nstandards of modern, self-healing distribution systems.\nFigure 3. Typical diagram of an 11-bus primary distribution system [31].\nFigure 4. Island formation due to a fault in line 4 [31].\nTable 4. Sequence paths and corresponding sequence path sets for each bus in the distribution system [31].\nBus (i) Sequence Path Sequence Path Set (SPi)\nBus 1 S/S ⇒ Line 1 S/S, Line 1\nBus 2 S/S ⇒Line1 ⇒Line2 S/S, Line 1, Line 2\nBus 3 S/S ⇒ Line 1 ⇒ Line 2 ⇒ Line 3 S/S, Line 1, Line 2, Line 3\nBus 4 S/S ⇒ Line 1 ⇒ Line 2 ⇒ Line 3 ⇒ Line 4 S/S, Line 1, Line 2, Line 3, Line 4\nBus 5 S/S ⇒ Line 1 ⇒ Line 2 ⇒ Line 3 ⇒ Line 4 ⇒ Line 5 S/S, Line 1, Line 2, Line 3, Line 4, Line 5\nBus 6 S/S ⇒ Line 1 ⇒Line 2⇒Line 3⇒Line 4⇒Line 5 ⇒Line 6 S/S, Line 1, Line 2, Line 3, Line 4, Line 5, Line 6\nBus 7 S/S ⇒ Line 1 ⇒ Line 7 S/S, Line 1, Line 7\nBus8 S/S ⇒ Line 1 ⇒ Line 7 ⇒ Line 8 S/S, Line 1, Line 7, Line 8\nBus 9 S/S ⇒ Line 1 ⇒ Line 7 ⇒ Line 8 ⇒ Line 9 S/S, Line 1, Line 7, Line 8, Line 9\nBus 10 S/S ⇒ Line 1 ⇒ Line 2 ⇒ Line 3 ⇒ Line 10 S/S, Line 1, Line 2, Line 3, Line 10\nBus 11 S/S ⇒ Line 1 ⇒ Line 2 ⇒ Line 3 ⇒ Line 10 ⇒ Line 11 S/S, Line 1, Line 2, Line 3, Line 10, Line 11\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 11 of 27\nTable 5. Sets of affected buses with their associated potential restoration paths for each contingency [31].\nContingency (C) Set of Affected Buses (AB C) Potential Restoration Paths (PR C)\nS/S 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ∅\nLine 1 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ∅\nLine 2 2, 3, 4, 5, 6, 10, 11 Tie2\nLine 3 3, 4, 5, 6, 10, 11 Tie2\nLine 4 4, 5, 6 Tie1, Tie2\nLine 5 5, 6 Tie1\nLine 6 6 Tie1\nLine 7 7, 8, 9 Tie2\nLine 8 8, 9 ∅\nLine 9 9 ∅\nLine 10 10, 11 Tie1\nLine 11 11 Tie1\nOnce all relevant sets are defined for each bus and contingency, the reliability indices\nfor the individual buses can be calculated, accounting for both planned restoration actions\nand intentional islanding operations. When this type of contingency occurs, certain system\nbuses (i.e., those included in the affected bus set ABC) are isolated by the protection system,\nforming islands. Intentional restoration is considered successful if at least one restoration\npath exists for the formed island, the path does not cause feeder overloads or excessive\nvoltage drops, and the substation receiving the transferred loads is not overloaded. If\nany of these conditions are violated, the intentional restoration is deemed unsuccessful.\nTo manage this, every possible recovery pathway for the created island is cataloged and\nassessed. We utilize a forward/backward sweep load flow technique for every network\ntopology and operational case. This analysis determines critical system states, such as\nvoltage levels at the buses, power injections at the substation, and individual feeder flows,\nensuring that no operational t",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "Min",
+      "level": 1,
+      "text": "i ≤ Vi ≤ V Max\ni (16)\n5. The power balance constraint is satisfied, ensuring that all generation sources supply\nthe total demand and system losses:\n∑\ni∈S\nPGi + ∑\ni∈DG\nPDGi − ∑\ni∈N\nPDi − ∑\ni∈T f\nPloss f = 0 (17)\n∑\ni∈S\nQGi + ∑\ni∈DG\nQDGi − ∑\ni∈N\nQDi − ∑\ni∈T f\nQloss f = 0 (18)\nHere, PGi and QGi are the active and reactive power supplied by the substations,\nPDGi and QDGi denote the active and reactive power from DG units, PDi and QDi are the\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 12 of 27\nbus demands, and Ploss f and Qloss f represent feeder losses. The sets S, DG, N, and T f\ncorrespond to substation buses, DG buses, load buses, and feeders, respectively.\nIf no restoration path exists or the intentional restoration fails, the system proceeds to\nintentional islanding. The island operation succeeds only if the total DG within the island\nmeets or exceeds the combined load and losses.\nB. Successful Islanding Requirements (Success Mode 2): To ensure successful island\nmode for disconnected loads, it is crucial that the total power generated by the\ndistributed generators (DGs) within the island matches the total load and losses of\nthat island:\nPDG I ≥ PDI + PLoss I (19)\nwhere PDGI is the total DG power inside island I, PDI is the total load, and PLossI is\nthe total system loss within the island, assumed to be 5% of the islanded load [ 7].\nThe outcome consists of two successful modes, namely successful restoration and\nsuccessful islanding, and one failure mode. The algorithm needs to choose one of\nthese modes for each contingency scenario. Figure 5 presents the flowchart of the\nproposed general methodology for evaluating distribution system reliability in the\npresence of DGs.\nFigure 5. Flowchart illustrating the proposed reliability evaluation model for the distribution system [31].\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 13 of 27\nC. Reliability Indices Calculation: To ensure successful island mode for disconnected\nloads, it is crucial that the total power generated by the DGs within the island can\nmeet the total demand and losses of that island:\nThe reliability indices of the distribution system are calculated after establishing\nall relevant sets, considering both successful restoration and intentional islanding. The\ndowntime for each load point i is determined as:\nDTi = ∑\nC∈SPi\nλCrC (20)\nwhere λC is the failure rate and rC is the repair time of component C within the sequence\npath SPi. The probability that load point i is isolated due to failures along its sequence path\nis given by:\nPisolated\ni = ∑C∈SPi λCrC\nNH (21)\nwith NH = 8760 h per year. For a specific contingency C, the probability of isolation is:\nPisolated\ni,c =\n( λCrC\nNH , i f c ∈ SPi\n0, i f c /∈ SPi\n(22)\nThe probability that bus i operates in a successful mode following contingency C\ndepends on both the isolation probability and the likelihood of either successful restoration\nor islanding. Assuming independence between these events, the probability of success is:\nPsuccess\ni = Pisolated\ni × PSRSI\ni,c (23)\nHere, PSRSI\ni,C represents the probability that either restoration or islanding conditions\nare satisfied. This probability is determined by summing the occurrence probabilities of all\noperating scenarios s that meet the success conditions:\nPSRSI\ni,c =\nTs\n∑\ns=1\nPs\nh\nISRi,s,c + ISI i,s,c\ni\n(24)\nISRi,s,c =\n(\n1, i f restoration conditions are met\n0, otherwise (25)\nISI i,s,c =\n(\n1, i f restoration conditions are met\n0, otherwise (26)\nwhere ISR(i,s,C) and ISI (i,s,C) are indicator functions for successful restoration and islanding,\nrespectively. If success mode 1 occurs, ISR = 1 and ISI = 0; if success mode 2 occurs,\nISR = 0 and ISI = 1. Both are zero in case of failure, as illustrated in Figure 5. Using these\nprobabilities, the unavailability of load point i is computed as:\nUi = ∑\nC∈SPi\n(λCrC − Psuccess\ni × NH ) (27)\nThe reliability indices for the system are then determined by:\nSAIDI = ∑i UiNi\n∑i Ni\n(28)\nASAI = ∑i Ni × NH − ∑i UiNi\n∑i Ni × NH (29)\nhttps://doi.org/10.3390/en19061581\nEnergies 2026, 19, 1581 14 of 27\nASUI = 1 − ASAI (30)\nENS = ∑\ni∈ΩES\nLa(i)Ui (31)\nHere, Ni represents the customers’ number at bus i, La(i) denotes the average load at\nthat bus, and NH = 8760 h. The reliability indices for the individual buses are calculated\nas follows:\nSAIDI i = ∑\ni∈SPi\n\u0000\nλCrC − Psuccess\ni,c × NH\n\u0001\n(32)\nENS i = La(i) ∑\ni∈SPi\n\u0000\nλCrC − Psuccess\ni,c × NH\n\u0001\n(33)",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Results",
+      "level": 1,
+      "text": "Several case studies were conducted to evaluate the effectiveness of the proposed\nframework. The details and results of these studies are outlined below:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 Overview of the Distribution System Studied",
+      "level": 2,
+      "text": "The effectiveness of the proposed planning framework is evaluated using a 54-bus\nradial distribution system. The complete network data are available in [32], and the system\nconfiguration is illustrated in Figure 6. The network consists of 50 existing feeders, three\nsubstations, and eight candidate tie lines, operating at a nominal voltage level of 15 kV . The\nreliability parameters of all system components, including failure rates and repair times,\nare provided in Table 6.\nFigure 6. Configuration of the primary distribution system with the locations of candidate tie lines.\nFor each planning stage and at every load point, the target reliability thresholds are\nset to SAIDI ≤ 2.5 h/year and ENS ≤ 5 MWh/year, as adopted from [33]. The interruption\ncost penalty is assumed to be 2000 $/MWh, while the installation cost of a normally\nopen (NO) switch is set to $4700 [34]. The construction cost of a new tie line is considered\nto be $2 × 106 per kilometer.\nhttps://doi.org/10.3390/en19061581",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f2",
+      "caption": "provides a visual summary of the optimization workflow."
+    },
+    {
+      "id": "f1",
+      "caption": "Typical chromosome encoding structure for the planning problem [31]."
+    },
+    {
+      "id": "f3",
+      "caption": "If line 4 experiences an outage, the affected buses are Bus 4, Bus 5, and Bus 6,"
+    },
+    {
+      "id": "f4",
+      "caption": "Island formation due to a fault in line 4 [31]."
+    },
+    {
+      "id": "f5",
+      "caption": "Flowchart illustrating the proposed reliability evaluation model for the distribution system [31]."
+    },
+    {
+      "id": "f6",
+      "caption": "Configuration of the primary distribution system with the locations of candidate tie lines."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparative summary of distribution system reliability literature."
+    },
+    {
+      "id": "t2",
+      "caption": "Wind turbine parameters [30]."
+    },
+    {
+      "id": "t3",
+      "caption": "PV module technical specifications [30]."
+    },
+    {
+      "id": "t4",
+      "caption": "Sequence paths and corresponding sequence path sets for each bus in the distribution system [31]."
+    },
+    {
+      "id": "t5",
+      "caption": "Sets of affected buses with their associated potential restoration paths for each contingency [31]."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "(32)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

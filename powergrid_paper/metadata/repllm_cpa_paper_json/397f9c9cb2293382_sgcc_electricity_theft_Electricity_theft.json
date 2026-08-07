@@ -1,0 +1,242 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/sgcc_electricity_theft/sgcc_electricity_theft__Electricity_theft_detection_with_deep_learning__531695316e.pdf",
+  "n_pages": 10,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Search Engines (SEs) play a crucial rule in the current Inter net world. If you wish to reach some\ncontent, except if you have a speciﬁc target in mind, you dial keywords on an SE through a web\nbrowser to discover the (expected) most relevant content. T he number of searches worldwide per\nyear is not precisely known, but just talking about Google, i t is thought that they handle at least\ntwo trillions of requests per year, and that it can even be muc h more than that 1. As a consequence,\nif you are a small content provider or a new comer, your visibi lity and business success will highly\ndepend on your ranking on SEs.\nSEs are regularly accused of biasing their rankings 2 by not only trying to provide as an out-\nput an ordered list of links based on relevance, but to also include criteria based on revenues it\ncould drive. The problem was brought in 2009 by Adam Raﬀ, co-f ounder of the price-comparison\ncompany Foundem, saying that Google was voluntarily penali zing his company in rankings with\nrespect to Google’s own services. Such a behavior would inde ed be rational from the SE perspec-\ntive, as it could yield signiﬁcant revenue increases; a math ematical model highlighting the optimal\n1https://searchengineland.com/google-now-handles-2-9 99-trillion-searches-per-year-250247\n2See for example\nhttps://www.technologyreview.com/s/610275/meet-the- woman-who-searches-out-search-engines-bias-against- women-and-minorities/\n1\nnon-neutral–i.e., not based on relevance only–strategies of SEs is for example described in [3]. The\nissue led to the use of expression search neutrality debate , in relation to the net neutrality debate\nwhere Internet Service Providers are accused of diﬀerentia ting service at the packet level to favor\nsome applications, content, or users. Indeed, similarly, n ew valid content can hardly be reached if\nnot properly considered by SEs. This is now an important deba te worldwide [2, 5, 8]. But while\ndeﬁning a neutral behavior of ISPs at the network level is qui te easy, a neutral behavior for SEs\ninvolves having a clear deﬁnition of relevance. Up to now thi s relevance is deﬁned by SE-speciﬁc\nalgorithms such as PageRank [7], that can additionally be (a nd are claimed to be) reﬁned by tak-\ning into account location, cookies, etc. The exact used algo rithms and their relation to relevance\nare sometimes hard to know without requiring a total transpa rency of SEs and free access to their\nalgorithms, which they are reluctant to disclose.\nBecause of the diﬀerent used algorithms, it is interesting t o compare search engines, for example\nby giving them a grade (or score). It is often said that if some one is not happy, she can just switch,\nshe is just one click away from another SE. But while it could b e true in a fully competitive market,\nit is not so easy in practice with SEs since most people just kn ow one or two SEs and do not have\na suﬃcient expertise to evaluate them and switch. As of May 20 18, Statcounter Global Stats 3\ngives worldwide a market share of 90.14% to Google, 3.24% to B ing, 2.18% to Baidu, 2.08% to\nYahoo!...\nOur paper has several goals:\n• First, to propose a so-called consensus SE , deﬁned such as some “average” behavior of SEs,\nbased on the idea that this average SE should be closer to one t ruly based on relevance.\nConsidering a list of several SEs, we give a score to all the pr ovided links, by weighing them\nby the position click-through-rate on each SE, estimating t he position-dependent probability\nto be clicked. The consensus SE then ranks links according to their score.\n• To give a score to SEs, comparing their results to the consens us SE. From the score of links,\nwe can give a score to SEs by summing the scores of the presente d lists weighted by their\npositions. It then allows us to rank the SEs themselves and sh ow which one seems the closest\nto the “optimal” consensus SE, for a single keyword and for a l ist of keywords.\n• To discuss and compare the behavior of SEs with respect to req uests in practice. We have\nimplemented and tested our model, computing grades for SEs a nd distributions of scores in\nterms of requests. From the rankings of SEs for any keyword, w e can also investigate if there\nis a suspect deviation of some SEs toward their own content wi th respect to competitors.\nThis would help to detect violations to a (potential) search neutrality principle.\nNote that algorithms comparing rankings exist in the litera ture, see [6] and references therein,\nbased on diﬀerences between vectors, but there is to our know ledge no algorithm like ours taking\ninto account the click-through-rates (weights) associate d to positions.\nThe rest of the paper is organized as follows. Section 2 prese nts the model: the deﬁnition of\nlink scores for any keyword, the corresponding SE score as we ll as the consensus SE. Section 3\npresents an implementation of this model in practice and com pares the most notable SEs. Finally,\nSection 4 concludes this preliminary work and introduces th e perspectives of extension.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Scoring model and consensus search engine",
+      "level": 1,
+      "text": "We consider n SEs, m keywords representative of real searches, and a ﬁnite set of ℓ pages/links\ncorresponding to all the results displayed for the whole set of searches. When dialing a keyword,\nSEs rank links. We will limit ourselves to the ﬁrst displayed page of each SE, considered here for\nsimplicity the same number a for all SEs, but we could consider diﬀerent values for each SE , and\neven a = ℓ.\n3http://gs.statcounter.com/search-engine-market-shar e\n2\nThe ranking is made according to a score assigned to each page for the considered keyword.\nThis score is supposed to correspond the relevance of the pag e. According to their rank, pages\nare more or less likely to be seen and clicked. The probabilit y to be clicked is called the click-\nthrough-rate (CTR) [4]; it is in general SE-, position- and l ink- dependent, but we assume here\nfor convenience, and as commonly adopted in the literature, a separability property: the CTR\nof link i at position l is the product q′\niql of two factors, q′",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "depending on the link i only, and ql",
+      "level": 1,
+      "text": "depending on the position l only. We typically have q1 ≥ q2 ≥ · · · ≥ qa. The diﬃculty is that\nthe link-relative term q′\ni, upon which a “neutral” ranking would be based, is unknown. B ut the\nposition-relative terms ql can be estimated, and we assume in this paper that they are kno wn and\nthe same on all SEs, i.e, that SEs’ presentation does not inﬂu ence the CTR. We then make the\nfollowing reasoning:\n• SEs favor the most relevant (according to them) links by rank ing them high, that is, providing\nthem with a good position and hence a high visibility, which can be quantiﬁed by the position-\nrelative term ql;\n• for a given keyword, a link that is given a high visibility by a ll SEs is likely to be “objectively\nrelevant”. Hence we use the average visibility oﬀered by the set of SEs to a link, as an\nindication of the link relevance for that keyword. We will ca ll that value the score of the\nlink for the keyword, which includes the link-relative term q′\ni.\n• We expect that considering several SEs will average out the p ossible biases introduced by\nindividual SEs, when estimating relevance; also, the analy sis may highlight some SEs that\nsigniﬁcantly diﬀer from the consensus for some sensitive ke ywords, which would help us\ndetect non-neutral behaviors.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Page score",
+      "level": 2,
+      "text": "The notion of score of the page as deﬁned by SEs is (or should) b e related to the notion of relevance\nfor any keyword. As brieﬂy explained in the introduction, th e idea of relevance is subjective and\ndepends on so many possible parameters that it can hardly be a rgued that SEs do not consider a\nvalid deﬁnition without knowing the algorithm they use. But transparency is very unlikely because\nthe algorithm is the key element of their business.\nIn this paper, as explained above we use a diﬀerent and origin al option for deﬁning the score,\nas the exposition (or visibility) provided by all SEs, which can be easily computed.\nFormally, for page i and keyword k, the score is the average visibility over all considered SEs :\nRi,k := 1\nn\nn∑\nj=1\nqπ j (i,k ) (1)\nwhere πj (i, k) denotes the position of page i on SE j for keyword k. In this deﬁnition, if a page is\nnot displayed by an SE, the CTR is taken as 0. Another way to say it is to deﬁne a position a + 1\nfor non displayed pages, with qa+1 = 0.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Search engine score",
+      "level": 2,
+      "text": "Using the score of pages (corresponding to their importance ), we can deﬁne the score of an SE j for\na given keyword k as the total “page score visibility” of its results for that k eyword. Mathematically,\nthat SE score Sj,k can be expressed as\nSj,k :=\n∑\npages i\nqπ j (i,k )Ri,k ,\nwhere again qp = 0 if a page is ranked at position p ≥ a + 1 (i.e., not shown), and for each page\ni, Ri,k is computed as in Eq. (1).\n3\nThe SE score can also be computed more simply, by just summing on the displayed pages:\nSj,k =\na∑\np=1\nqpR˜π j (p,k ),k (2)\nwhere ˜πj(p, k) is the page ranked at the pth position by SE j for keyword k, i.e., ˜πj(·, k) is the\ninverse permutation of πj(·, k).\nThe higher an SE ranks highly exposed pages, the higher its sc ore. The score therefore corre-\nsponds to the exposition of pages that are well-exposed on av erage by SEs.\nTo deﬁne the score of SE j, for the whole set of keywords, we average over all keywords:\nSj := 1\nm\nm∑\nk=1\nSj,k . (3)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.3 Consensus search engine",
+      "level": 2,
+      "text": "From our deﬁnitions of scores in the previous subsection, we can deﬁne the consensus SE as the\none maximizing the SE score for each keyword. Formally, for a given keyword k, the goal of the\nconsensus SE is to ﬁnd an ordered list of the ℓ pages (actually, getting the ﬁrst a is suﬃcient),\nwhere π(k)(p) is for the page at position p, such that\nπ(k)(·) = argmaxπ (·)\na∑\np=1\nqpRπ (p),k .\nNote that this maximization is easy to solve: it suﬃces to ord er the pages such that Rπ (k)(1),k ≥\nRπ (k)(2),k ≥ · · ·, i.e., to display pages in the decreasing order of their scor e (visibility).\nThe total score of the consensus SE can then also be computed, and is straightforwardly\nmaximal.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 Analysis in practice",
+      "level": 1,
+      "text": "We have implement in Python a web crawler that looks, for a set of keywords, the results provided\nby nine diﬀerent search engines. From those results, the sco res can be computed as described in the\nprevious section, as well as the results and score of a consen sus SE. The brute results can be found\nat https://partage.mines-telecom.fr/index.php/s/aG3SYh VYPtRCBKH. The code to get page\nURLs is adapted to each SE, because they display the results d iﬀerently. It also deals with results\ndisplay that can group pages and subpages (that is, lower lev el pages on a same web site) that\ncould be treated as diﬀerent otherwise. Another solved issu e is that a priori diﬀerent URLs\ncan lead to the same page. It is for example the case of http://www.maps.com/FunFacts.aspx,\nhttp://www.maps.com/funfacts.aspx, http://www.maps.com/FunFacts.aspx?nav=FF, http://www.maps.com/FunFacts,\netc. It can be checked that they actually lead to the same web p age output when accessing the\nlinks proposed by the SEs. Note on the other hand that it requi res a longer time for our crawler\nto get to each page and check whether the URL gets modiﬁed.\nWe (arbitrarily) consider the following set of nine SEs amon g the most popular, in terms of\nnumber of requests according to https://www.alexa.com/siteinfo:\n• Google\n• Yahoo!\n• Bing\n• AOL\n• ask.com\n4\n• duckduckgo\n• Ecosia\n• StartPage\n• Qwant.\nWe include SEs such as Qwant or StartPage, which are said to re spect privacy and neutrality. We\nalso clear the cookies to prevent them from aﬀecting the resu lts (most SEs use cookies to learn\nour preferences).\nWe consider 216 diﬀerent queries included in February 2018 c ommon searches. The choice is\nbased on the so-called trending searches in various domains according to https://trends.google.fr/trends/topcharts.\nWe arbitrarily chose keywords in diﬀerent categories to cov er a large range of possibilities.\nWe limit ourselves to the ﬁrst page of search engines results , usually made of the ﬁrst 10 links.\nThat is, we let a = 10 . The click-through rates qp are set as measured in [1] and displayed in\nTable 1.\nq1 q2 q3 q4 q5 q6 q7 q8 q9 q10\n0.364 0.125 0.095 0.079 0.061 0.041 0.038 0.035 0.03 0.022\nTable 1: CTR values used in the simulations, taken from [1]",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1 Search engines scores",
+      "level": 2,
+      "text": "Table 2 provides the average scores of the nine considered se arch engines, as well as that of the\nconsensus SE, according to Eq. (3). We also include the 95% co nﬁdence intervals that would\nbe obtained (abusively) assuming requests are independent ly drawn from a distribution on all\npossible requests. Under the same assumption, we can also im plement statistical tests to determine\nSE\nScore\nGoogle 0.0832 ± 0.0045\nYahoo 0.1103 ± 0.0030\nBing 0.0933 ± 0.0045\nAOL 0.1055 ± 0.0036\nAsk 0.0211 ± 0.0006\nDuckDuckGo 0.1106 ± 0.0029\nEcosia 0.1071 ± 0.0033\nStartPage 0.0816 ± 0.0046\nQwant 0.0906 ± 0.0048\nConsensus 0.1332 ± 0.0026\nTable 2: SE scores, and 95% conﬁdence intervals half-widths .\nwhether the scores of search engines are signiﬁcantly diﬀer ent. The corresponding p-values are\ngiven in Table 3. For two search engines, the p-value is the probability of error when rejecting the\nhypothesis they have similar scores. A small value indicate s a statistically signiﬁcant diﬀerence\nbetween both search engines (1% means 1% chance of error).\nWe can remark a group of four SEs with scores above the others: DuckDuckGo, Yahoo!, Ecosia,\nand AOL, around 0.11. The statistical analysis using the p-value allows to diﬀerentiate even more,\nwith DuckDuckGo and Yahoo! as a ﬁrst group, and Ecosia, and AO L slightly below. Then, Bing\nand Qwant get scores around 0.09 (and can not be strongly diﬀe rentiated from the p-value in\nTable 3)), and Google and StartPage around 0.082 (since Star tPage is based on Google, close\nresults were expected). Finally, quite far from the others, Ask.com has a score around 0.02.\nThe consensus SE has a score of 0.133, signiﬁcantly above all the SEs as shown in Table 3.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 Yahoo Bing AOL Ask DuckDuckGo Ecosia StartPage Qwant Consen sus",
+      "level": 1,
+      "text": "Google 1.3e-38 5.5e-05 9.7e-24 7.7e-70 6.3e-42 5.4e-30 1.3 e-01 5.4e-03 6.8e-82\nYahoo 5.0e-23 3.5e-08 1.5e-131 5.4e-01 1.9e-04 1.0e-40 2.4 e-25 2.4e-129\nBing 5.8e-11 2.6e-81 3.1e-23 2.8e-15 6.6e-06 6.1e-02 4.0e- 70\nAOL 6.1e-112 3.9e-07 1.3e-01 2.0e-26 1.9e-13 1.6e-78\nAsk 4.5e-135 5.1e-120 4.5e-67 8.3e-75 4.0e-163\nDuckDuckGo 4.5e-05 4.5e-42 4.4e-25 1.4e-130\nEcosia 5.6e-32 1.8e-17 2.0e-91\nStartPage 9.4e-04 2.3e-82\nQwant 1.6e-67\nTable 3: p-values for the tests comparing the average scores of search engines (T-test on related\nsamples of scores).",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.2 Analysis",
+      "level": 2,
+      "text": "Figure 1 displays by SE the percentage of common results with the consensus SE for each position\nrange. Again for all our searched keywords, we count the prop ortion of links in the 1 st position\ncorrespond to the link in 1 st position in the consensus SE, then do the same for the ﬁrst 2 po sitions,\nthen for the ﬁrst 3, etc.\n1 2 3 4 5 6 7 8 9 100\n20\n40\n60\n80",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "100 Position range x (from 1 st to x)",
+      "level": 1,
+      "text": "% in common with the consensus SE\nGoogle\nYahoo\nBing\nAOL\nAsk\nDuckDuckGo\nEcosia\nStartPage\nQwant\nConsensus\nFigure 1: Similarities in position with the consensus\nThe results are consistent with the previous tables: the ﬁgu re highlights the same groups of SE,\nwhile Ask.com clearly is far from the consensus.\nWe also draw in Figure 2 the distribution of the score of SEs re latively to the consensus where\non the x-axis, we have the pages ordered (for each SE) by the relative score from the largest to\nthe smallest.\nIt allows to see the variations of score per SE. Again the same SE groups appear, but the infor-\nmation is stronger than just the mean. For the ﬁrst quarter of requests, scores are close for all\nSEs except Ask.com, the diﬀerence becomes signiﬁcant later with some SEs which cannot keep up\nwith he best ones.\nTo identify deviations from other search engines, we highli ght respectively in Tables 4 and 5\nfor each SE the (ordered) 10 queries with the highest and lowe st relative score with respect to the\n6\n0 50 100 150 2000\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "1 Query ordered by value",
+      "level": 1,
+      "text": "Relative score\nGoogle\nYahoo\nBing\nAOL\nAsk\nDuckDuckGo\nEcosia\nStartPage\nQwant\nConsensus\nFigure 2: Distribution of scores relative to the consensus, from largest to smallest.\nconsensus SE. Those queries correspond to the extreme left ( for Table 4) and extreme right (for\nTable 5) of Fig. 2.\nSearch terms displayed in Table 4 appear to be quite complex– or speciﬁc–searches, for which\nthere is not much room for disagreement among SEs.\nOn the other hand, Table 5 shows, for each SE, the terms for whi ch they most disagree with\nthe consensus, which may help highlight non-neutral behavi ors. For example, it is interesting\nto note that Bing, the Microsoft-operated SE, diﬀers most fr om the consensus (hence, from the\nother SEs) on some sensitive searches such as skype, gmail, youtube , and facebook. Similarly,\nAOL strongly disagrees with the consensus for yahoomail, mail , and messenger. While Qwant\ngets low scores for google maps, msn, outlook, news, google drive, skype , and gmail, all\ninvolving SE-controlled services. Finally, let us note tha t we may also have a look at searches like\nrestaurant or cnn, for which Google is far from the consensus: is that to favor i ts own news and\ntable-booking services? Our study is too preliminary to dra w deﬁnite conclusions, but can help\nraise such questions.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 Conclusions",
+      "level": 1,
+      "text": "In this paper, we have deﬁned a measure of relevance of web pag es for given queries based on\nthe visibility/response from a whole set of search engines. This relevance takes into account the\nposition of the web page thanks to a weight corresponding to t he click-through-rate of the position.\nIt then allowed to deﬁne a score of a search engine for a given q uery, and the average score for a\nwhole set of queries.\nWe designed a tool in Python allowing to study the scores of ni ne known search engines and to\nbuild the consensus ranking maximizing the SE score, for a se t of more that two hundred queries.\nA ﬁrst analysis suggests that there are signiﬁcant diﬀerenc es among search engines, that may help\nidentify some sensitive terms subject to biases in the ranki ngs.\nWe ﬁnally note that our method does not provide an absolute-v alue score for each SE allowing\nto decide which is the best one, but rather indicates whether an SE agrees with the others. The\nuser may very well prefer an SE that is far from our consensus r anking, especially if that SE better\ntakes her preferences into account when performing the rank ing.\nIn a follow up of this preliminary work, we plan to design stat istical tests of potentially in-\ntentional deviations by search engines from their regular b ehavior, to highlight if non-neutrality\nby search engines can be detected and harm some content provi ders. This would be a useful tool\n7\nwithin the search neutrality debate.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "displays by SE the percentage of common results with the consensus SE for each position"
+    },
+    {
+      "id": "f2",
+      "caption": "Distribution of scores relative to the consensus, from largest to smallest."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "q1 q2 q3 q4 q5 q6 q7 q8 q9 q10"
+    },
+    {
+      "id": "t2",
+      "caption": "provides the average scores of the nine considered se arch engines, as well as that of the"
+    },
+    {
+      "id": "t3",
+      "caption": ")), and Google and StartPage around 0.082 (since Star tPage is based on Google, close"
+    },
+    {
+      "id": "t5",
+      "caption": ") of Fig. 2."
+    },
+    {
+      "id": "t4",
+      "caption": "Per SE, ordered list of 10 queries with the largest re lative score with respect to the"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. (1)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Eq. (3)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

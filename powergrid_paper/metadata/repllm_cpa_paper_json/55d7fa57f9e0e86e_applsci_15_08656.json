@@ -1,0 +1,290 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-15-08656.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Renewable energy has emerged as a critical pathway for achieving the goals of carbon\nneutrality [1]. The intermittent and stochastic nature of renewable energy, combined with\nits rising grid share, has increased peak-shaving pressure on power systems [ 2]. As for\nan urban power grid, the predominance of industrial loads has resulted in a progressive\nwidening of the diurnal peak-to-valley load differential [3]. This context emphasizes the\nfundamental importance of peak-shaving and valley-filling strategies as core mechanisms\nwithin load management for optimizing overall system operation. The conventional ap-\nproaches employed, such as capacity expansion of generation units and transmission\ninfrastructure, achieve their objectives at the expense of grid operational efficiency, particu-\nlarly concerning economic efficiency and resource utilization. Consequently, traditional\npeak-shaving measures are proving increasingly inadequate to effectively mitigate the exac-\nerbating load peak–valley disparity and the concomitant decline in power supply reliability.\nTo alleviate the mounting pressure on the power system supply–demand equilibrium, the\nAppl. Sci. 2025, 15, 8656 https://doi.org/10.3390/app15158656\nAppl. Sci. 2025, 15, 8656 2 of 14\nimplementation of more sophisticated, efficient, and reliable demand-side management\nstrategies is imperative.\nUnder the circumstance, battery energy storage stations (BESSs) offer a new solution\nto peak regulation pressure by leveraging their flexible “low storage and high generation”\ncapabilities and rapid response [ 4]. Compared to traditional thermal power peak load\nregulation, BESSs feature millisecond-level response speeds. By leveraging their bidirec-\ntional energy flow characteristics, they can regulate load peak-to-valley differences, thereby\nsmoothing out load fluctuations [5]. From a technical and economic perspective, the cost of\nlithium-ion battery energy storage has decreased by over 60% in the past five years, making\nit more widely applicable in daily peak-shaving scenarios [ 6]. More importantly, BESSs\ncan be deployed in a distributed manner at load centers, directly alleviating transmission\nand power-grid congestion and reducing network losses, which further demonstrate the\nadvantages [7].\nPrevious studies on BESS participation in peak–valley regulation have been conducted,\nprimarily focusing on two different strategies: one involves BESSs directly participating\nin grid peak–valley regulation, whereas the other involves BESSs indirectly participating\nin grid peak–valley regulation [8]. In the first strategy, the energy storage station directly\nparticipates in peak–valley regulation, with peak–valley regulation and valley filling as the\ncore optimization objectives [9], aiming to establish an optimal charging and discharging\nstrategy. Such studies directly address the effectiveness of peak regulation and typically\nincorporate actual operational constraints. For example, models may consider optimizing\npeak–valley regulation while reducing grid losses [ 10] or accounting for limitations on\ncharge–discharge cycle depth [11]. In complex systems, models must also integrate the\npeak–valley periods of the main grid and system power balance to formulate energy storage\nscheduling strategies [12]. Some studies employ simplified constant-power charging and\ndischarging models to achieve peak–valley regulation objectives or conduct economic\nevaluations [13]. The algorithms for addressing such direct peak-shaving strategies are\nmore diverse. Due to their ability to handle complex nonlinear problems [14], intelligent\nalgorithms such as genetic algorithms and particle swarm algorithms are widely used [15].\nIn addition, active control strategies combining short-term load forecasting have been\nproposed for grid energy storage optimization [16].\nThe second strategy involves BESSs indirectly participating in peak–valley regulation.\nAlthough peak–valley regulation is not directly set as an optimization objective, it can\nbe indirectly achieved by constructing a refined economic model to guide the charging\nand discharging behavior of the energy storage station. For example, by utilizing time-\nof-use pricing mechanisms, the energy storage station can charge during off-peak hours\nand discharge during peak hours to maximize economic benefits [17], thereby indirectly\nachieving peak–valley regulation. Related economic models include the BESS revenue\nmodel [18], which considers the interests of the generation side, grid side, and user side [19],\nand the investment economic model [20], which analyzes the economic conditions for large-\nscale energy storage applications from an investment return perspective.\nIn summary, although existing strategies for BESSs to participate in peak shaving\ncan smooth load fluctuations, most of them are still limited to a single BESS, and their\neffectiveness is restricted. Single BESSs are limited by their rated power and capacity\nconstraints, making it difficult for their regulation capabilities to match continuously\nchanging load curves. To overcome this inherent limitation and improve peak-shaving\neffectiveness, this paper proposes a multiple BESS coordinated variable-power control\nstrategy. The main contributions of this paper are as follows:\nThis paper proposes a control strategy of multiple battery energy storage stations\n(BESSs) for power-grid peak shaving. Firstly, the working principle of the variable-power\nAppl. Sci. 2025, 15, 8656 3 of 14\ncontrol strategy for multiple BESSs is proposed. Secondly, an optimization model is\nconstructed incorporating load forecasting, safety constraints, and evaluations for peak-\nshaving effectiveness. Thirdly, the collaborative algorithm based on a continuous time-\nperiod search and phased control is used to obtain the optimal control strategy. Finally,\na typical daily case is employed to quantitatively analyze the improvement effects on\npeak shaving.\nThe structure of this paper is as follows: Section 2 explains the design principles of\nthe cooperative variable-power mechanism and constructs an optimization model incor-\nporating load forecasting, safety constraints, and evaluation metrics. Section 3 conducts a\ndetailed analysis of the peak-shaving effects of the cooperative variable-power strategy and\nthe single constant power strategy through a comparison of typical daily cases, quantifying\nthe improvement effects on key metrics. Section 4 summarizes the work of this paper and\noutlines future research directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Peak Load Shifting Control Strategies",
+      "level": 2,
+      "text": "There are two operating modes for BESS in power systems. During low load periods,\nthe BESS switches to a charging state and acts as an electrical load, absorbing excess\nenergy from the load absorption system. During peak load periods, the BESS switches to\nthe discharging state and acts as a generator, discharging excess energy into the system.\nDeveloping a reasonable BESS charging and discharging control strategy can help to\nimprove the peak-shaving efficiency and BESS utilization.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1.1 Control Strategy for Constant Power Charging and Discharging Mode",
+      "level": 3,
+      "text": "The constant power charging and discharging control strategy operates on a daily\ntime scale and minimizes load fluctuations. Assuming that the charging and discharging\npower of the BESS remains constant, the start and stop times for charging/discharging\nare controlled by real-time load values, with the specific operational mode illustrated\nin Figure 1. After regulation by the BESS’s charging and discharging processes, load\nfluctuations will be maintained between the peak-shaving line and the valley-filling line,\nthereby achieving peak-shaving and valley-filling functionality.\nUnder this strategy, since the load power is typically much larger than the energy\nstorage power, the BESS charges and discharges at its rated power. The charging and\ndischarging times of the BESS can be calculated based on the total capacity and rated\ncharging/discharging power. Additionally, the BESS charges and discharges uniformly\nthroughout the day, and the number of charging and discharging cycles can be determined\nbased on the load curve.\nThe specific steps are as follows: first, based on the charging and discharging power\nPcharge and Pdischarge and the capacity E of the BESS, the charging and discharging times\nTcharge and Tdischarge are determined. After determining the charging and discharging\ntimes, draw a line L parallel to the horizontal axis based on the lowest point and the peak\npoint of the known load curve. Set the step size for moving along the positive direction of\nthe axis to ∆L and calculate the distance d between the two intersection points of line L and\nthe curve. When d = Tcharge, the time interval between these two intersection points is the\ndesired reasonable charging time range. If not, continue moving line L along the positive\ndirection of the Y-axis until the reasonable charging time range is determined. Similarly,\ndraw a horizontal line at the minimum load point and gradually move it upward in the\nsame step size L until the total time interval between the horizontal line and the load curve\nequals T, thereby determining the discharge time range. The flowchart of the constant\npower control strategy is shown in Figure 2.\nAppl. Sci. 2025, 15, 8656 4 of 14\nFigure 1. Constant power control strategy for BESS participating in peak shaving in power grids.\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 2. Constant power control strategy flowchart.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.2 Control Strategy for Variable-Power Charging and Discharging Mode",
+      "level": 3,
+      "text": "The aforementioned strategy primarily targets single-storage operation scenarios.\nHowever, when implementing peak shaving and valley filling at the power-grid level, the\ncapacity, power, and flexibility of a single storage power station often fail to meet actual\npeak regulation requirements. Additionally, adopting a single variable-power strategy\nimposes high demands on equipment regulation performance. Therefore, a variable-power\ncharge–discharge control strategy based on the coordinated operation of multiple BESSs is\nadopted for power grids.\nThe core idea of this strategy is to utilize multiple BESS units configured with con-\nstant power charging and discharging control strategies. By coordinating the start/stop\nAppl. Sci. 2025, 15, 8656 5 of 14\ntiming and charging/discharging states of each BESS unit, the strategy achieves an equiva-\nlent, dynamically varying charging and discharging power across the entire grid, thereby\nadapting to the continuous fluctuations in load. The objective is to constrain the strategy\nbased on the power-grid load forecast curve and overall energy balance within a daily\ntimeframe. By optimizing the cluster behavior of multiple constant-power BESS units, the\nstrategy precisely tracks the peak-shaving and valley-filling curves, ultimately ensuring\nthat the regulated load curve operates as smoothly as possible within the target range.\nThis significantly enhances the depth, accuracy, and system flexibility of peak-shaving and\nvalley-filling operations while reducing the dynamic regulation requirements on individual\nenergy storage device inverters. The specific operational mode is illustrated in Figure 3.\nFigure 3. Variable-power control strategy for multiple BESS participating in peak shaving in\npower grids.\nThe implementation of this strategy relies on centralized coordination and control of\nmultiple BESS units within the region. Each BESS operates independently with its own\nconstant-power charging and discharging strategy, meaning that its charging/discharging\npower is fixed at its rated power, and its actions are triggered by the dispatch instructions\nit receives. Based on the total load forecast curve of the power grid and the overall peak-\nshaving and valley-filling objectives, commands are directly issued to dynamically adjust\nthe output of each BESS participating in the cluster. Through this combination of operations\nof discrete constant-power BESS, a continuously varying charging/discharging power is\neffectively generated on the power-grid bus.\nThe specific steps are formalized in Algorithm 1 (Section 2.4). firstly, obtain the load\nforecast curve of the power grid and determine the overall peak-shaving and valley-filling\ntargets. Secondly, obtain the parameters of each BESS participating in the cluster (rated\npower, available capacity, initial SOC, etc.). Thirdly, compare the forecast load curve with\nthe target band and calculate the total charging/discharging power demand of the power-\ngrid bus required to maintain the load within the target band for each scheduling period.\nThen, based on the total demand, the current status of each BESS, and the constraints,\ndetermine the operation plan for each BESS. Finally, each BESS independently executes\nits constant-power charging/discharging operation based on the received instructions.\nFigure 4 shows the flowchart of the variable-power control strategy.\nAppl. Sci. 2025, 15, 8656 6 of 14\nStart\nInitialize: Load forecast, target \nband, BESS parameters\nCalculate power gap \nClassify: Peak (ΔP>0) / Valley \n(ΔP<0) / No action\nCombinatorial BESS dispatch\n(Minimize power imbalance)\nUpdate SOC for all BESS\nOutput: Dispatch commands\nEnd \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 4. Variable-power control strategy flowchart.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Evaluation",
+      "level": 2,
+      "text": "In order to illustrate the effectiveness of BESS in peak shaving and valley filling and to\nevaluate the above control strategies, indicators for evaluating the effectiveness of peak\nshaving and valley filling are constructed below.\n(1) Absolute peak-to-valley difference∆P: The absolute peak-to-valley difference refers\nto the difference between the peak load and the valley load, which is used to characterize\nthe maximum absolute deviation of load output on a daily time scale. The definition is\nas follows:\n∆P = Pmax − Pmin (1)\n(2) Peak-shaving depth: The amount of power reduced or added by the BESS during\npeak shaving. The definition is as follows:\n∆Ppeak = Ppeak − P′\npeak (2)\n∆Pvalley = P′\nvalley − Pvalley (3)\n(3) Peak–valley coefficient α: The peak–valley coefficient is the ratio of the valley value\nto the peak value of the load, which characterizes the flatness of the load curve. The flatter\nthe curve, the larger the coefficient. It is defined as follows:\nα = Pmin\nPmax\n× 100% (4)\n(4) Peak–valley difference rate β: The peak–valley difference rate is the ratio of the\nabsolute peak-to-valley difference to the peak load, which indicates the range of load\nfluctuations. The smaller the peak–valley difference rate, the smaller the range of load\nfluctuations. The definition is as follows:\nβ = ∆P\nPmax\n× 100% (5)\nAppl. Sci. 2025, 15, 8656 7 of 14\n(5) Standard deviation of load variation X: The standard deviation of load varia-\ntion indicates the dispersion of load data. The smaller the standard deviation, the more\nconcentrated the data, meaning smaller load fluctuations. The definition is as follows:\nX =\ns\n1\nn\nn\n∑\ni=1\n\u0000\nPi − P\n\u00012 (6)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.3 Constraint Conditions",
+      "level": 2,
+      "text": "(1) BESS capacity constraints:\nSOCmin ≤ SOC(t) ≤ SOCmax (7)\nwhere SOC is state of charge, which indicates the ratio of the battery’s current remaining\nusable capacity to its maximum usable capacity when fully charged. This constraint ensures\nthat the energy stored SOC(t) in the BESS at any given time t must be between its minimum\nallowable capacity SOCmin (usually greater than 0 to prevent deep discharge damage to\nthe battery) and maximum allowable capacity SOCmax (to prevent overcharging).\n(2) Charging and discharging power limits:\n(\nPmax\ncharge ≤ Pcharge(t) ≤ 0\n0 ≤ Pdischarge(t) ≤ Pmax\ndischarge\n(8)\nthis constraint limits the charging and discharging power P(t) of the BESS at time t. The\ncharging power is negative, and the discharging power is positive. P(t) must not exceed the\nrated power capacity of the equipment to prevent damage to energy storage equipment due\nto over current and ensure that power conversion equipment operates within safe limits.\n(3) Energy conservation constraints:\nSOC(t + 1) = SOC(t) +\n \nηcharge · Pcharge(t) −\nPdischarge(t)\nηdischarge\n!\n· ∆t\nEN\n(9)\nthis constraint ensures that the model accurately reflects the actual energy flow and losses\nduring the charging and discharging processes of the BESS, forming the basis for precise\nscheduling and state estimation.\nUnder the constant power strategy, the charging and discharging power of the BESS\nremains constant. The rated power of the energy storage device should be less than the\ndifference between the peak-shaving and valley-filling reference lines to avoid repeated\njudgments. At the same time, the rated power must be greater than the maximum value of\nthe load peak-to-valley difference before and after the energy storage action to prevent the\nBESS from acting multiple times. When calculating the energy storage capacity, a certain\nmargin should be retained for the battery state.\nIn the variable-power strategy, the charging and discharging power of the energy\nstorage device adjusts according to load changes, so there is no need to consider the scenario\nwhere the load curve exceeds the peak-shaving and valley-filling baseline after the energy\nstorage device operates. Additionally, since the power is variable, the battery capacity\nshould be calculated based on the actual power.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.4 Algorithm Implementation",
+      "level": 2,
+      "text": "The proposed Algorithm 1 (Multi-BESS Coordinated Variable-Power Control) is im-\nplemented as follows:\nAppl. Sci. 2025, 15, 8656 8 of 14\nAlgorithm 1 Multi-BESS Coordinated Variable-Power Control for Grid Peak Shaving\n(1) Initialization\nInput: Lforecast(t): Forecasted grid load curve [t = 1:T]; Target_Band: Desired load\nband [Lmin, target, Lmax, target]; BESSlist = {BESSi}: List of BESS units (rated power,\ncapacity, SOCmin/max)\n(2) Time-Step Processing(t = 1~T)\nCalculate power gap:\n∆Pgap(t) = Lforecast(t) − Target_Band(t)\n(3) Power Allocation:\nIf ∆Pgap(t) > 0 (peak):\nPdischarge, total(t) = min(∆Pgap(t), ΣBESSi, discharge capacity)\nDispatch BESS units via combinatorial optimization to meet Pdischarge, total(t)\nwhile respecting SOC constraints (7), Power limits (8), and Energy conservation (9).\nIf ∆P_gap(t) < 0 (valley):\nPcharge, total(t) = min(|∆Pgap(t)|, ΣBESSi, charge capacity)\nOptimize BESS charging sequence (similar to Step 2).\n(4) Dispatch and Update:\nSend power to each BESS unit and update SOC for all BESS units by using (9).\n(5) Termination:\nOutput: Time-series dispatch commands for all BESS units.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Results",
+      "level": 1,
+      "text": "Taking the daily grid load as the research object, typical daily data with a sampling\ninterval of 15 minutes was selected. The original load data is shown in Figure 5, and the\ncorresponding indicators are shown in Table 1. The initial configuration of the BESS is as\nfollows: SOC = 0.8, Prated = 10 MW, T = 24 h, and C = 20 MW·h. These parameter values are\nrepresentative of typical utility-scale BESS installations configured for daily peak-shaving\nduty cycles. To compare the two control strategies, the basic configuration of the BESS\nremains the same under different strategies.\nFigure 5. Typical daily raw load curve.\nTable 1. Initial configuration of BESS.\nRated Capacity Rated Power Initial SOC Max Charge Capacity Max Discharge Capacity\n20.0 MW·h 10.0 MW 0.80 2.0 MW ·h 12.0 MW ·h\nAppl. Sci. 2025, 15, 8656 9 of 14",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Performance of Constant Power Charging and Discharging Control Strategy",
+      "level": 2,
+      "text": "The BESS charges and discharges at a constant power of 10 MW. After analyzing the\ndata, the load peak-shaving and valley-filling variation curve under the constant power\nstrategy can be obtained, as shown in Figure 6. The output of the BESS is shown in Figure 7,\nand the corresponding indicator changes are shown in Table 2.\nFigure 6. Changes in load curves under constant power strategy.\n10",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "11111 clischarging period",
+      "level": 1,
+      "text": "01------��--------\ncharging period \n-10 \n2 4 6 8 10 12 14 \nt (ti). \n16 18 20 22 24 \nFigure 7. Schematic diagram of BESS output under constant power strategy.\nTable 2. Summary of energy storage peak-shaving plans.\nTime Period Type Start Time (h) End Time (h) Duration (h) Power (MW)\nCharge 4.25 4.75 0.50 −10.0\nDischarge 10.75 11.75 1.25 10.0\nFigure 6 provides a visual comparison of the effectiveness of the BESS in peak shav-\ning for power grids before and after the adoption of a constant power charge–discharge\ncontrol strategy. The figure shows the changes in the original load curve and the adjusted\nload curve. The original load curve exhibits the significant fluctuations characteristic of\nthe natural load on a typical day. After being regulated by the BESS’s constant power\ncharge–discharge control, the load curve undergoes changes: during peak periods, the\nAppl. Sci. 2025, 15, 8656 10 of 14\nBESS discharges at a fixed power, effectively reducing peak load; during off-peak pe-\nriods, the BESS charges, thereby increasing the off-peak load. Figure 6 demonstrates\nthe effectiveness of the constant-power control strategy in achieving peak-shaving and\nvalley-filling functionality.\nFigure 7 shows the operating status of the BESS under a constant power strategy,\ncorresponding to the scheduling plan in Table 2: two actions throughout the day and the\nBESS charging and discharging at rated power but exposing certain defects: first, the sepa-\nration of charging and discharging periods leads to relatively low equipment utilization; in\naddition, the output curve reflects the poor flexibility of a single fixed-power strategy.\nThe constant power strategy performs charging and discharging operations at a\nfixed-power level during preset time periods, which achieves basic peak-shaving and\nvalley-filling functions but has significant limitations. The peak shaving effect of BESS\nusing a constant power strategy is shown in Table 3. Its adjustment strategy is crude,\nequipment utilization is low, and the strategy relies on a single-energy storage device,\nwhich is relatively inflexible when dealing with continuous load fluctuations.\nTable 3. Summary of energy storage peak-shaving effects under constant power strategy.\nIndicator Before Peak Shaving After Peak Shaving Change\nMaximum load (MW) 120.13 116.18 3.95\nMinimum load (MW) 44.92 45.00 0.08\n∆P (MW) 75.21 71.18 4.03\nα 0.3739 0.3873 0.0134\nβ 0.6261 0.6127 0.0134\nX 22.8483 21.8695 0.9788",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Performance of Variable-Power Charging and Discharging Control Strategy",
+      "level": 2,
+      "text": "The BESS operates at a constant power of 10 MW during charging and discharging.\nAfter analyzing the data, the load peak-shaving and valley-filling variation curves under\nthe variable-power strategy can be obtained, as shown in Figure 8. The power output of the\nBESS is shown in Figure 9, and the corresponding indicator changes are shown in Table 4.\nThe final plan for energy storage participation in peak shaving is shown in Table 5. The\npeak and valley values represent the peak and valley values of the load curve under the\nvariable-power strategy.\nFigure 8. Changes in load curves under variable-power strategy.\nAppl. Sci. 2025, 15, 8656 11 of 14\nFigure 9. Schematic diagram of BESS output under varaiable-power strategy.\nTable 4. Output status of the BESS.\nOutput Stage Charging Period Discharging Period\nTotal duration 3.75–4.25 h (0.5 h) 10.75–11.75 h (1.0 h)\nStage 1 Charging two BESS\nsimultaneously (3.75 h) Discharging only BESS1 (10.75 h)\nStage 2 Charging only BESS2 (4.00 h) Discharging two BESS\nsimultaneously (11.00 h)\nStage 3 Charging only BESS1 (4.25 h) Discharging only BESS2 (11.50 h)\nTable 5. Summary of energy storage peak-shaving effects under varaible-power strategy.\nIndicator Before Peak Shaving After Peak Shaving Change\nMaximum load (MW) 120.13 114.50 5.63\nMinimum load (MW) 44.92 47.20 2.28\n∆P (MW) 75.21 67.30 7.91\nα 0.3739 0.4122 0.0383\nβ 0.6261 0.5878 0.0383\nX 22.8483 21.2826 1.5657\nFigure 8 shows that after adopting a multi-ESS coordinated variable-power strategy,\nthe load curve is precisely constrained within the target band. Compared with Figure 6,\nsignificant improvements can be seen: during the midday off-peak period, three-stage\ncharging continuously raises the valley value to 47.2 MW; during the evening peak period,\ntime-of-use discharge stabilizes the peak value at 114.5 MW. This result demonstrates that\nequivalent continuous-power regulation can be achieved through a discrete constant-power\nBESS cluster, significantly reducing the standard deviation of the daily load.\nFigure 9 illustrates the operational strategy of multi-BESS coordination: two BESS\nunits alternate operations to achieve equivalent variable power. During the charging phase,\nthe power gradually transitions between −20 MW (dual unit) and −10 MW (single unit);\nduring the discharging phase, the power stops between 10 MW and 20 MW. This dynamic\nscheduling achieves continuous changes in charging and discharging power through a\nAppl. Sci. 2025, 15, 8656 12 of 14\ncombination of start–stop operations, increasing the total regulation duration to 2 hours,\nwhich is a 33% improvement over the constant-power strategy, thereby fundamentally\nenhancing operational efficiency.\nTable 4 quantifies the scheduling logic for multi-BESS phased coordination. Taking\nthe discharge period as an example, Phase 1 involves only BESS1, Phase 2 involves dual-\nmachine parallel operation, and Phase 3 switches to BESS2. This sequential combination of\ndiscrete devices is the key to achieving the smooth load curve shown in Figure 8, validating\nthe idea of optimizing cluster behavior to precisely track the target band. The duration of\neach phase is ≤0.25 h (minimum scheduling interval), demonstrating the strategy’s ability\nto respond to short-term fluctuations.\nTable 5 data indicates that the variable-power strategy has achieved a significant\noverall improvement in peak-shaving performance, with the peak-to-valley difference\nreduction increasing to 7.91 MW, reflecting better peak-shaving and valley-filling effects.\nAdditionally, the standard deviation of load decreased by 1.57, representing a 60% improve-\nment. This highlights the advantage of the variable-power strategy in enhancing the depth\nand precision of peak shaving and valley filling. More importantly, the peak-to-valley\ncoefficient has risen to 0.4122, whereas the peak-to-valley difference rate has decreased\nto 0.5878. This indicates a higher degree of curve flattening and a smaller range of load\nfluctuations, thereby better meeting the requirements of the evaluation criteria.\nThe multi-BESS coordinated variable-power strategy generates equivalent continuous\nadjustable power at the grid level through the combination of start/stop sequences of\ndiscrete constant power units, achieving precise load tracking. As shown in Figure 8,\nthe load curve is strictly constrained within the target band: during the midday off-\npeak period, three-stage charging continuously raises the valley value from 44.92 MW\nto 47.2 MW; during the evening peak period, time-of-use discharge precisely suppresses\npeak fluctuations.\nThe performance of the constant and variable-power control strategies is inherently\ndependent on the configured BESS parameters, primarily the rated power and total ca-\npacity. It is critical that these core BESS parameters are kept constant in order to provide\na fair comparative analysis of the two fundamentally different control strategies under\nidentical conditions. The results in Tables 3 and 5 and Figures 6–9 show that the proposed\ncoordinated variable-power strategy utilizing multiple BESS units achieves significantly su-\nperior peaking performance compared to a single BESS constant power strategy, even when\nusing the same underlying BESS resources. This highlights the inherent advantages of the\ncoordination mechanism and dynamic scheduling achieved by the variable-power strategy.\n3.3. Scalability Analysis for Multiple BESSs (N > 2)\nThe core innovation of the proposed coordinated variable-power strategy lies in its\nscalable architecture for aggregating N discrete BESS units (N > 2) to achieve grid-level\nequivalent continuous-power control. While the case study in Section 3.2 employs N = 2\nfor clarity of demonstration, the methodology is inherently extensible to larger clusters.\nKey advantages of larger clusters include the following:\n(1) Finer Power Granularity: The equivalent power resolution improves with N, enabling\ntighter tracking of load fluctuations.\n(2) Enhanced Flexibility: Combinatorial control of N units expands the solution space,\nextending cumulative regulation duration and reducing individual stress via dynamic\npower sharing.\n(3) Algorithmic Tractability: The phased control algorithm (Section 2.1.2) maintains\ncomplexity, ensuring real-time feasibility for practical N values.\nAppl. Sci. 2025, 15, 8656 13 of 14\nWhile validated for N = 2, the strategy’s combinatorial control architecture ensures\nnative extensibility to arbitrary N. This establishes a scalable foundation for large-scale\npower-grid peak-shaving applications.",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9",
+          "f6"
+        ],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 Conclusions",
+      "level": 1,
+      "text": "This paper proposes and validates a coordinated variable-power control strategy\nfor multiple battery energy storage stations (BESSs) to address large-scale peak shaving\nin power grids. The core innovation lies in coordinating discrete BESS units to achieve\nequivalent continuous adjustable power, significantly enhancing flexibility and utilization.\nThe specific conclusions obtained are as follows.\n(1) This strategy addresses the peak-shaving challenge by coordinating the start-stop se-\nquence of multiple constant power BESS units. This coordination produces equivalent\ncontinuously adjustable charging and discharging power at the grid level, enabling\nfine-grained aggregation and control of discrete storage devices. This paper illus-\ntrates the basic design principles of this coordinated variable-power strategy and\ndevelops an auxiliary optimization model that incorporates load forecasting, security\nconstraints, and evaluation metrics.\n(2) The effectiveness of the proposed strategy is rigorously demonstrated through a\ncomparative case study. The validation clearly demonstrates the superior overall\npeak-shaving performance compared to the constant power strategy of a single BESS.\n(3) Quantitative analysis confirms the significant advantages: improved energy storage\nutilization through phased collaborative scheduling, reduced equipment risk and\nflexibility constraints inherent in single BESS operation, and reduced system dynamic\nresponse requirements through the “cluster-based stand-alone replacement” model.\nAll in all, this provides a reliable solution for large-scale energy storage participation\nin high-precision peaking applications.\nAuthor Contributions: Conceptualization, P .C. and W.C.; methodology, P .C.; software, W.C.; val-\nidation, P .C., W.C. and J.S.; formal analysis, J.S.; investigation, B.X.; resources, J.S.; data curation,\nB.X.; writing—original draft preparation, D.L.; writing—review and editing, D.L.; visualization, D.L.;\nsupervision, C.L.; project administration, C.L.; funding acquisition, B.X. All authors have read and\nagreed to the published version of the manuscript.\nFunding: This research was supported by the Science and Technology Project of State Grid Tianjin\nElectric Power Company (R&D2024-27).\nInstitutional Review Board Statement: Not applicable.\nInformed Consent Statement: Not applicable.\nData Availability Statement: All data included in this study are available upon request by contact\nwith the corresponding author.\nConflicts of Interest: Authors Peiyu Chen, Wenqing Cui and Bin Xu were employed by Electric\nPower Research Institute, State Grid Tianjin Electric Power Company. Author Jingan Shang was\nemployed by State Grid Tianjin Electric Power Company. The remaining authors declare that the\nresearch was conducted in the absence of any commercial or financial relationships that could be\nconstrued as a potential conflict of interest.\nAbbreviations\nThe following abbreviations are used in this manuscript:\nBESS Battery Energy Storage Station\nSOC State of Charge\nAppl. Sci. 2025, 15, 8656 14 of 14",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Constant power control strategy for BESS participating in peak shaving in power grids."
+    },
+    {
+      "id": "f2",
+      "caption": "Constant power control strategy flowchart."
+    },
+    {
+      "id": "f3",
+      "caption": "Variable-power control strategy for multiple BESS participating in peak shaving in"
+    },
+    {
+      "id": "f4",
+      "caption": "shows the flowchart of the variable-power control strategy."
+    },
+    {
+      "id": "f5",
+      "caption": "Typical daily raw load curve."
+    },
+    {
+      "id": "f6",
+      "caption": "Changes in load curves under constant power strategy."
+    },
+    {
+      "id": "f7",
+      "caption": "Schematic diagram of BESS output under constant power strategy."
+    },
+    {
+      "id": "f8",
+      "caption": "Changes in load curves under variable-power strategy."
+    },
+    {
+      "id": "f9",
+      "caption": "Schematic diagram of BESS output under varaiable-power strategy."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Initial configuration of BESS."
+    },
+    {
+      "id": "t2",
+      "caption": "Summary of energy storage peak-shaving plans."
+    },
+    {
+      "id": "t3",
+      "caption": "Summary of energy storage peak-shaving effects under constant power strategy."
+    },
+    {
+      "id": "t4",
+      "caption": "Output status of the BESS."
+    },
+    {
+      "id": "t5",
+      "caption": "Summary of energy storage peak-shaving effects under varaible-power strategy."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Multi-BESS Coordinated Variable-Power Control for Grid Peak Shaving"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 5,
+    "n_algorithms": 1,
+    "n_equations": 2
+  }
+}

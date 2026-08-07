@@ -1,0 +1,108 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2020__rideogram_drawing_svg_graphics_to_visualize_and_map_gen__8fd3b9cd9e.pdf",
+  "n_pages": 11,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 Institute of Cancer Stem Cell, Dalian Medical University, Dalian, Liaoning, China",
+      "level": 1,
+      "text": "4 Institute of Bioinformatics, School of Basic Medical Sciences, Southern Medical University, Guangzhou,\nGuangdong, China\nABSTRACT\nBackground. Owing to the rapid advances in DNA sequencing technologies, whole\ngenome from more and more species are becoming available at increasing pace. For\nwhole-genome analysis, idiograms provide a very popular, intuitive and effective way\nto map and visualize the genome-wide information, such as GC content, gene and repeat\ndensity, DNA methylation distribution, genomic synteny, etc. However, most available\nsoftware programs and web servers are available only for a few model species, such\nas human, mouse and fly, or have limited application scenarios. As more and more\nnon-model species are sequenced with chromosome-level assembly being available,\ntools that can generate idiograms for a broad range of species and be capable of\nvisualizing more data types are needed to help better understanding fundamental\ngenome characteristics.\nResults. The R package RIdeogram allows users to build high-quality idiograms of\nany species of interest. It can map continuous and discrete genome-wide data on the\nidiograms and visualize them in a heat map and track labels, respectively.\nConclusion. The visualization of genome-wide data mapping and comparison allow\nusers to quickly establish a clear impression of the chromosomal distribution pattern,\nthus making RIdeogram a useful tool for any researchers working with omics.\nSubjects Bioinformatics, Data Science, Graphics, Visual Analytics\nKeywords Genome, Chromosome, Idiogram, R package, Data visualization",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "Recently, with the development of sequencing technologies, especially rapid advances in\nthird generation sequencing including Pacific Biosciences ( Eid et al., 2009) and Oxford\nNanopore Technologies ( Laver et al., 2015), BioNano genome mapping ( Cao et al., 2014)\nand high-throughput chromatin conformation capture sequencing ( Dekker et al., 2002),\nmore and more species have their genomes sequenced or updated to the chromosome\nlevel ( Jiao & Schneeberger, 2017; Phillippy, 2017). After the chromosome-level genome\ncompletion, an overview of some genome characteristics can help to better understand a\nHow to cite this article Hao Z, Lv D, Ge Y, Shi J, Weijers D, Yu G, Chen J. 2020. RIdeogram: drawing SVG graphics to visualize and map\ngenome-wide data on the idiograms. PeerJ Comput. Sci. 6:e251 http://doi.org/10.7717/peerj-cs.251\nspecies genome, such as gene and transposon distribution across the sunflower genome\n(Badouin et al., 2017).\nAn idiogram, also known as a karyotype, is defined as the phenotypic appearance of\nchromosomes in the nucleus of an eukaryotic cell and has been widely used to visualize the\ngenome-wide data since the first web server, Idiographica, came online in 2007 (Kin & Ono,\n2007). There are dozens of tools have been developed for circular genome visualization\nwith a Perl language-based tool Circos being the most used one ( Krzywinski et al., 2009;\nParveen, Khurana & Kumar, 2019 ). In contrast, there are not many alternatives for non-\ncircular plots of whole genome information on idiograms. Although few R packages, like\nGenomeGraphs (Durinck et al., 2009), ggbio (Yin, Cook & Lawrence, 2012 ), IdeoViz (Pai\n& Ren, 2014), chromPlot (Orostica & Verdugo, 2016) and chromDraw (Janecka & Lysak,\n2016), and JavaScript libraries, like Ideogram.js (Weitz et al., 2017) and karyotypeSVG\n(Prlic, 2017), have been developed for non-circular genome visualization, they are either\nlimited in several species and data visualization types or lacking the ample customization.\nRecently, two R packages, karyoploteR (Gel & Serra, 2017) and chromoMap (Anand, 2019),\nwith strengthened capacities have been developed.\nHowever, one function that all these non-circular plots fail to achieve, as Circos does, is\nto visualize the relationship between two or more species using Bezier curves on idiograms.\nThis function is very useful and allows to interpret genome-wide relationships more\nintuitively, especially in the visualization of whole genome duplication. Indeed, Circos is\nusually used to show syntenic blocks both in inter- and intraspecies genome comparisons\nusing Bezier curves ( Hu et al., 2019; Wang et al., 2019). Thus, there is a lack of a R package\nfor non-circular genome visualization and allowing to visualize genome-wide relationships\nbetween two or more species using Bezier curves on idiograms.\nScalable Vector Graphics (SVG) is a language for describing two-dimensional graphics\napplications and images. SVG graphics is defined in an eXtensible Markup Language\n(XML) text file which means that one can easily use any text editor or drawing software\nto create and edit SVG graphics. Most R graphics packages are built on two graphics\nsystems, the traditional graphics system and the grid graphics system. Here, we developed\nan R package ( RIdeogram) to draw high-quality idiograms without species limitations,\nthat allows to visualize and map whole-genome information on the idiograms based on\nthe SVG language. Besides, RIdeogram can also be used to show the genome synteny with\nBezier curves linking the syntenic blocks on idiograms.\nDESCRIPTION\nThe package RIdeogram is written in R ( R Core Team, 2018 ), one of the most popular\nprogramming languages widely used in statistical computing, data analytics and graphics.\nHowever, this new R graphics package is not built based on any existing graphics systems.\nWe use the R environment to read the custom input files and calculate the drawing element\npositions in a coordinate system. Then, we use R to write all element information into a text\nfile following the XML format which are used to define graphics by the SVG language. A\nlist of the currently implemented commands is given in Table 1. In general, there are three\nHao et al. (2020), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.251 2/11\nTable 1 Functions contained in the package RIdeogram.\nFunction name Description\nGFFex Extract information from a GFF3 format genome\nannotation fill\nideogram Map and visualize the genome-wide data on the idiograms\nconvertSVG Convert the output file from the SVG format to the format\nusers chose\nsvg2tiff Convert the output file from the SVG format to the TIFF\nformat\nsvg2pdf Convert the output file from the SVG format to the PDF\nformat\nsvg2jpg Convert the output file from the SVG format to the JPG\nformat\nsvg2png Convert the output file from the SVG format to the PNG\nformat\nmain functions, GFFex, ideogram and convertSVG implemented in the package RIdeogram.\nUsers can use the function data to load the example data or the basic R function read.table\nto load the custom data from local files. The function GFFex can be used to extract the\ninformation from a GFF3 format genome annotation file. Then, the function ideogram can\nbe used to compute the information for all drawing elements based on the input files and\ngenerate a A4-sized SVG file containing a vector graphic which can be conveniently viewed\nand modified using the software Adobe Illustrator or Inkscape. Alternatively, users can also\nuse the function convertSVG to convert this SVG file into an adjustable image format (pdf,\npng, tiff, or jpg) with a user-defined resolution according to the practical requirements.\nIn general, there are two types of data, i.e., continuous and discrete data. For mapping\nand visualizing, RIdeogram considers the continuous data, such as gene density across the\nwhole genome in 1-Mb windows, as overlaid features and maps them on the idiograms with\ndark/light colors representing high/low values. For the other data type that are scattered\nthroughout the whole genome, such as the chromosomal distribution of members in one\ngene family, RIdeogram can add track labels next to the idiograms with three shapes (box,\ncircle and triangle) available to represent different characteristics of these members, such\nas the subclade that one gene member belongs to. Users can also combine the shapes\nand colors to represent more than three distinct characteristic types. Furthermore, users\ncan also map the continuous data as a heatmap, a line or area chart along the idiograms.\nIn addition, RIdeogram also provides functions for the visualization of dual and ternary\ngenome synteny using Bezier curves on the idiograms.\nRIdeogram is available through CRAN (https://cran.r-project.org/web/packages/\nRIdeogram/) and is developed on GitHub (https://github.com/TickingClock1992/\nRIdeogram). Further extensions in development and fixes can be seen in the issue listing\npage on the package’s GitHub page. The new function that we are planning to implement\nin next version include, but are not limited to, developing more types of data visualization\nalong the idiograms, visualizing genome synteny for more species and enlarging the\nHao et al. (2020), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.251 3/11\nuser-specified genome regions to display detailed characteristics, as we gather more from\nusers.\nEXAMPLES\nOur first example use the data contained in this package. After the completion of genome\nsequencing, assembly and annotation, RIdeogram can be used to give some idea of how\ngenes are distributed across the whole genome. The example data contained numbers of\nprotein-coding genes calculated in 1-Mb windows which can be considered as continues\ndata and positions of 500 random selected non-coding RNAs, including ribosomal RNAs\n(rRNAs), transfer RNAs (tRNAs) and microRNAs (miRNAs), which can be considered as\ndiscrete data. RIdeogram maps the gene density information on the idiograms as overlaid\nfeatures in a heat map an",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "chromosomes occupy almost the entirety of each X chromosome, suggesting a highly",
+      "level": 1,
+      "text": "conserved syntenic relationship of the X chromosome within the eutherian mammalian\nlineage (Ross et al., 2005).\nHao et al. (2020), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.251 5/11\nFigure 2 Syntenic comparison of three plant genomes. Genome synteny patterns show that a typical an-\ncestral region in the basal angiosperm Amborella can be tracked to up to two regions in Liriodendron and\nto up to three regions in grape. Gray wedges in the background highlight major syntenic blocks spanning\nmore than 30 genes between the genomes (highlighted by one syntenic set shown in colored).\nFull-size\n DOI: 10.7717/peerjcs.251/fig-2",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "CONCLUSION",
+      "level": 1,
+      "text": "The RIdeogram package provides an efficient and effective way to build idiograms with\nno species limitations and map genome-wide information on the idiograms for better\nvisualizing and understanding the chromosomal distribution patterns of some particular\ngenomic features. Meanwhile, this package can be also used to visualize syntenic analysis\nbetween genomes. Additionally, it is user-friendly and accessible for biologists without\nextensive computer programming expertise. Finally, RIdeogram can generate two types of\nimages, a vector graphic or a bitmap file, both in high-quality and meeting conventional\nrequirements for direct use in presentations or journal publications.\nHao et al. (2020), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.251 6/11\nACKNOWLEDGEMENTS\nWe thank Dr. Zhongjuan Zhang for her comments on the manuscript.\nADDITIONAL INFORMATION AND DECLARATIONS\nFunding\nThis work was supported by the Key Research and Development Plan of Jiangsu Province\n(BE2017376), the Foundation of Jiangsu Forestry Bureau (LYKJ[2017]42), the Qinglan\nProject of Jiangsu Province and the Priority Academic Program Development of Jiangsu\nHigher Education Institutions (PAPD). The funders had no role in study design, data\ncollection and analysis, decision to publish, or preparation of the manuscript.\nGrant Disclosures\nThe following grant information was disclosed by the authors:\nKey Research and Development Plan of Jiangsu Province: BE2017376.\nFoundation of Jiangsu Forestry Bureau: LYKJ[2017]42.\nQinglan Project of Jiangsu Province.\nPriority Academic Program Development of Jiangsu Higher Education Institutions\n(PAPD).\nCompeting Interests\nThe authors declare there are no competing interests.\nAuthor Contributions\n• Zhaodong Hao conceived and designed the experiments, performed the experiments,\nanalyzed the data, performed the computation work, prepared figures and/or tables,\nauthored or reviewed drafts of the paper, and approved the final draft.\n• Dekang Lv performed the experiments, performed the computation work, authored or\nreviewed drafts of the paper, and approved the final draft.\n• Ying Ge performed the experiments, performed the computation work, authored or\nreviewed drafts of the paper, typeset the code, and approved the final draft.\n• Jisen Shi and Dolf Weijers performed the experiments, authored or reviewed drafts of\nthe paper, and approved the final draft.\n• Guangchuang Yu and Jinhui Chen conceived and designed the experiments, performed\nthe computation work, authored or reviewed drafts of the paper, and approved the final\ndraft.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "Data Availability",
+      "level": 1,
+      "text": "The following information was supplied regarding data availability:\nData and codes are available at GitHub: https://github.com/TickingClock1992/\nRIdeogram.\nHao et al. (2020), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.251 7/11\nSupplemental Information\nSupplemental information for this article can be found online at http://dx.doi.org/10.7717/\npeerj-cs.251#supplemental-information.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Gene distribution across the whole human genome. The overlaid heatmap shows the gene"
+    },
+    {
+      "id": "f2",
+      "caption": "Syntenic comparison of three plant genomes. Genome synteny patterns show that a typical an-"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Functions contained in the package RIdeogram."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": true
+    },
+    "n_figures": 2,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

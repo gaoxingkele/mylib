@@ -1,0 +1,154 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2021__the_coefficient_of_determination_r_squared_is_more_info__3b7f750e58.pdf",
+  "n_pages": 24,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 Data Science for Health Unit, Fondazione Bruno Kessler, Trento, Italy",
+      "level": 1,
+      "text": "ABSTRACT\nRegression analysis makes up a large part of supervised machine learning, and\nconsists of the prediction of a continuous independent target from a set of other\npredictor variables. The difference between binary classi ﬁcation and regression is in\nthe target range: in binary classi ﬁcation, the target can have only two values (usually\nencoded as 0 and 1), while in regression the target can have multiple values. Even if\nregression analysis has been employed in a huge number of machine learning studies,\nno consensus has been reached on a single, uni ﬁed, standard metric to assess the\nresults of the regression itself. Many studies employ the mean square error (MSE)\nand its rooted variant (RMSE), or the mean absolute error (MAE) and its percentage\nvariant (MAPE). Although useful, these rates share a common drawback: since their\nvalues can range between zero and +in ﬁnity, a single value of them does not say\nmuch about the performance of the regression with respect to the distribution of the\nground truth elements. In this study, we focus on two rates that actually generate a\nhigh score only if the majority of the elements of a ground truth group has been\ncorrectly predicted: the coef ﬁcient of determination (also known as R-squared or R2)\nand the symmetric mean absolute percentage error (SMAPE). After showing their\nmathematical properties, we report a comparison between R2 and SMAPE in several\nuse cases and in two real medical scenarios. Our results demonstrate that the\ncoefﬁcient of determination ( R-squared) is more informative and truthful than\nSMAPE, and does not have the interpretability limitations of MSE, RMSE, MAE and\nMAPE. We therefore suggest the usage of R-squared as standard metric to evaluate\nregression analyses in any scienti ﬁc domain.\nSubjects Data Mining and Machine Learning, Data Science, Arti ﬁcial Intelligence\nKeywords Regression, Regression evaluation, Regression evaluation rates, Coef ﬁcient of\ndetermination, Mean square error, Mean absolute error, Regression analysis",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "The role played by regression analysis in data science cannot be overemphasised:\npredicting a continuous target is a pervasive task not only in practical terms, but also at a\nconceptual level. Regression is deeply investigated even nowadays, to the point of still\nbeing worth of considerations in top journals ( Jaqaman & Danuser, 2006 ; Altman &\nKrzywinski, 2015 ; Krzywinski & Altman, 2015 ), and widespread used also in the current\nHow to cite this article Chicco D, Warrens MJ, Jurman G. 2021. The coef ﬁcient of determination R-squared is more informative than\nSMAPE, MAE, MAPE, MSE and RMSE in regression analysis evaluation. PeerJ Comput. Sci. 7:e623 DOI 10.7717/peerj-cs.623\nSubmitted 26 March 2021\nAccepted 15 June 2021\nPublished 5 July 2021\nCorresponding author\nDavide Chicco,\ndavide.chicco@gmail.com\nAcademic editor\nYilun Shang\nAdditional Information and\nDeclarations can be found on\npage 18\nDOI 10.7717/peerj-cs.623\nCopyright\n2021 Chicco et al.\nDistributed under\nCreative Commons CC-BY 4.0\nscientiﬁc war against COVID-19 ( Chan et al., 2021 ; Raji & Lakshmi, 2020 ; Senapati et al.,\n2020; Gambhir et al., 2020 ). The theoretical basis of regression encompasses several\naspects revealing hidden connections in the data and alternative perspectives even up to\nbroadly speculative view: for instance, interpreting the whole statistical learning as a\nparticular kind of regression ( Berk, 2020 ), or framing deep neural networks as recursive\ngeneralised regressors ( Wüthrich, 2020), or even provocatively pushing such\nconsiderations to the limit of setting the whole of statistics under the regression framework\n(Hannay, 2020). The relevancy of the topic is clearly re ﬂected in the wide and\nheterogeneous literature covering the different aspects and insights of the regression\nanalysis, from general overviews ( Golberg & Cho, 2004 ; Freund, Wilson & Sa, 2006 ;\nMontgomery, Peck & Vining, 2021 ), to more technical studies ( Sykes, 1993; Lane, 2002)o r\narticles outlining practical applications ( Draper & Smith, 1998 ; Rawlings, Pantula &\nDickey, 2001 ; Chatterjee & Hadi, 2015 ), including handbooks ( Chatterjee & Simonoff,\n2013) or works covering speciﬁc key subtopics (Seber & Lee, 2012). However, the reference\nlandscape is far wider: the aforementioned considerations stimulated a steady ﬂow of\nstudies investigating more philosophically oriented arguments ( Allen, 2004; Berk, 2004), or\ndeeper analysis of implications related to learning ( Bartlett et al., 2020 ). Given the\naforementioned overall considerations, it comes as no surprise that, similarly to what\nhappened for binary classi ﬁcation, a plethora of performance metrics have been de ﬁned\nand are currently in use for evaluating the quality of a regression model (Shcherbakov et al.,\n2013; Hyndman & Koehler, 2006; Botchkarev, 2018b, Botchkarev, 2018a, Botchkarev, 2019).\nThe parallel with classi ﬁcation goes even further: in the scienti ﬁc community, a shared\nconsensus on a preferential metric is indeed far from being reached, concurring to making\ncomparison of methods and results a daunting task.\nThe present study provides a contribute towards the detection of critical factors in the\nchoice of a suitable performance metric in regression analysis, through a comparative\noverview of two measures of current widespread use, namely the coef ﬁcient of\ndetermination and the symmetric mean absolute percentage error.\nIndeed, despite the lack of a concerted standard, a set of well established and preferred\nmetrics does exist and we believe that, as primus inter pares , the coef ﬁcient of\ndetermination R-squared deserves a major role. The coef ﬁcient of determination is also\nknown as R -squared or R2 in the scienti ﬁc literature. For consistency, we will use all these\nthree names interchangeably in this study.\nIntroduced by Wright (1921) and generally indicated by R2, its original formulation\nquantiﬁes how much the dependent variable is determined by the independent variables,\nin terms of proportion of variance. Again, given the age and diffusion of R2, a wealth of\nstudies about it has populated the scienti ﬁc literature of the last century, from general\nreferences detailing de ﬁnition and characteristics ( Di Bucchianico, 2008 ; Barrett, 2000;\nBrown, 2009 ; Barrett, 1974), to more re ﬁned interpretative works ( Saunders, Russell &\nCrabb, 2012; Hahn, 1973; Nagelkerke, 1991; Ozer, 1985; Cornell & Berger, 1987 ; Quinino,\nReis & Bessegato, 2013 ); efforts have been dedicated to the treatment of particular cases\n(Allen, 1997; Blomquist, 1980 ; Piepho, 2019; Srivastava, Srivastava & Ullah, 1995 ;\nDougherty, Kim & Chen, 2000; Cox & Wermuth, 1992; Zhang, 2017; Nakagawa, Johnson &\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 2/24\nSchielzeth, 2017 ; Menard, 2000) and to the proposal of ad-hoc variations (Young, 2000;\nRenaud & Victoria-Feser, 2010 ; Lee et al., 2012 ).\nParallel to the model explanation expressed as the variance, another widely adopted\nfamily of measures evaluate the quality of ﬁt in terms of distance of the regressor to the\nactual training points. The two basic members of such family are the mean average\nerror (MAE) ( Sammut & Webb, 2010a ) and the mean squared error (MSE) ( Sammut &\nWebb, 2010b ), whose difference lies in the evaluating metric, respectively linear L1 or\nquadratic L2. Once more, the available references are numerous, related to both theoretical\n(David & Sukhatme, 1974 ; Rao, 1980; So et al., 2013 ) and applicative aspects ( Allen, 1971;\nFarebrother, 1976 ; Gilroy, Hirsch & Cohn, 1990 ; Imbens, Newey & Ridder, 2005 ; Köksoy,\n2006; Sarbishei & Radecka, 2011 ). As a natural derivation, the square root of mean square\nerror (RMSE) has been widely adopted ( Nevitt & Hancock, 2000 ; Hancock & Freeman,\n2001; Applegate et al., 2003 ; Kelley & Lai, 2011 ) to standardize the units of measures of\nMSE . The different type of regularization imposed by the intrinsic metrics re ﬂects on the\nrelative effectiveness of the measure according to the data structure. In particular, as a\nrule of thumb, MSE is more sensitive to outliers than MAE; in addition to this general note,\nseveral further considerations helping researchers in choosing the more suitable metric for\nevaluating a regression model given the available data and the target task can be drawn\n(Chai & Draxler, 2014 ; Willmott & Matsuura, 2005 ; Wang & Lu, 2018 ). Within the same\nfamily of measures, the mean absolute percentage error (MAPE) ( De Myttenaere et al.,\n2016) focuses on the percentage error, being thus the elective metric when relative\nvariations have a higher impact on the regression task rather than the absolute values.\nHowever, MAPE is heavily biased towards low forecasts, making it unsuitable for\nevaluating tasks where large errors are expected ( Armstrong & Collopy, 1992 ; Ren &\nGlasure, 2009; De Myttenaere et al., 2015 ). Last but not least, the symmetric mean absolute\npercentage error (SMAPE) ( Armstrong, 1985 ; Flores, 1986 ; Makridakis, 1993) is a recent\nmetric originally proposed to solve some of the issues related to MAPE. Despite the yet\nnot reached agreement on its optimal mathematical expression ( Makridakis & Hibon,\n2000; Hyndman & Koehler, 2006 ; Hyndman, 2014 ; Chen, Twycross & Garibaldi, 2017 ),\nSMAPE is progressively gaining momentum in the machine learning community due to its\ninteresting properties (Maiseli, 2019; Kreinovich, Nguyen & Ouncharoen, 2014; Goodwin &\nLawton, 1999 ),\nAn interesting discrimination among the aforementioned metrics can be formulated in\nterms of their output range. The coefﬁcient of determination is upper bounded by the value\n1, attained for perfect ﬁt; while R2 is not lower bounded, the value 0 corresponds to\n(small perturbations of) the trivial ﬁt provided by the horizontal line y = K for K the mean\nof the target value of all the training points. Since all negative values for R2 indicate a\nworse ﬁt than the average line, nothing is lost by considering the unit interval as the\nmeaningful r",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "METHODS",
+      "level": 1,
+      "text": "In this section, we ﬁrst introduce the mathematical background of the analyzed rates\n(“Mathematical Background”), then report some relevant information about the\ncoefﬁcient of determination and SMAPE ( “R-squared and SMAPE ”).\nMathematical background\nIn the following formulas, Xi is the predicted ith value, and the Yi element is the actual ith\nvalue. The regression method predicts the Xi element for the corresponding Yi element of\nthe ground truth dataset. De ﬁne two constants: the mean of the true values\n/C22Y ¼ 1\nm\nXm\ni¼1\nYi (1)\nand the mean total sum of squares\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 4/24\nMST ¼ 1\nm\nXm\ni¼1\nðYi /C0 /C22YÞ2 (2)\nCoefﬁcient of determination (R 2 or R-squared)\nR2 ¼ 1 /C0\nPm\ni¼1\nðXi /C0 YiÞ2\nPm\ni¼1\nð/C22Y /C0 YiÞ2\n(3)\n(worst value = −∞; best value = +1)\nThe coefﬁcient of determination ( Wright, 1921) can be interpreted as the proportion of\nthe variance in the dependent variable that is predictable from the independent variables.\nMean square error (MSE)\nMSE ¼ 1\nm\nXm\ni¼1\nðXi /C0 YiÞ2 (4)\n(best value = 0; worst value = + ∞)\nMSE can be used if there are outliers that need to be detected. In fact, MSE is great for\nattributing larger weights to such points, thanks to the L2 norm: clearly, if the model\neventually outputs a single very bad prediction, the squaring part of the function magni ﬁes\nthe error.\nSince R 2 ¼ 1 /C0 MSE\nMST and since MST is ﬁxed for the data at hand, R2 is monotonically\nrelated to MSE (a negative monotonic relationship), which implies that an ordering of\nregression models based on R2 will be identical (although in reverse order) to an ordering\nof models based on MSE or RMSE.\nRoot mean square error (RMSE)\nRMSE ¼\nﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃﬃ\n1\nm\nXm\ni¼1\nðXi /C0 YiÞ2\ns\n(5)\n(best value = 0; worst value = + ∞)\nThe two quantities MSE and RMSE are monotonically related (through the square root).\nAn ordering of regression models based on MSE will be identical to an ordering of models\nbased on RMSE.\nMean absolute error (MAE)\nMAE ¼ 1\nm\nXm\ni¼1\njXi /C0 Yij (6)\n(best value = 0; worst value = + ∞)\nMAE can be used if outliers represent corrupted parts of the data. In fact, MAE is not\npenalizing too much the training outliers (the L1 norm somehow smooths out all the\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 5/24\nerrors of possible outliers), thus providing a generic and bounded performance measure\nfor the model. On the other hand, if the test set also has many outliers, the model\nperformance will be mediocre.\nMean absolute percentage error (MAPE)\nMAPE ¼ 1\nm\nXm\ni¼1\n/C12/C12/C12/C12\nYi /C0 Xi\nYi\n/C12/C12/C12/C12 (7)\n(best value = 0; worst value = + ∞)\nMAPE is another performance metric for regression models, having a very intuitive\ninterpretation in terms of relative error: due to its de ﬁnition, its use is recommended in\ntasks where it is more important being sensitive to relative variations than to absolute\nvariations (De Myttenaere et al., 2016 ). However, its has a number of drawbacks, too, the\nmost critical ones being the restriction of its use to strictly positive data by de ﬁnition and\nbeing biased towards low forecasts, which makes it unsuitable for predictive models\nwhere large errors are expected ( Armstrong & Collopy, 1992 ).\nSymmetric mean absolute percentage error (SMAPE)\nSMAPE ¼ 100%\nm\nXm\ni¼1\njXi /C0 Yij\nðjXijþj YijÞ=2 (8)\n(best value = 0; worst value = 2)\nInitially deﬁned by Armstrong (1985), and then re ﬁned in its current version by Flores\n(1986) and Makridakis (1993), SMAPE was proposed to amend the drawbacks of the\nMAPE metric. However, there is little consensus on a de ﬁnitive formula for SMAPE, and\ndifferent authors keep using slightly different versions ( Hyndman, 2014). The original\nSMAPE formula deﬁnes the maximum value as 200%, which is computationally equivalent\nto 2. In this manuscript, we are going to use the ﬁrst value for formal passages, and the\nsecond value for numeric calculations.\nInformativeness\nThe rates RMSE, MAE, MSE and SMAPE have value 0 if the linear regression model ﬁts\nthe data perfectly, and positive value if the ﬁt is less than perfect. Furthermore, the\ncoefﬁcient of determination has value 1 if the linear regression model ﬁts the data perfectly\n(that means if MSE = 0), value 0 if MSE = MST, and negative value if the mean squared\nerror, MSE, is greater than mean total sum of squares, MST.\nEven without digging into the mathematical properties of the aforementioned statistical\nrates, it is clear that it is dif ﬁcult to interpret sole values of MSE, RMSE, MAE and MAPE,\nsince they have + ∞ as upper bound. An MSE = 0.7, for example, does not say much\nabout the overall quality of a regression model : the value could mean both an excellent\nregression model and a poor regression model . We cannot know it unless the maximum\nMSE value for the regression task is provided or unless the distribution of all the\nground truth values is known. The same concept is valid for the other rates having + ∞ as\nupper bound, such as RMSE, MAE and MAPE.\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 6/24\nThe only two regression scores that have strict real values are the non-negative\nR-squared and SMAPE. R-squared can have negative values, which mean that the regression\nperformed poorly. R-squared can have value 0 when the regression model explains none of\nthe variability of the response data around its mean ( Minitab Blog Editor, 2013).\nThe positive values of the coef ﬁcient of determination range in the [0, 1] interval, with 1\nmeaning perfect prediction. On the other side, the values of SMAPE range in the [0, 2],\nwith 0 meaning perfect prediction and 2 meaning worst prediction possible.\nThis is the main advantage of the coef ﬁcient of determination and SMAPE over RMSE,\nMSE, MAE, and MAPE: values like R2 = 0.8 and SMAPE = 0.1, for example, clearly\nindicate a very good regression model performance, regardless of the ranges of the ground\ntruth values and their distributions. A value of RMSE, MSE, MAE, or MAPE equal to 0.7,\ninstead, fails to inform us about the quality of the regression performed.\nThis property of R-squared and SMAPE can be useful in particular when one needs to\ncompare the predictive performance of a regression on two different datasets having\ndifferent value scales. For example, suppose we have a mental health study describing a\npredictive model where the outcome is a depression scale ranging from 0 to 100, and\nanother study using a different depression scale, ranging from 0 to 10 ( Reeves, 2021). Using\nR-squared or SMAPE we could compare the predictive performance of the two studies\nwithout making additional transformations. The same comparison would be impossible\nwith RMSE, MSE, MAE, or MAPE.\nGiven the better robustness of R-squared and SMAPE over the other four rates, we focus\nthe rest of this article on the comparison between these two statistics.\nR-squared and SMAPE\nR-squared\nThe coefﬁcient of determination can take values in the range ( −∞, 1] according to the\nmutual relation between the ground truth and the prediction model. Hereafter we report a\nbrief overview of the principal cases.\nR2 ≥ 0: With linear regression with no constraints, R2 is non-negative and corresponds\nto the square of the multiple correlation coef ﬁcient.\nR2 = 0: The ﬁtted line (or hyperplane) is horizontal. With two numerical variables this is\nthe case if the variables are independent, that is, are uncorrelated. Since R 2 ¼ 1 /C0 MSE\nMST, the\nrelation R2 = 0 is equivalent to MSE = MST, or, equivalently, to:\nXm\ni¼1\nðYi /C0 /C22YÞ2 ¼\nXm\ni¼1\nðYi /C0 XiÞ2 (9)\nNow, Eq. 9 has the obvious solution Xi = /C22Y for 1 ≤ i ≤ m, but, being just one quadratic\nequation with m unknowns Xi, it has in ﬁnite solutions, where Xi = /C22Y± ɛi for a small ɛi,a s\nshown in the following example:\n/C15 {Yi 1 ≤ i ≤ 10} = {90.317571, 40.336481, 5.619065,44.529437, 71.192687, 32.036909,\n6.977097, 66.425010, 95.971166, 5.756337}\nChicco et al. (2021), PeerJ Comput. ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "0 for i , 10",
+      "level": 1,
+      "text": "/C26\nPREDmiddle ¼f pm\ni : 1 /C20 i /C20 100g\npm\ni ¼ ri for i /C20 50 and i /C21 61",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "0 for 51 /C20 i /C20 60",
+      "level": 1,
+      "text": "/C26\nPREDend ¼f pe\ni : 1 /C20 i /C20 100g\npe\ni ¼ ri for i /C20 90",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "0 for i /C21 91",
+      "level": 1,
+      "text": "/C26\nIn all the three cases start, middle, end the predicting set coincides with REAL up to 10\npoints that are set to zero, at the beginning, in the middle and at the end of the prediction,\nrespectively. Interestingly, cnSMAPE is 0.9 in all the three cases, showing that SMAPE\nis sensible only to the number of non-matching points, and not to the magnitude of the\npredicting error. R2 instead correctly decreases when the zeroed sequence of points is\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 10/24\nfurther away in the prediction and thus farthest away from the actual values: R2 is 0.995 for\nPREDstart, 0.6293 for PRED middle and −0.0955 for PRED end.\nUC3 use case\nConsider now the as the ground truth the line y = x, and sample the set T including\ntwenty positive integer points T ={ ti =( xi,yT\ni)=( i,i)1 ≤ i ≤ 20} on the line. Deﬁne REAL =\n{ri =( xi,yR\ni)=( i,i + N(i)) 1 ≤ i ≤ 20} as the same points of T with a small amount of noise N\n(i) on the y axes, so that ri are close but not lying on the y = x straight line. Consider now\ntwo predicting regression models:\n/C15 The set PRED c = T representing the correct model;\n/C15 The set PRED w representing the (wrong) model with points de ﬁned as pw\ni = f(xi), for f\nthe 10-th degree polynomial exactly passing through the points ri for 1 ≤ i ≤ 10.\nClearly, pw\ni coincides with ri for 1 ≤ i ≤ 10, but ||pw\ni − ri|| becomes very large for i ≥ 11.\nOn the other hand ti ≠ ri for all i’s, but ||ti − ri|| is always very small. Compute now the two\nmeasures R2 and cnSMAPE on the ﬁrst N points i =1 , … , N for 2 ≤ N ≤ 20 of the two\ndifferent regression models c and w with respect to the ground truth set REAL ( Table 2).\nFor the correct regression model, both measures are correctly showing good results. For\nthe wrong model, both measures are optimal for the ﬁrst 10 points, where the prediction\nexactly matches the actual values; after that, R2 rapidly decreases supporting the\ninconsistency of the model, while cnSMAPE is not affected that much, arriving for N =2 0\nto a value 1/2 as a minimum, even if the model is clearly very bad in prediction.\nTable 1 UC1 use case.\njR 2 cnSMAPE\n5 0.9897 0.9500\n6 0.9816 0.9400\n7 0.9701 0.9300\n8 0.9545 0.9200\n9 0.9344 0.9100\n10 0.9090 0.9000\n11 0.8778 0.8900\n12 0.8401 0.8800\n13 0.7955 0.8700\n14 0.7432 0.8600\n15 0.6827 0.8500\n16 0.6134 0.8400\n17 0.5346 0.8300\n18 0.4459 0.8200\n19 0.3465 0.8100\n20 0.2359 0.8000\nNote:\nValues generated through Eq. (11).R 2, coef ﬁcient of determination ( Eq. (3)). cnSMAPE, complementary normalized\nSMAPE (Eq. (10)).\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 11/24\nUC4 use case\nConsider the following example: the seven actual values are ( 1, 1, 1, 1, 1, 2, 3 ) , and\nthe predicted values are ( 1, 1, 1, 1, 1, 1, 1 ) . From the predicted values, it is clear\nthat the regression method worked very poorly: it predicted 1 for all the seven values.\nIf we compute the coefﬁcient of determination and SMAPE here, we obtain R-squared =\n−0.346 and SMAPE = 0.238. The coef ﬁcient of determination illustrates that something\nis completely off, by having a negative value. On the contrary, SMAPE has a very good\nscore, that corresponds to 88.1% correctness in the cnSMAPE scale.\nIn this use case, if a inexperienced practitioner decided to check only the value of\nSMAPE to evaluate her/his regression, she/he would be misled and would wrongly believe\nthat the regression went 88.1% correct. If, instead, the practitioner decided to verify the\nvalue of R-squared, she/he would be alerted about the poor quality of the regression.\nAs we saw earlier, the regression method predicted 1 for all the seven ground truth\nelements, so it clearly performed poorly.\nUC5 use case\nLet us consider now a vector of 5 integer elements having values ( 1, 2, 3, 4, 5 ) , and a\nregression prediction made by the variables ( a, b, c, d, e ) . Each of these variables can\nassume all the integer values between 1 and 5, included. We compute the coef ﬁcient of\ndetermination and cnSMAPE for each of the predictions with respect to the actual values.\nTable 2 UC3 use case.\nCorrect model Wrong model\nN R2 cnSMAPE R 2 cnSMAPE\n2 −16.1555357 0.3419595 1 1\n3 −0.1752271 0.5177952 1 1\n4 0.7189524 0.6118408 1 1\n5 0.7968514 0.6640983 1 1\n6 0.8439391 0.7162407 1 1\n7 0.8711581 0.7537107 1 1\n8 0.8777521 0.7772273 1 1\n9 0.9069923 0.7962306 1 1\n10 0.9196087 0.8101526 1 1\n11 0.9226216 0.8230926 −2.149735 × 10 2 0.9090909\n12 0.9379797 0.8362582 −1.309188 × 10 4 0.8333333\n13 0.9439415 0.8447007 −2.493881 × 10 5 0.7692308\n14 0.9475888 0.8518829 −2.752456 × 10 6 0.7142857\n15 0.9551004 0.8613108 −2.276742 × 10 7 0.6666667\n16 0.9600758 0.8679611 −1.391877 × 10 8 0.6250000\n17 0.9622725 0.8740207 −7.457966 × 10 8 0.5882353\n18 0.9607997 0.8784127 −3.425546 × 10 9 0.5555556\n19 0.9659541 0.8837482 −1.275171 × 10 10 0.5263158\n20 0.9635534 0.8870441 −4.583919 × 10 10 0.5000000\nNote:\nWe deﬁne N, correct model, and wrong model in the UC3 Use case paragraph. R 2, coefﬁcient of determination (Eq. (3)).\ncnSMAPE, complementary normalized SMAPE ( Eq. (10)).\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 12/24\nTo compare the values of the coef ﬁcient of determination and cnSMAPE in the same\nrange, we consider only the cases when R-squared is greater or equal to zero, and we call it\nnon-negative R-squared. We reported the results in Fig. 1.\nAs clearly observable in the plot Fig. 1, there are a number of points where cnSMAPE\nhas a high value (between 0.6 and 1) but R-squared had value 0: in these cases, the\ncoefﬁcient of determination and cnSMAPE give discordant outcomes. One of these\ncases, for example, is the regression where the predicted values have values (1, 2, 3, 5, 2),\nR2 = 0, and cnSMAPE = 0.89.\nIn this example, cnSMAPE has a very high value, meaning that the prediction is 89%\ncorrect, while R2 is equal to zero. The regression correctly predicts the ﬁrst three points\n(1, 2, 3 ) , but fails to classify the forth element ( 4 is wrongly predicted as 5), and the\nﬁfth element ( 5 is mistakenly labeled as 2). The coef ﬁcient of determination assigns a bad\noutcome to this regression because it fails to correctly classify the only members of the\n4 and 5 classes. Diversely, SMAPE assigns a good outcome to this prediction because the\nvariance between the actual values and the predicted values is low, in proportion to the\noverall mean of the values.\nFaced with this situation, we consider the outcome of the coef ﬁcient of determination\nmore reliable and trustworthy: similarly to the Matthews correlation coef ﬁcient (MCC)\nFigure 1 UC5 Use case: R-squared versus cnSMAPE. Representation plot of the values of cnSMAPE\n(Eq. (10)) on the y axis and non-negative R-squared ( Eq. (3)) on the x axis, obtained in the UC5 Use case.\nBlue line: regression line generated with the loess smooth method.\nFull-size DOI: 10.7717/peerj-cs.623/ ﬁg-1\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 13/24\n(Matthews, 1975) in binary classi ﬁcation (Chicco & Jurman, 2020 ; Chicco, Tötsch &\nJurman, 2021 ; Tötsch & Hoffmann, 2021 ; Chicco, Starovoitov & Jurman, 2021 ; Chicco,\nWarrens & Jurman, 2021), R-squared generates a high score only if the regression is able to\ncorrectly classify most of the elements of each class. In this example, the regression fails to\nclassify all the elements of the 4 class and of the 5 class, so we believe a good metric\nwould communicate this key-message.\nMedical scenarios\nTo further investigate the behavior of R-squared, MAE, MAPE, MSE, RMSE and SMAPE,\nwe employed these rates to a regression analysis applied to two real biomedical\napplications.\nHepatitis dataset\nWe trained and applied several machine learning regression methods on the\nLichtinghagen dataset (Lichtinghagen et al., 2013; Hoffmann et al., 2018), which consists of\nelectronic health records of 615 individuals including healthy controls and patients\ndiagnosed with cirrhosis, ﬁbrosis, and hepatitis. This dataset has 13 featur",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "Methods",
+      "level": 1,
+      "text": "For the regression analysis, we employed the same machine learning methods two of us\nauthors used in a previous analysis (Chicco & Jurman, 2021): Linear Regression (Montgomery,\nPeck & Vining, 2021), Decision Trees (Rokach & Maimon, 2005), and Random Forests\n(Breiman, 2001), all implemented and executed in the R programming language ( Ihaka &\nGentleman, 1996). For each method execution, weﬁrst shufﬂed the patients data, and then we\nrandomly selected 80% of the data elements for the training set and used the remaining\nChicco et al. (2021), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.623 14/24",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "UC5 Use case: R-squared versus cnSMAPE. Representation plot of the values of cnSMAPE"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "UC1 use case."
+    },
+    {
+      "id": "t2",
+      "caption": "UC3 use case."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Eq. 9"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Eq. (11)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Eq. (10)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

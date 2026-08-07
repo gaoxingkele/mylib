@@ -1,0 +1,473 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-14-03682.pdf",
+  "n_pages": 16,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the rapid development of the economy, industrial and residential power con-\nsumption is increasing day by day, and energy demand presents a diversified and per-\nsonalized development trend. At present, long-distance transmission struggles meet the\nrequirements of multi-scale distribution networks for power supply reliability and diversity.\nIn order to address these power needs, research on the efficient operation of microgrids\nhas received increasing attention and become a strong support for the green development\nof a low-carbon society. A microgrid is a regional power generation, power distribution\nand power consumption system composed of distributed power sources, energy storage\nequipment, power electronic energy conversion devices, power loads, monitoring and\nprotection devices, and control components. Its purpose is to use distributed power sources\nflexibly and efficiently, solve the problem of full consumption of diversified energy sources\nand realize the stable operation of the power system in the region. However, due to the\nintermittency, randomness and uncontrollable nature of new energy power generation,\nnew energy alone cannot provide a sustainable and stable power supply. Therefore, it is\nnecessary to use adjustable power to meet the diversified demands of power loads.\nAs an important part of the new power system, the microgrid is being promoted on a\nlarge scale as the main distributed new energy consumption method, and it plays a key role\nAppl. Sci. 2024, 14, 3682. https://doi.org/10.3390/app14093682 https://www.mdpi.com/journal/applsci\nAppl. Sci. 2024, 14, 3682 2 of 16\nin maintaining the smooth operation of the distribution power grid. The deployment of\nmicrogrid systems can effectively address the power needs of remote areas, islands, or areas\nthat cannot be connected to a larger grid. With the further research into and application\nof microgrids, how to efficiently manage power distribution and energy transmission\nin microgrid systems to maximize economic benefits has become a significant research\ndirection. However, different from the traditional large power grid, the operation and\ndispatching of microgrids faces many challenges: (1) The uncertainty of intermittent\nrenewable energy power generation makes it difficult for a microgrid to make accurate day-\nahead dispatching plans based on prediction, resulting in the imbalance between supply\nand demand; (2) Bidirectional power flow caused by connecting distributed renewable\nenergy power generation into the grid can easily cause busbar voltage fluctuation, resulting\nin the instability of microgrid operation [1]. Therefore, due to the complexity of energy types\nand application environments, the overall economic operation optimization of microgrids\nfaces certain challenges [2,3].\nCompared with the optimal dispatching of the current large power grid, the optimal\ndispatching of the microgrid is more complicated. Distributed power sources in the\nmicrogrid have different forms and different operation characteristics. New energy sources\nsuch as photovoltaic and wind power are greatly affected by the weather and environment,\nand their power capacity is small. Many scholars have put forward their own solutions\nto the problems faced by optimal dispatching of the microgrid. The economic and social\nbenefits of microgrid operation are usually considered in the optimization of microgrid\ndispatching to minimize the operation cost and ensure the health and power balance of\nthe system. The literature [ 4] aims at minimizing energy production and transmission\ncost, power loss, and load-dumping operations, to improve system performance to the\nmaximum extent in general. The literature [5] manages the variables of the power system\nthrough optimal power control and supplies the load at the minimum or a reasonable\ncost without violating the system constraints. In order to improve energy efficiency, the\nliterature [6] proposes a LAN energy management method based on optimal energy flow\nto realize accurate control of distributed energy storage.\nAlthough the above studies have solved the power distribution problem of microgrid\nlines to a large extent, these studies have not fully considered the grid structure of the\nlow-voltage microgrid and its power distribution characteristics. Due to the low-voltage\npower supply characteristics of the microgrid, the line losses of its transmission lines cannot\nbe ignored. The traditional research usually ignores the influence of line loss, which has\nsome deviation in Hierarchical application. Therefore, in order to solve this problem, a\ncomprehensive optimization dispatching model of microgrid energy considering line loss\nis proposed in this paper. According to the characteristics of microgrids, a multi-time\nMarkov decision model was constructed, and a Hierarchical deep Q-network (HDQN)\nmethod was designed. The optimal decision estimation of discrete variables and continuous\nvariables was realized through a neural network, so as to obtain the approximate optimal\ndispatching strategy, which involves complicated transmission energy allocation and\nbattery charging/discharging management.\nIn essence, the microgrid energy transmission dispatching problem studied in this\npaper is a constrained non-linear programming problem. However, the current research\nmainly focuses on the overall dispatching of energy and lacks in-depth analysis and research\non the energy distribution of each power consumption unit; that is to say, it is difficult to\nallocate the power of each line.\nConsidering the relationship between power and voltage/current, the microgrid\noptimal transmission dispatching problem studied in this paper is a special nonlinear\nprogramming problem, that is, a quadratic programming problem with quadratic con-\nstraints. Therefore, in this paper, power flow control is included in the behavioral reward\nas the goal, to form a microgrid power controller based on deep reinforcement learning,\nin which the adjustable resources of load, diesel generator and energy storage device are\ntime-varying. The paper adopts a two-stage control mode. Firstly, the output power of\nAppl. Sci. 2024, 14, 3682 3 of 16\nthe system should meet the load demand of the microgrid. Secondly, the adjustability\nand continuity of the power output or input are ensured when charging/discharging the\nenergy storage. Finally, in the case of considering line loss, the power on all lines and\nthe actions of battery charging/discharging are controlled to ensure the dynamic balance\namong renewable energy, energy storage, diesel generators and loads, so as to ensure the\noptimal steady state operation of the microgrid.\nConsidering that the energy supply of the microgrid is provided by non-dispatchable\nenergy sources (e.g., photovoltaic and wind power) and dispatchable energy sources\n(e.g., diesel generation and battery), its energy dispatching optimization is to optimize\npower generation output and distribution line flow by regulating the supply of schedulable\nenergy and reducing the operation cost of the microgrid. Different from the high-voltage\ntransmission system, the distinct low-voltage power supply characteristics of a microgrid\nresult in significantly higher power losses as the line lengthens, due to the increased\ncurrent levels required for transmitting the same amount of power. Therefore, the optimal\ndispatching of energy in the microgrid should consider the power loss on the distribution\nline. However, most of the existing research does not consider the power loss of the\ntransmission line, making the operation cost predicted by various models higher. Therefore,\ntaking into account the power loss of distribution line, this paper reduces the energy loss\nand operation cost of the microgrid by adjusting the transmission power of each line.\nThis paper is organized into six sections. Section 1 is a general introduction. Section 2\nintroduces the work related to the optimal dispatching of microgrids. Section 3 presents\n",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "The energy transmission dispatching problem involves determining the optimal sched-\nule for the transmission of energy over a network of transmission lines, taking into account\nfactors such as the availability of energy sources, the demand for energy, and the constraints\nand limitations of the transmission system. This problem is particularly complex due to\nthe large number of variables involved and the need to account for uncertain factors such\nas weather patterns and unpredictable changes in energy demand. To solve the energy\ntransmission dispatching problem, advanced mathematical models and optimization tech-\nniques are used to analyze and optimize the energy delivery process. These models take\ninto account factors such as energy demand, transmission line capacity, transmission losses\nand the availability of energy sources and use sophisticated algorithms to determine the\noptimal schedule for energy transmission. Overall, energy transmission dispatching is a\ncritical component of the energy industry, as it enables the reliable and efficient delivery of\nenergy to customers while optimizing the use of resources and minimizing cost.\nIn order to optimize the energy dispatching strategies of microgrids in intermittent\nand random environments, many scholars have proposed model-based optimization dis-\npatching methods. The literature [7] proposes a dual MPC multi-energy microcomputer\noptimization dispatching strategy based on the TUBE model prediction control (TMPC).\nThe model mentioned by the multi-energy microgrid has a good robustness. A rogue mixed\ninteger two-order cone planning (R-MISOCP) model is proposed to use the elastic opti-\nmization dispatching of microgrid to achieve minimal cost operation of the microgrid [8].\nThe literature [9] proposes an optimal energy management strategy, considering the MMG\nnetwork that minimizes the operation cost of running constraints and carbon emissions and\nrealizes the optimal dispatching of energy. The literature [10] presents an energy manage-\nment method for multi-energy microgrids based on DQN, which overcomes the challenges\nof complex energy trading and multi-energy coupling, demonstrating superior conver-\ngence, stability and operational efficiency in a three-MEMG test system. The literature [11]\nproposes a two-stage random planning model such as new energy forces and electricity\nAppl. Sci. 2024, 14, 3682 4 of 16\nprices and carries out an optimization scheme for predict control through the model. These\nmethods need to establish accurate microgrid models for their solutions, but, in fact, most\nof the micro-power grid systems cannot complete the accurate construction of the model.\nUnder the premise of a large number of assumptions, the optimized dispatching of the\nmicrocomputer grid is realized. Therefore, when the environment becomes complex and\ncontrollable variables increase significantly, the model-driven methods have problems such\nas difficulty building, disaster and low-computing efficiency, and the scope of application\nis limited. At the same time, considering that the microgrid is a complex real-time dynamic\nsystem, the control method based on a model-driven control can no longer achieve the\naccurate optimization control of the microgrid.\nIn order to reduce the dependence on the model, the data-driven method is proposed\nin large quantities to solve the optimized dispatching problem of microgrids and improve\nthe economic goals as much as possible under various constraints. Chen et al. proposed a\nmodified deep Q-network to solve the power-charging and -discharging problem of user-\nside battery energy storage, reducing the cost and energy consumption of the charging and\ndischarging of the industrial park [12]. Paudyal et al. transformed the mixed integer nonlin-\near programming problem into a nonlinear programming problem based on actual needs\nand established a three-phase power distribution optimization power flow model, thereby\nreducing the computational burden and facilitating the Hierarchical implementation and\napplication [13]. The literature [14] adopted Long-Short-Term memory (LSTM), featuring\nthe past renewable power generation and load sequences, and continuously made opti-\nmal operation decisions online without relying on prediction models. The literature [15]\nproposed a multi-intelligent physical enhancement learning method with an attention\nmechanism. You can learn the optimal strategy of microgrids without complex system\nmodeling and significantly reduce the cost of the microgrid. An online dispatch method\nwas used based on the real-time energy management of microgrids, based on imitation\nlearning (IL) [16]. A real-time optimization method based on value function was proposed\nto minimize the total energy cost [17]. In addition, many people use simulation annealing\n(SA) and adaptive dynamic programming (ADP) to process the optimized dispatching\nproblem of microgrids [18–21]. Significantly, various studies have not conducted actual\nanalysis on the energy distribution of various energy-consuming units, and it is difficult to\ngrasp the distribution of the energy flow on the transmission line.\nAt present, on the basis of comprehensive consideration of the randomness of dis-\ntributed power output and the volatility of supply and demand prices, the mainstream\nmicrogrid operation cost optimization uses the output power of diesel power generation\n(DG), photovoltaic power generation (PV), wind-powered electricity generation, energy\nstorage battery and electrical load as the control variables [22–24]. Compared with high-\nvoltage transmission systems, microgrids are low-voltage transmission networks, and the\nresistance of transmission lines has an important impact on the economic dispatch of energy.\nThe transmission resistance causes more obvious power loss in the low-voltage network.\nIn order to further improve the economic operation capability of the microgrid, energy\ndistribution that takes into account the resistance characteristics of the transmission line is\na direction that needs further attention. Therefore, it is necessary to consider the power\nloss of the transmission line for optimizing and dispatching the low-voltage microgrid.\nAt the same time, we can dynamically optimize the energy dispatching, thereby reducing\noperation cost [25].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Problem Formulation",
+      "level": 1,
+      "text": "As shown in Figure 1, this paper considers a microgrid system, which consists of PVs,\nDGs, batteries and loads. PV and DG are important carriers of energy required to support\nthe operation of microgrids and can provide energy for user side loads and energy storage\nbatteries. Due to the close correlation between the power output of photovoltaic power\ngeneration and sunlight intensity, its large volatility restricts the accurate dispatching of\nenergy. The power output of DG and energy storage batteries is relatively stable, and it is\nAppl. Sci. 2024, 14, 3682 5 of 16\nan energy source that can be easily dispatched, which can ensure the stable operation and\ntimely response of the microgrid. The energy storage battery can be used as both a load\nand a power source in the system. When the power output of PV and DG cannot meet the\nenergy demand of the load, the energy storage battery maintains the balance between the\nsupply and demand of electric energy through a discharging operation. When the power\noutput of PV and DG exceeds the energy demand of the load, the battery stores energy\nthrough a charging operation to increase the consumption ratio of non-dispatchable energy.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 5 of 17 \n \nbatteries. Due to the close correlation between  the power output of photovoltaic power \ngeneration and sunlight intensity, its large volatility restricts the accurate dispatching of \nenergy. The power output of DG and energy storage batteries is relatively stable, and it is \nan energy source that can be easily dispatched, which can ensure the stable operation and \ntimely response of the microgrid. The energy storage ba ttery can be used as both a load \nand a power source in the system. When the power output of PV and DG cannot meet the \nenergy demand of the load, the energy storage battery maintains the balance between the \nsupply and demand of electric energy through a discharging operation. When the power \noutput of PV and DG exceeds the energy demand of the load, the ba ttery stores energy \nthrough a charging operation to increase th e consumption ratio of non-dispatchable en-\nergy. \n \nFigure 1. The framework of a microgrid system. \nThe paper mainly studies the power balance problem among the power supply side, \nthe load side and the energy storage side, as well as the power mismatch problem among \nthe controllable generation unit, controllable energy storage facility and adjustable load. \nAt the same time, if the power generation side does not have enough energy to meet the \ndemand of the loads, the charging and discharging of energy storage facilities and adjust-\nable loads will be considered. This process will continue until the mismatch problem is \nresolved.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Photovoltaic Power Generation System Model",
+      "level": 2,
+      "text": "The power output of PV is directly related to sunlight intensity and ambient temper-\nature. Its mathematical model can be represented by \n()1T\npv pv pv c STC\nSTC\nGPh Q T T G θ=+ −   (1)\nwhere ppv and hpv are the output power and derating factor of PV, respectively [26]. Gen-\nerally, the derating factor is set to 0.9.  Qpv represents the capacity of PV. GT and GSTC are \nthe light intensity at the working point and the light intensity under standard conditions, \nrespectively. θ and T\nc are the temperature coe ﬃcient and ba ttery temperature, respec-\ntively. TSTC is the reference temperature of the energy storage battery. In actual operation, \nthe reference temperature of the energy storage battery is set to 25 °C.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Diesel Power Generation System Model",
+      "level": 2,
+      "text": "The diesel power generation is a dispatch able energy source, and the relationship \nbetween its output power and operation cost can be given by \nFigure 1. The framework of a microgrid system.\nThe paper mainly studies the power balance problem among the power supply side,\nthe load side and the energy storage side, as well as the power mismatch problem among\nthe controllable generation unit, controllable energy storage facility and adjustable load.\nAt the same time, if the power generation side does not have enough energy to meet\nthe demand of the loads, the charging and discharging of energy storage facilities and\nadjustable loads will be considered. This process will continue until the mismatch problem\nis resolved.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Photovoltaic Power Generation System Model",
+      "level": 2,
+      "text": "The power output of PV is directly related to sunlight intensity and ambient tempera-\nture. Its mathematical model can be represented by\nPpv = hpv Qpv\nGT\nGSTC\n[1 + θ(Tc − TSTC )] (1)\nwhere ppv and hpv are the output power and derating factor of PV , respectively [26]. Gen-\nerally, the derating factor is set to 0.9. Qpv represents the capacity of PV .GT and GSTC are\nthe light intensity at the working point and the light intensity under standard conditions,\nrespectively. θ and Tc are the temperature coefficient and battery temperature, respectively.\nTSTC is the reference temperature of the energy storage battery. In actual operation, the\nreference temperature of the energy storage battery is set to 25 ◦C.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Diesel Power Generation System Model",
+      "level": 2,
+      "text": "The diesel power generation is a dispatchable energy source, and the relationship\nbetween its output power and operation cost can be given by\nCdg (Pdg (t)) =α(Pdg (t)∆t)2 + βPdg (t)∆t + γ (2)\nwhere Cdg(Pdg(t)) and Pdg(t) are the generation cost and output power of DG; α, β and γ are\nset to 0.00085, 0.11 and 6, respectively, in this paper [18].\nAppl. Sci. 2024, 14, 3682 6 of 16",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Energy Storage Battery Model",
+      "level": 2,
+      "text": "Energy storage batteries play a very important role in energy balance in microgrids\nand can regulate the supply and demand of electric energy [27]. In this paper, the battery\ncharging and discharging model can be modeled by\nEb,t+1 = Eb,t − Pb,t × η(Pb,t) (3)\nwhere Eb,t and Eb,t + 1 are the battery energy at time t and t + 1, respectively [28]. Pb,t is the\npower output at time t of the energy storage battery. η(Pb,t) is the total efficiency of the\nenergy storage battery either charging or discharging. It can be represented by\nη(Pb,t) =0.898 − 0.173\n\f\fPb,t\n\f\f/Pr s.t. Pr > 0 (4)\nwhere Pr is the rated output power of the energy storage battery. The value ofPb,t is positive,\nnegative and zero for the charging operation, discharging operation and non-operation of\nthe energy storage battery, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.4 Operation Conditions Constraints",
+      "level": 2,
+      "text": "Power balance of microgrid is the primary condition for the stable operation, and the\npower demand and supply in each time period need to satisfy the power balance equation.\nThe equation is defined as\ny\n∑\ni=1\nPload i,t =\nm\n∑\ni=1\nPpv i,t +\nx\n∑\ni=1\nPdg i,t +\nn\n∑\ni=1\nPb i,t (5)\nPmin\ndg ≤ Pdg,t ≤ Pmax\ndg (6)\n0 ≤ Ppv,t ≤ Pmax\npv (7)\nwhere Pmin\ndg , Pmax\ndg , Pmax\npv are the lower and upper limits of generator output power and the\nupper limits of photovoltaic output power, respectively.\nThe output power of DG and PV is constrained by the upper and lower boundaries in\nFormula (6) and Formula (7). The working time of the energy storage battery is limited\nby Formula (8). Its power rating and maximum charging/discharging rate are limited by\nFormula (9).\nEmin\nb,t ≤ Eb,t ≤ Emax\nb,t (8)\nPmin\nb,t ≤ Pb,t ≤ Pmax\nb,t (9)\nWhen the energy storage battery provides energy for q loads, the total power allocated\nby the transmission line must meet with the constraints\n0 ≤\nq\n∑\ni=1\nui,t ≤ Pmax\nb,t (10)\nCorrespondingly, when the distributed power sources in the microgrid provide energy\nfor f energy storage batteries, the power distributed by the transmission line needs to meet\nthe constraints\n0 ≤\nf\n∑\ni=1\nui,t ≤ Pmax\nb,t (11)\nPl,t = I2\nh,tRh (12)\nIh,t = uh,t\nVm\n(13)\nThe voltage Vm of the microgrid is generally 220 V . At the same time, the line loss of\nthe h-th transmission line at time t can be calculated based on Formulas (12) and (13).\nAppl. Sci. 2024, 14, 3682 7 of 16",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.5 Objective Function",
+      "level": 2,
+      "text": "The goal of the optimization problem is to search the optimal power flow of the\ntransmission line at each time period under the given state variables and calculate the\nminimum cost based on Formulas (5)–(13). Its expression is realized by\nmin(Ct) =\n+∞\n∑\nt\nCdg,t(x, u) +Cm,t(x, u) +Cl,t(x, u) (14)\nThe operation cost of microgrid Ct mainly consists of the fuel cost Cdg,t, the operation\nand maintenance cost Cm,t and the line loss cost Cl,t. These costs can be calculated by\nCdg,t(x, u) =Up × Pdg,t (15)\nCm,t(x, u) = (η1 × Ppv,t + η2 × Pdg,t) (16)\nCl,t(x, u) =θ1 × Pl,t + θ2 × Pb,t (17)\nThe price of the diesel is usually set as Up = USD 1.2, η1 = 0.0096, η2 = 0.088, θ1 = 0.08,\nθ2 = 0.01 [29]. From Formulas (12), (14) and (17), we can find that both the constraints and\nthe objective function contain quadratic terms. Therefore, the problem can be understood\nas a quadratically constrained quadratic programming (QCQP) problem.\nWhen the energy supply of the distributed energy source can meet the energy con-\nsumption demand of the microgrid, the energy storage battery can perform a charging\noperation to store energy. Correspondingly, when the energy supply is insufficient, the\ndiesel power generation and energy storage system can generate enough energy to meet\nthe operation needs of the microgrid.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 The Proposed HDQN Approach",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 DQN",
+      "level": 2,
+      "text": "DQN is a typical reinforcement learning method based on value function, combining\ndeep learning and Q-learning, and has good convergence performance. The structure of\nDQN is composed of the current value network, target value network, error function and\nexperience replay unit. It estimates action-value functions using deep neural networks\n(DNN). In order to solve the problem of instability and non-convergence of the DNN\napproximation of the action-value function, the experience replay mechanism and target\nnetwork can be adopted.\nDQN evaluates the action through the target network. The size of the action-value\nfunction corresponding to the different actions is estimated to find the maximum action of\nthe motion value function and the decision of the smart body. From the principle of the\nDQN approach, it can be seen that DQN can only handle limited action values. As the\naction space increases, DQN’s computing volume increases sharply, so DQN is usually\nused to process the task of discrete action space.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.2 Hierarchical Deep Q-Network Approach",
+      "level": 2,
+      "text": "In the process of a microgrid optimization decision, the agent can meet the actual\ndemand of the load through a series of battery-charging and -discharging power decisions\nand the power distribution of each line. However, the charging and discharging decision\nof the battery is a discrete variable decision, and the power distribution of each line is\na continuous variable decision. Therefore, when considering the line loss of the low-\nvoltage distribution power grid, the energy dispatching problem of the microgrid is a\nmixed-decision problem with complex constraints, including discrete action-continuous\nvariables. To solve these problems, an optimization approach based on DQN is proposed\nin this paper. The neural network is used to estimate the action values, so as to realize the\ndecision of continuous variables. At the same time, the discrete action decision is realized\nAppl. Sci. 2024, 14, 3682 8 of 16\nby combining with the DQN network, and, finally, the energy optimization dispatching of\nthe microgrid is realized.\nThe action space of comprehensive optimization dispatching of micrometers includes\ntwo types of actions. One is the charging/discharging of energy storage equipment, which\nis a discrete action. The other is the specific transmission power of each line, which is a\ncontinuous energy distribution. The energy storage equipment at the time of the charging\nand discharging decisions will affect the future energy status of the microgrid system\nand has long-term regulatory significance. Therefore, this paper designs a double-layer\nHDQN framework in which the upper-layer agent is used for the charging and discharging\ndecisions of energy storage devices, and the lower-layer agent receives the decision-making\nactions of the upper layer. Based on the upper-layer decision, an Actor-Critic network is\nused to obtain the optimal action that minimizes the system operation cost. All actions of\nthe upper-layer agent and the lower-layer agent constitute the entire action space at that\nmoment, acting together on the environment to obtain the next state.\nThe HDQN approach framework is shown in the Figure 2, including environment,\nexperience pool, rewards and different neural networks. Agents at both the upper and\nlower layers can sense the current state of the environment. The evaluation network of\nthe upper-layer agent can solve the long-term battery charging and discharging decisions,\nand the action and evaluation network of the lower-layer agent can solve the optimal line\npower distribution and output of each controllable unit at the current moment.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 9 of 17 \n \n \nFigure 2. The framework diagram of the HDQN approach.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.3 Upper Layer Model Design",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.3.1 Rewards",
+      "level": 3,
+      "text": "The return r obtained by the agent after selectin g actions according to the load de-\nmand, power output and battery state of charge at time t has a negative value. Therefore, \na higher return means a lower operation cost . The objective function can be obtained \nthrough cumulative rewards, and this design a llows the objective Function (14) to be in-\ncluded in the rewards: \n,,\n,,\n     \n1,     0\n1,  0\ntt\npv t load t\npv t load t\nrC\nPP\nPP\nκ\nκ\n=−\n−≥= −− <\n\n (18)\nwhere Ct is the system operation cost, and κ is an indicator function. When the photovol-\ntaic output is greater than the load demand, its value is 1, which gives the agent a positive \nreward. When the photovoltaic output is less than the load demand, its value is −1, which \nis equivalent to giving the agent a penalty, thereby aﬀecting the agent’s decision.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3.2 State Space",
+      "level": 3,
+      "text": "The microgrid system includes multiple components, such as distributed new en-\nergy, diesel generators, energy storage facilities and loads. The state space S is a collection \nof all states. The state s(t) includes the state of the energy storage ba ttery at time t , the \npower demand of the load, the power output of the generator and the output power of \nthe photovoltaic system: \nFigure 2. The framework diagram of the HDQN approach.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.3 Upper Layer Model Design",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.3.1 Rewards",
+      "level": 3,
+      "text": "The return r obtained by the agent after selecting actions according to the load demand,\npower output and battery state of charge at time t has a negative value. Therefore, a higher\nAppl. Sci. 2024, 14, 3682 9 of 16\nreturn means a lower operation cost. The objective function can be obtained through\ncumulative rewards, and this design allows the objective Function (14) to be included in\nthe rewards:\n˜\nrt = −κCt\nκ =\n\u001a 1, Ppv,t − Pload ,t ≥ 0\n−1, Ppv,t − Pload ,t < 0\n(18)\nwhere Ct is the system operation cost, and κ is an indicator function. When the photovoltaic\noutput is greater than the load demand, its value is 1, which gives the agent a positive\nreward. When the photovoltaic output is less than the load demand, its value is −1, which\nis equivalent to giving the agent a penalty, thereby affecting the agent’s decision.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.3.2 State Space",
+      "level": 3,
+      "text": "The microgrid system includes multiple components, such as distributed new energy,\ndiesel generators, energy storage facilities and loads. The state space S is a collection\nof all states. The state s(t) includes the state of the energy storage battery at time t, the\npower demand of the load, the power output of the generator and the output power of the\nphotovoltaic system:\ns(t) =\nn\nPpvm,t, Pdg,t, Ebn,t, Ploady ,t\no\n(19)\nwhere Ebn,t is the energy of the n-th battery at time t. Ploady,t, Ppvm,t and Pdg,t are the power\ndemand of the i-th load, output power of the m-th photovoltaic and output power of DG.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.3.3 Action Space",
+      "level": 3,
+      "text": "Combining practical scenarios and considering simplifying training difficulty, the ac-\ntion space of the upper layer agent mainly includes three situations: charging, discharging,\nand no operation of the battery. When the value is 1, the battery is in the charging state,\nwhen the value is −1, the battery is in the discharging state, and when the value is 0, the\nbattery has no operation.\neu(t) ={1, 0,−1} (20)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.4 Lower Layer Model Design",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.4.1 Rewards",
+      "level": 3,
+      "text": "The lower-layer agent minimizes system operation costs after upper-layer actions\nare given. The reward function is set based on the system objective function, which is to\nachieve cost optimization through cumulative rewards:\nrt =\n\u001a −Ct sum(ai,t) ≥ Pload i ,t\nλCt sum(ai,t) < Pload i ,t\n(21)\nwhere λ∈R+ is a positive natural number. By introducing λ and adjusting the reward\nfunction appropriately, the penalty factor is higher when the generated power cannot\nmeet the load demand. Therefore, under the condition of power balance, the system gives\npriority to meeting the load demand while meeting various constraints.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4.4.2 State Space",
+      "level": 3,
+      "text": "The state space of the lower-layer agent is consistent with that of the upper-\nlayer agent.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.4.3 Action Space",
+      "level": 3,
+      "text": "The action space A includes the output of controllable power on all lines. In this paper,\nall actions are the transmission power on each line, which is taken as a continuous value\nbut is limited by the inherent attributes of the energy storage device, load and so on, such\nAppl. Sci. 2024, 14, 3682 10 of 16\nas the maximum charging and discharging power of the battery. The action space can be\nexpressed as\nu(t) =\n\b\nu1,t, . . . ,uh,t\n\t\n(22)\nwhere uh,t is the power flow of the h-th transmission line at time t. The optimized control\nlaw u*(t) is found by the operational decision s(t).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4.5 Implementation of HDQN",
+      "level": 2,
+      "text": "To realize the optimal charging and discharging management and energy transmission\ndispatching, this paper uses the HDQN approach to control the actions of various devices\nin the microgrid. The upper-layer agent performs calculations based on the observed\nenvironmental state and its strategy at time t, thereby selecting a corresponding action\nand transmitting the action to the lower-layer agent at the same time. Based on this, the\nlower-layer agent calculates according to its strategy to obtain a set of determined actions.\nAll actions of the upper and lower layers of the agent act on the running environment and\nobtain the next environment state. The algorithm steps are shown in Algorithm 1.\nAlgorithm 1. HDQN algorithm for microgrid\n1: Randomly initialize the Q-network, the Actor network and the Critic network with\nweights θq, θu, θc.\n2: Initialize the target network Q-target network, the Actor-target network and the Critic-target\nnetwork with weights\nˆ\nθ\nq\n,\nˆ\nθ\nu\n,\nˆ\nθ\nc\n3: Initialize replay buffer {R1, R2}\n4: Initialize T, t\n5: for episode = 1, M do\n6: Receive the initial observation state S1\n7: for t = 1, T do\n8: With probability ε1. selects\n˜\nU random action\n˜\nu\n9: Otherwise selects\n˜\nu = maxu(st, u; θq)\n10: Execute action\n˜\nu, observe upper layer reward\n˜\nrt and new state St+1\n11: Store transition (st,\n˜\nut,\n˜\nrt, st+1) in R1\n12: Sample a random minibatch of N1 transitions (si,\n˜\nui,\n˜\nri, si+1) from R1\n13: Set yi =\n˜\nri + γmaxuQ(Si+1,\n˜\nu; θq)\n14: Perform a gradient descent step on\nL = 1\nN1 ∑i (yi − Q(si,\n˜\nui; θq))\n2\n15: end for\n16: for t = 1, T do\n17: With probability ε2 selects U random action u\n18: Execute action (\n˜\nu, u), observe lower-layer reward rt and update state St+1\n19: Store transition st, ut, rt, st+1) in R2\n20: Sample a random minibatch of N2 transitions (si, ui, ri, si+1) from R2\n21: Set yi = ri + γmaxuQ(Si+1, u; θu, θc)\n22: Update critic by minimizing the loss\nL = 1\nN2 ∑i (yi − Q(si, ui; θu, θc))2\n23: Update the actor policy using the sampled policy gradient:\n∇θu J ≈ 1\nN2 ∑i ∇uQ(s, u|θc)|s=si,u=u(si)∇θu u(s|θu)|si\n24: Every N steps\nˆ\nθ\nq\n= θq,\nˆ\nθ\nu\n= θu,\nˆ\nθ\nc\n= θc\n25: end for\n26: end for\n27: return (\n˜\nu, u)\nAppl. Sci. 2024, 14, 3682 11 of 16",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "5 Experimental Analysis",
+      "level": 1,
+      "text": "This experiment considers a typical microgrid system, including a photovoltaic sys-\ntem, a diesel generator, two batteries and two loads [ 21]. The time interval is ∆t = 1 h.\nReference [30] for the typical daily load and irradiation data. The batteries capacities\nare set to 100 kWh in the experiment. The rated power output and maximum charg-\ning/discharging rate of the batteries are 16 kW. The initial energy of the batteries is\n100 kWh. The rated power of PV and DG are 210 kW and 120 kW, respectively.\nIn this experiment, the Q-network of the upper-layer agent has three fully connected\nhidden layers. Through a large number of simulation experiments, the number of neurons\nis set to 300, 300 and 150 respectively. The activation function is the M-ReLU, whose hidden\nlayer has 200 and 150 M-ReLU neurons [ 12]. The upper and lower layers use the same\nnetwork parameters. The power transmission dispatching in this paper is a periodic task\nwith a 24 h cycle. In this experiment, some initial parameters are summarized in Table 1.\nTable 1. Parameters of the HDQN for the Microgrid Energy Dispatching Problem.\nParameter Value\nActor learning rate 0.0005\nCritic learning rate 0.0001\nBatch size 256\nSteps in one episode (T) 24\nDiscount factor 0.95\nIterates 1000\nCalculation accuracy 0.0001\nReplay memory 50,000\nFigures 3 and 4 show the cost curves of the SA, ADP and proposed approach under\nthe same conditions. Figure 3 shows the total cost generated by the three dispatching\nmethods. From the experimental results, it can be seen that the total cost does not increase\nsubstantially between 09:00 and 16:00. The reason is that photovoltaic is the main power\nsupply method during this period, and the total cost mainly comes from transmission\nline losses. At other times, the photovoltaic output drops to zero. At the same time, the\ndiesel generator and the batteries serve as the main power supply for the load. Therefore,\nthe cost of power supply is relatively high. Figure 4 shows the cost per time step of the\nSA, ADP and proposed approach. These experimental results show that the proposed\nmethod spends less on each time step than the SA and ADP , and the dispatching effect is\nbetter. The results show that the proposed approach costs less than the SA and ADP in\neach time step and has a better dispatching effect. The cost of the SA, ADP and proposed\napproach to provide services for all loads in one day is USD 1309.49, USD 1091.92 and\nUSD 1050.58, respectively. Compared with the other two approaches, the proposed ap-\nproach saves USD 258.91 and USD 41.34, respectively. Obviously, the proposed approach\nprovides the optimal dispatching scheme, which can support the operation of the microgrid\nwith minimal operation cost.\nFigures 5 and 6 show the energy outputs of PV and DG at each time period. Through\nthe analysis of the results, the energy outputs of PV and DG have a strong correlation.\nDG does not operate between 11:00 and 15:00, while the output power of PV is in a high\noperation state. At the same time, the energy output of PV can meet the energy demand of\nthe load and provide energy for charging the energy storage battery. At other times, PV\nand DG work together to meet the energy demand of the load.\nFigure 7 shows the power loss within 24 h, and the results show that power loss is\nworth paying attention to in the economical operation of microgrids. The total power\nlosses of the SA and the ADP are 199.91 kW and 130.87 kW, respectively. Using the\nproposed approach, the total power losses are 113.77 kW, saving 86.14 kW and 17.1 kW in\none day, respectively.\nAppl. Sci. 2024, 14, 3682 12 of 16\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 12 of 17 \n \nset to 100 kWh in the experiment. The rated power output and maximum charging/dis-\ncharging rate of the batteries are 16 kW. The initial energy of the batteries is 100 kWh. The \nrated power of PV and DG are 210 kW and 120 kW, respectively. \nIn this experiment, the Q-network of the upper-layer agent has three fully connected \nhidden layers. Through a large number of simulation experiments, the number of neurons \nis set to 300, 300 and 150 respectively. The activation function is the M-ReLU, whose hid-\nden layer has 200 and 150 M-ReLU neurons [12]. The upper and lower layers use the same \nnetwork parameters. The power transmission dispatching in this paper is a periodic task \nwith a 24 h cycle. In this experiment, some initial parameters are summarized in Table 1. \nTable 1. Parameters of the HDQN for the Microgrid Energy Dispatching Problem. \nParameter Value \nActor learning rate 0.0005 \nCritic learning rate 0.0001 \nBatch size 256 \nSteps in one episode (T) 24 \nDiscount factor 0.95 \nIterates 1000 \nCalculation accuracy 0.0001 \nReplay memory 50,000 \nFigures 3 and 4 show the cost curves of the SA, ADP and proposed approach under \nthe same conditions. Figure 3 shows the tota l cost generated by the three dispatching \nmethods. From the experimental results, it can be seen that the total cost does not increase \nsubstantially between 09:00 and 16:00. The reason is that photovoltaic is the main power \nsupply method during this period, and the total cost mainly comes from transmission line \nlosses. At other times, the photovoltaic output drops to zero. At the same time, the diesel \ngenerator and the ba tteries serve as the main power supply for the load. Therefore, the \ncost of power supply is relatively high. Figure  4 shows the cost per time step of the SA, \nADP and proposed approach. These experimental results show that the proposed method \nspends less on each time step than the SA and ADP, and the dispatching e ﬀect is better. \nThe results show that the proposed approach costs less than the SA and ADP in each time \nstep and has a better dispatching eﬀect. The cost of the SA, ADP and proposed approach \nto provide services for all loads in one day is USD 1309.49, USD 1091.92 and USD 1050.58, \nrespectively. Compared with the other two approaches, the proposed approach saves \nUSD 258.91 and USD 41.34, respectively. Obviously, the proposed approach provides the \noptimal dispatching scheme, which can support the operation of the microgrid with min-\nimal operation cost. \n \nFigure 3. The total cost within 24 h for three approaches. \nFigure 3. The total cost within 24 h for three approaches.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 13 of 17 \n \n \nFigure 4. The phase cost within 24 h for three approaches. \nFigures 5 and 6 show the energy outputs of PV and DG at each time period. Through \nthe analysis of the results, the energy outputs of PV and DG have a strong correlation. DG \ndoes not operate between 11:00 and 15:00, whil e the output power of PV is in a high op-\neration state. At the same time, the energy ou tput of PV can meet the energy demand of \nthe load and provide energy for charging the energy storage ba ttery. At other times, PV \nand DG work together to meet the energy demand of the load. \n \nFigure 5. The energy output of PV within 24 h. \n \nFigure 6. The energy output of DG within 24 h. \nFigure 4. The phase cost within 24 h for three approaches.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 13 of 17 \n \n \nFigure 4. The phase cost within 24 h for three approaches. \nFigures 5 and 6 show the energy outputs of PV and DG at each time period. Through \nthe analysis of the results, the energy outputs of PV and DG have a strong correlation. DG \ndoes not operate between 11:00 and 15:00, whil e the output power of PV is in a high op-\neration state. At the same time, the energy ou tput of PV can meet the energy demand of \nthe load and provide energy for charging the energy storage ba ttery. At other times, PV \nand DG work together to meet the energy demand of the load. \n \nFigure 5. The energy output of PV within 24 h. \n \nFigure 6. The energy output of DG within 24 h. \nFigure 5. The energy output of PV within 24 h.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 13 of 17 \n \n \nFigure 4. The phase cost within 24 h for three approaches. \nFigures 5 and 6 show the energy outputs of PV and DG",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "In this paper, the optimal energy transmission dispatching approach of the microgrid \nis introduced. An optimal approach for energy transmission dispatching based on an \nHDQN is proposed to achieve energy storage ba ttery management and transmission en-\nergy allocation of the microgrid. To reduce complexity, the system is designed in two lay-\ners, each represented by an agent. The upper layer ﬁrst makes charging and discharging \ndecisions for the battery, and the lower layer uses the power on each transmission line as \na decision variable, based on the decision results of the upper layer, to obtain a decision \nresult that minimizes the overall operation cost of the system. Simulation results show \nthat the proposed method combines the advantages of the HDQN to solve the problem of \npower allocation optimization in the microgrid. In continuous variable optimization, the \nproposed method achieves better performance than the SA and ADP. \nThe energy storage system is considered as  a whole in the paper. In fact, there are \nalso some scientiﬁc problems about the charging and discharging dispatching and battery \nFigure 9. The total cost without DG within 24 h.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 15 of 17 \n \nFigures 9 and 10 illustrate the total cost and step cost of using the SA, ADP and pro-\nposed approach without a diesel generator. It is  still clear that in the absence of a diesel \ngenerator, the total cost and cost per time step obtained by using the proposed approach \nare lower than the SA and the ADP. The total cost of the ADP is USD 80.4 per day, while \nthe total cost of the SA is USD 122.5 per day. The proposed approach saves USD 12 and \nUSD 54.5 per day, with savings rates of about 15% and 44%, respectively. When a mi-\ncrogrid system does not have a diesel generator, the most important costs during the sys-\ntem operation are the line loss an d the loss of energy storage ba tteries. Without a diesel \ngenerator, the total cost is reduced, but the quality of the power supply is greatly aﬀected, \nand the total power supply cannot fully meet the load demand. \n \nFigure 9. The total cost without DG within 24 h. \n \nFigure 10. The step cost without DG within 24 h.",
+      "refs": {
+        "figures": [
+          "f9",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "In this paper, the optimal energy transmission dispatching approach of the microgrid \nis introduced. An optimal approach for energy transmission dispatching based on an \nHDQN is proposed to achieve energy storage ba ttery management and transmission en-\nergy allocation of the microgrid. To reduce complexity, the system is designed in two lay-\ners, each represented by an agent. The upper layer ﬁrst makes charging and discharging \ndecisions for the battery, and the lower layer uses the power on each transmission line as \na decision variable, based on the decision results of the upper layer, to obtain a decision \nresult that minimizes the overall operation cost of the system. Simulation results show \nthat the proposed method combines the advantages of the HDQN to solve the problem of \npower allocation optimization in the microgrid. In continuous variable optimization, the \nproposed method achieves better performance than the SA and ADP. \nThe energy storage system is considered as  a whole in the paper. In fact, there are \nalso some scientiﬁc problems about the charging and discharging dispatching and battery \nFigure 10. The step cost without DG within 24 h.",
+      "refs": {
+        "figures": [
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "In this paper, the optimal energy transmission dispatching approach of the microgrid\nis introduced. An optimal approach for energy transmission dispatching based on an\nHDQN is proposed to achieve energy storage battery management and transmission\nenergy allocation of the microgrid. To reduce complexity, the system is designed in two\nlayers, each represented by an agent. The upper layer first makes charging and discharging\ndecisions for the battery, and the lower layer uses the power on each transmission line as\na decision variable, based on the decision results of the upper layer, to obtain a decision\nresult that minimizes the overall operation cost of the system. Simulation results show\nthat the proposed method combines the advantages of the HDQN to solve the problem of\npower allocation optimization in the microgrid. In continuous variable optimization, the\nproposed method achieves better performance than the SA and ADP .\nThe energy storage system is considered as a whole in the paper. In fact, there are also\nsome scientific problems about the charging and discharging dispatching and battery life of\ndifferent batteries within the energy storage system. Combining the line power distribution\nproposed in the paper, battery charging and discharging dispatching, and the management\nof batteries in energy storage systems, is a worthwhile issue for comprehensive energy\nmanagement and dispatching in microgrids.\nFuture research will explore how to determine the optimal capacity and location of\ndistributed power sources under stable electricity loads, taking into account the degrada-\ntion of batteries and the diesel generator’s impact on the decision-making process of the\napproach. Additionally, as the scale of the microgrid increases, its computational complex-",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The framework of a microgrid system."
+    },
+    {
+      "id": "f2",
+      "caption": "The framework diagram of the HDQN approach."
+    },
+    {
+      "id": "f7",
+      "caption": "shows the power loss within 24 h, and the results show that power loss is"
+    },
+    {
+      "id": "f3",
+      "caption": "The total cost within 24 h for three approaches."
+    },
+    {
+      "id": "f4",
+      "caption": "The phase cost within 24 h for three approaches."
+    },
+    {
+      "id": "f5",
+      "caption": "The energy output of PV within 24 h."
+    },
+    {
+      "id": "f6",
+      "caption": "The energy output of DG within 24 h."
+    },
+    {
+      "id": "f8",
+      "caption": "The cost error of each time step to diﬀerent discount factors."
+    },
+    {
+      "id": "f9",
+      "caption": "The total cost without DG within 24 h."
+    },
+    {
+      "id": "f10",
+      "caption": "The step cost without DG within 24 h."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Parameters of the HDQN for the Microgrid Energy Dispatching Problem."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "HDQN algorithm for microgrid"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 10,
+    "n_tables": 1,
+    "n_algorithms": 1,
+    "n_equations": 5
+  }
+}

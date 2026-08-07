@@ -1,0 +1,523 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-future-internet/mdpi-future-internet__2018__scada_system_testbed_for_cybersecurity_research_using_m__335a24bf1e.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "S\nupervisory Control and Data Acquisition (SCADA) systems are Industrial Control Systems \n(ICS) widely used by industries to monitor and control different processes such as oil and gas \npipelines, water distribution, electrical power grids, etc. These systems provide automated control \nand remote monitoring of services  being used in daily life. For example, states and municipalities \nuse SCADA systems to monitor and regulate water levels in reservoirs, pipe pressure, and water \ndistribution. \nA typical SCADA system includes components like computer workstations, Human Mach ine \nInterface (HMI), Programmable Logic Controllers (PLCs), sensors, and actuators [1]. Historically, \nthese systems had private and dedicated networks. However, due to the wide -range deployment of \nremote management, open IP networks (e.g., Internet) are no w used for SCADA systems \ncommunications [2]. This exposes SCADA systems to the cyberspace and makes them vulnerable to \ncyber attacks using the Internet. \nMachine Learning (ML) and artificial intelligence techniques have been widely used to \nconstitute an intelligent and efficient Intrusion Detection System (IDS) dedicated to  ICS. However, \nresearchers generally develop and train their ML -based security system using network traces \nobtained from publicly available datasets. Due to malware evolution and changes i n the attack \neprint\nFuture Internet 2018, 10(8), 76",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 of 15",
+      "level": 1,
+      "text": "strategies, these datasets fail to protect the system from the new types of attack s, and consequently, \nthe benchmark datasets should be updated periodically. \nThis paper presents the deployment of a SCADA system testbed for cybersecurity research and \ninvestigates the feasibility of using ML algorithms to detect cyber -attacks in real time. The testbed is \nbuilt using equipment deployed in real industrial settings . Sophisticated attacks are conducted on \nthe testbed to have a better understanding of the attacks and their consequences in SCADA \nenvironments. The network traffic is captured  including both abnormal and normal traffic. The \nbehavior of both types of traffi c (abnormal and normal ) is analyzed, and features are extracted to \nbuild a new SCADA-IDS dataset. This dataset is then used for training and testing ML models which \nare further deployed in the network . The performance of the ML model depends highly on the \navailable datasets. One of the main contributions  of this paper  is building a new dataset updated \nwith recent and more sophisticated attacks.  We argue that IDS using ML models trained with a \ndataset generated at the process control level could be more effi cient, less complicated, and more \ncost-effective as compared to traditional protection techniques. Five traditional machine learning \nalgorithms are trained to detect the attacks: Random Forest, Decision Tree, Logistic Regression, \nNaïve Bayes and KNN. Once trained and tested, the ML models are deployed in the network, where \nreal network traffic is used to analyze the effectiveness and efficiency of the ML models in a real-time \nenvironment. We compare the performance obtained during the training and test phas e of the ML \nmodels with the performance obtained  during the online deployment of these models in the \nnetwork. The online deployment  is another contribution of this paper since most of the published \npapers present the performance of the ML models obtained during the training and test phases. We \nare conducting this research to build an IDS software based on ML models to be deployed on the \nICS/SCADA systems. \nThe remainder of the paper is organized as follows. Section 2 presents a brief background of the \nICS-SCADA system reference model and the related works. Section 3 describes the developed \nSCADA system testbed. Section  4 describes the ML algorithms and the performance measurements \nused in this work. Section 5 shows the scenario of the conducted the attacks and the main features of \nthe dataset used to train the algorithms. Section  6 discusses our results and the interoperations \nbehind them. Finally, Section 7 concludes the paper with the main discussed points and outcomes.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Background",
+      "level": 1,
+      "text": "In this section, we briefly present  a description of the ICS -SCADA reference model and some \nrelated works in the domain of ML algorithms for SCADA system security.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 ICS Reference Model",
+      "level": 2,
+      "text": "The ICS is a general term that covers numerous control systems, including SCADA systems , \ndistributed control systems, and other control system configurations [3]. An ICS consists of \ncombinations of control components (e.g., electrical, mechanical, hydraulic, pneumatic) that are used \nto achieve various industrial objectives (e.g., manufacturi ng, transportation of matter or energy). \nFigure 1 shows an example of an ICS reference model [4]. \nAs can be seen from Figure 1, the ICS model is divided into four levels, 3 to 0. Level 3 (corporate \nnetwork) consists of the traditional information technolog y, including the general deployment of \nservices and systems, such as file transfer, websites, mail servers, resource planning, and office \nautomation systems. Level 2 (supervisory control local area network) includes the functions \ninvolved in monitoring and  controlling the physical processes and the general deployment of \nsystems such as HMIs, engineering workstations, and history logs. Level 1 (control network) \nincludes the functions involved in sensing and manipulating physical processes. For example, \nreceiving the information, processing the data, and triggering outputs, which are all done in PLCs. \nLevel 0 (I/O network) consists of devices (sensors/actuators) that are directly connected to the \nphysical process.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 of 15",
+      "level": 1,
+      "text": "Figure 1. ICS reference model [4]. \nAs shown in Figure 1, Level 3 is composed of the traditional IT infrastructure system (Internet \naccess service, file transfer protocol server, Virtual Private Network (VPN) remote access, etc.). \nLevels 2, 1, and 0, represent a typical SCADA system which is composed of the following \ncomponents: \n• HMI: Used to observe the status of the system or to adjust the system parameters for processes \ncontrol and management purposes. \n• Engineering Workstation: Used by engineers for programming the control functions of the \nHMI. \n• History Logs: Used to collect the data in real -time from the automation processes for current or \nlater analysis. \n• PLCs: Act as slave stations in the SCADA architecture. They are connected to sensors or \nactuators.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 The SCADA Communication Protocol",
+      "level": 2,
+      "text": "There are several communication protocols developed for  use in SCADA systems. These \nprotocols define the standard  message format for  all inter-device communications on the network. \nOne popular protocol , which is widely used  in SCADA system environments, is Modbus pr otocol \n[5]. Modbus is an application -layer messaging protocol that provides the Client/Server \ncommunications between devices connected to  an Ethernet network and offers services specified by \nfunction codes. The function codes  tell the server what action to  take. For example, a client can read \nthe status of the discrete outputs or the values of digital inputs from the PLC; or it can read/write the \ndata contents of a group of registers inside the PLC. Figure 2 illustrates an example of Modbus \nClient/Server communication.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 of 15",
+      "level": 1,
+      "text": "Figure 2. Modbus Client/Server communication example. \nThe Modbus register address type consists of four data reference types [5, 6] which are \nsummarized in Table 1. The “xxxx” following a leading digit represents a four-digit address location \nin the user data memory. \nTable 1. Data reference types [6, 7]. \nReference Range Description \n0xxxx 00001-09999 Read/Write Discrete Outputs or Coils. \n1xxxx 10001-19999 Read Discrete Inputs. \n3xxxx 30001-39999 Read Input Registers. \n4xxxx 40001-49999 Read/Write-Output or Holding Registers.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Related Works",
+      "level": 2,
+      "text": "Cyber-attacks are continuously evolving and changing behavior to bypass the security \nmechanisms. Thus, the utilization of advanced security mechanisms is essential to identify and \nprevent new attacks. In this sense, the development of real testbeds enables  the possibility of \nadvance research. \nMorris et al. [7] describe four datasets  to be used for cybersecurity research. The datasets \ninclude network traffic, process control, and  process measurement features from a set of attacks \nagainst testbeds which use M odbus application layer protocol. The authors argue that there are \nseveral datasets developed to train and validate IDS associated with traditional information \ntechnology systems,  but in the SCADA security area, there is a lack of availability and access t o \nSCADA network traffic. In our work, a new dataset with new types of attacks has been created. So, \nwe are providing one more resource to be used by researchers to train, validate, and compare their \nresults with other datasets once our dataset is available. \nIn order to  investigate the security of the Modbus/TCP protocol, Miciolino et al.  [8] explore a \ncomplex cyber -physical testbed, conceived for the control and monitoring of a water system. The \nanalysis of the experimental results highlights the critical c haracteristics of the Modbus/TCP as a \npopular communication protocol in ICS environments. They conclude that by obtaining sufficient \nknowledge of the system, an attacker is able to  change the commands of the actuators or the sensor \nreadings in order to achieve its malicious objectives. Obtaining knowledge of  the system is the first \nstep in attacking a system . This attack is also known as reconnaissance attack. Hence, in our work, \nour ML models are trained to recognize this kind of attack. \nIn [9], Rosa et al. describe some practical cyber- attacks using an electricity grid testbed. This \ntestbed consists of a hybrid environment of SCADA assets ( e.g., PLCs, HMIs, process control \nservers) controlling an emulated power grid. The work explains their attacks and discusses some of \nthe challenges faced by an attacker in implementing them. One of the attacks is the reconnaissance \nnetwork attack. The authors argue that this kind of attack can be used not only to discover devices \nand types of services but also to perf orm fingerprinting and discover PLCs behind the gateways. \nHence, in our work, advanced reconnaissance attacks are carried out, and ML algorithms are used to \ndetect them.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 of 15",
+      "level": 1,
+      "text": "In [10], Keliris et al. develop a process -aware supervised learning defense strategy t hat \nconsiders the operational behavior of an ICS to detect attacks in real -time. They use a benchmark \nchemical process and consider  several categories of attack vectors on their hardware controllers. \nThey use their trained SVM model to detect abnormalities  in real-time and to distinguish between \ndisturbances and malicious behavior as well. In our work, we use  five ML algorithms to identify the \nabnormal behavior in real-time and evaluate their detection performance. \nTomin et al.  [11] present a semi -automated method for online security assessment using ML \ntechniques. They outline some experience obtained at the Melentiev Energy Systems Institute, \nRussia in developing ML -based approaches for detecting potentially  dangerous states in power \nsystems. Multiple ML a lgorithms are trained offline using resampling cross -validation method. \nThen, the best model among the ML algorithms is selected based on performance and is used online. \nThey argue that the use of ML techniques provides reliable and robust solutions that c an resolve the \nchallenges in planning and operating future industrial systems with an acceptable level of security. \nCherdantseva et al. [12] review  state of the art  in cybersecurity risk assessment of SCADA \nsystems. This review  indicates that despite the p opularity of the machine learning techniques, \nresearch groups in ICS security have reported the lack of standard datasets for training and testing \nmachine learning algorithms. The lack of standard datasets has resulted in an inability to develop \nrobust ML models to detect the anomalies in ICS. Using the testbed proposed in this paper, we built \na new dataset for training and testing ML algorithms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3 The SCADA System Testbed",
+      "level": 1,
+      "text": "In this section, we describe the configuration of our SCADA system testbed for cyber security \nresearch.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1 The Testbed Framework",
+      "level": 2,
+      "text": "The purpose of our testbed is to emulate real -world industrial systems as closely as possible \nwithout replicating an entire plant or assembly system  [13]. The utilization of a testbed allows the \npossibility of carrying out real cyber -attacks. Our testbed is dedicated to controlling a water storage \ntank, which is a part of the process of water treatment and distribution. The components used in our \ntestbed are commonly used  in real SCADA environments . Figure 3 sho ws the SCADA testbed \nframework for our targeted application and Table 2 shows a brief description of the equipment  used \nto build the testbed. \n \nFigure 3. The testbed framework. \nTable 2. Description of the devices used in the testbed.\nDevices  Descriptions",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "6 of 15",
+      "level": 1,
+      "text": "On Button: Turns on the level control process of the water storage tank. \nOff Button: Turns off the level control process of the water storage tank. \nLight \nIndicator: Indicates whether the system is on or off. \nLevel Sensor 1 \n(LS1): \nMonitors the maximum water level in the tank. When the water reaches the maximum \nlevel, the sensor sends a signal to PLC. \nLevel Sensor 2 \n(LS2): \nMonitors the minimum water level in the tank. When the water reaches the minimum \nlevel, the sensor sends a signal to PLC. \nValve: \nControls the water level in the tank. When the water reaches the maximum level, the valve \nopens, and when the water reaches the minimal level, the valve closes. This logic is \nimplemented in PLC using the ladder language. \nWater Pump 1: Fills up the water tank. \nWater Pump 2: Draws water from the tank when the valve is open. \nPLC: \nControls the physical process. The logic of the water control system is in PLC, which \nreceives signals from the input devices (buttons, sensors), executes the program, and sends \nsignals to the output devices (water pumps and valve). \nHMI: \nUsed by the administrator to monitor and control the water storage system in real-time. \nThe administrator can also display the devices‘ state and interact with the system through \nthis interface. \nData History: Used to store logs and events of the SCADA system. \nAs shown in Figure 3, the  storage tank has two level sensors: Level Sensor 1 (LS1) and Level \nSensor 2 (LS2) that monitor the water level in the tank. When the water reaches the maximum level \ndefined in the system, the LS1 sends a signal to the PLC. The PLC turns off Water Pump 1 used to fill \nup the tank, opens the valve, and turns on Water Pump 2 to draw the water from the tank. When the \nwater reaches the minimal level defined in the system, LS2 sends a signal to the PLC, which closes \nthe valve, turns off Water Pump 2, and turns on Water Pump 1 to fill up the tank. This process starts \nover when the water level reaches LS1. SCADA system gets data from the PLC using the Modbus \ncommunication protocol and displays them to the system operator through the HMI interface. \nThere are other IC S protocols which could be used instead of Modbus in our testbed. For \nexample, DNP3 is an ICS protocol that provides some security mechanisms [14,15]. However, in a \nrecent research, Li et al. [16] reported that they found 17,546 devices connected to the In ternet using \nthe Modbus protocol spread all over the world. They have not counted the number of equipment not \ndirectly connected to the internet. Although there are other ICS protocols, many industries still use \nSCADA systems with Modbus protocol because t heir equipment does not support other protocols. \nIn this case, solutions to detect attacks can be cheaper instead of other solution like changing the \ndevices. \nPLC Schneider model M241CE40 is used in our testbed to control the process of the water \nstorage tank. The logic programming of the PLC is done using the LADDER programming language. \nThe LADDER language is not covered in this paper; however, more information can be found in [17, \n18]. The sensors described in Table 2 are connected to the digital inputs of the PLC. The pumps and \nvalves are connected to the output of the PLC.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 Machine Learning Algorithms and Performance Measurements",
+      "level": 1,
+      "text": "In this section, we describe the ML algorithms used in our work as well as the measurements \nused to evaluate their performances.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1 Machine Learning Algorithms",
+      "level": 2,
+      "text": "The ML algorithms can be classified as  supervised, unsupervised, and semi -supervised. Each \nclass has its characteristics and applicability. The discussion of all algorithms is out of the scope of \nthis paper. However, we refer the reader to [19] [20 ] for detailed technical discussions of these \nalgorithms. In this paper, we use traditional ML algorithms to detect the attacks. Our target is to",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "7 of 15",
+      "level": 1,
+      "text": "build supervised machine learning models, and we have chosen the followings algorithms for attack \ndetection and classification: \n1. Logistic Regression [20]. \n2. Random Forest [21]. \n3. Naïve Bayes [22]. \n4. Support Vector Machine (SVM) [23]. \n5. KNN [24]. \nThe performance of these algorithms is discussed in Section 6.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.2 Performance Measurements",
+      "level": 2,
+      "text": "Traditionally, the performance of ML algorithms is measured by metrics which are derived \nfrom the confusion matrix [25]. Table 3 shows the confusion matrix in the IDS context.  \nTable 3. Confusion matrix in IDS context. \nData class Classified as normal Classified as abnormal \nNormal True Negative (TN) False Negative (FN) \nAbnormal False Positive (FP) True Positive (TP) \nIn the IDS context, the following parameters are used to compose the confusion matrix:  \n• TN: Represents the number of normal flows correctly classified as normal (e.g., normal traffic); \n• TP: Represents the number of abnormal flows (attacks) correctly classified as abnormal (e.g., \nattack traffic); \n• FP: Represent the number of normal flows incorrectly classified as abnormal; \n• FN: Represents the number of abnormal flows incorrectly classified as normal;  \nNext, we present several evaluation metrics and their respective formulas which are derived \nfrom the confusion matrix parameters: \n• Accuracy: It is the percentage of correctly predicted flows  considering the total number of \npredictions: \nAccuracy % = TP + TN\nTP + TN + FP + FN × 100 (1) \n• False Alarm Rate (FAR): This represents the percentage of the normal flows misclassified as \nabnormal flows (attack) by the model: \nFAR % = FP\nFP +  TN  × 100 (2) \n• UN-Detection Rate (UND): It is the fraction of the abnormal flows (attack) which are \nmisclassified as normal flows by the model: \nUND % = FN\nFN + TP  × 100 (3) \nAccuracy (Eq. 1) is the most frequently used metric for evaluating the performance of learning \nmodels in classification problems. However, this metric is not very reliable for evaluating the ML \nperformance in the scenarios with imbalanced classes [26]. In this case, one class is dominant in \nnumber, and it has more samples relatively  compared to another class . For example, in IDS \nscenarios, the proportion of normal flows to attack flows is very high in any realistic dataset. That is, \nthe number of samples in the dataset which represent the normal flows is enormous compared to the \nnumber of samples which represent the attack flows. This problem is prevalent in scenarios where \nanomaly detection is crucial like fraudulent transactions in banks, identification of rare diseases, and \nin the identification of cyber-attacks in critical infrastructures. New metrics have been developed to \navoid a biased analysis [27]. So, in addition to the accuracy, we also used the FAR and UND metrics.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "8 of 15",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5 Attack Scenarios, Features Selection, and Evaluation Scenarios",
+      "level": 1,
+      "text": "In this section, we describe the attacks carried out in our testbed and the features used to build \nour dataset. This dataset will be used in Section 6 for training and testing the ML algorithms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.1 Attack Scenarios",
+      "level": 2,
+      "text": "Network attacks on SCADA systems can be divided  into three categories: Reconnaissance, \nCommand Injection, and Denial of Service (DoS) [7]. Our focus in this paper is on the reconnaissance \nattacks where the network is scanned for possible vulnerabilities to  be used for later attacks. \nReconnaissance attack is the first stage of any  attack on a networking system. In this stage, hackers \nuse scan tools to inspect the topology of the victim network and identify the devices in the network  \nas well as their vulnerab ilities. Figure 4 shows our testbed attack scenario where the dashed \nrectangles highlight the vulnerable spots and possible attack targets in the system . \n \nFigure 4. Attack Scenario. \nSome reconnaissance attacks can be easily detected. For example, there are scanning tools which \nsend a large number of packets per second under Modbus/TCP to the targeted device and wait for \nacknowledgment of the packets from them. If a response is received, the host (i.e., the device ) is \nactive. This attack generates a conside rable variation in the traffic behavior which can be easily \ndetected by the traditional IDS or even the traditional  firewall or rule- based mechanisms. Figure 5 \nshows an example of the traffic behavior when a scanning tool was used in our testbed:  \n \nFigure 5. Network traffic behavior under easy to detect attacks.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "9 of 15",
+      "level": 1,
+      "text": "On the other hand, there are some sophisticated reconnaissance attacks which are more difficult \nto detect. For example, some exploits can be used to map the network, and that results in an attack \nbehavior almost similar to normal traffic. Figure 6 illustrates the network traffic behavior during \nsuch exploit attacks. As can be seen, the change in the traffic behavior is negligible under the attack. \nThus, it is  difficult to detect the attack. The use of rule -based mechanisms would fail because the \nsignature of the Modbus and TCP traffic do  not change, and the language used to express the \ndetection rules may not be expressive enough. On the other hand,  the use of ML can improve the \ndetection rate as ML algorithms can be trained to detect these attack scenarios. \n \nFigure 6. Network traffic behavior under difficult to detect attacks. \nWe conducted the following reconnaissance  and exploit attacks specific to ICS environment \ndescribed in Table 4. Details of the commands  used to perform the attacks can be found in [28] and \n[29]. During the attacks, the network traffic was captured to be analyzed. W e used the following \ntools to analyze the captured traffic: Wireshark [30], and Argu s [31]. The captured traffic included \nunencrypted control information of the devices (valve, pumps, sensors) as well as information \nregarding their type (function codes, type of data). Table 5 presents statistical information about the \ncaptured traffic. \nTable 4. Reconnaissance attacks carried out against our testbed [29,30]. \nAttack Name Attack Description \nPort Scanner [29] \nThis attack is used to identify common SCADA protocols on the network. Using \nNmap tool, packets are sent to the target at intervals which vary from 1 to 3 seconds. \nThe TCP connection is not fully established so that the attack is difficult to detect by \nrules. \nAdress Scan Attack \n[29] \nThis attack is used to scan network addresses and identify the Modbus server \naddress. Each system has only one Modbus server and disabling this device would \ncollapse the whole SCADA system. Thus, this attack tries to find the unique address \nof the Modbus server so that it can be used for further attacks. \nDevice Identification \nAttack [29] \nThis attack is used to enumerate the SCADA Modbus slave IDs on the network and to \ncollect additional information such as vendor and firmware from the first slave ID \nfound. \nDevice Identification \nAttack (Aggressive \nMode) [29] \nThis attack is similar to the previous attack. However, the scanning uses an aggressive \nmode, which means that the additional information about all slave IDs found in the \nsystem us collected. \nExploit [30] \nExploit used to read the coils values of the SCADA devices. The coils represent the \nON/OFF status of the devices controlled by the PLC, such as motors, valves, and \nsensors [29]. \nTable 5. Statistical information on the captured traffic.\nMeasurement Value",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "10 of 15",
+      "level": 1,
+      "text": "Duration of capture (hours) 25 \nDataset length (GB) 1.27 \nNumber of observations 7,049,989 \nAverage data rate (kbits/s) 419  \nAverage packet size (bytes) 76.75  \nPercentage of  scanner attack  3 x 10-4  \nPercentage of address scan attack 75 x10-4  \nPercentage of device identification attack 1 x 10-4  \nPercentage of device identification attack (agressive mode) 4.93  \nPercentage of exploit attack 1.13  \nPercentage of all attacks (total) 6.07  \nPercentage of normal traffic 93.93",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.2 Features Selection",
+      "level": 2,
+      "text": "Once the network traffic is captured, the next step is to select potential features which can \ndistinguish the anomalous traffic from the normal traffic. The authors in [19] have selected 12 useful \nfeatures for ML -based network security monitoring in the ICS networks. In [32], the authors study \nthe potential features presented in [19]. In our work, we analyzed the variation of the features during \nthe normal and attack traffic, and we analyzed those features that do not vary during the normal and \nattack traffic. Based on these prior works and in our studies, Table 6 shows the features selected for \nour dataset. \nTable 6. Features selected to compose the dataset. \nFeatures Descriptions \nTotal Packets (TotPkts) Total transaction packet count \nTotal Bytes (TotBytes) Total transaction bytes \nSource packets (SrcPkts) Source/Destination packet count \nDestination Packets (DstPkts) Destination/Source packet count  \nSource Bytes (SrcBytes) Source/Destination transaction bytes \nSource Port (Sport) Port number of the source",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5.2 Evaluation Scenario",
+      "level": 2,
+      "text": "After defining the dataset, the features are extracted as discussed in the previous subsection. \nThen, the data is labeled either as normal traffic or attack traffic. Following that, the dataset is split  \ninto training and test datasets . The training dataset is composed  of 80% of the total data, and it is \nused to train our ML model. The test dataset consists of the remaining 20% of the data, and it is \nused to evaluate the performance of our trained ML model. We call this training and test phase as \n“offline evaluation ,” because the ML models are trained and tested offline. Figure 7 shows our \nevaluation scenario.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "11 of 15",
+      "level": 1,
+      "text": "Figure 7. Model Evaluation. \nAfter training and testing, the trained ML models are created and deployed in the network. \nThen, their performance is  analyzed using real network traffic. This phase is called  “online \nevaluation.” We compare the results obtained from the two phases  (offline a nd online). This  is \ndescribed next.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6 Numerical Results",
+      "level": 1,
+      "text": "In this section, we present the numerical results of  the attacks described in Subsection 5.1. \nFigure 8 shows the results about the accuracy of the ML algorithms used.  \nThe accuracy represents the total number of correct predictions divided by the total number of \nsamples (Eq. 1). As shown in Figure 8, considering the offline evaluations, Decision Tree and KNN  \nhave the best accuracy (100%) compared to other ML models. However, the difference in the \naccuracy is small among all trained models. In other words, all chosen ML algorithms performed \nwell in terms of accuracy during the offline phase. During the online phase, Decision Tree, Random \nForest, Naïve Bayes and Logistic  Regression have a small difference, hence, the performance of \nthese algorithms, in both phases (offline and online), are similar. The same does not happen with \nthe KNN model. There is a significant difference between the online and offline phase which \nindicates that in practice the KNN does not provide good accuracy. \n \nFigure 8. Accuracy results. \nAs shown in Table 5, our dataset is unbalanced. Therefore,  accuracy is not the ideal measure to \nevaluate the performance [33]. Other metrics are needed to compare the performance of the ML \nalgorithms. Figure 9 shows the False Alarm Rate results. The FAR metric is the percentage of the \nregular traffic which has been misclassified as anomalous by the model (Eq. 2). \n0.00\n20.00\n40.00\n60.00\n80.00",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "100.00 Decision",
+      "level": 2,
+      "text": "Tree\nRandom\nForest\nNaive Bayes Logistic\nRegression\nKNN\nAccuracy (Offline, Online) \nAccuracy - Offline (%) Accuracy - Online (%)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "12 of 15",
+      "level": 1,
+      "text": "Figure 9. False alarm rate results. \nRegarding the offline and online evaluations , as  shown in Figure 9, Random Forest and \nDecision Tree models have the best performance followed by the KNN model. These three models \nhave the lowest false alarm percentages followed by the Logistical Regression and Naïve Bayes. \nThese lowest percentages  mean that Random Forest, Decision Tree, and  KNN perform better in \ndetecting normal traffic. In our dataset, normal  traffic is the do minant traffic; therefore, it is \nexpected to have a low FAR value. This  low FAR value can be due to the model bias toward \nestimating the normal traffic perfectly, which  is common in unbalanced datasets. Further, the \nclustering done in the Random Forest, Decision Tree and KNN models can be helpful, especially \nwhen dealing with two types of data having different network features. \nFigure 10 shows the results of the un -detection rate metric. The UND (Eq. 4) represents the \npercentage of the traffic which is an anomaly but  is misclassified as normal  (the opposite of the \nFAR). The traffic represented by this metric is more critical than the traffic represented by the FAR \nmetric because, in this case, an attack can happen without being detected. Further, in our unbalanced \ndataset, the model s are biased toward normal  traffic and this metric would show how biased the \nmodels are. \n \nFigure 10. Un-Detected rate results. \nAs shown in Figure 10, considering the offline performance results, the percentage of the UND \nis small for Naïve Bayes, Logistic Regression, and KNN models, and zero for Decision Tree and \nRandom Forest models. That is, all algorithm shows excellent performance on this critical metric. \nHowever, considering the online performances, KNN model has the worst performance, much \ndifferent from the offline evaluation. The same does not happen to the other models, where their \n0.50 \n0.12 \n0.00 0.01 0.00 \n0.31 \n0.16 0.11 \n0.00 0.00 0.00\n0.20\n0.40",
+      "refs": {
+        "figures": [
+          "f9",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "0.60 Naive Bayes Logistic",
+      "level": 2,
+      "text": "Regression\nKNN Random\nForest\nDecision Tree\nFalse Alarme Rate (Offline, Online) \nLower is Better \nFalse Alarm Rate - Offline (%) False Alarm Rate - Online (%)\n0.10 0.44 0.44 0.00 0.00 \n64.71 \n0.75 0.51 0.26 0.20 \n0.00\n20.00\n40.00\n60.00",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "80.00 KNN Logistic",
+      "level": 2,
+      "text": "Regression\nNaive Bayes Random\nForest\nDecision Tree\nUn-Detection Rate (Offline, Online) \nLower is Better \nUn-Detection Rate - Offline (%) Un-Detection Rate  - Online (%)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "13 of 15",
+      "level": 1,
+      "text": "online performances are very close to the offline performance. This excellent performance shows that \nour selected features in this work ar e great as they could detect attacks  even in an unbalanced \ndataset.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "7 Conclusion",
+      "level": 1,
+      "text": "This paper presented the development of a SCADA system testbed to be used in cybersecurity \nresearch. The testbed is dedicated to controlling a water storage tank which is one  of the several \nstages in the process of water treatment and distribution. The testbed was used to analyze the effects \nof the attacks on SCADA systems. Using the network traffic, a new dataset was developed for use by \nresearchers to train machine learning algorithms as well as  validating and comparing their results \nwith other available datasets. \nFive reconnaissance attacks specific to ICS environment were conducted against  the testbed. \nDuring the attacks, the network traffic with information about the devic es (valves, pumps, sensors) \nwas captured. Using Argus and Wireshark network tools, features were extracted to build a dataset  \nfor training and testing machine learning algorithms. \nOnce the dataset was generated, five traditional machine learning algorithms  were used to \ndetect the attacks: Random Forest, Decision Tree, Logistic Regression, Naïve Bayes and KNN. These \nalgorithms were evaluated in two phases: during the training and test of the machine learning \nmodels (offline), and during the deployment of these models in the network (online).  The \nperformance obtained during the online phase was compared to the performance obtained during \nthe offline phase \nThree metrics were used to evaluate the performance of the used algorithms: accuracy, FAR, \nand UND . Regarding the  accuracy metric, in the offline phase, all ML algorithms showed an \nexcellent performance. In the online phase, almost all the algorithms had their performance very \nclose to the offline results. The KNN algorithm was the only one which did not pe rform well. \nMoreover, considering an unbalanced dataset and analyzing the FAR and UND metrics, we \nconcluded that Random Forest and Decision Tree models have better performance compared to \nothers in both phases.  \nResults show the feasibility of detecting reconnaissance attacks in ICS environments. Our future \nplans include generating more attacks and checking for the models’ feasibility  and performance in \ndifferent environments. Moreover, experiments using unsupervised algorithms will be done.  \nAcknowledgments: This work has been supported under the grant ID NPRP 10-901-2-370 funded by the Qatar \nNational Research Fund (QNRF) and grant#2017/01055- 4 São Paulo Research Foundation (FAPESP). The \nstatements made herein are solely the responsibility of the authors. Th e authors would like to thank the \nInstituto Federal de Educação, Ciência e Tecnologia de São Paulo (IFSP), Washington University in Saint Louis, \nand Qatar University. \nAuthor Contributions: Marcio Andrey Teixeira built the testbed and performed the experiments. Tara Salman \nand Maede Zolanvari assisted with revisions and improvements. The work was done  under the supervision \nand guidance of Professors  Jain,  Meskin, and Samaka, who also formulated the problem. \nConflicts of Interest: The authors declare no conflicts of interest.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "shows an example of an ICS reference model [4]."
+    },
+    {
+      "id": "f2",
+      "caption": "Modbus Client/Server communication example."
+    },
+    {
+      "id": "f3",
+      "caption": "The testbed framework."
+    },
+    {
+      "id": "f4",
+      "caption": "Attack Scenario."
+    },
+    {
+      "id": "f5",
+      "caption": "Network traffic behavior under easy to detect attacks."
+    },
+    {
+      "id": "f6",
+      "caption": "Network traffic behavior under difficult to detect attacks."
+    },
+    {
+      "id": "f7",
+      "caption": "Model Evaluation."
+    },
+    {
+      "id": "f8",
+      "caption": "shows the results about the accuracy of the ML algorithms used."
+    },
+    {
+      "id": "f9",
+      "caption": "False alarm rate results."
+    },
+    {
+      "id": "f10",
+      "caption": "shows the results of the un -detection rate metric. The UND (Eq. 4) represents the"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Data reference types [6, 7]."
+    },
+    {
+      "id": "t2",
+      "caption": "Description of the devices used in the testbed."
+    },
+    {
+      "id": "t3",
+      "caption": "Confusion matrix in IDS context."
+    },
+    {
+      "id": "t4",
+      "caption": "Reconnaissance attacks carried out against our testbed [29,30]."
+    },
+    {
+      "id": "t5",
+      "caption": "Statistical information on the captured traffic."
+    },
+    {
+      "id": "t6",
+      "caption": "Features selected to compose the dataset."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. 1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq. 2)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Eq. 4)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 10,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

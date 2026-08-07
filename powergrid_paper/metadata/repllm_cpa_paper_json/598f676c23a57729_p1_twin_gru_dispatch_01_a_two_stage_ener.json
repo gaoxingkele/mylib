@@ -1,0 +1,306 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__01__a_two_stage_energy_and_service_market_framework_involving_unit_commitm__1bc5ffee79.pdf",
+  "n_pages": 27,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Network security issues related to renewable energy sources (RES) and load forecast\nerrors are faced by transmission system operators (TSOs) by means of redispatching\nand balancing services. Balancing resources are exploited to restore system frequency\nin real-time (RT) operation, whereas redispatch mechanism can be used when energy\nmarket outcomes do not fulfil power flow bounds [1], showcasing a high potential for cost\noptimization to remedy network congestions and to compensate for power fluctuations.\nRedispatch mechanism is managed by different procurement and remuneration models,\ndepending on national grid rules [2].\nIn the last years, coupled energy markets were created in order to increase the util-\nisation of generation sources among European market operator members (Nominated\nElectricity Market Operators, NEMOs), resulting in Single Day-ahead Coupling and Single\nIntraday Coupling markets [3,4]. This new joint governance structure aims at achieving a\nbetter co-operation between NEMOs and TSOs. In fact, the inputs of these markets are the\nnetwork capacities and constraints provided by the TSOs and the bids and offers provided\nby the NEMOs. In this structure, the ancillary service provision/delivery is managed in a\nEnergies 2026, 19, 2377 https://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 2 of 27\nsuccessive market platform, where a harmonized market among European regions is still\nin a preliminary stage with some pilot projects, due to the different market frameworks [5].\nFurther insights into European market context and pilot projects are provided in [6].\nAmong European countries, Italian TSO has developed a comprehensive expertise\nin handling generating units and network constraints in market sessions downstream\nmerit-order energy markets, as highlighted in Figure 1 [7]. In particular, the energy markets\nare the Day-ahead (DAM) and the Intraday (IM) markets, managed by Italian Market\nOperator, aiming at maximising the social welfare through a merit-order zonal clearing\nprice mechanism. In this session, the main energy amount is traded defining the preliminary\ngeneration and load schedules considering step-wise bids and interzonal power flow\nconstraints. Downstream, the Ancillary Service market (ASM) sessions take place, managed\nby the TSO, to provide the required services according to a pay-as-bid auction market.\nSpecifically, the TSO, based on energy market schedules, can redispatch units to procure\nupward and downward power margin, depending on the needed reserve, while complying\nwith line power flows and unit commitment (UC) constraints along with the RES and\nload forecasts updates. Finally, Balancing Market (BM) is carried out over the whole day,\nactivating the amounts reserved in ASM to mitigate any contingency, e.g., load and RES\nmismatches, generation outage, etc., and remunerating only the activated energy.\nFigure 1. Italian market framework and main features.\nOn the methodological point of view, security-constrained unit commitment (SCUC)\nand economic dispatch (ED) have been extensively investigated [8,9]. These works provide\ncomprehensive state-of-the-art reviews of the mathematical modeling and solving of these\nproblems, tracing their evolution from deterministic approaches to stochastic and robust\noptimization frameworks, while emphasizing the integration of intermittent RES in the\ncurrent energy context of decarbonization.\nWhile these works establish a robust foundation for preventive generation schedul-\ning— addressing the uncertainty management [ 10,11], grid security and more recently\ncomputational efficiency in terms of flexible temporal resolution [12]—only a few works\ndeal with market-based power redispatch to update the production levels of generating\nunits depending on power system operating conditions. The amount of redispatched\npower derives from an optimization problem aiming at solving congestions [10–14], bal-\nancing RES and/or load due to uncertainties [10,11,15,16], facing outage in the presence\nof extreme weather events [ 17], or procuring reserve requirements [ 18,19]. In the most\nemployed deterministic formulations, units are allowed to be started-up or shut-down\nto provide redispatch, adopting integer variables, resulting in a mixed-integer linear pro-\ngramming (MILP) problem [14,20], and other formulations are seldom used, such as linear\nprogramming [10,11,16], dynamic non-linear programming [21], mixed-integer non-linear\nprogramming [13], or robust optimization [18]. The optimization problem has an economic\npurpose, mainly aiming at minimizing active power redispatch and start-up costs, and\nfurther costs can be due to shut-down, reserve provision or deployment, RES and/or load\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 3 of 27\ncurtailment [10,15–18]. On the other hand, technical objective functions involve congestions\nmitigation [10,13] or the minimization of the overload probability risk [11]. In this regard,\nthe inclusion of both technical and economic constraints is therefore necessary, albeit com-\nputationally costly, in order to ensure that the market outcomes are technically feasible.\nIn addition to power balance and power flow limits, modeled by means of sensitivity\nfactors [10,11,13] or DC load flow (DCLF) equations [15,17,18], constraints could involve\ngenerator technical limits [ 14–17,21], RES and/or load curtailment limits [ 16,17], along\nwith reserve provision, deployment or allocation limits [15,18].\nMost traditional UC/ED mathematical models focus on either the DAM or the ASM,\noverlooking the fact that decisions made in the former heavily constrain the latter. In\nparticular, in the redispatching action modeling the status of generators (on/off) is often\nconsidered as fixed by the DAM, so that only units that are already in operation are able\nto adjust their power production in the real-time markets [ 22]. However, the inherent\nRES stochasticity makes these methods excessively rigid and unrealistic requiring a re-\nevaluation of the operational status during ASM phase.\nA well-established line of research addresses the interdependence between markets\nusing multi-stage models. The co-ordination between consecutive market sessions has\nbeen investigated, especially for energy and real-time markets in the American framework,\nas in [23], dealing with a two-stage day-ahead (DA) clearing model for the energy and RT\nmarkets in the presence of high RES penetration considering fast-start generator behaviors\nas non-spinning reserve providers. In particular, the energy market optimization problem\nembeds the required amount of energy and reserves. Moreover, the work proposed in [24]\ndeals with a stochastic model predictive control scheme used to handle the uncertainty\nrelated to generation and load profiles combining Chance-Constrained and Machine Learn-\ning techniques. This approach can be applied to participate simultaneously in different\nenergy markets. The authors of [25] analyze the impact of wind farm (WF) power forecast\non the co-ordination between energy and RT markets, and particularly focusing on cost\nimplication between DA and RT due to WF uncertainties, handled by the system operator\nthrough anticipated RT adjustment bids, aiming to minimize the costs associated with\nconventional thermal generators and WF generators. In [ 26], a day-ahead reserve deter-\nmination method based on two-stage stochastic programming approach is proposed. In\nthe first stage the commitment of thermal units is carried out, whereas in the second stage\nthe operation of the system with and without the failure of key thermal units is evaluated.\nFurther methods, aims, and perspectives on market sessions co-ordination are available in\nthe review paper [27].\nRegarding the European framework, the work developed in [19] defines three opti-\nmization problems to model consecutive markets connecting intraday and reserve markets,\nin order to find feasible power profiles, provide secondary reserve (SR), and depl",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "In market-based power systems the ancillary services for the network security can\nbe procured together with energy in a single market session or in a dedicated market\ndownstream the energy procurement [ 34]. The market process proposed in this work\nbases its management on the European mechanism involving a multi-stage framework to\nhandle UC and network constraints in the ASM. Particularly, the proposed procedure is\ncomposed of four-stages, solved ∀ d ∈ ΩD, as depicted in Figure 2, each one synthesized in\nthe following:\n• DAM model: an economic-based merit-order zonal market optimization problem is\ncarried out to define preliminary generation schedules;\n• Unit bids adjustment for ASM : a bid adjustment mechanism is carried out to participate\nto the ASM, based on DAM results, unit technologies and technical limits;\n• DCLF and sensitivity factors : a network feasibility analysis of the DAM outcomes is\nassessed, and the power transfer distribution factors (PTDFs) for the redispatch actions\nare determined;\n• ASM optimization problem: a redispatch procedure that minimizes system costs, with a\npay-as-bid mechanism, in the presence of UC and network constraints is employed.\nFigure 2. Workflow of the proposed procedure to model DAM/ASM sequential interaction.\nThe first stage consists in solving the zonal DAM for each time stept of day d knowing\nthe units’ technical limits, availability and DAM bids. All the units are dispatched according\nto the economic merit-order, taking into account DA RES and load forecasts, as well as\nthe exchange limits between market zones. This yields a preliminary generation schedule\nand the Market Clearing Price (MCP). The resulting active power flows are then computed\nthrough successive DCLF analyses based on the DAM outcomes, while the cleared bids are\nadjusted starting from the operating condition defined in the DAM, compatibly with the\nservices that will be offered in the ASM. Once the RES and load forecasts are updated, this\nlatter can be solved for day d.\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 6 of 27",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 DAM Model",
+      "level": 2,
+      "text": "The proposed DAM is based on [35] aiming at minimizing step-wise generators bid\ncosts and subject to zonal power flow limits, zonal active power balance, unit maximum bid\nsteps, and generator maximum power in the absence of UC relations. With respect to [35],\nthe thermal unit time-varying maximum power and availability are here considered, along\nwith the DH unit strategy to bid in the DAM. The thermal generator maximum power is\ndetermined by means of monthly escalators that consider weather influence on thermal\nunit rated power and availability due to maintenance, as in (1). The DH unit strategy\nconsists in bidding a certain power amount, lower than maximum available level, in the\nDAM, with a bidding cost equal to 0 $/MWh, and holding the remaining power amount\nfor the ASM bids.\nPmax\ni,t = Pmax\ni · ei,t · ai,t (1)\nAssuming that load demand is inelastic with respect to price, the DAM is formulated\nas a linear programming (LP) optimization problem representative of a zonal market. The\ngoal is minimizing the stepwise generation costs at a single time step t ∈ ΩT over a time\nwindow composed of NT time steps, each with duration τ. The resulting DAM formulation\nis stated below:\nmin\nPi,s,t\nτ · ∑\ni∈ΩG\n∑\ns∈ΩS",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "ci,sPi,s,t (2)",
+      "level": 1,
+      "text": "subject to:\nPD\ni,t = ∑\ns∈ΩS\ni\nPi,s,t, ∀i ∈ ΩG (3)\n0 ≤ Pi,s,t ≤ ∆Pmax\ni,s,t , ∀i ∈ ΩG, ∀s ∈ ΩS\ni (4)\n0 ≤ PD\ni,t ≤ Pmax\ni,t , ∀i ∈ ΩDT ∪ ΩND (5)\n0 ≤ PD\ni,t ≤ Pda\ni,t , ∀i ∈ ΩR (6)\n0 ≤ PD\ni,t ≤ kH PH,max\ni,t , ∀i ∈ ΩH (7)\n∑\ni∈ΩG\nαG\ni,zPD\ni,t − ∑\nl∈ΩL\nαF\nz,l Fl,t = Dda\nz,t, ∀z ∈ ΩZ (8)\nFlb\nl ≤ Fl,t ≤ Fub\nl , ∀l ∈ ΩL (9)\nThe equality constraint (3) defines the dispatched power of each generator equal\nto the sum of the cleared bid steps. Inequality (4) limits the power of each bid step\nwithin its maximum width. Constraints (5) and (6) are required to ensure that the thermal\nunits never exceed the maximum power and RES never exceed their hourly forecasted\npower, respectively. For DH units, (7) specifies the maximum power available for each\nhour according to the dispatch strategy. The zonal active power balance of the system\nis presented in (8), whereas (9) expresses the active power exchange boundaries on each\ninterzonal connection. In particular, ∆Pmax\ni,s,t is the maximum bid step width, obtained\nas below:\n∆Pmax\ni,s,t = ∆Pmax\ni,s · ei,t (10)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Unit Bids Adjustment and DCLF Sensitivity Factors",
+      "level": 2,
+      "text": "In the framework of distinct energy and service market sessions, the market partic-\nipants could be called to submit ASM bids prior to the determination of energy market\nschedules [7]. Therefore, the TSO is called to adjust the submitted bids in order to fit the\ntechnical features of the units depending on the closest energy market session results.\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 7 of 27\nOn these bases, the proposed bid adjustment process from TSO perspective is aimed at\nproviding different services depending on DAM schedules and generator technical features,\nand the economic value of each service is weighted by time-varying factors applied to\nthe DAM bid prices. In particular, the DT units are assumed to provide SU, SD, upward\nredispatch (UR), downward redispatch (DR), and upward (USR) and downward (DSR)\nSR services, whereas DH units, equipped with a basin, can only bid UR and DR services,\nthanks to their higher flexibility and the absence of technical minimum, for each time\nstep t. The bid adjustment process for DT units is described by means of the graphical\nrepresentation shown in Figure 3, where the numbers represent the clearing order of bids.\nFigure 3. Bids’clearing order: not cleared unit (a), unit cleared below the technical minimum (b), unit\ncleared at the technical minimum (c), unit cleared between the technical limits (d), unit cleared at the\nrated power (e).\nIn particular, case (a) represents a DT unit not cleared in DAM, and the first bid that\ncould be cleared in ASM is the SU, followed by the first UR step and the USR bids, whereas\nthe DSR bid can be cleared only if the DT unit is above the technical minimum, and the\nother UR bid steps can be cleared only after using up the previous bid step. Case (b) is\nsimilar to case (a); however, the DT unit is cleared below the technical minimum, and\nthe SU bid, up to the technical minimum, or the SD bid, down to zero, must be cleared\nto comply with the unit constraint. The SU and SD bids are not numbered because the\nacceptance of one of the two bids is mandatory. Instead, case (c) shows the condition of\na DT unit cleared at technical minimum, pointing out the possibility to be shut down, by\nclearing the SD bid, or to provide upward services, as first action. In case (d) the DT unit is\ndispatched within its minimum and maximum power levels allowing the unit to clear UR\nor DR bid along with both SR bids. Finally, in case (e) the unit is cleared at its rated power,\nhence the first bids that can be cleared are the first DR step and DSR, while the following\nDR step bids can be cleared only after using up the previous one.\nIn order to evaluate the power flows (FD\nb,t) deriving from DAM schedules at each time\nstep t of the considered time horizon, the DCLF procedure is carried out [36]. Moreover,\nPTDFs (Sn,b) are calculated to quantify how an incremental change in the nodal active power\n∆Pn affects the branch power flows [37], and to keep generality, PTDFs are calculated by a\ndistributed slack bus DCLF [38], considering all generation nodes as slack buses.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.3 ASM Optimization Problem",
+      "level": 2,
+      "text": "In the nodal ASM optimization problem, assuming TSO viewpoint, the ASM bidding\nunits are redispatched taking into account UC and network constraints to be compliant\nwith SRR procurement and load and RES forecast update. The problem is solved each day\nover a yearly horizon, composed of ND days. To this purpose, the objective function fd\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 8 of 27\naims at minimizing the bid service costs, along with possible load shedding (LS) and RES\ncurtailment (RC) penalties over all time intervals of the day, as follows:\nfd = τ ·\nNT\n∑\nt=1\n(CR\nt + CUD\nt + CSR\nt + CLS\nt + CRC\nt ) (11)\nwhere each term of the objective function is defined as:\nCR\nt = ∑\ni∈ΩD\n\n\nNS\ni\n∑\ns=1\nc↑\ni,s,t∆P↑\ni,s,t −\nNS\ni\n∑\ns=1\nc↓\ni,s,t∆P↓\ni,s,t\n\n (12)\nCUD\nt = ∑\ni∈ΩDT\n\u0010\nCsu\ni zD\ni,tzmu\ni,t + csu\ni,t Psu\ni,t zsu\ni,t − csd\ni,t Psd\ni,t zsd\ni,t\n\u0011\n(13)\nCSR\nt = ∑\ni∈ΩDT\n(csr↑\ni,t Psr↑\ni,t − csr↓\ni,t Psr↓\ni,t ) (14)\nCLS\nt = ∑\nn∈ΩN\nCvoll Dls\nn,t (15)\nCRC\nt = ∑\ni∈ΩR\nCrc Prc\ni,t (16)\nin which CR\nt is the redispatching cost, CUD\nt is the difference between SU and SD costs,\nCSR\nt is the SR provision cost with asymmetric bids. In particular, Csu",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "is the fixed SU cost,",
+      "level": 1,
+      "text": "accounted only at first SU time-step through the minimum up time (MUT) binary variable.\nIn addition, Psu\ni,t is the minimum positive value between Pmin\ni,t and Pmin\ni,t − PD\ni,t, whereas Psd\ni,t\nis the minimum positive value between Pmin\ni,t and PD\ni,t, obtaining Pmin\ni,t as in (1) for Pmax\ni,t .\nIt has to be noted that from TSO perspective, accepted bids for generation decrease\n(SD, DR, and SR downward) represent an income for the TSO and are assumed negative in\nthe respective equations, whereas accepted bids for generation increase (SU, UR, and SR\nupward) are expenses for the TSO, along with LS and RC.\nFor each i ∈ ΩDU the DR and UR constraints limit the accepted quantities up to the\nrelevant ASM power bid amount in each step, as in (17) and (18), respectively, whereas (19)\nallows either UR or DR action:\n∆P↓\ni,s,t − ∆P↓\ni,s,tz↓\ni,t ≤ 0, s = 1, . . . , NS\ni (17)\n∆P↑\ni,s,t − ∆P↑\ni,s,tz↑\ni,t ≤ 0, s = 1, . . . , NS\ni (18)\nz↑\ni,t + z↓\ni,t ≤ 1 (19)\nFor each i ∈ ΩDT, the DT unit ASM power redispatch is defined as the algebraic sum\nof the accepted quantities, except for the SR:\n∆PA\ni,t =\nNS\ni\n∑\ns=1\n∆P↑\ni,s,t −\nNS\ni\n∑\ns=1\n∆P↓\ni,s,t + Psu\ni,t zsu\ni,t − Psd\ni,t zsd\ni,t (20)\nSince the bid types and their size and order for the ASM depend on the DAM output,\nthe following DT unit-state constraints are defined taking into account the unit-state due to\nASM clearing ∀ t ∈ ΩT:\nzi,t ≤ ai,t (21)\nPsr↓\ni,t − ∆PA\ni,t ≤ PD\ni,t − Pmin\ni,t zi,t (22)\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 9 of 27\nPsr↑\ni,t + ∆PA\ni,t ≤ Pmax\ni,t zi,t − PD\ni,t (23)\nzsr↓\ni,t ≤ zi,t ∧ zsr↑\ni,t ≤ zi,t (24)\nPsr↓\ni,t − Psh\ni zsr↓\ni,t ≤ 0 ∧ Psr↑\ni,t − Psh\ni zsr↑\ni,t ≤ 0 (25)\nzsu\ni,t ≤ zi,t ∧ zi,t + zsd\ni,t ≤ 1 (26)\nt+tmu\ni,t −1\n∑\nt′ =t\nzi,t′ ≥ tmu\ni,t zmu\ni,t (27)\nt+tmd\ni,t −1\n∑\nt′ =t\n(1 − zi,t′ ) ≥ tmd\ni,t zmd\ni,t (28)\nwhere, in (21) the unit state is bound by its availability ai,t, and it is considered in DAM\nas well. The minimum and maximum power constraints are defined in (22) and (23),\nrespectively, where the units can provide the SR only if they have suitable upward or\ndownward margins. With (24), upward and downward SR can be bid only by active DT,\nrespectively, whereas (25) limit the downward and upward SR provision up to the unit\nSRH. In (26), the unit state is consequent to SU and SD cleared bids, respectively, i.e., if the\nDT unit is started up in ASM it has to be zi,t = 1, whereas if the DT unit is shut down it\nyields zi,t = 0. DT units are subject by MUT and minimum down time (MDT) constraints,\nrespectively, modelled in (27) and (28), wheretmu\ni,t (tmd\ni,t ) is the minimum between the unit\nMUT (MDT) and the remaining time steps of the day as defined below:\ntmu\ni,t = min{MUi, NT − t} ; tmd\ni,t = min{MDi, NT − t} (29)\nConstraints (30)–(34) explicitate the conditions of all cases illustrated in Figure 3, and\ntheir activation depends on the DAM schedule PD\ni,t. If it is below Pmin\ni,t , the unit is forced in\n(30) to firstly clear the SU bid before the UR ones, as in the conditions (a) and (b); moreover,\nif it is not null the unit must clear either SU bid or SD bid in (31), this condition is depicted\nin (b). If the DAM schedule is greater than Pmin\ni,t , in (32) the SU bid cannot be cleared—as\nin the conditions (c)–(e)—whereas if the DAM schedule is null, in (33) the SD bid cannot\nbe cleared, as in (a). Instead, in (34) the SD bid can be accepted only if all the DR bids are\ncleared, reaching the minimum power, as in the conditions (d) and (e).\nz↑\ni,t ≤ zsu\ni,t if PD\ni,t < Pmin\ni,t (30)\nzsu\ni,t + zsd\ni,t = 1 if 0 < PD\ni,t < Pmin\ni,t (31)\nzsu\ni,t = 0 if PD\ni,t ≥ Pmin\ni,t (32)\nzsd\ni,t = 0 if PD\ni,t = 0 (33)\nNS\ni\n∑\ns=1\n∆P↓\ni,s,tzsd\ni,t ≤\nNS\ni\n∑\ns=1\n∆P↓\ni,s,t if PD\ni,t > Pmin\ni,t (34)\nAlthough the optimization problem is solved on a daily horizon, MUT and MDT\nconstraints introduce inter-temporal dependencies on i-th DT unit. Specifically, if a unit is\nturned on (off) during the ending hours of day d − 1, it could still be under MUT (MDT)\nconstraint at the beginning of day d.\nTo enforce constraint continuity between days, two auxiliary parameters are intro-\nduced downstream the ASM solution of the day d − 1, named ton\ni,d−1 and to f f\ni,d−1, representing\nthe number of consecutive time steps with zi,t = 1 and zi,t = 0, respectively, from the last\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 10 of 27\ntime-step of the day d − 1. The conditional constraint provided in Algorithm 1 is defined\nbased on d and t, linking ton\ni,d−1 with MUi and to f f\ni,d−1 with MDi. This ensures that zmu\ni,t , zmd\ni,t ,\nand zi,t are either fixed to specific values or related through an additional constraint.\nAlgorithm 1 MUT & MDT Continuity Algorithm\n1: Set d ← ΩD\n2: for i = 1, . . . ,NDT do\n3: Set ton\ni,d−1, to f f\ni,d−1, MUi, MDi ← ΩDT\n4: for t = 1, . . . ,NT do\n5: if ton\ni,d−1 = 0 then\n6: if to f f\ni,d−1 < MDi ∧ t < MDi − to f f\ni,d−1 then\n7: zi,t = zmu\ni,t = zmd\ni,t = 0\n8: else\n9: zmu\ni,t − zmd\ni,t = zi,t − zi,t−1\n10: end if\n11: else if to f f\ni,d−1 = 0 then\n12: if ton\ni,d−1 < MUi ∧ t < MUi − ton\ni,d−1 then\n13: zi,t = 1 ∧ zmu\ni,t = zmd\ni,t = 0\n14: else\n15: zmu\ni,t − zmd\ni,t = zi,t − zi,t−1\n16: end if\n17: end if\n18: end for\n19: end for\nFor the sake of clarity, consider a unit with MUi = 4 and ton\ni,d−1 = 2, hence the unit is\noperating since the last two hours of the day d − 1 and it must operate for 2 more hours at\nd. Therefore, at t = 1 and t = 2, zi,t = 1 and zmu\ni,t = zmd\ni,t = 0, whereas for the rest of the day\nthe unit can keep operating or can be shut down.\nAn additional inter-temporal dependency involves the programmed availability of\nthe i-th DT unit at day d + 1 and its MUT constraints at ending hours of the day d. To\nensure constraint consistency between MUT at d and availability at d + 1 a further auxiliary\nparameter is introduced upstream the ASM solution named are\ni,d+1 which counts the ai,t = 1\nat d + 1 from the beginning of the day up to the first ai,t = 0. The implemented rule,\nprovided in Algorithm 2, relates are\ni,d+1 and MUi to fix zmu\ni,t = 0. For example, if the i-th DT\nunit has are\ni,d+1 = 2 and MUi = 4, the unit can be started up to t = 23 of d to make MUT\ncompliant with its availability at d + 1.\nAlgorithm 2 MUT & Availability Continuity Algorithm\n1: Set d ← ΩD\n2: for i = 1, . . . ,NDT do\n3: Set are\ni,d+1, MUi ← ΩDT\n4: if are\ni,d+1 < MUi then\n5: for t = 24, . . . , 24− (MUi − are\ni,d+1 + 1) do\n6: zmu\ni,t = 0\n7: end for\n8: end if\n9: end for\nFor the DH units, the constraints (17)–(19) are still valid, whereas (20) is modified\neliminating SU and SD terms. Specific DH unit constraints are, ∀ i ∈ ΩH and ∀ t ∈ ΩT:\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 11 of 27\nElb\ni ≤ Eav\ni,t − τ∆PA\ni,t ≤ Eub\ni (35)\n−PD\ni,t ≤ ∆PA\ni,t ≤ min{Pmax\ni − PD\ni,t, (Eub\ni − Eav\ni,t )/τ} (36)\nzns\ni,t Eub\ni /τ ≤\nNS\ni\n∑\ns=1\n∆Pd\ni,s,t + Eav\ni,t−1/τ (37)\nThe energy balance is limited in (35) within the upper and the lower boundaries of the\nDH basin, (36) defines the limits of the total DH redispatched power, where the maximum\npower is the minimum between the available energy over the time interval and the upper\npower margin, whereas the minimum power is the opposite of the DAM schedule. The\nDH unit stops storing energy when the sum of the available energy and the DR power\nreaches the upper bound as in (37). At each time step t, Eav\ni,t is updated according to the\ninitial available energy (Eav\ni,0), the inlet energy (EM\ni,t ) and the DAM schedules up to the actual\ntime step t, and the ASM cleared bids until the time step t − 1 as follows:\nEav\ni,t = Eav\ni,0 +\nt\n∑\nˆt=1\n(EM\ni,ˆt − τPD\ni,ˆt ) −\nt−1\n∑\nˆt=1\nτ∆PA\ni,ˆt (38)\nThe RC and LS are limited to an upper bound defined as:\n0 ≤ Prc\ni,t ≤ Prt\ni,t, ∀i ∈ ΩR (39)\n0 ≤ Dls\nn,t ≤ Drt\nn,t, ∀n ∈ ΩN (40)\nFinally, network constraints are:\n∑\ni∈ΩD\n[PD\ni,t + ∆PA\ni,t] + ∑\ni∈ΩND\nPD\ni,t + ∑\ni∈ΩR\n[Prt\ni,t − Prc\ni,t ] = ∑\nn∈ΩN\n[Drt\nn,t − Dls\nn,t], ∀n ∈ ΩN\n(41)\nFlb\nb ≤ FD\nb,t + ∆Fb,t ≤ Fub\nb , ∀b ∈ ΩB (42)\n∆Fb,t = ∑\nn∈ΩN\nSn,b\n \n∑\ni∈ΩD\nβi,n∆PA\ni,t + ∑\ni",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1",
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Test System Features",
+      "level": 1,
+      "text": "The proposed methodology is applied to the NREL-118 Bus System which includes\ndatasets of load demand and WF and PV production for a leap year with hourly resolution\n(NT = 8784), along with costs, availability and escalators of the generation mix, and\nmonthly energy availability of the DH units [31,39]. The generation set consists of 327 units\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 12 of 27\nfor a total installed capacity of 40.5 GW, composed of 11.0 GW combined cycle (CC),\n3.6 GW combustion turbine (CT), 2.5 GW steam turbine (ST), 10.2 GW non dispatchable\nhydroelectric, 8.5 GW DH, 1.0 GW WF, and 3.4 GW of PV , and the remaining is distributed\namong internal combustion engine (ICE), biomass (Bio), and geothermal (Geo) technologies.\nThe rated power of DT and DH units is supposed equal to or greater than 10 MW.\nTherefore, 89 DT are involved in the ASM, as reported in Table 1, where per each technology\nand fuel–natural gas (NG) and oil–the total number, the Pmin\ni , the Pmax",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "along with the steps",
+      "level": 1,
+      "text": "costs ci,s and the specific SU fixed cost Csu\ni /Pmax",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "are reported, and the Psh",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "is supposed the",
+      "level": 1,
+      "text": "6% of Pmax\ni .\nTable 1. DT unit parameters.\nTechnology n. Pmin\ni\n[MW]\nPmax\ni\n[MW]\nci,s\n[$/MW]\nCsu\ni /Pmax\ni\n[$/MW]\nMUT\n[h]\nMDT\n[h]\nCC NG 28 [4.1, 503.9] [13.5, 943.5] [24.5, 61.3] [83.6, 83.7] [2, 6] [2, 8]\nCT NG 47 [4.5, 81.0] [15.0, 180.0] [27.9, 65.7] [33.9, 109.2] [1, 8] [1, 8]\nCT Oil 5 [21.4, 22.4] [71.2, 74.5] [192.3, 242.3] 31.8 2 2\nGeo 1 11.0 22.0 2.7 0 6 6\nST NG 8 [8.5, 57.0] [106.3, 712.0] [43.1, 60.0] 79.5 8 12\nMoreover, 15 DH units are individuated, and in Table 2,Pmax\ni , the features of DH basin\n(Eub",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "and Elb",
+      "level": 1,
+      "text": "i ) and the inlet energy are described.\nTable 2. DH unit parameters.\nDH Basin Features DH Inlet Energy\nDH Pmax\ni\n[MW]\nElb\ni\n[MWh]\nEub\ni\n[GWh]\nDaily\nMin [h/d]\nDaily\nMax [h/d]\nYearly\n[h/y]\n1–2 75.0 300 12.60 1.44 (November) 7.13 (May) 1701.1\n3–4 77.0 308 12.94 2.53 (November) 10.14 (May) 2517.2\n5 82.0 328 13.78 0.30 (February) 7.09 (June) 842.1\n6–10 1225.3 4901 205.85 2.13 (March) 15.08 (July) 2797.2\n11–12 810.8 3243 136.21 0.59 (January) 8.84 (May) 1476.2\n13 46.7 187 7.85 2.14 (September) 3.75 (May) 1139.9\n14 110.0 440 18.48 1.51 (November) 12.56 (May) 2314.3\n15 140.0 560 23.52 1.92 (November) 15.98 (May) 2945.5\nFor DH units, the 90% of the daily inlet energy is bid to the DAM, where the hourly\nquantity of the submitted bids follow five different behaviours as shown in Figure 4, based\non [40], the remaining 10% is held for the ASM. For the elaboration of UR and DR bid\nprices in Section 2, an equivalent DAM price bid is supposed to equal the daily median\nvalue of the DAM zonal price of the pertaining market zone.\nThe time-varying factors of the bid adjustment process are shown in Figure 5a and\nFigure 5b for the selling and buying bids, respectively. They have been obtained by\nprocessing the hourly Italian market bids, thanks to the similarity of system features in\nterms of RES impact and the analogous multi-stage market structure by averaging the\nhourly ratio between the ASM bid prices of each service and the DAM step prices submitted\nby each market participant [ 41]. It has to be noticed that, as expectable in a pay-as-bid\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 13 of 27\nframework, the selling ASM prices are greater than the selling DAM ones (i.e., time-varying\nfactors for UR, SU, and positive SR are greater than 1), in order to make ASM power\nincrease more profitable, whereas the buying ASM prices are mainly lower than the selling\nDAM ones (i.e., time-varying factors for DR, SD and negative SR are lower than 1), since\nthe buying bids represent an expense for the market participants that should be lower\nthan the marginal production price to ensure a revenue. These average hourly values are\ntherefore assigned to each dispatchable unit considering a gaussian variation with 99.7%\nconfidence interval set at 10% of the value.\nFigure 4. DH daily power bid profiles.\nFigure 5. Selling (a) and buying (b) bid time-varying factors boxplots.\nIn order to allow the activation of RC and LS actions as last resources, the values of\nCrc and Cvoll are high enough to represent the most expensive services representing a cost\nin the objective function, as follows:\nCrc = max\n\u0010\nc↑\ni,s,t\n\u0011\n+ 10 (45)\nCvoll = max\n \nCsu",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f5b"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "Pmin",
+      "level": 1,
+      "text": "i\n!\n+ 10 (46)\nThe load forecast error between DAM and ASM is taken from zonal load [31] and split\namong nodes through participation factors, whereas RES errors are treated separately for\neach PV units and WFs. The maximum, minimum, and average errors of each resource are\nreported in Table 3, noting that load error reaches roughly 10% of peak load, whereas error\non PV and WF can reach roughly 40% of installed power. In Table 3, the analogous values\nfor the net forecast error (NFE), defined as the difference in each time interval between total\nload error and total RES errors, are reported as well.\nhttps://doi.org/10.3390/en19102377\nEnergies 2026, 19, 2377 14 of 27\nTable 3. Maximum, minimum, and average forecast error values [MW].\nLoad PV WF NFE\nMax 2987.90 500.82 411.95 3312.48\nMin −3654.28 −1223.80 −391.00 −3667.76\nAvg 55.33 −70.01 −15.88 141.21",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4 Result Analyses",
+      "level": 1,
+      "text": "The whole framework is implemented in Python-based environment where the DAM\nand ASM optimizations are developed by means of Pyomo library [ 42] using Gurobi\nsolver [43] and DIgSILENT PowerFactory is employed for the DCLF and sensitivity anal-\nysis, exploiting the Python API to automatize the simulation process. Simulations are\nperformed on a computer with 32 GB RAM, 12th Gen Intel ® Core™ i9-12900F CPU @\n2.40 GHz, 16 physical cores, and 24 logical processors, using up to 24 threads. The daily\nprocess is averagely solved within 4 min, where the ASM solution represents the highest\ncomputational burden with an average elapsed time by roughly 2.5 min, in line with the\ntime requirements of SCADA/EMS systems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.1 Elaboration of ASM Inputs",
+      "level": 2,
+      "text": "The generation schedules yielded by DAM solution, normalized for each technology\ninstalled capacity, are reported in Figure 6. CC NG technology is most frequently called\nto produce due to lower production cost, providing 51.48 TWh during the year, followed\nby DH and CT NG supplying 16.98 TWh and 12.20 TWh, respectively. The total RES\ncontribution amounts to 31.2%, (i.e., 30.00 TWh). ST NG and ICE NG turn out to cover the\ndemand peaks, due to higher DAM bid prices. Some technologies have constant escalators\nat low price therefore, quite constant power levels are observed. The DAM zonal prices\nover the year are reported in Table 4. Negligible differences among market zones are\nobserved, due to sporadic interzonal congestions (56 occurrences on Zone 1-Zone 2).\nFigure 6. DAM dispatched power duration curve.\nTable 4. DAM zonal prices in $/MWh.\nValue Zone Zone 1 Zone 2 Zone 3\nMaximum 54.72 54.72 54.72\nAverage 34.75 34.74 34.74\nMinimum 27.02 27.02 27.02\nhttps://doi.org/10.3390/en19102377",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Italian market framework and main features."
+    },
+    {
+      "id": "f2",
+      "caption": "Workflow of the proposed procedure to model DAM/ASM sequential interaction."
+    },
+    {
+      "id": "f3",
+      "caption": "Bids’clearing order: not cleared unit (a), unit cleared below the technical minimum (b), unit"
+    },
+    {
+      "id": "f5b",
+      "caption": "for the selling and buying bids, respectively. They have been obtained by"
+    },
+    {
+      "id": "f4",
+      "caption": "DH daily power bid profiles."
+    },
+    {
+      "id": "f5",
+      "caption": "Selling (a) and buying (b) bid time-varying factors boxplots."
+    },
+    {
+      "id": "f6",
+      "caption": "DAM dispatched power duration curve."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "DT unit parameters."
+    },
+    {
+      "id": "t2",
+      "caption": "DH unit parameters."
+    },
+    {
+      "id": "t3",
+      "caption": "Maximum, minimum, and average forecast error values [MW]."
+    },
+    {
+      "id": "t4",
+      "caption": "DAM zonal prices in $/MWh."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "MUT & MDT Continuity Algorithm"
+    },
+    {
+      "id": "a2",
+      "caption": "MUT & Availability Continuity Algorithm"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e41",
+      "latex_or_text": "(41)"
+    },
+    {
+      "id": "e43",
+      "latex_or_text": "(43)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 4,
+    "n_algorithms": 2,
+    "n_equations": 3
+  }
+}

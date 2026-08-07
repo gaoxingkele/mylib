@@ -1,0 +1,301 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/c2ges_nerc_reports/c2ges_nerc_reports__Review_of_ML_techniques_for_optimal_power_flow__662562a2d9.pdf",
+  "n_pages": 16,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The context window length of most existing LLMs (Zhao\net al., 2023; Yang et al., 2023) is limited since they are\ntrained with a fixed length of training sequences. It’s deter-\nmined by the context window length during the pretraining\nstage. Once the length of the input texts exceeds the pretrain-\ning context window during the inference, the behavior of\n*Equal contribution 1Texas A&M University 2Amazon, the\nviews expressed or the conclusions reached are his own and\ndo not represent the view of Amazon 3Rice University 4Case\nWestern Reserve University. Correspondence to: Hongye Jin\n<jhy0410@tamu.edu>.\nProceedings of the 41 st International Conference on Machine\nLearning, Vienna, Austria. PMLR 235, 2024. Copyright 2024 by\nthe author(s).\nLLMs will be unpredictable and suffer from severe perfor-\nmance degradation. The perplexity (PPL) of the model will\nexplode with the long input sequences (Xiao et al., 2023;\nPeng et al., 2023; Han et al., 2023; Chen et al., 2023b).\nRecently, a variety of context window extension methods\nhave been developed to extend the context window of pre-\ntrained LLMs. A straightforward approach is to fine-tune\nthese models on enough extensive texts. Besides this, some\nmethods seek to extend context window length in more\nefficient fine-tuning ways. Among these contemporary\nmethods, some notable techniques include ‘PI’ (Chen et al.,\n2023b), ‘CLEX’ (Chen et al., 2023a) ‘Yarn’ (Peng et al.,\n2023), ‘PoSE’ (Zhu et al., 2023), ‘LongLora’ (Chen et al.,\n2023c), and ‘ABF’ (Xiong et al., 2023). These methods\naim to extend the content window based on the implicit\nassumption that pretrained LLMs lack the ability to han-\ndle long content. However, these methods typically require\nfinetuning to achieve extension, which can be resource and\ntime-intensive given the quadratic complexity of Transform-\ners. Additionally, high-quality long text data is scarce, hin-\ndering such fine-tuning approaches. Most real-world data\nis short, and much long text lacks meaningful long-range\ndependencies. With limited appropriate data, finetuning\nrisks degrading existing strong performance on shorter se-\nquences from pretraining or overfitting models to the tuning\nset. LLMs’ generalizability to broad tasks may be reduced.\nInstead of extending the content window, in this paper, we\nbelieve LLMs should have inherent capabilities to handle\nlong contexts. Our belief stems from the fact that when we,\nas human beings, are children, we are taught how to read and\nwrite using relatively short texts, such as articles spanning\nseveral pages. We rarely use extremely long texts like entire\nbooks or complete documents as learning materials. Yet,\nwe are still able to understand long texts effectively. With\nthis strong motivation, the poor performance of LLMs while\nfacing long text is not due to the lack of long context under-\nstanding capabilities. In our analysis, the key challenge pre-\nventing LLMs from effectively handling longer contexts is\nthe Out-of-Distribution (O.O.D) issues related to positional\nencoding, which we call the positional O.O.D1 issue. This\n1Here, the position refers to relative position rather than ab-\nsolute position. The relative position is m − n in RoPE, where\nm and n are the absolute positions of two tokens. The positional\n1\narXiv:2401.01325v3  [cs.CL]  11 Jul 2024\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nproblem arises when LLMs encounter text sequences during\ninference exceeding the length of their pretraining context\nwindow, where LLMs are exposed to new relative distances\nthat were not present during their pretraining phase. It is\nwidely recognized that Neural Networks (NNs) are suscep-\ntible to unpredictable behaviors when dealing with O.O.D\ninputs (Liu et al., 2021; Shen et al., 2021; Bai et al., 2021;\nZhang et al., 2023). To address this, an intuitive and practi-\ncal solution would be to remap the unseen relative positions\nto those encountered during the pretraining, thus extending\nthe LLMs’ ability to handle longer contexts naturally.\nThis paper proposes SelfExtend to elicit LLMs’ inherent\nlong context capabilities. SelfExtend addresses the issue\nof O.O.D. positional information by using a simple floor\ndivision operation to map unseen large relative positions to\nthose encountered during pretraining. The core idea hinges\non the observation that, in long texts, exacting word posi-\ntions becomes less crucial. The overall meaning and the\nrelative order of information hold greater significance. Just\nlike when answering questions about lengthy texts, we rely\non the general location and order, not the specific word-by-\nword placement. Natural language exhibits a characteris-\ntic where meaning stays relatively consistent within short\nranges like paragraphs. Therefore, using close or even iden-\ntical position encodings effectively captures the necessary\nrelative ordering of important information. This intuitive\napproach aligns perfectly with the floor operation’s function-\nality. Additionally, T5 (Raffel et al., 2020) and iRPE (Wu\net al., 2021) also share this similar intuition.\nOur SelfExtend is a plug-and-play method that takes ef-\nfect at the inference stage, allowing existing large language\nmodels to easily adopt it. We evaluate SelfExtend with\nsome popular LLMs (Llama-2 (Touvron et al., 2023), Mis-\ntral (Jiang et al., 2023a), SOLAR (Kim et al., 2023), and\nPhi-2 (Javaheripi et al., 2023)) on three types of tasks: lan-\nguage modeling, synthetic long context tasks, and real-world\nlong context tasks. The proposed SelfExtend substantially\nimproves the long context understanding ability and even\noutperforms many finetuning-based methods on some tasks.\nThese results underscore SelfExtend as an effective solution\nfor context window extension. The superior performance\nof SelfExtend also demonstrated the potential of large lan-\nguage models to effectively handle long contexts. Our main\ncontributions are summarized as follows:\n• We think LLMs with RoPE have a natural ability to han-\ndle long texts, even if they have not encountered super-\nlong ones during training. The previous limitation stems\nO.O.D refers to cases where the value of m − n during inference\nis unseen, i.e., larger than the values observed during pretraining.\nIn this paper, we map unseen large relative positions to those ob-\nserved during pretraining. More details about m − n are provided\nin Section 2.\nfrom O.O.D. positions, meaning the ”larger” positions\nhave not been seen during training. We call this the\npositional O.O.D. issue.\n• Based on this belief and to address the positional O.O.D.\nissue, we propose SelfExtend to extend the context win-\ndow of LLMs without any fine-tuning. We map the un-\nseen large relative positions (at inference) to known po-\nsitions (at training), thus allowing LLMs to maintain co-\nherence over longer texts without additional fine-tuning.\n• In both synthetic and real-world long context tasks, Self-\nExtend has proven its ability to deliver performance that\nmatches or surprisingly surpasses many existing fine-\ntuning-based models. This highlights the superior capa-\nbilities of our SelfExtend model.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Preliminary",
+      "level": 1,
+      "text": "In this section, we present the preliminaries of our work.\nPosition Encoding. Transformers (Vaswani et al., 2017)\nincorporate position information via different positional em-\nbedding designs. The common positional embedding design\ncan generally be categorized into two classes: absolute po-\nsition embeddings and relative positional encodings. The\nabsolute position embeddingprovides the absolute positions,\nwhich embeds each absolute position i into position vector\npi and adds word embeddings to their corresponding pi\nbefore feeding them to the model. Examples of such include\nsinusoidal position embeddings (Vaswani et al., 2017) and\nlearned position embeddings in GPT3 (Brown et al., 2020)\nand OPT (Zhang et al., 2022), or adding the dot product\nbetween two tokens’ position embeddings on the attention\nlogit (Ke et al., 2020). On the other hand, relative posi-\ntional encodings have been proposed to use relative distance\ninformation between tokens and have become the main-\nstream of position embedding. This information is usually\napplied in attention layers. Examples of such include a\nlearnable attention logit bias as in T5 (Xue et al., 2020),\nTransformer-XL (Dai et al., 2019); a fixed linear attention\ndecay called Alibi (Press et al., 2021); rotating query and\nkey sequences based on distance such as RoPE (Su et al.,\n2022), and XPos (Sun et al., 2023). The proposed method\nin this work is based on the Rotary Position Embedding\n(RoPE) introduced in (Su et al., 2022).\nRoPE. Here, we introduce the basic concept of RoPE.\nLet’s consider a sequence of tokens represented as\nw1, w2, · · ·, wL, and their corresponding embeddings are\ndenoted as x1, · · ·, xL ∈ R|D|, where |D| is the dimension\nof the embedding. The basic idea of RoPE is to incorporate\nthe positional information into the query q and the key vec-\ntors k, respectively. This integration ensures that their inner\nproduct qT k will contain the relative positional embedding\ninformation inherently. To achieve this, RoPE employs the\n2\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nfollowing vector transformations:\nqm = fq(xm, m) ∈ R|L|, kn = fk(xn, n) ∈ R|L|, (1)\nwhere |L| is the hidden dimension of per head. The func-\ntions fq and fk responsible for injecting positional informa-\ntion, are defined as fq(xm, m) = Wqxmeimθ, fk(xn, n) =\nWkxneinθ, where θd = b−2d/|D|, b = 10000 and projec-\ntors Wq, Wk : R|D| → R|L|. RoPE keeps the real part of\nthe inner product qT k, which is Re(q∗k). This operation\nensures that the dot product of the query and key vectors\ndepends entirely on the relative distance between the tokens,\nrepresented by m − n of the tokens as follows:\n⟨fq(xm, m), fk(xn, n)⟩R = Re(⟨fq(xm, m), fk(xn, n)⟩C)\n=Re(x∗\nmW ∗\nq Wkxneiθ(m−n)) = g(xm, xn, m− n), (2)\nwhere g(·) is an abstract mapping function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 SelfExtend",
+      "level": 1,
+      "text": "In this section, we first conduct a preliminary investigation\non the inherent ability of the LLMs to handle long content.\nThen, we propose our SelfExtend that effectively extends\nexisting LLMs’ context window without any fine-tuning.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Preliminary Analysis",
+      "level": 2,
+      "text": "① Why do LLMs fail on sequences during inference that\nare longer than their pre-training context window? For\na pretrained LLM with relative position encodings, such as\nRoPE, the behavior of the LLMs becomes unpredictable\nduring inference if the length of a sequence is longer than its\npretraining context window length. This has been explored\nby (Han et al., 2023; Chen et al., 2023b) that with unseen rel-\native positions, the attention distributions are different com-\npared to those within the pretraining context window. We\nargue that such failure stems from the Out-of-Distribution\n(O.O.D.) relative distance in the sense that neural networks\nare not robust to O.O.D. inputs (Shen et al., 2021).\n② How to solve positional O.O.D. problem? One feasible\nand straightforward way to handle unseen relative positions\nis to map them to positions that were seen during pretrain-\ning. We can use the FLOOR operation to map the unseen\npositions to positions within the pretraining context window,\nas shown in Figure 1. The proposed method is identical to\nthe original self-attention mechanism except that the FLOOR\noperation is applied to each token’s original position before\nthe inner product. We denote the self attention with the\nFLOOR operation applied as “grouped attention”. In Python\nstyle, the “grouped attention” is denoted as:\nPg = P // G s, (3)\nwhere P ∈ RB×L is the original position encoding, in\nwhich B is the batch size and L is the length of the input\n0011022103321044321055432106654321077654321001234567\n0000011101110022211022211003332211033322110000112233\n//2\nFigure 1. Illustration of grouped attention. We suppose that the\nLLM’s pretraining context window length is5 and the length of the\ninference sequence is 8. On the left figure, we show the positional\nOut-of-Distribution (O.O.D.) issue while the input length is out\nof the pretraining context window size. The y-axis of this matrix\nrepresents the position of query tokens and the x-axis represents\nthe position of key tokens. In this case, in the relative position\nmatrix, only those in orange are seen during pretraining. Relative\npositions in gray are outside the pretraining context window. In\nthe right figure, we show how the FLOOR operation is applied and\nthe relative position matrix for grouped self attention. With the Gs\nset as 2, the positions of query tokens and key tokens are mapped\nfrom 0-7 to 0-3 by FLOOR (//). The new relative positions (in\nblue) are all within the range of the pretraining context window.\n4k (4096)\n6k (6144)\nFigure 2. Perplexity (PPL) using grouped attention with different\ngroup sizes under different sequence lengths on PG-19 dataset.\nThe original Llama-2-7b-chat PPL is stable at 4k (4096) sequences\n(red dotted line) but explodes at 6k (6144) sequences (purple dotted\nline). The results show the LLMs keep a relatively low and stable\nPPL on long sequences with grouped attention.\ntext sequence. Gs denotes the group size, which is the base\nof the FLOOR operation. Taking the floor of the position\ndivided by the group size maps the original large position\nvalues to a smaller discrete set of values, avoiding the issue\nof out-of-distribution position values during inference.\n③ Can LLMs work well without accurate position in-\nformation? — Yes, but not that perfect. We show the\nperplexity (PPL) on the PG-19 (Rae et al., 2019) dataset\nwith the FLOOR operation applied to Llama-2-7b-chat across\ndifferent sequence lengths, in Figure 2. As a comparison,\nwe also show the PPL of the original model without the\nFLOOR operation as the dotted lines. From this figure, with\nthe FLOOR operation, LLMs keep a relatively low and stable\nPPL on the sequences whose lengths exceed the pretraining\ncontext window. Meanwhile, with grouped attention, the\n3\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nPPL is a little higher than the original LLMs, which is ex-\npected. However, the model’s PPL behavior is similar to\nthe original model, as the PPL is nearly unchanged within\nthe “context window” (for Llama-2: 2 - 8192, 4 - 16384,\nand 8 - 32768), demonstrating the effectiveness of group\nattention. Once the length of a sequence is longer than the\nnew “context window” (e.g., sequences with 10k tokens as\nthe input, with a group size of 2 ), the PPL explodes again\ndue to the positional O.O.D issue.\n④ How to restore degraded language modeling ability\ncaused by grouped attention? — Re-introducing nor-\nmal attention in the neighboring area. In the process of\ngenerating next tokens, the immediate neighbors of a tar-\nget token play a crucial role, which is well-supported by\nexisting methods of sparse attention mechanisms (Zaheer\net al., 2020; Shi et al., 2021) and methods for extending the\ncontextual window (Han et al., 2023; Xiong et al., 2023;\nLiu et al., 2024). These studies consistently highlight the\nimportance of maintaining the standard attention mecha-\nnism for tokens in close proximity to the target token. This\nproximity-based focus is essential for the accurate genera-\ntion of the next token, ensuring the coherence and fluency\nof the generated text, as evidenced by acceptable perplexity\n(PPL) levels. Employing grouped attention might not sig-\nnificantly affect the overall quality of generated sentences;\nhowever, it necessitates the accurate positioning of attention\nto maintain generation quality. Therefore, it is imperative\nto preserve the standard attention mechanism within the\nvicinity of the target token, as utilized during the pretraining\nphase, to ensure the precision and effectiveness of language\nmodels in capturing the nuances of local context.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 SelfExtend LLM Context Window Without Tuning",
+      "level": 2,
+      "text": "We introduce SelfExtend, a method that enhances LLMs’\nnatural capability to process extensive contexts without the\nneed for fine-tuning. SelfExtend incorporates two distinct\ntypes of attention mechanisms: 1) Grouped attention, specif-\nically designed for tokens that are far apart. This approach\napplies a floor operation to the positions to manage long-\ndistance relationships between tokens; 2) Standard attention,\nwhich employs the conventional attention mechanism for\nadjacent tokens within a specified range. The SelfExtend\nframework is depicted in Figure 3. Notably, SelfExtend\nmodifies only the attention mechanism during inference,\neliminating the need for additional fine-tuning.\nMaximum Extended Length of SelfExtend Suppose that\nwe have the pretraining context window size asL, the group\nsize for grouped attention as Gs, and the window size for\nneighbor tokens as wn. We shift the relative position of\ngrouped attention by wn − wn//Gs before merging the two\npieces of attention together. This ensures that the transition\nfrom the normal attention area to the grouped attention area\nTable 1. Perplexity on dataset PG19 with Llama-2-7b-chat and\nMistral-7b-instruct-0.1. We report the PPL of with&without Slid-\ning Window Attention (SW A) for Mistral.\nModel Evaluation Context Window SizeName 4096 6144 8192 10240 12288 14336 16384\nLlama-2-7b-chat 9.181 >103 >103 >103 >103 >103 >103\nSelfExtend-Llama-2-7b-chat 8.885 8.828 9.220 8.956 9.217 9.413 9.274\nMistral-7b-instruct-0.1 w/ SW A 9.295 9.197 9.532 9.242 9.198 9.278 9.294Mistral-7b-instruct-0.1 w/o SW A 9.295 9.205 10.20 55.35>103 >103 >103\nSelfExtend-Mistral-7b-instruct-0.1 9.272 9.103 9.369 9.070 8.956 9.022 9.128\nsmooth. We merge the two parts of attention by replacing\nthe attention values out of the neighbor token window with\nthe attention values from the grouped attention. All the\nmodifications are applied before the softmax operation and\nother parts remain unchanged. Ideally, the maximum length\nof the extended context window is:\n(L − wn) ∗ Gs + wn. (4)\nFor example, in Figure 3, the context window is extended\nfrom its pretraining length of 7 to (7 − 4) ∗ 2 + 4 = 10. The\npseudo code for SelfExtend is presented in Algorithm 1.\nRelation to Existing WorkThe grouped attention in SelfEx-\ntend can be viewed as a form of position interpolation (Chen\net al., 2023b), where some positions are interpolated to be\ninfinitely close to pretraining positions. Another finetuning-\nfree method, ReRoPE (Su, 2023), is equivalent to a special\ncase of SelfExtend: the group size is large enough that all\ntokens outside the neighbor window fall into the same group\n(e.g. group size 10, 000 in Figure 5). T5 (Raffel et al., 2020)\nand iRPE (Wu et al., 2021) also share the high-level idea\nof multi-level positional encodings, while applying it dur-\ning pretraining. T5 is more similar to ReRoPE for using\nthe same position for distant tokens. iRPE has finer distant\nposition encodings, more akin to SelfExtend.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f5"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "We evaluate SelfExtend with Llama-2 (Touvron et al.,\n2023) and its families, Phi-2 (Javaheripi et al., 2023), Mis-\ntral (Jiang et al., 2023a) and SOLAR (Kim et al., 2023)\non language modeling task, synthetic long context tasks,\nreal-world long context tasks and standard short-context\ntasks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4.1 Performance on Language Modeling Tasks",
+      "level": 2,
+      "text": "Language modeling task is the most fundamental and the\nleast requirement for LLMs, which is usually measured by\nperplexity (PPL) on the test text data. A low PPL does\nnot guarantee good performance on real tasks (Pal et al.,\n2023), however, a higher PPL suggests severe performance\ndegradation of LLMs. We evaluate SelfExtend’s language\nmodeling performance on dataset PG19 (Rae et al., 2019),\nwhich contains lengthy books. PPL is used as the metric.\nMore experimental details are presented in Appendix D.1\n4\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\n0102103210432104432105543210554432106655432106655443210\n0001101100221102211003322110332211004433221104433221100\n0102103210432105432106543210765432108765432109876543210\n//2 +(4 -4//2 ) SoftMax\nGrouped AttentionSelfExtendNormal Attention\nFigure 3. Illurstation of SelfExtend. This figure shows the attention score matrix (before SoftMax operation) of SelfExtend while a\nsequence of length 10 is fed into an LLM with the pretraining context window size (L = 7). The numbers denote the relative distances\nbetween the corresponding query and key tokens. SelfExtend has two kinds of attention mechanism: for neighbor tokens within the\nneighbor window (wn = 4), it adapts the normal self-attention; for tokens out of the window, it adapts the values from the grouped\nattention. The group size (Gs) is set to 2. We then merge two parts attention matrices and apply the softmax operation.\nMistral w/ SWASelfExtendMistral \nFigure 4. Passkey retrieval accuracy for Mistral-7b-instruct-0.1\nwith SW A or SelfExtend. Mistral with SelfExtend obtains100%\npasskey retrieval accuracy For all sequence length (token limit)\nand all depth. Mistral with SW A cannot retrieve the passkey out of\nthe sliding window. The default sliding window size is 4096.\nThe results show that SelfExtend can successfully maintain\na low PPL out of the pretraining context window for both\nLlama-2-7b-chat and Mistral. Without SelfExtend, the PPL\nexplodes when the length of test sequence is larger than\nthe context window. Mistral with SWA can also maintain\na low PPL out of its context window. But later in the next\nsection, we will demonstrate that a low PPL score does not\nnecessarily indicate proficiency in handling long contexts.\nMore discussion about PPL can be found in Appendix B.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.2 Performance on Synthetic Long Context Tasks",
+      "level": 2,
+      "text": "The passkey retrieval task is the same as what is defined in\nLandmark Attention (Mohtashami & Jaggi, 2023), which is\na synthetic long context task. It requires a language model\nto retrieve a simple passkey (i.e., a 5-digit random number)\nin a long meaningless text sequence. The passkey is placed\nwith various document depths (where the passkey is placed\nin the input texts) and context lengths (ranging from 4k to\n24k). We tested multiple passkey retrievals for each context\nlength and depth. The passkey was randomly placed within\na span of 400 tokens. For a depth of 0.1 and context of\n8k, the passkey was placed between tokens 800 − 1600.\nWe performed 10 iterations per span, so 20 total for that\nsetting. Experimental setting details and an example of\npasskey retrieval task can be found in Appendix D.2.\nThe results in Figure 4 show that without any fine-tuning,\nSelfExtend obtains 100% passkey retrieval accuracy across\nall tested depths and context lengths. The results also demon-\nstrate that: although Mistral w/ SW A has low PPL beyond\nits pretraining context window, it can only access informa-\ntion (i.e. the passkey) within its sliding window. Consider-\ning the simplicity of this task, these results strongly suggest\nit still does not have the true ability to handle long contexts.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.3 Performance on Real-World Long Context Tasks",
+      "level": 2,
+      "text": "Evaluation solely on language modeling (measured by per-\nplexity) and synthetic tasks like passkey retrieval cannot\nfully assess the long-context capabilities of LLMs. The task\nof Passkey retrieval is overly straightforward, and an LLM\nmay still struggle with long context despite low perplexity.\nTo comprehensively evaluate long-context performance, we\nfurther use two recent real-world long context benchmarks:\nLongBench (Bai et al., 2023) and L-Eval (An et al., 2023).\nThe results are presented in Table 2 and Table 3. On the\nLongBench in Table 2, for all four different base LLMs\nand most datasets, with SelfExtend, the LLM can obtain\nsignificant performance improvements.\nLlama-2-7B: We use SelfExtend to increase Llama-2-7b-\nchat’s context from 4k to 16k and 25k. Both significantly\noutperform Llama-2-7b-chat and most fine-tuned models on\nseveral datasets like HotpotQA. We also extend vicuna1.5-\n7B from 4k to 16k and 25k. With SelfExtend, vicuna1.5-7B\nsurpasses its fine-tuned counterpart vicuna1.5-7B-16k and\nranks among top Llama-2-7b models. On some datasets, the\n25k variant underperforms the 16k one due to the trade-off\nbetween larger context and positional precision. More de-\ntails about the trade-off is in Section 4.5.\nMistral-7B: We extend Mistral-7B’s context to 16k, sig-\nnificantly improving its long context ability over the base\nmodel. The fine-tuned variant MistralLite ((amazon, 2023))\n5\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nTable 2. Performance comparison of different LLMs on LongBench. * indicates the results reported by LongBench. *indicates the\nresults are reported by CLEX (Chen et al., 2023a). + indicates the results from us. Models in green/blue/cyan/orange are based on\nLlama2-7b/Mistral-7b/Phi-2/SOLAR-10.5B. The number (e.g. ‘25k’) indicates the maximum input length. The ‘SE’ prefix indicates\nSelfExtend is applied to this model. In this table, except SelfExtend, all other models require fine-tuning to extend the context window.\nCLEX is fine-tuned with 2B tokens. LongChat1.5-7B-32k and Vicuna1.5-7B-16K are fine-tuned on more than 80k conversations.\nCodeLLaMA (Rozi`ere et al., 2023) is fine-tuned on more than 500B tokens. MistralLite (Yin Song and Chen Wu and Eden Duthie, 2023)\nis also fine-tuned on more than 2B tokens (amazon, 2023). The better performance between models w/ and w/o SelfExtend is in bold.\nLLMsa Single-Document QA Multi-Document QA Summarization Few-shot Learning Synthetic Code\nNarrativeQAQasperMultiField-enHotpotQA2WikiMQAMusiqueGovReportQMSumMultiNewsTRECTriviaQASAMSumPassageCountPassageReLccRepoBench-P\nSelfExtend\nLlama-2-7B-chat-4k*18.719.236.825.432.89.427.320.825.861.577.840.72.1 9.852.443.8SE-Llama-2-7B-chat-16k+21.6925.0235.2134.3430.2414.1327.3221.3525.7869.5081.9940.965.665.8360.6054.33SE-Llama-2-7B-chat-25k+21.3726.6834.6335.4730.4615.5127.5121.3025.8768.5078.7941.293.903.5059.6953.83Mistral-7B-ins-0.1-16k w/ SW A+19.4034.5337.0642.2932.4914.8727.3822.7526.8265.0087.7742.341.4128.5057.2853.44Mistral-7B-ins-0.1-8k w/o SW A+20.4635.3639.3934.8129.9111.2124.7021.6726.6768.0086.6641.280.1824.0056.9455.85SE-Mistral-7B-ins-0.1-16k+b 23.5639.3349.5045.2834.9223.1430.7124.8726.8369.5086.4744.281.1829.5055.3253.44Phi-2-2k+ 4.467.0119.989.438.554.6225.6414.3224.0350.5074.551.712.834.1758.9654.14SE-Phi-2-8k+12.0412.1020.158.229.683.8927.9014.5822.1361.0082.821.402.372.8357.8756.42SOLAR-10.7B-ins-4k+16.5024.0646.7644.0336.0522.7631.3919.8126.3670.0087.9142.494.5 26.541.0454.36SE-SOLAR-10.7B-ins-16k+22.6332.4947.8846.1934.3227.8830.7522.1025.6274.5089.0442.794.0 28.053.7356.47Llama-3-8B-ins-8k+21.7144.2444.5446.8236.4221.4930.0322.6727.7974.590.2342.53NA67.0057.0051.22SE-Llama-3-8B-ins-16k+12.0412.1020.158.229.683.8927.9014.5822.1361.0082.821.402.372.8357.8756.42SE-Llama-3-8B-ins-32k 10/96+21.5043.9650.2648.1828.1825.5834.8823.8326.9675.5088.2642.014.1288.036.5837.73\nOther Methods\nLongChat1.5-7B-32k*16.927.741.431.520.69.730.822.726.463.582.334.21.0 30.553.055.3together/llama-2-7b-32k+15.6510.4933.4312.3612.536.1929.2817.1822.1271.087.7943.781.0 23.063.7961.77CLEX-7B-16k*18.0523.6844.6228.4419.539.1532.5222.925.556884.9242.820 11.559.0156.87CodeLLaMA-7B-16k*22.9330.6943.3733.0527.9314.228.4324.1826.847084.9743.432 13.564.3555.87SE-Llama-2-7B-chat-16k+21.6925.0235.2134.3430.2414.1327.3221.3525.7869.5081.9940.965.665.8360.6054.33SE-Llama-2-7B-chat-25k+21.3726.6834.6335.4730.4615.5127.5121.3025.8768.5078.7941.293.903.5059.6953.83Vicuna1.5-7B-16k*19.426.138.525.320.89.827.922.827.271.586.240.86.5 4.551.043.5SE-Vicuna1.5-7B-16k+21.8835.1642.0031.1422.5113.3328.4722.2426.7069.5086.3140.543.567.5060.1644.07SE-Vicuna1.5-7B-25k+22.4634.4242.5830.9524.3312.7227.7522.2627.2172.0084.0240.383.017.0058.8643.86MistralLite-16k+32.1247.0244.9558.547.2431.3233.2226.824.5871.590.6337.363 54.566.2765.29SE-Mistral-7B-ins-0.1-16k+23.8537.7546.9345.3534.5423.2830.4523.5826.9469.5085.7243.880.5928.5054.9253.44Gradient-Llama-3-8B-Inst-262k(32k)+21.7144.2444.5446.8236.4221.4930.0322.6727.7974.590.2342.53NA67.0057.0051.22Gradient-Llama-3-8B-Inst-1M(32k)+12.0412.1020.158.229.683.8927.9014.5822.1361.0082.821.402.372.8357.8756.42SE-Llama-3-8B-ins-32k 10/96+12.0412.1020.158.229.683.8927.9014.5822.1361.0082.821.402.372.8357.8756.42\nFixed Models\nGPT-3.5-Turbo-16k*23.643.352.351.637.726.929.523.426.768.091.441.74.5 71.054.753.6XGen-7B-8k*18 18.137.729.721.110.327.320.526.265.577.825.32.1 8.538.638.6InternLM-7B-8k*12.116.723.428.722.89.09.715.922.852.077.821.23.0 6.044.128.8ChatGLM2-6B-32k*21.131.546.245.134.021.932.424.026.562.578.736.31.5 77.055.649.9ChatGLM3-6B-32k*26.043.351.754.444.940.436.823.927.979.087.138.22.0 99.057.6654.76Baichuan-13B-4k*0.0717.5517.283.2915 0.16.81.7123.120.0520.065.770.060.547.9816.58ALiBi-7B-4k*0.048.1317.872.738 1.335.311.6425.559.258.834.670 1.2746.6918.54\na Details of used LLMs in this table are presented in Appendix E.\nachieves the best performance on most datasets. However,\nmany of these datasets were included in MistralLite’s fine-\ntuning data, such as NarrativeQA2.\nSOLAR-10.7B and Phi-2 : They have no finetuned vari-\nant for context window extension yet. SelfExtend can also\nobtain substantial performance improvements.\nOn the LEval benchmark in Table 3, we observe simi-\nlar results. Compared to fine-tuning free baselines like\nNTK or further fine-tuned models like Longchat1.5-7b-32k\nand Vicuna1.5-7b-32k, SelfExtend achieves superior perfor-\nmance on nearly all datasets3.\nIn summary, on the two benchmarks, SelfExtend achieves\n2More details about MistralLite’s fine-tuning data can be found\nat https://huggingface.co/amazon/MistralLite. At least,\nGovReport, QMSum, NarrativeQA, Qasper, QuALITY , and Hot-\npotQA are included. Meanwhile, Multi-passage QA and sum-\nmarization tasks are also in fine-tuning data. This also violates\nzero-shot evaluation conditions.\n3LEval performance seems sensitive to prompt engineering\nfor these sub-13B LLMs. For example, on some datasets, vanilla\nvicuna-13b underperforms vanilla vicuna-7b.\ncomparable or better performance, compared to meth-\nods that requires further fine-tuning. Despite our initial\nexpectation being that SelfExtend would simply outperform\nthe base model without additional extension methods, it\nis remarkable that our SelfExtend, which solely operates\nduring inference without the need for fine-tuning or training,\nachieves such impressive performance.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.4 Performance on Short Context Tasks",
+      "level": 2,
+      "text": "We argue that an ideal context length extension method\nshould not degrade performance on standard short-context\ntasks. Previous fine-tuning based methods usually undergo\nperformance degradation on short-context tasks (Peng et al.,\n2023; Xiong et al., 2023). Following (Peng et al., 2023),\nwe use Hugging Face Open LLM Leaderboard (Gao et al.,\n2023) to evaluate SelfExtend’s performance on five pub-\nlic short context tasks. Specifically, we use 25-shot ARC-\nChallenge (Clark et al., 2018), 10-shot HellaSwag (Zellers\net al., 2019), 5-shot MMLU (Hendrycks et al., 2020), 0-shot\nTruthfulQA (Lin et al., 2021), and 5-shot GSM8K (Cobbe\net al., 2021). The results are shown in Table 4. We also\n6\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nTable 3. Exam evaluation results on L-Eval. Tokens denotes the\nmaximum input context length. + indicates the results are from us\nand others are reported by L-Eval. The rows in the same color (or-\nange, green, blue, and pink) represent the models of those rows\nfrom the same base model. The better performance between mod-\nels w/ and w/o SelfExtend is highlighted in bold.\nModel Tokens Coursera GSM QuALITY TOEFL CodeU SFiction Avg.\nClaude1.3-100k 100k 60.03 88.00 73.76 83.64 17.77 72.65 65.97GPT-4-32k 32k 75.58 96.00 82.17 84.38 25.55 74.99 73.11Turbo-16k-0613 16k 63.51 84.00 61.38 78.43 12.22 64.84 60.73\nChatglm2-6b-8k 2k 43.75 13.00 40.59 53.90 2.22 54.68 34.69XGen-7b-8k (2k-4k-8k) 2k 26.59 3.00 35.15 44.23 1.11 48.43 26.41Chatglm2-6b-8k 8k 42.15 18.00 44.05 54.64 2.22 54.68 35.95Chatglm2-6b-32k 32k 47.81 27.00 45.04 55.01 2.22 57.02 39.01XGen-7b-8k 8k 29.06 16.00 33.66 42.37 3.33 41.40 27.63MPT-7b-65k 8k 25.23 8.00 25.24 17.84 0.00 39.06 19.22\nLlama2-7b-chat 4k 29.2119.0037.62 51.671.11 60.1533.12Longchat1.5-7b-32k32k 32.9918.0037.62 39.773.33 57.0231.45Llama2-7b-NTK 16k 32.7119.0033.16 52.780.00 64.8433.74SE-Llama2-7B-chat+16k 35.7625.0041.09 55.391.11 57.8136.02\nVicuna1.5-7b-16k16k 38.6619.0039.60 55.395.55 60.1536.39SE-Vicuna1.5-7B+16k 37.2121.0041.58 55.393.33 63.2836.96\nLlama2-13b-chat 4k 35.7539.0042.57 60.961.11 54.6839.01Llama2-13b-NTK 16k 36.4811.0035.64 54.641.11 63.2833.69Llama2-13b-NTK(Dyn)16k 30.0843.0041.58 64.311.11 35.1535.87SE-Llama2-13B-chat+16k 38.9542.0041.09 66.171.11 63.2842.10\nMistral-7b-ins-0.1 w/ SW A+16k 44.7744.0046.53 60.592.22 64.0643.70Mistral-7b-ins-0.1 w/o SW A+8k 43.6049.0045.05 60.594.44 60.9443.94MistralLite+ 16k 29.2332.0046.04 17.473.33 14.0623.69SE-Mistral-7b-ins-0.1+16k 45.2051.0048.02 64.683.33 59.3845.27\nPhi-2+ 2k 38.3764.0042.08 55.763.33 52.3442.64SE-Phi-2+ 8k 42.4465.0041.08 62.834.44 52.3444.69\nSOLAR-10.7b-Instruct-v1.0+4k 48.8472.0059.90 77.324.44 69.5355.34SE-SOLAR-10.7b-v1.0+16k 50.4472.0070.30 79.184.44 73.4458.30\nTable 4. Performance of SelfExtend on Hugging Face Open LLM\nbenchmark compared to baselines: Llama 2, Llama-2-chat-4,\nMistral-instruct-v0.1 and Phi-2. We use the same hyper-parameters\nas on LongBench benchmark. For Llama-2 & Llama-2-chat based\nSelfExtend, the group size is 16 and neighbor window is 1024;\nfor Mistral based SelfExtend, the group size is 6 and neighbor\nwindow is 1024; for Phi-2 based SelfExtend, the group size is 12\nand neighbor window is 512.\nSize Name ARC-c Hellaswag MMLU TruthfulQA GSM8k7B Llama-2 52.99 78.6646.5838.97 14.947B SE-Llama 252.9978.6546.68 38.9714.717B Llama-2-chat52.73 78.49 48.2045.32 18.737B SE-Llama-2-chat-16k52.73 78.4948.0945.33 18.887B Mistral-instruct-v0.1 54.3575.7255.5755.8930.937B SE-Mistral-instruct-v0.154.4475.7155.59 55.89 31.392.7B Phi-2 61.1775.13 58.2044.5455.112.7B SE-Phi-2 61.0075.20 58.29 44.54 55.42\ninvestigate the influence of varying group sizes and neigh-\nbor window sizes on short-context tasks and we present the\nresults in Appendix C.\nThe results show that SelfExtend can maintain the perfor-\nmance of the short-context tasks, while enhance the perfor-\nmance on long-context tasks. Moreover, because SeldEx-\ntend does not require any fine-tuning and only takes effect\nduring inference, SelfExtend can be readily adopted as a\nplug-in component for LLMs. This means SelfExtend can\nbe automatically and inherently disabled while encountering\nshort-text sequences. Then, with the parameters remaining\nunchanged, LLMs can maintain its original inference mech-\nanism on those short-context scenarios.\nTable 5. Performance of Phi-2 with different context window\nlengths. The vanilla Phi-2 has a 2k context window. SelfExtend\nextends Phi-2 to 4k (Gs = 4,wn = 512), 6k (Gs = 8,wn = 512)\nand 8k ( Gs = 12,wn = 512). The performance improvement\ncompared to vanilla Phi-2 is in the parenthesis.\nContext Length2k (vanilla) 4k 6k 8kDocument QANarrativeQA4.46 6.49 (+45.52%) 8.98 (+101.35%) 12.04 (+169.96%)Qasper 7.01 11.16 (+59.20%) 12.84 (+83.17%) 12.10 (+72.61%)SummarizationGovreport 25.46 27.91 (+9.62%) 28.14 (+10.53%) 27.51 (+8.05%)Qmsum 14.32 14.88 (+3.91%) 16.72 (+16.76%) 18.58 (+29.75%)Few-shot LearningTrec 50.5 60.0 (+18.81%) 62.5 (+23.76%) 60.0 (+18.81%)Triviaqa 74.55 84.88 (+13.86%) 82.64 (+10.85%) 81.31 (+9.07%)CodingRepobench-p54.14 56.18 (+3.77%) 56.76 (+4.84%) 57.05 (+5.37%)Lcc 58.96 59.06 (+0.17%) 58.88 (-0.14%) 59.42 (+0.78%)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.5 Ablations on Group Size and Neighbor Window",
+      "level": 2,
+      "text": "We investigate the influence of varying the group size Gs\nand the neighbor window wn. We experiments with Phi-2\non four real-world datasets from Longbench: narrativeqa,\nqasper, triviaqa, and repobench-p. The results are presented\nin Figure 5. Form the results, we observe two trade-offs:\n1) There is a trade-off with respect to group size in SelfEx-\ntend. Generally, both too small and too large group sizes\ncan result in inferior performance compared to an optimal\nlevel. With a large group size, position information be-\ncomes more coarse, potentially causing performance drops.\nConversely, small group sizes require SelfExtend to utilize\nlarger position embeddings to extend the context window.\nThese larger position embeddings are less trained compared\nto smaller ones. For example, in Llama-2 with its 4096\ncontext window, the relative position 4095 accounts for only\n1/2048 the frequency of the relative position 2048 in train-\ning. These under-trained relative positions can also degrade\nperformance. This trade-off produces the ’peak’ shape in\nthe figure, indicating the extended context window differs\nfrom the ideal case described in Equation (4).\n2) There is also another trade-off w.r.t. neighbor window\nsize. With larger neighbor window sizes, there is more\nprecise information about neighbor tokens, which is the\nmost important. But a larger neighbor window size means\nSelfExtend has to use a larger group size for a long se-\nquence, compared to using a smaller neighbor window size\n& smaller group size, the information about the whole se-\nquence becomes coarse.\nMore results can be found in Appendix G. When the group\nsize is so large that all distant tokens are in one group,\nSelfExtend degenerates into ReRoPE (e.g. group size of\n32768 in Figure 10).",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.6 Performance with Varying Context Window Length",
+      "level": 2,
+      "text": "To validate SelfExtend’s efficacy in enabling LLMs to utilize\nextended context windows, we assess Phi-2’s performance\nacross varying context lengths with SelfExtend, referencing\n7\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nFigure 5. The performance of Phi-2 when utilizing SelfExtend to extend its context window length to 8k, with varying group sizes\nand neighbor window sizes. The y-axis indicates performance and the x-axis shows the group size. And neighbor window size is\nfrom 256, 512, 768, 1024. Group size of 10000 in this experiment means all tokens out of the neighbor window are in the same\ngroup (10000>8k). Some combination (e.g. Gs = 6& wn = 1024) is omitted if the corresponding extended context window (Equa-\ntion (4)) is smaller than 8k. The dashed line is the performance of vanilla phi-2 with a 2k context window size.\n5 8 16 36 48 64 100\nNumber of Passkey Digits\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1.0Accuracy\nPasskey Retrieval on 16000 long sequences\nvicuna-1.5-7b-16k\nllama-2-7b-32k\nYarn-llama-2-7b-64k\nLlama-2-7b-Longlora-16k\nSelfExtend-16k-G_s-8\nSelfExtend-16k-G_s-12\nSelfExtend-16k-G_s-16\nSelfExtend-16k-G_s-100000\nFigure 6. Passkey retrieval accuracy for four fine-tuning-based\nlong-context models and SelfExtend on Llama-2-chat-7b across\nfour group sizes: 8, 12, 16, and 100000. For SelfExtend, the neigh-\nbor window is 1024. A group size of 100000 indicates that all\ntokens outside the neighbor window are in the same group.\nTable 5. Across four task types from LongBench, results are\ngenerally improved with longer contexts. Notably, SelfEx-\ntend monotonically enhances performance on NarrativeQA\nand Qmsum. While significant improvements are observed\nacross most datasets, a ’peak’ in performance suggests a\ntrade-off, as discussed in Section 4.5: longer contexts of-\nfer more relevant information, but the larger group sizes\nrequired by SelfExtend to extend the context window may\ncause less precise positional information4. Regarding Lcc,\nperformance remains consistent, possibly due to its reliance\non local codes and shorter dataset lengths5.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.7 Varying-Length Passkey Retrieval Task",
+      "level": 2,
+      "text": "The conventional passkey retrieval task, along with preva-\nlent benchmark datasets, primarily assesses the proficiency\nof LLMs in identifying and leveraging pertinent information.\nTraditionally, this task involves passkeys not exceeding 5\ndigits in length. To evaluate the LLMs’ capabilities of pro-\n4Other possible reasons include: Phi-2 is a base model without\ninstruction tuning, and SelfExtend’s performance is not optimal as\nwe use the same set of hyperparameters across all datasets, which\ncannot showcase SelfExtend’s full potential\n5With Phi-2 tokenizer, over 60% of Lcc instances are under\n4096 tokens, with an average length of 4069.7\nducing consistent and precise outcomes for long sequences,\nwe extended the task to incorporate passkeys with larger\nlengths. We test passkeys in 5, 8, 16, 36, 48, 64, 100 dig-\nits. The input sequence contains 16, 000 characters. More\ndetails are presented in Appendix D.3.\nThe results, depicted in Figure 6, illustrate a common trend:\nwhile short passkeys of 5 or 8 digits are easily managed\nby all, divergences in performance emerge as the length\nof passkey increases. Notably, with the exception of Yarn,\nmany tuning-based methods are unable to accurately repro-\nduce passkeys beyond 64 digits, and some of them even ex-\nperience a marked decline in performance when the passkey\nlength exceeds 16 digits. Remarkably, although without\ntuning, SelfExtend maintains its superiority. These find-\nings suggest that we should carefully choose the training\napproach when fine-tuning models to handle long contexts.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5 Conclusion and Discussion",
+      "level": 1,
+      "text": "In this paper, we argue that LLMs themselves have the inher-\nent ability to handle long sequences and propose SelfExtend\nto elicit the inherent long context abilities for LLMs by map-\nping unseen relative positions into those seen during pre-\ntraining. Without any tuning or further training, SelfExtend\ncan effectively improve LLMs’ long context performance.\nLimitations: SelfExtend increases computation cost with\nnaive implementations, since it performs extra attention\nacross all query-key pairs. However, with optimizations like\nblocked kernels (e.g. Flash Attention (Dao et al., 2022)),\nthis becomes linear rather than quadratic, and the marginal\ncost is small enough to be ignored for long input sequences.\nAlso, the performance degrades with large group size, pre-\nventing indefinitely long contexts. Besides, SelfExtend still\nprocesses the entire sequence to ensure information integrity,\nwhile some methods such as prompt compression (Chuang\net al., 2024; Jiang et al., 2023b) can shorten the input to re-\nduce computation. Additionally, evaluation methodologies\nfor assessing long context abilities remain open research\n8\nLLM Maybe LongLM: SelfExtend LLM Context Window Without Tuning\nquestions. Standard practices have yet to emerge, compli-\ncating experimental results.\nFuture Work: We are interested in more sophisticated map-\nping methods to replace the simple FLOOR operation, aim-\ning to enhance long context understanding and extend the\ncontext window length. Additionally, we plan to further in-\nvestigate the complex behaviors of LLMs using SelfExtend.\nImpact Statement\nThe impact of this contribution is multifaceted. Firstly, it\nenhances the usability and applicability of LLMs across\nvarious domains that require the processing of lengthy input\nsequences, such as document analysis, long-form question\nanswering, and retrieval augmented generation. Secondly,\nthe ability to extend the context window without fine-tuning\nsimplifies the deployment of advanced language models,\nmaking them more accessible to a broader range of users\nand applications. The availability of the code makes this\nsolution readily accessible to researchers and practitioners,\npromising widespread adoption and further innovation in\nthe field of natural language processing.\nAcknowledgements\nThe authors thank the anonymous reviewers for their helpful\ncomments. This work is in part supported by NSF grants\nNSF IIS-2310260 and IIS-2224843. The views and con-\nclusions contained in this paper are those of the authors\nand should not be interpreted as representing any funding\nagencies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Illustration of grouped attention. We suppose that the"
+    },
+    {
+      "id": "f2",
+      "caption": "Perplexity (PPL) using grouped attention with different"
+    },
+    {
+      "id": "f3",
+      "caption": "Illurstation of SelfExtend. This figure shows the attention score matrix (before SoftMax operation) of SelfExtend while a"
+    },
+    {
+      "id": "f4",
+      "caption": "Passkey retrieval accuracy for Mistral-7b-instruct-0.1"
+    },
+    {
+      "id": "f5",
+      "caption": "The performance of Phi-2 when utilizing SelfExtend to extend its context window length to 8k, with varying group sizes"
+    },
+    {
+      "id": "f6",
+      "caption": "Passkey retrieval accuracy for four fine-tuning-based"
+    },
+    {
+      "id": "f7",
+      "caption": "’Infinite’: a seemingly plausible method that extends an LLM’s context window to ’infinite’ length. It achieves this by dividing"
+    },
+    {
+      "id": "f8",
+      "caption": "Phi-2 with SelfExtend on GSM8K, Helleswag, MMLU and ARC-c, compared to the vanilla Phi-2 (Phi-2-2k). The x-axis shows"
+    },
+    {
+      "id": "f9",
+      "caption": "An example of the passkey retrieval task."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Perplexity on dataset PG19 with Llama-2-7b-chat and"
+    },
+    {
+      "id": "t2",
+      "caption": "Performance comparison of different LLMs on LongBench. * indicates the results reported by LongBench. *indicates the"
+    },
+    {
+      "id": "t3",
+      "caption": "Exam evaluation results on L-Eval. Tokens denotes the"
+    },
+    {
+      "id": "t4",
+      "caption": "Performance of SelfExtend on Hugging Face Open LLM"
+    },
+    {
+      "id": "t5",
+      "caption": "Performance of Phi-2 with different context window"
+    },
+    {
+      "id": "t6",
+      "caption": "Perplexity on the PG19 dataset: For ‘Infinite’, we set three different local window sizes: 1024, 2048, and 4096. We have also"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "PyTorch-style Pseudocode of SelfExtend"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e4",
+      "latex_or_text": "Equation (4)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 6,
+    "n_algorithms": 1,
+    "n_equations": 1
+  }
+}

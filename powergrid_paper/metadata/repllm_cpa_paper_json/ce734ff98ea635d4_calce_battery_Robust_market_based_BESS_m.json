@@ -1,0 +1,534 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/calce_battery/calce_battery__Robust_market-based_BESS_management__ed389c5d07.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "50 Image Processing Pipeline",
+      "level": 1,
+      "text": "Physical\nWorld\nSensor\nLayer\nData Prep.\nLayer\nApplication\nLayer\nSection 2\nSecurityRisk\nAnalysis RobustnessLinking Security\nand Robustness\nSection 4 Section 3 Section 6 Section 5\nPICT\nTestbed\nSection 7\nFigure 1: Abstraction of the image processing pipeline of\nautonomous vehicles and the main contribution of our SoK.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Autonomous vehicles and emerging advanced driver assistance\nsystems have become a reality in recent years [85, 139]. These ve-\nhicles depend on sensing systems to interpret their surroundings\nand make real-time decisions. Many autonomous vehicles integrate\nLiDAR or radar, but camera systems are widely used as single infor-\nmation source for tasks such as traffic sign detection, traffic light\nrecognition, and lane detection [40, 55] due to their ability to capture\ncolor information of the environment. Attacks on other sensors and\nsensor fusion have been examined in prior research [17, 116, 119],\nbut these do not replace the need for a detailed study of camera\npipelines. Because cameras are often a primary or sole perception\nsensor, securing their image processing pipeline is critical, both for\ncamera-only platforms and for multi-sensor systems where com-\npromised visual input can still mislead fused perception. The high\ninformation density and environmental exposure of cameras en-\nlarge the attack surface [15, 33, 40, 74, 102, 152], posing severe risks,\nespecially in fully autonomous vehicles without human fallback.\nCamera-based systems face diverse attacks that exploit both hard-\nware and algorithmic weaknesses, including adversarial physical\nperturbations that mislead object detection [4, 45, 134, 136, 140, 141],\nblinding attacks using directed light [ 100, 137], and exploits tar-\ngeting sensor-specific characteristics [68, 71, 117]. These threats\nhave been shown to be particularly effective against Machine Learn-\ning (ML) algorithms [127] that are often used in autonomous vehi-\ncles, and their effectiveness often depends on how they interact with\narXiv:2409.01234v2  [cs.CR]  7 Jan 2026\nKühr et al.\ndifferent stages of the image processing pipeline. Analyzing and\nsystematizing security and robustness research across this pipeline\nis the focus of our work.\nImage capturing is not a simple, monolithic process but rather\ninvolves a complex, multi-stage pipeline. Figure 2 illustrates this\ncomplexity, showing how data flows from the physical world to\nComputer Vision (CV) algorithms in the application layer (details\non the pipeline are given in §2). Ensuring the security of the image\nprocessing pipeline requires a deep understanding of its operational\nprinciples and a thorough identification of potential attack vectors.\nOur Systematization of Knowledge (SoK) reveals a significant gap\nin the current research landscape: While well-known existing work\nfocuses narrowly on the application layer, such as by modifyingML\nmodel inputs [4, 156], or on real-world scenarios, such as crafting\nadversarial patterns or objects [34, 45, 141], theyoverlook the impact\nof different layers of the image processing pipeline on the attack.\nMany attacks rely onvaried threat models and assumptions, often\nneglecting the significance of the entire image processing pipeline. This\noversight leads to inconsistent and misleading risk assessments. For\nexample, our systematic analysis indicates that application layer\nattacks require more sophisticated capabilities than those aiming\nat the physical world when considering the complete pipeline. This\nsignificantly impacts the feasibility of attacks and, consequently,\ntheir associated risks. Without a common threat analysis and risk\nassessment,we risk making unrealistic evaluations of certain attacks.\nTo address this issue, ourSoK systematically analyzes and classifies\nsecurity-related studies, adapting the ISO 21434 standard [56], in-\ntending to establish a consistent and comprehensive threat model\nthat accurately evaluates risks across the entire pipeline.\nWhile many attacks on the image processing pipeline exist, defen-\nsive research is significantly underrepresented. By contrast, many\nstudies in the robustness domain have been more comprehensive\nand have considered the complex image processing pipeline. How-\never, these studies primarily focus on mitigating environmental\ninfluences and improving performance benchmarks [13] rather than\naddressing intentionally crafted attacks. As a result,works from\nthe robustness domain are not sufficiently considered to secure the\nimage processing pipeline. Our SoK aims to bridge this critical gap\nby integrating insights from both security and robustness domains.\nBy doing so, we seek to help researchers develop a more resilient\nsystem that combines the strengths of works from both domains.\nFinally, the complexity of image processing pipelines and their\nextensive configuration options reveal another significant gap:no\nexisting testbed in the scientific community effectively addresses the\nfull spectrum of pipeline layers and configurations. Existing studies\noften rely on simulations [14, 15] or use unrealistic hardware (e.g.,\nsmartphones [17] or semi-professional cameras [154]). Furthermore,\nprior hardware testbeds [1, 112] lack full pipeline coverage and up-\nto-date technology. Our paper addresses this gap by proposing PICT\n(PICT is anImageCaptureTestbed), a new testbed that integrates\ncarefully selected hardware that mimics contemporary automotive\nsystems, covers all pipeline layers, is cost-effective, open-source,\nand easy to reproduce. PICT provides insights into both the security\nand robustness of the image processing pipeline and facilitates\ntesting attacks and countermeasures.\nWe make the following contributions as shown in Figure 1:\n• Systematizing security and robustness research.We\nprovide a comprehensive analysis of 92 papers – 56 on\nsecurity and 36 on robustness. For each domain, weclassify\nandcontextualizethe existing work, assess its impact, and\nidentify key observations (§3 and §5).\n• Evaluating risk and threat models of existing attacks.\nTo guide future research and enable focused investigation\nof critical threats, we systematicallyanalyzeandclassify\nsecurity-related research using the ISO 21434 standard (§4).\nWe also release the open-source tool TARA-CAM1, enabling\nreplication of our analysis and consistent evaluation of\nsimilar attacks, thereby offering a more consistent approach\nto threat assessment.\n• Bridging security and robustness research.Based on\nthe analysis of research papers from both security and ro-\nbustness domains, we establish links to increase awareness\nacross the domains for more integrated future research (§6).\n• Introducing PICT, a testbed for the image processing\npipeline.We developed an open-source 2 testbed, PICT,\ndeployed on embedded hardware to address the current gap\nin evaluating image processing pipelines. PICT integrates\ncarefully selected hardware and covers all pipeline layers.\nIt aims to enhance the understanding of attack impact and\nthe effectiveness of countermeasures on image processing\npipelines. To demonstrate its usability, we use the tool to\nshowcase representative attacks and the effectiveness of\ndefense mechanisms (§7 and §8).",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Image Processing Pipeline",
+      "level": 1,
+      "text": "Figure 2 illustrates a manufacturer-agnostic image processing pipe-\nline, which consists of four main layers: physical world, sensor layer,\ndata preparation layer, and application layer. Data captured from\nthe physical world moves from the sensor layer via the data prepa-\nration layer to the application layer. Additionally, control signals\nfrom software components on the application layer can influence\nthe data preparation layer and the sensor layer. It is important to\nnote that we use these layers conceptually; thus, the mapping of\nthese layers to actual hardware platforms may vary. For example,\ncomponents of the data preparation layer and the application layer\ncan run on the same physical device [62, 66]. Similarly, the applica-\ntion layer may be integrated into different hardware components.\nWhile real-world automotive image processing pipelines include\nmanufacturer-specific constraints and parameters, they share com-\nmon functional stages, enabling manufacturer-agnostic analysis.\nPhysical World:The physical world represents all visible objects\nin the field of view, such as street signs, road markings, pedestrians,\nand road users. Since an image sensor is sensitive to photons, it will\ncapture all entities, such as objects or displayed content, emitting or\nreflecting photons. The more photons an entity emits or passively\nreflects, the higher the captured and digitized value will be at a\ndedicated position. Therefore, other influences in the physical world,\n1https://tum-esi.github.io/PICT/\n2https://github.com/tum-esi/PICT\nSoK: Security of the Image Processing Pipeline for Camera-based Sensing in Autonomous Vehicles\nSTOP",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "50 Physical World",
+      "level": 1,
+      "text": "Camera\nLens\nImage Sensor\nCFA CMOS/\nCCD\nOn-Chip\nProcessing\nHDR, Defect Pixel Correction,\nVignetting Correction, LED\nFlicker Mitigation, Denoising,\nCropping, Mirroring, Black\nLevel Correction, Tone Map-\nping, Binning, . . .\nSerialization\nSensor Layer\nR G\nG B\nR C\nC C\nR C\nC G\nR C\nC B\nR Y\nY Cy\nC C\nC C\nDeserialization Image Signal\nProcessor\nDemosaicing, De-\nnoising, Rectification,\nColor- / Tone Cor-\nrection, Exposure\nControl, Compression,\nCropping, . . .\nData Preparation Layer\nAI Components\nPerception\nPlanning\nControl\nSensor Fusion\nDisplay\n. . .\nApplication Layer\nData Flow\nControl Flow\nHardware\nSoftware\nFigure 2: Overview of the image processing pipeline, consisting of four layers. Hardware components like the image sensor\nhave solid edges, while software-configurable components have rounded corners, such as the Image Signal Processor.\nlike sunbeams, shadows, or weather [18], can significantly impact\nthe subsequent layers of the image processing pipeline.\nSensor Layer:It is the first layer that senses and processes the\nphotons emitted by the physical world. It is important to differ-\nentiate between the termscameraandimage sensor. While every\ncamera includes an image sensor, it typically comprises additional\noptical and electrical components, as shown in Figure 2. Within\nthis layer, photons are directed through one or more lenses [ 37].\nThese lenses can either be fixed in position, providing a fixed focus,\nor be adjustable, allowing dynamic focus control [106]. Once the\nlight passes through the lenses, it reaches the image sensor.\nThis sensing element can be a Charge-coupled device (CCD) or\nComplementary metal–oxide–semiconductor (CMOS) array com-\nposed of usually multiple millions of photosensitive elements. Since\nthese photosensitive elements cannot differentiate colors, a color\nfilter array (CFA) is placed on top of the sensing array [32]. Various\nCFAs are available for different use cases [106], with the Bayer pat-\ntern being the most prominent CFA [37]. A Bayer pattern consists\nof a2× 2pixel matrix, with onered, twogreen, and oneblue pixel\n(also called RGGB). Especially in the automotive industry, different\nvariations of this original Bayer pattern exist, such as RCCC or\nRCCB, where \"C\" stands for \"clear\" pixels, meaning that they are\nnot sensitive to only a specific color [142]. Figure 2 shows different\nCFAs which are common in research and industry.\nAfter sensing light via CCD or CMOS technology, a readout\ncircuit converts the analog measured values into digital ones for\nfurther processing [160]. For CMOS sensors, this readout circuit\noften operates in arolling-shuttermode, where the entire pixel\narray is read out line by line [117] in contrast to CCD sensors [68].\nOnce digital values are available, many manufacturer-specific on-\nchip processing steps are performed [14, 18]. These operations can\ninclude defect pixel correction, image cropping, tone mapping, and\nsimple denoising [106]. In the automotive industry, High Dynamic\nRange (HDR) image sensors are often used, with a higher dynamic\nrange than typical sensors. This is achieved either by combining\nmultiple photosensitive elements per pixel [ 143] or by merging\nimages of the same scene captured with different settings [50, 84].\nFinally, the partially processed digital image is serialized into a\ndata stream for electronic transmission. A typical interface for\nthis purpose is the Camera Serial Interface 2 (CSI-2) by the MIPI\nAlliance [86]. For data transmission over longer distances, theCSI-2\nprotocol is often serialized using proprietary standards [129].\nData Preparation Layer:The first operation within this layer in-\nvolves deserializing the received data and delivering it to an Image\nSignal Processor (ISP) for further processing. The primary goal of an\nISP is to optimally prepare the captured image for subsequent use,\nsuch as displaying it for the human eye [106] or preparing it for CV\nalgorithms [90]. Similar to on-chip processing steps, calculations in\nthe ISP are often manufacturer-specific and can include a variety\nof operations [6]. Therefore, we will highlight the functionality of\nsome typical ISP components. The most prominent functionality is\ndemosaicing, which converts the captured raw image format (e.g.,\nBayer pattern) into an RGB image, where each pixel represents\nthree colors instead of individual color components [ 106]. Since\nthis spatial operation can introduce artifacts, various demosaicing\nmethods, and subsequent correction techniques are available [125].\nAdditionally, the bit depth per pixel is typically reduced, as the raw\ndata from the image sensor often has a high bit depth [95]. On the\nRGB image, many further image quality-enhancing processing steps\ncan be performed, such as color or tone correction [14] or extended\nimage denoising [8]. Lastly, ISPs can perform image scaling and/or\ncropping steps to prepare the captured image data for the subse-\nquent application [146]. Additionally, full-size or scaled images can\noften be lossy compressed by the ISP [106]. The prepared image is\noften used by the application layer to update image sensor settings\nsuch as the exposure control or camera gains [149]. Sophisticated\nimage sensors have such functionality already on-chip [123].\nApplication Layer:The final layer of the image processing\npipeline includes various applications for different tasks. For au-\ntonomous vehicles, CV algorithms are the most important. Among\nthese, ML models are the most common for fully autonomous\nvehicles. These models can range from simple object detection\nalgorithms to complex systems, such as trajectory planning based\non images or even end-to-end autonomous driving models [ 20].\nOther applications include the fusion of image data with other\nsensor data, such as LiDAR, the visualization of images in the\nvehicle’s infotainment system, and many others. In addition, this\nlayer includes applications that control the parameters of preceding\ncomponents. Examples include configuring the ISP or adjusting\nsensor settings to influence exposure control. This feedback loop is\nKühr et al.\ndepicted in Figure 2 as a control flow from the application layer\nto the ISP and the image sensor. Similar to the data preparation\nlayer, sophisticated image sensors might have application layer\nfunctionality already on-chip [122].",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Security Classification",
+      "level": 1,
+      "text": "After introducing the image processing pipeline, we now analyze\nthe security research related to the various layers. We reviewed 56\nsecurity-related research papers with the methodology for their se-\nlection detailed in Appendix A. From this analysis, we defineeight\nattack classesto classify the different types of attacks discussed\nin these papers. Additionally we categorize them into three groups:\n(i) Attack Papers : Papers that present an attack against one or\nmore of the pipeline components. This category includes papers\nthat mention possible defenses for the discussed attack but without\nthorough evaluation ; (ii) Attack and Defense Papers : Papers\nthat propose an attack and also include respective defense methods\nwith evaluation, or (iii) Defense Papers : Papers that focus solely\non defense methods. We then map each security-related work to the\ncorresponding layer of the image processing pipeline and highlight\nthe respective vulnerable asset in Table 1.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Physical World",
+      "level": 2,
+      "text": "In the physical world, attacks are separated into three classes:1○ Dy-\nnamic Physical Adversarial Distortions, 2○ Static Physical Adversarial\nDistortions, and 3○ Targeted Light Attacks. Additionally, it contains\nD○ Defenses. Many existing surveys summarize the research on\nthese physical adversarial samples [4, 45, 134, 136, 140, 141]. We\nemphasize that more sophisticated physical attacks, exploiting sen-\nsor characteristics [82] are covered separately in §3.2.\n1○ Dynamic Physical Adversarial Distortions:Attackers can\nproject [41, 78, 93] or display images [99] on physical layer items\nto disrupt the functionality of cameras in autonomous vehicles.\nWhile [41, 99] solely show attacks, [78, 93] propose additional miti-\ngation strategies via adversarial training [78] or improved ML mod-\nels [93]. All these attacks can be adapted dynamically to change, for\nexample, the size or the content of the adversarial distortions. While\nthis typically increases the attack complexity, it can compensate\nfor changing environmental conditions or viewing angles.\n2○ Static Physical Adversarial Distortions:By using printed im-\nages [34, 54, 57, 60, 69, 135], stickers [34, 49, 61, 161], or even three\ndimensional objects [7, 105], attackers can create persistent attacks\nin the physical world. Typically, environmental influences must be\nconsidered when creating such static distortions [57, 60, 69, 161].\nAdditionally, such perturbations could be overlays on complete\nobjects [54, 135] or stickers only on a small region [34]. While most\nwork [7, 34, 49, 57, 60, 69, 105, 135] provide attacks, some also pro-\nvide mitigations [89, 161]. Unlike 1○ dynamic physical adversarial\ndistortions, static ones remain fixed and cannot be changed during\ndeployment since they need to be recreated or newly placed.\n3○ Targeted Light Attacks:With targeted light, attackers can\neither directly blind cameras [100] and saturate the resulting image\nor use reflections from natural [52, 133] or artificial light sources [11,\n31]. In most cases, laser pointers, creating a strong light beam, are\ntypical attack devices [11, 31, 100]. These non-persistent attacks\ncan also be found in other application domains of cameras [38, 130].\nD○ Defenses:Feng et al . [36] introduce static physical adversarial\ndistortions that can be used to detect and defend against malicious\nphysical adversarial distortions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Sensor Layer",
+      "level": 2,
+      "text": "The sensor layer is critical because it is the first point where re-\nsearchers and engineers can actively influence system design, of-\nfering opportunities not only for attacks but also for defending the\nimage processing pipeline. There is a variety of available attack\nclasses: 1○ Dynamic Physical Adversarial Distortions, 3○ Targeted\nLight Attacks, 4○ Invasive Environmental Influences, 5○ Image Pro-\ncessing Attacks, 6○ Rolling Shutter Attacks, and a D○ Defense.\n1○ Dynamic Physical Adversarial Distortions:By using pro-\njectors, attackers can exploit lens flare effects, causing optical arti-\nfacts due to reflections [82]. Another attack, presented by Xia and\nChen [145], exploits the array structure of photosensitive elements\nin image sensors when showing images on a display. They demon-\nstrate that the Moiré effect, typically seen when geometric patterns\nsuch as lines intersect at certain angles [97], can occur on image\nsensors, adversely affecting object classification.\n3○ Targeted Light Attacks:Controlled targeted light can be used\nto exploit specific characteristics of image sensors, such as their\nsensitivity to infrared light [114, 137] or specific lenses [163]. Al-\nthough these attacks are comparable to 3○ targeted light attacks in\nthe physical world, they have sensor dependencies and are therefore\ncategorized in the sensor layer.\n4○ Invasive Environmental Influences:In contrast to the pre-\nvious attacks, invasive environmental influences aim to attack side-\nchannels of image sensors by introducing acoustic [59, 76] or elec-\ntromagnetic interference [67]. However, these attacks show limi-\ntations in their applicability: While electromagnetic interference\nworks only on CCD-based image sensors [ 67], existing acoustic\nattacks [59, 76] work only on cameras with movable lens systems.\n5○ Image Processing Attacks:Oyama et al . [98] explore an\nattack targeting the physical connection between the camera and\nits subsequent device, injecting manipulated image data. It is placed\nat the boundary between the sensor and data preparation layer.\n6○ Rolling Shutter Attacks:As CMOS-based image sensors are\nthe most common image sensor technology in autonomous vehicles,\ntheir rolling shutter effect represents a significant vulnerability.\nRolling shutter attacks [ 35, 46, 117, 153] represent illumination-\nbased attacks, working with pulsed light at a high frequency. Similar\nattacks [21, 53, 71] can also disturb face detection functionality that\ncan be relevant for in-vehicle monitoring systems.\nD○ Defenses:The MIPI Alliance introduced a security framework,\nenabling encryption and authentication already on the image sensor,\nto prevent further tampering with the digitized image [87].\nObservation 1:System design decisions of image sensors, such\nas the rolling-shutter mechanism, can lead to security vulnera-\nbilities. Such design flaws can propagate to software applica-\ntions that are often not secured against these attacks.\nSoK: Security of the Image Processing Pipeline for Camera-based Sensing in Autonomous Vehicles\nTable 1: The mapping of the security-related work into the four layers of the image processing pipeline and the eight attack\nclasses: 1○ Dynamic Physical Adversarial Distortion, 2○ Static Physical Adversarial Distortion, 3○ Targeted Light, 4○ Invasive\nEnvironmental Influences, 5○ Image Processing Attacks, 6○ Rolling Shutter Attacks, 7○ Digital Adversarial Distortion, and 8○\nTime Delay Attacks. D○ refers to pure defensive work.\nLayer Physical Sensor Data Prep. Application\nWork\n[99]\n[41]\n[93]\n[78]\n[7]\n[34]\n[105]\n[57]\n[69]\n[135]\n[54]\n[49]\n[61]\n[60]\n[161]\n[89]\n[133]\n[100]\n[11]\n[31]\n[52]\n[36]\n[145]\n[82]\n[163]\n[114]\n[137]\n[59]\n[67]\n[76]\n[98]\n[53]\n[21]\n[117]\n[46]\n[71]\n[153]\n[68]\n[35]\n[87]\n[103]\n[72]\n[73]\n[146]\n[104]\n[160]\n[2]\n[148]\n[15]\n[115]\n[80]\n[92]\n[47]\n[83]\n[157]\n[79]\nClass 1○1○1○1○2○2○2○2○2○2○2○2○2○2○2○2○3○3○3○3○3○D○1○1○3○3○3○4○4○4○5○6○6○6○6○6○6○6○6○D○5○5○5○5○D○D○5○7○7○7○8○8○D○D○D○D○\nVuln. Asset\nPerception\nPerception\nPlanning\nPerception\nPerception\nPerception\nFusionPerception\nPerception\nPerception\nPerception\nPerception\nPerception\nPerception\nPerception\nPlanning\nPerception\nCMOS/CCD\nPerception\nPerception\nPerception\n–\nCMOS/CCD\nLens\nCMOS/CCD\nCMOS/CCD\nCMOS/CCD\nLens\nCCD\nLens\nSer./Deser.\nCMOS\nCMOS\nCMOS\nCMOS\nCMOS\nCMOS\nCMOS\nCMOS–\nISP\nISP\nISP\nISP–\n–\nPerception\nFusion\nControlPerception\nPerception\nPerception\n–\n–\n–\n–\nCategory\nAttack\nDefense\n: Yes,: No, : Possible defenses without further evaluation",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Data Preparation Layer",
+      "level": 2,
+      "text": "Within this layer, different image processing steps enhance image\nquality and prepare data forCV algorithms. However, some of these\noperations are susceptible to attacks. We classify these as 5○ Image\nProcessing Attacksand their respective D○ Defense.\n5○ Image Processing Attacks:By exploiting ISP characteristics,\nit is possible to create camera-specific attacks that hide information\ntailored to work only on specific ISPs [103]. Additionally, certain\nprocessing steps of anISP can be exploited in general, such as image\nscaling [72, 73, 146] by embedding crafted information that only\nbecomes visible after scaling the image, leading to misclassification\nin subsequent layers. Through low-level image analysis, this attack\ncan be thwarted [146].\nD○ Defenses:It is possible to mitigate the effect of general artifi-\ncial perturbations by processing the raw image through different\nISP pipelines [160]. Additionally, improved scaling algorithms are\navailable that can mitigate the risk of image-scaling attacks [104].\nObservation 2:Processing steps in the data preparation layer\ncan significantly alter the appearance of images, such as the\ncolor, spatial artifacts, or image size. Attackers can exploit these\nprocessing steps to craft attacks, to create very targeted, asset-\nspecific attacks [ 103]. Still, as Table 2 shows, the amount of\nsecurity-related research is low compared to other layers, sug-\ngesting an opportunity to study ISP-based threats and defenses.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.4 Application Layer",
+      "level": 2,
+      "text": "Given the flexibility and variety of options within the application\nlayer, we focus on work specifically related to autonomous vehicles\nor realistic use cases where images are directly evaluated. Attacks\nand defenses requiring non-temporary image storage or extensive\npost-processing are excluded, as these methods are not applica-\nble to fully autonomous vehicles with onboard CV algorithms. In\nthis layer, three different attack classes can be observed: 5○ Image\nProcessing Attacks, 7○ Digital Adversarial Distortions, and 8○ Time\nDelay Attacks. Additionally, there are multiple D○ Defensesavailable.\n5○ Image Processing Attacks:Since the application layer works\non fully processed images, it allows adversarial perturbations via\nmodifications of image transformation parameters in such prepared\nimages [2] through further image processing. This impact can be\nmitigated using techniques such as adversarial training [2], which\nfall outside the scope of this SoK’s focus.\n7○ Digital Adversarial Distortions:Digital adversarial distor-\ntions can impact new autonomous driving paradigms like end-to-\nend autonomous driving [15], or even multi-sensor systems [148],\nconsisting of cameras and LiDARs. Additionally, specific automotive\nperception algorithms such as lane detection [115] can be attacked.\n8○ Time Delay Attacks:By introducing specific patterns in im-\nages, the execution time of object detection algorithms can be in-\ncreased and disturb the system functionality [ 80, 92]. Although\nMuller et al . [92] propose patches that are placed in the physi-\ncal world, they attack specific object detection algorithms in the\napplication layer as vulnerable assets.\nD○ Defenses:Many defense strategies focus on optimizing ML\nmodels or adjusting their input parameters [3, 4, 70, 94, 158]. How-\never, these approaches often overlook the earlier layers in the over-\nall pipeline. As part of this SoK, we do not focus on well-known\ndefense ML methods like reliable adversarial training [81] or data\nrandomization during training [147]. Instead, we concentrate on\nwork that considers elements of the image processing pipeline.\nSome existing research considers countermeasures against attacks\non the components shown in Figure 2. For example, there is work\non detecting physical camera blinding attacks [ 157]. Other stud-\nies focus on regions of interest [79], use multiple ML models for\nknowledge enhancement [47], or include consistency checks with\nother available information in autonomous vehicles [83].",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 Risk & Threat Model Classification",
+      "level": 1,
+      "text": "Current security research on camera pipelines often lacks a consis-\ntent risk evaluation, resulting in incomparable or even misleading\nthreat assessments. To address this gap, we systematically evaluate\nthe risk of 48 attack papers (with 8 out of the 56 surveyed papers\nfocusing solely on defense) mapped to the different layers of the\npipeline. We assess their impact and feasibility using ISO 21434 [56],\na well-defined, internationally recognized industry standard specif-\nically designed to address cybersecurity risks in the automotive\nindustry, ensuring a comprehensive and industry-relevant analysis.\nDetails on the threat analysis and risk assessment with ISO 21434\nKühr et al.\nTable 2: Evaluation of attacks sorted by layer and evaluated risk. Category details are available in Appendix B.\nLayer\nWorkEntry Point\nImpact S\nImpact O\nAccuracy\nImpact\nKnowledge\nEquipment\nWoO\nExpertise\nFeasibility\nRisk\nPhysical\n[99] Physical World Multiple Bespoke < 100m\n 1\n[7] Physical World Specialized < 1m\n 1\n[61] Physical World Multiple Bespoke < 100m\n 1\n[49] Physical World Specialized < 1m\n 1\n[161] Physical World Specialized < 100m\n 2\n[34] Physical World Standard < 10m\n 2\n[54] Physical World Specialized < 10m\n 2\n[105] Physical World Specialized < 10m\n 2\n[57] Physical World Specialized < 1m\n 3\n[133] Physical World Standard < 10m\n 3\n[69] Physical World Specialized < 100m\n 3\n[135] Physical World Bespoke < 10m\n 4\n[60] Physical World Specialized < 100m\n 4\n[100] Physical World Standard < 10m\n 4\n[31] Physical World Standard < 10m\n 4\n[52] Physical World Standard < 10m\n 4\n[89] Physical World Multiple Bespoke < 100m\n 4\n[41] Physical World Specialized < 10m\n 5\n[78] Physical World Specialized < 100m\n 5\n[11] Physical World Specialized < 100m\n 5\n[93] Physical World Specialized < 10m",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5 Sensor",
+      "level": 1,
+      "text": "[59] Physical World Bespoke < 0.1m\n 1\n[76] Physical World Specialized < 0.1m\n 1\n[98] Sensor / Data Multiple Bespoke < 0.1m\n 1\n[71] Physical World Bespoke < 1m\n 2\n[163] Physical World Bespoke < 10m\n 3\n[53] Physical World Bespoke < 10m\n 3\n[21] Physical World Bespoke < 10m\n 3\n[82] Physical World Specialized < 1m\n 3\n[67] Physical World Bespoke < 1m\n 3\n[114] Physical World Bespoke < 100m\n 4\n[117] Physical World Bespoke < 0.5m\n 4\n[153] Physical World Bespoke < 10m\n 4\n[68] Physical World Specialized < 10m\n 4\n[35] Physical World Bespoke < 10m\n 4\n[46] Physical World Specialized < 10m\n 5\n[145] Physical World Standard < 10m\n 5\n[137] Physical World Specialized < 10m\n 5\nData Pr.\n[103] Physical World Specialized < 1m\n 3\n[73] Physical World Specialized < 1m\n 3\n[72] Application Layer Standard remote\n 3\n[146] Application Layer Standard remote",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3 Application",
+      "level": 1,
+      "text": "[148] Application Layer Standard remote\n 1\n[80] Application Layer Standard remote\n 1\n[92] Physical World Standard < 10m\n 2\n[115] Physical World Bespoke < 10m\n 3\n[15] Physical World Specialized < 1m\n 4\n[2] Application Layer Standard remote\n 4\nAccuracy: Targeted, Untargeted\nImpact: Negligible, Moderate, Major, Severe\nKnowledge: white-box, gray-box, black-box\nFeasibility: Very Low, Low, Medium, High\nExpertise:\n Layman,\n Proficient,\n Expert,\n Multiple Experts\nRisk: According to ISO 21434 [56] from low 1to high 5\nSoK: Security of the Image Processing Pipeline for Camera-based Sensing in Autonomous Vehicles\nare given in Appendix B. Table 2 presents the attack impact and fea-\nsibility rating as well as the final risk level from low 1 to high 5 .\nTo assess the risk, we include the following categories as defined\nin ISO 21434 [56]:\n• Asset Identification: Characterize the layer of the image\nprocessing pipeline where the attack unfolds its potential.\n• Attack Path Analysis: Define the attack entry point used by\nthe attacker.\n• Impact Rating: Rate the impact ( Negligible,\nModerate, Major, or Severe) of the presented\nattack according to the following criteria: (i) Impact on\nsafety; (ii) Impact on operation, and (iii) Targeted accuracy,\ndescribing whether the result of the attack can be actively\ncontrolled (Targeted ) or not (Untargeted ).\n• Attack Feasibility: Evaluate the feasibility of the attack (\nVery Low, Low, Medium, or High) based on the fol-\nlowing criteria: (i) Required knowledge of the system to\nperform the attack ( white-box, gray-box, or black-\n-box); (ii) Necessary equipment (Standard, Specialized, Be-\nspoke, or Multiple Bespoke); (iii) Window of opportunity,\nwhich refers to the distance between the attacker’s system\nto the victim, and (iv) Specialist expertise (\n Layman,\nProficient,\n Expert, or\n Multiple Experts)\nAll ratings in Table 2 are generated with our interactive tool\nTARA-CAM3. For each attack, we provide the exact ISO 21434\nparameters to enable full reproducibility. Readers can add new\nattacks or modify any parameter and instantly see the recalculated\nrisk level, enabling exploration of how changes – such as shifting\nthe window of opportunity – affect feasibility.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.1 Physical World",
+      "level": 2,
+      "text": "All physical-world attacks share a common criterion: their entry\npoint is rooted in the physical environment. However, the risk\nlevels of these attacks can vary widely, from low ( 1 ) to high ( 5 ).\nAlthough most attacks have a severe ( ) or major ( )\nimpact, their feasibility goes from very low ( ) [7, 49, 61, 99] to high\n( ) [60, 78, 93]. Especially, the required knowledge and expertise\ncontribute to the feasibility of physical world attacks, resulting in\nvarying risks. Except for two papers [89, 99], all attacks in this layer\nneed only standard or specialized equipment. The number of attacks\nresulting in high risk ( 4 and 5 ) [11, 31, 41, 60, 78, 89, 93, 100, 135],\ntheir limited black-box knowledge ( ) and the possibility of them\nbeing targeted ( ) should guide future defensive research of the\nimage processing pipeline.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.2 Sensor Layer",
+      "level": 2,
+      "text": "Similar to the previous layer, nearly all attacks on the sensor layer\nhave their entry point in the physical world, except for [98], which\ntargets the interconnection between the sensor layer and the data\npreparation layer. Additionally, the risk levels are also distributed\nfrom low ( 1 ) to high ( 5 ). In contrast to the physical world, at-\ntacks with a very low feasibility ( ) [59, 76, 98] require different\nknowledge but unite in a small window of opportunity (< 0.1m). In\ngeneral, more attacks require bespoke or even multiple bespoke [98]\n3https://tum-esi.github.io/PICT/\nequipment compared to attacks in the physical world. The variation\nin the required knowledge and expertise results in very low ( )\nto high ( ) feasibility. A total of six attacks show only a moderate\nimpact ( ) but still range up to risk level 3.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.3 Data Preparation Layer",
+      "level": 2,
+      "text": "While attacks on preceding layers had their attack entry point\nmainly in the physical world, here we identified the first attacks\nwith an entry point on the application layer [72, 146]. Due to their\nsimilar operation principle, all attacks in this layer share a major\nimpact ( ) and medium feasibility ( ). We emphasize that no\nwork requires specific knowledge, resulting in black-box attacks\n( ). These properties lead to a common risk level of 3.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.4 Application Layer",
+      "level": 2,
+      "text": "Many attacks targeting the application layer [2, 80, 148] also use it\nas their entry point, setting them apart from most attacks in other\nlayers. A key limitation of these attacks is that the manipulated\nimages must be accessible, often requiring stepping-stone attacks\nthrough other components, which adds complexity. However, ex-\nceptions exist, such as those described in [ 115] and [ 15], which\ntarget the application layer while using the physical world as entry\npoints. Irrespective of the entry point, the impact of all attacks\nranges from moderate ( ) [92] to severe ( ) [2, 15, 148].\nWith a feasibility only ranging from very low ( ) to medium ( ),\nthe highest risk level of these attacks is 4.\nObservation 3:Attacks on the physical world and sensor lay-\ners often combine high feasibility, little system knowledge, and\nhigh impact, often resulting in high risk scores. In contrast,\nattacks in the data preparation and application layers require\nhigh expertise and are harder to execute due to possible prior\nstepping-stone attacks. Yet, some still score high risk due to\ntheir high impact. This cross-layer pattern, where knowledge re-\nquirements shift from low to high as one moves up the pipeline,\nemerges clearly only when threats are mapped systematically.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Robustness Classification",
+      "level": 1,
+      "text": "The development of camera-based autonomous driving solutions\nhas demonstrated a mature level of safe and robust perception, uti-\nlizing CV algorithms even in high-speed scenarios for nearly four\ndecades [28]. This progress motivates us to analyze research on\nthe image processing pipeline not only from a security perspective\nbut also by exploring how security can be enhanced through in-\nsights from the robustness domain. To achieve this, we reviewed 36\nrobustness-related studies, with the methodology for selecting and\nexcluding these papers detailed in Appendix A. We map these pa-\npers across different layers of the image processing pipeline using\nmultiple criteria and introducesix robustness classesthat can\nbe used to categorize the collected research papers. By doing so,\nwe aim to bridge the gap between work in the robustness domain\nand security-related studies, as discussed in §6. The result of the\nclassification of 36 papers is presented in Table 3. The criteria used\nfor classifying the papers include:\nKühr et al.\n• Layer: We use the layers of the image processing pipeline\nin Figure 2 to organize the individual subsections. As many\npapers operate on multiple layers, we also have subsections\non these combined ones.\n• Contribution: While some work analyzes and optimizes\nthe existing image processing pipeline components, others\naim to identify new structures or working principles. We,\ntherefore, differentiate betweenAnalysis( ♂search), analyzing the\nexisting system,Optimization( ὒ7), aiming to optimize the\nexisting system, andUpgrades( /sync), describing work that\naims to use new approaches to increase the robustness.\n• Impact: Since the human visual perception primarily drove\nthe development of camera systems, we differentiate work\nthat optimizes theQualityof images or work that focuses\non CV applications, aiming to improve theirSafety. There\nis also research considering both categories.\n• Effort: This represents the effort that is necessary to imple-\nment the proposed work in a system. It can be: (i) aminor\nsoftwareupdate ( ); (ii) amajor softwareupdate ( ); (iii) a\nnecessaryhardwareupgrade ( ), or (iv) changes that even\nconcern the surroundinginfrastructure( ).",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.1 Physical World / Sensor Layer",
+      "level": 2,
+      "text": "I Environmental and Data Processing Analysis:In general,\nwork that acts both in the physical world and in the sensor layer\ncan be allocated to this class, where some work analyzes the effect\nof environmental influences and sensor distortions [18, 51], or even\nprovide datasets for evaluation [128], and other work explains on\na more theoretical level the performance of CV algorithms under\nthe influence of random changes [ 48, 58]. In a different analysis,\nBijelic et al. [13] investigate environmental effects on both standard\nCMOS cameras and so-called gated cameras. This supporting work\non more robust CV algorithms can also increase the robustness\nagainst adversarial distortions both in the real world and in the\napplication layer.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.2 Sensor Layer",
+      "level": 2,
+      "text": "In contrast to the previous subsection, here we focus exclusively\non research related to the sensor layer. We identified three defense\nclasses: II Anti-Flicker Improvements, III CFA Improvements, and\nIV Low-Layer Sensor Improvements.\nII Anti-Flicker Improvements:Various methods exist to de-\ntect and mitigate the flickering effect of pulsed Light-Emitting\nDiodes (LEDs) [10, 26, 118]. Many automotive image sensors al-\nready support LED flicker mitigation, often using proprietary al-\ngorithms [96]. Since these algorithms are often integrated directly\non the chip, they typically require a high implementation effort,\nalthough it is also possible to implement such functions as part of\nthe data preparation in a separate component [9].\nIII CFA Improvements:This class focuses on improvements\nof the CFA for automotive-specific requirements, which can influ-\nence the outcome of attacks that use digital images or targeted\nlight. Research has examined CFAs tailored to the automotive in-\ndustry [19, 39, 142]. While [142] and [39] explore the best existing\nCFA for traffic signal detection, Chakrabarti [19] proposes replacing\nthe traditional Bayer CFA with an adaptive learned CFA.\nIV Low-Layer Sensor Improvements:A multitude of improve-\nments of the image sensor is available. These improvements can\ninclude advanced lens stacks, which are crucial for creating high-\nquality images and can significantly boost the performance of ob-\nject detection algorithms [ 24]. Additionally, HDR image sensors\ncan play a vital role in defending against simple blinding attacks\nthrough targeted light by sequentially capturing multiple images\nwith varying exposure settings to create a single image with a\nhigher dynamic range [84]. Although potentially introducing mo-\ntion artifacts on fast-moving objects, image sensors with such an\nHDR feature onboard are common in the automotive industry [113].\nAnother area of low-layer sensor improvements aims to reduce the\nrolling shutter effect, which is particularly important in high-speed\nscenarios [121, 132]. Furthermore, sensor hardware properties can\nbe leveraged to generate more realistic noise in artificial images [12],\nwhich can be utilized in technologies such as training data ran-\ndomization [147] or adversarial training [81]. While much of the\nresearch is focused on optimizing image quality for the human\nvisual system, some studies also enhance the performance of CV\nalgorithms [10, 12, 24, 118]. Since optimizations and upgrades to the\nsensor layer often involve hardware changes or even infrastructural\nmodifications, the effort for work in this layer is typically high.\nObservation 4:Although robustness-related improvements\nin the sensor layer can enhance the security of the image pro-\ncessing pipeline, they often come with a high effort, affecting\nnot only the hardware itself but also its infrastructure. This\nmakes a thorough evaluation from a security perspective diffi-\ncult and shows the need for a camera testbed featuring realistic\nautomotive features.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5.3 Sensor Layer / Data Preparation Layer",
+      "level": 2,
+      "text": "Two classes were identified: I Environmental and Data Processing\nAnalysis, and V Digital Image Processing Improvements.\nI Environmental and Data Processing Analysis:Differ-\nent research focused on analyzing various distortions within the\nimage processing and their impact on neural networks [ 30, 63]\nand perception algorithms [101]. The analyzed distortions relate\nto digital images, printed objects, or adversarial distortions from\nsecurity-related research.\nV Digital Image Processing Improvements:Improvements in\nthis class aim to ameliorate digitized image data processing. Since\nthe exact functionalities of the on-chip processing in the sensor\nlayer and the functions of the ISP within the data preparation layer\nare not standardized, we will classify the respective work in this\nsubsection, covering both layers. Much of this research aims to\noptimize parameters of the ISP [14, 90, 91, 101, 111, 149–151], but\ndue to the possible tasks of their proposed work, it is classified\nin this combined subsection. Similar work [ 16, 27, 50, 138, 154]\ndoes not only try to optimize parameters on existing components\nboth in the sensor layer and data preparation layer but tries to\nreplace components of the image processing pipeline with new\nones to improve the visual quality of images and the performance\nof CV algorithms. By optimizing or replacing processing steps in\nSoK: Security of the Image Processing Pipeline for Camera-based Sensing in Autonomous Vehicles\nTable 3: Layer classification of robustness-related work: I Environmental and data processing analysis, II Anti-Flicker\nimprovement, III CFA improvement, IV Low layer sensor improvement, V Digital image processing improvement, VI Ap-\nplication improvement; ♂searchAnalysis, ὒ7Optimization, /syncUpgrade\nLayer Physical/Sensor Sensor Sensor/Data Prep. Data App.\nWork\n[18]\n[13]\n[51]\n[128]\n[48]\n[58]\n[12]\n[26]\n[10]\n[118]\n[39]\n[142]\n[19]\n[24]\n[84]\n[132]\n[121]\n[30]\n[63]\n[150]\n[101]\n[14]\n[149]\n[91]\n[90]\n[151]\n[111]\n[138]\n[50]\n[16]\n[65]\n[27]\n[154]\n[5]\n[164]\n[77]\nClass I I I I I I I II II II III III III IV IV IV IV I I V V V V V V V V V V V V V V I VI VI\nContr.♂search ♂search ♂search ♂search ♂search ♂searchὒ7♂searchὒ7 /sync ὒ7 ὒ7 /sync /sync /sync /sync /sync♂search ♂search ♂search ♂searchὒ7 ὒ7 ὒ7 ὒ7 ὒ7 ὒ7 /sync /sync /sync /sync /sync /sync♂search/sync /sync\nSafety ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓\nQuality ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓ ✓\nEffort\nthe image processing pipeline, the impact of adversarial distortions,\nprinted objects, or other physical attacks can potentially be reduced.\nA similar approach is given by Zhang et al. [160].\nBy considering light outside the human visible spectrum, both\nthe image sensor and data processing algorithms can be optimized\nto improve the performance of pedestrian detection algorithms [65].\nNevertheless, such major changes typically require more effort than\nsoftware-based image processing pipeline modifications.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5.4 Data Preparation Layer",
+      "level": 2,
+      "text": "I Environmental and Data Processing Analysis:Nearly all\nbasic image processing functions can be integrated with on-chip\nprocessing in the sensor layer, as the processing steps between these\nlayers often overlap. Only more complex image transformations,\nsuch as image compression algorithms, are typically handled by\nthe more capable ISP. Therefore, analyzing image compression\nalgorithms and their impact on object detection algorithms [5] is\ncrucial in defending against attacks on image transformations [2].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.5 Application Layer",
+      "level": 2,
+      "text": "VI Application Improvements:All research in this layer aims\nto enhance the software algorithms. Similar to the security-related\nresearch on the application layer discussed in §3.4, we explicitly\nexclude work that does not involve components of the image pro-\ncessing pipeline or is not specifically applicable to autonomous\ndriving. Existing surveys and reviews [ 75, 159, 162] provide an\noverview of methods to create robust CV algorithms that operate\non the application layer.\nEnhancing the performance of image detectors [77] can improve\nthe robustness of object detection algorithms in autonomous vehi-\ncles, particularly in scenarios where vehicles are far away. Another\napproach to increase robustness on the application layer is im-\nproving classification algorithms through fine-tuning with noisy\ndata [164], which could be further enhanced with more realistic\nimage sensor noise simulations [12]. Both methods share the po-\ntential to counteract adversarial perturbations, whether through\ndigital images, printed objects, or adversarial distortions in the\ndigital domain.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6 Linking Robustness and Security Work",
+      "level": 1,
+      "text": "Security and robustness research on camera pipelines has largely\nevolved in parallel, with little awareness of each other’s advances.\nAs a result, several well-known attacks have been discussed in\nsecurity literature without consistently acknowledging that rele-\nvant mitigations were already available, sometimes for decades.\nFor example, camera blinding attacks on automotive systems, first\nreported in 2015 [100], were often examined without reference to\nHDR imaging, a technique introduced in 1994 [84] to better capture\nhigh dynamic range scenes. Similarly, rolling shutter exploits lever-\naging flickering light [117] appeared after the introduction of LED\nflicker mitigation in automotive image sensors [10, 26, 118], yet this\ndefense is not addressed in security papers. Our SoK links robust-\nness and security research, uncovering overlooked connections and\nenabling both communities to adapt proven solutions. We make\nthese connections visible by mapping attack classes from Table 1\nto robustness mechanisms from Table 3 in Table 4. This shows not\nonly where existing robustness measures align with security needs,\nbut also where countermeasures remain absent and which layers\nhave the highest overlap. The layers defined in Figure 2 are used to\ndistinguish where the work operates.\nParticularly adversarial distortions in the physical world ( 1○\nand 2○) and application layer ( 7○) not only received defenses in\nthe security domain but also show high similarities with existing\nrobustness research working on several layers. Since these attack\nclasses rely on precisely calculated distortions, different robustness-\nrelated research can be applied to possibly mitigate the impact of\nsuch attacks. Similarly, blinding through targeted light ( 3○) is not\nonly defended from a security perspective [ 157] but also closely\nrelated to existing analyses ( I ) and upgrades ( IV and V ) from\na robustness perspective. Additionally, well-known robustness mea-\nsures, such as light flicker mitigation technologies ( II ), can help\nmitigate rolling-shutter attacks ( 6○) that exploit the sensor sensi-\ntivity to fast flickering light. Such close relations show that the\nwhole image processing pipeline must be considered when crafting\nboth attacks and defenses on camera systems. Another observa-\ntion is the distribution of the work among the layers: The data\npreparation layer received significantly more robustness-related\nresearch, while the security research showed more available work\nin the physical world. By contrast, highly specialized, recent timing\nattacks [80, 92] neither have directly related countermeasures nor\nKühr et al.\nTable 4: Comparing security- and robustness-related research work. Many works act on similar operational principles. As\nhighlighted by the green references, some attack classes received additional research from defensive security work.\nLayer Physical Sensor Data Prep. App.\nClass Security 1○ 2○ 3○ 1○ 3○ 4○ 5○ 6○ 5○ 5○ 7○ 8○\nRobustness Work [99] [41]\n[93] [78]\n[7] [34] [105] [57]\n[69] [135] [54] [49]\n[61] [60] [161] [89]\n[100] [11]\n[31] [52]\n[133]\n[145]\n[82]\n[163]\n[114]\n[137]\n[59]\n[67]\n[76]\n[98] [53] [21] [117] [46]\n[71] [153] [68] [35]\n[103] [72]\n[73] [146][2]\n[148]\n[15]\n[115]\n[80]\n[92]\nPhysical/\nSensor I\n[18] [13]\n[51] [128]\n[48] [58]\n [36]\n [36]\nSensor\nI [12]\nII\n[26]\n[10]\n[118]\nIII\n[39]\n[142]\n[19]\nIV [24] [84]\n[132] [121]\nSensor./\nData Prep.\nI [63]\n[30]\nV\n[150] [101] [14]\n[149] [91] [90]\n[111] [138] [50]\n[65] [27] [154]\n[151] [16]\n[87]\n [104]\n[87]\n[87] [87]\nData Prep. I [5] [160] [160] [160]\n [160]\nApp. VI [77] [164]\n [47, 79, 83]\n [47, 79, 83] [47, 157] [157]\n [47, 79, 83]\nshow strong similarities to existing robustness-related research.\nThe consideration of robustness-related research and the com-\nplete image processing pipeline is necessary, since existing security\nindustry standards [87] can protect only a fraction of possible at-\ntacks. Especially attacks that originate in the physical world (1○, 2○,\nand 3○), or attacks that exploit specific sensor characteristics ( 4○,\nand 6○) are still possible with state-of-the-art security measures of\nindustry standards.\nObservation 5:Robustness research on the image processing\npipeline is unevenly distributed: many works concentrate on the\nsensor and data preparation layers, often with high-effort hard-\nware upgrades, while the physical world and application layers\nsee less direct attention. Certain approaches, particularly envi-\nronmental and processing analyses, appear in multiple layers,\nreflecting their potential to thwart attacks across the pipeline.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "7 Image Processing Pipeline Testbed",
+      "level": 1,
+      "text": "To leverage the insights from our SoK, we built PICT, an image\nprocessing pipeline testbed designed for academic experimentation.\nPICT is not intended to replicate the full complexity of commercial\nmulti-camera stacks, but to embody the complexity and extensive\nconfiguration options of the image processing pipeline identified\nas missing in existing tools. It allows for manipulating image pro-\ncessing pipeline parameters and investigating intermediate images,\ncontributing to both security research from Table 1 and robustness\nresearch of camera systems from Table 3. Moreover, it facilitates\ndeveloping and testing attacks and countermeasures on the im-\nage processing pipeline by enabling controlled image capture with\ndefined settings. Despite the significant demand for such a plat-\nform, to our knowledge, no open testbed simultaneously offers\nrealistic hardware, comprehensive pipeline-layer coverage, and\nreproducibility.\nMany existing studies, such as [ 2, 7, 18, 19, 22, 24, 30, 47, 73,\n148], have conducted evaluations without fully utilizing hardware\ntestbeds, relying instead on existing datasets or simulations [14, 15,\n80, 99, 105]. On the other hand, real-world evaluations involving\nhardware testbeds often use one of two types of image-capturing\ndevices: (i)Smartphone cameras[ 17, 21, 34, 35, 57, 59, 68, 71, 76, 117,\n153, 160, 161], or (ii)(Semi-) Professional cameras[ 12, 27, 41, 72, 90,\n128, 154, 160]. Finally, existing testbeds for interacting with image\nprocessing pipeline layers do not represent state-of-the-art technol-\nogy [1, 112]. These observations motivate the development of PICT,\na testbed with embedded hardware and software for evaluating\nmultiple pipeline parameters.\nDesign Considerations:Based on the limitations of existing\nsolutions, we outline key design considerations of PICT:\n(1) Representative image sensor: It should feature realistic\nsensor sizes, as these impact image quality. For example,\nthe iPhone 8 Plus as used in [ 17] has a sensor size of\n32.3 mm2 [25], whereas the EOS Rebel T6i, used in [ 41],\nhas a much larger sensor of 332.3 mm2 [29]. As a reference,\nautomotive sensors are typically smaller with a sensor\nsize of≈ 25 mm2 [95, 96, 113]. Lastly, it should cover a\nwide field of view of ≥100°, similar to real automotive\ncameras [23, 88, 110, 131, 155].\n(2) Use case consideration: PICT should be able to configure\nsettings that align with automotive CV algorithms rather\nthan visually appealing images. Features like advanced lens\nsystems, including optical zoom, which are uncommon or\nunavailable in automotive systems, should not be consid-\nered.\n(3) Modularity and hardware access: PICT should allow for\nSoK: Security of the Image Processing Pipeline for Camera-based Sensing in Autonomous Vehicles\nlow-level access to sensor interconnections, which is often\nrestricted in fully assembled devices. This enables the usage\nof alternative image sensors for specific requirements.\n(4) Consideration of all layers: PICT must encompass all layers\nof the image processing pipeline, as depicted in Figure 2.\nCurrent testbeds often overlook lower layers, such as the\nsensor layer [64].\nHardware Architecture:PICT uses aCamera Module 3 Widewith\na Sony IMX708 image sensor for evaluation and development with\nmax. 11.9MP and a 102°field of view [ 107]. This camera module\nsupports real-world automotive features, such as anHDR mode, and\nmany settings that can be controlled manually. We use aRaspberry\nPias an embedded device with the MIPI-CSI-2 camera interface that\nis also used in automotive systems on chip [109]. The Raspberry\nPi is solely selected for its ability to provide an easily configurable\nenvironment that aligns with the purpose of the testbed, making\nit an appropriate choice for our investigation. It is not part of the\nperformance characteristics of the image processing pipeline. With\na hardware investment of≈ $70, this enables researchers to cost-\neffectively analyze the image processing pipeline. At the same time,\nthe use of standardized interfaces and easily available hardware\ncomponents allows modifications, such as adding other sensors.\nSoftware Architecture:To capture and evaluate images, we offer\nthree software tools that enable interaction with different mod-\nules of the image processing pipeline. The modular design and\nstandardized data formats facilitate integration with other tools:\n(1) Image Capturing: Allows the capturing of images both be-\nfore and after the ISP, including the configuration of the\non-chip processing and the ISP parameters. Since the cam-\nera module transmits only one image to the Raspberry Pi,\nboth images can be compared since there is no delay or\nsecond exposure.\n(2) Low-Level Analysis: Enables a manual inspection and analy-\nsis of two captured images. It allows researchers to investi-\ngate the effect of parameter changes on the captured image.\nBesides visual inspection, it calculates statistical metrics.\n(3) Application-specific Analysis: We provide a Faster R-CNN-\nbased object detection tool as an example software [108].\nBy reading both the pre-ISP and post-ISP image files, PICT\nallows for the analysis of how individual parameters impact\nobject detection. Additionally, PICT supports custom tools\ndue to the use of standardized data formats.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t3",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "8 Evaluation",
+      "level": 1,
+      "text": "We will demonstrate the usability and benefits of PICT as well as\nthe influence of the holistic consideration of the image processing\npipeline by: (i) showcasing PICT’s ability to test proposed defense\nmechanisms of Table 4; (ii) providing a better understanding of at-\ntacks through analysis capabilities and supporting a more accurate\nrealization of attack scenarios <, and (iii) highlighting PICT’s im-\npact by comparing its result with unrealistic mobile phone cameras,\ncommonly used in research. We selected representative attacks of\ndifferent classes, but other attacks can be evaluated similarly.\n(a) Reference image\n (b) HDR inactive\n (c) HDR active\nFigure 3: Defensive analysis: blinding attack and HDR imag-\ning as a possible mitigation for the region of interest.\n−150 −100 −50 0 50 100 150 200 2500\n200\n400\n600\n800\n1,000\n1,200\n1,400\n1,600\nImage Difference per color component in DN\nAmount of pixels\nRed\nGreen\nBlue\nFigure 4: Histogram of the difference of Figures 3b and 3c.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "8.1 Defensive Use Case Analysis",
+      "level": 2,
+      "text": "We use PICT to evaluate HDR imaging [84, 143] as a mitigation\nfor camera blinding attacks [100], an example of the overlooked\nrobustness–security connections discussed in §6. While camera\nblinding poses a significant risk, our test shows that HDR function-\nality reduces the effect of highly saturated regions in the image.\nFor our test, we placed a real stop sign 10 meters away from our\ntestbed and positioned the laser of a commercially available laser\nrangefinder (Leica Disto A5) directly below the stop sign, aimed\nstraight into the camera. The benign reference image is shown in\nFigure 3a. The correct stop sign goes undetected when the camera\nis blinded and HDR is inactive. Figure 4 shows the histogram of\nthe difference between Figure 3b (without HDR) and Figure 3c\n(with HDR) of the post- ISP image as one possibility to compare\nthe images with the low-level analysis tool. While the red color\nchannel shows a high amount of equal pixel values, representing\nthe saturated pixels of the laser beam, there is a local maximum at\nan image difference of approx. 25 DN. By contrast, the green and\nblue channels show a maximum difference at a negative value. This\nmeans that the non-HDR image (Figure 3b) shows a more intense\nred color in the analyzed region, while green and blue are stronger\nin the HDR image (Figure 3c). This stronger color differentiation\ncan explain why the stop sign is detected in the HDR image. The\nfurther the maxima of the individual color components drift apart,\nthe higher the impact of the HDR since the color components will\nbe strongly separated.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3a"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "8.2 Attack Use Case Analysis",
+      "level": 2,
+      "text": "In another use case analysis, we use PICT to demonstrate how\nlow-level pipeline analysis can bridge the gap between digitally\ndesigned attacks and their physical-world counterparts. For this\ntest, we use adversarial patches of [120], a variant of [34], which\nKühr et al.\n(a) Physical world\nsticker\n(b) Original digital\nsticker\n(c) Improved digital\nsticker\nFigure 5: Attack use case analysis: Physical adversarial sam-\nple compared to digital representation and improved digital\nrepresentation for the region of interest.\n0\n200",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "400 Physical world sticker",
+      "level": 1,
+      "text": "0\n200",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "400 Original digital sticker",
+      "level": 1,
+      "text": "Amount of pixels\n0 50 100 150 200 2500\n200",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "400 Improved digital sticker",
+      "level": 1,
+      "text": "Pixel intensity in DN\nFigure 6: Histograms for the upper stickers in Figure 5.\napplies an adversarial patch to a stop sign to evade detection by the\nYOLO object detector. We select this use case since some attacks [31,\n34] provide a digital simulation of the physical stickers to create\nand optimize the adversarial patch. In the first step, we capture a\nreal-world stop sign with the applied printed sticker as shown in\nFigure 5a. We use this image to replace the printed sticker with a\ndigital overlay, depicted in Figure 5b. By performing a low-level\nanalysis, we can see the impact of the overall image processing\npipeline and iteratively improve the digital sticker to represent the\nprinted one more accurately in Figure 5c.\nAlthough the real-world hiding attack leads to a low confidence\nof 0.48 in Figure 5a, the original digital sticker results in a more\nsuccessful hiding attack in Figure 5b. Figure 6 shows in the upper\nplot that the histograms of the physical and digital representation\nof the sticker deviate significantly. By adjusting the brightness of\nthe digital sticker based on the low-level analysis, we can reach a\nconfidence of 0.47 for the improved digital sticker, which is close to\nthe confidence of the physical sticker. As shown in the lower plot\nof Figure 6, the intensity follows the physical sticker closer.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f5a",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "8.3 Processing Pipeline Use Case Analysis",
+      "level": 2,
+      "text": "As previously shown, many attacks were evaluated using mobile\nphone cameras [17, 21, 34, 35, 57, 59, 68, 71, 76, 117, 153, 160, 161].\nWhile convenient, they have image sensors, optics, and ISP config-\nurations that differ significantly from automotive cameras, leading\nto attack evaluations that may not transfer to real systems. We use\nPICT to compare the effect of adversarial RP2 patches [34] when\ncaptured with an automotive-like camera and a mobile phone. For\nour test, we use an iPhone SE 2020 [43], with a comparable camera\nas in the original work [34, 42, 44]. We craft the stickers to perform\na targeted attack against the Inception v3 classifier model [ 126]\n(a) PICT, classified as\na \"traffic sign. \"\n(b) iPhone, classified\nas a \"moving van. \"\nFigure 7: Impact analysis: While the patched stop sign from\nthe iPhone is repeatedly misclassified, images captured with\nPICT are correctly classified by Inception v3.\nto misclassify a \"traffic sign\" into a \"spindle, \" an arbitrarily chosen\ntarget class. As shown in Figure 7, we captured ten images of the\nadversarially patched stop sign with PICT and an iPhone SE 2020.\nAlthough both image sensors capture images with≈12MP, iPhone\nimages from Figure 7b are constantly misclassified with an aver-\nage confidence of 0.40. By contrast, PICT images from Figure 7a\nare only misclassified in three out of ten images with an average\nconfidence of 0.18. We repeated the measurements in a darker en-\nvironment, confirming these results: All captured iPhone images\nare misclassified, while images captured with PICT are not. This\nuse case analysis shows that different cameras with different con-\nfigurations can yield significantly different attack results, despite\ncapturing images under identical environmental conditions.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "9 Conclusion",
+      "level": 1,
+      "text": "In this SoK, we investigated security-related research on all lay-\ners of the image processing pipeline. We classified the attacks on\nthis pipeline by adapting the automotive security standard ISO",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "21434 Additionally, we surveyed robustness-related research on",
+      "level": 1,
+      "text": "the pipeline and identified six main classes of work. By analyzing\nboth security- and robustness-related research, we aimed to take a\nfirst step towards closing the existing research gap between these\ndomains and identified the need for a testing environment. With\nour proposed testbed PICT, we enable researchers to modify several\ncomponents on all layers of the pipeline and analyze the system\nimpact of individual component changes, allowing further research\non security and robustness. Three use case analyses show the bene-\nfit of our testbed and highlight that the two research domains must\nbe considered in unison. Future work on the five identified research\ngaps can help make the overall system more secure and robust.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Abstraction of the image processing pipeline of"
+    },
+    {
+      "id": "f2",
+      "caption": "illustrates a manufacturer-agnostic image processing pipe-"
+    },
+    {
+      "id": "f3",
+      "caption": "Defensive analysis: blinding attack and HDR imag-"
+    },
+    {
+      "id": "f4",
+      "caption": "Histogram of the difference of Figures 3b and 3c."
+    },
+    {
+      "id": "f3a",
+      "caption": "The correct stop sign goes undetected when the camera"
+    },
+    {
+      "id": "f5",
+      "caption": "Attack use case analysis: Physical adversarial sam-"
+    },
+    {
+      "id": "f6",
+      "caption": "Histograms for the upper stickers in Figure 5."
+    },
+    {
+      "id": "f5a",
+      "caption": "We use this image to replace the printed sticker with a"
+    },
+    {
+      "id": "f7",
+      "caption": "Impact analysis: While the patched stop sign from"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "The mapping of the security-related work into the four layers of the image processing pipeline and the eight attack"
+    },
+    {
+      "id": "t2",
+      "caption": "Evaluation of attacks sorted by layer and evaluated risk. Category details are available in Appendix B."
+    },
+    {
+      "id": "t3",
+      "caption": "Layer classification of robustness-related work: I Environmental and data processing analysis, II Anti-Flicker"
+    },
+    {
+      "id": "t4",
+      "caption": "Comparing security- and robustness-related research work. Many works act on similar operational principles. As"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

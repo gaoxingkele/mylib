@@ -1,0 +1,359 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-13-01165.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Background",
+      "level": 2,
+      "text": "Stable, uninterrupted, and high-quality electricity helps to keep industry and society \nrunning. Considering that electricity cannot be  stored, accurate forecasting of electricity \nload has a significant impact on the reliability of a power system and economic develop-\nment. In particular, daily load forecasting plays a vital role in the daily operational manage-\nment of power companies, such as energy transfer scheduling, unit combination, and load \ndispatch [1,2]. As an integral part of the daily operation and management of power compa-\nnies, the accurate prediction of residents’ daily load is of great significance to urban power \ngrid planning and power market operation. Overestimation will increase operating costs, \nand underestimation will lead to power shortages [3,4]. With more and more interactive \nadjustments between residents’ electricity demand, power supply, and power grid, the in-\nformation interaction between large-scale users and a power grid generates massive data \n[5,6]. Residential load data have the characteristics of fine granularity, strong volatility, sig-\nnificant difference, and large data volume. This brings new challenges to grid load forecast-\ning [7]. \nIn traditional resident load forecasting, scholars at home and abroad have put forward \nsome methods, which can be divided into two types. One is the time series method, and the \nCitation: Cao, J.; Zhang, R.-X.;  \nLiu, C.-Q.; Yang, Y.-B.; Chen, C.-L.  \nA Group Resident Daily Load  \nForecasting Method Fusing  \nSelf-Attention Mechanism Based on \nLoad Clustering. Appl. Sci. 2023, 13, \n1165. https://doi.org/10.3390/  \napp13021165 \nAcademic Editor: Luis  \nHernández-Callejo \nReceived: 13 December 2022 \nRevised: 12 January 2023 \nAccepted: 13 January 2023 \nPublished: 15 January 2023 \n \nCopyright: © 2023 by the authors. \nSubmitted for possible open access \npublication under the terms and \nconditions of the Creative Commons \nAttribution (CC BY) license \n(https://creativecommons.org/license\ns/by/4.0/). \n\nAppl. Sci. 2023, 13, 1165 2 of 21 \n \nother is the artificial intelligence method. Tr aditional time series methods include Auto-\nregressive Integrated Moving Averages, Seasonal Autoregressive Integrated Moving Aver-\nages, and Vector Autoregressive Moving Averages [8]. ARIMA and SARIMA are suitable \nfor univariate load forecasting [9,10]. VARMA is suitable for multivariate time series fore-\ncasting, and it requires a high stability of the series [11]. Traditional time series models are \nconsidered linear models, while the load forecasting problem is nonlinear. Recently, more \nand more researchers prefer to use artificial intelligence methods on load forecasting prob-\nlems. \nArtificial intelligence prediction methods include support vector machines, artificial \nneural networks, etc. However, existing microgrid daily load forecasting research mainly \nfocuses on the power generation side, for ex ample, on the prediction of thermal power \nand solar lamp power generation equipment. There is insufficient research on short-term \nload forecasting on the electricity side. Resear ch on residential load forecasting often fo-\ncuses on residential load forecasting for individual households, and there is a lack of re-\nsearch on group residential load forecasting. For example, one study [12] used wavelet \ntransform and support vector machines to predict the time series of residential loads. \nHowever, the above methods are for load forecasting of individual residents. The authors \ndid not take into account the situation of the population of the group. Another study [13] \nproposed a linear regression short-term load forecasting model considering the influence \nof working time and meteorological factors, but its error is relatively large. The main rea-\nson is that it lacks the ability to handle shar p fluctuations in the load profile, and noisy \ndata have a large negative impact on load forecasting. Another reason is that it lacks the \ntreatment of the strong fluctuation of the load  curve. Undecomposed load noise is large, \nand the direct prediction error is large. Re ference [14] integrates empirical mode decom-\nposition, particle swarm optimization, and an adaptive network-based fuzzy inference \nsystem. This method decomposes the load and reduces the noise to a certain extent, but it \ndoes not introduce an attention mechanism based on the neural network. As a result, it \nobtains the same prediction feature weights and can still be further improved. \nTo summarize, the previous methods have three problems in the daily load forecast-\ning of group residents. Firstly, the load data of group residents have the characteristics of \nhigh dimensionality and large amount of data. Existing research tends to predict the load \nof individual residents, and there is a lack of research on the data characteristics of group \nresidents’ load. Secondly, there is a lack of treatment for the fluctuation of the load curve. \nThe traditional method is fixed in the noise reduction time base function, and there is no \nadaptive matching signal which leads to noisy forecast data. Thirdly, the time series in-\nformation is assigned the same weight, and the important information of the load data is \nnot fully utilized in the prediction. Therefore, to solve the above problems, we propose a \ngroup resident daily load forecasting method. This method successfully reduces the fore-\ncast error and realizes the different daily load forecasts of group residents. \nThe structure of this paper is as follows: Section 2 introduces the theoretical basis of \nthe daily load forecasting method. Section 3 introduces the experimental analysis and ex-\nperimental results, and Section 4 is the conclusion.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Related Works",
+      "level": 2,
+      "text": "Accurate load prediction is very important for the energy generation, energy dispatch-\ning, and smooth operation of a power grid. It can also promote the maximum utilization of \nrenewable resources and reduce the loss of primary energy in the power grid [15]. The user-\nside power grid, with residential quarters and commercial residences as the main compo-\nnents, is an effective carrier for local consumption and utilization of renewable energy. It \nundertakes the function of coordinating distributed power and user load [16]. According to \nexisting statistics, the urban user-side power grid load reached more than 60% of the total \nnon-industrial load of a city, becoming an important part of the urban power system [17]. \nIn the power grid environment, due to the difference in consumption patterns among resi-\ndents, the load prediction of group residents is more challenging than that of substations. \nAppl. Sci. 2023, 13, 1165 3 of 21 \n \nHippert et al. [18] classified electrical lo ad based on forecast range into short-term \nload forecast, medium-term load forecast, an d long-term load forecast. Short-term load \nforecasting models range from a few minutes to a few days. Daily load forecasts fall within \nthe scope of short-term load forecasting. Shor t-term load forecasting is often used in a \npower grid to bridge the gap between energy generation and demand. \nDifferent from traditional residential load forecasting, load forecasting methods for \na single building or a small number of buildings have challenges when dealing with the \nlarge number of users collected by smart meters. For example, cluster-based load forecast-\ning methods have attracted more and more attention. In Ref. [19], a K-Means algorithm is \napplied to specific features of the load profile. They used the average consumption over a \nday, the average consumption for each day of the week, and the location of the peak over \nthe year as feature clusters. The final sum of predictions is derived from the deep learning \nmodel. They improved the predictive accuracy of Irish datasets and smart meters in New \nYork by 11%. In Ref. [20], a load prediction model based on improved fuzzy c-mean clus-\ntering is proposed. It filters out the weakly correlated features from adjacent load values \nand uses similar local daily data as input features. The above methods did not study th \nload forecasting of the group residents. The problems of large dimension of load data and \nobvious difference in load curve are not taken into account.  \nAlthough clustering is a good solution, it  can be optimized before making predic-\ntions. Because of the nonlinearity and nonstationarity in residential load data, it is difficult \nto describe the moving tendency of electric load and to improve the forecast accuracy. To \nestablish a suitable and effective forecasting model, the original data features of the resi-\ndential short-term electric load need to be fully considered and analyzed. In Refs. [21,22], \nboth papers propose a method for short-term electrical load prediction combining wavelet \ntransforms and neural networks. The authors combine the wavelet transforms with neural \nnetworks for short-term electrical load forecasting. Despite the wavelet transforms becom-\ning a standard for the analysis of nonlinear and nonstationary signals, there is still the \nproblem of high prediction noise for computing and failure. \nIn terms of predictive models, cutting-edge artificial intelligence methods represented \nby deep learning are developing rapidly. For example, one study [23] proposes an improved \ndeep learning method that improves the accuracy and generalization ability of an infrared \nsmall object detection problem. In contrast to shallow learning, deep learning generally re-\nfers to stacking multiple layers of neural networks and relying on stochastic optimization to \nperform learning tasks. Among these methods, the convolutional neural network (CNN) is \na type of feedforward neural network that in cludes convolutional calculations and has a \ndeep structure [24,25]. A recurrent neural network (RNN) is an artificial neural network in \nwhich nodes are directed to form a ring. The internal state of such a network can exhibit \ndynamic timing behavior. In theory, it can use historical information of any length, so it can \nmodel time series more completely [26]. However, RNN has the problem of gradient disap-\npearance and gradient explosion during training. Therefore, researchers have improved it \nand proposed the Long Short-Term Memory (LSTM) network [27]. One study [28] proposes \na deep Long Short-Term Memory (LSTM)-based ultra-short-term prediction method for re-\ngional-level loads based on big data resources.  It visually demonstrates the extraction of \nabstract features from the load data by usin g a deep learning algorithm and confirms its \ngood feature learning capability. Reference [29] predicted daily peak load based on Bi-di-\nrectional Long Short-Term Memory (Bi-LSTM) and feature correlation analysis. Another \nstudy [30] proposes an LSTM-based ultra-short-term prediction method for regional-level \nloads based on big data resources. It visually demonstrates the extraction of abstract features \nfrom the load data by using a deep learning algorithm and confirms its good feature learn-\ning capability. However, the authors did not take into account the issue of the weighting of \nadjacent individual load values on the prediction results. This results in the hidden layer \nmissing such critical information, which ultimately reduces the prediction accuracy. \nAppl. Sci. 2023, 13, 1165 4 of 21 \n \nThis paper addresses the method of daily load forecasting for groups of residents by \nfirst clustering similar load curves. The prediction models in each cluster are then fitted. \nFinally, the predictions from each cluster are summed to obtain the final predicted value.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "This paper comprehensively considers the pr oblems of residents’ load differentia-\ntion, high noise, and the same weight. We propose a group resident daily load forecasting \nmethod fusing a self-attention mechanism based on load clustering. \nIn the first step of the method in this pape r, the missing values are first filled in the \noriginal residential electricity data set, and then the time granularity is set. In the second \nstep, this paper proposes to use the singular value decomposition (SVD) method to reduce \nthe dimensionality of the residential load data to solve the problem of slow processing of \nmassive power consumption data. Then, we use the K-Shape method to cluster the residen-\ntial electricity consumption data and conduct differential analysis to solve the difference in \nresidential electricity consumption. In the third step, the clustered typical resident load is \ndecomposed by using the superior signal decomposition ability of the modal decomposition \nmethod to obtain the IMF component data set. This overcomes the problem of strong data \nvolatility and reduces noise. In the fourth step, the mixed fo recasting method is selected, \nand a Bi-LSTM-Attention (BLA) load forecasting model considering the time series feature \nweight is constructed to obtain accurate forecasting results. The Bi-LSTM model has the ad-\nvantage of obtaining contextual information about the time series data, and it can take into \naccount the influence of different time dimensions in the input sequence on the load. The \nintroduction of the attention mechanism enables different weights to be assigned to the load \nfeatures at different times, which can make full use of the key information of the hidden \nlayer. In the fifth step, the component predictions are summed to obtain the final prediction. \nThe overall research idea of this method is shown in Figure 1. \nAppl. Sci. 2023, 13, 1165 5 of 21 \n \n \nFigure 1. The framework of the daily load forecasting method.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Clustering Method Based on Dimensionality Reduction",
+      "level": 2,
+      "text": "The model proposed in this paper is based on the Bi-LSTM recurrent neural network, \nwhich is highly robust for modeling time series data. On this basis, we introduce the at-\ntention mechanism to assign different weights to the temporal features and the external \nfeatures at the same time. This highlights the key features within the input data that play \na key role in the residential electricity usage forecasting process. It helps to improve the \naccuracy of short-term load forecasting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.1 Dimensionality Reduction Method Based on SVD",
+      "level": 3,
+      "text": "Singular value decomposition (SVD) is an important matrix decomposition in linear \nalgebra, it is based on the generalization of arbitrary matrices [31]. Singular value decom-\nposition is similar in some respects to eigenvector-based diagonalization of symmetric or \nHermite matrices [32].  \nGiven a matrix 𝐴 of size m×m , it is decomposed diagonally, such as in Equation \n(1):\n  \n𝐴 =𝑈 𝛬 𝑈ିଵ (1)\nIn this equation, each column of 𝑈 is an eigenvector, and the elements on the 𝛬 di-\nagonal are the eigenvalues arranged from large to small. If 𝑈  is recorded as 𝑈=\n(𝑢ሬ⃗ଵ,𝑢ሬ⃗ଶ,...,𝑢 ሬ⃗௠), then the results are calculated as shown in Equation (2):  \n\nAppl. Sci. 2023, 13, 1165 6 of 21 \n \n𝐴𝑈= 𝐴(𝑢ሬ⃗ଵ,𝑢ሬ⃗ଶ,...,𝑢 ሬ⃗௠)=( 𝜆ଵ𝑢ሬ⃗ଵ,𝜆 ଶ𝑢ሬ⃗ଶ,...,𝜆 ௠𝑢ሬ⃗௠)\n= (𝑢ሬ⃗ଵ,𝑢ሬ⃗ଶ,…,𝑢ሬ⃗௠) ൥\n𝜆ଵ ⋯0\n⋮⋱ ⋮\n0⋯ 𝜆 ௠\n൩ \n⇒ 𝐴𝑈=𝑈 𝛬⇒ 𝐴 =𝑈 𝛬 𝑈ିଵ \n(2)\nwhen matrix 𝐴 is a symmetric matrix, and it is decomposed symmetrically and diago-\nnally, as shown in Equation (3):  \n𝐴 =𝑄 𝛬 𝑄் (3)\nIn this equation, each column of 𝑄 is a mutually orthogonal eigenvector and is a unit \nvector, and the elements on the 𝛬 diagonal are eigenvalues arranged from large to small. \nWhen the matrix 𝑄 is written as 𝑄=( qሬ⃗ଵ,qሬ⃗ଶ,...,q ሬ⃗୫), then the matrix 𝐴 can also be \nwritten as shown in Equation (4):  \n𝐴 =𝜆 ଵ𝑞⃗ଵ𝑞⃗ଵ\n் +𝜆 ଶ𝑞⃗ଶ𝑞⃗ଶ\n்+. . . +𝜆௠𝑞⃗௠்  (4)\nThe goal of the singular value decomposit ion method is to find a mapping matrix, \nand then multiply it with the original data 𝐴, to achieve the effect of dimensionality re-\nduction, which is suitable for the massive residential electricity numerical data collected \nby smart meters. Dimensionality reduction of data through singular value decomposition \nnot only reduces the data dimension and accelerates model training, but it also effectively \nfilters noise data and improves model generalization.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.1.2 Clustering Method Based on K-Shape",
+      "level": 3,
+      "text": "Clustering is an unsupervised method that can divide data sets into several groups \nbased on the similarity and distance between the data without prior information [33]. We \ndivide the residents into different clusters according to the annual load curve and estab-\nlished a separate model for each cluster. Existing clustering algorithms mainly include \nhierarchical clustering, partition-based clustering, density-based clustering, grid-based \nclustering, and model-based clustering. \nK-Shape is one of the most advanced time series clustering algorithms based on K-\nMeans [34]. To cope with time series, K-Shape uses shape-based distance to evaluate the \nsimilarity between two curves. In addition, shape-based distance uses cross-correlation \ndistance to identify the minimum distance between two curves, even if they are not \nproperly aligned. Specifically, the K-Shape method is shown in the following steps: \nStep 1: K-Shape calculates the distance be tween two-time series by using the cross-\ncorrelation method. We suppose there are two-time series X and Y, both of length m. To \nachieve translational invariance, Y is set as the constant, and we delimit X step by step \nand calculate the difference between X and Y at  each step. This is shown in the formula \nbelow: \n𝑥పሬሬሬ⃗(𝑠) =൞( 0 ,..., 0ᇩᇭᇪᇭᇫ\n|௦|\n,𝑥 ଵ,𝑥 ଶ,...,𝑥 ௠ି௦),              𝑠 ≥ 0\n(𝑥ଵି௦,...,𝑥 ௠ିଵ,𝑥 ௠,0 ,..., 0ᇣᇤᇥ\n|௦|\n),         𝑠 < 0  (5)\nStep 2: The difference depends on the numb er of cross-relations, which represents \nthe number of K-Shape cross-relations  𝐶𝐶ఠ(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)=𝑅 ఠି௠(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗) , including 𝜔∈\n{1 , 2 ,..., 2 𝑚−1}. 𝑅ఠି௠(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)  can be divided into two cases, as shown in Equation (6): \n𝑅ఠି௠(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)= ൞ ෍𝑥 ௟ +𝑘∙𝑦 ௟,       𝜔 − 𝑚 ≥ 0\n௠ି௞\n௟ୀଵ\n𝑅ఠି௠(𝑦 ሬሬ⃗,𝑥  ሬሬ⃗),             𝜔 − 𝑚 < 0\n  (6)\nAppl. Sci. 2023, 13, 1165 7 of 21 \n \n𝑅ఠି௠ is used to calculate the similarity be tween X and Y at each step. The dot prod-\nuct is calculated at the positions present in both X and Y. The final R is the sum of the dot \nproducts of the valid regions. It can be said that the larger R is, the more similar the two \nsequences are. \nStep 3: K-Shape defines the shape-based distance (SBD). The more the blocks overlap, \nthe bigger the shape is like 𝐶𝐶. To compare the similarity values of all possible positions, \nwe take the most similar Max ( 𝐶𝐶) and then use 1−𝑚 𝑎 𝑥 ( 𝐶 𝐶 ) to obtain 𝑆𝐵𝐷, as shown \nin Equation (7): \n𝑆𝐵𝐷(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)=1−𝑚 𝑎 𝑥\nఠ\n( 𝐶𝐶ఠ(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)\nඥ𝑅଴(𝑥 ሬሬ⃗,𝑥  ሬሬ⃗)∙𝑅 ଴(𝑦 ሬሬ⃗,𝑦 ሬሬ⃗)\n) (7)\nStep 4: The more similar the shape, the smaller the distance 𝑆𝐵𝐷 is. The normalized \n𝑁𝐶𝐶 value is between [ −1, 1] and, therefore, the 𝑆𝐵𝐷 value is between [0, 2]. The 𝑁𝐶𝐶 is \ncalculated as shown in Equation (8): \n𝑁𝐶𝐶௤(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)=\n⎩\n⎪⎪\n⎨\n⎪⎪\n⎧ 𝐶𝐶ఠ(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)\n𝑚 ，                    𝑞 = “𝑏”(𝑁𝐶𝐶௕)\n𝐶𝐶ఠ(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)\n𝑚−| 𝜔 |，                     𝑞 = “𝑢”(𝑁𝐶𝐶௨)\n𝐶𝐶ఠ(𝑥 ሬሬ⃗,𝑦 ሬሬ⃗)\nඥ𝑅଴(𝑥 ሬሬ⃗,𝑥  ሬሬ⃗)∙𝑅 ଴(𝑦 ሬሬ⃗,𝑦 ሬሬ⃗)\n，        𝑞 = “𝑐”(𝑁𝐶𝐶௖)\n (8)\nStep 5: Once the distance is defined, you need to adjust the centroid algorithm based \non the distance logic. By looking for  𝜇௞ሬሬሬሬ⃗∗ , K-Shape makes the similarity between  𝜇௞ሬሬሬሬሬ⃗∗ \nand each sequence 𝑥௜ of 𝑃௞  as large as possible.  𝜇௞ሬሬሬሬሬ⃗∗ is calculated as shown in Equation \n(9): \n𝜇௞ሬሬሬሬ⃗∗ = argmax\nఓೖሬሬሬሬሬ⃗\n෍𝑁 𝐶 𝐶௖\n௫ഢሬሬሬ⃗∈௉ೖ\n(𝑥పሬሬሬ⃗,𝜇 ௞ሬሬሬሬ⃗)ଶ\n= argmax\nఓೖሬሬሬሬሬ⃗\n෍(\n௫ഢሬሬሬ⃗∈௉ೖ\n𝑚𝑎𝑥ఠ𝐶𝐶ఠ(𝑥పሬሬሬ⃗,𝜇 ௞ሬሬሬሬ⃗)ଶ\nඥ𝑅଴(𝑥పሬሬሬ⃗,𝑥 పሬሬሬ⃗)∙𝑅 ଴(𝜇௞ሬሬሬሬ⃗,𝜇 ௞ሬሬሬሬ⃗)\n)ଶ \n(9)\nThe final clustering method is realized through iteration, and each iteration is di-\nvided into two steps. The first step is to re calculate the centroid. The second step is to \nredistribute each sequence to different clus ters according to the distance between each \nsequence and the new centroid. We keep iterating until the tag stops changing. \nIn the daily load prediction of power grid group residents, the K-Shape method is \nused to deal with the load curve of group residents and cluster it. This method can balance \nthe large difference in electricity consumption habits among residents and reduce the \nheavy workload of forecasting individual residents. K-Shape relies on an extensible itera-\ntive refinement process that creates homogeneous and well-separated clusters. As its dis-\ntance measure, K-Shape uses a normalized ve rsion of the cross-correlation measure to \nconsider the shape of the time series when  comparing them. K-Shape is a domain-inde-\npendent, highly accurate, and efficient clustering method, and it is very suitable for time \nseries.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2 Noise Reduction Method Based on Empirical Mode Decomposition",
+      "level": 2,
+      "text": "After the differential analysis of residents, we can obtain the typical residential elec-\ntricity consumption data. However, the data for each type of residential electricity con-\nsumption are strong and noisy. To reduce the noise and further improve the prediction \naccuracy, we use the empirical mode decomp osition method to decompose the complex \noriginal signal. This method can decompose complex and unstable load signal into a rel-\natively stable Intrinsic Mode Function (IMF),  which is reconstructed into a more stable \nAppl. Sci. 2023, 13, 1165 8 of 21 \n \ntime series. By using the empirical mode decomposition method, the IMF component is \nselectively input into the subsequent prediction model to reduce noise and further im-\nprove prediction accuracy. The specific process is shown in Figure 2. \n \nFigure 2. The structure of the EMD. \nEmpirical mode decomposition (EMD) is a time–frequency analytical method of sig-\nnal proposed in 1998, where the signal refers to a time series signal [35]. Common time \nseries signal processing methods can be divided into three categories: time domain, fre-\nquency domain, and time–frequency domain [36]. Time-domain analytical features in-\nclude meaning, variance, kurtosis, peak-to-peak value, etc. Frequency-domain features \ninclude frequency, energy, etc. Time–frequency domain analysis includes wavelet trans-\nform, etc.  \nThe EMD theory holds that all signals are co mposed of a finite number of Intrinsic \nMode Functions. The IMF component contains local characteristic signals of different time \nscales of the original signal. The empirical mode decomposition method can make the \nnon-stationary data smooth, and then it performs the Hilbert transform to obtain the time \nspectrum diagram and the frequency with ph ysical meaning [37]. EMD decomposes the \ninput signal into several eigenmode functions and a residual, which is composed of the \nfollowing formula: \nI(n) =෍ 𝐼 𝑀 𝐹௠(𝑛) +𝑅 𝑒 𝑠ெ(𝑛)𝐼(𝑛)\nெ\n௠ୀଵ\n (10)\nwhere I(n) represents the input signal, 𝐼𝑀𝐹௠(𝑛) represents the intrinsic mode function \nof 𝑀௧௛, and 𝑅𝑒𝑠ெ (𝑛) represents the residual. Where in the process of extracting IMF is \ncalled screening, and the process of screening is as follows. \nFirst, we mark the local extreme points. Then, we connect the maximum points to \nform the upper envelope through a cubic spline line and connect the minimum points to \nform the lower envelope. After that, we find the mean value mଵ of the upper and lower \n\nAppl. Sci. 2023, 13, 1165 9 of 21 \n \nenvelope. Finally, we subtract the mean value mଵ of the upper and lower envelopes from \nthe input signal 𝑋(𝑡). \n𝐼(𝑛) −𝑚 ଵ =ℎ ଵ𝐼(𝑛) −𝑚 1 (11)\nOne iteration of the above process cannot guarantee that ℎଵ is an IMF, and the above \nprocess needs to be repeated until ℎଵ is an IMF. The iterative stopping criterion produces \nthe number of executions of an intrinsic modulus function screening process, and the stop-\nping criterion standard deviation (SD) used in this method is shown in Equation (12): \nSD୩ =෍ |ℎ௞ିଵ(𝑛) −ℎ ௞(𝑛)ଶ|\nℎ௞ିଵ\nଶ (𝑛)\n்\n௡ୀ଴\n (12)\nIn summary, EMD is atime–frequency domain signal processing method that can de-\ncompose signals based on the time-scale characteristics of the data without presetting any \nbasic functions. EMD has obvious advantages in dealing with non-stationary and nonlin-\near data. It is suitable for analyzing nonlinear and non-stationary signal sequences.  \nThis is because the basis functions of EMD are derived from the signal itself. There-\nfore, this analysis is adaptive compared to traditional methods where the basis functions \nare fixed. EMD is based on the sequential ex traction of energy associated with various \nintrinsic time scales of the signal, starting from finer time scales (high-frequency modes) \nto coarser time scales (low-frequency modes). The sum of IMFs is well-matched to the \nsignal, thus reducing noise while maintaining integrity.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.3 Bi-LSTM-Attention Model for Residential Daily Load Forecasting",
+      "level": 2,
+      "text": "To identify the hidden information in the time series for subsequent prediction, this \npaper introduces a self-attention mechanism based on Bi-LSTM to assign different \nweights to the time series data. The Bi-LSTM is used to capture the contextual information, \nand the important information of the time series data can be fully used by using the self-\nattention mechanism.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.3.1 Bi-LSTM Method",
+      "level": 3,
+      "text": "LSTM is proposed by Hochreiter, and it is a special RNN that can solve the problem \nof gradient explosion and gradient disappearance by adding a gate control mechanism \n[38]. To selectively update memory un its, LSTM introduces the unit state 𝑐",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "௧ to preserve",
+      "level": 1,
+      "text": "the long-term memory based on the hidden layer state  ℎ௧. This reflects the dependencies \nof adjacent times learned by the deep network at any time step and the institutional char-\nacteristics of the input data long before. \nEach LSTM calculation unit contains three control gates, an input gate i୲, an output \ngate o୲, and a forgetting gate 𝑓௧. When the input sequence is {𝑥ଵ,𝑥 ଶ,...,𝑥 ்}, including 𝑥௧ ∈\n൛𝑥௧,ଵ,𝑥 ௧,ଶ,...,𝑥 ௧,௞ൟ, ∈ 𝑅௞  represents the k-dimensional real vector data under the t-time \nstep. The internal updating process of the unit is as follows: \nThe forgetting gate 𝑓௧ is proposed to forget the state of the upper memory cell  𝑐௧ିଵ \ninformation. It can be expressed as shown in Equation (13): \n𝑓௧ =𝜎 ( 𝑊௙𝑥௧ +𝑈௙ℎ௧ିଵ +𝑏 ௙) (13)\nThe 𝑊௙ is the weight matrix of the forgetting gate. 𝑏௙ is the offset of the forgetting \ngate. 𝑥௧ is the current sample input. ℎ௧ିଵ is the output of the previous sequence. 𝜎, rep-\nresent the sigmod function. The input gate 𝑖௧ and the memory cell candidate status 𝑐௧෥ \nare calculated as shown in Equations (14) and (15): \n𝑐௧෥ =𝑡 𝑎 𝑛 ℎ ( 𝑊௖𝑥௧ +𝑈 ௖ℎ௧ିଵ +𝑏 ௖) (14)\n𝑖௧ =𝜎 ( 𝑊௜𝑥௧ +𝑈 ௜ℎ௧ିଵ +𝑏 ௜) (15)\nAppl. Sci. 2023, 13, 1165 10 of 21 \n \nwhere  𝑊௜ represents the weight matrix of the input gate; 𝑊௖ represents the weight ma-\ntrix of the candidate state; and 𝑏௜ and 𝑏௖ are the corresponding offset. By combining the \nlast-moment memory state 𝑐௧ିଵ and the current moment candidate’s memory state 𝑐௧෥, \n𝑖௧ and 𝑓௧ update the current moment memory unit state  𝑐௧, as shown in Equation (16): \n𝑐௧ = 𝑓௧ ∙𝑐 ௧ିଵ +𝑖 ௧ ∙𝑐 ௧෥ (16)\nwhere ∙ represents multiplication by element. The input gate 𝑜௧ is mainly used to con-\ntrol the output of the memory unit state value. The calculation of 𝑜௧ is shown in Equation \n(17): \n𝑜௧ =𝜎 ( 𝑊௢𝑥௧ +𝑈 ௢ℎ௧ିଵ +𝑏 ଴) (17)\nwhere 𝑊௢ is the weight matrix of the output gate, and 𝑜௧. 𝑏଴ is the offset of the output \ngate. The hidden layer output value h୲ is obtained by using nonlinear calculation, as \nshown in Equation (14): \nℎ௧ =𝑜 ௧ ∙𝑡 𝑎 𝑛 ℎ ( 𝑐௧) (18)\nThe unit weight and bias of each control cell in the above formula are used to predict \nthe load in the time series through training and learning. Usually, the LSTM network in-\nformation is a one-way transmission, and it cannot use future information. To adapt to \nthe various characteristics of daily load amplitude, this paper selects Bi-LSTM to construct \nthe prediction model. Bi-LSTM is formed by the combination of forward and backward \nLSTM, and the structure is shown in Figure 3. \n \nFigure 3. The structure of the Bi-LSTM model. \nForward LSTM can obtain the past data information of the input sequence. Backward \nLSTM can obtain the future data informat ion of the input sequence. The forward and \nbackward LSTM training of time series is realized to further improve the overall integrity \nof feature extraction. In t time step, the output 𝐻௧ of the hidden layer of Bi-LSTM consists \nof the forward ℎ௧ሬሬሬ⃗ and the backward ℎ௧⃖ሬሬሬ: \nℎ௧ሬሬሬ⃗ =𝐿 𝑆 𝑇 𝑀ሬሬሬሬሬሬሬሬሬሬሬ⃗(ℎ௧ିଵ,𝑥 ௧,𝑐 ௧ିଵ), 𝑡 ∈ ሾ1, 𝑇ሿ (19)\nℎ௧⃖ሬሬሬ =𝐿 𝑆 𝑇 𝑀⃖ሬሬሬሬሬሬሬሬሬሬሬ(ℎ௧ାଵ,𝑥 ௧,𝑐 ௧ାଵ), 𝑡 ∈ ሾ𝑇, 1ሿ (20)\n𝐻௧ =ሾ ℎ௧ሬሬሬ⃗,ℎ ௧⃖ሬሬሬሿ (21)",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.3.2 Self-Attention Mechanism",
+      "level": 3,
+      "text": "The attention mechanism is a probability- weighted mechanism that mimics the at-\ntention of the human brain [39]. When the hu man brain observes things, it will focus on \nspecific places and ignore other places. Ther e is an intrinsic correlation between hidden \nfeatures. Hidden features of different time steps have different effects on the prediction \nresults, which is unrecognizable by the Bi-LSTM network. Therefore, the self-attention \nmechanism is well suited to load prediction methods involving LSTM networks. This \n\nAppl. Sci. 2023, 13, 1165 11 of 21 \n \nmethod highlights the more important factors by assigning different probability weights \nto the inputs, ultimately further improving the prediction accuracy of the model. \nThe attention layer assigns the feature weight of the model learning to the input vec-\ntor of the next time step to highlight the impact of key features on the sequence. The final \ndata are entered into the fully connected layer. After the virtual function processing of the \nfully connected layer, the predicted load va lue is obtained. The implementation process \nis as follows: \nStep 1 Calculate the correlation between ea ch current input feature and the current \nload. \nStep 2 Use the Softmax formula to convert each correlation into a probabilistic form. \nStep 3 Multiply each obtained probability by the implicit representation of the corre-\nsponding input feature to represent the contri bution of the feature to the predicted load. \nThe contributions of all the input features ar e then added together as the input parts to \npredict the next load data. \nThe process can be expressed by Equations (22)~(24): \n𝑒௧  = 𝑉 𝑡 𝑎 𝑛 ℎ ( 𝑊ℎ௧ +𝑏 ) (22)\n𝛼௧ = 𝑒𝑥𝑝(𝑒௧)\n∑ 𝑒𝑥𝑝(𝑒௝)௡\n௝ୀଵ\n (23)\n𝐶௧ =෍ 𝑎 ௧ℎ௧\n௡\n௧ୀଵ\n  (24)\nwhere 𝑒௧ and 𝛼௧ are, respectively, the weight score and the attention weight correspond-\ning to different features at the current time t; 𝑉 and 𝑊 is the weight of the multilayer \nperceptron when calculating the attention weight; 𝑏 is the bias parameter of the multi-\nlayer perceptron when calculating the attention weight; N is the dimension of the input \nvector of the prediction model; and 𝐶௧ is the output of the attention mechanism at time t. \nThis paper introduces attention mechanisms based on past and future input characteris-\ntics. Thus, the model can give different weights to the input features to highlight the in-\nfluence of strong correlates and reduce the shadow of weakly correlated factors. \nAs seen in Figure 4, after receiving the input for a time window, the model passes the \nsequence data to the forward LSTM hidden layer and the reverse LSTM hidden layer, and \nthe two combine to output the processed vector. The attention layer takes the data pro-\ncessed by the LSTM layer as input, calculates the weight vector, and then combines the \nweight vector with the shallow output to ob tain a new vector input into the linear trans-\nformation layer. The green boxes in the figure indicate the resulting attention weight pa-\nrameters. Finally, the linear transformation layer calculates the predicted value. \nThis paper combines the Bi-LSTM algorithm with an attention mechanism. This \nmethod mines the contribution of the contextual information in the time series data, the \nhistorical resident data in different time di mensions, and the external features to predict \nthe results. Thus, it highlights the effective features and further improves the accuracy of \nresidential electricity forecasting. \nAppl. Sci. 2023, 13, 1165 12 of 21 \n \n…     … \nDataset\nIMF component data\nx1                 x2                  x3             …   …                 xt\nY1 Yt-1 Yt Yn… … … … \nh1\nh1\nh2\nh2\nh3\nh3\nht\nht\n… … \n… … \na1\n a2\n a3\n at\n \nFigure 4. The structure of the Bi-LSTM-Attention Model.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Example Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 Data Sources",
+      "level": 2,
+      "text": "This paper is based on the British Grid’s residential electricity consumption data set \nfor London in 2014. The dataset contains pa rtial consumption readings from November \n2011 to February 2014 for a sample of 5567 London households, with readings taken every \nhalf hour in kilowatt-hours. In this paper, the electricity consumption data of households \nwith relatively complete data from January to December 2012 are selected for research. \nEach household has 1753 load data pieces, and there are 3533 households, with a total of \n6,193,349 load data pieces.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2 Error Indicator",
+      "level": 2,
+      "text": "The missing data can be discussed in the following two situations: For a single miss-\ning data, according to the characteristics of the smooth variation in the power load curve, \nthe average load of the two data points before and after the data point is taken to fill in \nthe missing data. For continuous multiple missing data, according to the characteristic \nthat the load curves of the power system have roughly the same trend, we use similar load \ncurves in adjacent dates to replace them. \nWe use five predictors to demonstrate the validity of the method proposed in this \npaper. The formulae for the forecast error assessment indicators are shown below. \nMean Absolute Percentage Error (MAPE): \n𝑀𝐴𝑃𝐸 =100%\n𝑁 ෍| 𝑃௧௨௥௘ −𝑃௙௢௥௘\n𝑝௧௨௥௘\n|\nே\n௜ୀଵ\n (25)\nMean Absolute Error (MAE): \nAppl. Sci. 2023, 13, 1165 13 of 21 \n \n𝑀𝐴𝐸 =1\n𝑁 ෍| 𝑃௧௨௥௘ −𝑃௙௢௥௘|\n௡\n௜ୀଵ\n (26)\nMean Square Error (MSE): \n𝑀𝑆𝐸 =1\n𝑁 ෍(𝑃௧௨௥௘ −𝑃௙௢௥௘\nே\n௜ୀଵ\n)ଶ (27)\nSymmetric Mean Absolute Percentage Error (SMAPE): \n𝑆𝑀𝐴𝑃𝐸 =100%\n𝑁 ෍ |𝑃௧௨௥௘ −𝑃௙௢௥௘|\n(|𝑃௧௨௥௘| +ห 𝑃௙௢௥௘ห)\nே\n௜ୀଵ\n (28)\nRoot Mean Square Error (RMSE): \n𝑅𝑀𝑆𝐸 =ඩ1\n𝑁 ෍(𝑃௧௥௨௘ −𝑃௙௢௥௘)ଶ\nே\n௧ୀଵ\n (29)\nIn the above formulae, 𝑁 is the predicted point; 𝑃௧௨௥௘ is the actual value of the resi-\ndent load; and 𝑃௙௢௥௘ is the predicted resident load.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.3 Experimental Analysis and Verification",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3.1 Clustering Visualization and Comparison Experiment",
+      "level": 3,
+      "text": "We used SVD to downscale the load data of the 3533 households from 17,500 to 2000. \nThe time required for clustering was significantly reduced from seven days to less than \none day. We used the K-Shape algorithm to cl uster the 3533 real residential user load \ncurves into two categories. To display the data distribution after clustering more vividly, \nwe used Principal Component Analysis to map the data from high-dimensional space to \ntwo-dimensional space. The clustering visualization diagram is shown in Figure 5. \n \nFigure 5. Cluster visualization. \nThe x-axis and y-axis, respectively, represent the first dimension and the second di-\nmension after the data are reduced to two dimensions, and the difference between differ-\nent clusters is obvious after clustering. To further demonstrate the clustering effect, the \naverage daily load of residents in different clus ters after clustering is shown in Figure 3. \nThe vertical axis represents the load in kW. The horizontal axis represents time, with a \nminimum time unit of 30 min and a total of 48-time steps. \nAs can be seen in Figure 6, the K-Shape clustering algorithm can divide residents into \ntwo categories according to the difference in residential electricity consumption. The first \n\nAppl. Sci. 2023, 13, 1165 14 of 21 \n \nis high-electricity residents, and the other is low-electricity residents. Among them, the \npeak daily load of Class I residents is 0.33 kw/h, which is about 33% higher than that of \nClass II residents at 0.22 kW/h. The daily load valley value of Class I residents is 0.18 kW/h \nand that of Class II residents is 0.13 kW/h, while the daily trough value of Class I residents \nis about 38% higher than that of Class II residents, with obvious differences. \n \nFigure 6. Daily average electricity consumption of two types of residents after clustering. \nTo further verify the effect of differentiat ed clustering on subsequent experiments, \nablation experiments were perf ormed on the above results. In  this project, residents are \ndivided into two categories, high-electricity residents and low-electr icity residents, and \nthe daily load is forecasted on the same grid residential electricity consumption dataset. \nIn Table 1, ALL represents the results of th e direct prediction without clustering, and K-\nShape_2 indicates the results of the prediction after clustering into two categories. \nTable 1. Cluster ablation experimental results. \nAlgorithm MAPE MAE MSE RMSE SMAPE \nALL 2.16% 46.36 3177 56.36 3.29 \nK-Shape_2 1.49% 23.77 2994 59.67 2.84 \nAs shown in Table 1, when the clustering is two classes, the MAPE is 1.49%, and the \nMAE is 23.77, both of which are better than the unclustered results. This is because we \ndivide the load curves of group residents in to two categories through clustering, which \nare high power consumption curves and low power consumption curves. Predicting them \nseparately can ensure that the input vectors of the prediction model have a higher simi-\nlarity so that the prediction is more accurate. \nAs shown in Table 2, K-Shape has a sign ificant improvement compared to K-means \nand DBSAN. Compared to K-means and DBSAN, the method in this paper improves the \nMAPE by 5.82% and 14.47%, respectively. Improvements of 47.22 and 107.52 are achieved \non the MAE, respectively. Compared to the other two methods, K-Shape significantly im-\nproves the results of all the metrics. This is mainly due to the optimization of the distance \ncalculation method, the centroid calculatio n method, and the introduction of the fre-\nquency-domain feature extraction method.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The framework of the daily load forecasting method."
+    },
+    {
+      "id": "f2",
+      "caption": "The structure of the EMD."
+    },
+    {
+      "id": "f3",
+      "caption": "The structure of the Bi-LSTM model."
+    },
+    {
+      "id": "f4",
+      "caption": "The structure of the Bi-LSTM-Attention Model."
+    },
+    {
+      "id": "f5",
+      "caption": "Cluster visualization."
+    },
+    {
+      "id": "f6",
+      "caption": "Daily average electricity consumption of two types of residents after clustering."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Cluster ablation experimental results."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation \n(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Equation (3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation (4)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation \n(9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation \n(17)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 20
+  }
+}

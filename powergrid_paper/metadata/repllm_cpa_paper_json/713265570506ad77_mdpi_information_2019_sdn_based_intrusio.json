@@ -1,0 +1,310 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2019__sdn_based_intrusion_detection_system_for_early_detectio__2c8518edcb.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "According to [1], in the beginning of 2018, more than 50% of the world population use d the \nInternet (85% in Europe and 95% in North America). The number of devices connected to the Internet \nhas skyrocketed during th e last decade [2]. Cisco [3] forecasts that in 2021 there will be around 27.1 \nbillion network devices worldwide. This exponential growth represents not only the progress of \ntechnology, however also the opport unity for attackers to take advantage of this extraordinary \ninfrastructure to compromise many network resources and information assets.  \nIn 2016, the world witnessed one of the world’s largest Distributed Denial of Service (DDoS) \nattacks ever seen [4]. This attack was possible due to security weaknesses that allowed the non -\nauthorized remote access to Internet of Things (IoT) devices. In this way, non -identified attackers \nhave installed a Botnet (i.e., Mirai) at a very high number of IoT devices. These devices were located \nat network domains geographically separated from each other. Then, at a specific instant of time, \nthrough the botnet, the compromised IoT devices simultaneously generated a high amount of traffic \ntowards specific Internet Servers, exhausting their resources. Consequently, the services normally \nInformation 2019, 10, x 2 of 18 \n \nprovided by those servers were down for several hours due to the huge difficulty to neutralize every \nattack source. \nSoftware Defined Networking (SDN) is a promising paradigm that allows the programming of \nthe logic behind the network’s operation with some abstraction level from the underlying networking \ndevices. Large companies, such as Google, already deploy SDN with great success [5].  \nOur work proposes a feasible SDN -based generic solution to mitigate modern Mirai -like DDoS \nattacks when and where they originate. In this way, we obtain a more accurate and flexible detection \nmethod without adding too much overload on the network. The current proposal aims to detect and \nmitigate the DDoS attack at its origin while maintaining the Quality of Service (QoS) of benign users \neven when an online service is under attack. Moreover, the solution is open and scalable enough to \naccommodate the detection and mitigation of other types of DDoS attacks at their origin. In a nutshell, \nour proposed solution has the following characteristics: (i) it compares at runtime the expected trend \nof normal traffic against the trend of monitored traffic; (ii) if a significant deviation on the traffic trend \nis detected, then an event is created; (iii) as an event associated to a DDoS attack is produced, then a \nSDN controller creates flow rules for blocking the malign traffic; and (iv) we assume that the detection \nand mitigation of a DDoS attack is made at each potential source of that DDoS attack.  \nThis article is organized into five different sections. The initial section introduces the motivation \nand the goals of our current research. The second section discusses some related work. The following \nsection is devoted to the design, specification , and deployment of our proposal. The fourth section \ndescribes the proposal evaluation tests and discusses their results. Finally, the last section discusses \nthe major conclusions and some guidelines for future research.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "Cyber-attacks, especially those based on DDoS, are more and more prevalent, and their impact \nis greater than ever on the network infrastructure, online services , and digital information assets. In \nparallel, SDN is starting to emerge and is gaining increasing attention from the diverse networking \nplayers. We envision that it is very important to propose SDN-based solutions for urgently thwarting \nDDoS attacks, among others.  \nThere is already a plethora of solutions capable of detecting and fighting against DDoS attacks. \nTo analyze such solutions, we have classified them into two different categories: signature-based and \nanomaly-based solutions. Signature-based solutions identify each DDoS attack through its signature. \nThe signatures of DDoS attacks are stored in a database. Avant -Guard [6] is one of the most \nreferenced work s in this category. It uses two types of modules: Connection Migration (CM) and \nActuation Trigger (AT) module. The CM works as a specialized proxy that receives and classifies \nTCP-SYN requests. Additionally, the AT module generates an event to a system’s controller after the \nCM has classified some traffic as non-legit. Nevertheless, this work just deals with SYN flood attacks. \nOther literature solution proposes DDoS detection by controlling the bandwidth in each router’s \ninterface [7]. After this solution detects some congestion, it notifies the controller and changes the \navailable bandwidth. However, it does not distinguish benign from malign traffic. Other works \nsuggest the integration of an Intrusion Detection System (IDS) with SDN [8]. Further similar \nsignature-based techniques are detailed in [9–16]. Nonetheless, these have serious limitations because \nthey cannot detect novel attacks or known attack variants. The next paragraph debates a more flexible \nalternative. \nThe solutions classified as anomaly-based learn about the “normal” behavior of the network. In \nthis way, everything that drives away from the “normal” behavior is classified and reported as a \nstrange event. For instance, the authors of [17] use a neural network for analyzing the network flows. \nIn this way, t hey can classify each flow as either a normal one or associated to an ongoing DDoS \nattack. Other similar proposals are [18–20]. However, all these  proposals oblige to considerable \nsupervised training before efficiently detecting attacks. A survey of more network anomaly detection \ntechniques is available in [21]. \nAccording to our best current knowledge, no previous literature contributions mitigate DDoS -\nbased cyber-attacks directly at their origin , except for some approaches based on clustering [22]. A \nInformation 2019, 10, x 3 of 18 \n \nclustering method is a non -supervised data mining technique. Nevertheless, the clustering method \nshows some drawbacks, such a s the efficient management of clusters. This can be a very complex \ntask, demanding enormous processing effort, which creates serious system bottlenecks as well as \ninaccurate decisions [22]. To overcome these potential issues of clustering methods, we alternatively \npropose an anomaly -based and event -triggered scalable solution to detect these types of cyber -\nattacks at their source network domains, completely aligned with [23], minimizing the attacks ’ \namplification. Our SDN-based solution mitigates the attack via a blacklist of IP addresses associated \nwith the detected malign flows. Then, these flows are blocked at  their source domains using \nOpenFlow rules. In addition, our anomaly-based detection model uses a threshold value to trigger a \nremediation process for the detected DDoS-based cyber-attack. The next section discusses the design \nand implementation of our proposed DDoS mitigation system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Design and Deployment of Our Flow-Based Proposal Thwarting DDoS Attacks",
+      "level": 1,
+      "text": "This section discusses the design and implementation of our flow -based proposal that intends \nto detect and mitigate DDoS attacks at their source domain s. In addition, our solution protects some \nrelevant Quality of Service (QoS) metrics for the flows that are associated with normal Web Services.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 System Design",
+      "level": 2,
+      "text": "The proposed system uses a DDoS attack detection and mitigation mechanism that integrates an \nIntrusion Detection System (IDS) within the SDN architecture at the client side for either domestic or \norganizational networking scenarios.  \nThe system operates vi a a loop control among three basic architectural components (Figure 1): \nthe network, the IDS , and the controller. The network represents all the data traffic and where a \npotentially DDoS attack might be launched. The IDS represents our DDoS attack detectio n \nmechanism, which analyzes all the traffic exchanged across the network. As the IDS detects an \nongoing DDoS attack, the IDS notifies the Controller. After the Controller is notified by the IDS, the \nController transfers to the networking devices of the dat a path of some new flow rules for restoring \nthe normal operation of the network as quickly as possible.  \nThe system has three critical phases: detection, communication , and mitigation. The detection \nphase is about the system’s capability of detecting a DDoS attack. The communication phase occurs \nwhen the IDS alerts the controller about the detected DDoS attack. The mitigation phase is when the \ncontroller transfers some flow rules to the local switch, blocking the evil traffic. These flow rules are \nstored in a permanent way within that switch.  \n \nFigure 1. The System’s Basic Architecture. \nFigure 2 shows the conceptual model of the current work. Our proposal combines the \nfunctionality offered by both an SDN controller and an Intrusion Detection System (IDS). By \naggregating these two entities, we have obtained an SDN -Based IDS Monitor. Each new Packet that \narrives to the system (i.e., it was received in the switch’s port) is classified as belonging to a Flow and \nmakes a Request to the system. In this way , the switch processes the received Packet according to a \n\nInformation 2019, 10, x 4 of 18 \n \nRule associated to the Flow that Packet belongs to, making a Decision. In the case, the switch does \nnot initially have any Rule for that Flow, then, the switch requests it to the SDN controller. The  SDN \ncontroller installs the correct flow Rule in the switch which permits the Packet to proceed to its \ndestination only if the packet belongs to a “well behaved” flow. Otherwise, a dropping Rule is \ninstalled in the switch. In this last case, the packets o f the “bad” flow are discarded. The flow \nclassification as “good” or “bad” is made by the IDS using a set of pre-configured rules. Each Request \nthat is involved in a Flow results in a Decision from the developed system.  \n  \nFigure 2. The System’s Conceptual Model (adapted from [24]).",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 System Deployment",
+      "level": 2,
+      "text": "We have implemented the virtualized system that is visualized in Figure 3 as a proof-of-concept \nof the system’s model that was already presented in Figure 2. Our system uses three different Virtual \nMachines (VM): VM A, B, and C. VM A contains two modules: the SDN Ryu controller and the Snort \nIntrusion Detection System (IDS). The SDN Ryu controller programs the network operation when \nspecific flow -based events occur (e.g., after the controller has rece ived an OpenFlow Packet_in \nmessage). The SDN controller changes the network data plane via link (A), sending OpenFlow \nforwarding rules. The Snort IDS is our rule-based system is used to “fire an alarm” in the presence of \nan occurring DDoS attack. Hence, after the IDS detects a DDoS attack, it sends an alert packet via the \nUnix Domain Socket to the SDN controller, which is visualized in Figure 3 as link (D). Therefore, VM \nA has two network interfaces. The first interface ( adapter 1 ) was configured as Host-Only (i.e., \nvirtualized networking mode provided by the Hypervisor —VirtualBox) and it supports link (A) \ncommunication. The second interface (adapter 2) was configured as the internal network (intnet mode \nof the Hypervisor) and it supports link (B) communication. \nVM B emulates the network domain (e.g., home network) where a potential cyber-attack can be \ninitiated. It runs a network emulator (i.e., Mininet) which deploys a network domain with some hosts, \nthe software -based switch , and the NAT routing device. The software -based switch runs the \nOpenFlow protocol client part and belongs to the data plane of our testbed. This switch performs \nport mirroring and sends the entire traffic to the Snort IDS via link (B). The NAT device is used as a \ngateway for the hosts having access to the online server through link (C).  \nVM C represents an online server that can be potentially attacked by a DDoS threat. This VM \nhas a single network adapter. This adapter was configured as Host-Only and it supports link (C) \ncommunication. In a nutshell, our testbed connections are as follows:  \n• Bi-directional link (A) between the OpenFlow switch and the SDN controller which exchanges \ncontrol traffic between the data and control planes—the Southbound Application Programming \nInterface (API); \n• Unidirectional link (B) between OpenFlow switch and Snort IDS which enables the switch to \nsend all the mirrored traffic to the IDS for further analysis; \n\nInformation 2019, 10, x 5 of 18 \n \n• Bi-directional link (C) which connects the local network domain (i.e. , VMs A, B) to the remote \nservice; \n• Unidirectional link (D) which enables Snort IDS to notify the SDN controller (i.e., Ryu) about an \nongoing DDoS attack through alert packets via the Unix Domain Socket.  \n \nFigure 3. System Deployment. \nFigure 4 represents the workflow of our system for each packet that arrives to the Ope nFlow \nswitch. The reader should now consider a usage scenario where a host tries to send a packet to the \nonline resource. The OpenFlow switch receives that packet and tries to match it against the flow rules \nof its table. If no match occurs, then the switch requests to the controller a new rule for the new flow. \nThen, the controller responds by sending the new forwarding rule for that flow. Alternatively, if a \nmatch occurs within the switch, this means the switch already has a flow rule for that received packet. \nIn this case, the switch forwards that packet according to the existing flow rule. In this way, the packet \ntraverses the NAT gateway and proceeds towards the online service. In either case, the switch will \nmirror every received packet to Snort IDS. Then, the IDS analyzes the packet, processing it by means \nof a statistical function. This is designated as anomaly detection. In th is specific case, the statistical \nfunction evaluates the mirrored packet as part of a malign flow. Then, the IDS notifies the SDN \ncontroller about this. By its turn, the SDN controller sends a blocking flow rule to the switch. The \nswitch can mitigate the attack by eliminating all packets, matching the new installed blocking rule. \nFigure 5 gives further details about how our solut ion operates in the presence of a DDoS attack \ndriven by User Datagram Protocol ( UDP) flooding and originated in a compromised internal host. \nWe assume that the SDN controller has already installed a rule in the switch that normally forwards \npackets that originated from that host. We now explain the diverse processing steps a packet follows \nwithin our proposal. First, the ICMP Echo Request arrives to the switch. Then, the switch forwards \nthe ICMP Echo Request  to NAT. The switch mirrors with some latency ( this depends on the \ninternal switch fabric) the ICMP Echo Request  to the Snort IDS. While NAT forwards the ICMP \nVirtual\nMachine B\nVirtual\nMachine A\nVirtual\nMachine C\nNotes :\nH1, H2, H3 = Host\nOpen Flow vSwitch = Switch\nOnline Service = Server\nMininet\nSDN-based Monitor\nOnline Service\nH1 H2 H3\nOpen Flow\nvSwitch\nNAT\nRyu Controller\nSnort IDS\nForwarding\nRules\nIDS\nRules\n(A)\n(B)\n(C)\n(D)\nInformation 2019, 10, x 6 of 18 \n \nEcho Request to the Server and waits for the ICMP Echo Reply, the Snort IDS in parallel analyzes \nthe ICMP Echo Request by means of a statistical function. If Snort considers that the processed \npacket has a statistical ly incorrect behavior, then the source node of that packet is clas sified as a \nmalign host. Then, the IDS notifies the SDN controller about that  via the Unix Domain Socket . After \nthis, the controller mitigates the attack by sending a rule to the switch that blocks future packets that \noriginated from the discovered malign host. Hence, after receiving the previous dropping packet \nrule, the switch can protect the network resources against the malign packets as well as protecting \nthe remote server from that attack. Nevertheless, the switch suffers from a slight processing overhead \ndue to the mirroring function. However, it is worth noting that this overhead is not so relevant in our \ndomestic scenario. \n \nFigure 4. System Workflow for Each Received Packet. \n \nFigure 5. Sequential Diagram of System Messages. \nTo deploy our SDN-based IDS (see Figure 5) , we have aggregated the offered functionalities of \nan SDN controller and an IDS. The SDN controller is based on the open -source Python solution \ndesignated as Ryu [25]. We have coded within this controller a Python function designated as \nprocess_snort_alert. This function processes alerts received from the IDS. If the received alert \n\nInformation 2019, 10, x 7 of 18 \n \nis detected as a “Ryu block”, then that function sends a blocking flow rule to the Switch to otherwise \nignore it. We have also used a well -known IDS, Snort [26]. It detects attacks based on known rule \nsignatures. We have configured Snort by editing the files snort.conf as well as \nddos_detection.rules to consider our specific DDoS rules. These DDoS rules are used along the \ndistinct testing scenarios of our proposa l and allow the flexibility of our solution to adapt to other \nDDoS cyber-attacks.  \nThe Mininet [27] was used in our work to emulate the home network. This network was \ndeployed using the Mininet Python API. For that, we created a Python script file. Inside that file, \nthere are some instruction lines for deploying a NAT device within our topology. This NAT device \nworks as a gateway between our emulated home network and the online re mote service. The home \nnetwork IP address is 10.0.0.0/8. The online service IP address is 192.168.56.104.  \nOur proposal uses Port Mirroring for traffic monitoring. Port Mirroring consists of duplicating \npackets that go in/out one switch’s port and forwards  these packets to another switch’s port. To \nconfigure port mirroring, we started by removing the IP address from the interface enp0s8 of the VM \nB (sudo ifconfig enp0s8 0 ). Then, we used the ovs-vsctl tool to add to the switch s1 a new \nport that connects to the interface enp0s8 (sudo ovs-vsctl add-port ",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 Results",
+      "level": 1,
+      "text": "This section describes the evaluation tests of our proposal and discusses the obtained r esults. It \nalso contains useful information about the home simulated network. To simulate the DDoS attack, \nwe used the hping3 tool that sends customized TCP/IP packets. Table 1 shows the hping3 \narguments that were used throughout our testing scenarios.  \nTable 1. Hping3 Tool Arguments Used in Our Testing Scenarios. \nArguments Description \n-i Indicates the interface to use \n-flood Sends packets as fast as possible without taking care to show incoming replies \n-1 Uses ICMP mode \n-a Sets a fake IP address  \n-d Defines the size of each packet \n4.1. Tests’ Description \nWe now introduce the three scenarios that were used to assess our proposal. Table 2 summarizes \nthese scenarios. We recall that these three scenarios assume  that each DDoS attack should be \npreferably mitigated at its original source domains. In this way, we avoid that the remote servers \ncould suffer the negative performance effects induced by a DDoS attack. During the next discussion, \nwe evaluate if the main ideas behind our  proposal are completely fulfilled. Therefore, it is not our \nintention to perform tests with scenarios with thousands of nodes , because in doing that, a testbed \nwould not be a convenient option. For that, a network simulator would be a more convenient tool . \nNevertheless, this option is out of the scope of the current work. In this way, the tests listed in Table \n2 have been made with the intent of validating the most relevant functional aspects of our proposal.  \nTable 2. Test Scenarios Summary. \nScenario Description Parameters Evaluated Hping3 Arguments",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "A Distributed Denial of Service (DDoS) attack is",
+      "level": 1,
+      "text": "simulated with two malign hosts while a benign \nhost has its normal access to the online service. \nDDoS Mitigation Time; \nAverage RTT (Round \nTrip Time); Packet loss. \n--flood \nInformation 2019, 10, x 8 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "A DDoS attack with a spoofed IP address is",
+      "level": 1,
+      "text": "simulated with one malign host while two benign \nhosts have their normal access to the online \nservice. \nDDoS Mitigation Time; \nAverage RTT; Packet \nloss. \n-a; \n--flood \nIII \nA DDoS attack with packet’s size manipulation is \nsimulated with one malign host while two benign \nhosts have their normal access to the online \nservice. \nDDoS Mitigation Time; \nAverage RTT; Packet \nloss. \n-d; \n--flood",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.2 Results Presentation and Discussion",
+      "level": 2,
+      "text": "We now present and discuss the obtained evaluation results. After some packets were \nexchanged within the network, using the pingall Mininet command, the switch updated its flow rule \ntable, as shown in Figure 6. We can verify that new rules were updated within the switch’s Flow \nTable with priority=1. Using these flow rules, the switch has the normal behavior of a le gacy switch \nthat learns the MAC address of each host and binds it to the switch’s port that has  last received a \nframe from that host.  \n \nFigure 6. OpenFlow Switch Flow Rule Table Before a DDoS Attack. \nFigure 7 visualizes the typical traffic trend of our network when all hosts are well behaved.  \n \n\nInformation 2019, 10, x 9 of 18 \n \nFigure 7. Usual System Usage before a DDoS Attack. \nTable 3 gives a numerical perspective of the typical values of some Quality of Service  (QoS) \nmetrics when there is no attack. These results were obtained from ping tests that were executed in \neach host. \nTable 3. Typical System Performance without DDoS Attack. \nTest Id. \nHost 1 Host 2 Host 3 \nAverage RTT \n(ms) \nPacket Loss \n(%) \nAverage \nRTT (ms) \nPacket Loss \n(%) \nAverage \nRTT (ms) \nPacket Loss \n(%) \n1 0.588 0 0.439 0 0.765 0 \n2 0.756 0 1.274 0 0.712 0 \n3 0.493 0 0.463 0 0.593 0 \n4 0.766 0 0.904 0 1.37 0 \n5 2.004 0 0.402 0 0.447 0 \nAverage 0.922 0 0.696 0 0.777 0 \nFigure 8 shows the traffic volume produced by a DDoS Attack when our proposed Defense \nSystem is disabled. From this, we can analyze that after 50 s, the network was submitted to a \nsignificant amount of traffic, originated by that DDoS attack. In fact, that  attack originated a \nmaximum peak that slightly overl apped the value of 42,000 packets/s (2,520,000 packets/m). The \ncurrent attack is inspired in the Center for Applied Internet Data Analysis  \n(https://www.caida.org/home/ (verified in 27/02/2019)) (CAIDA) dataset which was commonly used \nin recent publications [28]. In the next sub-sections, we present and discuss the several tests we made \nto detect and mitigate the diverse cyber-attacks. \n \nFigure 8. Network Traffic injected by a DDoS Attack when our Defense System is Off.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f6"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2.1 Scenario I",
+      "level": 3,
+      "text": "As described previously, this test consists o f performing a DDoS attack originat ing in both \nhosts 1  and 3, while host 2  maintains its “normal” access to the remote server. Therefore, the \nhping3 tool was used in ICMP mode, flooding packets as fast as possible to the server \n(192.168.56.104). The host 2 flow rate while the server is under attack is displayed in Figure 9. \nWe can see that the host 2  rate varies along the time. These rate variations result from the online \nserver resource starvation and network congestion, which are both induced by the DDoS attack.  \n\nInformation 2019, 10, x 10 of 18 \n \n \nFigure 9. Scenario I—Host 2 Rate when the Remote Server is Under a DDoS Attack. \nWe have configured the Snort to detect a cyber -attack through the rule specified in (1). \nAccording to that rule, an alert is generated when Snort captures more than 10 packets within one \nsecond from any source IP within the 10.0.0.0/8 network, destined to 192.168.56.104 (i.e., Online web \nserver), and using any Transport ports. \nalert icmp 10.0.0.0/8 any → 192.168.56.104 any (msg:”ryu block”; \ndetection_filter:track by_src, count 10, seconds 1, sid:1000001) \n(1) \nWhen the system detects an attack, it starts the  mitigation phase. To mitigate the attack, our \nproposal transfers some flow rules  to the local switch  (Figure 10). In fact, one can check that our \nproposal reacts to the attack through the initial two rules displayed at the head of the flow table of \nthe local switch. These two new rules with high priority values drop the received packets from both \nmalicious users, host 1 and host 3.  \n \nFigure 10. Scenario I—OpenFlow Switch’s Flow Table after DDoS Attack. \nOur solution only blocks the malicious mirrored traffic after it was detected the first time. \nTherefore, Snort was configured to limit the logging events for 60 s (Figure 11). In this way, the \ncontroller only deals with a single alert within that period, a voiding the controller overload. This \nconfiguration to limit the number of alerts was defined in the file threshold.conf. \n \nFigure 11. Snort Extra Configuration. \nA graphical representation of the DDoS attack is shown in Figure 12 where we can see the traffic \ngenerated as a function of time. Here, one can observe the normal usage of the system during the first \n60 s. Then, host 3 launches a DoS attack (first peak of packets transmitted per second). Next, host 1 \nlaunches another DoS attack (second peak of packets transmitted per second), simulating the DDoS \n\nInformation 2019, 10, x 11 of 18 \n \nattack. The DDoS attack was nearly mitigated at 64 seconds. Hence, from then on, we can verify that \nthe network stabilizes around its “normal” operating status. \n \nFigure 12. Scenario I—DDoS Attack and Mitigation. \nTable 4 shows our results to the variables: DDoS mitigation time, the average Round Trip Time \n(RTT), and the percentage of the packet loss. The results of the average RTT and the percentage of \npacket loss were retrieved from the ping command of host 2. The DDoS mitigation time was retrieved \nfrom the Wireshark I/O graph. Our solution needs, on average, approximately five seconds to detect \nand mitigate the DDoS attack. \nTable 4. Scenario I—Performance Results. \n# Tests DDoS Mitigation Time (s) Average RTT (ms) Packet Loss (%) \n1 3 0.619 0 \n2 4 0.547 0 \n3 5 0.561 0 \n4 5 0.484 0 \n5 7 0.767 0 \nAverage 4.8 0.596 0",
+      "refs": {
+        "figures": [
+          "f9",
+          "f12",
+          "f11",
+          "f10"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2.2 Scenario II",
+      "level": 3,
+      "text": "In this scenario, we perform a DDoS attack with a spoofed IP address. Therefore, the hping3 tool \nwas used in ICMP mode, flooding packets as fast as possible to the server IP address (192.168.56.104) \nwith a spoofed IP address, i.e., 10.0.0.55. \nTo give a better idea of the QoS impact in both hosts 2 and 3 while the network was under attack, \nwe present the results visualized i n Figure 13. Even though we simulated the attack with only one \nhost, we can verify that the host’s rate remained constant. \n\nInformation 2019, 10, x 12 of 18 \n \n \nFigure 13. Scenario II—Hosts 2 and 3 Rate during a DDoS Attack Dissimulated by Spoofing. \nWe can confirm that the mitigation proces s is taking over by checking the switch’s flow rule \ntable (Figure 14). We can verify that  the controller mitigated the attack through the first two lines of \nthe Table. It consists o f a new rule with higher priority to drop packets for the malign host \n(priority=100, actions=drop, dl_src=00:00:00:00:00:01, nw_src=10.0.0.55 and nw_dst=192.168.56.104).  \n \nFigure 14. Scenario II—OpenFlow Switch’s Flow Table after the DDoS Attack. \nThe rules used in this test were the same as the test before and the rule spec ified in (2). The \ndetection filter is the same except for all IP addresses that are not in the 10.0.0.0/8 network. This way, \na wider range of IP addresses is under “surveillance”.  \nalert icmp !10.0.0.0/8 any→192.168.56.104 any (msg:”ryu \nblock”;detection_filter:trackby_src,count 10,seconds 1,sid:1000002 \n(2) \nA graphical visualization of the whole process (i.e., detection and mitigation phase) is presented \nin Figure 15. As can be seen, it illustrates the traffic generated as a function of time. During the initial \ntwo seconds, the network operated in its normal status. Then, at second 2, host 3 launched a DDoS \nattack. This attack was blocked after two seconds from its start. From four seconds until the end of \nour test, we can see the traffic stabilizing and going back to the “usual” traffic loading.  \n\nInformation 2019, 10, x 13 of 18 \n \n \nFigure 15. Scenario II—DDoS Detection and Mitigation. \nTable 5 shows our results to the variables: DDoS mitigation time, the average Round Trip Time \n(RTT), and the percentage of the packet loss. The results of the average RTT and the percentage of \npacket loss were retrieved from the host 2 ping command. The DDoS mitigation time was retrieved \nfrom the Wireshark I/O graph.  \nTable 5. Scenario II—Performance Results. \n# Tests DDoS Mitigation Time (s) Average RTT (ms) Packet Loss (%) \n1 3 0.504 0 \n2 2 0.460 0 \n3 2 0.557 0 \n4 2 0.513 0 \n5 2 0.523 0 \nAverage 2.2 0.511 0",
+      "refs": {
+        "figures": [
+          "f14",
+          "f15",
+          "f13"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2.3 Scenario III",
+      "level": 3,
+      "text": "The transmission rate of hosts 2 and 3 are presented in Figure 16. We can observe  that the rate \nof these two hosts, despite the cyber-attack occurrence, stayed unchanged during the entire duration \nof our test. These results show that some QoS characteristics of the normal traffic were protected from \nthe negative effect of the cyber -attack by the collaborative effort of both Snort and  the Ryu SDN \nController.  \n\nInformation 2019, 10, x 14 of 18 \n \n \nFigure 16. Scenario III—Hosts 2 and 3 Rate During a DDoS Attack Based on Large Size Packets. \nThrough the switch’s flow rule table (Figure 17 ), we can verify that the SDN controller \nsuccessfully mitigated the attack through the first rule of that table.  \n \nFigure 17. Scenario III Test OpenFlow Switch’s Flow Table after DDoS Attack. \nThe rule used in this test is in (3). In this case, Snort detects a DDoS attack if a packet that comes \nfrom the 10.0.0.0/8 network towards the server IP address has more than 800 bytes of data (dsize:>800).  \nalerticmp 10.0.0.0/8 any→192.168.56.104 any (msg:”ryu block”; dsize: \n>800; sid:1000003) \n(3) \nNext is presented a graphical representation (Figure 18) of the system’s load during the detection \nand mitigation phases. During the initial 11 s, the network shows a normal status. Then, at 11 seconds, \nhost 1 launched the DoS attack. This attack is mitigated and blocked in nearly 3 s. After 14 seconds, \nthe network traffic stabilizes returning to its “normal” load.",
+      "refs": {
+        "figures": [
+          "f17",
+          "f16"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The System’s Basic Architecture."
+    },
+    {
+      "id": "f2",
+      "caption": "shows the conceptual model of the current work. Our proposal combines the"
+    },
+    {
+      "id": "f3",
+      "caption": "System Deployment."
+    },
+    {
+      "id": "f4",
+      "caption": "represents the workflow of our system for each packet that arrives to the Ope nFlow"
+    },
+    {
+      "id": "f5",
+      "caption": "gives further details about how our solut ion operates in the presence of a DDoS attack"
+    },
+    {
+      "id": "f6",
+      "caption": "OpenFlow Switch Flow Rule Table Before a DDoS Attack."
+    },
+    {
+      "id": "f7",
+      "caption": "visualizes the typical traffic trend of our network when all hosts are well behaved."
+    },
+    {
+      "id": "f8",
+      "caption": "shows the traffic volume produced by a DDoS Attack when our proposed Defense"
+    },
+    {
+      "id": "f9",
+      "caption": "Scenario I—Host 2 Rate when the Remote Server is Under a DDoS Attack."
+    },
+    {
+      "id": "f10",
+      "caption": "Scenario I—OpenFlow Switch’s Flow Table after DDoS Attack."
+    },
+    {
+      "id": "f11",
+      "caption": "Snort Extra Configuration."
+    },
+    {
+      "id": "f12",
+      "caption": "Scenario I—DDoS Attack and Mitigation."
+    },
+    {
+      "id": "f13",
+      "caption": "Scenario II—Hosts 2 and 3 Rate during a DDoS Attack Dissimulated by Spoofing."
+    },
+    {
+      "id": "f14",
+      "caption": "Scenario II—OpenFlow Switch’s Flow Table after the DDoS Attack."
+    },
+    {
+      "id": "f15",
+      "caption": "Scenario II—DDoS Detection and Mitigation."
+    },
+    {
+      "id": "f16",
+      "caption": "Scenario III—Hosts 2 and 3 Rate During a DDoS Attack Based on Large Size Packets."
+    },
+    {
+      "id": "f17",
+      "caption": "Scenario III Test OpenFlow Switch’s Flow Table after DDoS Attack."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Hping3 Tool Arguments Used in Our Testing Scenarios."
+    },
+    {
+      "id": "t2",
+      "caption": "Test Scenarios Summary."
+    },
+    {
+      "id": "t3",
+      "caption": "gives a numerical perspective of the typical values of some Quality of Service  (QoS)"
+    },
+    {
+      "id": "t4",
+      "caption": "shows our results to the variables: DDoS mitigation time, the average Round Trip Time"
+    },
+    {
+      "id": "t5",
+      "caption": "shows our results to the variables: DDoS mitigation time, the average Round Trip Time"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": false,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 17,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

@@ -1,0 +1,765 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__05__vulnerability_driven_multi_objective_energy_sto__157f48848b.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 State Grid Henan Economic Research Institute, Zhengzhou 450000, China",
+      "level": 1,
+      "text": "2 State Key Laboratory of Power System Environmental Protection, Wuhan 430072, China",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3 School of Electrical and Automation, Wuhan University, Wuhan 430072, China",
+      "level": 1,
+      "text": "* Correspondence: luhailiang@whu.edu.cn; Tel.: +86-188-7178-6605 \nAbstract \nThe large-scale integration of distributed photovoltaics (DPV) and their inherent uncer-\ntainties have significantly increased the operational risks of distribution networks. More-\nover, frequent outages caused by extreme events further impose substantial loss es on \nthese networks, highlighting the urgent need to enhance their disaster resilience and load-\nsupply capabilities. To address these challenges, this paper proposes an energy storage \nallocation method that simultaneously considers economic performance and comprehen-\nsive vulnerability. First, a vulnerability assessment framework for distribution networks \nis established from both pre -disaster and post -disaster perspectives. In the pre -disaster \nstage, an improved electrical betweenness index, voltage deviatio n index, and network -\nbalance index are employed to identify weak lines and nodes. In the post -disaster stage, \nbased on the identified weak components, two types of scenarios, namely random line \nfailures and worst -case failures, are constructed to emulate e xtreme events, and an en-\nhanced network supply efficiency index is developed to quantitatively evaluate the net-\nwork’s recovery capability. Subsequently, a multi -objective optimal allocation model for \nenergy storage is formulated with economic cost and compr ehensive vulnerability as ob-\njective functions, and an Enhanced Beluga Whale Optimization algorithm is adopted to \nobtain the optimal siting and sizing of energy storage systems.  Case studies on an im-\nproved IEEE 33 -bus distribution system show that, compared  with the no -ESS scheme, \nthe proposed plan yields about a 66.4% reduction in network loss cost, around 22% im-\nprovement in average voltage deviation, and a roughly 10% reduction in the comprehen-\nsive vulnerability index under normal operation. Under random and targeted line outage \nscenarios, the proposed scheme also achieves the highest area under curve and average \nnetwork effectiveness indices and the lowest performance volatility among the bench-\nmark strategies. These results demonstrate that, for the tested  IEEE 33 -bus system, the \nvulnerability-driven ESS planning framework can markedly enhance both economic effi-\nciency and resilience to extreme events. \nKeywords: extreme events; comprehensive vulnerability; storage configuration; EBWO; \nnetwork efficiency \n \nAcademic Editor: Daniel Morinigo-\nSotelo \nReceived: 19 November 2025 \nRevised: 9 December 2025 \nAccepted: 25 December 2025 \nPublished: 30 December 2025 \nCopyright: © 2025 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and con-\nditions of the Creative Commons At-\ntribution (CC BY) license. \nEnergies 2026, 19, 210 2 of 23 \n \nhttps://doi.org/10.3390/en19010210",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "To implement the national “dual -carbon” strategy, the installed capacity of new en-\nergy generation, particularly distributed photovoltaic (PV) power, has expanded rapidly. \nBy November 2024, China’s cumulative PV installation had reached approximately 790 \nGW. The large-scale integration of renewable energy and its increasing penetration have \nsubstantially intensified the uncertainty and complexity of pow er system operation [1,2]. \nMeanwhile, power grids are exposed to additional shocks from extreme weather events. \nFor instance, in June 2023, Vietnam experienced a severe power shortage triggered by ex-\ntreme heat, heavily affecting residential life and industrial production; in July 2023, Ty-\nphoon Doksuri struck Fujian Province, causing thousands of line outages and widespread \nblackouts. Such factors collectively exacerbate the vulnerability of distribution networks \nand increase operational risks. As a key component of the emerging power system, energy \nstorage systems (ESSs) offer cross-temporal energy-shifting capability, which can enhance \nrenewable energy utilization, suppress voltage fluctuations, and improve power quality. \nMoreover, due to their flexible deployment and fast response, ESSs can serve as an emer-\ngency supply source during extreme events to secure critical loads. Therefore, identifying \nnetwork weak points and rationally planning and allocating energy storage systems are \nof great significance for enhancing system resilience. \nAt present, the optimal allocation of energy storage systems (ESSs) is mainly applied \nin three scenarios, the generation side, the grid side, and the user side, with most studies \nfocusing on achieving system -level or storage-related economic benefits. On t he genera-\ntion side, ESSs can effectively mitigate the output fluctuations of renewable energy, en-\nhance grid hosting capacity, and participate in frequency regulation. Ref. [3] minimizes \nwind and PV curtailment and total system cost, and improves the particle swarm optimi-\nzation algorithm using congestion sorting to determine the optimal storage capacity based \non an entropy-weighted evaluation. However, single-type storage is often unable to meet \nthe requirements of large capacity and fast response. To addres s this issue, Ref. [4] pro-\nposes a hybrid ESS that combines electrochemical batteries, supercapacitors, and hydro-\ngen storage according to their operating frequency characteristics, significantly improving \nrenewable energy utilization. Building upon this, Re f. [5] integrates fluctuation suppres-\nsion and frequency regulation by reconstructing typical wind power and regulation sig-\nnals using ensemble empirical mode decomposition, and establishes a hybrid storage \npower allocation model. An adaptive particle swarm optimi zation method is used to ob-\ntain the optimal configuration of hybrid storage. On the grid side, ESSs can participate in \npeak shaving, provide reserve capacity, and alleviate network congestion. Ref. [6] consid-\ners peak –valley characteristics and minimi zes load variance while accounting for eco-\nnomic performance, using a quantum genetic algorithm to determine storage capacity. \nRef. [7], considering newly emerging flexible loads, develops a comprehensive evaluation \nmodel consisting of source–load matching, load curve smoothness, and user comfort. The \nresults show that the coordinated participation of flexible loads and ESSs not only im-\nproves economic and environmental benefits but also provides effective peak shaving and \ngrid pressure mitigation while maint aining user satisfaction. On the user side, properly \nplanned ESSs can effectively address power quality issues associated with high renewable \npenetration, such as voltage fluctuations [8,9], voltage limit violations [10], voltage devia-\ntions [11,12], and flicker problems [13]. However, most of the above studies adopt single-\nobjective optimization, which limits the comprehensiveness of the results.  \nTo address voltage fluctuations and operational economics in distribution networks \nwith high renewable penetration, multi -objective optimization algorithms such as the \nNon-dominated Sorting Genetic Algorithm III (NSGA -III) [14], Multi-Objective Particle \nSwarm Optimization (MOPSO) [2,15], and Multi-Objective Evolutionary Algorithm based \non Decomposition (MOEA/D) [16] have been widely adopted for ESS planning, effectively \nEnergies 2026, 19, 210 3 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nbalancing multiple conflicting objectives. Building upon these algorithmic foundations, \nrecent studies have developed various ESS optimization frameworks. For instance, Ref. \n[17] formulates a multi-objective siting and sizing model that simultaneously minimizes \nsystem cost, voltage deviations, and load fluctuations, solved using an improved mayfly \noptimization algorithm. Ref . [18] proposes a voltage sensitivity -based preselection \nmethod to enhance computational efficiency, reducing the candidate siting set by identi-\nfying nodes with poor voltage stability before optimizing storage planning based on eco-\nnomic performance and loss minimization. Beyond power quality improvements, user -\nside ESSs can also function as emergency backup power, ensuring critical load supply and \nenhancing overall grid reliability. Refs. [19,20] incorporate reliability indices such as sys-\ntem average interruption duration and load curtailment into their storage optimization \nmodels, demonstrating that strategically deployed ESSs can effecti vely mitigate the im-\npacts of grid faults and supply interruptions. \nReliability and resilience are fundamental requirements for the secure and continu-\nous operation of distribution networks under both normal and extreme conditions [21,22]. \nReliability primarily focuses on ensuring uninterrupted power supply to end users during \nroutine operations and typical failure scenarios, while resilience emphasizes the grid’s \nability to withstand, adapt to, and rapidly recover from high -impact low -probability \nevents such as extreme weather, natural disasters, and cascading failures [23,24]. From a \nrisk-oriented perspective, vulnerability characterizes how sensitive the network structure \nand operating state are to external disturbances and how easily the supply capability can \nbe degraded, and thus can be regarded as a useful extension of tra ditional reliability as-\nsessment that bridges the concepts of reliability and resilience. Vulnerability assessment \nmethods based on complex network theory have developed rapidly since they were in-\ntroduced into power systems in the early 2000s. Appropriately planned and deployed en-\nergy storage systems can reduce network vulnerability by reshaping power flows and \nbuffering power fluctuations, thereby enhancing both the reliability and resilience of the \ngrid. In this context, Refs. [25,26] use network vulnerability indices based on complex net-\nwork theory to identify weak nodes and determine optimal storage placement for system \nreinforcement. However, these studies mainly describe vulnerability through power qual-\nity indicators such as voltage deviation or load balancing and do not fully account for the \ninfluence of network topology on vulnerability. Ref. [27] incorporates structural vulnera-\nbility into the assessment framework and shows, by analyzing voltage variation rates be-\nfore and after ESS integration, that appropriate storage deployment can effectively miti-\ngate distribution network vulnerability, but it still does not examine whether such config-\nurations can significantly improve the supply capability of the grid under extreme events. \nTo enhance the ability of distribution networks to withstand extreme events and im-\nprove their post-disaster recovery capability, this paper proposes a vulnerability-oriented \nmulti-objective energy storage planning method that simultaneously considers econo mic \nperformance and comprehensive vulnerability. First, a two-stage vulnerability assess",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Comprehensive Vulnerability Assessment Framework for",
+      "level": 1,
+      "text": "Distribution Networks \nThis section presents a two -stage vulnerability assessment framework for distribu-\ntion networks (Figure 1). The pre -event stage (Section 2.1) identifies weak components \nthrough improved electrical betweenness, voltage deviation, and network equilibrium in-\ndices. The post -event stage (Section 2.2) evaluates supply restoration capability under \nfault scenarios using network supply effectiveness metrics. \nEnergies 2026, 19, 210 5 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nPre-Event\nStructural \nVulnerability of Lines\nOperational \nVulnerability of Lines\nNetwork \nEquilibrium\nComposite Vulnerability \nIndicator of Lines\n Vulnerability \nand Economic \nPerformance\nIdentification of Line \nVulnerability\nRandom Attack \nand Deliberate Attack\nNetwork Efficiency \nIndicator\nPost-Event\n (Simulated Line Fault)\nEnergy Storage Optimization\nSimulation Verification\nIEEE 33-Bus \nModel\nBus Voltage Deviation\nNetwork Loss\nNetwork Efficiency  \nQuasi-Opposition-\nBased Learning\nOptimal Energy Storage \nSiting and Sizing\nMulti-Objective Optimization\nLoad Loss Rate\nMO-EBWO  \nOptimization Algorithm\nSpiral \nForaging \nStrategy\nVulnerability & Economic \n \nFigure 1. Indicator system for distribution network vulnerability assessment.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Identification Method for Weak Components in Distribution Networks",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.1 Structural Vulnerability of Distribution Networks",
+      "level": 3,
+      "text": "Electrical betweenness is commonly used to represent the structural vulnerability of \nnodes or lines. Traditional electrical betweenness primarily considers generator capacity, \nload level, and the distribution of current flows within the network. Its genera l form is \nexpressed as follows [28]: \n() gd\ngd\ng G d D\nB l W f\n\n=\n (1) \nIn (2), the term √∣ 𝑃𝑑/𝑃𝑔 ⋅ 𝑌𝑔𝑑 ∣ acts as a power distribution weighting factor, which \nreflects the proportion of the active power of generator node 𝑔 that is delivered to load \nnode 𝑑  under their electrical coupling 𝑌𝑔𝑑 . The quantity 𝐼𝑔𝑑(𝑚, 𝑛)  represents the line \ncurrent sensitivity on line (𝑚, 𝑛) caused by a unit current injection between source node \n𝑔 and load node 𝑑, i.e., the power transfer distribution factor (PTDF) for the pair (𝑔, 𝑑). \nIn the equation, B(l) denotes the electrical betweenness of line 𝑙; g and d represent \ngenerator nodes and load nodes, respectively, while G and D denote the sets of generator \nand load nodes. Wgd is the weight associated with power distribution, and \ngdf  repre-\nsents the distribution of line currents under an applied potential difference, also known \nas power transfer distribution factors (PTDFs).  In practical systems, however, the power \nsupplied by a generator typically serves nearby nodes more significantly, with limited \ncontribution to distant nodes. Therefore, improved electrical betweenness is proposed by \nincorporating the equivalent admittance  between generator and load nodes as an addi-\ntional weighting factor: \ne\n/ | ( , ) |\n()\ngd\nd g gd\ng G d D\ngd\nP P Y I m n\nBl NN\n\n=\n\n (2) \nIn the equation, 𝐵𝑒(𝑙) denotes the improved electrical betweenness of line 𝑙; 𝑚 and \n𝑛 are the two terminal nodes of line 𝑙. 𝑃𝑔 and 𝑃𝑑 represent the active power at genera-\ntor node 𝑔 and load node 𝑑, respectively, while 𝑁𝑔 and 𝑁𝑑 denote the total numbers \nof generator nodes and load nodes. 𝑌𝑔𝑑 is the equivalent admittance between generator \nnode 𝑔 and load node 𝑑. A larger 𝑌𝑔𝑑 indicates that the generator and load nodes are \ncloser and the power transfer efficiency between them is higher, whereas a smaller 𝑌𝑔𝑑 \nimplies a greater electrical distance and thus lower contribution from the generator to that \nEnergies 2026, 19, 210 6 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nload node. The term 𝑓𝑔𝑑\n(𝑚,𝑛) represents the current on line (𝑚, 𝑛) resulting from injecting \na unit current between source node 𝑔 and load node 𝑑. Therefore, the structural vulner-\nability of the distribution line can be expressed as follows: \ne1\nstr\ne\n()\nmax ( )\nM\nl\nBl",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "B l M",
+      "level": 1,
+      "text": "=\n\n= \n (3) \nIn the equation, Vstr presents the structural vulnerability of the distribution lines, and \nM denotes the total number of lines in the network.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.1.2 State Vulnerability of Distribution Networks",
+      "level": 3,
+      "text": "Operational vulnerability reflects real -time network conditions through voltage de-\nviations at line terminal nodes, where Δ𝑉𝑚𝑎𝑥  denotes the maximum allowable voltage \ndeviation of the system (typically set to 0.07 per unit)  [25]. Larger deviations indicate re-\nduced disturbance tolerance. For line 𝑙 at time 𝑡 \n,,\nmax\n( , )\nt m t n\nv\nV\ntl\nV\nV=\n−\n\n (4) \nIn Equation (4), 𝑣𝑙(𝑡)  denotes the operational vulnerability of line 𝑙  at time 𝑡 ; \n𝑉𝑚(𝑡) and 𝑉𝑛(𝑡) represent the voltage magnitudes of nodes 𝑚 and 𝑛 at time 𝑡, respec-\ntively. \nBy normalizing the nodal vulnerability, we obtain \n( )\n( ) ( )\nmin\nmax min\n( , ) ,( , ) ,,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "t l v t lV t l v t l v t l",
+      "level": 1,
+      "text": "−= −\n (5) \nIn the equation, 𝑣min(𝑡, 𝑙) and 𝑣max(𝑡, 𝑙) represent the minimum and maximum val-\nues of the operational vulnerability of all lines at time 𝑡, respectively. \nTherefore, the operational vulnerability of the distribution network can be expressed \nas follows: \nstate 11\n11 ( , )\ntl\nTM",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "T tlM V",
+      "level": 1,
+      "text": "==\n= \n (6) \nIn the equation, 𝑉state represents the operational vulnerability indicator of the distri-\nbution network; 𝑇 is the operating time horizon of the system, with 𝑇 = 24; and 𝑀 de-\nnotes the total number of lines in the distribution network.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.1.3 Network Equilibrium of Distribution Networks",
+      "level": 3,
+      "text": "Network equilibrium measures the uniformity of the distribution of line operational \nvulnerability. If certain lines exhibit significantly higher vulnerability than others, the sys-\ntem exhibits lower equilibrium and becomes more susceptible to cascading fail ures. \nTherefore, the network equilibrium of the distribution network is characterized using the \nvoltage equilibrium of distribution lines, defined as follows: \nv\n1\n( , )\n(\n(,\n,)\n)\nj\nM",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "t l",
+      "level": 1,
+      "text": "j\ntp\nV\nl\nt\n=\n=\n\n \n(7) \n( )v v 2 v 1\n( ) ( , ) log ( , )\nM",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "H t p t l p t l",
+      "level": 1,
+      "text": "=\n=− \n (8) \n2\n1 2\n()1 1 log( ( ))\nT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "v t",
+      "level": 1,
+      "text": "HtJ TM\n\n=\n=  − \n\n (9) \nIn (7), 𝑝𝑣(𝑡, 𝑙) denotes the weighting factor of the operational vulnerability of line 𝑙 \nat time 𝑡, reflecting its relative contribution to the overall network vulnerability at that \nEnergies 2026, 19, 210 7 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nmoment. This weighting factor is obtained by normalizing the operational vulnerability \nacross all lines at time 𝑡, such that 𝑝𝑣(𝑡, 𝑙) ∈ [0,1] and ∑ 𝑝𝑣(𝑡, 𝑙)\n𝑀\n𝑙=1 = 1, where 𝑀 is the \ntotal number of transmission lines. A larger 𝑝𝑣(𝑡, 𝑙)  indicates that line 𝑙  contributes \nmore significantly to the system -wide voltage deviation risk at time 𝑡. In (8), 𝐻𝑣(𝑡) rep-\nresents the Shannon entropy of line operational vulnerability, which is used to measure \nthe uniformity of the vulnerability distribution among all lines. In (9), 𝐽𝑣 denotes the net-\nwork equilibrium indicator of the distribution network. It characterizes the overall distri-\nbution uniformity of line operational vulnerability over the entire time horizon ( 𝑇 = 24). \nWhen the vulnerability of all lines is highly uniform  (i.e., when the values of 𝑝𝑣(𝑡, 𝑙) are \nvery close to each other ), 𝐽𝑣 approaches zero, indicating that each line contributes simi-\nlarly to system risk and that the network is more stable. Conversely, when the vulnerabil-\nity distribution is highly uneven (i.e., some lines exhibit significantly higher vulnerability \nthan others), 𝐽𝑣 approaches one, implying poor network stability and a higher likelihood \nof cascading failures that may lead to system outages.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.1.4 Comprehensive Vulnerability Indicator of Distribution Networks",
+      "level": 3,
+      "text": "In summary, the comprehensive vulnerability of a distribution network is jointly de-\ntermined by its structural vulnerability, operational vulnerability, and network equilib-\nrium. The detailed computational procedure is illustrated in Figure 2.  \nEnd\nStart\nY\nN Is every  source–load  \nnode pair traversed?\nObtain branch electrical-\ndistance vulnerability\nBased on power-flow calculation, \nobtain voltage magnitude of each node\nCalculate branch \nvoltage deviation\nObtain branch voltage-\nstate vulnerability\nObtain network voltage-\nstability vulnerability index\nCombine electrical-distance and voltage-state analysis to \nobtain the comprehensive branch vulnerability index\nInput distribution network parameters, PV \noutput, and typical load profiles\nExtract generator \nand load node data\nCalculate electrical \ndistance weighting matrix\nIdentify  source–load  \nnode pairs\nCompute the power flow on each \nbranch caused by a unit injection at \nthe  source–load  node pairs Calculate the proportional contribution \nof branch voltage-state vulnerability at \neach time instant to the overall network \nvoltage vulnerability\n \nFigure 2. Flow of calculation of integrated vulnerability indicators for distribution networks. \nV str state vC V V J  =  +  + \n (10) \nIn Equation (10), 𝐶𝑉 represents the comprehensive vulnerability indicator of the dis-\ntribution network, obtained through a weighted combination of structural vulnerability, \noperational vulnerability, and network equilibrium. The coefficients 𝛼, 𝛽, and 𝛾 denote \nthe weights of structural vulnerability, operational vulnerability, and network equilib-\nrium, respectively, satisfying 𝛼 + 𝛽 + 𝛾 = 1. These weights are determined using a com-\nbined Analytic Hierarchy Process (AHP) and entropy weight method: the AHP estab-\nlishes the relative importance of the three components based on expert judgment, while \nEnergies 2026, 19, 210 8 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nthe entropy method adjusts these weights according to the actual data distribution to en-\nsure objectivity. This hybrid approach balances subjective domain expertise with objective \ndata characteristics, reflecting the true influence of each vulnerability component on over-\nall system vulnerability.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.2 Post-Event Supply Restoration Capability of Distribution Networks",
+      "level": 2,
+      "text": "Network supply efficiency represents the effectiveness of power transfer between \ngeneration nodes and load nodes within the power system, serving as an indicator of the \noverall performance of the network. The efficiency function is used to evaluate the en-\nhancement in post -event supply restoration capability achieved by integrating energy \nstorage systems: \n1 g\ngdg Gd Dd g d\nPEY N N P \n=   \n (11) \nIn the equation, 𝐸 denotes the original supply efficiency of the network. The per-\ncentage change in the overall network vulnerability relative to its original state is used to \nassess the impact of extreme events on the overall performance of the distribution net-\nwork: \n0% 100%EE E=\n \n(12) \nIn the equation, 𝐸% represents the variation rate of network efficiency after the sys-\ntem is subjected to an extreme event; a larger value of 𝐸% indicates a stronger capability \nto withstand risks. 𝐸0 denotes the initial network efficiency of the system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3 Bi-Level Optimization Model for Energy Storage Allocation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.1 Energy Storage Capacity Optimization Model",
+      "level": 2,
+      "text": "The capacity of the energy storage system is modeled based on its state of charge \n(SOC) and the corresponding charging and discharging periods. The state of charge of the \nstorage device varies at each time 𝑡 depending on whether it is charging or discharging. \nSpecifically, the following occurs: \n(1) When the energy storage system is charging \nch\nOC OC\nbat\nC() Δ( ) ( 1) (1 ) P t tS t S t M\n = −  − +\n (13) \n(2) When the energy storage system is discharging \ndis\nOC OC\nbat D\n() Δ( ) ( 1) (1 ) P t tS t S t M \n= −  − − \n (14) \nIn the equation, SOC(𝑡) represents the state of charge of the energy storage system \nat time 𝑡 ; 𝛿  denotes the self -discharge rate of the storage battery; 𝑃ch(𝑡)  and 𝑃dis(𝑡) \nare the charging and discharging power of the storage system at time 𝑡, respectively. 𝜂C \nand 𝜂D represent the charging and discharging efficiencies. The energy storage capacity \ncan be obtained from (15) as follows: \ndis\nch C1 D\nbat\n()() Δ\n1\nT\nt\nPtP t t\nM T\n \n\n=\n  + \n= −\n (15) \nIn the equation, 𝑀bat denotes the energy storage capacity, which represents the total \namount of energy required for charging and discharging while accounting for the self -\ndischarge effect of the storage system over the entire time horizon.  \nEnergies 2026, 19, 210 9 of 23 \n \nhttps://doi.org/10.3390/en19010210",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.2 Objective Function",
+      "level": 2,
+      "text": "Given the high installation and operation–maintenance costs associated with energy \nstorage systems, it is essential to fully consider both the cost factors and the benefits they \nbring to the distribution network when planning storage deployment. To ensure the safety \nand economic efficiency of distribution network operation, this study adopts a multi -ob-\njective optimization framework using two evaluation indicators. The overall economic \nperformance of the distribution network is defined as 𝑓1, and the comprehensive line vul-\nnerability is defined as 𝑓2. Accordingly, the objective function 𝐹 is formulated as follows: \n12min min( ( ), ( ))\n s.t. ( ) = 0, ( ) 0\nF f x f x\ng x h x\n=\n \n (16) \nIn the equation, min 𝐹 represents the minimum value within the optimization space \nconstructed by the two objectives 𝑓1 and 𝑓2; 𝑥 denotes the feasible solution of the deci-\nsion variables. The functions 𝑔(𝑥) and ℎ(𝑥) correspond to the equality and inequality \nconstraints that the model must satisfy, which together define the feasible region of the \noptimization problem.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.2.1 Overall Economic Cost of the Distribution Network",
+      "level": 3,
+      "text": "The overall economic cost of system operation includes the full life -cycle cost of the \nenergy storage configuration, network power loss cost, and the electricity purchase cost \nfrom the main grid: \n1 Bat ploss Gridf C C C= + +\n (17) \nIn the equation, 𝐶Bat represents the comprehensive economic cost of the energy stor-\nage system; 𝐶ploss denotes the network power loss cost; and 𝐶Grid is the electricity pur-\nchase cost from the main grid. \n(1) Comprehensive Economic Cost of the Energy Storage System \nReferring to the full life-cycle cost model of energy storage systems, the comprehen-\nsive economic cost consists of the initial fixed investment cost, operating cost, operation \nand maintenance (O&M) cost, and government subsidy mechanisms. These components \nare formulated in (18): \ninv ps om suBat bC C C C C= + + −\n (18) \nThe initial investment cost of ESS is determined by the number of installed units, the \ncapacity, and the power rating of each unit: \n( )\nBat\nBat, Bat,1 hhh\nN\ninvC E P \n=\n=   + \n (19) \nwhere 𝑁𝐵𝑎𝑡 denotes the number of installed ESS units; 𝐸𝐵𝑎𝑡,ℎ and 𝑃𝐵𝑎𝑡,ℎ represent the \ninstalled capacity (kWh) and power rating (kW) of the ℎ-th battery unit, respectively; and \n𝜆 and 𝜏 denote the unit capacity cost and unit power cost of 𝐸𝐵𝑎𝑡, respectively. Lithium-\nion batteries with high comprehensive performance are selected as the ESS components, \nwith cost parameters set as follows: 𝜆 ≈ 170/kWh and 𝜏 ≈ USD 113/kW. \nThe operating cost of ESSs is related to the electricity price during charging and dis-\ncharging periods: \nBat\npur ch, sell dis,11ps ( ( ) ( ) ( ) ( ))\nN T\nhhht",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "e t P t e t P t",
+      "level": 1,
+      "text": "==\n=   − \n (20) \nwhere 𝑃𝑐ℎ,ℎ(𝑡) and 𝑃𝑑𝑖𝑠,ℎ(𝑡) represent the charging and discharging power of the ℎ-th \nESS unit at time 𝑡, respectively; and 𝑒𝑝𝑢𝑟(𝑡) and 𝑒𝑠𝑒𝑙𝑙(𝑡) denote the electricity purchase \nand selling prices at time 𝑡, respectively. \nThe O&M cost 𝐶𝑜𝑚 is calculated as 5% of the initial investment cost: \nEnergies 2026, 19, 210 10 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nom inv 5%CC =\n (21) \nThe revenue from government subsidies for ESS electricity generation is given by  \nBat\nsub d",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4 is,",
+      "level": 1,
+      "text": "2\n11\n( ( )) h\nN\nht\nC P t \n==\n= \n (22) \nwhere 𝐶𝑠𝑢𝑏  is the total government subsidy; 𝜎  denotes the government subsidy per \nkWh of electricity generation, typically set at USD 0.017/kWh; and Δ𝑡 is the time interval. \n(2) Network Power Loss Cost of the Distribution System \nThe power loss in the distribution network can be obtained through system power \nflow calculation, as expressed in (23): \n(\n( )\nloss1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "22 loss , 1",
+      "level": 1,
+      "text": ",\nloss ( ) ( )\n( ) ( ) ( )\n2 ( ) ( )cos ( ) )\n(\nT\nt\nM",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "j i jl",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "j i j",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "P t e t",
+      "level": 1,
+      "text": "P t G V t V t\nV t V t t \n=\n=\n=\n= + −\n (23) \nIn the equation, 𝐶loss  denotes the economic cost associated with network power \nlosses; 𝑃loss(𝑡) represents the power loss of the distribution system at time 𝑡; e(t) is the \nelectricity price at time 𝑡 ; 𝐺𝑖,𝑗   denotes the conductance between nodes 𝑖   and 𝑗 ; and \n𝑉𝑖(𝑡), 𝑉𝑗(𝑡), and 𝜙𝑖,𝑗(𝑡)  are the voltage magnitudes of nodes 𝑖 and 𝑗 and their phase \nangle difference at time 𝑡, respectively. \n(3) Electricity Purchase Cost from the Main Grid \nThe electricity purchase cost from the main grid is determined by the electricity price \nand the power exchanged between the main grid and the distribution network, as ex-\npressed in (24): \nGrid pu Grid1 r ( ) ( )\nT\nt\ntPCe t\n=\n=\n (24) \nIn the equation, 𝐶Grid represents the electricity purchase cost of the distribution net-\nwork from the main grid, and 𝑃Grid(𝑡) denotes the power injected from the main grid into \nthe distribution network at time 𝑡.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3.2.2 Comprehensive Vulnerability of the Distribution Network",
+      "level": 3,
+      "text": "The comprehensive vulnerability of the distribution network is jointly determined \nby its structural vulnerability, operational vulnerability, and network equilibrium. It is \nobtained from (10) as follows: \n2 V str state vf C V V J   = =  +  + \n (25)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.3 Constraints",
+      "level": 2,
+      "text": "(1) Voltage Constraints \nmin max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "i iV V V",
+      "level": 1,
+      "text": "\n (26) \nIn the equation, 𝑉𝑖\nmin and 𝑉𝑖\nmax denote the lower and upper voltage limits of node \n𝑖, respectively. \n(2) Power Balance Constraint \npv Bat\nG Bat a PV,1 , lo d loss1\n( ) ( ) ( ) ( ) ( ) 0\nN N\nhhhh\nP t P t P t P t P t\n==\n+  +  − − =\n (27) \nIn the equation, 𝑁pv  denotes the number of installed photovoltaic (PV) units; \n𝑃pv,ℎ(𝑡) represents the active power output of the ℎ-th PV unit at time 𝑡; and 𝑃load(𝑡) is \nthe total load demand at time 𝑡. \nEnergies 2026, 19, 210 11 of 23 \n \nhttps://doi.org/10.3390/en19010210 \n(3) Line Power Flow Constraints \n( )\n( )\n, , , ,\n, , ,\n( ) ( ) ( ) cos sin\n( ) ( ) ( ) sin cos",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "i j i j i j i j i j ji",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "i j i j ij i j i j ji",
+      "level": 1,
+      "text": "P t V t V t G B\nQ t V t V t G B\n\n\n\n\n =  + =  −\n \n(28) \nIn the equation, 𝑃𝑖(𝑡) and 𝑄𝑖(𝑡) represent the active and reactive power injected at \nnode 𝑖 at time 𝑡, respectively. \n(4) Constraints on the Total Active and Reactive Power Injected from the Upstream Grid \ninto the Distribution Network \nmin\nGrid Grid Grid\nGrid\nmax\nmin m\nGr i",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "d Gr d",
+      "level": 1,
+      "text": "a\ni\n()\n()\nP P t P\nQ Q t Q\n\n\n\n\n\n (29) \nIn the equation, 𝑃Grid\nmin, 𝑃Grid\nmax, 𝑄Grid\nmin, and 𝑄Grid\nmax represent the lower and upper limits \nof the active and reactive power exchanged through the tie line between the upstream \ngrid and the distribution network. \n(5) Constraints Related to the Energy Storage System. This includes the charging and \ndischarging power limits and the SOC constraints. \nch, Bat,\nBat,\ndis,\nmin max\nOC OC OC\nC\nD\n0 ( )\n( ) 0\n()h\nhh\nh\nh\nP t P\nP Pt\nS S t S\n\n\n\n−\n\n\n\n\n\n\n\n \n(30) \nIn the equation, SOCℎ represents the state of charge of the ℎ-th energy storage unit.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "4 Algorithmic Framework of the Proposed Model",
+      "level": 1,
+      "text": "The traditional Beluga Whale Optimization (BWO) algorithm is a recently developed \nswarm intelligence method that simulates the foraging and survival behaviors of beluga \nwhale groups. It conducts global optimization through three key operators : exploration, \nexploitation, and whale -fall behavior. However, when addressing complex multi -objec-\ntive optimization problems, the classical BWO still suffers from several limitations, in-\ncluding low-quality initial population, a tendency to fall into local optima, and insufficient \nbalance between exploration and exploitation. These issues generally lead to slow conver-\ngence and suboptimal solution quality. \nTo overcome these drawbacks, this study proposes an Enhanced Beluga Whale Op-\ntimization algorithm (EBWO). The algorithm incorporates a quasi -oppositional learning \nstrategy to improve the distribution quality of the initial population, introduces a spiral \nforaging mechanism to strengthen global search capability, and designs an adaptive ex-\nploration–exploitation switching mechanism to maintain a better balance during the \nsearch process. In addition, improved Lévy flight and whale -fall operators are integrated \nto enhance local refinement ability and increase the probability of escaping local optima.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "4.1 Quasi-Opposition-Based Learning (QOBL) Initialization Strategy",
+      "level": 2,
+      "text": "To enhance the distribution of the initial population and improve both the quality \nand diversity of the initial solutions, the quasi -oppositional based learning (QOBL) strat-\negy is incorporated. For each individual 𝑥𝑖\n𝑡, its opposite solution and quasi -opposite so-\nlution are computed as follows: \n2\njj\nj\nluc +=\n  (31) \nopp t\nij j j ijx l u x= + −\n  (32) \nEnergies 2026, 19, 210 12 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nIn the equation,  𝑐𝑗  denotes the center of the search interval in the 𝑗-th dimension, \nand 𝑥𝑖𝑗\nopp represents the complete opposite solution of 𝑥𝑖𝑗. The quasi-oppositional learn-\ning position is then updated as follows: \n( ) ( )\n( ) ( )\nbest best best\nbest best\n1\n, 1,\n, 1,\ntt\niit",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "t t t",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "i i",
+      "level": 1,
+      "text": "ri\nri\n\n\n+\n−\n + − + − ==\n+ − + − ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "x x x x",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "x x x x x",
+      "level": 1,
+      "text": "(33) \nBy comparing the fitness values of the original solution and its quasi -opposite coun-\nterpart, the better one is retained in the population. This strategy applies a “mirroring and \nstretching” operation to the current solutions in each generation, thereby inc reasing the \nlikelihood of escaping from local optima.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "4.2 Spiral Foraging Strategy",
+      "level": 2,
+      "text": "After applying the QOBL strategy, a spiral foraging mechanism inspired by manta \nray hunting behavior is introduced to further enhance the global exploration capability in \neach iteration. Let 𝑥best denote the current global best solution. The spiral factor in gen-\neration 𝑡 is defined as follows: \n( ) ( )max\n9 9 9 9\nmax\n1, 2exp sin 2 , (0,1)Ttt r r r r U T  −+= \n\n  (34) \nFor the 𝑖-th individual, its position is updated according to the following equation:  \n( ) ( )\n( ) ( )\nbest best best\nbest best\n1\n, 1,\n, 1,\ntt\niit",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "t t t",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "i i",
+      "level": 1,
+      "text": "ri\nri\n\n\n+\n−\n + − + − ==\n+ − + − ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "x x x x",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s43",
+      "title": "x x x x x",
+      "level": 1,
+      "text": "(35) \nIn the equation , 𝑟 ∼ 𝑈(0,1). If 𝑓(𝑥𝑖\n𝑡+) < 𝑓(𝑥𝑖\n𝑡), the updated position is directly ac-\ncepted. This strategy enables each individual to move toward global optimum while sim-\nultaneously forming a spiral search trajectory along a “chain -like path,” thereby enhanc-\ning its fine-grained exploitation capability in the vicinity of the global best solution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s44",
+      "title": "4.3 Multi-Objective EBWO Procedure",
+      "level": 2,
+      "text": "To efficiently solve the proposed bi-objective energy storage planning model, an en-\nhanced multi-objective EBWO framework is developed. The algorithm begins by gener-\nating a high -quality initial population through the QOBL initialization strategy. During \neach iteration, spiral foraging, adaptive exploration –exploitation switching, Lévy flight \nperturbation, and whale -fall operators are sequentially applied to maintain population \ndiversity and strengthen the approximation capability toward the Pareto front. Thr ough-\nout the optimization process, an external elite archive is employed to store and update all \nnon-dominated solutions, ensuring that only high -quality candidates are preserved ac-\ncording to dominance relations. \nAfter convergence, the objective values of all archived solutions are normalized and \nprocessed with entropy weight calculation to determine the relative importance of each \nobjective. Two decision -making approaches —entropy-weighted TOPSIS and entropy -\nweighted Euclidean distance —are subsequently adopted to assess the comprehensive \nperformance of candidate solutions and to identify representative compromise solutions \nfor energy storage allocation and operational analysis. Through this process, the enhanced \nEBWO achieves balanced improvements in global exploration, convergence speed, and \nsolution diversity, providing an effective and robust tool for bi -objective planning. The \ndetailed flowchart of the proposed approach is illustrated in Figure 3.  \nEnergies 2026, 19, 210 13 of 23 \n \nhttps://doi.org/10.3390/en19010210 \nUse the quasi-oppositional \nlearning strategy to optimize the \ninitial population and compute \nthe fitness values.\nStart\nEncode the decision variables \nrelated to the energy storage \nlocation and capacity\nInput the distribution network \nparameters as well as the typical \nphotovoltaic and load output data\nSet the relevant parameters of the \nEBWO algorithm, including the \nwhale population size, the \ndimensionality of the population, and \nthe maximum number of iterations.\nExecute the cyclone foraging \nstrategy and compute the \nbalance factor and the \nwhale fall probability.\nB＞0.5\nThe individual is in \nthe exploration phase\nThe individual is in the \nexploration phase\nUpdate the positions and \ncompute the corresponding \nfitness values.\nCalculate the whale-fall \nprobability W\nW＞0.5\nY\nUpdate the positions \nof the beluga whales\nk=k+1\nwhen k<K\nN\nN\nY\nObtain the optimal \nPareto front\nEnd\n \nFigure 3. Improved Beluga Whale Multi-Objective Optimization algorithm.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s45",
+      "title": "4.4 Algorithm Performance Evaluation",
+      "level": 2,
+      "text": "To further verify the effectiveness of the proposed EBWO algorithm and examine its \nadaptability to different types of Pareto fronts, three standard multi-objective benchmark \nfunctions, ZDT1, ZDT2, and ZDT3, are selected for comparative experiments. ZDT1 co r-\nresponds to a continuous convex front, ZDT2 to a concave front, and ZDT3 to a complex, \ndiscontinuous front composed of several disconnected segments. These benchmarks \njointly provide a comprehensive test of the algorithm’s performance under different front \ngeometries. \nIn all tests, the decision dimension is set to 10. The population size and maximum \nnumber of iterations of all algorithms are kept identical so that the total number of func-\ntion evaluations (population size × iterations) is the same. Each setting is indepe ndently \nrun 10 times. The Inverted Generational Distance (IGD) is adopted as the performance \nmetric, and the IGD–iteration curves are recorded together with the mean IGD at the final \niteration. A smaller IGD indicates that the obtained non -dominated set is  closer to the \nanalytical Pareto front, implying better overall performance in terms of convergence and \ndiversity. \n(1) Analysis of IGD Convergence Behavior \nAs shown in Figure 4, which depicts the IGD convergence curves of the three algo-\nrithms on ZDT1–ZDT3, the following observations can be made: \nEnergies 2026, 19, 210 14 of 23 \n \nhttps://doi.org/10.3390/en19010210 \n \nFigure 4. IGD convergence curves of the three algorithms on different ZDT test functions. \nFor all three benchmark problems, the IGD values of MOBWO, MOPSO, and EBWO \ndecrease with the increase in iteration number, indicating that all three algorithms possess \nbasic convergence capability. \nConcerning ZDT1, the IGD of EBWO drops much faster than those of the other two \nalgorithms. EBWO reduces IGD to a low level within a relatively small number of itera-\ntions (about 100 –200 generations), whereas MOBWO and MOPSO still remain at much \nhigher IGD levels under the same number of iterations and converge more slowly in the \nlater stages.  Regarding ZDT2, EBWO consistently achieves the lowest IGD among the \nthree algorithms at all iteration stages, demonstrating a stronger capability of approximat-\ning concave Pareto fronts. MOPSO yields the highest IGD throughout the run and exhibits \na clear plateau in the middle and late iterations, suggesting weaker convergence and di-\nversity on this type of problem. The performance of MOBWO lies between EBWO and \nMOPSO. For ZDT3, all three algorithms show a gradually decreasing IGD, but the final \nIGD differences are relatively smaller. Under the current parameter settings, MOBWO at-\ntains the smallest final IGD, while the final IGD values of EBWO and MOPSO are slightly \nhigher but of the same order of magnitude. This indicates that for complex problems with \nmultiple disconnected front segments, EBWO and MOBWO exhibit comparable overall \nperformance, with MOPSO being slightly inferior. \nIn summary, the numerical experiments on the ZDT1 –ZDT3 benchmark functions \nshow that, under the same number of function evaluations, EBWO generally outperforms \nMOBWO and MOPSO in terms of convergence speed, approximation accuracy and, in \nmost cases, the qu ality of the obtained Pareto fronts, while achieving performance com-\nparable to MOBWO on the discontinuous ZDT3 problem. These benchmark results con-\nfirm the effectiveness and robustness of the proposed algorithm and provide a solid algo-\nrithmic basis for its  subsequent application to energy storage planning. The population \nsize, maximum number of iterations, and main control parameters of EBWO are chosen \nfollowing the settings in [29], in order to ensure consistency and comparability with exist-\ning studies on improved BWO algorithms.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s46",
+      "title": "5 Case Studies",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s47",
+      "title": "5.1 Basic Parameters of the Test System",
+      "level": 2,
+      "text": "Simulation studies are conducted on a modified IEEE -33 bus distribution network \nincorporating distributed photovoltaic (PV) units to verify the effectiveness of the pro-\nposed vulnerability identification method and the energy storage optimization strategy. \nThe topology of the test system is shown in Figure 5. The total system load is 3715 kW + \nj2300 kvar, the base power is 10 MVA, and the nominal line -to-line voltage is 12.66 kV. \nThe allowable voltage range for all nodes is 0.95 –1.05 pu. Distributed PV units  are con-\nnected at buses 10, 15, and 30. The system load profiles and wind/PV output data are ob-\ntained from normalized field-measured data from a region in Northwest China, as shown \nin Figure 6.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Indicator system for distribution network vulnerability assessment."
+    },
+    {
+      "id": "f2",
+      "caption": "Flow of calculation of integrated vulnerability indicators for distribution networks."
+    },
+    {
+      "id": "f3",
+      "caption": "Improved Beluga Whale Multi-Objective Optimization algorithm."
+    },
+    {
+      "id": "f4",
+      "caption": "IGD convergence curves of the three algorithms on different ZDT test functions."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of existing ESS planning methods and the proposed approach."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "(30)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "(31)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "(32)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    },
+    {
+      "id": "e34",
+      "latex_or_text": "(34)"
+    },
+    {
+      "id": "e35",
+      "latex_or_text": "(35)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 35
+  }
+}

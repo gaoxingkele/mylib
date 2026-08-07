@@ -1,0 +1,309 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p5_hybrid_moea_feasibility_review/p5_hybrid_moea_feasibility_review__07__multi_timescale_coordinated_planning_of_wind_solar_and_en__872293ee4b.pdf",
+  "n_pages": 27,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 State Grid NanChang Electric Power Supply Company, Nanchang 330077, China",
+      "level": 1,
+      "text": "2 School of Electrical and Electronic Engineering, North China Electric Power University, Changping District,\nBeijing 102206, China\n* Correspondence: wuzy@ncepu.edu.cn\nAbstract\nThe core of power system planning lies in optimizing resource portfolios to ensure reliable\nelectricity supply, with generalized adequacy serving as a key indicator of supply security.\nAs the share of renewable energy increases, the mechanisms underlying system security\nundergo profound changes, extending the concept of adequacy from mere power balance to\nencompass flexibility and inertia support while exhibiting spatial and temporal heterogene-\nity and wide-area characteristics. Traditional planning approaches can no longer meet these\nevolving requirements. To address this, a power grid coordinated planning framework is\nproposed based on generalized adequacy, which integrates power and energy adequacy,\nflexibility adequacy, and inertia adequacy. Within this framework, generalized adequacy\nmetrics and their quantification methods are developed, and a coordinated planning strat-\negy for wind power, photovoltaic power, multi-timescale energy storage, and transmission\nexpansion is introduced to enhance renewable energy utilization and meet flexibility needs\nacross multiple timescales. Furthermore, a scheme evaluation and selection method based\non generalized adequacy is proposed. Finally, the effectiveness of the proposed approach is\nvalidated through case studies on the IEEE 24-bus system.\nKeywords: generalized adequacy; coordinated planning framework; flexibility and inertia\nadequacy; multi-timescale energy storage; renewable energy utilization",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increasing demands of economic and social development, coupled with\nstringent environmental protection requirements, the large-scale integration of renewable\nenergy into power systems has become a global consensus among governments and\ngrid operators [1–3]. Compared to conventional thermal power, which provides stable\nand reliable output, renewable energy generation is highly sensitive to extreme weather\nconditions and exhibits pronounced seasonal variations. These characteristics exacerbate\nthe complexity of multi-timescale power and energy balancing in modern power systems,\nfurther underscoring the need for enhanced system flexibility [ 4]. Additionally, as the\nshare of renewable energy continues to grow, the decline in system operational inertia\nhas emerged as a critical concern, making dynamic frequency stability a key objective\nin power system planning [ 5]. In light of these challenges, traditional grid planning\nmethodologies are increasingly inadequate in accommodating the evolving distribution of\nenergy resources and transmission network structures. This necessitates an urgent revision\nEnergies 2025, 18, 5024 https://doi.org/10.3390/en18185024\nEnergies 2025, 18, 5024 2 of 27\nof planning frameworks and evaluation criteria to facilitate the large-scale integration of\nrenewable energy sources.\nAdequacy, as a fundamental prerequisite for the stable and reliable operation of\npower systems, remains a core consideration in the planning phase. Conventional grid\nplanning approaches primarily focus on thermal power, hydropower, and transmission\ninfrastructure, typically ensuring adequacy by requiring that the total installed capacity\nof thermal power units exceeds the forecasted load by a predefined margin. However, as\nthe share of renewable energy continues to expand, this criterion is becoming increasingly\nunreliable. The inherent seasonal variability and short-term stochastic nature of renewable\nenergy generation exacerbate supply–demand imbalances, rendering traditional capacity-\nbased adequacy assessments insufficient [ 6]. Moreover, the short-term fluctuations of\nrenewable energy amplify net load volatility, necessitating substantial ramping resources\nto maintain system stability. Furthermore, as synchronous generators are progressively\nsupplanted by inertia-free renewable sources, the system’s ability to provide inertial support\ncontinues to diminish, elevating the risk of large-scale frequency excursions. Consequently,\nit is imperative to extend the traditional concept of adequacy, which has historically focused\non capacity adequacy, toward a more comprehensive framework that integrates power and\nenergy adequacy, flexibility adequacy, and inertia adequacy.\nTo address these emerging trends, scholars worldwide have been actively investigating\npower system adequacy evaluation methodologies, grid planning strategies, and scheme\ncomparison techniques. In the context of adequacy evaluation metrics, the international\norganization ESIG, in its latest report, emphasized the urgent need to update the conven-\ntional Loss of Load Expectation (LOLE) metric and its 0.1 d/a criterion. It advocates for the\nadoption of a multi-metric framework that integrates Expected Energy Not Served (EENS)\nalongside additional risk indicators to enhance reliability assessments [7]. The academic\ncommunity has explored various methodologies to assess adequacy in the context of large-\nscale renewable energy integration. For instance, in [8], the authors extended the traditional\nadequacy assessment, which was originally based on available generating capacity, by\nincorporating primary energy supply constraints and multiple energy carriers, utilizing\npenalty functions and a multi-level energy flow model. Similarly, in [9], researchers incor-\nporated generator reserve capacity and transmission power flow constraints into adequacy\nevaluations, further integrating wind turbine ramping limitations, specifically the Ramp\nPower Limit (RPL) and Ramp Rate Limit (RRL), within a second-order cone programming\n(SOCP) framework. In the domains of system flexibility and inertia evaluation, numerous\nindicators have been proposed to address the evolving challenges of renewable-dominated\npower systems. For example, in [10], a comprehensive flexibility assessment framework\nwas developed, incorporating key statistical indicators such as flexibility shortage prob-\nability, expectation, duration, and quantiles, which were built upon conventional power\nand energy adequacy metrics. In [11], a probabilistic approach was introduced to define\nInsufficient Ramp Resource Probability (IRRP) and Insufficient Ramp Resource Expectation\n(IRRE) as quantitative flexibility indicators. Furthermore, ref. [12] introduced the concept\nof an inertia security region (ISR) and proposed a set of novel metrics, including the inertia\nsecurity region aspect ratio, inertia security margin, and inertia reserve coefficient, to char-\nacterize the ISR and quantitatively assess system inertia. In addition, ref. [ 13] proposed\nfour frequency security assessment metrics and established their correlation with system\ninertia, providing a robust framework for frequency stability analysis.\nWith regard to power grid planning methodologies and scheme comparisons, sub-\nstantial research has been conducted on the coordinated planning of renewable energy,\nenergy storage, and transmission networks in future power systems [14,15]. For example,\nref. [16] proposed a chance-constrained transmission expansion planning approach that\nEnergies 2025, 18, 5024 3 of 27\nexplicitly accounts for load demand and wind power uncertainty, optimizing the trade-off\nbetween economic efficiency and system reliability. In [17], a distributed robust optimiza-\ntion model was formulated to minimize transmission expansion costs under uncertainty\nwhile maximizing renewable energy penetration. Recognizing that most transmission\nexpansion studies overlook the need for system flexibility optimization to address the\nvariability of renewable energy. Additionally, ref. [18] developed an enhanced binary parti-\ncle swarm optimization (BPSO) algorithm to solve the security-constrained transmission\nexpansion planning problem, demonstrating its effectiveness through case studies. In\nterms of scheme comparison methodologies, extensive research has been conducted on\nvarious multi-criteria decision-making (MCDM) techniques. Among these, commonly\nemployed weighting methods include the Analytic Hierarchy Process (AHP) [19], the en-\ntropy weight method [20], and the grey comprehensive evaluation method [21]. Moreover,\nranking-based approaches such as the Technique for Order Preference by Similarity to Ideal\nSolution (TOPSIS) and the Preference Ranking Organization Method for Enrichment Evalu-\nations (PROMETHEE-II) [22] have been widely adopted for scheme selection, providing\nsystematic and robust decision-making frameworks.\nThe primary limitation of the aforementioned studies is their fragmented treatment of\nadequacy across different dimensions, including power and energy adequacy, flexibility\nadequacy, and inertia adequacy, without ensuring consistency in resource planning. This\nlack of integration impedes the holistic enhancement of adequacy across all dimensions,\nthereby limiting the overall reliability and stability of modern power systems. To address\nthis gap, this paper proposes a comprehensive grid planning methodology based on\ngeneralized adequacy, enabling the coordinated planning and optimization of renewable\nenergy, short-term and long-term energy storage, and transmission infrastructure. The\nstructure of this paper is as follows: Section 2 introduces the concept of generalized\nadequacy, establishes the corresponding evaluation metrics, and develops a systematic\nassessment methodology. Section 3 presents a comprehensive grid planning and scheme\ncomparison approach based on generalized adequacy, aimed at effectively enhancing\nthe adequacy level while facilitating sche",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Generalized Adequacy Theory and Its Evaluation Metrics",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Transition from Traditional Adequacy to Generalized Adequacy",
+      "level": 2,
+      "text": "In conventional power system resource planning, adequacy requirements are generally\nconsidered met as long as the total installed generation capacity exceeds the system’s peak\nEnergies 2025, 18, 5024 4 of 27\nload by a predefined margin [23–25]. However, with the increasing penetration of high-\nproportion renewable energy and the growing complexity of demand-side dynamics, power\nsystem planning must now extend beyond capacity adequacy to encompass flexibility\nadequacy and dynamic frequency security, necessitating corresponding investments in\nadditional resources. Whether considering traditional capacity adequacy or the emerging\ndimensions of flexibility adequacy and inertia adequacy, the planning process exhibits the\nfollowing key characteristics:\n(1) Adequacy across all dimensions manifests externally as the ability of supply to meet\nsystem-wide demand.\n(2) Future system requirements must be addressed through the planned allocation of\nspecific resources, as control-based measures alone cannot provide additional supply\ncapacity to meet operational demands.\n(3) The dynamic matching of supply and demand is fundamentally realized through\nthe transmission of electrical energy. While traditional adequacy ensures that total\nenergy supply meets demand, flexibility adequacy fundamentally requires that the\nramping capabilities of various resources are sufficient to track fluctuations in load-\nside demand. In terms of inertia adequacy, although the inertia support capability\nof thermal power units is independent of energy transfer, the virtual inertia effect\nprovided by new resources such as renewables and energy storage depends on their\nenergy output. Consequently, the realization of power and energy adequacy, flexibility\nadequacy, and inertia adequacy fundamentally relies on the effective transmission of\nelectrical energy within the system.\nBased on the above considerations, the traditional adequacy concept is extended,\nand a generalized adequacy framework is proposed, which integrates power and energy\nadequacy, flexibility adequacy, and inertia adequacy. This concept encompasses the supply–\ndemand matching processes across various time scales in power systems, including inertia\nresponse and frequency response at the millisecond-to-second level, flexibility supply–\ndemand balancing at the minute-to-hour level, and power and energy balance at the\ndaily-to-annual scale. At the core of this framework lies the assessment of whether dynamic\nmatching between system supply capabilities and demand is maintained across different\ntimescales, with corresponding evaluation metrics systematically reflecting this adequacy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Generalized Adequacy Evaluation Metrics and Quantification Methods",
+      "level": 2,
+      "text": "To evaluate whether a given planning scheme satisfies the required system operational\nconditions, it is essential to determine whether the proposed scheme’s evaluation metrics\ncomply with the standards established by grid operators or relevant regulatory institutions.\nFor example, in the context of traditional adequacy indicators, the United States commonly\nemploys the LOLE metric, with a standard threshold of 0.1 d/a [26], whereas European\ncountries typically adopt a similar approach using the Loss of Load Hours (LOLH) metric,\nwith a standard threshold of 3 h/a [7]. To effectively incorporate the concept of generalized\nadequacy into grid planning, seven evaluation metrics are proposed along with their corre-\nsponding assessment methodologies, building upon internationally recognized adequacy\nindicators. These metrics are designed to systematically quantify the generalized adequacy\nlevel of planning schemes, ensuring a robust and comprehensive evaluation framework.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.1 Power and Energy Adequacy Metrics",
+      "level": 3,
+      "text": "As discussed earlier, the LOLH metric is one of the most widely used indicators for\npower and energy adequacy, providing a probabilistic measure of supply shortages. Addi-\ntionally, the Expected Energy Not Served (EENS) metric is commonly employed to quantify\nthe magnitude of energy deficiencies during shortage events. To further account for the\nEnergies 2025, 18, 5024 5 of 27\nimpact of low-probability, high-impact events—such as extreme weather conditions and\ngeological disasters—financial risk metrics, including Value at Risk (VaR) and Conditional\nValue at Risk (CVaR), have been increasingly adopted in power system assessments [7].\nSpecifically, EENS denotes the expected value of the energy that the system is unable to sup-\nply to meet load demand within a given time period. EENS CVaR represents the mean value\nof EENS corresponding to the most severe part of the EENS probability distribution across\nall evaluated events. As highlighted in [7], future power and energy adequacy assessment\nmethodologies should satisfy the following three key requirements: (1) expanding from\nsingle-metric evaluation to a multi-metric framework; (2) incorporating indicators that\nmeasure the severity of load loss events; and (3) considering the impact of extreme events.\nBased on a comprehensive review of existing metrics, their advantages, and application\nneeds, three evaluation indicators are introduced: LOLH, EENS, and the CVaR value of\nEENS, denoted as EENS CVaR. The calculation methods are as follows:\nHLOL = 1\nY\nY\n∑\ny=1\nD\n∑\nd=1\n24\n∑\nt=1\nsgn\nn\nmax\n\u0010\nLy,d,t − SGC,y,d,t, 0\n\u0011o\n(1)\nEENS = 1\nY\nY\n∑\ny=1\nD\n∑\nd=1\n24\n∑\nt=1\nmax\n\u0010\nLy,d,t − SGC,y,d,t, 0\n\u0011\n(2)\nECVaR\nENS = 1\n1 − α\nZ\nEENS ≥VaR\nφ(α, EENS )(EENS − VaR)dEENS (3)\nwhere HLOL represents the LOLH, an adequacy evaluation metric for power and energy\nadequacy; Y denotes the total number of assessment scenario years; D represents the total\nnumber of days in scenario year y; sgn(·) is the sign function, which equals 1 when a\nloss-of-load event occurs; Ly,d,t denotes the system load at time t on day d in scenario year\ny; SGC,y,d,t represents the total available generation capacity at time t on day d in scenario\nyear y; EENS represents the EENS; ECVaR\nENS represents the Conditional Value at Risk (CVaR)\nof EENS; α represents the proportion of extreme event scenarios considered, typically set at\n5%; VaR refers to the Value at Risk of EENS ; ϕ(·) is the probability density function. The\nLOLH metric primarily characterizes the average number of hours per year in which energy\nshortages occur, with units of h/a. EENS represents the annual average unmet energy\ndemand, measured in MWh. In contrast, EENS CVaR quantifies the average expected loss\nof load for the worst-case scenario years under extreme weather events such as heatwaves\nwith low wind conditions, cold waves, and prolonged droughts. This metric is used to\nassess the potential risks posed by extreme events to power system energy supply.\nIn terms of assessment methodology, sequential Monte Carlo sampling is employed,\nincorporating a certain proportion of extreme scenarios to simulate the impact of meteoro-\nlogical disasters. The extreme scenarios considered in this study, along with their setup\nmethods, are detailed in Table 1. By sampling the operational states of various genera-\ntion resources across a large number of scenario years, the system’s power and energy\nsupply–demand balance at each time step can be statistically analyzed, thereby obtaining\nthe relevant evaluation metrics. The specific steps for applying sequential Monte Carlo\nsampling in adequacy evaluation can be found in [27].\nIn Table 1, all extreme meteorological scenarios are constructed based on historical\nmeteorological and power system data. For example, the “extreme heat with low wind”\nscenario uses recent three-year summer data to identify high-temperature periods, during\nwhich wind power output is set to the historical 5th percentile and load is increased by\n10%. The “extreme cold with low solar” scenario is based on historical cold wave data, with\nPV output reduced to minimum levels and load increased by 10%. The “severe drought”\nscenario uses recent three-year dry-season hydrological data, reducing hydropower output\nEnergies 2025, 18, 5024 6 of 27\nto extremely low levels with a corresponding load increase. The probability of each scenario\nis determined by historical statistics (about 1–2%), and all parameter settings and durations\nare reviewed by experts for physical and engineering validity. These scenarios are randomly\nembedded in the Monte Carlo sampling to fully reflect the impact of extreme events on\nsystem adequacy. Single extreme meteorological events with the greatest system impact\nand highest frequency in actual grids were prioritized, ensuring both scientific rigor and\npractical feasibility. These three scenarios cover the main vulnerabilities of China’s power\nsystem in summer, winter, and dry seasons, reflecting both supply-side and demand-\nside extreme risks. Such scenario types have occurred frequently in practice and are also\nkey focus areas in mainstream international adequacy assessments, meeting the needs of\nmedium- and long-term system adequacy analysis.\nTable 1. Extreme scenario types evaluated and their configuration methods.\nExtreme Scenario Scenario Configuration Method Proportion of Total Scenarios\nExtreme heat with no wind\nRandomly select a period during\nsummer in the scenario year, where\nwind power output significantly\ndecreases to nearly zero, and load\ndemand rapidly increases by\napproximately 10%.\n0.01Extreme cold with no sun\nRandomly select a period during winter\nin the scenario year, where photovoltaic\noutput significantly decreases to nearly\nzero, and load demand rapidly increases\nby approximately 10%.\nSevere drought\nRandomly select a period during\nsummer in the scenario year, where\nhydropower output significantly\ndecreases to nearly zero, and load\ndemand rapidly increases by\napproximately 10%.\nAll the generalized adequacy demand evaluation indicators presented above are\ncalculated based on extreme values, with quantification performed using hourly simulation\nresults for the entire year (8760 h). This approach was chosen to verify the adaptability\nof the proposed Generalized Adequacy coordinated planning framework and evaluation\nindex system under extreme conditions. Therefore, using the maximum value provides a\nmore intuitive representation of system performance under the most stringent constraints,\nthereby highlighting the effectiveness of the method in extreme scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.2 Flexibility Adequacy Metrics",
+      "level": 3,
+      "text": "Currently, there is no universally accepted standard for evaluating system flexibility.\nGiven the characteristics of the resource planning process and the intrinsic nature of\nflexibility regulation, flexibility adequacy metrics have been designed and selected based\non the following principles:\n(1) The selected metrics should reflect the matching relationship between flexibility\ndemand and supply.\n(2) In the planning process, the use of negative indicators, such as margin-based metrics,\nis more effective in highlighting existing system deficiencies and identifying gaps in\nflexibility regulation, thereby underscoring the necessity of resource planning.\nEnergies 2025, 18, 5024 7 of 27\n(3) Unlike power and energy adequacy, which primarily assess static capacity sufficiency,\nflexibility adequacy emphasizes the continuous matching of supply and demand at\nevery moment. Therefore, it is essential to account for both the alignment between\nresource ramping rates and net load fluctuation rates across adjacent time intervals,\nas well as the consistency between ramping capacity and the overall range of net\nload variations.\nIn accordance with these principles, we propose two flexibility adequacy metrics: the\nflexible ramp capacity margin and flexible ramp rate margin. Flexible Ramp Capacity\nMargin refers to the total additional ramping capacity of flexible resources required to meet\nnet load variations within a given time period. Flexible Ramp Rate Margin refers to the total\nadditional ramping rate of flexible resources required to meet net load variation rates within\na given time period. These metrics are systematically defined as the difference between\nflexibility demand and available supply within their respective dimensions, thereby quanti-\nfying the additional resources required to satisfy ramping rate and ramping capacity needs.\nThe corresponding mathematical formulations for these metrics are provided as follows:\nIrate\nF,T = Drate\nF,T − Rrate\nN,T (4)\nImile\nF,T = Dmile\nF,T − Smile\nN,T (5)\nwhere Irate\nF,T represents the flexibility ramping rate margin in the studied region over a given\ntime scale T; Imile\nF,T represents the flexibility ramping capacity margin in the studied region\nover time scale T; Drate\nF,T denotes the system’s flexibility ramping rate demand over time\nscale T, and Dmile\nF,T denotes the system’s flexibility ramping capacity demand over time scale\nT. T represents the studied time scale. Rrate\nF,T refers to the system’s normalized ramping rate\nover time scale T, while Smile\nF,T denotes the system’s normalized ramping capacity over time\nscale T.\nThe evaluation process first involves quantifying flexibility ramping rate demand\nand flexibility ramping capacity demand across different time scales. Then, the flexibility\nregulation capability of existing resources is assessed by computing the normalized ramping\nrate and normalized ramping capacity. A comparison of demand and supply capacity is\nconducted to obtain flexibility adequacy indicators. The quantification of demand primarily\nemploys the first-order difference method, statistically analyzing net load variation rates\nand magnitudes based on historical net load curves over multiple years in the studied\nregion. The maximum observed values are used as the flexibility demand. Supply capacity\nis quantified by statistically analyzing the attributes of available flexibility resources within\nthe studied region, normalizing the results, and then computing the metrics. The specific\ncalculation formulas are given as follows:\nRNet,T\nn,d,t = LNet\nn,d+1,t − LNet\nn,d,t (6)\nDrate\nF,T = fsta1\n\u0010\nRNet,T\nn,1,t , RNet,T\nn,w,t , . . . ,RNet,T\nn,d,t\n\u0011\n(7)\nDmile\nF,T = fsta2\n\u0010\nLNet,T\nn,1,t , LNet,T\nn,w,t , . . . ,LNet,T\nn,d,t\n\u0011\n(8)\nRrate\nN,T =\n∑\nk∈UT (k)\nRU\nk\n∑\nk∈UT (k)\nPmax\nk\n× PNC (9)\nSmile\nN,T =\n∑\nk\n(Pmax\nk − Pmin\nk )\n∑\nk∈UT (k)\nPmax\nk\n× PNC (10)\nEnergies 2025, 18, 5024 8 of 27\nwhere LNet\nn,d,t represents the net load at time t on day d in the n-th historical load curve,\nwhile RNet,T\nn,d,t represents the net load variation rate at time t on day d in the n-th historical\nload curve over time scale T. fsta1(·) is a statistical function that derives the system’s\nflexibility ramping rate demand based on historical net load variation data. Dmile\nF,T denotes\nthe system’s flexibility ramping capacity demand over time scale T. fsta2(·) is a statistical\nfunction that derives the system’s flexibility ramping capacity demand based on histor-\nical net load fluctuation range data. UT(k) represents the set of resources available for\nflexibility regulation over time scale T. RU\nk denotes the ramping rate of the k-th type of\nresource available for flexibility regulation. Pmax\nk represents the maximum output capacity\nof the k-th type of flexibility resource. PNC is the normalized capacity reference, set as the\nsystem’s annual peak load. Pmin\nk represents the minimum output capacity of the k-th type\nof flexibility resource.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.3 Inertia Adequacy Metrics",
+      "level": 3,
+      "text": "Existing inertia indices in academic research primarily assess the system’s frequency\nsecurity and stability from an operational perspective. However, to support the planning of\ninertia resources in renewable energy-integrated power systems, it is essential to develop an\ninertia adequacy index from a planning perspective. The critical aspect of planning inertia\nresources lies in quantifying the system’s minimum inertia requirement and establishing\ncorresponding threshold standards. By synthesizing the global application of existing\ninertia evaluation indices, considering the spatiotemporal distribution characteristics of\ninertia, and assessing the contribution of various inertia resources within the power system,\nthis study proposes an inertia adequacy evaluation framework based on two key indicators:\nthe minimum inertia requirement and the system inertia margin. The minimum inertia\nis defined as the minimum system inertia required to ensure that the rate of change of\nfrequency (RoCoF) and frequency deviation do not exceed safety limits after a system\ndisturbance, measured in MW·s. The inertia margin refers to the relative ratio between the\nsystem inertia and the minimum inertia requirement. A larger system inertia margin indi-\ncates that the system’s inertia level significantly exceeds the minimum inertia requirement.\nThe calculation method is as follows:\nHmin = max(HRoCoF , Hnadir ) (11)\nAH = Hsys − Hmin\nHmin\n× 100% (12)\nHsys = 2(Esg + Enew + Ea)\nSsys\n(13)\nwhere Hmin represents the minimum inertia of the power grid system. HRoCoF denotes\nthe minimum inertia required for the receiving-end power grid to meet the maximum\nallowable rate of change of frequency. Hnadir refers to the minimum inertia required to\nprevent the receiving-end power grid from triggering low-frequency load shedding. Esg\nrepresents the total kinetic energy of synchronous generators. Enew is the equivalent total\nkinetic energy of renewable energy virtual inertia. Ea represents the total kinetic energy\nfrom other sources. The following presents the detailed derivation and calculation process.\n(1) RoCoF constraint (Initial rate of change of frequency)\nThe equivalent power deficit is denoted as ∆P, the system base frequency as f0, and\nthe maximum allowable RoCoF as RoCoF max (Hz/s). The relationship is given by\nIRoCoF\nmin = f0∆P\n2Sbase RoCoFmax\n(14)\nEnergies 2025, 18, 5024 9 of 27\nHRoCoF\nmin = 2Sbase IRoCoF\nmin = f0∆P\nRoCoFmax\n(15)\n(2) Nadir constraint (Frequency nadir)\nAssuming that primary frequency regulation ramps linearly within TPFR seconds\nto cover a fraction α (0 ≤ α ≤ 1) of the power imbalance, and the maximum allowable\nfrequency deviation is |∆ fmax |. Based on energy balance, the following approximation can\nbe obtained:\nHNadir\nmin ≈ f0∆PTPFR(1 − 0.5α)\n2Sbase |∆ fmax | (16)\nINadir\nmin = 2Sbase HNadir\nmin ≈ f0∆PTPFR(1 − 0.5α)\n|∆ fmax | (17)\nThe final minimum system inertia required is determined by adopting the more\nstringent constraint\nHmin = max\nn\nHRoCoF\nmin , HNadir\nmin\no\n, Imin = 2Sbase Hmin = max\nn\nIRoCoF\nmin , INadir\nmin\no\n(18)\nwhere f0 denotes the nominal system frequency, typically set to 50 Hz. Sbase represents\nthe system base capacity. ∆P is the equivalent power deficit set for the system. Sbase refers\nto the maximum permissible rate of change of frequency. |∆ fmax | denotes the maximum\nallowable frequency deviation, used to constrain the frequency nadir. α is the proportion\nof the imbalance that can be covered by primary frequency regulation (PFR) in the steady\nstate. TPFR is the effective time required for PFR to reach the target output (or specified\nproportion) following its activation. H represents the system equivalent inertia constant.\nIn terms of specific evaluation methods, inertia levels are assessed based on the gener-\nator dispatching strategies under different planning scenarios. Specifically, the minimum\nsystem inertia levels HRoCoF and Hnadir required to ensure the most stringent frequency\nsecurity indices (rate of change of frequency and lowest frequency point) are calculated [28].\nGiven that minimum inertia and inertia margin exhibit time-dependent characteristics, the\neffectiveness of a given planning scheme is evaluated based on the maximum value of\nthe minimum inertia index and the minimum value of the inertia margin index over the\nevaluation period.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Comprehensive Power Grid Planning and Planning Scheme Selection",
+      "level": 1,
+      "text": "Method Considering Generalized Adequacy",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Comprehensive Power Grid Planning Framework Based on Generalized Adequacy",
+      "level": 2,
+      "text": "Under conventional resource and grid co-planning methodologies, a single optimal\nplanning scheme is typically derived. However, the generalized adequacy indices proposed\nin Section 2 primarily serve as post-assessment tools, providing evaluation results only after\na planning scheme has been formulated. This retrospective approach makes it challenging\nto identify directions for further optimizing resource allocation. Consequently, these\nindices are insufficient for guiding the coordinated planning of multi-type resources and\nthe power grid to enhance the system’s generalized adequacy. To address this limitation,\nthis study proposes a comprehensive power grid planning framework designed to improve\ngeneralized adequacy, as illustrated in Figure 1.\nWithin this framework, the process begins by identifying representative planning\nscenarios through historical data curve clustering. Subsequently, the integrated power\ngrid planning model introduced in Section 3.2 is employed to derive optimal planning\nschemes for multi-type resources and the power grid. For each generated planning scheme,\ngeneralized adequacy is evaluated using the methodology outlined in Section 2.2. If the\ngeneralized adequacy criteria are not met or if the level of generalized adequacy fails to\nEnergies 2025, 18, 5024 10 of 27\nimprove, the framework identifies extreme scenarios where the adequacy indices exceed\npredefined limits. These critical scenarios are then incorporated into the scenario set utilized\nby the planning model. The integrated power grid planning process is iteratively executed\nuntil a planning scheme that satisfies the generalized adequacy requirements is obtained.\nFigure 1. Schematic diagram of the integrated grid planning framework based on generalized adequacy .",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2 Integrated Power Grid Planning Model",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2.1 Objective Function",
+      "level": 3,
+      "text": "Under the planning framework described in Section 3.2, to simulate the cross-temporal\nenergy transfer function of energy storage at different timescales and account for the\ndistributional differences in renewable energy and loads throughout the year, this study\nemploys the temporal decomposition method proposed in [29]. This method decomposes\nthe full 8760 h annual time horizon into intra-day and inter-day timescales to separately\nmodel power and energy balancing as well as resource operations. Additionally, to ensure\ninertia adequacy, constraints related to dynamic frequency security are incorporated into\nthe traditional power grid planning model. Since the construction methods for certain\nscenario cost components and constraint conditions have been detailed in [29], they are not\nrepeated here.\nThe objective of the planning model in this study is to minimize total costs, which\ninclude investment cost Cinv, operational cost Copr , and carbon emission cost Ccarb . Specifi-\ncally, investment costs consist of line investment cost Cline\ninv , renewable energy investment\ncost Cnew\ninv , long-duration energy storage investment cost Cles\ninv, and short-duration energy\nstorage investment cost Cses\ninv. The calculation method is as follows:\nCinv = Cline\ninv + Cnew\ninv + Cles\ninv + Cses\ninv (19)\nCK\ninv = ∑\nK∈NK\ncinv\nK SK\nrK(1 + rline )TK\n(1 + rK)TK − 1\n, K ∈ {line, w, s, ses, les } (20)\nEnergies 2025, 18, 5024 11 of 27\nwhere CK\ninv represents the total investment cost of a certain planned resource K; cinv\nK de-\nnotes the unit investment cost of resource K; SK is the investment scale of resource K;\nNK represents the set of nodes for planned resource deployment; rK is the investment\ndiscount rate calculated based on the annual interest rate; and TK represents the investment\npayback period. The indices line, w, s, ses, and les represent transmission lines, wind\npower units, photovoltaic power stations, short-term energy storage, and long-term energy\nstorage, respectively.\nOperating costs are categorized into long-term operating costs CLT and short-term\noperating costs CST. The former includes long-term thermal power fuel costs CLT\nf uel and\nload-shedding costs CLT\ncut, while the latter consists of short-term thermal power fuel costs\nCST\nf uel, thermal power start-stop costs CST\nst , and load-shedding costs CST\ncut. The calculation\nmethods for specific cost components are as follows:\nCopr = (1 − δ)CLT + δCST\n= (1 − δ)(CLT\nf uel + CLT\ncut ) +δ(CST\nf uel + CST\nst + CST\ncut ) (21)\nwhere δ is the weighting factor representing the proportion of daily electricity balance\noperating costs to total operating costs. It reflects the consideration of daily operating costs\nin the comprehensive planning. This paper assumes equal weighting between long-term\nand short-term costs, setting δ = 0.5.\nThe carbon emission cost is calculated as follows:\nCcarb =\nNd\n∑\nd=1\nT\n∑\nt=1\nNG\n∑\ni=1\nccarb Ecarb\ni,d,t πd (22)\nwhere Nd represents the total number of typical days; πd denotes the number of calendar\ndays represented by typical day d; ccarb is the carbon emission penalty coefficient; Ecarb\ni,d,t\nrepresents the carbon emissions of thermal power unit i at time t on typical day d.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2.2 Constraints",
+      "level": 3,
+      "text": "(1) Planning Constraints\nPlanning constraints primarily govern the allocation and investment scale of various\nresources, encompassing transmission line construction constraints, renewable energy\ncapacity constraints, and short-term and long-term energy storage capacity constraints.\nThe mathematical formulation of these constraints is presented as follows:\n0 ≤ ∑\n(i,j)∈Np\ni̸=j\nxp\nline,ij ≤ xmax\nline,ij (23)\nSK ≤ Smax\nK , K ∈ {w, s, ses, les } (24)\nwhere xp\nline,ij is a binary decision variable indicating whether the p-th new transmission\nline is constructed on branch ij (xp\nline,ij = 1 if the line is constructed, otherwise not);\nNp represents the set of candidate transmission lines; xmax\nline,ij is the maximum number\nof additional lines between transmission nodes i and j; and xmax\nline,ij also represents the\nmaximum operational scale of a certain planned resource K.\n(2) Short-Term Operation Constraints\nShort-term constraints are designed to ensure the balance of electricity power and\nenergy within a daily timescale while imposing operational limitations on various resources.\nThese constraints include nodal power balance constraints, power flow constraints, thermal\npower generation and start-stop constraints, renewable energy generation constraints, and\nEnergies 2025, 18, 5024 12 of 27\nshort-term/long-term energy storage operation constraints. In this section, we focus on\nthe formulation of nodal power balance constraints, power flow constraints, and dynamic\nfrequency security constraints, which play a critical role in maintaining system stability\nand operational feasibility.\nPST\ni,d,t + PST\nh,d,t + PST\nw,d,t + PST\ns,d,t + (PST,dis\nses,d,t − PST,ch\nses,d,t) + (PST,dis\nles,d,t − PST,ch\nles,d,t )\nA\n◦\nP\n◦\nl,d,t + APPP\nl,d,t = PST\ntl,d,t + LST\nlo,d,t − LST\ncut,d,t\n(25)\nP\n◦\nij,d,t − bijn\n◦\nline,ij (θi,d,t − θj,d,t) =0, ∀(i, j) ∈ N0\np (26)\nPP\nij,d,t − xp\nline,ijbij (θi,d,t − θj,d,t) =0,\n∀(i, j) ∈ Np, ∀p ∈ (1, 2, . . . ,nmax\nline,ij − n\n◦\nline,ij ) (27)\n0 ≤ nline,ij ≤ nmax\nline,ij (28)\nθre f,t,s,Y = 0 (29)\nHsys,t = ∑\ni\nHC\ni Pi,max Ii,t + ∑\nn\nHC\nses Pses\nn (30)\nPPFR\ni,t ≤ λi,PFR Pi,max (31)\nPg,PFR,t = ∑",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "PPFR",
+      "level": 1,
+      "text": "i,t , ∀t (32)\nPes,PFR,t = ∑\nn\nPPFR\nn,t , ∀t (33)\nf0Ploss ,t\n2Hsys,t\n≤ fRoCoF ,max , ∀t (34)\nf0\n2Hsys,t\n\"\n(Ploss ,t − Pes,PFR,t)2tg\n2Pg,PFR,t\n+ Pes,PFR,ttes\n2\n#\n≤ ∆ fmax , ∀t (35)\nPg,PFR,t + Pes,PFR,t ≥ Ploss ,t (36)\nwhere Ao and Ap are the nodal-branch incidence matrices for the initial system lines and\ncandidate lines, respectively; Po\nl,d,t and Pp\nl,d,t represent the active power flow vectors of\nthe initial system lines and candidate lines at time t on typical day d, respectively; and\nPST\ni,d,t, PST\nw,d,t, PST\ns,d,t, PST\nh,d,t, PST,ch\nses,d,t, PST,dis\nses,d,t, PST,ch\nles,d,t, PST,dis\nles,d,t, PST\ntl,d,t, LST\nlo,d,t, LST\ncut,d,t respectively\ndenote the active power vectors of thermal power generation, wind power generation,\nphotovoltaic generation, hydropower generation, short-term energy storage charging,\nshort-term energy storage discharging, long-term energy storage charging, long-term\nenergy storage discharging, external transmission corridor flow, nodal load, and nodal\nload shedding. bij, no\nline,ij and nmax\nline,ij represent the susceptance of a single transmission line\non branch ij, the number of initial system lines, and the maximum number of additional\ncandidate lines, respectively; No\np is the set of initial system lines; Po\nij,d,t represents the total\nactive power flowing through the initial system branch ij at time t on typical day d; Pp\nij,d,t\nrepresents the active power flowing through the newly built p-th transmission line on\nbranch ij at time t on typical day d; θi,d,t, θj,d,t, θre f,d,t represent the voltage phase angles\nof nodes i, j, and the reference balancing node at time t on typical day d; and HC",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "and",
+      "level": 1,
+      "text": "HC\nses are the inertia time constants of thermal power units and short-term energy storage,\nrespectively. Pmax\ni , Pses\nn represent the maximum output limit of thermal power unit i and\nthe planned capacity of short-term energy storage unit n, respectively; λi,PFR is the upper\nbound of the frequency regulation power capacity for thermal power units, typically set at\n8%; Pg,PFR,t, Pes,PFR,t denote the total frequency regulation capacity provided by thermal\npower units and energy storage at time t; Ploss ,t represents the power disturbance due to\nEnergies 2025, 18, 5024 13 of 27\nfrequency deviations at time t, typically set as 10% of the system load; tg and tes denote the\nresponse times required for thermal power units and energy storage to reach a specified\nfrequency regulation power level; fRoCoF ,max represents the maximum allowable RoCoF; f0\nis the nominal system frequency; and∆ f max represents the maximum permissible frequency\ndeviation. The linearization method of Equation (35) can be found in reference [30].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.3 Planning Scheme Selection Method Considering Generalized Adequacy",
+      "level": 2,
+      "text": "Under the planning framework proposed in Section 3.1, the integrated power grid\nplanning model designed to enhance generalized adequacy generates a cost-minimized\nplanning scheme in each iteration, with each scheme exhibiting a different level of general-\nized adequacy. A key challenge lies in evaluating the differences among various planning\nschemes and selecting the optimal scheme under diverse policy orientations. To address\nthis challenge, this section first introduces a scheme evaluation index system, which in-\ncorporates the generalized adequacy indicators presented in Section 2.2. Subsequently, a\ncombined subjective–objective weighting method is applied to determine the comprehen-\nsive weights of the indices. Finally, the PROMETHEE-II method is employed to compare\nand rank different planning schemes, ultimately identifying the most suitable scheme that\nmeets the planning requirements.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3.1 Scheme Evaluation Index System",
+      "level": 3,
+      "text": "During the post-evaluation stage of a planning scheme, it is essential to assess its per-\nformance from multiple dimensions, including economic viability, technical feasibility, and\nenvironmental impact. Based on these considerations, this study proposes a scheme eval-\nuation index system encompassing three primary dimensions—economic, technical, and\nexternal factors—comprising a total of ten evaluation indicators, as illustrated in Figure 2.\nFigure 2. The evaluation index system of generalized adequacy.\nWithin this evaluation framework, the Levelized Cost of Energy (LCOE) is defined\nas the average cost required to generate 1 kWh of electricity within the system. The\ncorresponding mathematical formulation is as follows:\nCave = Cinv + Copr + Ccarb\nEgener\n(37)\nEnergies 2025, 18, 5024 14 of 27\nwhere Cave represents the LCOE, measured in $/kWh; Egener denotes the total amount\nof electrical energy generated by all power sources within the system over the entire\nsimulation period embedded in the planning model, measured in kWh.\nThe renewable energy utilization rate is defined as the percentage of renewable energy\nconsumption relative to the total electricity generation over the entire simulation period\nembedded in the planning model. Its calculation method is as follows:\nη = ENc\nENsum\n× 100% (38)\nwhere η represents the renewable energy utilization rate; EVRE ,c denotes the actual con-\nsumed electricity from renewable energy sources; EVRE ,g refers to the total electricity\ngeneration from renewable energy sources.\nCarbon emission intensity is defined as the amount of carbon dioxide emissions in\nt/MWh of electricity generated on average over the entire simulation period embedded in\nthe planning model. Its calculation method is as follows:\nScarb =\nNd\n∑\nd=1\nT\n∑\nt=1\nNG\n∑\ni=1\nEcarb\ni,d,t πd\nEgener\n(39)\nwhere Scarb represents the carbon emission intensity indicator, measured in t/MWh.\nIt is worth noting that the seven generalized adequacy indicators proposedin Section 2.2\nform the technical core of the evaluation system and correspond one-to-one with seven\nof the ten evaluation indicators in the scheme assessment framework. Specifically, LOLH,\nEENS, and the EENS CVaR indicator correspond to the evaluation of power and energy\nadequacy; the flexibility ramping rate margin and ramping capacity margin indicators\ncorrespond to the assessment of flexibility adequacy; and the minimum inertia requirement\ntogether with inertia margin indicators correspond to inertia adequacy. On this basis, three\nsupplementary indicators, including LCOE, renewable energy utilization rate, and carbon\nemission intensity, are further incorporated to capture economic efficiency, renewable\nenergy accommodation capability, and environmental performance. Consequently, the\nten-indicator system can be regarded as an integrated framework consisting of “seven\ngeneralized adequacy indicators and three external comprehensive indicators,” in which the\nformer reflects supply–demand balance, flexibility, and frequency security, while the latter\nextends the evaluation toward economic and environmental dimensions, thus ensuring a\nholistic and multi-criteria assessment of planning schemes.\nThe proposed indicators and the relevant variables involved in their calculation have\nbeen summarized as follow Table 2.\nTable 2. Indicator symbols and definitions.\nIndicator Symbol Indicator Definitions Indicator Symbol Indicator Definitions\nELOL Loss of load expectation (LOLE) HLOL Loss of load hours (LOLH)\nEENS\nExpected energy not\nserved (EENS) / Conditional value at risk (CVaR)\nECVaR\nENS The CVaR value of EENS RoCoF Rate of change of frequency\nImile\nF,T\nThe flexibility ramping\ncapacity margin Irate\nF,T\nThe flexibility ramping\nrate margin\nHmin The minimum system inertia AH The system inertia margin\nHsys The system equivalent inertia Cave Levelized cost of energy (LCOE)\nη The renewable energy\nutilization rate Scarb The carbon emission intensity",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Schematic diagram of the integrated grid planning framework based on generalized adequacy ."
+    },
+    {
+      "id": "f2",
+      "caption": "The evaluation index system of generalized adequacy."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Extreme scenario types evaluated and their configuration methods."
+    },
+    {
+      "id": "t2",
+      "caption": "Indicator symbols and definitions."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e35",
+      "latex_or_text": "Equation (35)"
+    },
+    {
+      "id": "e37",
+      "latex_or_text": "(37)"
+    },
+    {
+      "id": "e39",
+      "latex_or_text": "(39)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 12
+  }
+}

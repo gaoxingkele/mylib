@@ -1,0 +1,314 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/sdwpf_kddcup2022/sdwpf_kddcup2022__BUAA_BIGSCity_ST-GNN_wind_power_forecasting__0a8a983b69.pdf",
+  "n_pages": 6,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "Wind power is a rapidly growing source of clean energy. How-\never, the dynamics and uncertainties of wind power can affect the\ngrid network’s system reliability. Therefore, accurate wind power\nforecasting is essential for reliable energy generation and smooth\npower system dispatching.\nBaidu KDD Cup 2022 Spatial Dynamic Wind Power Forecasting\nChallenge 2 presents a unique Spatial Dynamic Wind Power Fore-\ncasting dataset: SDWPF, which contains the wind power data of 134\nwind turbines from a wind farm over half a year with their relative\npositions and some dynamic context factors, such as wind speed,\nenvironment temperature, and turbine internal status. This Wind\nPower Forecasting (WPF) Challenge encourages the participants\nto develop effective models to accurately estimate the wind power\nsupply of a wind farm at different time scales. The main difference\nbetween this challenge and past wind power prediction tasks is that\nthe data provides the spatial distribution of turbines and various\ntypes of dynamic contextual information, so this competition is\nnot a pure time series prediction task. The average of RMSE (Root\nMean Square Error) and MAE (Mean Absolute Error) is used as the\nevaluation score.\nIn the literature, a series of works on wind power forecasting\nhave emerged. The mainstream wind prediction methods can be\ndivided into two main categories: classical statistical methods and\nmachine learning (or deep learning) methods. The classical sta-\ntistical methods are mainly some time series forecasting models,\nwhich are more dependent on the assumption of smoothness of the\ntime series. Yunus et al. [18] employ an autoregressive integrated\nmoving average (ARIMA) based frequency-decomposed model to\nforecast short-term wind power. Recently, machine learning-based\nmodels have been widely used in wind power forecasting tasks.\nWang et al. [15] use a support vector machine (SVM) to forecast\nshort-term wind power. With the development of graph neural\nnetworks in recent years, the wind power forecasting task is no\nlonger treated as a simple time series forecasting task. Because, in\naddition to the effects of wind speed, weather, and other factors,\nthe output power of neighboring wind turbines interacts with each\nother and is spatially correlated. Graph neural networks (GNN) are\nsuitable for capturing non-Euclidean graph structure relationships.\nFor example, Li [13] integrate the GNN and Deep Residual Network\n(DRN) for short-term wind power forecasting.\nOur solution for this wind power forecasting task is also based\non the graph neural network. Specifically, we extend and combine\ntwo spatial-temporal graph neural network models, i.e., AGCRN [1]\n2https://aistudio.baidu.com/aistudio/competition/detail/152/0/introduction\narXiv:2302.11159v1  [cs.LG]  22 Feb 2023\nConference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato and Tobin, et al.\nand MTGNN [16], for wind power forecasting. The spatial-temporal\ngraph neural network combines a graph neural network model and\na temporal neural network model, such as the recurrent neural\nnetwork (RNN) and 1D convolutional neural network (1D-CNN).\nIn this way, the temporal neural network captures the temporal\ndependence between the wind power data of each single wind tur-\nbine, and the graph neural network captures the spatial correlation\nbetween the wind power data of multiple wind turbines. On top\nof these two base models, we introduce a relative geographic dis-\ntance graph and a semantic distance graph, allowing the graph\nneural network to consider the interaction between wind turbines\nfrom different perspectives. We can achieve accurate wind power\nforecasting by capturing the dynamic spatial and temporal charac-\nteristics in wind power data. Our solution achieves an overall score\nof -45.36026.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 PRELIMINARIES",
+      "level": 1,
+      "text": "In this section, we first introduce basic notations and prelimi-\nnaries used in this paper. Then we formalize the problem of wind\npower forecasting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Notations and Definitions",
+      "level": 2,
+      "text": "Definition 1 (Wind Turbine Farm). A wind turbine farm con-\ntains𝑁 wind turbines within a specific area, each constantly gen-\nerating electricity. The Supervisory Control and Data Acquisition\n(SCADA) system of the wind farm continuously records the power\ngenerated by each wind turbine in the wind farm at a fixed time\ninterval.\nDefinition 2 (Wind Power Tensor). In this paper, we use 𝑿𝑡∈\nR𝑁×𝐶 to denote the observation at time 𝑡 of 𝑁 wind turbines in\nthe wind farm, where 𝐶 is the length of the observation vector. The\nobservation includes active wind power, wind speed, etc., as described\nin Section 4.1. In addition, we use 𝑿 =(𝑿1, 𝑿2,··· , 𝑿𝑇)∈ R𝑇×𝑁×𝐶\nto denote the wind power tensor of all wind turbines at 𝑇 time slices.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Problem Formalization",
+      "level": 2,
+      "text": "The wind power forecasting task aims to predict the wind power\nsupply of a wind farm in the future time given the historical obser-\nvations. Formally, given the tensor 𝑿 observed on a wind farm, our\ngoal is to learn a mapping function𝑓 from the observations of the\nprevious𝑇 steps to predict the wind power supply of the future𝑇′\nsteps as:\n[𝑿(𝑡−𝑇+1),··· , 𝑿𝑡]\n𝑓\n−→[ ˆ𝑿(𝑡+1),··· , ˆ𝑿(𝑡+𝑇′)]. (1)\nNote that the prediction result tensor ˆ𝑿∈ R𝑇′×𝑁×1 contains only\none-dimensional features, i.e., the active power generated by each\nwind turbine.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 METHODS",
+      "level": 1,
+      "text": "In this section, we describe the two models used in this challenge.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 AGCRN",
+      "level": 2,
+      "text": "Adaptive Graph Convolutional Recurrent Network (AGCRN) is\nproposed in [1] NIPS2020. AGCRN consists of two adaptive mod-\nules to enhance Graph Convolution Network (GCN) and proposes\nFigure 1: Overall Structure of AGCRN\nthe NAPL-GCN module: (1) a Node Adaptive Parameter Learn-\ning (NAPL) module to capture node-specific patterns; (2) a Data\nAdaptive Graph Generation (DAGG) module to infer the inter-\ndependencies among different time series automatically. To capture\ntemporal correlations in the data, AGCRN replaces the MLP lay-\ners of the Gated Recurrent Unit (GRU) [ 6] with the NAPL-GCN\nmodule to capture both node-specific spatial and temporal correla-\ntions in the time series. The overall structure of AGRCN is shown\nin Figure 1. Here we modify the DAGG module and add a pre-\ndefined semantic distance graph of all turbines to directly capture\nthe semantic relationships between the time series of different wind\nturbines. We stack several AGCRN layers as an encoder to capture\nthe spatial-temporal correlations in the wind power data. Finally,\nwe obtain the predicted wind power supply time series of all wind\nturbines by applying a single linear transformation to project the\nrepresentation generated by the encoders.\n3.1.1 Node Adaptive Parameter Learning (NAPL). GCN is widely\nused to capture spatial correlations in data. According to [12], graph\nconvolution operation can be well approximated as:\n𝒁 =(𝑰𝑁+𝐷− 1\n2𝐴𝐷− 1\n2)𝑿𝑖 𝚯+ 𝒃 (2)\nwhere𝐴∈ R𝑁×𝑁 is the adjacency matrix of the graph, 𝑫 is the\ndegree matrix, 𝑿𝑖∈ R𝑁×𝐶 and 𝒁∈ R𝑁×𝐹 are input and output of\nthe GCN layer,𝚯∈ R𝐶×𝐹 and 𝒃∈ R𝐹 are the learnable weights and\nbias respectively. However, it is difficult to model diverse patterns of\nall turbines with the shared𝚯 and 𝒃. To learnnode-specific patterns,\nthe NAPL module maintains a unique parameter space for each\nturbine. Besides, instead of directly learning 𝚯∈ R𝑁×𝐶×𝐹 , which\nis too large to optimize, this module learns two smaller parameter\nmatrix: a node embedding matrix 𝑬 ∈ R𝑁×𝑑 and a weight pool\n˜𝑾∈ R𝑑×𝐶×𝐹 , where𝑑 is the embedding dimension and𝑑≪𝑁 . In\nthis way, 𝚯 = 𝑬 ˜𝑾. We use the same operation for 𝒃∈ R𝑁×𝐹 , i.e.,\n𝒃 = 𝑬 ˜𝒃, ˜𝒃∈ R𝑑×𝐹 . Finally, the NAPL-GCN module is calculated as:\n𝒁 =(𝑰𝑁+𝐷− 1\n2𝐴𝐷− 1\n2)𝑿𝑖 𝑬 ˜𝑾+ 𝑬 ˜𝒃. (3)\n3.1.2 Data Adaptive Graph Generation (DAGG). The DAGG mod-\nule automatically infers the spatial dependencies between each pair\nof wind turbines for the graph convolution operation. First, this\nmodule uses the same learnable node embedding 𝑬 ∈ R𝑁×𝑑 as\nthe NAPL-GCN module for all wind turbines, where each row of\n𝑬 represents the node embedding of a wind turbine. We directly\nBUAA_BIGSCity: Spatial-Temporal Graph Neural Network for Wind Power Forecasting in Baidu KDD CUP 2022 Conference acronym ’XX, June 03–05, 2018, Woodstock, NY\n(a) Semantic Distance Graph, 𝑀=5\n (b) Geographic Distance Graph, 𝜖 = 0.8\nFigure 2: Different Adjacency Graphs\ngenerate𝐷− 1\n2𝐴𝐷− 1\n2 by multiplying 𝑬 and 𝑬𝑇 as:\n𝐷− 1\n2𝐴𝐷− 1\n2 = softmax(ReLU(𝑬· 𝑬𝑇)), (4)\nwhere softmax and ReLU are activation functions. During training,\nthe node embeddings 𝑬 will be updated automatically to learn the\nhidden spatial dependencies among all wind turbines. Then, the\nDAGG enhanced NAPL-GCN can be expressed as:\n𝒁 =(𝑰𝑁+ softmax(ReLU(𝑬· 𝑬𝑇))) 𝑿𝑖 𝚯+ 𝒃. (5)\n3.1.3 Semantic Distance Graph. The DAGG enhanced NAPL-GCN\nmodule can adaptively learn the spatial dependencies among all\nwind turbines and the node-specific patterns among them. As a mul-\ntivariate time series forecasting task, there is not only geographical\ndistance correlation between multiple time series but also semantic\nsimilarity, i.e., time series similarity. Therefore, a semantic distance\ngraph is also considered for the graph convolution operation. We\ncompute the Dynamic Time Warping (DTW) distance [17] between\nthe historical wind power supply time series of each pair of wind\nturbines and obtain a similarity matrix𝐷𝑑𝑡𝑤 . Then, for each wind\nturbine,𝑀 wind turbines with the top-𝑀 smallest DTW distance\nare selected as neighbors to obtain a binary semantic distance graph\n𝐴𝑑𝑡𝑤 , shown in Figure 2(a). Finally, we append𝐴𝑑𝑡𝑤 to the DAGG\nenhanced NAPL-GCN module as follows:\n𝒁 =(𝑰𝑁+ softmax(ReLU(𝑬· 𝑬𝑇))+ 𝐷− 1\n2𝐴𝑑𝑡𝑤𝐷− 1\n2)𝑿𝑖 𝚯+ 𝒃, (6)\nwhere𝐷 is the degree matrix of𝐴𝑑𝑡𝑤 , i.e.,𝐷𝑖,𝑖 = Í\n𝑗𝐴𝑑𝑡𝑤\n𝑖,𝑗 . Equation\n(6) is the complete formulation of the graph convolution module\nof the modified AGCRN model to capture spatial correlation. To\nfurther capture temporal correlation, the AGCRN model replaces\nthe MLP layers in the GRU model with the graph convolution\nmodule described above. We stack multiple AGCRN layers and\nobtain the prediction results of the model by a linear transformation\non top of this.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 MTGNN",
+      "level": 2,
+      "text": "Multivariate Time Series Forecasting Graph Neural Networks\n(MTGNN) is proposed in [ 16] KDD2021. As shown in Figure 3,\nthe overall structure of MTGNN consists of multiple sequentially\nconnected gated temporal convolutional modules and spatial graph\nconvolutional modules, with additional residual connections to\nmake the model easy to train. Skip connections are added after each\nFigure 3: Overall Structure of MTGNN\ntemporal convolution module to get the output hidden features.\nFinally, the output module consists of two 1*1 convolutions is used\nto project the hidden features to the desired output dimension, i.e.,\nthe length of the predicted time window𝑇′. Here we modify the\nadaptive graph structure learning module in MTGNN and instead\nuse a graph based on the relative geographic distance between wind\nturbines.\n3.2.1 Geographic Distance Graph. The relative geographic relation-\nship between wind turbines, such as the upstream vs. downstream\nrelationship, has a significant impact on the power generated by\nwind turbines. Therefore, we calculate the Euclidean distance be-\ntween two turbines based on the coordinates of each turbine given\nin the data and obtain the geographic distance matrix 𝐷𝑔𝑒𝑜 . We\nbelieve that the closer the turbines are to each other, the greater the\ninfluence. Therefore, we define the following weighting formula\nto obtain the geographic distance graph𝐴𝑔𝑒𝑜 , which is shown in\nFigure 2(b):\n𝐴𝑔𝑒𝑜\n𝑖,𝑗 =\n \n\n1, exp(−\n(𝐷𝑔𝑒𝑜\n𝑖,𝑗 )2\n𝜎2 )≥ 𝜖\n0, exp(−\n(𝐷𝑔𝑒𝑜\n𝑖,𝑗 )2\n𝜎2 ) <𝜖,\n(7)\nwhere𝐷𝑔𝑒𝑜\n𝑖,𝑗 represents the distance between turbine𝑖 and turbine\n𝑗, the𝜎 is the standard deviation of distances, and𝜖 is the threshold\nto control the sparsity of the geographic distance graph.\n3.2.2 Spatial Graph Convolution Module. The graph convolution\nmodule used here is a mixhop propagation layer. Given the geo-\ngraphic distance graph𝐴𝑔𝑒𝑜 , the mix-hop propagation layer consists\nof two steps: (1) the information propagation step and (2) the infor-\nmation selection step. There are𝐾 steps of information propagation,\neach of which is calculated as follows:\n𝑯(𝑘) =𝛽𝑯𝑖𝑛+( 1−𝛽) ˜𝐴𝑯(𝑘−1), (8)\nwhere 𝑯𝑖𝑛 is the input hidden states of this layer, i.e. the output of\nthe previous layer, 𝑯(𝑘) is the output after the𝑘-th propagation,\n𝛽 is the hyperparameter which controls the proportion of input\nfeatures retained, and ˜𝐴 is the Laplace matrix of the geographic\ndistance graph, ˜𝐴 = ˜𝐷−1(𝐴𝑔𝑒𝑜+𝐼), ˜𝐷𝑖,𝑖 = 1+ Í\n𝑗𝐴𝑔𝑒𝑜\n𝑖,𝑗 .\nConference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato and Tobin, et al.\nTable 1: Statistics of the SDWPF dataset\nDays Interval # of columns # of turbines # of records\n245 10 minutes 13 134 4,727,520\nThe information selection step is a weighted aggregation of the\nresults of the𝐾-step propagation so that the model can make an\nadaptive selection. The information selection step is defined as\nfollows:\n𝑯𝑜𝑢𝑡 =\n𝐾∑︁\n𝑖=0\n𝑯(𝑘)𝑾(𝑘), (9)\nwhere𝐾 is the total steps of information propagation, 𝑾(𝑘) are\nlearnable parameters, 𝑯𝑜𝑢𝑡 is the output hidden states of the mix-\nhop propagation graph convolution module. In general, this mixhop\npropagation graph convolution, which is a balance between the\nnodes’ local information and the neighborhood information, avoids\nthe over-smoothing problem of the graph convolution model [4].\n3.2.3 Gated Temporal Convolution Module. The temporal convo-\nlution module consists of two dilated inception layers. The first\ndilated inception layer is followed by a tangent hyperbolic (tanh)\nactivation function as a filter, and the other is followed by a sig-\nmoid activation function as a gate. The process of calculation is as\nfollows:\n𝑻𝑜𝑢𝑡 = tanh(𝑻1)⊙ sigmod(𝑻2) (10)\nwhere⊙ indicates the Hadamard product and 𝑻1, 𝑻2 are the output\nof the two dilated inception layers, respectively.\nThe dilated inception layer is implemented with 1D convolu-\ntional filters to deal with the time series data. Besides, to increase\nthe receptive field to handle longer time series and reduce model\ncomplexity, we use a dilated convolution whose receptive field\ngrows exponentially by two as the number of hidden layers in-\ncreases. Besides, to discover temporal patterns with various ranges,\nwe use four different sizes of filters, including 1× 2, 1× 3, 1× 6,\nand 1× 7. The outputs of the four filters are truncated to the same\nlength according to the largest filter and concatenated across the\nchannel dimension to get the model outputs.",
+      "refs": {
+        "figures": [
+          "f2",
+          "f3"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 EXPERIMENTS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 Datasets",
+      "level": 2,
+      "text": "The SDWPF dataset 3 is collected from Supervisory Control and\nData Acquisition (SCADA) systems on wind turbines of a wind\nfarm owned by Longyuan Power Group [19]. The SCADA data are\nsampled every 10 minutes from each wind turbine in the wind farm,\nwhich consists of 134 wind turbines and the total time span of the\ndata is 245 days. The detailed information of the SDWPF dataset is\nshown in Table 1.\nThis dataset contains important external features, such as wind\nspeed and external temperature, which can influence wind power\ngeneration, as well as critical internal features, such as the inside\ntemperature, that indicate the operating status of each wind turbine.\nA detailed introduction of the main attributes of the SDWPF dataset\nis listed in Table 2.\n3https://aistudio.baidu.com/aistudio/competition/detail/152/0/datasets\nFigure 4: Spatial Distribution of Wind Turbines\nIn addition, the SDWPF dataset provides the relative position\nfor all wind turbines. Figure 4 characterizes the spatial distribution\nof the 134 wind turbines in the wind farm.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2 Experimental Settings",
+      "level": 2,
+      "text": "4.2.1 Dataset Processing. To make full use of the SDWPF dataset,\nwe apply some feature engineering approaches to the dataset. First,\nwe select useful features for the model training and remove irrel-\nevant or redundant features according to correlation coefficient\nscores [2]. For attributes listed in Table 2 we select the following\nfive features, including𝑊𝑠𝑝𝑑 ,𝐸𝑡𝑚𝑝 ,𝐼𝑡𝑒𝑝 ,𝑃𝑟𝑡𝑣 and𝑃𝑎𝑡𝑣 . Second,\nwe construct a new feature Δ𝑃𝑎𝑡𝑣 based on𝑃𝑎𝑡𝑣 . At time step𝑡0,\nΔ𝑃𝑎𝑡𝑣 is the difference between 𝑃𝑎𝑡𝑣 at time step𝑡0 and𝑃𝑎𝑡𝑣 at\ntime step𝑡0− 1. In addition, before training, we use Z-score nor-\nmalization on the dataset to standardize the data inputs. Finally,\nfollowing the official release of the baseline code 4, we add a data\nargument strategy. During the model training, we fuse the historical\ntime series of each wind turbine with data from different periods\nof the same wind turbine to enrich the data samples and mitigate\nthe occurrence of overfitting.\n4.2.2 Evaluation Metrics. Wind power forecasting aims to predict\nthe wind farm’s time series of wind power. However, due to the\nunderlying outliers in the SDWPF dataset, we evaluate the pre-\ndiction results for each wind turbine and then sum the prediction\nscores as the final score of the model. In this wind power forecasting\nchallenge, our target is to predict a future length-288 wind power\nsupply time series, and the average of RMSE (Root Mean Square\nError) and MAE (Mean Absolute Error) is used as the evaluation\nscore. Therefore, at the time step 𝑡0, the evaluation score 𝑠𝑖\n𝑡0 for\nwind turbine𝑖 is defined as:\n𝑠𝑖\n𝑡0 = 1\n2\n©­­\n«\n√︄ Í288\n𝑗=1(𝑿𝑖\n𝑡0+𝑗− ˆ𝑿𝑖\n𝑡0+𝑗)2\n288 +\nÍ288\n𝑗=1|𝑿𝑖\n𝑡0+𝑗− ˆ𝑿𝑖\n𝑡0+𝑗|\n288\nª®®\n¬\n, (11)\nwhere 𝑿𝑖\n𝑡0+𝑗 is the ground-truth active power (𝑃𝑎𝑡𝑣 ) of wind turbine\n𝑖 and ˆ𝑿𝑖\n𝑡0+𝑗 is the predicted active power of wind turbine𝑖 at time\nstep𝑡0+ 𝑗. At time step 𝑡0, the final score 𝑆𝑡0 is the sum of the\nevaluation score on all 134 wind turbines.\n4https://github.com/PaddlePaddle/PGL/tree/main/examples/kddcup2022/wpf_\nbaseline\nBUAA_BIGSCity: Spatial-Temporal Graph Neural Network for Wind Power Forecasting in Baidu KDD CUP 2022 Conference acronym ’XX, June 03–05, 2018, Woodstock, NY\nTable 2: Column names and their specifications of the SDWPF dataset\nColumn Column Name Specification",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "1 TurbID Wind turbine ID",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2 Day Day of the record",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Tmstamp Created time of the record",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4 Wspd (m/s) The wind speed recorded by the anemometer",
+      "level": 1,
+      "text": "5 Wdir ( ◦) The angle between the wind direction and the position of turbine nacelle\n6 Etmp ( ◦C) Temperature of the surounding environment\n7 Itmp ( ◦C) Temperature inside the turbine nacelle\n8 Ndir ( ◦) Nacelle direction, i.e., the yaw angle of the nacelle\n9 Pab1 ( ◦) Pitch angle of blade 1\n10 Pab2 ( ◦) Pitch angle of blade 2\n11 Pab3 ( ◦) Pitch angle of blade 3",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "12 Prtv (kW) Reactive power",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "13 Patv (kW) Active power (target variable)",
+      "level": 1,
+      "text": "As for the outliers, we introduce a few specific treatments when\nusing this data. This section is the same as in the official introduction\ntechnical report [19].\nZero values. There are some reactive power and active power\nwhich are smaller than zeros. We simply treat all the values which\nare smaller than 0 as 0.\nMissing values. Some values at some time are not collected\nfrom the SCADA system and will not be used for evaluating the\nmodel.\nUnknown values. At some times, wind turbines stop gener-\nating electricity for external reasons, such as wind turbine mod-\nification and/or active scheduling of power supply to avoid grid\noverload. In these cases, the actual generated active power of the\nwind turbine is unknown. These unknown values will not be used to\nevaluate the model. In this challenge, two conditions are introduced\nto determine whether the target variable is unknown:\n• If at time step𝑡0, there are𝑃𝑎𝑡𝑣 ≤ 0 and𝑊𝑠𝑝𝑑 > 2.5, then\nthe actual active power 𝑃𝑎𝑡𝑣 of this wind turbine at time\nstep𝑡0 is unknown;\n• If at time step 𝑡0, there are 𝑃𝑎𝑏 1 > 89◦ or𝑃𝑎𝑏 2 > 89◦ or\n𝑃𝑎𝑏 3 > 89◦, then the actual active power𝑃𝑎𝑡𝑣 of this wind\nturbine at time step𝑡0 is unknown.\nAbnormal values. If there are any abnormal values in any col-\numn of the data record, these values will not be used to evaluate the\nmodel. In this challenge, we define two rules to identify abnormal\nvalues:\n• If at time step 𝑡0,𝑁𝑑𝑖𝑟 > 720◦ or𝑁𝑑𝑖𝑟 <−720◦, then the\nactual active power𝑃𝑎𝑡𝑣 of this wind turbine at time step𝑡0\nis abnormal;\n• If at time step𝑡0,𝑊𝑑𝑖𝑟 > 180◦ or𝑊𝑑𝑖𝑟 <−1808◦, then the\nactual active power𝑃𝑎𝑡𝑣 of this wind turbine at time step𝑡0\nis abnormal.\n4.2.3 Training Loss. We choose to use the Huber loss [ 9] as the\ntraining loss function of the two models because the Huber loss is\nless sensitive to outliers than the squared error loss, which can be\nexpressed as follows:\nL( ˆ𝑿, 𝑿) =\n \n\n1\n2( ˆ𝑿− 𝑿)2 | ˆ𝑿− 𝑿|≤ 𝛿\n𝛿| ˆ𝑿− 𝑿|− 1\n2𝛿 2 | ˆ𝑿− 𝑿| >𝛿\n, (12)\nwhere𝛿 is the threshold parameter to control the sensitivity of\nsquared error, ˆ𝑿 represents the predicted active power of all wind\nturbines, and 𝑿 represents the ground-truth active power of all\nwind turbines. Note that all the predicted and ground-truth values\nhave been treated with rules for outliers in Section 4.2.2.\n4.2.4 Training and Model Settings. All experiments are conducted\non Ubuntu 18.04 with an NVIDIA GeForce 3090 GPU. We predict\na future length-288 wind power supply time series with the past\nlength-144 wind power supply time series, i.e.,𝑇 = 144,𝑇′ = 288.\nWe implement two models based on the PyTorch 5 framework. We\ntrain our model using an Adam [11] optimizer with a learning rate\nof 0.001. The batch size is 32, and the training epoch is 30. A clipping\ngradient mechanism is used to stabilize the gradient for training\nbetter, and the clipping gradient is set to 5. As for the Huber loss,\nthe threshold parameter𝛿 is 5.\nFor training AGCRN, we stack two AGCRN layers and set the\nhidden unit to 64 for all the AGCRN cells. The embedding dimen-\nsion𝑑 of each node is 10. In the semantic distance graph𝐴𝑑𝑡𝑤 , the\nnumber of similar wind turbines𝑀 is 5. For training MTGNN, we\nstack three sequentially connected gated temporal convolutional\nmodules and spatial graph convolutional modules. The hidden di-\nmension is 32, and the skip connection dimension is 64. The number\nof information propagation steps𝐾 is 2. The proportion of input\nfeatures retained in the Spatial Graph Convolution Module 𝛽 is\n0.05, and the dilation exponential factor in the Gated Temporal\nConvolutional Module is 2. In the geographic distance graph𝐴𝑔𝑒𝑜 ,\nthe threshold to control the sparsity𝜖 is 0.8.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.3 Empirical Results",
+      "level": 2,
+      "text": "Table 3 summarizes the performance of models used in the fi-\nnal submission. A 5-fold cross-validation strategy is adopted for\n5https://pytorch.org/\nConference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato and Tobin, et al.\nTable 3: Model Performance\nModel Fold Val Loss\nAGCRN\n0 0.3218\n1 0.4953\n2 0.3570\n3 0.2988\n4 0.4085\nMTGNN - 0.2512\ntraining AGCRN. As shown in Table 3, we divide all the data into\nfive equal folds, then AGCRN is trained using the other four folds\nand validated on the selected fold. MTGNN is directly trained on\nthe training set containing data of 214 days and validated on the\nvalidation set containing data of 31 days.\nAfter training, we leverage a naive weighted average to ensemble\nthe output of 5 AGCRN models according to the performance of\nvalid loss. Specially, we perform a weighted fusion of the prediction\nresults of the 5 AGCRN models based on the reciprocals of valid\nlosses, i.e., [0.3218−1, 0.4953−1, 0.3570−1, 0.2988−1, 0.4085−1]. In this\nway, the larger the validation set loss, the smaller the proportion\nof models in the ensemble model. After obtaining the ensembled\nAGCRN model, we integrate the ensembled AGCRN model and\nMTGNN model again according to the ratio of 4:6 and obtain the\nfinal model prediction results. Using this method, we achieve -\n45.36026 on the test set finally.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5 RELATED WORK",
+      "level": 1,
+      "text": "The mainstream wind power forecasting methods can be divided\ninto two main categories: classical statistical methods and machine\nlearning (or deep learning) methods. The classical statistical meth-\nods are mainly some time series forecasting models. For example,\nHan et al. [7] utilized the autoregressive moving average (ARMA)\nmodel to forecast wind power. Recently, machine learning-based\nmodels have been widely used in wind power forecasting tasks.\nWang et al. [15] used a support vector machine (SVM) to forecast\nshort-term wind power.\nDeep learning-based algorithms are currently the dominant al-\ngorithms for wind power forecasting. Chen et al. [5] used a joint\nmodel composed of Long Short-Term Memory Network (LSTM)[8]\nand Convolutional Neural Network (CNN) to forecast wind power\nfor multi-turbines. Liu et al. [14] also integrated a Long Short-Term\nMemory Network (LSTM) with variational mode decomposition\nfor short-term wind power forecasting. In recent years, with the\ndevelopment of graph neural networks (GNN), wind power fore-\ncasting is no longer treated as a simple time series forecasting task.\nResearchers have begun using graph neural networks to capture\nspatial correlations between wind turbines. For example, Khodayar\net al. [10] used LSTM to extract temporal features and a first-order\napproximation of spectral graph convolution to capture spatial fea-\ntures for wind power forecasting. Li [13] integrated the GNN and\nDeep Residual Network (DRN) for short-term wind power fore-\ncasting. Bentsen et al. [ 3] proposed a modular framework using\nattention-based graph neural networks for wind power forecasting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "6 CONCLUSION",
+      "level": 1,
+      "text": "In this technical report, we present our solution for the Baidu\nKDD Cup 2022 Spatial Dynamic Wind Power Forecasting Challenge.\nThis competition provides a large-scale dataset of 134 wind turbine\nhistorical data, with the relative position of the turbines and various\ndynamic contextual information. We extend two spatial-temporal\ngraph neural network models, i.e., AGCRN and MTGNN, as our\nbasic models. These models capture the data’s dynamic temporal\nand spatial correlations, enabling accurate wind power forecasting.\nWe train AGCRN by 5-fold cross-validation and additionally train\nMTGNN directly on the training and validation sets. Finally, we\nensemble the two models as our final submission. Using our method,\nour team BUAA_BIGSCity achieves -45.36026 on the test set.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall Structure of AGCRN"
+    },
+    {
+      "id": "f2",
+      "caption": "Different Adjacency Graphs"
+    },
+    {
+      "id": "f3",
+      "caption": "Overall Structure of MTGNN"
+    },
+    {
+      "id": "f4",
+      "caption": "Spatial Distribution of Wind Turbines"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Statistics of the SDWPF dataset"
+    },
+    {
+      "id": "t2",
+      "caption": "Column names and their specifications of the SDWPF dataset"
+    },
+    {
+      "id": "t3",
+      "caption": "summarizes the performance of models used in the fi-"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "Equation\n(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

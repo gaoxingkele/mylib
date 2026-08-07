@@ -1,0 +1,281 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-16-05815.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 ZJU-UIUC Institute, Zhejiang University, Haining 314400, China",
+      "level": 1,
+      "text": "2 Economic and Technology Research Institute, State Grid Jiangsu Electric Power Company,\nNanjing 210000, China\n* Correspondence: beixuan.23@intl.zju.edu.cn\nAbstract\nAccurate substation-level Short-Term Load Forecasting (STLF) is essential for secure day-\nahead power-system operation, yet localized demand is often affected by meteorological\nvariation and discrete calendar shifts such as statutory holidays and makeup workdays. At\nthis spatial scale, end-to-end forecasting models may over-smooth abrupt local changes\nand fail to represent peaks and valleys accurately. To address this issue, this study proposes\na Calendar-Aware Frequency-Decoupled Framework (CA-FDF) for 24 h ahead substa-\ntion load forecasting. The load series is decomposed by the Discrete Wavelet Transform\n(DWT), and the low-frequency component is tracked by a regime-aware Recursive Least\nSquares (RLS) filter. The residuals are then refined through explicit calendar-state encoding\nand day-ahead weather forecasts. A Multi-Layer Perceptron (MLP) learns latent weather\nrepresentations, while SHapley Additive exPlanations (SHAP) interpret calendar- and\nweather-related effects. Experiments on hourly operational data from 29 anonymized\nsubstations in East China show that CA-FDF achieves a Mean Absolute Percentage Error\n(MAPE) of 1.92% and outperforms representative baselines under the same day-ahead set-\nting. The results indicate that frequency-decoupled residual refinement improves localized\nload forecasting, with calendar-aware correction contributing the largest gain.\nKeywords: short-term load forecasting; calendar-state encoding; frequency decoupling;\nover-smoothing",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The transition to sustainable power grids and the increasing frequency of extreme\nweather events have brought greater volatility to modern power systems [1]. Therefore,\nShort-Term Load Forecasting (STLF) remains an important task for economic dispatch\nand grid security. Although system-level aggregated load forecasting has achieved high\naccuracy, predicting demand at the localized distribution level remains difficult. Local loads\nare closely tied to specific industrial activities and severe meteorological variations [2].\nIn addition, the growing penetration of solar and other distributed resources further\ncomplicates net load forecasting at the distribution level [3].\nRecent studies have continued to explore hybrid and decomposition-enhanced struc-\ntures for short-term load forecasting. Cai et al. proposed a Variational Mode Decomposition–\nGated Recurrent Unit–Temporal Convolutional Network (VMD-GRU-TCN) hybrid net-\nwork to combine signal decomposition with deep temporal modeling for electrical load\nAppl. Sci. 2026, 16, 5815 https://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 2 of 22\nforecasting [4]. Xiong et al. further integrated VMD, deep temporal convolutional net-\nworks, and self-attention to capture multi-scale short-term load variation [5]. Chen et al.\nstudied improved data decomposition and hybrid deep-learning models for short-term\nelectricity load forecasting, showing that decomposition-based preprocessing remains\nuseful for improving forecasting performance [ 6]. These studies indicate that hybrid\nforecasting pipelines are still important in practical power-system applications. A recent\ncomprehensive review by Eren and Kucukdemiral further summarized deep-learning-\nbased STLF studies and identified important research directions related to dataset spec-\nification, uncertainty-aware forecasting, online solutions, and practical extensions [ 7].\nThese findings suggest that further work is still needed on localized substation forecasting,\nexplicit calendar-state modeling, reproducible experimental settings, and interpretable\nfeature attribution.\nRecent progress in STLF has been driven largely by advanced deep learning (DL)\narchitectures that capture nonlinear temporal dependencies. Ensemble tree-based al-\ngorithms such as Extreme Gradient Boosting (XGBoost) have shown strong perfor-\nmance on structured tabular data [ 8], and optimized boosting frameworks have been\nproposed to reduce asymmetric forecasting deviations [ 9]. Meanwhile, hybrid recur-\nrent networks, such as spatio-temporal fusion graphs, can model coupled temporal\nrepresentations [10]. Optimized Convolutional Neural Network–Bidirectional Long Short-\nTerm Memory–Attention (CNN-BiLSTM-Attention) structures have also been applied\nsuccessfully to sequential grid data [11]. Recent studies have further shown that neural-\nnetwork-based and transfer-learning-based frameworks can achieve strong performance in\nSTLF under weather-sensitive and heterogeneous operating conditions [12,13].\nTransformer-based models and their variants have recently become prominent because\nof their ability to capture long-range dependencies. In load forecasting and closely related\npower-system forecasting tasks, feature-temporal Transformers have been used for multi-\nvariate weather inputs [14], multi-scale hypergraph and dual-layer Transformer structures\nhave been applied to complex grid forecasting problems [ 15], and hybrid Transformer-\nTCN-GRU models have improved thermal load forecasting [ 16]. Comparative studies\nacross multiple time scales also continue to support the value of recurrent and Transformer-\nbased architectures for load forecasting [17]. Meanwhile, patch-based Transformer models\nsuch as PatchTST have been developed for long-horizon forecasting [ 18], and simpler\nlinear baselines such as DLinear remain competitive when decomposition is carefully\ndesigned [19].\nRecent studies have shown more clearly that the main difficulty arises when forecast-\ning moves from aggregated demand to local network levels. Pinheiro et al. [20] developed\na forecasting framework spanning from the system level to secondary substations and\nshowed that, at more localized and volatile nodes, historical load, calendar information,\nand weather variables need to be considered together. López et al. [21] examined uncom-\nmon calendar conditions and showed that a simple holiday label is often not sufficient.\nWith a finer distinction among holidays and adjacent days, the forecasting accuracy can\nbe improved. Cao et al. [22] discussed the same problem from an adaptation perspective\nand noted that external changes, especially those related to weather and holidays, may\nrapidly lead to concept drift and performance degradation. Similar findings were also\nobserved in distribution-level prediction research. Huyghues-Beaufond et al. [23] showed\nthat automatic data cleansing and handling of outliers have a clear effect on 24 h ahead\nforecasting, while Rubasinghe et al. [24] found that a two-stage design using decomposi-\ntion is helpful for tracking peaks and valleys during periods of high short-term volatility.\nRelated findings also appear in studies based on component decomposition and combined\nmodeling. Massidda et al. [25] modeled total load and thermal load of communities sepa-\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 3 of 22\nrately, and Pramanik et al. [26] combined similar-day information with sequence modeling\nin buildings with high renewable penetration to capture both smooth background demand\nand short-term variation. Together, these studies indicate that forecasting at more localized\nlevels depends not only on temporal dependence itself but also on data quality, calendar\neffects, variation at different time scales, and changing external conditions.\nExisting studies have improved the accuracy of forecasting, but when data-driven\nmodels are applied to substation-level load series, there still remains a significant issue.\nIn many cases, these models produce overly smooth predictions and fail to follow abrupt\nlocal changes well. This is partly because, under global loss functions, high-frequency\nvariations are often averaged out to reduce the overall error. To address the issue of unstable\ndata, researchers have tried feature separation and fusion methods [27], as well as more\ndetailed decomposition strategies [28]. For instance, decomposed Fourier AutoRegressive\nIntegrated Moving Average (ARIMA) has been used to model multi-frequency seasonal\npatterns in energy markets [ 29], and adaptive multi-stage wavelet denoising has been\nused to keep load characteristics useful while filtering noise [ 30]. However, previous\nwork has usually emphasized either special-day modeling or adaptation to changing data\ndistributions. Little attention has been paid to combining explicit calendar-state modeling\nwith a frequency-decoupled forecasting structure under day-ahead weather constraints.\nTo address this issue, we propose a Calendar-Aware Frequency-Decoupled Framework\n(CA-FDF) for 24 h ahead substation load forecasting. The framework first stabilizes the\nlow-frequency base of the load series and then refines the remaining residuals using\ncalendar-state information and day-ahead meteorological inputs. This staged design is\nintended to keep the slow-moving structure stable while retaining sensitivity to local shifts\nassociated with special calendar conditions and weather changes. To remain consistent\nwith practical dispatch settings, the model uses only day-ahead weather forecasts rather\nthan realized future weather observations.\nThe main contributions of this paper are as follows:\n• A staged framework to alleviate over-smoothing in substation-level forecasting:\nWe address a practical weakness of end-to-end forecasting models at substation level,\nnamely their tendency to smooth out sharp local variations. By separating low-\nfrequency base tracking from high-frequency residual correction, the proposed frame-\nwork impro",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Proposed Methodology",
+      "level": 1,
+      "text": "This section describes the theoretical basis, authorial design, and implementation logic\nof the proposed CA-FDF framework. Instead of relying on a fully end-to-end black-box\nstrategy, CA-FDF separates the main sources of substation load variation into several\nconnected modules. As shown in Figure 1, the workflow includes an input layer, a base\nbranch, a residual refinement branch, a final fusion-output module, and a SHAP-based\ninterpretability module. In this design, Discrete Wavelet Transform (DWT)-based fre-\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 4 of 22\nquency decoupling and Recursive Least Squares (RLS) tracking are used to estimate the\nlow-frequency load base, calendar-state encoding and lagged residual learning are used to\ncorrect institutional schedule shifts, and Multi-Layer Perceptron (MLP)-enhanced weather\nrepresentation is used to refine the remaining weather-sensitive residual variation. There-\nfore, the own contribution of CA-FDF is a staged residual-correction framework that assigns\ndifferent forecasting errors to corresponding model components, rather than forcing a single\nend-to-end model to learn all effects at once.\nOverall framework of CA-FDF\nINPUT LAYER\nHistorical\nsubstation \nload y(t)\nDay-ahead\nweather\nforecasts\nCalendar state:\nWeekday/\nWeekend/\nHoliday/ Makeup\nTemporal \nencodings\nLagged \nload & \nresidual \nstatistics\nFrequency \ndecoupling by \nDWT(db4)\ny(t)\nLow-frequency \nbase component\nHigh-\nfrequency\nresidual \ncomponent\nDecompose load \ninto low-frequency \nbase + high-\nfrequency residual\nBase branch\nAdaptive low-frequency tracking\nLow-frequency \nbase component\nRegime-aware\nRLS filter\nLow/Medium/High\nload regimes\nTemporal + lag\nfeatures\nStage 1 residual refinement\nCalendar-aware historical correction\nStage 2 residual refinement\nWeather-sensitive correction\n(A) MLP Auto Feature \nEnhancer\n(B) Weather residual \nlearner FweatherLatent\nWeather \nrepresentation\nH(t)\nResidual target:\nBase\nforecast:\nHistorical\nresidual\ncorrection:\nWeather\nresidual\ncorrection:\nFinal fusion and \nforecast\n24-h-ahead \nsubstation load \nforecast\nModel interpretability\nFeature attribution for \nload inertia, calendar \nstate, and weather \nrepresentations\nStrict day-ahead setting: \nonly information \navailable up to the \nforecast origin is used\nLow-frequency trend tracking Calendar-aware residual correction Weather-driven residual correction\n−\n−\nFigure 1. Overall framework of CA-FDF. The framework consists of an input layer, a DWT-RLS-based\nbase branch, a residual refinement branch with calendar-aware and weather-sensitive correction, a\nfinal fusion-output module, and a SHAP-based interpretability module. The low-frequency base\nestimate and the refined residual corrections are combined to produce the final day-ahead load\nforecast. Source: Authors’ own elaboration.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Frequency Decoupling and Adaptive Base Tracking",
+      "level": 2,
+      "text": "The original substation load data are unstable, with slow-moving trends and short-\nterm fluctuations mixed together. To separate these two parts, the original load signal y(t)\nis first decomposed using DWT. In the rolling-origin implementation, this decomposition\nis recomputed at each forecasting step using only observations available up to the forecast\norigin. The Daubechies 4 (db4) mother wavelet is chosen because its orthogonal structure is\nsuitable for representing step-like changes and minimizes the distortion at the boundaries.\nAt decomposition level J, the signal is written as\ny(t) =∑\nk\ncA J,kϕJ,k(t) +\nJ\n∑\nj=1\n∑\nk\ncDj,kψj,k(t), (1)\nwhere cA J,k and cDj,k are the approximation and detail coefficients, respectively.\nThe low-frequency component reconstructed from the approximation coefficients\nis denoted by ybase (t). It represents the slowly varying background load and is tracked\nby an RLS filter. Let x(t) denote the regressor vector formed by temporal features and\nlag-based historical statistics. In the implementation, this vector includes cyclical hour-of-\nday, day-of-week, and day-of-year encodings, together with recent and weekly load-lag\nstatistics available before the forecast origin. These inputs are used only for tracking the\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 5 of 22\nlow-frequency base component, rather than directly predicting the final load. The weighted\nleast-squares objective is\nE(t) =\nt\n∑\ni=1\nλt−i\nh\nybase (i) − θT(t)x(i)\ni2\n, (2)\nwhere λ ∈ (0, 1] is the forgetting factor and θ(t) is the coefficient vector. A smaller λ\ngives more weight to recent observations and therefore allows for faster adaptation to\nstructural change, while a larger λ leads to smoother base tracking. The recursive update\nequations are\nK(t) = P(t − 1)x(t)\nλ + xT(t)P(t − 1)x(t) , (3)\nθ(t) =θ(t − 1) +K(t)\nh\nybase (t) − θT(t − 1)x(t)\ni\n, (4)\nP(t) = 1\nλ\nh\nI − K(t)xT(t)\ni\nP(t − 1), (5)\nwhere K(t) denotes the Kalman gain vector and P(t) denotes the inverse correlation matrix.\nTo retain adaptability under different operating conditions, base tracking is further\ncarried out in a regime-aware manner. In practice, the historical load distribution is divided\ninto low-, medium-, and high-load regimes according to empirical quantiles, and the\nrouted base estimates are then recombined into the final low-frequency trend estimate. This\nregime-aware treatment improves local adaptability while keeping the overall frequency-\ndecoupled structure unchanged. The output of this branch is denoted by ˆybase (t) and is\nused as the background forecast for the subsequent residual-refinement stages.\nFigure 2 shows an example of load data decomposition for a representative\nanonymized substation by using DWT. The low-frequency part keeps the main trend\nand the smoother daily shape of the original data, while the value of the residual compo-\nnent is relatively small and mainly contains short-term changes. This is also consistent with\nthe design of the framework. The base branch is used to follow the stable part of the load\nseries, and the residual branches are used to capture the more sudden changes that may\nbe related to calendar pattern shifts or weather effects. The low-frequency curve shown\nin Figure 2 is only an example of the decomposition result from the observed series, not\nthe forecast output itself. In actual prediction, the base branch tracks this low-frequency\nstructure to obtain ˆybase (t), as the main part of the final prediction.\nFigure 2. Example of DWT-based load decomposition of an anonymized substation. The top panel\npresents the original load data, the middle panel reconstructs the low-frequency base, and the bottom\npanel shows the high-frequency residual component. Source: Authors’ own calculation based on\nanonymized operational load data.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 6 of 22",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Knowledge-Driven Calendar-State Encoding and First-Stage Residual Refinement",
+      "level": 2,
+      "text": "Although the DWT-RLS branch captures the continuous basic inertia of the load data,\nhigh-frequency residuals often show sharp and discrete shifts driven by human activity.\nIn China, substation loads are particularly influenced by the “makeup workday” policy,\nwhich can lead to workday-like peaks on nominal weekends. To account for these effects\nand avoid ordinal bias from numerical coding, we define a categorical operational status\nindicator Iop (t):\nIop (t) =\n\n\n\nHoliday, if t ∈ H,\nMakeup, if t ∈ M,\nWeekend, if t ∈ Wend,\nWeekday, otherwise,\n(6)\nwhere H, M, and Wend denote statutory holidays, makeup dates, and regular weekends,\nrespectively.\nThis categorical state is converted into a four-dimensional one-hot vector:\nvcal (t) = [vH(t), vM(t), vWE (t), vWD (t)]T ∈ {0, 1}4. (7)\nFor example, for a makeup workday, vcal (t) = [0, 1, 0, 0]T.\nLet the preliminary prediction produced by the base branch be denoted by ˆybase (t).\nThe first-stage residual target is then\nrhist (t) =y(t) − ˆybase (t). (8)\nThis residual captures the nonlinear deviations left after the low-frequency base has been\nremoved. To model it, we combine calendar-state information with temporal encodings,\nlagged load statistics, and lagged residual cues into a history-aware feature vector:\nzhist (t) =vcal (t) ⊕ ztime (t) ⊕ ly(t) ⊕ lr(t), (9)\nwhere ztime (t) denotes cyclical temporal features such as hour-of-day and day-of-week\ninformation, ly(t) denotes lagged load features, and lr(t) denotes lagged residual features.\nIn the experiments, the cyclical time vector is formed as\nztime (t) = [sin(2πht/24), cos(2πht/24), sin(2πdt/7), cos(2πdt/7), sin(2πqt/366), cos(2πqt/366)], (10)\nwhere ht, dt, and qt denote the hour of day, day of week, and day of year, respectively. The\nlagged load vector is defined as\nly(t) = [y(t − 24), y(t − 48), y(t − 168), y24(t), y168(t), s24\ny (t)], (11)\nand the lagged residual vector is defined as\nlr(t) = [rhist (t − 24), rhist (t − 48), rhist (t − 168), r24(t), s24\nr (t)]. (12)\nHere y24(t) and y168(t) denote the rolling mean of the observed load over the previous",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "24 and 168 h, s24",
+      "level": 1,
+      "text": "y (t) denotes the rolling standard deviation over the previous 24 h, andr24(t)\nand s24\nr (t) denote the corresponding rolling mean and standard deviation of the historical\nresidual. The lags of 24, 48, and 168 h are used to represent daily persistence, two-day\nmemory, and weekly periodicity. All these quantities are calculated only from timestamps\nearlier than t.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 7 of 22\nThe corresponding residual correction is written as\nˆrhist (t) =Fhist\n\u0000\nzhist (t)\n\u0001\n, (13)\nwhere Fhist (·) denotes a LightGBM-type Gradient-Boosted Decision Tree (GBDT) residual\nlearner in this study. This model is adopted because it can handle heterogeneous tabular\ninputs, one-hot calendar variables, and nonlinear interactions between lagged-load and\nresidual features effectively.\nIt should be noted that rhist (t) is not replaced by ly(t) or lr(t). Instead, rhist (t) is\nthe supervised target of the first-stage residual learner, while ly(t) and lr(t) are historical\nexplanatory features used to predict this residual target.\nAt this stage, the model focuses on distortions tied to work–rest transitions, short-\nmemory dependence, and discrete operating-regime shifts, rather than asking the base\nbranch to absorb all local irregularities. The refined prediction after this stage is\nˆyhist (t) = ˆybase (t) +ˆrhist (t). (14)\nIn this way, calendar-aware historical refinement bridges the gap between the smooth\nlow-frequency base and the remaining exogenous fluctuations that are handled in the\nnext stage.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.3 Cross-Domain Latent Representation Boosting and Weather-Residual Refinement",
+      "level": 2,
+      "text": "After the calendar-aware historical correction, the remaining residual may still contain\nweather-sensitive variation and other short-term deviations. To model the weather-sensitive\npart, the framework uses day-ahead forecasts of six weather variables: shortwave radiation,\n2 m temperature, 2 m relative humidity, 10 m wind speed, precipitation, and cloud cover.\nThe second-stage residual target is defined as\nrweather (t) =y(t) − ˆyhist (t). (15)\nThis residual represents the part that is still not explained after the base branch and the\ncalendar-aware historical correction.\nUsing raw weather variables directly in a tree-based model may not be sufficient to\nrepresent their joint nonlinear effects. For example, the influence of temperature on load\nmay depend on humidity, cloud cover, solar radiation, and concurrent operating conditions.\nTo better capture such interactions, we introduce an MLP-based AutoFeatureEnhancer. For\neach forecast timestamp, the weather input vector is defined as\nW(t) = [G(t), T(t), RH (t), WS(t), P(t), CC(t)], (16)\nwhere G(t) is shortwave radiation, T(t) is 2 m temperature, RH (t) is 2 m relative humidity,\nWS(t) is 10 m wind speed, P(t) is precipitation, and CC(t) is cloud cover. The MLP maps\nthe weather input into a latent weather representation H(t) as follows:\nH(t) =ReLU(Wh2 ReLU(Wh1W(t) +b1) + b2), (17)\nwhere Wh1 and Wh2 are trainable weight matrices, b1 and b2 are bias vectors, and\nReLU(x) =max(0, x) is the rectified linear activation function. The output H(t) is not a\nweather forecast itself, but a learned representation of the day-ahead weather inputs for\nresidual load correction.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 8 of 22\nThe learned weather representation is then combined with selected calendar and\ntemporal predictors to estimate the weather-sensitive residual correction:\nˆrweather (t) =Fweather\n\u0000\nH(t) ⊕ vcal (t) ⊕ ztime (t)\n\u0001\n, (18)\nwhere Fweather (·) denotes the weather residual learner, which is also implemented as a\nLightGBM-type GBDT model in this study. This learner uses the MLP-derived weather\nrepresentation, together with calendar and temporal predictors, to estimate the remaining\nresidual after base tracking and calendar-aware historical correction. The final forecast is\ntherefore written as\nˆy(t) = ˆybase (t) +ˆrhist (t) +ˆrweather (t). (19)\nThe base branch provides the smooth background trend, the first residual stage handles\ndeviations related to calendar effects and load history, and the weather stage further corrects\nthe remaining exogenous variation. These three parts are designed to work in sequence,\nwith each stage focusing on a different source of forecasting error.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.4 Model Interpretability via SHAP Analysis",
+      "level": 2,
+      "text": "To improve the transparency of the proposed CA-FDF for operational use, we integrate\nSHapley Additive exPlanations (SHAP) based on cooperative game theory, which provides\na unified framework for interpreting the predictions of complex machine learning models\nby assigning an importance value to each feature for a particular prediction. The SHAP\nvalue ϕi for feature i is calculated as\nϕi = ∑\nS⊆F\\{i}\n|S|!(|F| − |S| −1)!\n|F|! [v(S ∪ {i}) − v(S)], (20)\nwhere F is the set of all input features, S is a subset of features excluding i, and v(S)\nrepresents the expected model output given the feature subset S. By computing these\nvalues across the test set, we quantify both the global importance and the local effects of\ncalendar-state variables and learned weather representations. Since several meteorological\ninputs may be correlated in practice, such as temperature, humidity, cloud cover, and solar\nradiation, the resulting SHAP values are used to explain the behavior of the trained model\nrather than to claim independent causal effects of individual variables. In other words,\na high SHAP contribution indicates that the model relies strongly on the corresponding\nfeature or feature representation under the given input distribution, but the attribution\nshould still be interpreted together with domain knowledge and the correlations among\nweather variables.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Case Study and Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Data Description and Evaluation Setup",
+      "level": 2,
+      "text": "The proposed framework is evaluated on hourly operational load data from 29 repre-\nsentative 220 kV substations in a provincial power grid in East China for the year 2024. As\n2024 was a leap year, each substation has 8784 hourly observations. The substations we\nselected have different load characteristics. Some are mainly industrial areas, while others\nare mixed commercial and residential areas. This makes the test results more closely reflect\npractical dispatch scenarios.\nBecause the original station-level operational records are subject to utility confidential-\nity restrictions, the raw load values and any identifiable station or geographic information\ncannot be publicly released. To clarify the data structure used in the experiments, Table 1\nsummarizes the main data sources, their key fields, and how they are linked before model\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 9 of 22\ntraining. The dataset is organized as an hourly panel indexed by anonymized substation ID\nand timestamp. After preprocessing and feature construction, each model sample contains\nthe observed active load as the forecasting target, the calendar-state label, the matched\nday-ahead weather forecast variables, and lagged or rolling historical features calculated\nonly from earlier timestamps.\nTable 1. Data structure and linkage of the experimental dataset. All substation identifiers and\ngeographic labels are anonymized. Source: Authors’ own elaboration.\nData Source Key Fields Temporal Resolution/Size Role in the Experiment\nHourly substation load\nrecords\nAnonymized substation ID;\ntimestamp; hourly active load",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "29 anonymized substations",
+      "level": 1,
+      "text": "× 8784 hourly observations\nin 2024\nForecasting target and source of\nlagged-load features\nSubstation–weather-\nzone mapping\nAnonymized substation ID;\nanonymized weather-zone code\nOne anonymized\nweather-zone code for each\nsubstation\nLinks each substation to the\ncorresponding weather forecast\nrecords without disclosing\ngeographic names\nDay-ahead\nmeteorological forecast\nrecords\nTimestamp; shortwave radiation; 2 m\ntemperature; 2 m relative humidity;\n10 m wind speed; precipitation; cloud\ncover\nHourly forecast records for\nthe study period\nExogenous inputs for the\nweather-residual refinement\nbranch\nDerived calendar and\nhistory features\nCalendar state; lagged load; lagged\nresidual; rolling statistics\nCalculated for each forecast\ntimestamp using only\nhistorical information\nInputs for calendar-aware and\nhistory-aware residual learning\nThe continuous variables used after data linkage and feature construction are further\nsummarized in Table 2, including their physical units and descriptive statistics. The load\nvariable is hourly active load, measured in MW. The meteorological variables are day-\nahead forecast inputs used by the weather-residual branch. Calendar-state variables are\ndimensionless categorical indicators constructed from the official Chinese holiday and\nmakeup-workday schedule, and all lagged and rolling features are calculated only from\ntimestamps earlier than the forecast target.\nTable 2. Descriptive statistics of the main continuous variables used in the experiments. Source:\nAuthors’ own calculation.\nVariable Unit Mean Std. Min. Max.\nHourly active load MW 186.88 100.20 12.81 529.07\nShortwave radiation W/m2 156.30 242.29 0.00 1046.00\n2 m temperature ◦C 18.71 9.37 −5.70 41.61\n2 m relative humidity % 75.89 16.78 18.00 100.00\n10 m wind speed m/s 7.58 5.44 0.00 44.74\nPrecipitation mm 0.17 0.75 0.00 34.70\nCloud cover % 70.69 36.52 0.00 100.00\nBefore modeling, only isolated and physically implausible spikes that were inconsis-\ntent with the neighboring load profile were capped using a rolling 3σ rule. This treatment\nwas intended to reduce the influence of likely sensor or recording errors, not to remove\nreal operational load anomalies. Persistent deviations associated with holidays, makeup\nworkdays, weather changes, or load-regime transitions were retained and modeled through\nthe calendar-state, weather, and lagged residual features. Missing values were filled by\nlinear interpolation using only information available before the forecast origin. No samples\nfrom the target day or later were used during pre-processing.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 10 of 22\nTo reflect changing seasonal conditions and keep the evaluation close to actual op-\neration, we use an expanding-window rolling forecast scheme instead of a fixed train–\ntest split. For each target day T, the data are divided in chronological order into four\nnon-overlapping parts:\n• Testing Set: The target day T (24 h), used only for out-of-sample day-ahead predic-\ntion.\n• Validation Set: The 7 days immediately before the target day (days T − 7 to T − 1),\nused for hyperparameter selection in the current rolling step.\n• Isolation Gap: A 24 h gap at day T − 8, kept out of the validation scoring during\nhyperparameter selection to reduce short-range leakage between model selection and\nmodel fitting.\n• Sub-training Set: All available historical data from day 1 to day T − 9, used to learn\nthe initial model structure and the long-term load background.\nAt each rolling step, the forecasting procedure is carried out in two stages. We first\nsearch for a suitable hyperparameter configuration on the validation set. After that, the\nmodel is retrained using all historical data from day 1 to day T − 1 under the selected\nconfiguration, and the load of day T is then predicted in a strict day-ahead setting. For\nthe benchmark comparison and the calendar-related analysis reported later, all results are\nsummarized on the common evaluation subset, where every compared model produces\npredictions for the same station–timestamp pairs. In this way, all reported metrics are\ncalculated on exactly the same samples.\nThe parameter ranges in Table 3 were selected to balance model flexibility and fore-\ncasting stability under the rolling-origin validation scheme. The DWT decomposition level\nwas limited to 2–4, because a very shallow decomposition may not sufficiently separate the\nbase and residual components, while an overly deep decomposition may move useful load\nvariation into the residual branch. The RLS forgetting factor was searched within 0.95–0.995\nto balance fast adaptation to recent changes and stable low-frequency tracking. For the\nGBDT-based residual learners, the learning rate and tree-complexity parameters were\nrestricted to moderate ranges to capture nonlinear residual patterns without overfitting the\nshort validation window. The MLP weather enhancer used a compact two-hidden-layer\nstructure, together with L2 regularization, so that the learned weather representation re-\nmained stable and did not dominate the calendar-aware residual correction. At each rolling\nstep, the final hyperparameter configuration was selected on the validation set and then\nused for the corresponding day-ahead test prediction.\nTable 3. Hyperparameter configurations and search space of the CA-FDF framework. Source:\nAuthors’ own elaboration.\nModule Hyperparameter Base Value Search Space\nFDF: DWT + RLS\nMother Wavelet Daubechies 4 (db4) -\nDecomposition Level (J) 2 [2, 4], integer\nRLS Forgetting Factor (λ) 0.98 [0.95, 0.995], log-uniform\nHistorical Residual Refinement\nNumber of Estimators 200 -\nLearning Rate 0.05 [0.01, 0.2], log-uniform\nNumber of Leaves/Tree Complexity 31 [20, 50], integer\nMLP Weather Enhancer Hidden Layer Sizes (32, 16) -\nL2 Regularization (α) 0.001 [10−5, 10−1], log-uniform\nWeather Residual Learner\nNumber of Estimators 150 -\nMaximum Tree Depth 5 [3, 8], integer\nLearning Rate (η) 0.05 [0.01, 0.2], log-uniform\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 11 of 22\nAll experiments were implemented in Python 3.11 under the same rolling-origin eval-\nuation protocol. In CA-FDF, the DWT decomposition, regime-aware RLS base tracking,\nLightGBM-type GBDT residual learners, and MLP-based weather representation were exe-\ncuted sequentially for each rolling forecast step. For the baseline models, including DLinear,\nPatchTST, and CNN-BiLSTM-Attention, the main architectural settings were kept consis-\ntent with their corresponding reference designs, and tunable training hyperparameters\nwere selected using the same validation window as the proposed CA-FDF framework. No\ntest-set information was used for model selection. The experiments were conducted on a\nWindows-based workstation equipped with an Intel Core i7 CPU and an NVIDIA GeForce\nRTX 4060 GPU. All reported metrics were calculated on the same evaluation samples after\naligning the substation IDs and timestamps across all models, so that different models were\ncompared using exactly the same observations.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Evaluation Metrics",
+      "level": 2,
+      "text": "To assess forecasting accuracy, four standard metrics are employed: Mean Absolute\nPercentage Error (MAPE), Root Mean Square Error (RMSE), Mean Absolute Error (MAE),\nand R-squared (R2). Let yi and ˆyi denote the observed and predicted load values at sample\ni, respectively, N denote the number of evaluated samples, and ¯y denote the mean observed\nload. The four metrics are defined as follows:\nMAPE = 100%\nN\nN\n∑\ni=1\n\f\f\f\f\nyi − ˆyi\nyi\n\f\f\f\f, (21)\nMAE = 1\nN\nN\n∑\ni=1\n|yi − ˆyi|, (22)\nRMSE =\nvuut 1\nN\nN\n∑\ni=1\n(yi − ˆyi)2, (23)\nR2 = 1 − ∑N\ni=1(yi − ˆyi)2\n∑N\ni=1(yi − ¯y)2 . (24)\nMAPE measures the relative forecasting error and is useful for comparing substations\nwith different load scales. MAE and RMSE measure the absolute forecasting error in MW,\nwhile RMSE gives a larger penalty to large deviations and is therefore more sensitive to\npeak or valley forecasting errors. The R2 value measures how much of the variation in\nthe observed load can be explained by the forecast. In this study, the four metrics are\nreported together to provide a balanced evaluation of both relative accuracy and absolute\nerror magnitude.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.3 Benchmark Comparison",
+      "level": 2,
+      "text": "To assess the forecasting performance of CA-FDF, we compare it with three represen-\ntative baseline models under the same 24 h ahead rolling-origin setting. All models are\nevaluated with the same forecasting horizon and the same evaluation protocol so that the\ncomparison is fair.\n• PatchTST [ 18]: A Transformer-based model that uses patching and channel-\nindependent design to capture long-range temporal dependence.\n• DLinear [19]: A linear decomposition model that has shown competitive performance\nin many time-series forecasting tasks.\n• Optimized CNN-BiLSTM-Attention [11]: A hybrid sequential model commonly used\nin power load forecasting.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 12 of 22\nAs shown in Table 4, CA-FDF gives the best results on the aligned evaluation set of\n29 substations. It achieves the lowest MAPE (1.92%), RMSE (5.26), and MAE (3.40), and\nalso obtains the highest R2 (0.9972). This shows that the proposed framework predicts\nsubstation-level load more accurately in the current test setting.\nTable 4. Performance comparison on the aligned evaluation set covering 29 substations. Source:\nAuthors’ own calculation.\nModel Architecture MAPE RMSE (MW) MAE (MW) R2\nDLinear [19] 2.33% 5.67 3.90 0.9968\nOptimized CNN-BiLSTM-Attention 2.50% 6.15 4.26 0.9962\nPatchTST [18] 2.53% 7.67 4.62 0.9941\nProposed Framework (CA-FDF) 1.92% 5.26 3.40 0.9972\nThe overall performance of DLinear is the strongest among the three baselines, but\nCA-FDF still improves on it, reducing MAPE from 2.33% to 1.92% and MAE from 3.90 to\n3.40. The difference is larger when compared with PatchTST. The same general tendency\ncan also be seen in the 72 h forecasting example, the error-distribution results, and the\ncalendar-aware analysis shown later. This indicates that splitting the forecast into a low-\nfrequency base part and later residual corrections helps reduce the over-smoothing problem\nof end-to-end sequence models.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.4 Visual Error and Over-Smoothing Analysis",
+      "level": 2,
+      "text": "To further clarify the over-smoothing issue in end-to-end models, we first examine\na representative 72 h forecasting example and then compare the distribution of absolute\nerrors across all substations.\nAs shown in Figure 3, all models capture the general trend of the load series, but\ntheir performance differs when the load changes quickly. The comparison is shown over a\ncontinuous 72 h forecasting window at a representative substation.\nFigure 3. The 72 h continuous forecasting trajectory at a representative substation. Source: Authors’\nown calculation based on the aligned evaluation set.\nThe baseline models, including DLinear, CNN-BiLSTM-Attention, and PatchTST,\nrespond more smoothly around peak and valley transitions, especially during the sharp\nincrease in the evening load or the low demand in the early morning. By comparison,\nCA-FDF follows the local fluctuations more closely and fits the actual load data better at\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 13 of 22\nthese turning points. This indicates that the proposed frequency-decoupled and residual-\nrefinement structure enables the model to capture short-term changes more effectively.\nFigure 4 shows a similar situation from the perspective of error distribution. The error\ndistributions of the three baselines are wider and have heavier upper tails, while for the\nproposed model, most of the absolute errors are concentrated in a smaller numerical range.\nThe dashed markers inside each violin summarize the central part of the distribution.\nOverall, CA-FDF shows a lower central tendency and a tighter spread on the aligned\ntest set.\nTo further examine whether the improvement is statistically reliable and not caused\nby a single representative substation, we performed a station-level paired significance test.\nFor each of the 29 substations, the MAE of each model was first calculated on the aligned\nevaluation period. The proposed CA-FDF and each baseline were then compared using\na two-sided Wilcoxon signed-rank test over the 29 paired station-level MAE values. A\nsignificance level of 0.05 was used to assess whether the station-level MAE reduction was\nstatistically significant. The results are reported in Table 5.\nTable 5. Station-level statistical comparison between CA-FDF and baseline models based on MAE.\nSource: Authors’ own calculation.\nComparison p-Value Stations with Lower MAE\nCA-FDF vs. DLinear 1.84 × 10−5 24/29\nCA-FDF vs. CNN-BiLSTM-Attention 3.37 × 10−6 25/29\nCA-FDF vs. PatchTST 3.73 × 10−8 27/29\nThe test results show that the reduction in station-level MAE is statistically significant\nfor all three baseline comparisons. In addition, CA-FDF obtains lower MAE than DLinear,\nCNN-BiLSTM-Attention, and PatchTST at 24, 25, and 27 out of the 29 substations, respec-\ntively. This indicates that the improvement is not only visible in the representative 72 h\ntrajectory, but is also consistent across most substations.\nFigure 4. Violin plot of absolute forecasting errors on the aligned test set for DLinear, CNN-BiLSTM-\nAttention, PatchTST, and the proposed CA-FDF. The proposed model shows more errors concentrated\nat lower values than the three baselines. Source: Authors’ own calculation.\nhttps://doi.org/10.3390/app16125815\nAppl. Sci. 2026, 16, 5815 14 of 22",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.5 Calendar-Aware Evaluation Across Day Types",
+      "level": 2,
+      "text": "To test the effect of calendar-state encoding, we further compare the forecasting results\nof four operational day types: Weekday, Weekend, Holiday, and Makeup. This analysis\nfocuses on two questions. The first is whether the load patterns of these day types are\ndifferent in the raw data. The second is whether distinguishing them explicitly is helpful\nfor forecasting under calendar-sensitive conditions.\nFigure 5 shows the average daily load curves of a representative anonymized sub-\nstation under the four day types. The differences are fairly clear. Weekday and Weekend\nfollow a similar daily shape, but the Weekday curve stays at a higher level for most hours.\nHoliday days have a lower overall load level and a more pronounced midday trough,\nwhich makes them different from ordinary non-working days. Makeup days show the\nhighest load level among the four categories and remain above ordinary Weekend and\nHoliday conditions for most of the day. This suggests that makeup workdays should not\nbe grouped together with regular weekends, and supports treating them as a separate\ncalendar state.\nFigure 5. Average daily load curves across Weekday, Weekend, Holiday, and Makeup conditions\nat a representative anonymized substation. The four curves show noticeable differences, especially\nbetween Holiday and Makeup conditions, which supports the use of explicit calendar-state modeling.\nSource: Authors’ own calculation based on anonymized operational load data.\nAfter showing that the four operational states are associated with different load\npatterns, we next examine whether the proposed framework can use this information\nin forecasting. Table 6 reports the daily averaged MAPE of each model across the\nfour day types, and Figure 6 presents the absolute results, together with the relative\nreduction achieved by the proposed model.\nTable 6. Calendar-aware evaluation across different operational day types (daily averaged MAPE, %).\nSource: Authors’ own calculation.\nDay Type Proposed DLinear CNN-BiLSTM-Attention PatchTST\nWeekday 1.91 2.34 2.51 2.34\nWeekend 1.88 2.30 2.53 3.19\nHoliday 1.98 2.36 2.42 2.48\nMakeup 2.02 2.17 2.46 2.40\nAs shown in Table 6, CA-FDF achieves the lowest daily averaged MAPE for all four\nday types. Its advantage is not limited to ordinary weekdays, and can also be seen on\nholiday and makeup days, where load behavior is more sensitive to calendar arrangement.\nhttps://doi.org/10.3390/app16125815",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall framework of CA-FDF. The framework consists of an input layer, a DWT-RLS-based"
+    },
+    {
+      "id": "f2",
+      "caption": "shows an example of load data decomposition for a representative"
+    },
+    {
+      "id": "f3",
+      "caption": "The 72 h continuous forecasting trajectory at a representative substation. Source: Authors’"
+    },
+    {
+      "id": "f4",
+      "caption": "shows a similar situation from the perspective of error distribution. The error"
+    },
+    {
+      "id": "f5",
+      "caption": "shows the average daily load curves of a representative anonymized sub-"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Data structure and linkage of the experimental dataset. All substation identifiers and"
+    },
+    {
+      "id": "t2",
+      "caption": "Descriptive statistics of the main continuous variables used in the experiments. Source:"
+    },
+    {
+      "id": "t3",
+      "caption": "Hyperparameter configurations and search space of the CA-FDF framework. Source:"
+    },
+    {
+      "id": "t4",
+      "caption": "Performance comparison on the aligned evaluation set covering 29 substations. Source:"
+    },
+    {
+      "id": "t5",
+      "caption": "Station-level statistical comparison between CA-FDF and baseline models based on MAE."
+    },
+    {
+      "id": "t6",
+      "caption": "Calendar-aware evaluation across different operational day types (daily averaged MAPE, %)."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p6_nsga_bls_feasibility_review/p6_nsga_bls_feasibility_review__11__multi_objective_optimization_of_load_flow_in_power_systems_a__a52cc70f0b.pdf",
+  "n_pages": 33,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The electric power grid is an ever-changing dynamic system. This system is intended\nto safely and consistently produce, transfer, and distribute electricity from power plants\nto consumers [1]. It is made up of power generation units, transmission and distribution\nsystems, control and protection systems, and energy-consuming devices. Since its estab-\nlishment in the late 19th century, the grid has experienced revolutionary transformations.\nOriginally built for unidirectional power flow and centralized generation, it changed to\naccommodate expanding industrial and residential needs [2–4]. There is a need for more ef-\nfective, adaptable, and intelligent grid management in line with the ever-growing demand\nfor electricity. By 2035, this growth is expected to rise by 53% [5–11].\nIn the 21st century, a new phase has been reached in power systems, characterized\nby the integration of renewable energy sources (RESs) which is driven by environmental\ngoals, decreasing technological costs, and accessibility to electricity in underdeveloped\nnations [12–14]. China, the EU, and the US have the largest installed solar PV capacity,\nEnergies 2025, 18, 6056 https://doi.org/10.3390/en18226056\nEnergies 2025, 18, 6056 2 of 33\nwith over 2.2 TW worldwide by the end of 2024, according to the International Renewable\nEnergy Agency (IRENA) and about 19.2 GW for Africa and the Middle East. With a current\ninstalled capacity of 1.136 TW, wind energy comes in second position, with significant\ninstallations in Asia, North America, Europe and an expected installed capacity of 16 GW\nin Africa by 2025 [15,16].\nFurthermore, grid dynamics are changing as a result of the integration of RESs. These\nsources have a major impact on grid stability and power quality. Due to their intermittent\nnature and time-varying output, their integration brings uncertainty and variability into\nthe grid which can lead to voltage fluctuations, supply–demand imbalance, and excessive\ntransmission losses, etc. [ 17–22]. It is therefore necessary to conduct studies aimed at\nexamining and optimizing power systems in order to adapt to changes in the energy\nlandscape and ensure the sustainability and resilience of the grid [23–30].\nApplications of optimization techniques in power systems are motivated by the ongo-\ning conflict between the growing complexity of the grid and the necessity for a cost-effective,\nreliable, and efficient power supply [3–7]. An evolution has been observed in power system\nconfigurations and optimization techniques used to address the management, operation,\nand planning of power systems, from basic cost-minimization problems with centralized\nstructures to complex, multi-objective problems with interconnected networks and various\npower sources [31,32].\nOptimization techniques in power systems started more than 45 years ago when\nthe Optimal Power Flow (OPF) problem (which aims to identify the optimal state of\noperation for power systems) was developed, and they have since advanced through\nmultiple chronological phases of problem formulation and solution approaches [33]. The\ndevelopment of optimization solutions across time can be approximately categorized into\nthree periods as shown in Figure 1 [34–40]:\nFigure 1. Evolutionary trajectory of optimization techniques in power systems.\nIn the traditional period, which spanned from before the 1980s to the early 1990s, tradi-\ntional optimization methods including linear programming (LP), nonlinear programming\n(NLP), and mixed-integer programming (MIP) were considered the norm. For basic, deter-\nministic situations, these techniques provided optimal solutions and were mathematically\nrigorous. However, the rise of deregulated markets and the grid’s growing complexity\nmade their weaknesses clear. In the Metaheuristics and Artificial Intelligence (AI) pe-\nriod, from the 1990s to the late 2000s, metaheuristics and AI based algorithms including\nGenetic Algorithms (GA) and Particle Swarm Optimization (PSO) were popular. These\nalgorithms were inspired by nature and were particularly good at searching large nonlinear\nsearch spaces for near-global solutions. Because of their resilience and adaptability, they\nwere perfect for solving challenging, non-convex problems that traditional approaches\nwere unable to solve. In the Modern or Hybrid and Advanced period, from the 2010s to\npresent, managing the significant unpredictability brought by the widespread integration\nof renewable energy sources and smart grid technology has become the focus of most\nresearch studies. Nowadays, hybrid approaches that incorporate several approaches, ro-\nEnergies 2025, 18, 6056 3 of 33\nbust optimization, and stochastic programming are examples of modern solutions. In an\nextremely uncertain environment, these strategies place a significant priority on resilience\nand real-time flexibility to guarantee that the grid stays steady, safe, and effective [4,21].\nOPF comprises any optimization problem in a power system that aims to optimize\npower system operation while satisfying constraints. Several power system optimization\nissues are specific cases or extensions of OPF. This general structure includes dozens of\noptimization issues for power system planning and operation. In Figure 2, a wide range of\noptimization problems are shown, including long-term power system planning and main-\ntenance scheduling to guarantee future capacity and reliability and short-term operational\ndecisions like Unit Commitment and Economic Dispatch that minimize costs and maintain\nsecurity [3,34]. In order to minimize losses and enhance voltage stability, optimization\nis essential for resolving particular network issues such as network reconfiguration and\nreactive source allocation [36–42]. Beyond technical and financial issues, applications such\nas pollution dispatch demonstrate how multi-objective optimization (MOO) is used to\nbalance cost and environmental impact, guaranteeing that the grid in its entirety is not just\nsecure and effective, but sustainable as well [ 41,42]. Figure 3 shows a quick view of the\ncurrent state of power system optimization which emphasizes the fundamental operational\nand planning difficulties facing the transmission and generation industries as well as the\nmanagement of the intricate distribution network. Power system optimization is moving\naway from deterministic algorithms, which perform well in the structured, high-accuracy\nrequirements of generation and transmission at 53% of applications, and towards heuristic\nand hybrid approaches, which dominate the distribution network at 45% because they are\nbetter at handling non-linearity, non-convexity, and discrete variables while avoiding local\noptima. Heuristics and hybrids are more reliable for modern complex, uncertain systems,\neven though deterministic approaches are faster; at the same time, new AI-based techniques\nare demonstrating great promise for real-time, adaptive control, although their current use\nis constrained by the requirement for large amounts of data and processing power.\nFigure 2. Optimization applications in power systems [36–42].\nEnergies 2025, 18, 6056 4 of 33\nFigure 3. Optimization techniques in power systems percentages [43].\nPower flow analysis is conducted to ascertain how power flows throughout the net-\nwork under specific load and generation scenarios. It also gives important voltage in-\nformation, such as phase and magnitude, at every grid node [ 44–47]. However, it is\ncrucial to simplify the problem formulation and choose the most efficient optimization\nstrategies [48,49].\nAs shown in Figure 4, this paper presents an in-depth review of MOOPF techniques by\nassessing critically what each proposed method has accomplished, as well as the classifica-\ntion of their applications, and the formulation of the problem in power systems. It critically\nexamines how power system management, operation, and planning are addressed via\noptimization, but also how the problem is formulated. The study identifies trends in the u",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Topologies of Power Systems",
+      "level": 1,
+      "text": "The topology of power systems is the electrical or physical configuration of a power\nsystem’s loads, transmission lines, and generators [ 50–53]. A variety of configurations,\nas illustrated below in Figure 5, can be used to organize power systems. Every kind of\nconfiguration has unique properties and operates in a variety of ways. As described in [54],\nthe system’s cost, adaptability, and dependability are determined by this configuration.\nFigure 5. (a) Radial architecture, (b) Loop architecture, (c) Mesh architecture.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Radial or Star Networks",
+      "level": 2,
+      "text": "The most straightforward and typical configuration, particularly in distribution sys-\ntems, is a radial structure as shown in Figure 5a. This arrangement creates no closed loops\nsince feeders branch off from a single source of power, such as a substation, and provide\nelectricity to loads as they go [ 55]. There is only one connection to the source for every\nload. Due to its affordability and ease of use, the radial configuration is frequently used for\nEnergies 2025, 18, 6056 6 of 33\ndistribution networks, particularly in residential areas [56]. Its main drawback is that it\nis not very reliable because any defect on the feeder will cut off power to all downstream\nloads, leaving the system open to massive outages.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Loop Networks",
+      "level": 2,
+      "text": "A loop structure, as shown in Figure 5b, offers a closed path for power flow, which\nenhances the radial structure [ 57,58]. After leaving a substation, feeders travel around\na service area before returning to the same substation or another one. Usually, a radial\nspur off the loop supplies each load. Individual loads are still served radially even when\nthe loop itself offers two routes to the main supply. However, as opposed to the more\nstraightforward radial structures, this increased reliability comes at the expense of being\nmore costly and requiring more intricate protection measures.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3 Mesh or Connected Networks",
+      "level": 2,
+      "text": "A highly intricate and dependable configuration as illustrated in Figure 5c is a mesh\ntopology, in which a grid is formed by connecting numerous generators and loads via a\nlarge number of transmission lines. Power can move between any two points in the system\nin a number of parallel ways [59]. This configuration is costly and intricate to construct,\nmanage and safeguard. Sophisticated control and protection systems are necessary because\nof the intricate power flow pathways. For high-voltage transmission networks that serve as\nthe foundation of a regional or national grid, this is the typical structure.\nThe feasible solution space, power flow equations, and optimization constraints in\nMOOPF studies are directly impacted by the electrical network topology. Thus, knowledge\nof network topology is essential for understanding how optimization algorithms are used\nand why some approaches work better in particular system configurations. Practicality,\nthe most effective electrical network (power system) design is determined by the objective\n(dependability, cost, power quality, losses, etc.), but for modern power systems with\ntransformers and distributed generation, mesh or connected network is typically the\noptimal architecture [51,52,59].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Optimization Techniques",
+      "level": 1,
+      "text": "In the realm of power systems, optimization approaches are crucial for enhancing\nthe efficiency [60], reliability, and economic viability of electricity generation, distribution,\nand transmission [61–65]. The primary goal of an optimization problem, which is a math-\nematical model, is to minimize undesirable factors (such as cost, energy loss, errors, etc.)\nor maximize desirable factors (such as profit, quality, efficiency, etc.), subject to certain\nlimitations [49,66–69]. However, a multi-objective problem with conflicting goals will never\nhave a single optimal solution, but rather a collection of them [70].\nOptimization issues can be tackled using a variety of traditional methods [71]. In the\npart that follows, we will examine the two primary aspects of optimization techniques in\npower systems: classical and intelligent optimization techniques [72–77], which are illus-\ntrated in Figure 6, and compared in Table 1. Classical models are particular computations\nproduced by an algorithm that accepts a value or set of values as input and returns a value\nor set of values as output. Intelligent models are methods or procedures used to finish a\ntask or find a solution [78,79].\nEnergies 2025, 18, 6056 7 of 33\nFigure 6. Methods to address optimization problems [72–77].\nTable 1. Classical and intelligent optimization techniques comparison.\nFeature Classical Optimization Intelligent Optimization\nMethod Exact/Deterministic Non-exact/Stochastic\nMath model Explicit mathematical model Black-box models\nIntricacy handling Limited High\nResult One optimal solution Multiple (global optimum)\nSpeed Fast (for basic models) Slower (for iterative search)\nGlobal search Local minima propensity Improved capability\nComputation Time Shorter (small, convex systems) Higher (large, complex systems)\nConvergence behavior Quickly (convex) Global/near-global solutions\nSolution Quality Exact/near-exact (convex, smooth) High-quality\nCFD/CFI (Constraint Feasibility\nDegree/Index) CFD = 0 (satisfaction of constraints) CFD > 0\nHandling of CFD/CFI Enforced rigidly (mathematically) Flexible\nNumerical Stability High (Jacobian/Hessian\nwell-conditioned) Stable (Algorithmic adjustment)\nImplementation Difficulty Simpler Difficult\nScalability Effective (small, medium systems) Adaptable (Large systems)",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Classical Optimization T echniques",
+      "level": 2,
+      "text": "Conventional techniques created to address problems with clearly specified mathe-\nmatical features are known as classical optimization techniques. They are deterministic,\nas shown in Figure 6, which means they will always yield the same outcome given a\nstarting position. These techniques use calculus-based ideas like gradients and Hessians to\nmethodically search for the best result [80].\nA mathematical program is the fundamental building block for articulating and\nsolving optimization problems using mathematical models [75]. Working with very simple\nEnergies 2025, 18, 6056 8 of 33\nmathematical equations may allow for the possibility of analytical solutions. In many\nreal-world situations, the relationships involved are too complicated to allow for direct\ndifferentiation [81], hence alternative optimization processes are required to determine the\noptimal objective value and the associated values of independent variables.\nThere are several mathematical programs, often based on the particulars of the sit-\nuation at hand. In this instance, the problem is regarded as Linear Programming (LP) if\nthe variables in the problem (sometimes denoted by “x”) allow both the objective function\nand the constraints to be characterized as linear functions [ 49]. However, when restric-\ntions and/or the target functions exhibit non-linear features, the problem is categorized\nas Non-Linear Programming (NLP). Furthermore, variables are limited to believing that\nthe “Integer” trait is applied only to integer values [ 69]. An example of a binary choice\nin a power system would be a transformer that is either in functioning mode (status = 1)\nor in a spare state (status = 0). When every variable satisfies this requirement to be an\ninteger, the problem is known as integer programming (IP). However, only when some of\nthe variables need integer values does Mixed Integer Programming (MIP) arise [82]. These\nvariations in problem classification aid in choosing optimization strategies appropriate for\nthe constraints and intrinsic complexity of the issue. Quadratic programming (QP) is an\nadvanced form of NLP . The QP optimization model features linearly specified constraints\nand a quadratic objective function. QP is more accurate than LP-based techniques. The\nmost commonly used objective function in power system optimization is the generation\ncost function, which is frequently quadratic. As a result, the QP solution to the power\nsystem optimization problem cannot be simplified using such an objective function [82].\nSince it calculates the second-order partial derivatives of the power-flow equations in addi-\ntion to other constraints (the Hessian), Newton’s method, another type of NLP , is known\nas a second-order approach. Often, the prerequisites for optimality are the Kuhn–Tucker\nrequirements [82,83].",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 Intelligent Optimization T echniques",
+      "level": 2,
+      "text": "Deterministic or exact optimization methods are rigorous, mathematical-based ap-\nproaches, as explained in Sections 1 and 3.1, and they use known parameters. However, real-\nworld problems frequently contain some unknown parameters [3]. Therefore, classical or\nexact optimization methods are limited because they are unable to handle integer-variable,\nvariability, uncertainty, non-linearity and large-scale optimization problems[35–40,80,81].\nHence, the introduction of intelligent optimization techniques (stochastic). These ap-\nproaches, as illustrated in Figure 6, are a class of algorithms that employ stochastic or\nheuristic ways to solve problems; they are also referred to as metaheuristics. They draw\ninspiration from biological or natural phenomena including physical annealing, swarm\nbehavior, and evolution. They are intended to search a larger search space in order to\nidentify a global or near-global optimum, and they do not require derivatives, in contrast\nto traditional approaches.\nOptimization algorithms are computer programs used to solve the mathematical\nmodels developed during power system optimization. These algorithms search for the\noptimal solution within the parameters of the issue domain. There are two categories of\nalgorithms: exact (deterministic) and not-exact (stochastic or approach methods), as seen\nin Figure 6. Even when exact algorithms find a global optimum, they frequently do not\nscale well to large problems [41,78]. For complicated power system problems, non-exact\nalgorithms which fall into two categories—heuristic, and artificial intelligence (AI)—are\nmost frequently employed in the literature.\nNot-exact methods are often more scalable when handling large issues, allowing for\nprecise characterization of the optimization problem. It is important to keep in mind that\nEnergies 2025, 18, 6056 9 of 33\nalthough these approaches look for fulfilling answers, they cannot ensure that the solution\nis feasible, near, or ideal. Nevertheless, certain modified heuristic techniques have come up\nand assert they can guarantee the best results [46].\nPrecise, conventional optimization methods often encounter issues that prevent them\nfrom solving the optimization problem in a timely way [44]. To avoid such circumstances,\nother methods that can detect high-quality, if not quite accurate, approximations to exact\nanswers were created. These methods, referred to as heuristics, were initially primarily\nreliant on the knowledge and experience of specialists and were intended to explore the\nsearch space in a particularly useful way. Heuristics were initially employed by G. Polya\nin 1945 [84], and their use grew throughout the 1970s as new heuristics were created for\nspecific issues in a range of technical and scientific fields, including electrical engineering. In\nessence, a heuristic is designed to provide better computational efficiency than conventional\noptimization methods at the expense of reduced precision.\nSimple or basic heuristics and meta-heuristics are the two subclasses of heuristic [41].\nIn order to rapidly ascertain the control parameters for power system components such\nas transformers and generators without guaranteeing optimality, basic heuristics are com-\nmonly used in optimal power flow (OPF) and typically take the shape of constructive, local\nsearch algorithms [85]. Although simple heuristics can improve the solution for an issue\nrapidly and effectively, they have a high risk of becoming stuck in a local optimum.\nSince they began in the mid-1980s, metaheuristic approaches to optimization prob-\nlems have improved steadily, making it possible to address and solve a growing number\nof problems that were previously considered difficult or impossible to solve [ 86]. Meta-\nheuristics, which are a step up from simple heuristics, seek to find the optimal answer\noutside of a predetermined neighborhood. In OPF, meta-heuristic techniques are used to\nexplore larger, complex solution spaces effectively than typical heuristics [87–92], such as\nevolutionary algorithms, Monte Carlo methods, human-based algorithms, etc. [45]. Many\nmeta-heuristic methods are derived from biologic principles (nature-inspired, population-\nbased algorithms) [93–96]. All of them, in essence, start with a point or set of points and go\ntowards a better solution while being guided by heuristic, empirical, or logical rules and\nsensitivities [97–104]. These ideas are used to generate and categorize the search possibili-\nties. In MOOPF, meta-heuristic algorithms are essential in solving problems efficiently by\naddressing multiple objectives simultaneously [3]. These algorithms balance exploration\nwith exploitation by simulating a large number of control variable combinations, such as\ngenerator outputs, voltages, and tap settings, resulting in diverse, near-optimal solutions.\nHence, the concept of Pareto optimality (Pareto front) as explained in Section 4 and illus-\ntrated by Figure 7 [14,78]. The purpose of the Pareto optimality is to find a set of trade-off\noptimal solutions (Pareto-optimal solutions), rather than one optimal solution [80,81]. As\nillustrated in Table 2, a power system operator has three objective functions—to minimize\nCO2 emissions, generation cost and voltage deviation (VD). For such solutions, no objective\nfunction can be improved without first sacrificing at least one other objective function. For\ninstance, in Table 2, the Pareto front illustrates that minimizing CO2 emissions increases\nthe generation cost, enabling decision-makers to choose their preferred point of opera-\ntions based on policy considerations. The advantages of meta-heuristic algorithms are\nadaptability to change, and ability to handle integer-variable, non-linearity and large-scale\noptimization problems [3,41].\nEnergies 2025, 18, 6056 10 of 33\nFigure 7. Illustration of the concept pareto optimality [78].\nTable 2. An example of MOOPF solution based meta-heuristic algorithms (Pareto front).\nSolution CO 2 (kg/h) Cost ($/h) VD\n1 400 900 0.016\n2 300 950 0.014\n3 200 1000 0.011\nIn OPF, AI techniques like machine learning and deep learning have grown in popular-\nity [105]. By analyzing historical data, machine learning algorithms are able to predict the\noptimal power system configurations [106–111]. Because deep learning can handle compli-\ncated non-linear interactions, it is increasingly being used to solve OPF problems [112,113].\nBecause AI approaches may improve accuracy and automate power system management,\nthey have potential when addressing large-scale, data-driven OPF operations [ 82]. For\nexample, artificial neural networks (ANN) were based on a learning algorithm created by\nHebb in 1949 that demonstrated how a network of neurons might exhibit learning behavior.\nANNs are primarily categorized by their architecture (number of layers), learning regime,\nand topology (feed forward, connection pattern, or recurrent, etc.) [80].\nHowever, the superiority of the heuristic approach in solving large-scale, complex,\ncombinatorial, and nonlinear problems is supported by a vast number of models that\nhave been published in scientific journals. Conversely, when the network size grows,\nexact techniques demand significantly more computing work [41,80,84]. To sum up, while\naccurate optimization techniques yield theoretically optimal outcomes, they may jeopardize\nmodelling accuracy in power system settings, resulting in poor outcomes.\nAs explained in Section 1, a hybrid approach is possible and effective. The combination\nof deterministic and stochastic methods improves optimization results in power systems,\nresulting in more precise, faster, and dependable solutions. Deterministic approaches\nprovide precision and speedy convergence, but stochastic approaches excel in exploring\ncomplex, nonlinear solution spaces [41,42]. Therefore, when employing hybrid approaches,\nstochastic algorithms identify the global optimum, and deterministic methods improve\nthe results.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Multi-Objective Optimization in Power Systems",
+      "level": 1,
+      "text": "OPF is a set of optimization problems in power systems engineering. An optimization\nproblem having many objective functions is referred to as multi-objective optimization.\nUnlike one objective with a single solution, multi-objective optimization (MOO) issues have\na group or set of solutions that reflect trade-offs between objectives [78]. Subject to both\noperational and physical limitations, a MOOPF problem aims to concurrently optimize\nmany competing objectives in power systems, as explained in Section 3.2. Multi-objective\noptimization techniques are intended to generate these trade-offs [114]. Resolving these\ncompromises is essential because it provides the information and resources necessary\nEnergies 2025, 18, 6056 11 of 33\nfor designers and operators to understand and weigh all their possibilities [ 46,78]. The\nfollowing is a typical mathematical expression for a multi-objective optimization problem:\nMin\\Max f m(x) (1)\nSubject to\nxl ≤ x ≤ xu\ng(x) ≤ 0\nh(x) = 0\nwhere x is an independent variable vector, fm(x) is a vector of objective functions, xl and\nxu are vectors of lower and upper bounds, respectively, andh(x) and g(x) are vectors of\nequality and inequality constraints. For every aim in the objective function vector, there are\ntwo alternative outcomes: minimization and maximization.\nA complex MOO problem that considers the interests of multiple parties is the design,\noperation, and planning of a power system. These stakeholders, which include investors,\nnetwork operators, end users, and regulators, each have unique goals that periodically\nclash. It is necessary to bring together several opposing goals, even within the same partici-\npating party. Consider the government’s concurrent focus on economic and environmental\nchallenges. Investors seek solutions that increase investment earnings while lowering\nconstruction expenses. Operators aim to achieve a balance between lowering operating\nexpenses and preserving network stability. Power system optimization basically involves\nnegotiating a complicated environment of many objectives and trade-offs in order to meet\nthe needs and expectations of various stakeholders [81,82].\nIt is important to employ a concept other than optimal in order to solve a multi-\nobjective optimization problem. Pareto-optimality is the most often used concept of op-\ntimality in multi-objective optimization [ 3,14,41,78,115,116]. The solution is considered\nnon-dominated, Pareto optimal, Pareto efficient, or non-inferior if it is impossible to in-\ncrease the value of any of the objective functions without lowering some of the other\nobjective values. When the concept of Pareto optimality is applied, Figure 7 shows that\nsolutions 3 and 4 “dominate” both solutions 7 and solutions 8 and 9, while solutions 8 and\n9 are “dominated” by solution 7. All of the solutions in the entire set P that are not being\ndominated by any other solution comprise the set of non-dominated solutions [78]. Without\nfurther subjective preference information, there could be (perhaps infinite) numbers of\nPareto optimal solutions that are all thought to be equally good [ 116]. The Pareto front\nof objectives is known as the Pareto front. Multi-objective optimization can therefore be\nsaid to have two true purposes [ 78]: (1) to find a set of solutions that are as close to the\nPareto-optimal front as possible, and (2) to find a set of replies that are as diverse as possible.\nThe following paragraphs examine and evaluate a number of important studies that have\napplied MOO to power system issues.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1 Categories of Multi-Objective Optimization Algorithm",
+      "level": 2,
+      "text": "MOO techniques can be divided into three major categories according to the manner\npreferences are expressed. Methods with preferences that have been expressed earlier,\nmethods without preferences, and methods with preferences that have been presented later\nfall into these categories. A priori articulation provides the optimization approach with\nthe prior knowledge about the preference or priority of different objective functions. An\noptimal solution is selected from the Pareto front, which is first acquired at a posterior\narticulation [116]. In addition to these three categories, MOO problems are also commonly\nsolved using multi-objective evolutionary algorithms (MOEAs) [115–119]. Evolutionary\nalgorithms (EAs) can also be applied to many types of challenges and search domains.\nEnergies 2025, 18, 6056 12 of 33\nAdditionally, data-driven methods like neural networks and reinforcement learning are\nbeing utilized to address MOO problems in power systems as a result of advancements in\nmachine learning. These techniques reveal complex relationships between selection criteria\nand objectives, giving decision-makers valuable data. As a result, each of these five groups\nis briefly described in Figure 8 along with a few examples.\n \n \n \n \n \nFigure 8. Categories of Multi-Objective Optimization Algorithm.\nSince the methods listed in the three categories have different drawbacks, evolutionary\nalgorithms (EAs) and AI-based algorithms are an excellent choice for solving multi-objective\noptimization issues [41].",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 Literature Review",
+      "level": 2,
+      "text": "MOO problems with hybrid and RES integration in power systems are addressed\nin [33–38], considering variabilities and uncertainties. In the first paper, a novel MOO\ntechnique that uses the Gravitational Search Algorithm (GSA) to lower CO 2 emissions,\nincrease the usage of renewable energy sources, improve power dependability, and lower\nprices is introduced. The system’s economic resilience is demonstrated by a sensitivity\nanalysis to the carbon tax. In terms of solution diversity and quality, the GSA performs\nbetter than conventional techniques. The ideal configuration decreased environmental\nimpact by 14.2% and increased the share of renewable energy by 18.4%. Similarly, in the\nsecond study, MOO is used to minimize power supply losses and cut costs. To determine\nwhich algorithm best balances cost and performance, seven algorithms are examined\n(Giant Trevally Optimizer or GTO, Gazelle Optimization Algorithm or GOA, Honey Badger\nAlgorithm or HBA, Manta Ray Foraging Optimization or MRFO, Pelican Optimization\nAlgorithm or POA, Sea Horse Optimizer or SHO, and Synergistic Swarm Optimization\nAlgorithm or SSOA). Three scenarios (balanced supply, energy scarcity, and energy surplus)\nare used to test them. The third study suggests a framework for the MOO to determine\nthe ideal placement and scale for distributed renewable generating in power networks.\nUncertainties like demand variations, equipment malfunctions, and resource availability\nare taken into consideration. An OPF model based on Monte Carlo (MCS-OPF) simulates\nnetwork performance and assesses the total cost of the system. A novel optimization\ntechnique that takes into account social, technical, economic, and environmental aspects\nis presented in the fourth study. It optimizes CO2 emissions, human development index\nor HDI, loss of power supply probability or LPSP , and levelized cost of energy or LCOE\nall at once. The Pareto front is generated and simulated using the NSGA-II and MOPSO\nEnergies 2025, 18, 6056 13 of 33\nalgorithms. In the fifth study an MO problem centered on network loss minimization\nand voltage profile augmentation was developed. MATLAB-2015 has been used to write\nthe Newton–Raphson approach for load flow and the black hole algorithm. Finally, the\napplicability of the New Improved Differential Evolution (NIDE) method to the MOO-\nbased Reactive Power Planning (RPP) problem is discussed in the sixth study.\nIn [40], Pareto effective solutions to the multi-objective reconfiguration problem are\nfound using a multi-objective Tabu Search technique. A test has been carried out on an\nIEEE system to show how the multi-objective method works and how effective its use is.\nThyristor-controlled series compensators (TCSCs) are used in the study conducted\nin [42] to enhance power system performance by lowering power losses, increasing trans-\nmission capacity, and stabilizing the voltage profile. The MOOPF problem is solved using\nthe adaptive parallel seeker optimization algorithm (APSOA). By determining the ideal\nsize and position, the technique also reduces the cost of TCSC installation.\nThe OPF problem in [44] is successfully resolved by a multi-objective particle swarm\noptimization (MOPSO) method, which produces high-quality Pareto solutions in a single\nrun. Similarly to this, other multi-objective techniques such as variable constants particle\nswarm optimization (VCPSO), genetic algorithm (GA), and particle swarm optimization\n(PSO) are also used in [47] to optimize the size and placement of distributed generators\n(DGs) with the goal of lowering power losses and improving voltage profiles. VCPSO is\nthe most effective of these techniques. Additionally, the successful integration of renewable\nenergy sources (RESs) into distribution networks is simulated using heuristic techniques\nincluding Ant Lion Optimization (ALO), Gray Wolf Optimization (GWO), Whale Opti-\nmization Algorithm (WOA), and PSO [73]. These methods decrease computing times and\nimprove efficiency and convergence.\nA two-step MOOPF solution technique has been suggested in order to preserve the\neconomy, ecology, and security elements while the power system is operating [45]. In step\n1, the knee point-driven evolutionary algorithm (KnEA) for the MOOPF problem may be\nintroduced in order to find the Pareto-optimal solutions. In step 2, decision makers are\ngiven option supports through an integrated decision analysis technique that combines the\nFuzzy C-Means (FCM) clustering approach and grey relational projection (GRP).\nFor the MOOPF problem addressed in [46], a novel MO Modified Imperialist Com-\npetitive Algorithm (MOMICA) is employed, accounting for the effects of fuel cost, voltage\ndeviation, active power losses, and pollution. The industry-standard IEEE 30-bus power\nsystems are used to evaluate the performance of a novel MOMICA approach.\nBecause RESs are unpredictable and irregular, integrating them into OPF becomes\nmuch more complex. To tackle this issue, the study in [ 48] presents two multi-objective\nalgorithms centered on non-dominated sorting: the Non-Dominated Sorting Genetic Algo-\nrithm (NSGA-II) and its updated variant, the Adaptive Crossover Non-Dominated Sorting\nDifferential Evolution (ACNSDE). These algorithms utilize a state-of-the-art constraint\nmanagement technique called Superiority of Feasible Solutions (SF). In scenarios involving\nstochastic wind and solar energy, the proposed methods may effectively achieve the objec-\ntives of multi-objective OPF optimization, according to the actual results from several test\ncases. They are also capable of creating balanced, competitive solutions.\nThe multi-objective optimal reactive power dispatch (MORPD) problem, which aims\nto minimize active power loss and voltage deviation, has been addressed with a two-step\napproach. Classification-Based Pre-Selection (CPS) and Pareto Domination-Based Multi-\nObjective Evolutionary Algorithm (CPS/MOEA) are two MOO algorithms used in the\ninitial step of this method to obtain Pareto optimum solutions (POSs) with uniformly\ndistributed attributes. To further enhance these answers and reflect the preferences of the\ndecision-maker, the Fuzzy C-Means Algorithm (FCM) and the Grey Relation Projection\nEnergies 2025, 18, 6056 14 of 33\nMethod (GRP) are coupled in the second stage. This combination approach appropri-\nately addresses and solves the MORPD model [ 115]. Similarly, MOOPF is investigated\nin [117–119] using the MOEA/D based on decomposition. This technique allows one\nexecution approach to produce a set of non-dominated results, or Pareto solutions. An\ninnovative hybrid MOEA is then used to solve the MOOPF problem, particularly when\ncombining RESs like solar and wind energy. This hybrid MOEA guarantees a range of\nworkable options and enhances the selection process by fusing decomposition with the\nsum of normalized objectives.\nUsing a weighted sum approach, the Multi-Objective Cuckoo Search Algorithm\n(MOCSA) is created and used to determine the optimal network reconfiguration while\nguaranteeing that the voltage profile aligns with the goal of reducing power loss [120]. The\nWhale Optimization Algorithm (WOA) is used in another study [ 121] to address MOO,\nwhich includes lowering bus voltage variation (VD) and real power loss in grid-connected\nmicro electrical systems with non-firm tiny power plants. These techniques were eval-\nuated and compared with PSO, GA, and Artificial Bee Colony (ABC) using IEEE 6 and\n14 bus systems.\nIn [122], cost, Voltage Stability Index (VSI), and loss objectives are examined using an\nupdated PSO and the MOOPF via Pareto optimum approach. The research investigation\nalso explains the key concepts of Ant colony optimization (ACO), PSO, and hybrid swarm\noptimization. The results of this proposed method provide the best compromise outcome\nwith the quickest execution time when compared to PSO. The stochastic search optimization\ntechnique and fuzzy multi-objective optimal power flow (FMOPF) are used to address the\nOPF problem [123].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Evolutionary trajectory of optimization techniques in power systems."
+    },
+    {
+      "id": "f2",
+      "caption": "Optimization applications in power systems [36–42]."
+    },
+    {
+      "id": "f3",
+      "caption": "Optimization techniques in power systems percentages [43]."
+    },
+    {
+      "id": "f4",
+      "caption": "Overview of MOOPF in power system visual representation."
+    },
+    {
+      "id": "f5",
+      "caption": "(a) Radial architecture, (b) Loop architecture, (c) Mesh architecture."
+    },
+    {
+      "id": "f6",
+      "caption": "Methods to address optimization problems [72–77]."
+    },
+    {
+      "id": "f7",
+      "caption": "Illustration of the concept pareto optimality [78]."
+    },
+    {
+      "id": "f8",
+      "caption": "Categories of Multi-Objective Optimization Algorithm."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Classical and intelligent optimization techniques comparison."
+    },
+    {
+      "id": "t2",
+      "caption": "An example of MOOPF solution based meta-heuristic algorithms (Pareto front)."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

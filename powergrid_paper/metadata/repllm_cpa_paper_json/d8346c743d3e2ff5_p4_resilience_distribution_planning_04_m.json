@@ -1,0 +1,381 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p4_resilience_distribution_planning/p4_resilience_distribution_planning__04__multi_objective_site_selection_and_capacity_determinati__25730500a1.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increasing proportion of distributed generation (DG) involved in the active\ndistribution network (ADN) at the power supply end, the load peak-to-valley difference of\neach node is increasing. An advanced distribution network has the ability to combine and\ncontrol various distributed energy resources (distributed power, controllable load, energy\nstorage, demand-side management, etc.). At the same time, the uncertainty of DG output\nincreases the risks and challenges of ADN optimal scheduling. The potential risk can be\nreduced as much as possible by predicting the output of DG. In addition, the utilization\nof electric vehicle (EVs) as energy storage devices can suppress the impact of the voltage\nand load fluctuations of ADN to a certain extent. Therefore, the topics of multi-objective\nsite selection and the capacity determination of ADN with new energy and shared energy\nstorage in EVs are worthy of further study.\nDG owns an inexhaustible nature, is absent of carbon emissions, and has been widely\nused in ADNs in recent years [1–3]. However, compared with the characteristics of stable\nElectronics 2025, 14, 151 https://doi.org/10.3390/electronics14010151\nElectronics 2025, 14, 151 2 of 14\noutput of traditional energy sources such as coal, the output of DG is highly uncertain\ndue to the influence of various factors [ 4–6]. Since DG can help ADNs to deal with the\nproblem of supply and demand imbalance, some scholars have conducted research on\nthe combination of ADNs with DG and added DG to nodes with insufficient loads in\nADNs [7,8]. Considering the security risks and frequency modulation performance of DG,\na multi-timescale scheduling strategy was designed and investigated in references [9–11].\nIn references [12,13], in order to deal with the issue of DG output uncertainty, the typical\nscenario of wind speed was investigated by combining the Elbow method with the K-means\nclustering algorithm. In references [ 14,15], the SVG equipment is used to dynamically\nregulate voltage to deal with reactive power programming problems under large-scale DG.\nReference [16] analyzes the correlation between wind turbines and photovoltaic equipment,\nwhere a two-layer opportunity constraint model was established with the optimal power\nflow as the optimization goal. Undoubtedly, the above methods have played a positive role\nin improving the stability of the new energy distribution network. However, most of above\nstudies do not take into account the influence of the uncertain output prediction of new\nenergy, or the siting and capacity determination of energy storage devices, in stabilizing\nDG output fluctuations.\nWith the increasing proportion of new energy in ADN systems, the fluctuation un-\ncertainty of DG output brings the problems of load-side power balance and new energy\ncurtailment to the system. By strengthening the nonlinear rules of input DG data, ref-\nerence [17] further improved the prediction accuracy of DG output. In reference [ 18], a\nwind and solar output scenario model considering K-means clustering was established for\nsystematic planning research. Based on this, it was noticed that energy storage devices\nhave the effect of stabilizing DG output. With the continuous increase of EV ownership,\nthe role of energy storage devices based on the dispatchable potential of EV clusters is\nprominent. In reference [19], a potential model of EV cluster schedulable was established\nto assist ADNs in achieving peak and frequency regulation. In 4eference [20], to reduce the\noperating cost of the system, a bidding model for charging stations was constructed to fully\ntap the dispatchable potential of EV clusters. In reference [21], the EV cluster was utilized\nas the energy storage devices to participate in the ADN scheduling process. However, due\nto the output uncertainty of the EV cluster, it was necessary to further process the output of\nthe EV cluster.\nBased on the above discussion, it can be observed that most existing studies only\nconsider the influence of the location of distributed power supply on the active distribution\nnetwork system. Regarding how to reduce the influence of DG, the existing literature\nmainly deals with the addition of energy storage devices, which does not consider the\nuncertainty of DG. As an emerging unit of energy use, electric vehicles can also play the\nrole of mobile energy storage, which can provide maximum flexibility and reduce costs\ncompared to traditional energy storage components. In addition, the electric vehicle group\nhas a relatively clear time pattern, which is consistent with the output of wind turbines and\nphotovoltaic cells. Therefore, the questions of how to analyze the impact of electric vehicle\nintegration on ADNs and then smooth the uncertainty of DG through electric vehicles are\nworthy of further study.\nTo deal with these issues, in this paper, we propose a novel multi-objective site selection\nand capacity determination of distribution networks considering new energy uncertainties\nand the shared energy storage of electric vehicles. Firstly, based on the kernel density\nestimation and Frank copula function, the wind and solar output scenarios are generated\nto reduce the influence of DG uncertainty. Secondly, the CNN-BiLSTM method is used to\nprocess the data of EV clusters. Subsequently, a multi-objective site selection and capacity\ndetermination model is established for EV charging stations based on the dispatchable\nElectronics 2025, 14, 151 3 of 14\npotential of EV clusters. Then, the multi-objective particle swarm optimizer (MOPSO) is\nused to optimize the vulnerability, network loss, and optimal capacity of the energy storage\nof ADN. Finally, the effectiveness and advantages of the proposed method are verified by\nextensive tests under different scenarios.\nThe rest of this paper is organized as follows: In Section 2, the scheduling model of\nADNs is established. In Section 3, the DG output prediction model is developed, which\nincludes DG and copula functions. Then, Section 4 describes the model of EV cluster\nscheduling. Subsequently, Section 5 presents extensive test results under various situations.\nFinally, conclusions are drawn and future work suggestions are proposed in Section 6.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 ADN Scheduling Model Considering Multi-Objective Optimization",
+      "level": 1,
+      "text": "Due to the large number of parameters in the ADN model compared with the tra-\nditional research scheme that takes a single variable as the target for optimization, this\npaper considers the multi-objective optimization algorithm to reflect the specific situation\nof ADNs more reasonably.\nThe access of DG will have a significant impact on the voltage stability, network loss,\nand power quality of ADNs. The changes in power quality will directly affect the stability\nof the system voltage, which in turn will exacerbate the fluctuation of load [22–24]. Energy\nstorage and other devices can stabilize the influence of DG by adjusting their own output\nwhen DG’s output fluctuates to achieve the purpose of peak shaving and valley filling.\nHowever, the upfront investment of energy storage equipment in the early planning stage\nof ADNs is expensive. Therefore, the question of how to plan the location of energy storage\nis an urgent problem to be solved. To deal with the issue, this paper establishes an ADN\nmulti-objective optimal scheduling model for node voltage fluctuations and network losses,\nwith an optimal energy storage device capacity as the goal.\n(1) Node voltage fluctuation: According to Reference [10], voltage stability is an impor-\ntant indicator of power system stability. The access of DG will influence the node\nvoltage of system by affecting the balance of reactive power. In this paper, the sum\nof node voltage fluctuations is selected as the objective f1, which is expressed in\nEquation (1):\nf1 =\nNbus\n∑\ni=1\nT\n∑\nj=1\n\f\fVij − Vi\n\f\f, (1)\nwhere Nbus represents the total number of nodes; T stands for 24 h; Vij is the voltage\nbetween the nodes; and Vi denotes the standard voltage.\n(2) Network loss: After large-scale DG is connected, the reactive power of the power\nsystem may be insufficient. If the access location of the DG is far away from the main\nline of the ADN, the electrical distance will increase, which in turn leads to an increase\nin the network loss of system. The objective function f2 represents the sum of the\nnetwork losses of the ADN system, which can be expressed as Equation (2)\nf2 = closs\nT\n∑\nt=1\n∑\nij∈Eline\nIij,t\n2rij, (2)\nwhere closs denotes the unit network loss cost; Eline represents the set of branches in\nthe ADN; Iij,t means the branch current; and rij indicates the branch resistance.\n(3) Energy storage system capacity: In the early construction stage of ADN, to avoid the\nlarge investment and the low utilization rate of energy storage capacity, the capacity\nallocation of the energy storage device should be considered in advance based on\nits economic benefits. Therefore, the total capacity of the energy storage device is\nselected as the objective function. Based on this, the cost, contribution to network loss,\nElectronics 2025, 14, 151 4 of 14\nand voltage stability can be balanced by a multi-objective algorithm. f3 is the objective\nfunction of the optimal capacity of the energy storage system, which is presented in\nEquation (3)\nf3 =\n2\n∑\nj=1\nt0+n∆t\n∑\nij∈Eline\nPcha (j)/Pdis (j)∆t, (3)\nwhere t0 denotes the time when charging starts; Pcha/dis represents the charging and\ndischarging power; and ∆t indicates the charging and discharging time of the energy\nstorage device.\nWhen determining the location and capacity of EV charging stations in ADN, it is\nnecessary to optimize the location and power of EV charging stations. In addition, the\nnetwork loss and node voltage fluctuation of ADNs should be also taken into account.\nThen, an ADN model with multi-objective optimization is established.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 DG Output Prediction Model",
+      "level": 1,
+      "text": "In recent years, the number of wind turbines and photovoltaic units operated by ADN\nsystems increased [25]. Although the addition of DG can reduce the output of gas units in\nthe system and thus reduce the carbon emissions of the system, the impact of the fluctuation\nof DG output on ADNs cannot be ignored [ 26]. In order to reduce the adverse impact\nof DG output uncertainty, the influence of randomness and correlation of DG should be\nconsidered before it is put into ADNs [27].\nAt present, some scholars have studied the randomness of the output of wind turbines\nand photovoltaic units. There are mainly two schemes to deal with the issue: (1) assuming\nthat the wind speed obeys the Weibull distribution and the light intensity obeys the Beta\ndistribution, then the historical results can be utilized to obtain the estimation of wind\nspeed and light intensity. However, this scheme only carries out reliability evaluation and\nanalysis, which cannot be applied to calculate the annual cost because it ignores the time\nscale of DG data. (2) Based on the day-ahead output prediction data of wind speed and\nlight intensity, the stochastic analysis of wind speed and photovoltaic power is realized\nby the error sampling of the data. However, the prediction limitations of this scheme are\nobvious; further processing is needed for the predicted steps.\nFirstly, the non-parametric kernel density estimation method is used to fit the historical\ndata of DG, and the kernel density estimation expressions of wind turbines and photovoltaic\nunits are obtained, which can be expressed as follows:\nˆf (x) = 1\nnh\nT\n∑\nt=i\nK( x − Xi\nh ), (4)\nEquation (4) represents the specific process of WT and PV generation, where n is the\nsample size; h is the width of the window; K(·) is a kernel function; x is the output of hourly\nPV/WT; and Xi denotes the output of hourly PV/WT of the i-th day. This method does not\nneed to assume the distribution of historical data, and its advantage is that the output data\nof DG units can be directly processed to obtain the output probability density function of\nDG units in each period of the day.\nThen, the optimal copula joint probability distribution was used to generate the annual\noutput scenarios of wind turbines and photovoltaic units. Due to the large number of types\nof copula functions, it is necessary to distinguish and select the goodness of fit according to\nthe actual situation of the model. Since the output of DG usually has a negative correlation\nand complementarity, the Frank copula function is selected to describe the wind–solar\ncorrelation. The Frank copula function is an improvement on the copula function. Frank\nElectronics 2025, 14, 151 5 of 14\ncopula can work with both non-negative and negative correlations of variables [ 28]. In\ngeneral, the joint probability of a wind scene can be expressed as follows:\nFn(xi, yi) = C(FXi (xi), FYi (yi)), (5)\nEquation (5) represents the probability function of the joint output of the wind and\nsolar; Where C(·) denotes a copula connection function; FXi (xi), FYi (yi) are the probability\nfunctions for wind turbines and photovoltaics, respectively. The specific process of the\nFrank copula function is shown in Figure 1.\nElectronics 2025, 14, x FOR PEER REVIEW 5 of 15 \n \n \nof types of copula functions, it is necessary to distinguish and select the goodness of ﬁt \naccording to the actual situation of the model. Since the output of DG usually has a nega-\ntive correlation and complementarity, the Frank copula function is selected to describe the \nwind–solar correlation. The Frank copula function is an improvement on the copula func-\ntion. Frank copula can work with both non-negative and negative correlations of variables \n[28]. In general, the joint probability of a wind scene can be expressed as follows: \n(, ) ( () , () )ii\nni i i i\nXYFx y C F x F y= , (5)\nEquation (5) represents the probability function of the joint output of the wind and \nsolar; Where C (·) denotes a copula connection function; ()i",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "XF x , ()i",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "YF y  are the prob-",
+      "level": 1,
+      "text": "ability functions for wind turbines and photovoltaics, respectively. The speciﬁc process of \nthe Frank copula function is shown in Figure 1. \n \nFigure 1. Generation of wind and photovoltaic daily curve. \nAfter that, the Frank copula function of each period is sampled. Then, the output of \neach period can be calculated according to the joint probability distribution function of \nsampling results and DG output. Finally, a typical daily curve is generated considering \nDG correlation and randomness.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 Exploration of Schedulable Potential of EV Fleets",
+      "level": 1,
+      "text": "In this subsection, the shared energy storag e characteristics of EV clusters are taken \ninto account [29]. At ﬁrst, the data processing method for EV clusters is developed. Then, \nthe schedulable potential model for EV clusters is established.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4.1 Data Processing Process of EV Cluster",
+      "level": 2,
+      "text": "Via the cluster processing of electric vehicles, the prediction error can be signiﬁcantly \neliminated. However, the historical data bias of EVs is still one of the reasons for the error. \nTo deal with this issue, a method to process the historical data of EV clusters is developed \nby combing the convolutional neural networks (CNNs) with bi-directional long short-\nterm memory (Bi-LSTM), which can e ﬀectively its error. CNN processes the initial data \nthrough local connection and weight sharing, which e ﬀectively reﬂects the data charac-\nteristics. At the same time, the number of pa rameters in the training process is greatly \nreduced, which is convenient for extracting the feature information of the data [30]. A \nschematic diagram of the CNN process is shown in Figure 2.  \nFigure 1. Generation of wind and photovoltaic daily curve.\nAfter that, the Frank copula function of each period is sampled. Then, the output of\neach period can be calculated according to the joint probability distribution function of\nsampling results and DG output. Finally, a typical daily curve is generated considering DG\ncorrelation and randomness.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Exploration of Schedulable Potential of EV Fleets",
+      "level": 1,
+      "text": "In this subsection, the shared energy storage characteristics of EV clusters are taken\ninto account [29]. At first, the data processing method for EV clusters is developed. Then,\nthe schedulable potential model for EV clusters is established.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 Data Processing Process of EV Cluster",
+      "level": 2,
+      "text": "Via the cluster processing of electric vehicles, the prediction error can be significantly\neliminated. However, the historical data bias of EVs is still one of the reasons for the error.\nTo deal with this issue, a method to process the historical data of EV clusters is developed\nby combing the convolutional neural networks (CNNs) with bi-directional long short-term\nmemory (Bi-LSTM), which can effectively its error. CNN processes the initial data through\nlocal connection and weight sharing, which effectively reflects the data characteristics. At\nthe same time, the number of parameters in the training process is greatly reduced, which\nis convenient for extracting the feature information of the data [30]. A schematic diagram\nof the CNN process is shown in Figure 2.\nCompared with traditional LSTM, Bi-LSTM displays a reverse LSTM process, which\ncan better connect historical data with future data [17]. CNN-Bi-LSTM can further explore\nthe relationship between the current data and the data at each time point to improve the\nprediction accuracy. After knowing the maximum charge/discharge power of EVs and the\nhistorical data of SOC, the data are divided into training groups and test groups. Firstly,\nthe data of the training group were used to explore the internal connection, and secondly,\nthe data of the test group were used to verify the accuracy. The schematic diagram of the\nBi-LSTM method is shown in Figure 3.\nElectronics 2025, 14, 151 6 of 14\nElectronics 2025, 14, x FOR PEER REVIEW 6 of 15 \n \n \nInput layer\nConvolutional \nlayer Pooling layer\nFully \nconnected \nlayer\nOutput\n \nFigure 2. Structure of CNN. \nCompared with traditional LSTM, Bi-LSTM displays a reverse LSTM process, which \ncan better connect historical data with future data [17]. CNN-Bi-LSTM can further explore \nthe relationship between the current data and the data at each time point to improve the \nprediction accuracy. After knowing the maximum charge/discharge power of EVs and the \nhistorical data of SOC, the data are divided in to training groups and test groups. Firstly, \nthe data of the training group were used to explore the internal connection, and secondly, \nthe data of the test group were used to verify the accuracy. The schematic diagram of the \nBi-LSTM method is shown in Figure 3.  \nForward \nLSTM\nReverse \nLSTM\n···\n···\nInput \nlayer\nOutput \nlayer\nxt-1 xt xt+1\nyt yt+1yt-1\nhihi-1\nht-1\nhi+1\nht ht+1\n \nFigure 3. A schematic diagram of Bi-LSTM.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2 Establishment of the Schedulable Potential Model for EV Clusters",
+      "level": 2,
+      "text": "Compared with a single-EV model, the multi-type EV cluster model in an electric \nvehicle station (EVS) can better reﬂect the state of the actual EV. Assuming that each type \nof EV has a ﬁxed arrival and departure time arriveT / leaveT  and state of charge (SOC) 0S , a \npotential energy storage model for EVS cluster dispatchable can be established. The SOC \nconstraints and charge–discharge power constraints of an EV can be expressed as [31,32] \nfollows: \nEVS EVS\n1\n11 11\nTN TN\ndis\ntt c h a\nin in\nPSS P η η\n−\n== ==\n=+ −   , (6)\nEVS EVS\nexpTSS = , (7)\nEVS EVS EVS\nmin max tSSS ≤≤ , (8)\n,max\n,max\n0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "0 cha cha",
+      "level": 1,
+      "text": "dis dis\nPP\nPP\n≤≤\n ≤≤\n, (9)\nFigure 2. Structure of CNN.\nElectronics 2025, 14, x FOR PEER REVIEW 6 of 15 \n \n \nInput layer\nConvolutional \nlayer Pooling layer\nFully \nconnected \nlayer\nOutput\n \nFigure 2. Structure of CNN. \nCompared with traditional LSTM, Bi-LSTM displays a reverse LSTM process, which \ncan better connect historical data with future data [17]. CNN-Bi-LSTM can further explore \nthe relationship between the current data and the data at each time point to improve the \nprediction accuracy. After knowing the maximum charge/discharge power of EVs and the \nhistorical data of SOC, the data are divided in to training groups and test groups. Firstly, \nthe data of the training group were used to explore the internal connection, and secondly, \nthe data of the test group were used to verify the accuracy. The schematic diagram of the \nBi-LSTM method is shown in Figure 3.  \nForward \nLSTM\nReverse \nLSTM\n···\n···\nInput \nlayer\nOutput \nlayer\nxt-1 xt xt+1\nyt yt+1yt-1\nhihi-1\nht-1\nhi+1\nht ht+1\n \nFigure 3. A schematic diagram of Bi-LSTM.",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 Establishment of the Schedulable Potential Model for EV Clusters",
+      "level": 2,
+      "text": "Compared with a single-EV model, the multi-type EV cluster model in an electric \nvehicle station (EVS) can better reﬂect the state of the actual EV. Assuming that each type \nof EV has a ﬁxed arrival and departure time arriveT / leaveT  and state of charge (SOC) 0S , a \npotential energy storage model for EVS cluster dispatchable can be established. The SOC \nconstraints and charge–discharge power constraints of an EV can be expressed as [31,32] \nfollows: \nEVS EVS\n1\n11 11\nTN TN\ndis\ntt c h a\nin in\nPSS P η η\n−\n== ==\n=+ −   , (6)\nEVS EVS\nexpTSS = , (7)\nEVS EVS EVS\nmin max tSSS ≤≤ , (8)\n,max\n,max\n0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "0 cha cha",
+      "level": 1,
+      "text": "dis dis\nPP\nPP\n≤≤\n ≤≤\n, (9)\nFigure 3. A schematic diagram of Bi-LSTM.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.2 Establishment of the Schedulable Potential Model for EV Clusters",
+      "level": 2,
+      "text": "Compared with a single-EV model, the multi-type EV cluster model in an electric vehicle\nstation (EVS) can better reflect the state of the actual EV . Assuming that each type of EV\nhas a fixed arrival and departure timeTarrive/Tleave and state of charge (SOC)S0, a potential\nenergy storage model for EVS cluster dispatchable can be established. The SOC constraints\nand charge–discharge power constraints of an EV can be expressed as [31,32] follows:\nSEVS\nt = SEVS\nt−1 +\nT\n∑\ni=1\nN\n∑\nn=1\nηPcha −\nT\n∑\ni=1\nN\n∑\nn=1\nPdis\nη , (6)\nSEVS\nT = SEVS\nexp , (7)\nSEVS\nmin ≤ SEVS\nt ≤ SEVS\nmax, (8)\n(\n0 ≤ Pcha ≤ Pcha,max\n0 ≤ Pdis ≤ Pdis,max\n, (9)\nEquation (6) represents the total SOC of the EV in the charging station. The charging\nand discharging status of the EV is determined using historical data. Equation (7) represents\nthe expected SOC of the EVS. Equation (8) denotes the upper and lower limits of the SOC\nallowed by EVS. Equation (9) indicates the upper and lower limits of EVS charge and\ndischarge power. Here, SEVS\nt indicates the power level of the EVS at time t; N denotes the\ntotal number of EVs; η means the charge–discharge efficiency; Pcha represents the charging\npower; Pdis represents the discharging power; SEVS\nexp is the expected amount of power; SEVS\nmin\nand SEVS\nmax are the allowable scope of SOC; and Pcha,max and Pdis,max are the allowable range\nof charge and discharge power, respectively [33].\nElectronics 2025, 14, 151 7 of 14",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5 Case Analysis",
+      "level": 1,
+      "text": "In this paper, the IEEE33-node ADN system is used for scenario analysis, and the\ndetailed parameters are shown in Reference [18]. The total load is 3715 kw + j2300 kvar,\nand the rated voltage of the system is 12.66 kV . The flowchart of the algorithm in this paper\nis shown in Figure A1 of the Appendix A.\nIn the example of this study, the wind turbines are installed at nodes 20 and 14, and\nthe photovoltaic units are installed at nodes 9 and 30. The Frank copula function is used to\npredict the historical data of wind and solar output, and the typical sunrise force curves of\nthe two are extracted, as shown in Figure 1. The number of system nodes that can connect\nto EVS energy storage ranges from 2 to 33, the maximum number of nodes that can be\nconnected to EVS is 2, and the maximum installed power is 400 kW.\nFirstly, the scenario generation of wind turbine PV and the data of EV cluster are\nprocessed [30,34,35]. The DG output probability density curve obtained from the Frank\ncopula function is shown in Figures 4 and 5. Based on the DG output prediction model\nestablished in Section 3, 500 wind–solar complementary scenarios are generated. Then, the\ngenerated new energy output scenarios can be reduced, and the corresponding probability\nof each scenario can be calculated.\nElectronics 2025, 14, x FOR PEER REVIEW 7 of 15 \n \n \nEquation (6) represents the total SOC of the EV in the charging station. The charging \nand discharging status of the EV is determin ed using historical data. Equation (7) repre-\nsents the expected SOC of the EVS. Equation (8) denotes the upper and lower limits of the \nSOC allowed by EVS. Equation (9) indicates the upper and lower limits of EVS charge and \ndischarge power. Here, \nEVS\ntS  indicates the power level of the EVS at time t ; N  denotes \nthe total number of EVs; η  means the charge–discharge e ﬃciency; chaP  represents the \ncharging power; disP  represents the discharging power; EVS\nexpS  is the expected amount of \npower; \nEVS\nminS  and \nEVS\nmaxS  are the allowable scope of SOC; and ,maxchaP  and ,maxdisP  are the \nallowable range of charge and discharge power, respectively [33].",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5 Case Analysis",
+      "level": 1,
+      "text": "In this paper, the IEEE33-node ADN system  is used for scenario analysis, and the \ndetailed parameters are shown in Reference [18]. The total load is 3715kw + j2300kvar, and \nthe rated voltage of the system is 12.66 kV. The ﬂowchart of the algorithm in this paper is \nshown in Figure A1 of the Appendix A.  \nIn the example of this study, the wind turbines are installed at nodes 20 and 14, and \nthe photovoltaic units are installed at nodes 9 and 30. The Frank copula function is used \nto predict the historical data of wind and solar output, and the typical sunrise force curves \nof the two are extracted, as shown in Figure 1. The number of system nodes that can con-\nnect to EVS energy storage ranges from 2 to  33, the maximum number of nodes that can \nbe connected to EVS is 2, and the maximum installed power is 400 kW.  \nFirstly, the scenario generation of wind turbine PV and the data of EV cluster are \nprocessed [30,34,35]. The DG output probability density curve obtained from the Frank \ncopula function is shown in Figures 4 and 5. Based on the DG output prediction model \nestablished in Section 3, 500 wind–solar co mplementary scenarios are generated. Then, \nthe generated new energy output scenarios can be reduced, and the corresponding prob-\nability of each scenario can be calculated. \n \nFigure 4. Wind power output reduction scenarios. \nFigure 4. Wind power output reduction scenarios.\nElectronics 2025, 14, x FOR PEER REVIEW 8 of 15 \n \n \n \nFigure 5. PV output reduction scenarios. \nAccording to Figures 4 and 5, it can be seen that the results generated by the DG \nscenario can more accurately generate the randomness and correlation of the DG unit out-\nput in the selected area. The DG data processed through the above data are conducive to \nthe overall planning of the ADN system in the early stage of construction, and further \nimprove the operational reliability of the AND system.  \nAs can be seen from Figure 6, after using the CNN-BiLSTM model to mine and pre-\ndict the rules of the historical data of EV cl usters, the accuracy is improved to be higher \nthan that of the non-predicted scenario and other initial algorithms, which can meet the \nactual needs of ADN planning well. \n0 5 10 15 20 25 30 35 40\n15\n16\n17\n18\n19\n20",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f1",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "21 Test samples",
+      "level": 1,
+      "text": "The inbound time of the \nEV/t\n \n(a) EV inbound time. \n0 5 10 15 20 25 30 35 40\n4\n6\n8\n10\n12\n14The outbound time of the EV\nTest samples  \n(b) EV outbound time. \nFigure 5. PV output reduction scenarios.\nAccording to Figures 4 and 5, it can be seen that the results generated by the DG\nscenario can more accurately generate the randomness and correlation of the DG unit\noutput in the selected area. The DG data processed through the above data are conducive\nElectronics 2025, 14, 151 8 of 14\nto the overall planning of the ADN system in the early stage of construction, and further\nimprove the operational reliability of the AND system.\nAs can be seen from Figure 6, after using the CNN-BiLSTM model to mine and predict\nthe rules of the historical data of EV clusters, the accuracy is improved to be higher than\nthat of the non-predicted scenario and other initial algorithms, which can meet the actual\nneeds of ADN planning well.\nElectronics 2025, 14, x FOR PEER REVIEW 8 of 15 \n \n \n \nFigure 5. PV output reduction scenarios. \nAccording to Figures 4 and 5, it can be seen that the results generated by the DG \nscenario can more accurately generate the randomness and correlation of the DG unit out-\nput in the selected area. The DG data processed through the above data are conducive to \nthe overall planning of the ADN system in the early stage of construction, and further \nimprove the operational reliability of the AND system.  \nAs can be seen from Figure 6, after using the CNN-BiLSTM model to mine and pre-\ndict the rules of the historical data of EV cl usters, the accuracy is improved to be higher \nthan that of the non-predicted scenario and other initial algorithms, which can meet the \nactual needs of ADN planning well. \n0 5 10 15 20 25 30 35 40\n15\n16\n17\n18\n19\n20",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "21 Test samples",
+      "level": 1,
+      "text": "The inbound time of the \nEV/t\n \n(a) EV inbound time. \n0 5 10 15 20 25 30 35 40\n4\n6\n8\n10\n12\n14The outbound time of the EV\nTest samples  \n(b) EV outbound time. \nElectronics 2025, 14, x FOR PEER REVIEW 9 of 15 \n \n \n0 5 10 15 20 25 30 35 40\n0.4\n0.45\n0.5\n0.55\n0.6\n0.65\n0.7",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "0.75 Initial SOC for EVs",
+      "level": 2,
+      "text": "Test samples\nTrue value CNN CNN-BiLSTMBiLSTM  \n(c) The initial SOC of the EV. \nFigure 6. A comparison of data from diﬀerent algorithms. \nIn order to verify the e ﬀectiveness of the proposed method, the following four sce-\nnarios are selected for comparison: \nscenario 1: DG is not connected. \nscenario 2: Access to DG without energy storage. \nscenario 3: Connect to DG and add EVS energy storage. \nscenario 4: Connect to DG and add normal energy storage. \nTable 1 shows the results of the multi-object ive functions in the four scenarios. As \ncan be seen from Table 1, the vulnerability of the ADN network in scenario 2 is improved \ncompared with that in scenario 1; scenario 3 reduces the network vulnerability compared \nwith scenario 2 and further reduces the network loss of the system compared with sce-\nnario 1. Compared with scenario 3, the voltage ﬂuctuation rate and network loss of sce-\nnario 4 are improved. These results show that EVS energy storage can better stabilize the \ninﬂuence of DG output on voltage ﬂuctuation compared with ordinary energy storage. \nTable 1. A comparison of objective functions under three scenarios. \n scenario 1 scenario 2 scenario 3 scenario 4 \nTarget 1 0.319736 0.369132 0.36345 0.36784 \nTarget 2 1.657225 0.947059 1.170143 1.268574 \nTarget 3 / / 2.565299 2.325875 \nFigure 7 shows the voltage curve for scenarios 1–3. Comparing and analyzing the \nnode voltage curves of the three scenarios, it  can be seen that, compared with scenario 1 \nwithout DG, the voltage ﬂuctuation of scenario 2 is signiﬁcantly improved after consider-\ning DG, indicating that the access of DG has a large impact on the voltage of the ADN \nsystem. In scenario 3, the voltage st ability of the ADN system is signi ﬁcantly improved \nafter the energy storage model with the dispatchable potential of EV clusters is added. \nTaking the voltage of node 16 as an example, the voltage deviation of node 16 in scenario \n3 is 9.4% compared with that of node 16 in scenario 1, and the voltage deviation of node \n16 in scenario 2 compared with node 16 in scenario 1 is 40%, which fully veriﬁes the eﬀec-\ntiveness of the proposed scheme. \nFigure 6. A comparison of data from different algorithms.\nIn order to verify the effectiveness of the proposed method, the following four scenar-\nios are selected for comparison:\nscenario 1: DG is not connected.\nscenario 2: Access to DG without energy storage.\nscenario 3: Connect to DG and add EVS energy storage.\nscenario 4: Connect to DG and add normal energy storage.\nTable 1 shows the results of the multi-objective functions in the four scenarios. As\ncan be seen from Table 1, the vulnerability of the ADN network in scenario 2 is improved\nElectronics 2025, 14, 151 9 of 14\ncompared with that in scenario 1; scenario 3 reduces the network vulnerability compared\nwith scenario 2 and further reduces the network loss of the system compared with scenario 1.\nCompared with scenario 3, the voltage fluctuation rate and network loss of scenario 4 are\nimproved. These results show that EVS energy storage can better stabilize the influence of\nDG output on voltage fluctuation compared with ordinary energy storage.\nTable 1. A comparison of objective functions under three scenarios.\nscenario 1 scenario 2 scenario 3 scenario 4\nTarget 1 0.319736 0.369132 0.36345 0.36784\nTarget 2 1.657225 0.947059 1.170143 1.268574\nTarget 3 / / 2.565299 2.325875\nFigure 7 shows the voltage curve for scenarios 1–3. Comparing and analyzing the\nnode voltage curves of the three scenarios, it can be seen that, compared with scenario 1\nwithout DG, the voltage fluctuation of scenario 2 is significantly improved after considering\nDG, indicating that the access of DG has a large impact on the voltage of the ADN system.\nIn scenario 3, the voltage stability of the ADN system is significantly improved after the\nenergy storage model with the dispatchable potential of EV clusters is added. Taking\nthe voltage of node 16 as an example, the voltage deviation of node 16 in scenario 3 is\n9.4% compared with that of node 16 in scenario 1, and the voltage deviation of node 16 in\nscenario 2 compared with node 16 in scenario 1 is 40%, which fully verifies the effectiveness\nof the proposed scheme.\nElectronics 2025, 14, x FOR PEER REVIEW 10 of 15 \n \n \n(a) scenario 1. \n(b) scenario 2. \n \n(c) scenario 3. \nFigure 7. Node voltage curves for diﬀerent scenarios. \nFigure 8 shows the output curve of EV cluster energy storage in scenario 3. From the \ndata in the ﬁgure, it can be observed that the tw o energy storage devices maintain the \nSOC range during the period of 10:00–15:00, with high DG outputs used to cope with the \nimpact of DG output uncertainty. When the DG output is high, the energy storage device \nconducts a charging process to absorb the additional output of the DG. A discharge oper-\nation is carried out when the DG output is low to compensate for the lack of DG output. \nFurthermore, the eﬀectiveness of the proposed scheme in this paper is veriﬁed in stabiliz-\ning DG ﬂuctuations. \nFigure 7. Cont.\nElectronics 2025, 14, 151 10 of 14\nElectronics 2025, 14, x FOR PEER REVIEW 10 of 15 \n \n \n(a) scenario 1. \n(b) scenario 2. \n \n(c) scenario 3. \nFigure 7. Node voltage curves for diﬀerent scenarios. \nFigure 8 shows the output curve of EV cluster energy storage in scenario 3. From the \ndata in the ﬁgure, it can be observed that the tw o energy storage devices maintain the \nSOC range during the period of 10:00–15:00, with high DG outputs used to cope with the \nimpact of DG output uncertainty. When the DG output is high, the energy storage device \nconducts a charging process to absorb the additional output of the DG. A discharge oper-\nation is carried out when the DG output is low to compensate for the lack of DG output. \nFurthermore, the eﬀectiveness of the proposed scheme in this paper is veriﬁed in stabiliz-\ning DG ﬂuctuations. \nFigure 7. Node voltage curves for different scenarios.\nFigure 8 shows the output curve of EV cluster energy storage in scenario 3. From\nthe data in the figure, it can be observed that the two energy storage devices maintain\nthe SOC range during the period of 10:00–15:00, with high DG outputs used to cope with\nthe impact of DG output uncertainty. When the DG output is high, the energy storage\ndevice conducts a charging process to absorb the additional output of the DG. A discharge\noperation is carried out when the DG output is low to compensate for the lack of DG\noutput. Furthermore, the effectiveness of the proposed scheme in this paper is verified in\nstabilizing DG fluctuations.\nElectronics 2025, 14, x FOR PEER REVIEW 11 of 15 \n \n \n \n(a) Energy storage device 1. \n \n(b) Energy storage device 2. \nFigure 8. EVS output and SOC curve. \nFigure 9 shows the final location of the EVS. After considering the site selection and \ncapacity setting model of EVS, the average voltage of node 13 is reduced by 29.5% com-\npared to the level before the consideration of EVS, and the average voltage of node 33 is \nreduced by 21.5% compared to the level before the consideration of EVS. These test results \ndemonstrate the advantages of energy storage devices in smoothing out ADN voltage \nfluctuations and verify the role of EVS in the substitution of energy storage devices. \n \nFigure 8. EVS output and SOC curve.\nElectronics 2025, 14, 151 11 of 14\nFigure 9 shows the final location of the EVS. After considering the site selection\nand capacity setting model of EVS, the average voltage of node 13 is reduced by 29.5%\ncompared to the level before the consideration of EVS, and the average voltage of node 33 is\nreduced by 21.5% compared to the level before the consideration of EVS. These test results\ndemonstrate the advantages of energy storage devices in smoothing out ADN voltage\nfluctuations and verify the role of EVS in the substitution of energy storage devices.\nElectronics 2025, 14, x FOR PEER REVIEW 11 of 15 \n \n \n \n(a) Energy storage device 1. \n \n(b) Energy storage device 2. \nFigure 8. EVS output and SOC curve. \nFigur",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f9",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "To deal with the problems of ADN load fluctuation caused by DG access, a multi-\nobjective site selection and capacity determination method for distribution networks is\nproposed. We consider new energy uncertainties and shared energy storage of electric\nvehicles. The proposed method can reduce the uncertainty of ADN systems by introducing\nenergy storage devices based on EV clusters and predicting DG and EV data. The main\nconclusions are as follows:\n(1) The EV cluster energy storage device can better stabilize the voltage fluctuation of the\nADN system caused by the uncertainty of DG outputs. Compared with traditional\nenergy storage devices, EV cluster energy storage reduces the upfront construction\ncost and improves energy utilization. After considering the site selection and capacity\nsetting model of EVs, the average voltage of node 13 is reduced by 29.5% compared\nto the scenario without EVs, and the average voltage of node 33 is reduced by 21.5%\ncompared to the scenario without EVs.\n(2) The probability density curve of DG output obtained based on the Frank copula\nfunction can better reflect the actual situation of DG output and reduce the prediction\nbias compared with the traditional prediction algorithm. The EV data predicted based\non CNN-BiLSTM can also reflect the actual situation of EV more realistically, reducing\nthe uncertainty of EV output. The CNN-BiLSTM algorithm used in this paper can\nfurther reduce the data error of EV , which is 10.2% higher than the ordinary CNN\nmethod and 8.3% higher than that of the Bi-LSTM algorithm.\nElectronics 2025, 14, 151 12 of 14\n(3) The multi-objective distribution network siting and capacity setting model can op-\ntimize the ADN model with DG via the aspects of node voltage fluctuation and\nADN network loss, which further improves the feasibility compared with the single-\ntarget model.\nIn future research, we will further study the multi-objective optimization algorithm\nto improve the solution efficiency of MOPSO. In addition, the model combining EV path\nplanning and ADN networks will be also investigated to enrich the factors of EVS site\nselection and capacity determination.\nAuthor Contributions: G.W. and H.L. (Haiyang Li). were responsible for methodology, simulation,\nand validation. H.L. (Huayong Lu) conducted the analysis and wrote the paper. Conceptualization\nwas handled by H.L. (Huayong Lu) and X.Y.; resource management by H.L. (Haiyang Li) and X.S.;\ndata curation by Z.L. and X.S.; original draft preparation by H.L. (Huayong Lu) and X.S.; review\nand editing by Y.W; visualization by H.L. (Huayong Lu) and X.S.; supervision by Y.W.; project\nmanagement by H.L. (Haiyang Li); and funding acquisition by Y.W. All authors have read and agreed\nto the published version of the manuscript.\nFunding: This work is supported by the State Grid Henan Electric Power Company Technology\nProject (5217C0240001).\nData Availability Statement: The data presented in this study are available in this article.\nConflicts of Interest: Authors Guodong Wang, Haiyang Li, Xiao Yang, Huayong Lu were employed\nby the State Grid Henan Electric Power Company; Authors Xiao Song and Zheng Li were employed\nby the State Grid Jiaozuo Electric Power Supply Company. The remaining authors declare that the\nresearch was conducted in the absence of any commercial or financial relationships that could be\nconstrued as a potential conflict of interest.\nAbbreviations\nDG distributed generation\nAND active distribution network\nEV electric vehicle\nMOPSO multi-objective particle swarm optimizer\nSOC state of charge\nCNN convolutional neural network\nBi-LSTM bi-directional long short-term memory\nAppendix A\nElectronics 2025, 14, x FOR PEER REVIEW 13 of 15 \n \n \nby the State Grid Jiaozuo Electric Power Supply Company. The remaining authors declare that the \nresearch was conducted in the absence of any commercial or ﬁnancial relationships that could be \nconstrued as a potential conﬂict of interest. \nAbbreviations \nDG distributed generation  \nAND active distribution network  \nEV electric vehicle  \nMOPSO multi-objective particle swarm optimizer  \nSOC state of charge  \nCNN convolutional neural network  \nBi-LSTM bi-directional lo ng short-term memory  \nAppendix A \n \nFigure A1. Flowchart of the algorithm in this article. \nTable A1. Sampling parameters of EV. \nEV arriveT  leaveT  0S  \nThe Number of EVs \nWithin 1 Charging \nStation \nThe Number of EVs \nWithin 2 Charging Sta-\ntions \nThe Number of EVs \nWithin 3 Charging Sta-\ntions \nThe Number of EVs \nWithin 4 Charging Sta-\ntions \n1 N (18, 4) N (8, 4) U (0.4, 0.6) U (180, 210) U (180, 210) 0 U (380, 400) \n2 N (21, 1) N (7, 1) U (0.2, 0.4) U (190, 220) U (90, 120) U (90, 120) 0 \n3 N (9, 2) N (17, 2) U (0.4, 0.6) 0 U (380, 400) U (380, 400) 0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Generation of wind and photovoltaic daily curve."
+    },
+    {
+      "id": "f2",
+      "caption": "Structure of CNN."
+    },
+    {
+      "id": "f3",
+      "caption": "A schematic diagram of Bi-LSTM."
+    },
+    {
+      "id": "f4",
+      "caption": "Wind power output reduction scenarios."
+    },
+    {
+      "id": "f5",
+      "caption": "PV output reduction scenarios."
+    },
+    {
+      "id": "f6",
+      "caption": "A comparison of data from diﬀerent algorithms."
+    },
+    {
+      "id": "f7",
+      "caption": "shows the voltage curve for scenarios 1–3. Comparing and analyzing the"
+    },
+    {
+      "id": "f8",
+      "caption": "shows the output curve of EV cluster energy storage in scenario 3. From the"
+    },
+    {
+      "id": "f9",
+      "caption": "shows the final location of the EVS. After considering the site selection and"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "shows the results of the multi-object ive functions in the four scenarios. As"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Equation (3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation (4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Equation (5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

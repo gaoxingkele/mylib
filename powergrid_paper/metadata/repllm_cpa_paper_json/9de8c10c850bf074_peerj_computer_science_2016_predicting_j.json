@@ -1,0 +1,229 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2016__predicting_judicial_decisions_of_the_european_court_of___365ec1101e.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2016 Aletras etal",
+      "level": 1,
+      "text": "Distributed under\nCreative Commons CC-BY 4.0\nOPEN ACCESS\nPredicting judicial decisions of the\nEuropean Court of Human Rights: a\nNatural Language Processing perspective\nNikolaos Aletras1,2, Dimitrios Tsarapatsanis 3, Daniel Preoţiuc-Pietro 4,5 and\nVasileios Lampos2\n1 Amazon.com, Cambridge, United Kingdom\n2 Department of Computer Science, University College London, University of London, London,\nUnited Kingdom",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3 School of Law, University of Sheffield, Sheffield, United Kingdom",
+      "level": 1,
+      "text": "4 Positive Psychology Center, University of Pennsylvania, Philadelphia, United States\n5 Computer & Information Science, University of Pennsylvania, Philadelphia, United States\nABSTRACT\nRecent advances in Natural Language Processing and Machine Learning provide us with\nthe tools to build predictive models that can be used to unveil patterns driving judicial\ndecisions. This can be useful, for both lawyers and judges, as an assisting tool to rapidly\nidentify cases and extract patterns which lead to certain decisions. This paper presents\nthe first systematic study on predicting the outcome of cases tried by the European Court\nof Human Rights based solely on textual content. We formulate a binary classification\ntask where the input of our classifiers is the textual content extracted from a case and\nthe target output is the actual judgment as to whether there has been a violation of an\narticle of the convention of human rights. Textual information is represented using\ncontiguous word sequences, i.e., N-grams, and topics. Our models can predict the\ncourt’s decisions with a strong accuracy (79% on average). Our empirical analysis\nindicates that the formal facts of a case are the most important predictive factor. This\nis consistent with the theory of legal realism suggesting that judicial decision-making\nis significantly affected by the stimulus of the facts. We also observe that the topical\ncontent of a case is another important feature in this classification task and explore this\nrelationship further by conducting a qualitative analysis.\nSubjects Artificial Intelligence, Computational Linguistics, Data Mining and Machine Learning,\nData Science, Natural Language and Speech\nKeywords Natural Language Processing, Text Mining, Legal Science, Machine Learning, Artificial\nIntelligence, Judicial decisions",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "In his prescient work on investigating the potential use of information technology in the\nlegal domain, Lawlor surmised that computers would one day become able to analyse and\npredict the outcomes of judicial decisions (\nLawlor, 1963). According to Lawlor, reliable\nprediction of the activity of judges would depend on a scientific understanding of the ways\nthat the law and the facts impact on the relevant decision-makers, i.e., the judges. More\nthan fifty years later, the advances in Natural Language Processing (NLP) and Machine\nLearning (ML) provide us with the tools to automatically analyse legal materials, so as to\nbuild successful predictive models of judicial outcomes.\nHow to cite this article Aletras etal (2016), Predicting judicial decisions of the European Court of Human Rights: a Natural Language\nProcessing perspective. PeerJ Comput. Sci. 2:e93; DOI 10.7717/peerj-cs.93\n1An amicus curiae (friend of the court)\nis a person or organisation that offers\ntestimony before the Court in the context\nof a particular case without being a formal\nparty to the proceedings.\nIn this paper, our particular focus is on the automatic analysis of cases of the European\nCourt of Human Rights ( ECtHR or Court ). The ECtHR is an international court that rules\non individual or, much more rarely, State applications alleging violations by some State\nParty of the civil and political rights set out in the European Convention on Human Rights\n(ECHR or Convention). Our task is to predict whether a particular Article of the Convention\nhas been violated, given textual evidence extracted from a case, which comprises of specific\nparts pertaining to the facts, the relevant applicable law and the arguments presented by\nthe parties involved. Our main hypotheses are that (1) the textual content, and (2) the\ndifferent parts of a case are important factors that influence the outcome reached by the\nCourt. These hypotheses are corroborated by the results. Our work lends some initial\nplausibility to a text-based approach with regard to ex ante prediction of ECtHR outcomes\non the assumption that the text extracted from published judgments of the Court bears\na sufficient number of similarities with, and can therefore stand as a (crude) proxy for,\napplications lodged with the Court as well as for briefs submitted by parties in pending\ncases. We submit, though, that full acceptance of that reasonable assumption necessitates\nmore empirical corroboration. Be that as it may, our more general aim is to work under\nthis assumption, thus placing our work within the larger context of ongoing empirical\nresearch in the theory of adjudication about the determinants of judicial decision-making.\nAccordingly, in the discussion we highlight ways in which automatically predicting the\noutcomes of ECtHR cases could potentially provide insights on whether judges follow a\nso-called legal model (\nGrey, 1983) of decision making or their behavior conforms to the\nlegal realists’ theorization (Leiter, 2007), according to which judges primarily decide cases\nby responding to the stimulus of the facts of the case.\nWe define the problem of the ECtHR case prediction as a binary classification task.\nWe utilise textual features, i.e., N-grams and topics, to train Support Vector Machine\n(SVM) classifiers (\nVapnik, 1998). We apply a linear kernel function that facilitates the\ninterpretation of models in a straightforward manner. Our models can reliably predict\nECtHR decisions with high accuracy, i.e., 79% on average. Results indicate that the ‘facts’\nsection of a case best predicts the actual court’s decision, which is more consistent with\nlegal realists’ insights about judicial decision-making. We also observe that the topical\ncontent of a case is an important indicator whether there is a violation of a given Article of\nthe Convention or not.\nPrevious work on predicting judicial decisions, representing disciplinary backgrounds\nin political science and economics, has largely focused on the analysis and prediction of\njudges’ votes given non textual information, such as the nature and the gravity of the\ncrime or the preferred policy position of each judge (\nKort, 1957; Nagel, 1963; Keown,\n1980; Segal, 1984; Popple, 1996; Lauderdale & Clark, 2012). More recent research shows\nthat information from texts authored by amici curiae 1 improves models for predicting the\nvotes of the US Supreme Court judges ( Sim, Routledge & Smith, 2015 ). Also, a text mining\napproach utilises sources of metadata about judge’s votes to estimate the degree to which\nthose votes are about common issues (\nLauderdale & Clark, 2014). Accordingly, this paper\npresents the first systematic study on predicting the decision outcome of cases tried at a\nmajor international court by mining the available textual information.\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 2/19\n2ECHtR provisional annual report for\nthe year 2015: http://www.echr.coe.int/\nDocuments/Annual_report_2015_ENG.\npdf\n.\n3HUDOC ECHR Database: http://hudoc.\nechr.coe.int/.\n4Nonetheless, not all cases that pass this\nfirst admissibility stage are decided in the\nsame way. While the individual judge’s\ndecision on admissibility is final and does\nnot comprise the obligation to provide\nreasons, a Committee deciding a case may,\nby unanimous vote, declare the application\nadmissible and render a judgment on\nits merits, if the legal issue raised by the\napplication is covered by well-established\ncase-law by the Court.\nOverall, we believe that building a text-based predictive system of judicial decisions\ncan offer lawyers and judges a useful assisting tool. The system may be used to rapidly\nidentify cases and extract patterns that correlate with certain outcomes. It can also be used\nto develop prior indicators for diagnosing potential violations of specific Articles in lodged\napplications and eventually prioritise the decision process on cases where violation seems\nvery likely. This may improve the significant delay imposed by the Court and encourage\nmore applications by individuals who may have been discouraged by the expected time\ndelays.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "MATERIALS AND METHODS",
+      "level": 1,
+      "text": "European Court of Human Rights\nThe ECtHR is an international court set up in 1959 by the ECHR. The court has jurisdiction\nto rule on the applications of individuals or sovereign states alleging violations of the civil\nand political rights set out in the Convention. The ECHR is an international treaty for\nthe protection of civil and political liberties in European democracies committed to the\nrule of law. The treaty was initially drafted in 1950 by the ten states which had created the\nCouncil of Europe in the previous year. Membership in the Council entails becoming party\nto the Convention and all new members are expected to ratify the ECHR at the earliest\nopportunity. The Convention itself entered into force in 1953. Since 1949, the Council of\nEurope and thus the Convention have expanded significantly to embrace forty-seven states\nin total, with a combined population of nearly 800 million. Since 1998, the Court has sat\nas a full-time court and individuals can apply to it directly, if they can argue that they have\nvoiced their human rights grievance by exhausting all effective remedies available to them\nin their domestic legal systems before national courts.\nCase processing by the court\nThe vast majority of applications lodged with the Court are made by individuals.\nApplications are first assessed at a prejudicial stage on the basis of a list of admissibility\ncriteria. The criteria pertain to a number of procedural rules, chief amongst which is the\none on the exhaustion of effective domestic remedies. If the case passes this first stage, it\ncan either be allocated to a single judge, who may declare the application inadmissible and\nstrike it out of the Court’s list of cases, or be allocated to a Committee or a Chamber. A large\nnumber of the applications, according to the court’s statistics fail this first admissibility\nstage. Thus, to take a representative example, according to the Court’s provisional annual\nreport for the year 2015,\n2 900 applications were declared inadmissible or struck out of\nthe list by Chambers, approximately 4,100 by Committees and some 78,700 by single\njudges. To these correspond, for the same year, 891 judgments on the merits. Moreover,\ncases held inadmissible or struck out are not reported, which entails that a text-based\npredictive analysis of them is impossible. It is important to keep this point in mind, since\nour analysis was solely performed on cases retrievable through the electronic database of\nthe court, HUDOC.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 The cases analysed are thus the ones that have already passed the first",
+      "level": 1,
+      "text": "admissibility stage, 4 with the consequence that the Court decided on these cases’ merits\nunder one of its formations.\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 3/19\n5Rules of ECtHR, http://www.echr.coe.int/\nDocuments/Rules_Court_ENG.pdf.\nMain premise\nOur main premise is that published judgments can be used to test the possibility of a\ntext-based analysis for ex ante predictions of outcomes on the assumption that there is\nenough similarity between (at least) certain chunks of the text of published judgments\nand applications lodged with the Court and/or briefs submitted by parties with respect\nto pending cases. Predictive tasks were based on the text of published judgments rather\nthan lodged applications or briefs simply because we did not have access to the relevant\ndata set. We thus used published judgments as proxies for the material to which we do not\nhave access. This point should be borne in mind when approaching our results. At the very\nleast, our work can be read in the following hypothetical way: if there is enough similarity\nbetween the chunks of text of published judgments that we analyzed and that of lodged\napplications and briefs, then our approach can be fruitfully used to predict outcomes with\nthese other kinds of texts.\nCase structure\nThe judgments of the Court have a distinctive structure, which makes them particularly\nsuitable for a text-based analysis. According to Rule 74 of the Rules of the Court,\n5 a\njudgment contains (among other things) an account of the procedure followed on the\nnational level, the facts of the case, a summary of the submissions of the parties, which\ncomprise their main legal arguments, the reasons in point of law articulated by the Court\nand the operative provisions. Judgments are clearly divided into different sections covering\nthese contents, which allows straightforward standardisation of the text and consequently\nrenders possible text-based analysis. More specifically, the sections analysed in this paper\nare the following:\n• Procedure: This section contains the procedure followed before the Court, from the\nlodging of the individual application until the judgment was handed down.\n• The facts: This section comprises all material which is not considered as belonging to\npoints of law, i.e., legal arguments. It is important to stress that the facts in the above\nsense do not just refer to actions and events that happened in the past as these have been\nformulated by the Court, giving rise to an alleged violation of a Convention article. The\n‘Facts’ section is divided in the following subsections:\n– The circumstances of the case: This subsection has to do with the factual background\nof the case and the procedure (typically) followed before domestic courts before\nthe application was lodged by the Court. This is the part that contains materials\nrelevant to the individual applicant’s story in its dealings with the respondent state’s\nauthorities. It comprises a recounting of all actions and events that have allegedly\ngiven rise to a violation of the ECHR. With respect to this subsection, a number of\ncrucial clarifications and caveats should be stressed. To begin with, the text of the\n‘Circumstances’ subsection has been formulated by the Court itself. As a result, it\nshould not always be understood as a neutral mirroring of the factual background\nof the case. The choices made by the Court when it comes to formulations of the\nfacts incorporate implicit or explicit judgments to the effect that some facts are more\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 4/19\nrelevant than others. This leaves open the possibility that the formulations used by the\nCourt may be tailor-made to fit a specific preferred outcome. We openly acknowledge\nthis possibility, but we believe that there are several ways in which it is mitigated.\nFirst, the ECtHR has limited fact-finding powers and, in the vast majority of cases,\nit defers, when summarizing the factual background of a case, to the judgments of\ndomestic courts that have already heard and dismissed the applicants’ ECHR-related\ncomplaint (\nLeach, Paraskeva & Uelac, 2010 ; Leach, 2013). While domestic courts do\nnot necessarily hear complaints on the same legal issues as the ECtHR does, by\nvirtue of the incorporation of the Convention by all States Parties (\nHelfer, 2008),\nthey typically have powers to issue judgments on ECHR-related issues. Domestic\njudgments may also reflect assumptions about the relevance of various events, but\nthey also provide formulations of the facts that have been validated by more than one\ndecision-maker. Second, the Court cannot openly acknowledge any kind of bias on its\npart. This means that, on their face, summaries of facts found in the ‘Circumstances’\nsection have to be at least framed in as neutral and impartial a way as possible. As a\nresult, for example, clear displays of impartiality, such as failing to mention certain\ncrucial events, seem rather improbable. Third, a cursory examination of many ECtHR\ncases indicates that, in the vast majority of cases, parties do not seem to dispute the\nfacts themselves, as contained in the ‘Circumstances’ subsection, but only their legal\nsignificance (i.e., whether a violation took place or not, given those facts). As a result,\nthe ‘Circumstances’ subsection contains formulations on which, in the vast majority\nof cases, disputing parties agree. Last, we hasten to add that the above three kinds\nof considerations do not logically entail that other forms of non-outright or indirect\nbias in the formulation of facts are impossible. However, they suggest that, in the\nabsence of access to other kinds of textual data, such as lodged applications and briefs,\nthe ‘Circumstances’ subsection can reasonably perform the function of a (sometimes\ncrude) proxy for a textual representation of the factual background of a case.\n– Relevant law: This subsection of the judgment contains all legal provisions other\nthan the articles of the Convention that can be relevant to deciding the case. These\nare mostly provisions of domestic law, but the Court also frequently invokes other\npertinent international or European treaties and materials.\n• The law: The law section considers the merits of the case, through the use of legal\nargument. Depending on the number of issues raised by each application, the section\nis further divided into subsections that examine individually each alleged violation of\nsome Convention article (see below). However, the Court in most cases refrains from\nexamining all such alleged violations in detail. Insofar as the same claims can be made\nby invoking more than one article of the Convention, the Court frequently decides only\nthose that are central to the arguments made. Moreover, the Court frequently refrains\nfrom deciding on an alleged violation of an article, if it overlaps sufficiently with some\nother violation it has already decided on.\n– Alleged violation of article x: Each subsection of the judgment examining alleged\nviolations in depth is divided into two sub-sections. The first one contains the Parties’\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 5/19\n6The data set is publicly available for\ndownload from https://figshare.com/s/\n6f7d9e7c375ff0822564.\nFigure 1 Procedure. This section contains the procedure followed before the Court, from the lodging of\nthe individual application until the judgment was handed down.\nSubmissions. The second one comprises the arguments made by the Court itself on\nthe Merits.\n∗ Parties’ submissions: The Parties’ Submissions typically summarise the main\narguments made by the applicant and the respondent state. Since in the vast\nmajority of cases the material facts are taken for granted, having been authoritatively\nestablished by domestic courts, this part has almost exclusively to do with the legal\narguments used by the parties.\n∗ Merits: This subsection provides the legal reasons that purport to justify the specific\noutc",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Prohibits torture and inhuman and degrading treatment 250",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "6 Protects the right to a fair trial 80",
+      "level": 1,
+      "text": "8 Provides a right to respect for one’s ‘‘private and family life,\nhis home and his correspondence’’\n254\nFor each article, we first retrieve all the cases available in HUDOC. Then, we keep only\nthose that are in English and parse them following the case structure presented above.\nWe then select an equal number of violation and non-violation cases for each particular\narticle of the Convention. To achieve a balanced number of violation/non-violation cases,\nwe first count the number of cases available in each class. Then, we choose all the cases in\nthe smaller class and randomly select an equal number of cases from the larger class. This\nresults to a total of 250, 80 and 254 cases for Articles 3, 6 and 8, respectively.\nFinally, we extract the text under each part of the case by using regular expressions,\nmaking sure that any sections on operative provisions of the Court are excluded. In this\nway, we ensure that the models do not use information pertaining to the outcome of the\ncase. We also preprocess the text by lower-casing and removing stop words (i.e., frequent\nwords that do not carry significant semantic information) using the list provided by\nNLTK (\nhttps://raw.githubusercontent.com/nltk/nltk_data/ghpages/packages/corpora/\nstopwords.zip).\nDescription of textual features\nWe derive textual features from the text extracted from each section (or subsection) of each\ncase. These are either N-gram features, i.e., contiguous word sequences, or word clusters,\ni.e., abstract semantic topics.\n• N-gram features: The Bag-of-Words (BOW) model (\nSalton, Wong & Yang, 1975 ; Salton\n& McGill, 1986) is a popular semantic representation of text used in NLP and Information\nRetrieval. In a BOW model, a document (or any text) is represented as the bag (multiset)\nof its words (unigrams) or N-grams without taking into account grammar, syntax\nand word order. That results to a vector space representation where documents are\nrepresented as m-dimensional variables over a set of m N-grams. N-gram features have\nbeen shown to be effective in various supervised learning tasks (\nBamman, Eisenstein\n& Schnoebelen, 2014; Lampos & Cristianini, 2012). For each set of cases in our data set,\nwe compute the top-2000 most frequent N-grams where N ∈ {1,2,3,4}. Each feature\nrepresents the normalized frequency of a particular N-gram in a case or a section of a\ncase. This can be considered as a feature matrix, C ∈ Rc×m, where c is the number of\nthe cases and m = 2,000. We extract N-gram features for the Procedure ( Procedure),\nCircumstances ( Circumstances), Facts ( Facts), Relevant Law ( Relevant Law), Law\n(Law) and the Full case ( Full) respectively. Note that the representations of the Facts\nis obtained by taking the mean vector of Circumstances and Relevant Law. In a similar\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 8/19\nway, the representation of the Full case is computed by taking the mean vector of all of\nits sub-parts.\n• Topics: We create topics for each article by clustering together N-grams that are\nsemantically similar by leveraging the distributional hypothesis suggesting that similar\nwords appear in similar contexts. We thus use the C feature matrix (see above), which is\na distributional representation (\nTurney & Pantel, 2010) of the N-grams given the case as\nthe context; each column vector of the matrix represents an N-gram. Using this vector\nrepresentation of words, we compute N-gram similarity using the cosine metric and\ncreate an N-gram by N-gram similarity matrix. We finally apply spectral clustering (\nvon\nLuxburg, 2007)—which performs graph partitioning on the similarity matrix—to obtain\n30 clusters of N-grams. For Articles 6 and 8, we use the Article 3 data for selecting the\nnumber of clusters T , where T = {10,20,..., 100}, while for Article 3 we use Article",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "8 Given that the obtained topics are hard clusters, an N-gram can only be part of a",
+      "level": 1,
+      "text": "single topic. A representation of a cluster is derived by looking at the most frequent\nN-grams it contains. The main advantages of using topics (sets of N-grams) instead\nof single N-grams is that it reduces the dimensionality of the feature space, which is\nessential for feature selection, it limits overfitting to training data (\nLampos et al., 2014;\nPreoţiuc-Pietro, Lampos & Aletras, 2015 ; Preoţiuc-Pietro et al., 2015) and also provides a\nmore concise semantic representation.\nClassiﬁcation model\nThe problem of predicting the decisions of the ECtHR is defined as a binary classification\ntask. Our goal is to predict if, in the context of a particular case, there is a violation or\nnon-violation in relation to a specific Article of the Convention. For that purpose, we use\neach set of textual features, i.e., N-grams and topics, to train Support Vector Machine\n(SVM) classifiers (\nVapnik, 1998). An SVM is a machine learning algorithm that has shown\nparticularly good results in text classification, especially using small data sets ( Joachims,\n2002; Wang & Manning, 2012). We employ a linear kernel since that allows us to identify\nimportant features that are indicative of each class by looking at the weight learned for\neach feature (\nChang & Lin, 2008). We label all the violation cases as +1, while no violation\nis denoted by −1. Therefore, features assigned with positive weights are more indicative of\nviolation, while features with negative weights are more indicative of no violation.\nThe models are trained and tested by applying a stratified 10-fold cross validation, which\nuses a held-out 10% of the data at each stage to measure predictive performance. The linear\nSVM has a regularisation parameter of the error term C, which is tuned using grid-search.\nFor Articles 6 and 8, we use the Article 3 data for parameter tuning, while for Article 3 we\nuse Article 8.\nRESULTS AND DISCUSSION\nPredictive accuracy\nWe compute the predictive performance of both sets of features on the classification of\nthe ECtHR cases. Performance is computed as the mean accuracy obtained by 10-fold\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 9/19\nTable 2 Accuracy of the different feature types across articles. Accuracy of predicting violation/non-\nviolation of cases across articles on 10-fold cross-validation using an SVM with linear kernel. Parentheses\ncontain the standard deviation from the mean. Accuracy of random guess is .50. Bold font denotes best\naccuracy in a particular Article or on Average across Articles.\nFeature Type Article 3 Article 6 Article 8 Average\nN-grams Full .70 (.10) .82 (.11) .72 (.05) .75\nProcedure .67 (.09) .81 (.13) .71 (.06) .73\nCircumstances .68 (.07) .82 (.14) .77 (.08) .76\nRelevant law .68 (.13) .78 (.08) .72 (.11) .73\nFacts .70 (.09) .80 (.14) .68 (.10) .73\nLaw .56 (.09) .68 (.15) .62 (.05) .62\nTopics .78 (.09) .81 (.12) .76 (.09) .78\nTopics and circumstances .75 (.10) .84 (0.11) .78 (0.06) .79\ncross-validation. Accuracy is computed as follows:\nAccuracy = TV + TNV\nV + NV (1)\nwhere TV and TNV are the number of cases correctly classified that there is a violation\nan article of the Convention or not respectively. V and NV represent the total number of\ncases where there is a violation or not respectively.\nTable 2 shows the accuracy of each set of features across articles using a linear SVM. The\nrightmost column also shows the mean accuracy across the three articles. In general, both\nN-gram and topic features achieve good predictive performance. Our main observation\nis that both language use and topicality are important factors that appear to stand as\nreliable proxies of judicial decisions. Therefore, we take a further look into the models by\nattempting to interpret the differences in accuracy.\nWe observe that ‘Circumstances’ is the best subsection to predict the decisions for cases\nin Articles 6 and 8, with a performance of .82 and .77 respectively. In Article 3, we obtain\nbetter predictive accuracy ( .70) using the text extracted from the full case (‘Full’) while the\nperformance of ‘Circumstances’ is almost comparable ( .68). We should again note here\nthat the ‘Circumstances’ subsection contains information regarding the factual background\nof the case, as this has been formulated by the Court. The subsection therefore refers to the\nactions and events which triggered the case and gave rise to a claim made by an individual\nto the effect that the ECHR was violated by some state. On the other hand, ‘Full’, which\nis a mixture of information contained in all of the sections of a case, surprisingly fails\nto improve over using only the ‘Circumstances’ subsection. This entails that the factual\nbackground contained in the ‘Circumstances’ is the most important textual part of the case\nwhen it comes to predicting the Court’s decision.\nThe other sections and subsections that refer to the facts of a case, namely ‘Procedure,’\n‘Relevant Law’ and ‘Facts’ achieve somewhat lower performance ( .73 cf. .76), although\nthey remain consistently above chance. Recall, at this point, that the ‘Procedure’ subsection\nconsists only of general details about the applicant, such as the applicant’s name or country\nof origin and the procedure followed before domestic courts.\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 10/19\nOn the other hand, the ‘Law’ subsection, which refers either to the legal arguments used\nby the parties or to the legal reasons provided by the Court itself on the merits of a case\nconsistently obtains the lowest performance ( .62). One important reason for this poor\nperformance is that a large number of cases does not include a ‘Law’ subsection, i.e., 162,\n52 and 146 for Articles 3, 6 and 8 respectively. That happens in cases that the Court deems\ninadmissible, concluding to a judgment of non-violation.\nWe also observe that the predictive accuracy is high for all the Articles when using\nthe ‘Topics’ as features, i.e., .78, .81 and .76 for Articles 3, 6 and 8 respectively. ‘Topics’\nobtain the best performance in Article 3 and performance comparable to ‘Circumstances’\nin Articles 6 and 8. ‘Topics’ form a more abstract way of representing the information\ncontained in each case and capture a more general gist of the cases.\nCombining the two best performing sets of features (‘Circumstances’ and ‘Topics’)\nwe achieve the best average classification performance ( .79). The combination also yields\nslightly better performance for Articles 6 and 8 while performance marginally drops for\nArticle 3. That is .75, .84 and .78 for Articles 3, 6 and 8 respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "Discussion",
+      "level": 1,
+      "text": "The consistently more robust predictive accuracy of the ‘Circumstances’ subsection suggests\na strong correlation between the facts of a case, as these are formulated by the Court in this\nsubsection, and the decisions made by judges. The relatively lower predictive accuracy of the\n‘Law’ subsection could also be an indicator of the fact that legal reasons and arguments of a\ncase have a weaker correlation with decisions made by the Court. However, this last remark\nshould be seriously mitigated since, as we have already observed, many inadmissibility\ncases do not contain a separate ‘Law’ subsection.\nLegal formalism and realism\nThese results could be understood as providing some evidence for judicial decision-making\napproaches according to which judges are primarily responsive to non-legal, rather than\nto legal, reasons when they decide appellate cases. Without going into details with respect\nto a particularly complicated debate that is out of the scope of this paper, we may here\nsimplify by observing that since the beginning of the 20th century, there has been a major\ncontention between two opposing ways of making sense of judicial decision-making: legal\nformalism and legal realism (\nPosner, 1986; Tamanaha, 2009; Leiter, 2010). Very roughly,\nlegal formalists have provided a legal model of judicial decision-making, claiming that the\nlaw is rationally determinate: judges either decide cases deductively, by subsuming facts\nunder formal legal rules or use more complex legal reasoning than deduction whenever\nlegal rules are insufficient to warrant a particular outcome (\nPound, 1908; Kennedy, 1973;\nGrey, 1983; Pildes, 1999). On the other hand, legal realists have criticized formalist models,\ninsisting that judges primarily decide appellate cases by responding to the stimulus of the\nfacts of the case, rather than on the basis of legal rules or doctrine, which are in many\noccasions rationally indeterminate (\nLlewellyn, 1996; Schauer, 1998; Baum, 2009; Leiter,\n2007; Miles & Sunstein, 2008).\nExtensive empirical research on the decision-making processes of various supreme and\ninternational courts, and especially the US Supreme Court, has indicated rather consistently\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 11/19\nthat pure legal models, especially deductive ones, are false as an empirical matter when\nit comes to cases decided by courts further up the hierarchy. As a result, it is suggested\nthat the best way to explain past decisions of such courts and to predict future ones is\nby placing emphasis on other kinds of empirical variables that affect judges (\nBaum, 2009;\nSchauer, 1998). For example, early legal realists had attempted to classify cases in terms\nof regularities that can help predict outcomes, in a way that did not reflect standard legal\ndoctrine (\nLlewellyn, 1996). Likewise, the attitudinal model for the US Supreme Court claims\nthat the best predictors of its decisions are the policy preferences of the Justices and not\nlegal doctrinal arguments (\nSegal & Spaeth, 2002).\nIn general, and notwithstanding the simplified snapshot of a very complex debate that\nwe just presented, our results could be understood as lending some support to the basic\nlegal realist intuition according to which judges are primarily responsive to non-legal,\nrather than to legal, reasons when they decide hard cases. In particular, if we accept that\nthe ‘Circumstances’ subsection, with all the caveats we have already voiced, is a (crude)\nproxy for non-legal facts and the ‘Law’ subsection is a (crude) proxy for legal reasons and\narguments, the predictive superiority of the ‘Circumstances’ subsection seems to cohere\nwith extant legal realist treatments of judicial decision-making.\nHowever, not more should be read into this than our results allow. First, as we have\nalready stressed at several occasions, the ‘Circumstances’ subsection is not a neutral\nstatement of the facts of the case and we have only assumed the similarity of that subsection\nwith analogous sections found in lodged applications and briefs. Second, it is important to\nunderline that the results should also take into account the so-called selection effect (\nPriest\n& Klein, 1984) that pertains to cases judged by the ECtHR as an international court. Given\nthat the largest percentage of applications never reaches the Chamber or, still less, the Grand\nChamber, and that cases have already been tried at the national level, it could very well be\nthe case that the set of ECtHR decisions on the merits primarily refers to cases in which the\nclass of legal reasons, defined in a formal sense, is already considered as indeterminate by\ncompetent interpreters. This could help explain why judges primarily react to the facts of\nthe case, rather than to legal arguments. Thus, further text-based analysis is needed in order\nto determine whether the results could generalise to other courts, especially to domestic\ncourts deciding ECHR claims that are placed lower within the domestic judicial hierarchy.\nThird, our discussion of the realism/formalism debate is overtly simplified and does not\nimply that the results could not be interpreted in a sophisticated formalist way. Still, our\nwork coheres well with a bulk of other empirical approaches in the legal realist vein.\nTopic analysis\nThe topics further exemplify this line of interpretation and provide proof of the usefulness\nof the NLP approach. The linear kernel of the SVM model can be used to examine which\ntopics are most important for inferring whether an article of the Convention has been\nviolated or not by looking at their weights w.\nTables 3– 5 present the six topics for the most\npositive and negative SVM weights for the articles 3, 6 and 8, respectively. Topics identify in\na sufficiently robust manner patterns of fact scenarios that correspond to well-established\ntrends in the Court’s case law.\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 12/19\n7Note that all the cases used as examples in\nthis section are taken from the data set we\nused to perform the experiments.\nTable 3 The most predictive topics for Article 3 decisions. Most predictive topics for Article 3, represented by the 20 most frequent words,\nlisted in order of their SVM weight. Topic labels are manually added. Positive weights ( w) denote more predictive topics for violation and negative\nweights for no violation.\nTopic Label Words w\nTop-5 Violation\n4 Positive State Obligations injury, protection, ordered, damage, civil, caused, failed,\nclaim, course, connection, region, effective, quashed,\nclaimed, suffered, suspended, carry, compensation,\npecuniary, ukraine\n13.50",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "10 Detention conditions prison, detainee, visit, well, regard, cpt, access, food,",
+      "level": 1,
+      "text": "situation, problem, remained, living, support, visited,\nestablishment, standard, admissibility merit, overcrowding,\ncontact, good\n11.70\n3 Treatment by state officials police, officer, treatment, police officer, July, ill, force,\nevidence, ill treatment, arrest, allegation, police station,\nsubjected, arrested, brought, subsequently, allegedly, ten,\ntreated, beaten",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "10.20 Top-5 No Violation",
+      "level": 2,
+      "text": "8 Prior Violation of Article 2 june, statement, three, dated, car, area, jurisdiction,\ngendarmerie, perpetrator, scene, June applicant, killing,\nprepared, bullet, wall, weapon, kidnapping, dated June,\nreport dated, stopped\n−12.40",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "19 Issues of Proof witness, asked, told, incident, brother, heard, submission,",
+      "level": 1,
+      "text": "arrived, identity, hand, killed, called, involved, started,\nentered, find, policeman, returned, father, explained\n−15.20",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "13 Sentencing sentence, year, life, circumstance, imprisonment,",
+      "level": 1,
+      "text": "release, set, president, administration, sentenced, term,\nconstitutional, federal, appealed, twenty, convicted,\ncontinued, regime, subject, responsible\n−17.40\nFirst, topic 13 in Table 3 has to do with whether long prison sentences and other\ndetention measures can amount to inhuman and degrading treatment under Article 3.\nThat is correctly identified as typically not giving rise to a violation (\nEuropean Court of\nHuman Rights, 2015). For example, cases 7 such as Kafkaris v. Cyprus ([GC] no. 21906/04,\nECHR 2008-I), Hutchinson v. UK (no. 57592/08 of 3 February 2015) and Enea v. Italy\n([GC], no. 74912/01, ECHR 2009-IV) were identified as exemplifications of this trend.\nLikewise, topic 28 in\nTable 5 has to do with whether certain choices with regard to the\nsocial policy of states can amount to a violation of Article 8. That was correctly identified\nas typically not giving rise to a violation, in line with the Court’s tendency to acknowledge\na large margin of appreciation to states in this area (\nGreer, 2000). In this vein, cases such\nas Aune v. Norway (no. 52502/07 of 28 October 2010) and Ball v. Andorra (Application\nno. 40628/10 of 11 December 2012) are examples of cases where topic 28 is dominant.\nSimilar observations apply, among other things, to topics 23, 24 and 27. That includes\nissues with the enforcement of domestic judgments giving rise to a violation of Article\n6 (\nKiestra, 2014). Some representative cases are Velskaya v. Russia, of 5 October 2006\nand Aleksandrova v. Russia of 6 December 2007. Topic 7 in Table 4 is related to lower\nstandard of review when property rights are at play ( Tsarapatsanis, 2015). A representative\nAletras etal (2016), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.93 13/19",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Procedure. This section contains the procedure followed before the Court, from the lodging of"
+    },
+    {
+      "id": "f2",
+      "caption": "The facts. This section comprises all material which is not considered as belonging to points of"
+    },
+    {
+      "id": "f3",
+      "caption": "The law. The law section is focused on considering the merits of the case, through the use of le-"
+    },
+    {
+      "id": "f4",
+      "caption": "Operative provisions. This is the section where the Court announces the outcome of the case,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "shows the Convention right that each article"
+    },
+    {
+      "id": "t2",
+      "caption": "Accuracy of the different feature types across articles. Accuracy of predicting violation/non-"
+    },
+    {
+      "id": "t3",
+      "caption": "The most predictive topics for Article 3 decisions. Most predictive topics for Article 3, represented by the 20 most frequent words,"
+    },
+    {
+      "id": "t5",
+      "caption": "has to do with whether certain choices with regard to the"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

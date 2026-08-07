@@ -1,0 +1,175 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-machines/mdpi-machines__2020__local_motion_planner_for_autonomous_navigation_in_viney__cb6ebfd530.pdf",
+  "n_pages": 11,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Local Motion Planner for Autonomous Navigation in",
+      "level": 1,
+      "text": "Vineyards with a RGB-D Camera-Based Algorithm\nand Deep Learning Synergy\nDiego Aghi, Vittorio Mazzia, and Marcello Chiaberge\nAbstract—With the advent of agriculture 3.0 and 4.0, in view of\nefﬁcient and sustainable use of resources, researchers are increas-\ningly focusing on the development of innovative smart farming\nand precision agriculture technologies by introducing automation\nand robotics into the agricultural processes. Autonomous agricul-\ntural ﬁeld machines have been gaining signiﬁcant attention from\nfarmers and industries to reduce costs, human workload, and\nrequired resources. Nevertheless, achieving sufﬁcient autonomous\nnavigation capabilities requires the simultaneous cooperation of\ndifferent processes; localization, mapping, and path planning are\njust some of the steps that aim at providing to the machine the\nright set of skills to operate in semi-structured and unstructured\nenvironments. In this context, this study presents a low-cost,\npower-efﬁcient local motion planner for autonomous navigation in\nvineyards based only on an RGB-D camera, low range hardware,\nand a dual layer control algorithm. The ﬁrst algorithm makes\nuse of the disparity map and its depth representation to generate\na proportional control for the robotic platform. Concurrently,\na second back-up algorithm, based on representations learning\nand resilient to illumination variations, can take control of\nthe machine in case of a momentaneous failure of the ﬁrst\nblock generating high-level motion primitives. Moreover, due to\nthe double nature of the system, after initial training of the\ndeep learning model with an initial dataset, the strict synergy\nbetween the two algorithms opens the possibility of exploiting new\nautomatically labeled data, coming from the ﬁeld, to extend the\nexisting model’s knowledge. The machine learning algorithm has\nbeen trained and tested, using transfer learning, with acquired\nimages during different ﬁeld surveys in the North region of Italy\nand then optimized for on-device inference with model pruning\nand quantization. Finally, the overall system has been validated\nwith a customized robot platform in the appropriate environment.\nKeywords— Agricultural Field Machines, Stereo Vision, Deep\nLearning, Autonomous Navigation, Edge AI, Transfer Learning",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Nowadays, with the continuous growth of the human popula-\ntion, agriculture industries and farmers have been facing the ex-\nponential augmentation of global demand of food production.\nAccording to the projections of growth established in 2017 by\nthe United Nations [1], by 2050, the global population will be\naround 9.7 billion and it is expected to reach 11.1 billion in",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2100 So, there is an incremental need of new techniques and",
+      "level": 1,
+      "text": "The authors are with Politecnico di Torino – Department of Electronics and\nTelecommunications and Department of Environment, Land and Infrastructure\nEngineering, Italy. Email:{name.surname}@polito.it.\ntechnologies aimed at maximizing efﬁciency and productivity\nof every single land sustainably.\nOver the years, precision agriculture [2] and digital farm-\ning [3] have gradually contributed with autonomous robotic\nmachines and information collection to improve crop yield\nand resource management, to reduce the labor costs, and in\npart, to increase the production efﬁciency. This has led to\nequip harvesting machineries with driverless systems in order\nto maximize the navigation efﬁciency by reducing the number\nof intersections in the path, and therefore, the amount of fuel\nconsumed [4]. Once endowed with the appropriate effectors,\nthese robotic vehicles can harvest [5, 6], spray [7, 8, 9],\nseed [10] and irrigate [11], and collect trees and crops data\nfor inventory management [12, 13, 14]; when conﬁgured as\nplatforms, they can carry laborers to prune and thin trees,\nhence reducing inefﬁciencies and injuries in the workplace[15].\nResearch on applications of mobile robotic systems in agricul-\ntural tasks has been increasing vastly [16]. However, despite\nthe rising in investments and research activities on the subject,\nmany implementations remain experimental and far from being\napplied on a large scale. Indeed, most of the proposed solutions\nrequire a combination of real-time kinematic GPS (RTK-\nGPS) [17, 18] and costly sensors like three-dimensional multi-\nchannel Light Detection and Ranging (LIDAR) [19]. Other\nthan being very expensive, those solutions are unreliable and\nprone to failure and malfunction due to their complexity.\nOn the other hand, several recent works [20, 21] focus their\nefforts on ﬁnding an affordable solution for the generation\nof a global map with related way-points. However, path\nfollowing inside vineyard rows is still a challenging task due\nto localization problems and variability of the environment.\nIndeed, GPS receivers require to function in an open area with\na clear view of the sky [22], hence, expensive sensors and\nsolutions are needed in order to navigate through vineyards\nrows and follow the generated paths.\nIn this context, we present a low-cost, robust local motion\nplanner for autonomous navigation in vineyards trying to\novercome some of the present limitations. Indeed, our power-\nefﬁcient solution makes use only of RGB-D camera without\ninvolving any other expensive sensor such as LIDAR or RTK-\nGPS receivers. Moreover, we exploit recent advancements in\nthe Deep Learning [23] techniques and optimization practices\nfor Edge AI [24] in order to create an overall resilient local\nnavigation algorithm able to navigate inside vineyard rows\nwithout any external localization system. The machine learning\nmodel has been trained using transfer learning with images\narXiv:2005.12815v1  [cs.LG]  26 May 2020\n2\nacquired during different ﬁeld surveys in the North region of\nItaly and then we validated the navigation system with a real\nrobot platform in the relevant environment.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "R ELATED WORKS",
+      "level": 1,
+      "text": "As far as autonomous navigation is concerned, classic\nautonomous systems capable of navigating a vineyard adopt\nhigh-precision RTK-GPS [25, 26, 27, 28] or by the use of\nlaser scanners combined with GPS [29, 30]. However, the\nlack of GPS availability due to environmental conditions such\nas large canopies, the need for prior surveying of the area,\nand unreliable connectivity in certain scenarios make GPS-free\napproaches desirable [31]. On the other hand, more modern\nand recent approaches employ different types of sensors usu-\nally combined with each other [19]. For example, Zaidner et\nal. introduced a data fusion algorithm for navigation, which\noptimally fused the localization data from various sensors;\nGPS, inertial navigation system (INS), visual odometry (VO)\nand wheel odometry are fused in order to estimate the state\nand localization of the mobile platform [32]. However, as high-\nlighted by the authors, there is a trade-off between cost and\naccuracy, and the data fusion algorithm could fail if each sensor\nhighly differs from each other.\nRegarding affordable and low-cost solutions, Riggio et al.\nproposed a low-cost solution based only on a single-channel\nLIDAR and odometry, but it is greatly affected by the type of\ncanopy and condition of the speciﬁc vineyard [33]. Instead,\nin [16], they proposed a vision based-control system using a\nclustering algorithm and Hough Transform in order to detect\nthe central path between two rows. However, it is extremely\nsensitive to illumination conditions and intra-class variations.\nOn the other hand, the emerging needs of automation\nin the agricultural production systems and in the crop life\ncycles, concurrent to the unstoppable expansion towards new\nhorizons of the deep learning, led to the development of\nseveral architectures for a variety of applications in precision\nagriculture. For instance, in [34] and [35], authors proposed\nsolutions based on known architectures such as AlexNet [36],\nGoogleNet [37] and CaffeNet [38] to detect diseases in plants\nand leaves respectively. Moreover, deep learning has been\nused for crop type classiﬁcation [39, 40, 41, 42], crop yield\nestimation [43, 44, 45, 46], fruit counting [24, 47, 48], and even\nto predict the weather, forecasting temperature and rainfall[49].\nWe propose a novel approach based only on a consumer-\ngrade RGB-D camera and latest innovations in the machine\nlearning ﬁeld to create a robust to noise local motion plan-\nner. The algorithm that exploits the depth map produces a\nproportional control and is supported, in case of failure, by a\ndeep learning model that produces high-level primitives [50].\nMoreover, the strict synergy between the two system blocks\nopens the possibility to easily create an incremental learning\narchitecture where new labeled data coming from the ﬁeld are\nused to extend the existing capabilities of the machine learning\nmodel.\nThe remainder of this paper is organized as follows. Sec-\ntion III introduces the materials and data used for this research.\nSections IV and V give a detailed overview of the proposed\nmethodology with the obtained experimental results followed\nby the conclusion and future works.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "M ATERIALS AND DATA",
+      "level": 1,
+      "text": "In order to acquire a dataset for training and testing the deep\nneural network, we performed ﬁeld surveys in two distinct\nrural areas in the North part of Italy; Grugliasco near the\nmetropolitan city of Turin in the Italian region of Piedmont\nand Valle San Giorgio di Baone in the Province of Padua in\nthe Italian region Veneto. The collected video samples present\ndifferent types of terrains, wine quality, and they were acquired\nat a different time of the day, with diverse meteorological\nconditions. Videos were shot at 1080p with a 16:9 ratio in order\nto have more ﬂexibility during the data processing process.\nOn the other hand, to acquire images and compute the\ndepth map on the platform, we employed the stereo camera\nIntel RealSense Depth Camera D435i 1. It is a vision system\nequipped with an RGB camera and two infrared cameras which\ncomputes the depth of each pixel of the acquired frame up to\n10 meters.\nFinally, for the practical in-ﬁeld evaluations, the stereo\ncamera has been installed on an unmanned ground vehicle\n(UGV): the model Jackal from Clearpath Robotic endowed\nwith an Intel Core i3-4330TE. The camera mounted on the\nchosen robotic platform is depicted in Figure 1. 2\nFig. 1. UGV Jackal from Clearpath Robotics endowed with an Intel\nRealSense D435i.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "P ROPOSED METHODOLOGY",
+      "level": 1,
+      "text": "Our goal is to develop a real-time local motion planner with\nan ultra-light computational load able to overcome practical\nproblems faced by the GPS device when carrying out an\nautonomous navigation along a vineyard row.\nThe workﬂow of our proposal is the following: ﬁrst, the\nstereo camera acquires the frames with the RGB camera and,\nsimultaneously, it provides a depth map computed through\nthe two infrared cameras. Successively, a light depth-map-\nbased algorithm processes the depth maps detecting the end\n1https://www.intelrealsense.com/depth-camera-d435i/\n2https://clearpathrobotics.com/jackal-small-unmanned-ground-vehicle/",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 of the vineyard row and, consequently, it calculates the con-",
+      "level": 1,
+      "text": "trol values with a proportional controller on both linear and\nangular velocities. Unfortunately, in particular weather and\nlightning conditions, the depth map generation is unreliable\nand prone to error. Indeed, as in many outdoor applications,\nthe sunlight inﬂuences negatively the quality of the results\nand compromises the control given by the local navigation\nalgorithm. To face this problem, as a back-up solution, we\nimplemented a Convolutional Neural Network (CNN) trained\nat classifying whether the camera is pointing at the center\nof the end of the vineyard row or at one of its sides. Once\nan output prediction is obtained, we can route the path of\nthe robot properly to avoid collisions with the sides of the\nvineyard. Moreover, we exploited the latest advancement in\nmodel optimization techniques in order to obtain an efﬁcient\nand lightweight neural network able to inference in real-time\non a low-cost, low-power device with limited computational\ncapabilities. The overall algorithm pseudo-code is reported in\nFigure 1. We integrated the proposed algorithm with the open-\nsource Robot Operating System 3(ROS) to apply the generated\ncontrol to the actuators of the selected UGV . Finally, to prevent\nthe robot platform from colliding with unexpected obstacles\nthat obstruct its way, we use the depth-map provided by the\nstereo camera and we apply a simple threshold value in order to\nimmediately stop the motion in case of an impending collision.\nThe resulting system is a low-cost, power-efﬁcient, and\nconnection-free local path planner that can be easily integrated\nwith a global system achieving fully autonomous navigation\nin vineyards.\nA. Continuous Depth Map Control\nIn order to obtain a proportional control, we detect the\ncenter of the end of the vineyard row exploiting the depth-map\nprovided by the stereo camera. Subsequently, the control values\nfor the linear velocity and the angular velocity are calculated\nproportionally to the horizontal distance between the center of\nthe end of the vineyard row and the longitudinal axis of the\nUGV .\nTo this end, we compute the largest area that gathers all the\npoints beyond a certain depth value and then, we bound that\narea with a rectangle that will be used to compute the control\nvalues.\nThe depth-map is a single-channel matrix with the same\ndimensions of the image resolution, where each entry repre-\nsents the depth in millimeters of the corresponding pixel in the\ncamera frame. The limits of the depth computation are 0 and\n8 meters; therefore, the values in the depth matrix range from\n0 to 8000.\nThe main steps of the proposed methodology, described in\nAlgorithm 1, are shown in detailed with the following points:\n1) Matrix normalization: In order to have a solution adapt-\nable to different outdoor scenarios, we need to have a\ndynamic deﬁnition of near ﬁeld and far-ﬁeld. Therefore,\nwe employ a dynamic threshold computed proportion-\nally to the maximum acquired depth value. Hence,\n3https://www.ros.org/\nby normalizing the matrix, we obtain a threshold that\nchanges dynamically depending on the values of the\ndepth map.\n2) Depth threshold: We apply a threshold on the depth\nmatrix, obtained through a detailed calibration, in order\nto deﬁne which is the near ﬁeld (represented with a “0”)\nand the far ﬁeld (represented with a “1”). At this point\nthe depth matrix is a binary mask.\n3) Bounding operation: We perform edge detection on\nthe binary image, extrapolating the contours of the\nwhite areas, and then, we bound these contours with\na rectangle.\n4) Back-up solution: If no white area is detected or in\ncase the area of the largest rectangle is less than a\ncertain threshold, we activate the back-up model based\non machine learning.\n5) Window selection: On the other hand, if there are mul-\ntiple detected rectangles, we evaluate only the biggest\none in order to get rid of the noise. The threshold\nvalue for the area is obtained through a calibration\nand it is used to avoid false positive detection. In fact,\nthe holes on the sides of the vineyard row can be\ndetected as large areas with all the points beyond the\ndistance threshold, and therefore they can lead to a\nwrong command computation. To prevent the system\nfrom performing an autonomous navigation using an\nerroneous detection of the end of the vineyard row, we\ncalibrated the threshold to reduce the possibility that\nthis eventuality occurs drastically. From now on, with\nthe term window we will refer to the largest rectangle\ndetected in the processed frame which area is greater\nthan the area threshold.\n6) Control values: The angular velocity and the linear\nvelocity values are both proportional to the horizontal\ndistance (in pixel) between the center of the detected\nwindow and the center of the camera frame and based\non a parabolic function. The distance d is computed as:\nd =Xw−Xc (1)\nwhere Xw is the horizontal coordinate of the center\nof the detected rectangle and Xc is the horizontal\ncoordinate of the center of the frame. Figure 2 shows\na graphical representation of the computation of the\ndistance d.\nThe controller value for the angular velocity ( ang vel)\nis calculated through the following formula:\nang vel =\n\n\n\n−max ang vel·\n(\nd2\n( w\n2 )2\n)\n, if d≥ 0\nmax ang vel·\n(\nd2\n( w\n2 )2\n)\n, if d< 0\n(2)\nwhere max ang vel is the maximum angular velocity\nachievable and w is the width of the frame.\n4\nFig. 2. Depth-map algorithm scheme. The end of the vineyard row detected is\nrepresented by the red rectangle. The value d, on which the control algorithm\nis based on, is computed as the horizontal distance between the center of the\ncamera frame and the center of the detected window.\nAlgorithm 1 RGB-D camera based algorithm\nInput: Dh×w: Depth Matrix provided by the camera\nInput: F h×w×3 RGB frame acquired by the camera\nInput: Tdistance threshold on the distance\nInput: Tarea threshold on the area of the rectangles\nInput: Xc horizontal coordinate of the center of the camera\nframe\nInput: Xw horizontal coordinate of the center of the detected\nwindow\nOutput: Control commands for the autonomous navigation\n1: D←−∥D∥2\n2: for i=1,··· h and j=1,··· w do\n3: if Di×j > Tdistance then\n4: Di×j=1\n5: else\n6: Di×j=0\n7: end if\n8: end for\n9: cont[]← contours(Di×j)\n10: rect[]← boundingRect(cont[])\n11: if max(area(rect[]))< Tarea or rect[].isEmpty() then\n12: continue from line 18\n13: else\n14: angular velocity()\n15: linear velocity()\n16: acquire next frame and restart from line 1\n17: end if\n18: I1×rh×rw×3← preprocessing(Fh×w×3)\n19: model prediction(I1×rh×rw×3 )\n20: ML controller()\nAs far as the linear velocity ( lin vel) control function\nis concerned, it is still be a parabola, but this time the\nlower is the distance d the higher its value gets. There-\nfore the formula is:\nlin vel =max lin vel·\n(\n1−\n( d2\n( w\n2 )2\n))\n(3)\nwhere max lin vel is the maximum linear velocity\nachievable and w is the width of the frame. Both control\ncharacteristics curve are depicted in Figure 3.\n(a)\n(b)\nFig. 3. Considering a frame resolution of 640 ×480, a maximum linear\nvelocity of 1 m/s and a maximum angular velocity of 1 rad/s the plot of the\nlinear velocity control function is shown in Figure 3a, whereas, the plot of\nthe angular velocity control function is shown in Figure 3b.\nB. Discrete CNN Control\nNavigating in an outdoor environment can be extremely\nchallenging. Among several troubles, we noticed that sunlight\ncan be very deceptive when performing edge detection and it\ncould lead to hazardous situations using a total camera-based\nnavigation system. Therefore, besides the depth-map based\nalgorithm, we propose a back-up solution that exploits machine\nlearning methodologies in order to assist the main algorithm in\ncase of failure. These are the last points described in Algorithm\n1.\nGreatly inspired by Giusti et al. [51] our second approach\nrelies on a convolutional neural network (CNN) that classiﬁes\nthe frames acquired by the camera into the three following\nclasses: left, center and right. So, in a vineyard scenario, the\nclass center desc",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "E XPERIMENTAL DISCUSSION AND RESULTS",
+      "level": 1,
+      "text": "In this section, we discuss the details of the deep learning\nmodel training with its dataset generation and evaluation. Fur-\nthermore, we introduce the optimization adjustments applied to\nthe network in order to boost the frequency control to 47.15\nHz. Finally, we conclude with the experimentation data and\nresults gathered during the ﬁeld tests.\nA. Dataset Creation\nWe used a dataset of 33.616 images equally balanced along\nwith the three previously introduced classes. In order to create\nthe training dataset, as previously introduced in Section III, we\ntook several videos in a variety of vineyards rows with a 1080\np resolution camera in order to have more ﬂexibility during\nthe pre-processing phase. In particular, for the ﬁrst video of\nthe center class, we recorded rows with the camera pointing at\nits center. Whereas, for the other two videos, classes left and\nright, we registered with the camera rotated of 45 degrees with\nrespect to the longitudinal axis of the row towards the left and\nthe right side, respectively. Eventually, we took each video as\na streaming of images and we selected the best frame every\nsix consecutive ones using a Laplacian ﬁlter to detect the less\nblurring one. Figure 5 shows an example for each class.\nB. Model Training\nAs already introduced, we trained the network using a\ntechnique known as transfer learning [56]; instead of starting\nto train with weights randomly initialized, we used variables\nobtained with an earlier training session. In particular, we ex-\nploited weights obtained ﬁtting MobileNet with the ImageNet\nclassiﬁcation dataset [57]. Using this technique, we were able\nto take advantage of previous low-level features, learned by the\nnetwork, highly reducing the number of images and epochs\nrequired for the training. Indeed, edges, contours, and basic\n6\n(a)\n (b)\n (c)\nFig. 5. Three samples of the dataset used to train the network, one for each class. ( a) is an example of the left class, ( b) of the center class, and ( c) of the right\nclass. Dataset samples have been collected with different weather conditions and at a different time of day. The resulting heterogeneous training set is aimed at\ngiving generality and robustness to the model.\ntextures are general-purpose features that can be reused for\ndifferent tasks. In order to properly train, validate and test the\nmodel, we randomly divided the dataset into three subsets as\nfollow: 70% for the training set, 15% for the development\nset, and the remaining 15% for the test set. We trained the\nresulting network for only six epochs with a batch size of 64.\nTo increment the robustness of the network and to overcome\npossible problems of overﬁtting, we used different techniques\nsuch as dropout [58], weight decay [59] and data augmentation\nwith changes in zoom and brightness [60]. Finally, we used\nmini-batches with RMSprop optimizer [61], accuracy metric,\nand cross entropy as a loss function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "Machine Learning Model Evaluation and Optimization",
+      "level": 1,
+      "text": "The implemented model has been trained and tested with the\nsubdivision of the dataset introduced in previous Section V-B,\ngiving an accuracy of 1.0 over the test set. Therefore, this\nmodel is the one employed for the navigation.\nIn order to inspect the model and justify the high accuracy\nof it, we plotted the intermediate activations of the trained net-\nwork and we adopted Grad-CAM, [62], to highlight important\nregions in the image for predicting the correct class. In Figure 7\nare shown some feature maps at different level of depth:\nimmediately after the ﬁrst convolution, at an intermediate point\nand before the average pooling layer. It is clear how the\ndeep learning model is able to generate robust feature maps\nalready after the ﬁrst convolution. Later those representations\nare exploited in order to produce disentangled representations\nthat easily allow the model to predict the three different\nclasses with high level of conﬁdence. Instead, in Figure 6, are\npresented the regions of interest for the three different classes.\nWith Grad-CAM we can visually validate that the network is\nactivating around the proper patterns of the input image and\nthat it is not exploiting short cuts to achieve a high level of\naccuracy. Indeed, we can easily assess that the model, trained\nwith transfer learning, is exploiting the vineyard rows and their\nvanishing point to obtain an effective generalization power.\nMoreover, in order to evaluate the robustness of the net-\nwork over new scenarios, and prove how transfer learning\nis so effective for this speciﬁc application, we performed an\nexperimentation, training the model only with a small part\nof the available dataset. So, we trained the architecture with\njust a vineyard type and tested the resulting model with ﬁve\ncompletely different scenarios with diverse wine quality and\nweather conditions. In particular, we used only 18% as training\nexamples, corresponding to 6.068 images, due to the amount\nof images available for each region of the available dataset.\nConsequently, we tested the new trained network with the\nremaining 27458 samples.\nFig. 7. Three input images belonging to different classes, with their respective\nactivation maps taken at different level of depth of the network. Already on\nearly stages, the network, pre-trained on ImageNet, is able to extract useful\nrepresentations that lead at robust, disentangle activations in the ﬁnal layers. It\nis possible to notice how the two spacial dimensions are increasingly reduced.\nAs shown in Table I, an accuracy of 0.94 is achieved by the\nre-trained model in this second case. That is an optimal result\nconsidering the fact that the network has been trained with a\nvery small dataset and it has been tested with a completely\ndifferent vineyard scenario. This clearly demonstrates how\ntransfer learning, for this speciﬁc task, is very effective at\nproviding good generalization capabilities with also a small\ntraining set. We also compared, using this last split, the selected\nnetwork with other notable architectures of the literature. As it\nis clear from Table II MobileNet is the right balance between\naverage accuracy and computational request. However, in the\n7\n(a)\n (b)\n (c)\nFig. 6. Gradient information, ﬂowing into the last convolutional layer of MobileNet, is used to understand each neuron for a decision of interest. It is possible\nto assess that for either the three classes, ( a–c), the network is ”looking” at the vineyard roads and their vanishing point.\npresence of a platform with more ﬂexible computational con-\nstraints, EfﬁcientNet-B1, or networks with higher compound\ncoefﬁcient φ [63], would be much more likely to generalize\nover new scenarios maintaining an optimal level of efﬁciency.\nTABLE I. R ESULTS OF THE SECOND EVALUATION OF THE TRAINED\nCNN MODEL .\nClass Precision Recall f1-Score\nright 0.850 1.000 0.919\nleft 1.000 0.899 0.947\ncenter 1.000 0.924 0.961\nmicro avg 0.941 0.941 0.941\nmacro avg 0.950 0.941 0.942\nweighted avg 0.950 0.941 0.942\nFinally, as previously introduced, the employed network\nhas been optimized, discarding all redundant operations and\nreducing the ﬂoating point precision from 32 to 16 bits,\nusing the framework TensorRT. The optimization process,\nbesides not affecting the accuracy of the predictions, it gives a\nsigniﬁcant increment to the number of frames elaborated per\nsecond by our model, using the same hardware supplied with\nthe robot. In fact, the control frequency using Tensorﬂow with\na frozen graph, computational graph of the network without\noptimization and tranining nodes, was 21.92 Hz, whereas, with\nthe performed optimization, we reached 47.15 Hz.\nTABLE II. C OMPARISON BETWEEN DIFFERENT CNN ARCHITECTURES\nUSING 18% OF THE AVAILABLE DATASET AND TRANSFER LEARNING TO\nTRAIN THE NETWORKS . M OBILE NET, FOR THIS SPECIFIC APPLICATION , IS\nA GOOD TRADE -OFF BETWEEN PERFORMANCE AND COMPUTATIONAL\nCOST .\nModel Parameters GFLOPSs Avg. Acc.\nMobileNet [52] 4,253,864 0.579 94.7%\nMobileNetV2 [64] 3,538,984 0.31 91.3%\nEfﬁcientNet-B0 [63] 5,330,571 0.39 93.8%\nEfﬁcientNet-B1 [63] 7,856,239 0.70 96.8%\nResNet50 [65] 25,636,712 4.0 93.1%\nDenseNet121 [66] 8,062,504 3.0 95.3%\nD. Field Experimentation\nAs far as the deployment is concerned, the system has been\nimplemented in a ROS-oriented robot platform. The robot in\nwhich the local planner has been tested is an unmanned ground\nvehicle: the model Jackal from Clearpath Robotics (Figure 8)\nintroduced in Section III.\nThe tests have been carried out in a new vineyard scenario.\nIn order to correctly perform navigation the stereo camera has\nbeen installed in such a way that the center of the camera\nframe corresponds to the longitudinal axis of the vehicle.\nFig. 8. Jackal model robotic platform on the test site during the ﬁeld\nexperimentation.\nThe proposed solution, after several trials with different\nvineyard rows but similar weather conditions, proved to be\nable to perform an autonomous navigation along the given\npaths, even lowering down the resolution of the camera to\n640× 480. More speciﬁcally, for the two infrared cameras\nwith which the camera computes the depth-map the resolution\nhas been set to 640× 480, whereas, for the RGB images\nprocessed by the machine learning model we started with a\nresolution of 1280×720 and then we gradually reduced it until\n640×480 as mentioned. Moreover, when acquiring images we\nused the default calibration provided by Intel with the camera\n8\nlens distortion based on the Brown–Conrady model [67]. The\nintrinsic parameters for the ﬁnal conﬁguration of the camera\nin both the so-called depth and color modes are showed in\nTable III. All our tests showed precise trajectories, comparable\nwith ones obtained with data fusion techniques that make use\nof several expensive sensors to maintain the correct course.\nTABLE III. I NTRINSIC PARAMETERS OF THE CAMERA FOR EACH OF\nTHE EXPLOITED MODES . PRINCIPAL POINT (PPX AND PPY) AND FOCAL\nLENGTH (FX AND FY) FOR A RESOLUTION OF 640× 480.\nMode Depth Color\nPPX 321.910675048828 316.722351074219\nPPY 236.759078979492 244.21875\nFx 387.342498779297 617.42242431640\nFy 387.342498779297 617.789978027344\nAs noticeable from the depth maps samples in Figure 9 taken\nduring the ﬁeld experimentation, the ﬁrst method can detect the\nend of the vineyard independently from the direction of the\nlongitudinal axis of the robot. The rectangle is successively\nused for control signals generation. In case of a fault of this\nsolution, as previously introduced, the machine learning based\nalgorithm takes control. Finally, it is possible to exploit the\ndistance value d to easily collect new, already labeled, sample\ndata from the operational work of the robotic platform. Indeed,\ndue to the nature of all mini-batch gradient descent based\noptimizer, it is possible to continuously use new data points\nto extend the existing model’s knowledge obtaining a more\nrobust and prone to generalize neural network.\nFig. 9. Instances of the depth-map based algorithm while performing tests\nin the vineyards. Whe",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "C ONCLUSIONS",
+      "level": 1,
+      "text": "We proposed a local motion planner for vineyards rows au-\ntonomous navigation. We exploited the stereo vision properties\nof an RGB-D camera and latest advancements in deep learn-\ning optimization techniques in order to obtain a lightweight,\npower-efﬁcient algorithm able to run on a low-cost hardware.\nThe proposed overall methodology provides a real-time con-\ntrol frequency using only hardware with limited computational\ncapabilities containing costs and required resources. The back-\nup trained neural network is robust to different factors of\nvariation, and after the optimization procedure, it provides a\ncontrol frequency of 47.15 Hz without the need of external\nhardware accelerators.\nFinally, the proposed local motion planner has been im-\nplemented on a robotic platform and tested on the relevant\nenvironment, demonstrating to scale real working conditions\neven with a low resolution.\nAs future work, we plan to integrate the presented work with\na concrete application and extent the methodology to orchards\nand any other analogous scenario.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "We integrated the proposed algorithm with the open-"
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": ", are shown in detailed with the following points:"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 2
+  }
+}

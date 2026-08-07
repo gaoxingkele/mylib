@@ -1,0 +1,90 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2020__albumentations_fast_and_flexible_image_augmentations__44a4a12154.pdf",
+  "n_pages": 4,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Modern machine learning models, such as deep artiﬁcial\nneural networks, often have a very large number of param-\neters, which allows them to generalize well when trained\non massive amounts of labeled data. In practice, such large\nlabeled datasets are not always available for training, which\nleads to the elevated risk of overﬁtting. Data augmentation\nis a commonly used technique for increasing both the size\nand the diversity of labeled training sets by leveraging input\ntransformations that preserve output labels. In computer vi-\nsion domain, image augmentations have become a common\nimplicit regularization technique to combat overﬁtting in deep\nconvolutional neural networks and are ubiquitously used to\nimprove performance on benchmark datasets [1]–[5].\nWhile most deep learning frameworks implement basic\nimage transformations, the list is typically limited to some\nvariations and combinations of ﬂipping, rotating, scaling, and\ncropping. Different domains, imaging modalities, and tasks\nmay beneﬁt from a wide range of different amounts and\ncombinations of image transformations [4]–[6]. For example,\nvery extensive image augmentations are typical in medical\nimage analysis, where datasets are often small and expensive\nto acquire, and annotations are often sparse, compared to\nthe natural images [7], [8]. Even on well studied bench-\nmark datasets, different data augmentation strategies lead to\nperformance variability. For example, image rotation is an\neffective data augmentation method on CIFAR-10, but not on\nMNIST, where it can negatively affect the network’s ability to\ndistinguish between handwritten digits 6 and 9 [6]. Thus, there\nis a need for ﬂexible and rich image augmentation tools that\nwill allow to apply combinations of a wide range of various\ntransformations to the task in hand.\nWhile the largest gains in efﬁciency of deep neural networks\nhave come from computation with graphical processing units\n(GPUs) [9], which excel at the matrix and vector operations\ncentral to deep learning, data pre-processing and augmentation\nare typically done on a CPU. As the performance and the\nmemory capacity of the GPU hardware steadily improve, the\nefﬁciency of data augmentation operations becomes increas-\ningly important, such that GPUs are not idling while CPUs\nare preparing the next mini-batch of data to pass through\nthe network. However, the image processing speed varies in\nexisting tools for image augmentation.\nIn this paper we present Albumentations, a fast and ﬂexible\nsolution for image augmentations. Albumentations is a library\nbased on a fast implementations of a large number of various\nimage transform operations, but also is an easy-to-use wrapper\naround other augmentation libraries. It provides a simple\nyet powerful interface for different tasks, including image\nclassiﬁcation, segmentation, detection, etc. We demonstrate\nthat Albumentations is faster than other commonly used image\naugmentation tools on the most of commonly used image\ntransformations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "A LBUMENTATIONS",
+      "level": 1,
+      "text": "Fig. 1 demonstrates application of a number of image\ntransformation operations available in Albumentations, in-\ncluding color, contrast, brightness, and other transformations.\nThese image operations and their various combinations are\ncommonly used in a wide range of computer vision tasks. For\nthis example, we selected the parameters of transformation\nsuch that results of their applications visibly differ from the\noriginal image, which may not be always desirable in practice.\nBelow we provide task-speciﬁc augmentation examples for\ndifferent computer vision tasks.\narXiv:1809.06839v1  [cs.CV]  18 Sep 2018\nFig. 1. Exemplar applications of image transformations available in Albu-\nmentations\nA. Street view image detection\nComputer vision tasks are not limited to image classiﬁca-\ntion, thus, the support of augmentations for other data formats\nis also important. Many spacial transforms implemented in\nAlbumentations support operating on segmentation masks and\nbounding boxes, that are used in object detection and tracking.\nFig. 2 shows an example of applying a combination of a\nhorizontal ﬂip and a random sized crop to an image from the\nMapillary Vistas Dataset for Semantic Understanding of Street\nScenes [10]. Besides the original image, it shows the result of\ntransform application on both bounding box and instance mask\nannotations.\nB. Satellite and aerial imagery\nIn the analysis of satellite and aerial images, transformations\nthat preserve the shape of objects are typically used to avoid\nthe distortions of rigid-shape objects, such as buildings. Such\ntransform operations include cropping, rotations, reﬂections,\nand scaling. For example, on of the top-3 performing solutions\nin the DSTL Satellite Imagery Feature Detection challenge\non Kaggle used combinations of random cropping and a\nrandom transformation from dihedral group Dih4 [11]. High-\nperforming solutions to other challenges also implemented\nsimilar types of image augmentations, for example, for au-\ntomatic road extraction [12] and for multi-class land segmen-\ntation [13] from satellite imagery. Fig. 3 provides examples\nof such image transforms applied to an image from the Inria\nAerial Image Labeling dataset [14]. Corresponding binary\nmasks of buildings present in the image are also transformed\nin the same way as the original image.\nFig. 2. An example of applying a combination of transformations available\nin Albumentations to the original image, bounding boxes, and ground truth\nmasks for instance segmentation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Biomedical image analysis",
+      "level": 1,
+      "text": "Image augmentations are intensively used in the analysis\nof biological and medical images due to the typically limited\namount of available labeled data [7]. For example, combining\npre-trained deep network architectures with multiple augmen-\ntation techniques enabled accurate detection of breast cancer\nfrom a very small set of histology images with less than 100\nimages per class [8]. Similarly, the use of medical image\naugmentations helped to improve the results of segmentation\nof hand radiographs and bone age assessment [15]. In medical\ncomputer vision tasks that deal with color images or videos,\ncolor transformations have also been shown to help deep\nnetworks to generalize better, for example, such for surgical\n[16] or endoscopic [17] video analysis. In addition to these\ncommonly used transforms, operations like grid distortion and\nelastic transform often can be helpful, see Fig. 3, since medical\nimaging is often dealing with non-rigid structures that have\nshape variations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "B ENCHMARKS",
+      "level": 1,
+      "text": "The quantitative comparison of image transformation speed\nperformance for Albumentations and other commonly used\nimage augmentation tools is presented in Table I. We included\na framework-agnostic image augmentation library imgaug\n[18], as well as augmentations provided within Keras [19]\nand PyTorch [20] frameworks. For the most image operations,\nAlbumentations is consistently faster than all alternatives.\nFig. 3. Exemplar geometry-preserving transforms applied to a satellite image (top row) and ground truth binary segmentation mask (bottom row).\nTABLE I\nTIME IN SECONDS PER IMAGE TRANSFORMATION OPERATION TASK USING DIFFERENT AUGMENTATION TOOLS (LOWER IS BETTER ).\nAlbumentations imgaug torchvision (Pillow backend) torchvision (Pillow-SIMD backend) Keras\nRandomCrop64 0.0017 - 0.0182 0.0182 -\nPadToSize512 0.2413 - 2.493 2.3682 -\nHorizontalFlip 0.7765 2.2299 0.3031 0.3054 2.0508\nVerticalFlip 0.178 0.3899 0.2326 0.2308 0.1799\nRotate 3.8538 4.0581 16.16 9.5011 50.8632\nShiftScaleRotate 2.0605 2.4478 18.5401 10.6062 47.0568\nBrightness 2.1018 2.3607 4.6854 3.4814 9.9237\nShiftHSV 10.3925 14.2255 34.7778 27.0215 -\nShiftRGB 2.6159 2.1989 - - 3.0598\nGamma 1.4832 - 1.1397 1.1447 -\nGrayscale 1.2048 5.3895 1.6826 1.2721 -\nFig. 4. Grid distortion and elastic transform applied to a medical image.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "C ONCLUSIONS",
+      "level": 1,
+      "text": "We present Albumentations, a fast and ﬂexible library for\nimage augmentations with many various image transform\noperations available, that is also an easy-to-use wrapper around\nother augmentation libraries. We provide examples of image\naugmentations for different computer vision tasks ans show\nthat Albumentations is faster than other commonly used\nimage augmentation tools on the most of commonly used\nimage transformations. The source code for Albumentations\nis made publicly available online at https://github.com/albu/\nalbumentations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

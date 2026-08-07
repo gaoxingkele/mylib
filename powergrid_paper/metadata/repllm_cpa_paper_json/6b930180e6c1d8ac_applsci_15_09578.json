@@ -1,0 +1,233 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-15-09578.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In recent years, rapid global economic growth and far-reaching shifts in industrial\nstructure have transformed high energy-consuming industrial parks—clusters dominated\nby energy-intensive enterprises—into major hubs of energy use, key sinks for renewable-\nenergy integration, and important engines of economic expansion [ 1,2]. These parks\ntypically accommodate aluminium electrolysis, steel smelting, petrochemical and data-\ncenter facilities, resulting in extremely high electricity-demand intensity, pronounced load\nvolatility, strong sensitivity to external influences and complex nonlinear behaviour [ 3].\nFigure 1 illustrates a year of power-load data from a representative high energy-consuming\nindustrial park in northeastern China. The horizontal axis represents time, with a total\nof 8760 h. The vertical axis represents MW, which is a unit of power commonly used\nto indicate the output power of large-scale energy systems, and the unit for high-energy\nAppl. Sci. 2025, 15, 9578 https://doi.org/10.3390/app15179578\nAppl. Sci. 2025, 15, 9578 2 of 22\nconsumption load; the series displays marked nonlinear and stochastic characteristics, indi-\ncating that conventional linear forecasting methods cannot deliver the required accuracy.\nBecause forecast precision directly determines the security and stability of the park’s power\nsupply, the optimal allocation of energy resources and the efficiency of grid operation [4],\ndeveloping high-accuracy load-forecasting techniques has become a prerequisite for effec-\ntive energy management. Such advances are also crucial for integrating higher shares of\nrenewable energy and for advancing carbon-reduction goals [5].\n0 1 0 0 02 0 0 03 0 0 04 0 0 05 0 0 06 0 0 07 0 0 08 0 0 0\n0\n200\n400\n600\n800\n1000Load(MW)\ntime points/1h  \n \n \nFigure 1. One-Year Load Data from a Northeast China High Energy-Consuming Park.\nElectricity load forecasting can be categorized into three types based on time scale:\nultra-short-term, short-term, and long-term forecasting. Ultra-short-term forecasting fo-\ncuses on load fluctuations in the next few minutes to hours, primarily used for real-time\nscheduling and control of the power system to ensure its safe and stable operation. Short-\nterm forecasting targets load changes from the next day to several days ahead, providing\ndecision support for power system operation and scheduling, such as power generation\nplanning, transmission planning, and day-ahead spot market transactions. Long-term\nforecasting covers load demand for the next several days to months or even years, serving\nas a crucial foundation for power system planning and development. It provides insights\nfor power source allocation, grid planning, and transmission line upgrades. This paper\nfocuses on short-term load forecasting, predicting the trend in high-energy load changes\nover the next 6 days, with a data sampling interval of 15 min.\nTraditional power-load forecasting techniques—such as regression analysis, grey\ntheory and classical time-series models—presuppose strong linear regularities in load\ndynamics, an assumption that breaks down under the complex operating conditions of high\nenergy-consuming industrial parks. Spurred by recent advances in artificial-intelligence\nand big-data analytics [6], deep-learning approaches, notably recurrent neural networks\n(RNNs) and long short-term memory (LSTM) networks, have begun to exhibit superior\nperformance in the load-forecasting domain [7]. Even so, these single-model frameworks\nremain inadequate for fully capturing the intricate nonlinear characteristics embedded in\nHigh energy-consuming Load data.\nTherefore, introducing multimodal decomposition into the forecasting framework has\nbecome an effective way to enhance the accuracy of complex load predictions; widely used\ntechniques include Seasonal-and-Trend decomposition using Loess (STL), empirical mode\ndecomposition (EMD), variational mode decomposition (VMD) and complete ensemble\nempirical mode decomposition (CEEMD). For example, refs. [8,9] use EMD and CEEMD\nto decompose time series into intrinsic mode functions (IMFs) at different frequencies,\nbut these methods suffer from mode mixing, which degrades decomposition quality and\nAppl. Sci. 2025, 15, 9578 3 of 22\nultimately diminishes forecasting performance. Ref. [ 10] applies VMD to forecast the\nload of an integrated-energy system; however, its decomposition parameters are chosen\nempirically, without theoretical justification, resulting in insufficient feature extraction\nafter VMD.\nBuilding on the capacity of modal decomposition to reduce sequence complexity,\nresearchers are progressively fusing decomposition techniques with deep-learning models\nto further exploit nonlinear spatiotemporal characteristics. Ref. [11] combines variational\nmode decomposition (VMD) with meta-learning for integrated-energy-system load fore-\ncasting, employs a bidirectional long short-term memory network (BiLSTM) to capture\ntemporal patterns in the load series, and uses the maximal information coefficient to\naddress inter-load correlations; simulations confirm the approach’s superior predictive\naccuracy. Refs. [12,13] obtain similarly precise results by coupling modal-decomposition\nmethods with various deep-learning frameworks. Ref. [14] integrates an attention mech-\nanism, multi-task learning and LSTM to yield accurate forecasts of wind power, solar\ngeneration and system load, whereas ref. [15] blends CatBoost, XGBoost and optimization\nalgorithms to boost load-prediction accuracy through hyper-parameter tuning. Together,\nthese hybrids provide a more comprehensive and effective toolbox for power-load fore-\ncasting. Ref. [ 16] further constructs a high-performance system comprising a temporal\nconvolutional network, a BiLSTM-attention module and an improved marine predator\nalgorithm (ISSA-WFTS), effectively capturing nonlinear features and compensating for\nmodel deficiencies. Nevertheless, although these deep hybrid frameworks excel on public\ndatasets, their extensive parameter counts, heavy reliance on GPU resources and lim-\nited interpretability and generalization constrain practical deployment. For the highly\nvolatile, stochastic High energy-consuming Load profiles of industrial parks, they entail\nhigh training costs, significant deployment hurdles and a high risk of overfitting. There is\ntherefore a pressing need for decomposition–prediction schemes that remain structurally\nlean, computationally efficient and interpretable.\nBuilding on these insights, we propose a forecasting framework tailored for high\nenergy-consuming industrial parks, which integrates feature selection, hierarchical decom-\nposition, and hybrid deep learning. The contribution can be summarized as follows.\n(1) Feature refinement via nonlinear correlation analysis: Maximal Information Coeffi-\ncient (MIC) analysis is applied to identify input features that exhibit strong nonlinear\nassociations with the target load, enabling the removal of redundant variables and\nthe construction of a compact, information-rich input space.\n(2) Hierarchical multimodal decomposition: A two-stage decomposition scheme is\nemployed to reduce signal complexity. The raw load series is first processed using\nseasonal-trend decomposition via Loess (STL) to extract trend and periodic compo-\nnents, while the residual is further decomposed using variational mode decompo-\nsition (VMD) to capture multi-scale fluctuations. This hierarchical design enables\nmode-specific learning and enhances interpretability.\n(3) Parallel hybrid forecasting architecture: A dual-branch network is constructed by\ncombining a bidirectional gated recurrent unit (BiGRU) with an Informer model. Bi-\nGRU captures short-term dynamics and local variations, while the Informer leverages\nsparse attention to model long-range dependencies. Their complementary strengths\nenable the model to extract both fine-grained and global temporal features, improving\nprediction accuracy and robustness.\nAppl. Sci. 2025, 15, 9578 4 of 2",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Correlation Analysis and Hierarchical Modeling of High",
+      "level": 1,
+      "text": "Energy-Consuming Loads",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Correlation Analysis of Typical High Energy-Consuming Loads",
+      "level": 2,
+      "text": "In forecasting loads for typical high energy-consuming industrial parks, the raw\npower-load data are highly complex: the load evolution is jointly driven by heterogeneous,\nmulti-source factors—meteorological conditions, production schedules, process parameters\nand public holidays—and displays pronounced non-linearity, time lags and multi-scale cou-\npling [17]. In Figure 2, the data represent part of the high-energy consumption load during\nthe summer months (June–July) in a high-energy consumption park located in Northeast\nChina. The park includes various high energy-consuming industries, such as the electrolytic\naluminum industry, aluminum processing industry, and ferroalloy industry, among others,\nand exhibits extremely non-linear and stochastic behaviour. Feeding all candidate features\nindiscriminately into the model would inevitably introduce substantial redundant noise,\ndestabilise parameter estimation, reduce training efficiency and potentially obscure the true\neffects of key driving factors. Consequently, a systematic correlation analysis is imperative\nbefore model construction: by quantitatively assessing the statistical dependence between\ncandidate variables and the load, identifying optimal lags and diagnosing multicollinearity,\nthis analysis supplies verifiable screening criteria for feature engineering, ensuring that the\nmodel concentrates on information-dense and interpretable inputs and thereby enhancing\nthe accuracy, robustness and interpretability of high energy-consuming load forecasts.\nFigure 2. Summer Load of High Energy-Consuming Industry.\nTraditional linear correlation analyses are ill-suited to uncover the potential nonlinear\nassociations embedded in high energy-consuming load data; they fail to reveal the complex\ninter-variable dependencies and thereby constrain both rigorous feature selection and\nimprovements in model performance. A correlation-analysis tool capable of capturing\narbitrary forms of dependence is therefore urgently required. Accordingly, we adopt the\nmaximal information coefficient (MIC) [18] as the measure of feature relevance.\nMIC is based on information theory and can simultaneously capture both linear and\nnonlinear dependencies between variables. Compared to linear regression and Pearson\ncorrelation, MIC has a significant advantage in capturing complex data relationships.\nLinear regression assumes that there is a linear relationship between variables, while\nMIC can capture both linear and nonlinear relationships, adapting to more diverse data\npatterns. Pearson correlation can only measure linear relationships and is less sensitive to\nnonlinear ones, while MIC effectively identifies complex nonlinear dependencies, providing\na more comprehensive feature selection, reducing redundant information, and improving\nthe model’s prediction accuracy and robustness. The MIC is defined in Equation (1). A\nthreshold of 0.3 is adopted; any feature whose MIC with the load exceeds this value is\nAppl. Sci. 2025, 15, 9578 5 of 22\ndeemed to exert a significant influence and is incorporated into the multidimensional\ninput dataset.\nMIC (X, Y) = max\nG∈Gn,B\n\u0012 I∗(X, Y; G)\nlog(min(xB, yB))\n\u0013\n(1)\nHere, X and Y denote the two variables under investigation; Gn,B is the set of all\npossible two-dimensional grids; I∗(X, Y; G) represents the maximum mutual information\nattainable within a given grid G; xB, yB are the numbers of bins along the X and Y-axes,\nrespectively. The term log(min(xB, yB)) normalizes the maximal information coefficient\n(MIC), restricting it to the interval 0–1. In practice, the MIC increases from 0 (no asso-\nciation) to 1 (very strong association) as the strength of dependence between the two\nvariables grows.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Hierarchical Modeling of Typical High Energy-Consuming Loads",
+      "level": 2,
+      "text": "Power-load sequences in high energy-consuming industrial parks are driven by multi-\nple factors—production processes, meteorological variability and external policies—and\nexhibit pronounced multiscale, non-stationary and cross-frequency characteristics. Con-\nventional single-stage decomposition techniques cannot simultaneously extract long-term\ntrends, periodic variations and local high-frequency perturbations, thereby constraining the\nperformance of subsequent forecasting models. We therefore propose a hierarchical mod-\nelling strategy: seasonal-trend decomposition using Loess (STL) is first applied to isolate\ntrend and seasonal components, reducing data complexity; the residual series from STL is\nthen subjected to variational mode decomposition (VMD) to further refine high-frequency\nand non-stationary features. This approach effectively decouples load characteristics, sup-\nplies more discriminative inputs to the parallel forecasting architecture and consequently\nenhances both prediction accuracy and robustness.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2.1 STL Decomposition of High Energy-Consuming Loads",
+      "level": 3,
+      "text": "We preprocess the time series using the seasonal-trend decomposition (STL) method\nbased on locally weighted regression [ 19]. STL is a flexible, non-parametric technique\nrooted in locally weighted regression (LOESS) that decomposes yt into trend, seasonal and\nremainder components:\nyt = Tt + St + Rt (2)\nThe STL method effectively decomposes the seasonal and trend components without\nrelying on any prior assumptions regarding the shape of the trend or seasonality. High\nEnergy-Consuming Load data exhibit multiple periodicities and gradual trend changes,\nmaking STL’s non-parametric decomposition approach particularly suitable. STL can flexi-\nbly adapt to the complex patterns within the data, accurately separating the seasonal and\ntrend components, thus providing cleaner input data for subsequent VMD decomposition.\nIn this study, the seasonal period is set to 288, corresponding to a 3-day cycle (with each\ncycle consisting of 288 15-min time points), which captures the daily periodic fluctuations\nin the data. The seasonal window is set to 13, meaning that every 13 time points undergo\nseasonal smoothing, approximately equivalent to 3 h and 15 min, effectively smoothing\nshort-term seasonal fluctuations. The trend window is not explicitly set. When the trend\nwindow is not specified, STL automatically adjusts the smoothing of the long-term trend\nbased on the data’s characteristics. This adaptive trend smoothing method dynamically\nadjusts the smoothing level according to the long-term changes in the data.\nAppl. Sci. 2025, 15, 9578 6 of 22\nThe STL procedure proceeds as follows: the raw series is first subjected to a preliminary\nLOESS smoothing; the series is then partitioned by its seasonal period and each segment is\nsmoothed separately to obtain the seasonal component; after the seasonal term is removed,\nthe residual is smoothed again to extract the trend component. Nested inner and outer\niterations iteratively update the trend and seasonal terms until stable convergence is\nachieved. The decomposition results are shown in Figure 3.\nFigure 3. STL Decomposition Plot of Summer Load in High Energy-Consuming Industry.\nThe raw series is first preprocessed with STL to strip out explicit trend and seasonal\ncomponents; the resulting residuals are then fed into a hybrid model that couples VMD with\nInformer–BiGRU, enabling deeper exploitation of the series’ nonlinear and high-frequency\nfeatures and thereby boosting forecasting performance.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.2 VMD Decomposition Based on the Artificial Lemming Algorithm (ALA)",
+      "level": 3,
+      "text": "High energy-consuming power loads exhibit pronounced nonlinear behaviour. Al-\nthough STL decomposition lowers the complexity of the residual relative to the raw data,\nthe residual remains highly uncertain and therefore difficult to forecast. We thus further\ndecompose the STL residual with VMD, generating components that display clear periodic\ncharacteristics. The hierarchical forecasting model obtained in this way shows definite ad-\nvantages over a single-stage VMD approach, and experiments confirm that the hierarchical\nstrategy delivers markedly higher prediction accuracy.\nVariational mode decomposition (VMD) is a fully non-recursive, adaptive signal-\ndecomposition technique that effectively eliminates the mode-mixing encountered in tradi-\ntional modal-decomposition algorithms and is highly robust to noise, making it well suited\nto the load-decomposition requirements of high energy-consuming integrated-energy sys-\ntems. Without sacrificing the original signal characteristics, VMD decomposes the input\ninto several intrinsic mode functions (IMFs) with distinct centre frequencies; fundamentally,\nthe procedure amounts to formulating and solving a constrained variational optimisation\nproblem. The constrained variational model is expressed as follows:\nAppl. Sci. 2025, 15, 9578 7 of 22\n\n\n\nmin\n{uk},{ωk}\n\u001a K\n∑\nk=1\n\r\r∂t\n\u0002\nuk(t) · e−jωkt\u0003\r\r2\n2\n\u001b\ns.t.\nK\n∑\nk=1\nuk(t) = f (t)\n(3)\nIn this formulation, f (t) is the original signal to be decomposed, uk(t) is the k − th\nintrinsic mode function (IMF), and ωk is the center frequency corresponding to uk(t). The\nfactor e−jωkt is a complex-exponential modulator, so uk(t) · e−jωkt is the frequency-shifted\nversion of the k − th mode. The operator ∂t denotes temporal differentiation. The objective\nmin\n{uk},{ωk}\n\u001a K\n∑\nk=1\n\r\r∂t\n\u0002\nuk(t) · e−jωkt\u0003\r\r2\n2\n\u001b\nminimizes the total bandwidth across all modes, while\nthe reconstruction constraint\nK\n∑\nk=1\nuk(t) = f (t) ensures that the IMFs collectively reproduce\nthe original signal without loss.\nTo solve the variational problem, VMD introduces the Lagrange multiplierλ(t) and\nconstructs an augmented Lagrangian, thereby transforming the constrained optimisation\ninto an unconstrained one.\nL({uk}, {ωk}, λ) = α ·\nK\n∑\nk=1\n\r\r∂t\n\u0002\nuk(t) · e−jωkt\u0003\r\r2\n2\n+\n\r\r\r\r f (t) −\nK\n∑\nk=1\nuk(t)\n\r\r\r\r\n2\n2\n+\n\u001c\nλ(t), f (t) −\nk\n∑\nk=1\nuk(t)\n\u001d (4)\nIn variational mode decomposition, the penalty factor α limits the bandwidth conver-\ngence of each mode, whereas the number of modes K determines how many intrinsic mode\nfunctions can be extracted; selecting these parameters appropriately is crucial for obtaining\na high-quality decomposition. An excessively large α can induce mode mixing and mask\nsalient information, while an overly small α allows high-frequency noise to contaminate\nthe components, leading to redundant modes. Likewise, setting K too high tends to overfit\nnoise and increase signal complexity, whereas setting K too low leaves the useful signal\ninsufficiently decomposed.\nTo eliminate the uncertainty inherent in empirically selecting parameters, this study\nemploys the ALA algorithm to perform global collaborative optimization of the number\nof modes (K) and the quadratic penalty factor ( α), thereby ensuring a rational choice of\nVMD decomposition parameters; envelope entropy [20] is adopted as the evaluation metric.\nEnvelope entropy characterizes signal sparsity and is inversely related to periodicity: the\nclearer the signal’s periodicity, the lower its envelope-entropy value. Minimizing the mean\nenvelope entropy is therefore set as the optimization objective; a lower mean value indicates\nthat the corresponding IMF set possesses more pronounced periodic characteristics. Using\nthe IMF set with the strongest periodicity as the model input simplifies multidimensional\nload modelling and enhances forecasting accuracy. Accordingly, by taking mean enve-\nlope entropy as the objective function and jointly adjusting the VMD mode number and\nquadratic penalty factor, the periodic information in the load sequence is extracted to the\ngreatest extent, thereby improving decomposition quality. The procedure for calculating\nenvelope entropy is as follows:\nFirst, envelope extraction is performed via the Hilbert transform, which, for an input\nsignal x(t), is computed as follows:\nEnvelope (t) =| H{x(t)} | (5)\nAppl. Sci. 2025, 15, 9578 8 of 22\nThe envelope entropy is then calculated as follows:\nH(uk) = −\nN\n∑\ni=1\n|uk(i) |log |uk (i)| (6)\nwhere uk(i) denotes the envelope value of the k − th mode at the i − th time instant, and N\nis the length of the envelope sequence. The entropy value reflects the complexity of the\nsignal envelope—the higher the entropy, the more complex the signal.\nThe objective function based on minimizing the mean envelope entropy is expressed\nas follows: \n\n\nmin\nK,α\nJ(K, α) = 1\nK\nK\n∑\nk=1\nH(uk)\nKmin ≤ K ≤ Kmax\nαmin ≤ α ≤ αmax\n(7)\nwhere K and α denote the mode number and the quadratic penalty factor, respectively;\nKmin and Kmax are the minimum and maximum allowable values of K; and αmin and αmax\nare the minimum and maximum permissible values of α.\nGiven that high energy-consuming industrial loads typically display pronounced\nnon-linearity, frequent disturbances, indistinct periodicity, and substantial noise in their\ntime-series profiles, conventional optimisation algorithms often suffer from premature\nconvergence and a limited search space when selecting decomposition parameters for such\ndata, making it difficult to attain the global optimum. To overcome this challenge, we\nintroduce a novel optimisation technique that mimics the collective behaviour of lemmings—\nthe Artificial Lemming Algorithm (ALA).\nThe ALA algorithm can efficiently optimize multiple parameters in the VMD algorithm.\nIts unique mechanism, which simulates the collective behavior of lemming groups, provides\noutstanding global optimization ability and rapid local convergence in complex search\nspaces. Compared to the Grey Wolf Optimization (GWO) algorithm, ALA has stronger\nglobal optimization capability and the ability to avoid local optima, enabling a more\ncomprehensive exploration of complex solution spaces. Compared to the White Whale\nOptimization (WOA) algorithm, ALA performs better in balancing global search and local\nconvergence, effectively avoiding premature convergence while maintaining the depth\nof global search. Compared to Particle Swarm Optimization (PSO), ALA demonstrates\nstronger global exploration ability and faster convergence in high-dimensional complex\nproblems, making it particularly suitable for complex optimization tasks. Therefore, using\nthe ALA algorithm for VMD parameter optimization in this paper can significantly improve\nthe precision and accuracy of the STL residual component VMD decomposition, providing\na more reliable parameter optimization solution for deep feature extraction in high energy-\nconsuming load sequences. These pronounced advantages have been thoroughly validated\nin ref. [21].\nThe detailed implementation procedure of the ALA is as follows:\nData preprocessing: The original power-load data are imported; missing values are\nimputed by interpolation, while outliers are removed and replaced with the median, thereby\nproviding a clean input for subsequent variational mode decomposition (VMD).\nAppl. Sci. 2025, 15, 9578 9 of 22\nPopulation initialization: The VMD mode number and quadratic penalty factor are\nmapped into a continuous vector space, allowing the ALA to optimise these parameters.\nWithin the feasible domain, N lemmings are generated at random; in this study, the initial\npopulation size is set to N = 50.\nVMD decomposition: Each lemming’s current position serves as the parameter vector\nfor VMD, which decomposes the residual component of the STL series into multiple\nintrinsic mode functions (IMFs).\nFitness evaluation: For the obtained IMFs, the envelope entropy of each mode is\ncomputed, followed by the calculation of the mean envelope entropy.\nEnergy-coefficient calculation: The energy coefficient ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 Parallel Forecasting of High Energy-Consuming Loads Based on",
+      "level": 1,
+      "text": "Informer and BiGRU\nHigh energy-consuming load data are characterised by high dimensionality, complex\nfluctuations, and frequent dynamic changes; a single forecasting model generally fails to\ncapture long-term trends and short-term abrupt variations with equal accuracy, resulting\nin sub-optimal performance. To address this limitation, we propose a parallel forecasting\narchitecture that integrates an Informer with a bidirectional gated recurrent unit (BiGRU),\nas illustrated in Figure 6; two independent deep-learning branches operate concurrently to\nextract features from global long-range trends and local short-term fluctuations, respectively,\nthereby enabling accurate prediction of complex temporal load series.\nThe Informer, a Transformer architecture optimised specifically for long-sequence fore-\ncasting, introduces a probabilistic sparse self-attention mechanism that markedly reduces\nthe computational burden faced by conventional Transformers when processing lengthy\nsequences, thereby substantially increasing model efficiency. Moreover, its generative\ndecoder alleviates the information loss that can arise during long-horizon prediction and,\ntogether with global sparse self-attention and an adaptive-resolution mechanism, more\neffectively identifies and captures global features—such as long-term trends, seasonal fluc-\ntuations, and periodic variations—in load data, making the Informer particularly suitable\nfor analysing and forecasting complex global patterns in long sequences.\nAppl. Sci. 2025, 15, 9578 11 of 22\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 6. Parallel Forecasting Architecture Diagram.\nIn parallel, the BiGRU augments the standard GRU with a bidirectional information-\nprocessing mechanism, enabling it to learn features from sequence data in both past and\nfuture directions simultaneously. Compared with a unidirectional GRU, the BiGRU more\neffectively extracts local dynamic features and is more sensitive to short-term abrupt\nchanges and local details in load data. Furthermore, its architecture is more compact than\nthat of an LSTM, incurs lower computational overhead during training and inference,\nand converges more quickly, making it highly efficient for real-time forecasting scenarios.\nConsequently, the BiGRU excels at capturing the frequent short-term fluctuations, random\ndisturbances, and sudden events characteristic of power-load series, markedly enhancing\nthe model’s ability to predict local variation trends.\nAs depicted in Figure 7, once the Informer and BiGRU branches have independently\nextracted global and local features from the load data, a multilayer perceptron (MLP) is\nemployed to fuse the resulting feature representations. This fusion strategy achieves deep\nintegration and interaction of information, thereby further improving forecasting accuracy.\nSpecifically, the MLP effectively combines the Informer’s global-trend information with the\nBiGRU’s local-fluctuation cues to generate synergistic features that enhance the model’s\nunderstanding and handling of complex temporal data. By means of this feature-fusion\nscheme, the model simultaneously capitalises on the Informer’s strength in modelling\nlong-sequence global trends and the BiGRU’s aptitude for capturing short-term local\nvariations, comprehensively boosting both the accuracy and robustness of forecasts for\nhigh energy-consuming loads.\nFigure 7. Flowchart of Parallel Fusion Strategy.\nAppl. Sci. 2025, 15, 9578 12 of 22\nAdvantages of the parallel architecture: Its design mitigates the limitations that a single\nmodel may encounter when dealing with complex load data, thereby enhancing the overall\nstability and robustness of the forecasts. Because the Informer and BiGRU focus on global\nand local features of the data, respectively, the model can efficiently extract and integrate\ninformation across multiple temporal scales, making it particularly suitable for high energy-\nconsuming industrial settings, data centres, and other power-load forecasting tasks. This\nparallel structure not only improves predictive accuracy but also augments the model’s\nadaptability, enabling outstanding performance in volatile industrial environments.\nIn summary, to address the multi-dimensionality, pronounced volatility, and dynamic\nvariability of high energy-consuming load data, this study proposes a parallel forecasting\nmodel that integrates an Informer with a bidirectional gated recurrent unit (BiGRU). The\nInformer branch extracts global long-term trend features, whereas the BiGRU branch\ncaptures local short-term fluctuations; a multilayer perceptron (MLP) then fuses these\nrepresentations, achieving deep integration of global and local information. Compared\nwith conventional single-model approaches, the proposed parallel architecture concurrently\naccommodates trends and fluctuations across multiple time scales, markedly enhancing the\naccuracy, stability, and adaptability of forecasts for complex load data, and thus exhibits\nsubstantial application potential in high energy-consuming power-load prediction and\nrelated scenarios.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Construction of a Load Forecasting Framework for Typical Loads in",
+      "level": 1,
+      "text": "High Energy-Consuming Industrial Parks Based on Multimodal\nDecomposition and Hybrid Neural Networks\nAs illustrated in Figure 8, we propose a hierarchical modelling framework for fore-\ncasting high energy-consuming loads that fuses two deep-learning paradigms. The raw\nload data are first ingested and subjected to a two-stage hierarchical decomposition, fol-\nlowed by correlation analysis of the high energy-consuming load; the results are then\nprocessed through four parallel prediction-and-fusion modules to deliver highly accurate\nload forecasts. The detailed workflow is as follows:\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 8. Overall Framework Diagram of High Energy-Consuming Load Forecasting.\nAppl. Sci. 2025, 15, 9578 13 of 22\nFirst-stage hierarchical decomposition: The raw high energy-consuming load series\nis decomposed by seasonal-trend decomposition based on LOESS (STL), yielding three\ncomponents: a trend component, a seasonal component, and a residual component.\nSecond-stage hierarchical decomposition: The residual component obtained from\nthe STL decomposition is further analysed by variational mode decomposition (VMD);\nthe optimal mode number and quadratic penalty factor are determined via the Artificial\nLemming Algorithm (ALA), after which the residual is re-decomposed with VMD using\nthese optimised parameters.\nCorrelation analysis: The maximal information coefficient (MIC) is applied to evaluate\ncorrelations and isolate the factors driving fluctuations in high energy-consuming loads;\nthese explanatory variables are then supplied, alongside the load series itself, to the parallel\nforecasting framework.\nParallel forecasting: A BiGRU–Informer parallel architecture forecasts the load. The\nInformer branch captures global, long-term trends, whereas the BiGRU branch captures\nlocal, short-term fluctuations. Their respective feature representations are fused by a\nmultilayer perceptron (MLP), enabling deep integration of information and producing the\nfinal high-precision forecast.",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 Numerical Example and Simulation Analysis",
+      "level": 1,
+      "text": "To verify the effectiveness of the proposed model, we investigated a representative\nhigh energy-consuming load in an industrial park located in northeastern China. A case\nstudy was conducted using 35,040 historical load observations and the corresponding\nmeteorological data recorded from 16 April 2024 to 16 April 2025, with a sampling interval\nof 15 min. Because the region exhibits pronounced seasonal characteristics, separate load-\nforecasting experiments were performed for summer (June–July) and winter (December–\nJanuary). The datasets for each season were partitioned into training, validation and test\nsets in an 8:1:1 ratio; the training set was used to fit the model, the validation set to tune\nhyper-parameters and select the best model, and the test set to assess final performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "5.1 Data Preprocessing and Feature Input of High Energy-Consuming Loads",
+      "level": 2,
+      "text": "Outliers in the raw load data can severely compromise forecasting accuracy. Therefore,\nthe interquartile range (IQR) method was used to detect and remove outliers, and the\nmissing points were imputed with the mean of their adjacent samples.\nPotential factors correlated with the fluctuations of the high energy-consuming load\nwere quantified using the maximal information coefficient (MIC); the detailed results are\npresented in Figure 9.\nBecause the selected high energy-consuming integrated energy system is located in\nnortheastern China—where pronounced seasonal patterns lead to large temperature differ-\nences between winter and summer—its load is inevitably affected by ambient temperature.\nFigure 9 further confirms a strong association between the high energy-consuming load\nand temperature, with a correlation coefficient of ≈0.36. The same figure shows that the\ncorrelations between the load and both day type and weekday type are each ≈0.34. These\nresults indicate that the load is also strongly influenced by these two factors, indirectly\nsuggesting that it follows a distinct production rhythm. All three correlated factors are\nconsistent with the real-world operating characteristics of the high energy-consuming inte-\ngrated energy system. Consequently, temperature, day type and holiday type—identified\nby the MIC as the most influential factors—were incorporated as auxiliary features into the\nparallel load-forecasting architecture.\nAppl. Sci. 2025, 15, 9578 14 of 22\n1 0.16097 0.34023 0.25143 0.34232 0.25952 0.35949\n0.16097 1 0.01256 0.00777 0.01325 0.12936 0.47381\n0.34023 0.01256 1 0.58045 0.29903 0.36021 0.36335\n0.25143 0.00777 0.58045 1 0.84742 0.25473 0.1217\n0.34232 0.01325 0.29903 0.84742 1 0.19892 0.12266\n0.25952 0.12936 0.36021 0.25473 0.19892 1 0.16787\n0.35949 0.47381 0.36335 0.1217 0.12266 0.16787 1\nload \nmonth\nday\nweek\nweekday\nHumidity\nTemperature\nload \nmonth\nday\nweek\nweekday\nHumidity\nTemperature\n0.000\n0.2000\n0.4000\n0.6000\n0.8000\n1.000\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 9. Correlation Analysis Results Plot.",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5.2 Prediction Experiments and Evaluation Metrics for High Energy-Consuming Loads",
+      "level": 2,
+      "text": "To rigorously assess the predictive performance of the proposed model for high energy-\nconsuming loads, we carried out an ablation study in which the model was compared with\nVMD + Informer + BiGRU, VMD + BiGRU, BiGRU and GRU. For load decomposition,\nthe hierarchical modelling strategy of the proposed approach was benchmarked against\nVMD, STL, CEEMD and EMD decompositions. Thus, the accuracy, applicability and\neffectiveness of the proposed method were evaluated from both the forecasting-model and\ndecomposition-technique perspectives.\nTo rigorously evaluate the predictive capability of the proposed model, four per-\nformance metrics were employed: root mean square error (RMSE), mean absolute error\n(MAE), mean absolute percentage error (MAPE) and the coefficient of determination (R2).\nRMSE characterises the quadratic deviation between predicted and observed values; MAE\nquantifies the average absolute deviation of the predictions from the ground truth. MAPE\nemphasises the relative proportion of the error with respect to the actual value, thereby\ngauging the model’s scale-invariant accuracy across different magnitudes. R 2 denotes\nthe percentage of the total variance in the target variable that is explained by the model,\nserving as an indicator of goodness of fit. The mathematical expressions of these metrics\nare provided in Equations (8)–(11).\nRMSE =\ns\n1\nn\nn\n∑\ni=1\n(yi − ˆyi)2 (8)\nMAE = 1\nn\nn\n∑\ni=1\n|yi − ˆyi| (9)\nMAPE = 1\nn\nn\n∑\ni=1\n\f\f\f\f\nyi − ˆyi\nyi\n\f\f\f\f × 100% (10)\nR2 = 1 −\nn\n∑\ni=1\n(yi − ˆyi)2\nn\n∑\ni=1\n(yi − y)2\n(11)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates a year of power-load data from a representative high energy-consuming"
+    },
+    {
+      "id": "f2",
+      "caption": "Summer Load of High Energy-Consuming Industry."
+    },
+    {
+      "id": "f3",
+      "caption": "STL Decomposition Plot of Summer Load in High Energy-Consuming Industry."
+    },
+    {
+      "id": "f4",
+      "caption": "Flowchart of the Artificial Lemming Algorithm (ALA)."
+    },
+    {
+      "id": "f5",
+      "caption": "VMD Decomposition Plot of the Residual Component from STL."
+    },
+    {
+      "id": "f6",
+      "caption": "Parallel Forecasting Architecture Diagram."
+    },
+    {
+      "id": "f7",
+      "caption": "Flowchart of Parallel Fusion Strategy."
+    },
+    {
+      "id": "f8",
+      "caption": "Overall Framework Diagram of High Energy-Consuming Load Forecasting."
+    },
+    {
+      "id": "f9",
+      "caption": "further confirms a strong association between the high energy-consuming load"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

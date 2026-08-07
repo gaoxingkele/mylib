@@ -1,0 +1,359 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p6_nsga_bls_feasibility_review/p6_nsga_bls_feasibility_review__03__bi_objective_resilient_backbone_grid_planning_via_a_three_st__90d73ce782.pdf",
+  "n_pages": 26,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In the global low -carbon transition of power systems with high renewable energy \nintegration, pumped-storage has emerged as a core strategic resource for enhancing grid \nresilience, with global plans targeting capacity expansions of tens of gigawatts [1–3]. \nHowever, systematic planning challenges remain,  including disjointed site selection and \ntransmission-corridor planning, the lack of explicit quantification of the resilience value \nof pumped storage in black -start scenarios [4], and the coarse handling of hierarchical \nconstraints, including connectivity, N -1 connectivity, and power flow security. Current \nAcademic Editor: Antonio T.  \nAlexandridis \nReceived: 5 March 2026 \nRevised: 1 May 2026 \nAccepted: 4 June 2026 \nPublished: 10 June 2026 \nCopyright: © 2026 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and \nconditions of the Creative Commons \nAttribution (CC BY) license. \nEnergies 2026, 19, 2798 2 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nplanning methods face challenges in balancing computational efficiency with solution \nquality [5 ,6]. Therefore, developing a bi -objective resilient backbone -grid planning ap-\nproach that simultaneously integrates economic performance and system resilience, in-\ncorporates precise N-1 connectivity analysis, and fully exploits the pumped storage hub \neffect is of significant theoretical and engineering importance [7,8]. \nCurrent research on pumped-storage and backbone-grid-coordinated planning pri-\nmarily focuses on economic and technical feasibility, while paying insufficient attention \nto the resilience-support value of pumped-storage under extreme conditions [9,10]. Exist-\ning studies on resilience value modeling predominantly focus on the functional imple-\nmentation of pumped -storage equipment. Although resilience -support pathways for \npumped-storage systems have been discussed from  perspectives such as black-start con-\ntrol, emergency output regulation, and rapid load response, quantitative models that ex-\nplicitly characterize the contribution of pumped -storage units during post -fault system \nrecovery are still lacking . This results in insufficient support for differentiated resilience \nevaluation of planning schemes and complicates the accurate assessment of the unique \nresilience value of pumped -storage resources [11–13]. Regarding N -1 connectivity con-\nstraints, traditional methods have significant limitations: optimization approache s using \npenalty functions or slack coefficient meth ods for N -1 overload expectations are essen-\ntially soft constraint designs. These methods cannot strictly satisfy the rigid safety require-\nment of edge connectivity ≥2, and in complex network topologies, they tend to generate \nnumerous infeasible solutions, c onsuming excessive computational resources [14–16], \nthereby reducing planning efficiency. Meanwhile, few studies addressing rigid con-\nstraints encounter issues such as exponential computational complexity and convergence \ndifficulties, making them unsuitable for large -scale backbone-grid planning scenarios. In \ndeveloping evaluation metrics for planning, existing models primarily prioritize eco-\nnomic viability and resource compatibility. While current pumped -storage site selection \nframeworks incorporate multiple indicators, such as investment costs, output capacity \nalignment, and environmental benefits, they systematically exclude the resilience dimen-\nsion. This oversight leads to planning outcomes that fail to  adequately address both sys-\ntem resilience under extreme conditions and recovery efficiency [17–21]. The critical gap \nin this field lies in explicitly quantifying the resilience value of pumped storage, precisely \nsatisfying the stringent N-1 connectivity requirements, and fully integrating resilience as-\nsessment into planning models [22]. \nThis study addresses the identified research gaps by investigating both the planning \nmodel and intelligent optimization algorithm levels. At the model level, with pumped \nstorage serving as the core power source for system black start, the resilience evaluation \nsystem incorporates restoration -distance contribution and capacity -weighted between-\nness centrality . A dual -objective “economy-resilience” planning model is constructed, \nwith connectivity, N-1 connectivity (edge connectivity ≥ 2), and dual-scenario power flow \nsecurity of pumped-storage units as rigid constraints. At the algorithm level, a bi-objective \nthree-stage evolutionary algorithm, TER-NSGA-II, is proposed within the computational \nintelligence framework. The optimization process is divided into three phases: connectiv-\nity construction, N-1 connectivity reinforcement, and safety convergence. During the con-\nnectivity reinforcement phase, edge connectivity is precisely validated using the maxi-\nmum flow-minimum cut theorem. Simulation results from the IEEE  118-bus system, to-\ngether with extended validation on the IEEE 300 -bus system, demonstrate the effective-\nness of the proposed method in terms of optimization accuracy, solution-set quality, and \nengineering applicability. \nIt should be noted that this study adopts a deterministic modeling framework to rep-\nresent typical operating scenarios and does not explicitly account for renewable genera-\ntion variability or load uncertainty. Existing studies have shown that uncertainty can  \nEnergies 2026, 19, 2798 3 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nsignificantly affect the capacity configuration and operation results of power and inte-\ngrated energy systems [23,24]. In addition, DC power flow is employed to improve com-\nputational efficiency at the planning stage, while voltage magnitude constraints, reactive \npower effects, and network losses are not explicitly modeled. Therefore, the results of this \nstudy are more sui table for candidate backbone -grid screening at the planning stage ra-\nther than for detailed operational validation. These limitations are further discussed in the \nmodel description and conclusion sections, together with possible directions for future \nextension.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Resilient Backbone-Grid and Pumped-Storage Resilience Value",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 The Connotation and Construction Criteria of the Resilient Backbone Grid",
+      "level": 2,
+      "text": "In extreme disaster scenarios, a resilient backbone  grid is a core network structure \ndesigned to ensure continuous power supply to critical loads, formed by optimized trans-\nmission channels with topological redundancy and rapid recovery capabilities [2 5,26]. \nWhen pumped-storage systems are extensively integrated as black -start power sources, \nelevating them to “resilient cores,” their hub locations and bidirectional power support \ncapacities must be incorporated into planning [27]. \nThe resilient backbone-grid framework under study is defined as follows: given fixed \npumped-storage connection locations and capacities, the resilient backbone grid is con-\nstructed through optimized backbone-channel selection under hard constraints of connec-\ntivity, N-1 connectivity (edge connectivity ≥ 2), and dual-scenario pumped-storage power \nflow security, while resilience is quantified by recovery -distance contribution and capac-\nity-weighted betweenness centrality. The construction process follows four fundamental \nprinciples, which are systematically incorporated into the subsequent model: \na. Bidirectional power-carrying criterion: The grid structure must satisfy transmission \ncapacity constraints under both pumped-storage power generation and pumping op-\neration modes, ensuring bidirectional power flow security and balance.  \nb. N-1 connectivity criterion: At least two edge-disjoint paths must exist between core-\nload buses and pumped -storage black -start power sources, ensuring a minimum \nedge connectivity of two to maintain power supply continuity during single compo-\nnent failures. \nc. Power supply assurance criterion: It must cover all critical power buses, core -load \nbuses, and black-start buses (e.g., pumped-storage plants) to ensure physical connec-\ntivity of essential services under extreme conditions. \nd. Economic-resilience synergy principle: Under strict compliance with the aforemen-\ntioned safety hard constraints, grid planning should balance construction costs with \nresilience benefits, offering diversified solutions ranging from economic priority to \nsafety priority.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Technical Characteristics and Recovery Value of Pumped-Storage Plants",
+      "level": 2,
+      "text": "As a strategic resource for enhancing the safety and resilience of power systems, \npumped-storage plants feature bidirectional power flow ( generation and pumping ), mi-\nnute-level response capabilities, and black -start functionality [2 8]. For fixed -speed \npumped-storage units, the pumping power 𝑃𝑝𝑢𝑚𝑝  is typically represented at the rated \npower 𝑃𝑁 [29], whereas the generation power 𝑃𝑔𝑒𝑛 is allowed to vary within a practical \nrange of 50–100% of 𝑃𝑁 [30]. \n𝑃𝑝𝑢𝑚𝑝 = 𝑃𝑁 (1) \n0.5𝑃𝑁 ≤ 𝑃𝑔𝑒𝑛 ≤ 𝑃𝑁 (2) \nEnergies 2026, 19, 2798 4 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nThis study integrates pumped storage into the black-start power supply pool for con-\nnectivity and N -1 connectivity verification. Typically connected to critical grid sections, \nthese facilities exhibit high betweenness centrality at grid buses. Their strategic location \nenables efficient power distribution during system recovery. This hub value is quantified \nthrough recovery -distance contribution and capacity -weighted betweenness centrality , \nthereby incorporating the technical characteristics of pumped storage  into the resilience \nobjective and mapping them to system-level resilience gains.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Quantitative Index System for Grid Resilience Considering Pumped-",
+      "level": 1,
+      "text": "Storage Characteristics",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Quantitative Framework for Resilience Recovery",
+      "level": 2,
+      "text": "Grid resilience emphasizes maintaining critical services under extreme disturbances, \ndiffering from traditional reliability, with a focus on post-disturbance recovery speed and \ncontinuity of system functionality [31,32]. Existing studies have shown that power system \nresilience assessment usually needs to consider both structural and functional changes, \nsince a single performance perspective is insufficient to fully characterize the system state \nafter disturbances [33].  Similarly, comprehensive resilience as sessment frameworks also \nemphasize constructing integrated indicators from multiple dimensions to improve the \noverall characterization of system states [3 4]. This study focuses on post -disaster scenar-\nios, quantifying the backbone grid ’s power supply reconstruction capacity for core loads \nsupported by pumped-storage black-start systems. This capacity depends on two factors: \nfirst, the electrical accessibility of recovery paths, referring to the electrical distance be-\ntween core loads and black-start power sources; second, the hubness of pumped -storage \nnetworks, indicating their central role in the grid topology. By coupling recovery-distance \ncontribution with capacity-weighted betweenness centrality, this paper constructs a sys-\ntem resilience mismatch index (𝐹2), where lower values indicate better system resilience.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Contribution of Distance to Restoration",
+      "level": 2,
+      "text": "The recovery-distance contribution 𝐹2,dist quantifies the electrical cost required to re-\nstore power from a pumped-storage (black-start) bus to a core-load bus after a disturbance. \nA lower value indicates shorter recovery paths and faster restoration speeds. Existing \ncomplex-network resilience studies have shown that shortest paths and their aggregated \nforms can effectively characterize network accessibility and recovery capability [ 34]. The \ncalculation formula is: \n𝐹2,dist  =  \n1\n𝑇𝑛𝑜𝑟𝑚\n  ⋅  \n1\n|𝑉core|   ∑ min\n 𝑢 ∈ 𝑉𝑝𝑠ℎ\n𝑑𝑤(𝑣, 𝑢)𝑣 ∈ 𝑉core   (3) \nwhere |𝑉core| is the number of core -load buses;  𝑉𝑝𝑠ℎ is the set of black -start buses (i.e., \npumped-storage buses); 𝑇𝑛𝑜𝑟𝑚 is the normalization factor; and 𝑑𝑤(𝑣, 𝑢) is the weighted \nshortest path distance from a bus 𝑣 to a black-start bus 𝑢. \nThe weighted shortest path distance 𝑑𝑤(𝑣, 𝑢) is based on line reactance and includes \na capacity adjustment factor: \n𝑑𝑤(𝑣, 𝑢) = 𝑚𝑖𝑛𝑝∈𝑃(𝑣,𝑢) ∑ (𝑥𝑖 × 100 × 𝑘𝑖)𝑖∈𝑝   (4) \nwhere 𝑥𝑖 is the reactance of line 𝑖 on the path 𝑝, and the multiplier 100 is introduced as \na scaling factor to keep the resulting value within a reasonable optimization range. \nThe capacity adjustment factor 𝑘𝑖 is defined as: \n𝑘𝑖 = 1\n1 + 𝑆𝑖/1000 × 𝜉𝑖 (5) \nwhere 𝑆𝑖 denotes the rated capacity of line 𝑖, reflecting the engineering principle that a \nhigher-capacity line generally provides stronger power -transmission capability per unit \nEnergies 2026, 19, 2798 5 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nreactance. A special discount factor ξi is applied when a transmission line is directly con-\nnected to a pumped-storage bus, reflecting the greater recovery value of pumped-storage \nblack-start transmission channels due to their flexible and rapid response capability . Fi-\nnally, the normalization factor 𝑇𝑛𝑜𝑟𝑚 is defined as the maximum weighted shortest-path \ndistance from all pumped-storage buses in the original grid to the core-load buses, ensur-\ning that the resulting value falls within the range (0, 1).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Pumped-Storage Hub Effect",
+      "level": 2,
+      "text": "The pumped-storage hub effect quantifies the criticality of pumped -storage buses in \nthe network using capacity-weighted betweenness centrality, integrating both topological \ncentrality and available power capacity [35]. Buses that lie on a larger number of shortest \npaths tend to act as hubs in power transmission, and their strategic locations provide en-\nhanced support for post-disturbance recovery. Defined as: \n𝐵𝐶psh =\n∑ 𝐶𝑢𝑢 ∈ 𝑉𝑝𝑠ℎ ⋅𝐵𝐶(𝑢)\n∑ 𝐶𝑢𝑢 ∈ 𝑉𝑝𝑠ℎ\n  (6) \nwhere 𝐶𝑢 is the rated capacity (MW) of the 𝑢 -th pumped-storage bus and 𝐵𝐶(𝑢) is the \nbetweenness centrality  of the pumped -storage bus, calculated based on weighted dis-\ntance: \n𝐵𝐶(𝑢) = ∑ 𝜎𝑠𝑡(𝑢)\n𝜎𝑠𝑡𝑠≠𝑢≠𝑡   (7) \nwhere the metric consists of two components: the total number of shortest path routes 𝜎𝑠𝑡 \nbetween buses and the count of paths 𝜎𝑠𝑡(𝑢) traversing specific buses. Topological cen-\ntrality alone cannot capture actual support capacity. By capacity weighting, the system \nprovides a comprehensive evaluation of pumped -storage buses ’ hub status and opera-\ntional potential, effectively reflecting both the topological hub role and power support \ncapability of pumped-storage facilities.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.4 System Resilience Mismatch Index",
+      "level": 2,
+      "text": "The recovery distance factor and the pumped -storage hub effect factor are coupled \nthrough a product model. Similarly, comprehensive resilience assessment studies empha-\nsize the coordinated integration of structural and functional indicators to improve the \noverall characterization of system -state changes [33,34]. Accordingly, the system resili-\nence mismatch index is defined as: \n𝐹2 = 𝐹2,dist × (1 − 𝛼 ⋅ 𝐵𝐶psh) (8) \nwhere 𝛼 = 0.3 is the hub effect influence coefficient. A smaller value of 𝐹2 indicates a \nstronger ability of the system to maintain power supply to core loads after disturbances \nand therefore reflects better resilience. The product form reflects that restoration distance \nrepresents the baseline structural difficulty of post -disturbance recovery, whereas the \npumped-storage hub effect acts as a proportional correction term that captures the en-\nhancement introduced by topological centrality and available support capacity. \nThe hub effect influence coefficient 𝛼  is introduced to regulate the correction \nstrength of the pumped-storage hub effect on the restoration distance. In this study, 𝛼 is \nset to 0.3, which reflects the positive contribution of pumped -storage hub support to sys-\ntem recovery while avoiding over -amplification of a single topological attribute, thereby \npreserving engineering interpretability and numerical stability. \nSince both 𝐹2,dist and 𝐵𝐶psh are determined by the network topology, line parame-\nters, and pumped-storage capacities, they remain constant with respect to 𝛼 under a fixed \nbackbone-grid configuration. Therefore, the resilience mismatch index 𝐹2 = 𝐹2,dist × (1 −\n𝛼 ⋅ 𝐵𝐶psh)  is a linear function of 𝛼 . The first -order derivative is given by \n𝜕𝐹2\n𝜕𝛼 =\n−𝐹2,𝑑𝑖𝑠𝑡𝐵𝐶𝑝𝑠ℎ, indicating that increasing 𝛼 enhances the reduction effect of the hub term \nEnergies 2026, 19, 2798 6 of 26 \n \nhttps://doi.org/10.3390/en19122798 \non resilience mismatch. Moreover,  \n𝜕2𝐹2\n𝜕𝛼2 = 0, showing that no nonlinear amplification or \nabrupt variation is introduced by 𝛼. \nAdditional comparisons among alternative surrogate formulations, together with the \nsensitivity analysis of 𝛼, are provided in Appendix A. These supplementary analyses are \ndesigned to examine the local stability and engineering interpretability of the proposed \nindex under representative backbone configurations and typical disturbance scenarios, \nrather than to establish a strict global optimality proof for all parameter combinations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 Mathematical Model of the Backbone-Grid Structure",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.1 Decision Variables",
+      "level": 2,
+      "text": "Define the decision variable 𝑦𝑖 ∈ {0, 1}, which indicates whether candidate line 𝑖 is \nselected for the backbone grid. Let the set of candidate routes be denoted as 𝐸, and the \ndecision for each route is: \n𝑦𝑖 = {1, if the route is selected for the backbone grid\n0, if the route is not selected ∀𝑖 ∈ 𝐸 (9) \nwhere the decision vector is defined as 𝒀 = [𝑦1, 𝑦2, … , 𝑦|𝐸|]𝑇 . Within this framework, \n𝐿′ ={𝑖 ∈ 𝐸 ∣ 𝑦𝑖 = 1} represents the set of lines selected for the backbone network from the \noriginal candidate set 𝐸, and the resulting network topology is constructed accordingly.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 Multi-Objective Function",
+      "level": 2,
+      "text": "The backbone network framework adopts a bi -objective optimization model to bal-\nance economic performance  and resilience. The economic indicator is quantified using \nnormalized impedance to represent construction costs and transmission losses, formu-\nlated as: \n𝑚𝑖𝑛 𝐹1 (𝑦) =\n∑ 𝑧𝑖𝑖∈𝐸 ⋅𝑦𝑖\n𝑍𝑛𝑜𝑟𝑚\n  (10) \nwhere 𝑧𝑖 = √𝑟𝑖\n2 + 𝑥𝑖\n2 denotes the impedance modulus of line 𝑖, and 𝑍𝑛𝑜𝑟𝑚 is the normal-\nization factor set to three times the total impedance of the minimum spanning tree across \nthe network, which ensures that the value of 𝐹1 falls within a reasonable range and aligns \nwith the target magnitude of resilience. \nThe resilience target is represented by the system resilience mismatch index , ex-\npressed as: \n𝑚𝑖𝑛 𝐹2 (𝑦) = 𝐹2,dist(𝑦) × (1 − 𝛼 ⋅ 𝐵𝐶psh(𝑦)) (11) \nwhere 𝐹2,dist  is the recovery -distance factor defined as the weighted electrical distance \nfrom a core -load bus to a black -start bus , 𝐵𝐶psh denotes the weighted centrality of the \npumped-storage buses; and 𝛼 = 0.3 is the hub-effect coefficient controlling the discount \nintensity of the hub effect on resilience loss.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.3 Constraints",
+      "level": 2,
+      "text": "To ensure the engineering feasibility of the backbone grid, the following three cate-\ngories of hard constraints must be satisfied:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.3.1 Connectivity Constraint",
+      "level": 3,
+      "text": "The backbone grid must form a connected graph, with all critical buses belonging to \nthe same connected component. \n𝑉key ⊆ 𝑉(𝐶1), |𝐶| = 1 (12) \nwhere 𝑉𝑘𝑒𝑦 = 𝑉𝑏𝑠 ∪ 𝑉𝑐𝑜𝑟𝑒 ∪ 𝑉𝑖𝑚𝑝 represents the set of all critical buses (black -start buses, \ncore-load buses, and important power source buses), 𝑉(𝐶1) denotes the set of buses in the \nlargest connected component (or any connected component) of the network 𝐺(𝐿′) \nEnergies 2026, 19, 2798 7 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nformed by the selected transmission lines, and |𝐶| represents the total number of con-\nnected components in the network 𝐺(𝐿′).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.3.2 N-1 Connectivity Constraint",
+      "level": 3,
+      "text": "This constraint ensures power supply continuity under single-component failures. It \nrequires at least two edge-disjoint paths between core -load buses and pumped -storage \nbuses, with the edge connectivity satisfying: \n𝜆𝐺(𝐿′) (𝑣, 𝑢) ≥ 𝐾, ∀𝑣 ∈ 𝑉core, ∀𝑢 ∈ 𝑉psh (13) \nwhere 𝜆𝐺(𝐿′) (𝑣, 𝑢)  denotes the edge connectivity between bus 𝑣  and bus 𝑢  in graph \n𝐺(𝐿′), and 𝐾 = 2 is imposed to ensure that single -line faults do not affect the power \nsupply to core-load buses.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3.3 Power Flow Safety Constraints",
+      "level": 3,
+      "text": "The power flow safety constraints require the backbone grid to satisfy safe operating \nconditions under both power generation and pumping scenarios of pumped -storage \nunits. These constraints are evaluated using a DC power flow model and transformed into \ncontinuous risk indices to facilitate evolutionary search, as detailed below. \nIn system operation analysis, the DC power flow model is adopted to approximate \nactive-power flows on transmission lines. Owing to its simple formulation and computa-\ntional efficiency, DC power flow is widely used in planning and optimization studies of \nhigh-voltage transmission systems [3 6]; however, it does not explicitly model voltage \nmagnitudes, reactive power, or network losses, and therefore the results are more suitable \nfor planning -stage backbone -grid screening rather than detailed operational valida tion \n[37]. The relationship between bus active power injection and bus voltage phase angles \ncan be expressed as: \n𝑷 = 𝑩𝜽 (14) \nwhere 𝑷 is the vector of active power injected at buses, 𝑩 is the bus reactance matrix, \nand 𝜽 is the vector of bus voltage phase angles. For any transmission line 𝑙 connecting \nbuses 𝑚 and 𝑛, the active power flow is given by: \n𝑃𝑙 = 𝒃𝑙 ⋅ (𝜃𝑚 − 𝜃𝑛) (15) \n𝑏𝑖 = 1/𝑥𝑖 (16) \nwhere 𝑥𝑙 is the reactance of line 𝑙. \nTo ensure system operational safety, line power flows must not exceed their trans-\nmission capacities, and bus phase angle differences must be controlled within allowable \nranges: \n|𝑃𝑖| ≤ 𝑃̄𝑖, ∀𝑖 ∈ 𝐿′ (17) \n|𝜃𝑚 − 𝜃𝑛| ≤ 𝜃̄, ∀line i connecting nodes m, n (18) \nwhere 𝑃̄  is the upper limit of active transmission capacity for line 𝑖, and 𝜃̄ is the maxi-\nmum allowable bus phase angle difference. In optimization problems, directly handling \nthese inequality constraints often leads to a narrow feasible domain, which is not condu-\ncive to the efficient exploration of evolutionary algorithms. To this end, the hard con-\nstraints are transformed into continuous risk indices to quantify the degree of violation of \nsafety constraints by candidate solutions. \nThe line overload risk is defined as: \n𝑅line = 𝑚𝑎𝑥𝑙∈𝐿′ 𝑚𝑎𝑥 (0,\n|𝑃𝑙|−𝑃𝑙\n𝑚𝑎𝑥\n𝑃𝑙\n𝑚𝑎𝑥  )  (19) \nEnergies 2026, 19, 2798 8 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nThe phase angle limit violation risk is defined as: \n𝑅angle = 𝑚𝑎𝑥(𝑚,𝑛)∈𝐿′ 𝑚𝑎𝑥 (0,\n|𝜃𝑚−𝜃𝑛|−𝛥𝜃𝑚𝑎𝑥\n𝛥𝜃𝑚𝑎𝑥\n )  (20) \nThe total risk for a single operating scenario is the maximum of these two risks:  \n𝑅scenario = 𝑚𝑎𝑥( 𝑅line, 𝑅angle) (21) \nTwo typical operating scenarios are considered to comprehensively assess system \nsafety. In the generation scenario, the load is at 100% of its base value, and pumped -stor-\nage units operate at 50–100% of their rated capacity for power generation. The bus power \nbalance equation is: \n∑ 𝑃𝑖,conv\ngen\n𝑖∈𝐺conv + ∑ 𝑃𝑢,psh\ngen\n𝑢∈𝑉psh = ∑ 𝑃𝑘,load\nbase\n𝑘∈𝐿 × 1.0  (22) \nIn the pumping scenario, the load is at 70% of its base value, and pumped -storage \nunits operate at 100% of their rated capacity for pumping (with negative power). The bus \npower balance equation is: \n∑ 𝑃𝑖,conv\npump\n𝑖∈𝐺conv − ∑ 𝑃𝑢,psh\npump\n𝑢∈𝑉psh = ∑ 𝑃𝑘,load\nbase\n𝑘∈𝐿 × 0.7  (23) \nwhere 𝐺𝑐𝑜𝑛𝑣  represents the set of conventional generator buses, 𝑃𝑖,conv\ngen   is the output \npower of conventional generator 𝑖, 𝑉𝑝𝑠ℎ is the set of pumped -storage buses, 𝑃𝑢,psh\npump de-\nnotes the power generation and pumping power of pumped-storage unit 𝑢, and 𝑃𝑘,load\nbase  is \nthe base load at load bus 𝑘. The combined risk for the two scenarios is the maximum of \nthe total risks from each scenario: \n𝑅total = max( 𝑅pump, 𝑅gen) (24) \nThe final feasible solution must strictly satisfy all safety constraints, i.e., the combined \nrisk must be zero: \n𝑅total = 0 (25) \nThis risk index transforms hard constraints into continuous quantitative measures of \nconstraint violation, providing more refined guidance for the multi-objective evolutionary \nalgorithm and enabling the search process to  adjust its direction according to risk levels \nwhile gradually approaching feasible high-quality solutions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Integration of Three-Stage Framework and Graph-Theoretic",
+      "level": 1,
+      "text": "Validation in TER-NSGA-II Algorithm \nThe construction of the backbone grid is a high -dimensional, discrete, and highly \nconstrained multi-objective combinatorial optimization problem. Traditional mathemati-\ncal programming methods are limited by combinatorial explosion and nonlinear con-\nstraints, making them inefficient for solving such problems. The standard NSGA-II algo-\nrithm performs well in general multi-objective optimization due to its elite retention, fast \nnon-dominated sorting, and crowding distance mechanism [38]. However, it exhibits in-\nsufficient constraint handling capabilities when applied to engineering problems with \nstrong constraints [39]. Firstly, the randomness of crossover and mutation often generates \ninfeasible solutions that violate connectivity and N -1 connectivity constraints, and reli-\nance on penalty functions severely reduces optimization efficiency. Secondly, it lacks pre-\ncise quantification and evolutionary guidance for N -1 connectivity. Finally, it is prone to \nlocal optima and has difficulty maintaining population diversity, and its fixed elite-selec-\ntion mechanism cannot meet the incremental needs of hierarchical constraints [40]. To ad-\ndress these issues, this paper proposes a three-stage evolutionary reverse-learning NSGA-\nII (TER-NSGA-II), which integrates a three -stage framework and graph -theoretic valida-\ntion. \nEnergies 2026, 19, 2798 9 of 26 \n \nhttps://doi.org/10.3390/en19122798",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.1 Three-Stage Iteration and Elite Selection Integrated Framework",
+      "level": 2,
+      "text": "The total number of iterations 𝑇𝑚𝑎𝑥 is divided into three stages to match the engi-\nneering logic of “first connectivity, then redundancy, and finally safety”:  \na. Stage I (Connectivity Construction): Prioritize retaining individuals with the lowest \nconstraint violation values, rapidly converging toward the feasible domain.  \nb. Stage II (N-1 Connectivity Reinforcement): This stage balances N-1 connectivity and \nthe system resilience mismatch index 𝐹2, giving individuals that satisfy N-1 connec-\ntivity a selection advantage. Those that do not satisfy the constraint are identified for \nreinforcement through the minimum cut set, and such edges are favored in genetic \noperations. \nc. Stage III (Convergence and Safety Optimization): Once the population  has largely \nsatisfied all hard constraints, the focus shifts to objective optimization and the reten-\ntion of Pareto-front individuals. \nThe top 5 elite individuals from each generation directly enter the next generation, \nensuring the stable transmission of high-quality solutions. \nTo enhance the interpretability of the staged search process and the transferability of \nparameter settings, the three parameters 𝑇1, 𝑇2, and 𝑇𝑟𝑒𝑣𝑒𝑟𝑠𝑒 are defined as the switching \ngenerations between Stage I and Stage II, between Stage II and Stage III, and the triggering \ninterval of periodic reverse learning, respectively. These parameters jointly determine \nhow search effort is allocated across the diff erent stages. Considering their scale depend-\nence on the total number of generations, an automatic configuration procedure based on \nirace is adopted in the case study section to determine their final values [41].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.2 Hierarchical Constraint Screening Strategy",
+      "level": 2,
+      "text": "Rather than relying on the conventional “generate-repair” mode, hard constraints are \ntransformed into dynamic selection pressures: \na. Connectivity Handling: Quickly determine connectivity based on graph theory \nsearch, using “main-component anchoring + incremental component connection” re-\npairs, with a preference for low-cost lines. \nb. N-1 Connectivity Assessment: Abstract the network as a unit -capacity undirected \ngraph, with core loads as sources and pumped-storage as sinks, calculating edge con-\nnectivity using the max -flow min-cut theorem to identify key reinforcement edges \nthat guide evolution. \nc. Power Flow Safety Check: In Stage III, individuals that meet connectivity and N -1 \nconnectivity constraints undergo dual -scenario DC power flow calculations. A uni-\nfied assessment is performed using dual-scenario (generation/pumping) risk indices \n𝑅total, with only individuals meeting safety standards retained. The risk indices pro-\nvide a continuous search gradient, thereby avoiding the “cliff effect” caused by bi-\nnary feasibility judgments.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5.3 Periodic Reverse Learning Mechanism",
+      "level": 2,
+      "text": "To further enhance the global search capability of TER-NSGA-II in discrete backbone-\ngrid planning problems, a periodic reverse learning mechanism is introduced. The core \nidea is that, after several generations of evolution, part of the population may become \nclustered within a limited search region. If only conventional crossover and mutation op-\nerators are applied, the search process tends to remain confined to the current neighbor-\nhood, leading to reduced population diversity and an increased risk of premature conver-\ngence. Therefore, reverse learning is triggered every 𝑇𝑟𝑒𝑣𝑒𝑟𝑠𝑒 generations. By constructing \nreverse individuals with complementary line -selection patterns relative to the original \nEnergies 2026, 19, 2798 10 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nsolutions, the search space is actively expanded, providing additional candidate solutions \nfor subsequent environmental selection. \nFor any individual, its chromosome is defined as the binary decision vector 𝒀 in (9), \nwhere 𝑦𝑖 = 1 indicates that candidate line i is selected into the backbone grid, and 𝑦𝑖 = 0 \notherwise. Reverse learning is implemented by performing a bitwise inversion on this bi-\nnary structure. Given an original individual 𝒀, its reverse individual is defined as 𝒀 =\n𝟏 − 𝒀, i.e., 𝑦𝑖̅ = 1 − 𝑦𝑖. This operation implies that the lines retained in the original solu-\ntion are preferentially removed in the reversed solution, while the unselected lines are \nactivated. As a result, the reverse individual is able to escape from the local structural \npattern of the original solution and generate a new topology significantly different from \nthe current population. \nAs illustrated in Figure 1, a simplified example is used to demonstrate the structural \ntransformation of a reverse chromosome before and after connectivity repair. Since a fea-\nsible solution must ensure that key nodes are connected to the backbone grid, consider an \nindividual with chromosome 𝒀, where selected candidate lines form a topology that sat-\nisfies the key-node connectivity requirement. After applying bitwise inversion, the reverse \nchromosome 𝒀 is obtained. Due to the drastic change in line combinations, the reversed \ntopology may violate connectivity constraints, potentially resulting in network disconnec-\ntion or isolation of key nodes. Therefore, it cannot directly participate in environmental \nselection. \nTo address this issue, a connectivity repair procedure is first applied to the reversed \nindividual. By adding necessary critical lines, the network is restored to a connected state. \nLet the repaired individual be denoted as  𝒀𝑟𝑒𝑝, whose corresponding topology satisfies \nthe connectivity requirement and can proceed to subsequent selection.  \nIt should be noted that connectivity repair is only the first step for reintroducing re-\nverse individuals into the candidate solution set. Based on the current evolutionary stage, \nadditional constraint handling is performed. Specifically, in Stage II, furth er reinforce-\nment of N-1 connectivity is conducted, while in Stage III, dual -scenario power flow secu-\nrity constraints are evaluated. In other words, reverse learning introduces complementary \nsearch directions rather than directly producing feasible solutions. Its effectiveness lies in \nthe combined process of “reverse generation + constraint repair + environmental selec-\ntion,” which introduces structurally diverse yet potentially feasible candidate solutions \ninto the population. \nFrom a procedural perspective, the periodic reverse learning mechanism can be sum-\nmarized into five steps: \na. Reverse learning is triggered when the current generation satisfies 𝑡 𝑚𝑜𝑑 𝑇reverse = 0; \nb. Each individual in the population undergoes bitwise inversion to generate reverse \nchromosomes; \nc. Connectivity repair is first applied, followed by stage -dependent constraint han-\ndling; \nd. The repaired reverse individuals are merged with the original population and off-\nspring solutions to form an expanded candidate set; \ne. Non-dominated sorting, crowding distance calculation, and elite preservation are \nperformed to select individuals for the next generation. \nTherefore, periodic reverse learning is not a simple random perturbation, but a mech-\nanism that constructs complementary search directions based on existing high-quality so-\nlutions. Through constraint repair and environmental selection, only promising solutions \nare retained. This mechanism expands the search space while maintaining solution qual-\nity, effectively reducing the risk of stagnation in local optima without disrupting the over-\nall evolutionary framework of TER-NSGA-II. \nEnergies 2026, 19, 2798 11 of 26 \n \nhttps://doi.org/10.3390/en19122798 \n \nFigure 1. Illustration of reverse learning and connectivity repair. The circled numbers denote node \nindices, and the red lines indicate the active lines after connectivity repair.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5.4 Complete Solution Process of the TER-NSGA-II Algorithm",
+      "level": 2,
+      "text": "Based on the above improvement strategies, the complete solution process of the \nTER-NSGA-II algorithm is illustrated in Figure 2. The specific steps are as follows: \n\nEnergies 2026, 19, 2798 12 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nStart\nInitialization\nInput grid parameters & candidate \nset E\nRandomly generate initial \npopulation\nInitial Evaluation & Feasibility \nCheck\nConnectivity repair & constraint \npreprocessing\nStage Determination & \nHierarchical Constraint \nHandling\nExecute corresponding strategy by \ncurrent generation t\nGenetic Operations\nGenerate offspring population\nReverse Chromosome \nGeneration & Repair\nConnectivity + N-1 connectivity \ndual repair\nMerge\nExpand offspring population\nStage-Matched Constraint \nRepair\nRe-feasibility check by current \nstage\nEnvironmental Selection\nNon-dominated sorting + crowding \ndistance\nElite retention for next generation Greedy Post-Processing of \nPareto Front\nRemove redundant lines under F2​ \nthreshold\nEnd\nReverse Learning?\nreversemod T 0t =\nObjective Recalculation\nEconomic indicator F1 & resilience \ndeviation F2\nTermination \nCriterion Met?\nmaxtT\nYes\nYes\nNo\nNo\n \nFigure 2. Overall solution process of the TER-NSGA-II algorithm. \na. Input and Initialization: Input the original grid parameters and candidate line set 𝐸, \ninitialize the genetic parameters, and randomly generate the initial binary population \n𝑃0. \nb. Initial Evaluation: Calculate the economic objective 𝐹1 and the system resilience mis-\nmatch index 𝐹2 , and perform connectivity repair and constraint preprocessing to \nachieve initial feasibility. \nc. Stage Determination and Hierarchical Constraint Handling: Determine the current \nstage based on the current generation 𝑡 and execute the corresponding hierarchical \nconstraint strategy. \nd. Genetic Operations: Generate the offspring population 𝑄𝑡  through binary tourna-\nment selection, mask crossover, and bit-flip mutation. \ne. Trigger Reverse Learning: If 𝑡  𝑚𝑜𝑑 𝑇reverse = 0, generate reverse chromosomes and \nrepair connectivity and N-1 connectivity, then merge and expand the offspring pop-\nulation to 𝑄𝑡′; otherwise, set 𝑄𝑡′ = 𝑄𝑡. \nf. Constraint Repair and Objective Recalculation: Execute stage-matched constraint re-\npair on 𝑄𝑡′, and recalculate 𝐹1 and 𝐹2. \nEnergies 2026, 19, 2798 13 of 26 \n \nhttps://doi.org/10.3390/en19122798 \ng. Environmental Selection: Merge 𝑄𝑡′  with the parent population 𝑃𝑡 , perform non-\ndominated sorting and crowding distance calculation, and select the top 𝑀 individ-\nuals to form the next generation 𝑃𝑡+1. \nh. Termination Check: If 𝑡 ≥ 𝑇𝑚𝑎𝑥, proceed to Step 9; otherwise, set 𝑡 = 𝑡 + 1 and re-\nturn to Step 3. \ni. Post-processing and Output: Perform greedy post-processing on the Pareto front so-\nlution set. Under the condition that the change in the resilience index does not exceed \na preset threshold, redundant lines are removed one by one while checking con-\nstraint satisfaction, and the final Pareto-optimal solution set for the backbone grid is \nthen output.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.5 Theoretical Performance Analysis of the Algorithm",
+      "level": 2,
+      "text": "The three-stage iterative framework activates constraints in layers, encouraging the \npopulation to gradually satisfy stricter engineering requirements and improving the fea-\nsible-domain search tendency.  Let the proportion of individuals in the 𝑡-th generation \nsatisfying the stage 𝑠 constraint be denoted as 𝑝𝑠(𝑡). Stage I only requires connectivity \nconstraints, so its feasible solution space ℱ1 is much larger than that of Stage II (ℱ2, which \nrequires N-1 connectivity), and Stage III has the smallest feasible solution space ℱ3(which \nadditionally requires power flow safety). Since the elite selection strategy preferentially \nretains individuals with low constraint violation values, and repair operations are guided \nin each generation, the following tendency can be expected: \n𝑝1(𝑡 + 1) ≥ 𝑝1(𝑡), 𝑝2(𝑡 + 1) ≥ 𝑝2(𝑡) (26) \nWhen switching between stages, the feasible solutions accumulated in the previous \nstage provide a high -quality initial population for the next stage, so the overall feasible -\nsolution probability is expected to improve as the evolutionary process proceeds.  In the \nIEEE 118-bus experiments, TER -NSGA-II achieved a 100.00% feasible -run rate across all \nindependent runs, whereas NSGA -II achieved only 48.11%. This result is consistent with \nthe above theoretical analysis. \nThe main computational cost of TER -NSGA-II comes from non -dominated sorting, \nconstraint validation, and reverse learning. Let the population size be 𝑀, the maximum \nnumber of generations be 𝑇𝑚𝑎𝑥, and the number of candidate lines be 𝐻(𝐻 = |𝐸|). The \ntime complexity of non-dominated sorting is 𝑂(𝑀2), and connectivity and N-1 connectiv-\nity validation for each pair of core -load and pumped-storage buses requires the Dinic al-\ngorithm, which has a complexity of 𝑂(𝑚𝑖𝑛( 𝑉2/3, 𝐻1/2)𝐸). Given that in the IEEE 118-bus \nsystem, only 10 bus pairs need to be calculated, this part is actually much less time -con-\nsuming than non-dominated sorting. Therefore, the total time complexity is 𝑂(𝑇𝑚𝑎𝑥𝑀2 +\n𝑇𝑚𝑎𝑥𝑀𝐻), which is higher than the standard NSGA-II’s 𝑂(𝑇𝑚𝑎𝑥𝑀2), but due to the signif-\nicant improvement in feasible solution rates, the algorithm avoids a large amount of re-\ndundant search. Under the same number of iterations, the probability of obtaining feasible \nhigh-quality solutions is therefore improved relative to that of traditional methods.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6 Case Studies and Numerical Validation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "6.1 Test Systems and Experimental Settings",
+      "level": 2,
+      "text": "The IEEE 118 -bus system is employed as the main test system  to validate the pro-\nposed planning approach.  The system configuration includes core generation buses \n(Buses 10, 69, 80, and 89), core -load buses (Buses 11, 16, 20, 29, and 50), and PSH units \nused as black-start resources (Buses 63 and 64, each with 240 MW).  The planning model \nis subject to the N -1 connectivity constraint, which strictly requires an edge connectivity \nof 𝜆 ≥ 2 between critical load centers and black -start units, together with dual -scenario \nsteady-state security requirements. \nEnergies 2026, 19, 2798 14 of 26 \n \nhttps://doi.org/10.3390/en19122798 \nTo further examine the scalability of the proposed method, an additional IEEE 300 -\nbus system is used for extended validation under the same modeling framework. This \nextended case is intended to assess the applicability of the proposed method to larger -\nscale networks and to examine whether the algorithm can maintain acceptable optimiza-\ntion performance as network size increases. \nFor TER-NSGA-II, the population size is set to 50 and the maximum number of gen-\nerations is set to 200 in the IEEE 118-bus case. The stage-related parameters are determined \nthrough the irace-based tuning procedure described in Section 6.2, and the final con figu-\nration is set to 𝑇1 = 77, 𝑇2 = 115, and 𝑇reverse = 49. \nTo evaluate the effectiveness of the proposed framework, NSGA-II and the more re-\ncent reference-point-based algorithm NSGA -III/NG are adopted as benchmark methods \n[42]. All compared algorithms use the same decision encoding, population size, termina-\ntion criterion, network data, and constraint -evaluation criteria, so that the comparison is \nconducted under a unified problem definition and a consistent feasible-domain criterion.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6.2 Parameter Tuning and Configuration of TER-NSGA-II",
+      "level": 2,
+      "text": "To avoid relying entirely on empirical parameter settings, the key stage -related pa-\nrameters of TER -NSGA-II are tuned using irace, an automatic algorithm -configuration \nprocedure. Since 𝑇1, 𝑇2, and 𝑇reverse are all scale-dependent with respect to the total num-\nber of generations 𝐺, they are first rewritten in normalized ratio form as 𝑝1 = 𝑇1/𝐺, 𝑝2 =\n𝑇2/𝐺, and 𝑝𝑟 = 𝑇reverse/𝐺. This ratio-based formulation allows the tuned configuration to \nbetter reflect the relative allocation of search effort across the three evolutionary stages.  \nDuring the tuning process, two aspects are considered simultaneously: the ability to \ngenerate feasible solutions under strong constraints and the overall bi-objective optimiza-\ntion performance. Several representative candidate configurations are screened and com-\npared. As summarized in Table 1, the Baseline corresponds to the original empirical set-\nting, whereas Candidate A, Candidate B, and Candidate C are representative configura-\ntions selected during the automatic tuning process. Although some candidates ach ieve \nlower scalarized tuning costs, they may still exhibit high zero-cost frequency, small feasi-\nble-solution-set size, or unstable performance across repeated runs. Therefore, the final \nparameter setting is selected not only according to the mean tuning cost, but also accord-\ning to feasible-solution generation capability and run-to-run stability. \nTable 1. Comparison of irace candidate parameter configurations. \nConfiguration 𝒑𝟏 𝒑𝟐 𝒑𝒓 Mean Cost Std Feasible Count Zero-Cost \nBaseline 0.30 0.60 0.10 0.4077 0.1073 6.2 0 \nCandidate A 0.25 0.70 0.15 0.0344 0.0770 4.2 4 \nCandidate B 0.217 0.518 0.203 200,005 447,225 7.6 0 \nCandidate C 0.387 0.577 0.247 0.2232 0.1070 10.4 0 \nAs shown in Table 1, Candidate A achieves the lowest mean cost, but it has a rela-\ntively high zero -cost frequency and a lower average feasible count, indicating possible \nsolution-set degeneration or an overly small feasible solution set in some runs. Candidate \nB exhibits abnormally large mean cost and standard deviation, suggesting unstable per-\nformance. By contrast, Candidate C does not yield the lowest mean cost, but its zero -cost \nfrequency is zero and its feasible count is the highest among the compared configurations. \nTherefore, Candidate C provides the best overall balance between feasible-solution acqui-\nsition, optimization performance, and robustness. Accordingly, in the formal experiments \nwith G = 200, the final stage parameters are set to T1 = 77, T2 = 115, and Treverse = 49. \nThis configuration implies that the early search effort is primarily allocated to feasible \nconnectivity construction, followed by N -1 connectivity reinforcement, and finally by",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Illustration of reverse learning and connectivity repair. The circled numbers denote node"
+    },
+    {
+      "id": "f2",
+      "caption": "Overall solution process of the TER-NSGA-II algorithm."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of irace candidate parameter configurations."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

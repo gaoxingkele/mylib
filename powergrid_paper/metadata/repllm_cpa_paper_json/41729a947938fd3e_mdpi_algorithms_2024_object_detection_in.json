@@ -1,0 +1,387 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2024__object_detection_in_autonomous_vehicles_under_adverse_weathe__ef0d95c419.pdf",
+  "n_pages": 36,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 School of Computer Science and Technology, Guangdong University of Technology,",
+      "level": 1,
+      "text": "Guangzhou 510006, China; junhong.chen@uhasselt.be\n4 Expertise Centre for Digital Media, Flanders Make, Hasselt University, 3500 Hasselt, Belgium\n* Correspondence: zpzhang@csu.edu.cn (Z.Z.); asimpk@gdut.edu.cn or masim@psu.edu.sa (M.A.)\n† These authors contributed equally to this work.\nAbstract: Enhancing the environmental perception of autonomous vehicles (AVs) in intelligent\ntransportation systems requires computer vision technology to be effective in detecting objects and\nobstacles, particularly in adverse weather conditions. Adverse weather circumstances present serious\ndifficulties for object-detecting systems, which are essential to contemporary safety procedures, infras-\ntructure for monitoring, and intelligent transportation. AVs primarily depend on image processing\nalgorithms that utilize a wide range of onboard visual sensors for guidance and decisionmaking.\nEnsuring the consistent identification of critical elements such as vehicles, pedestrians, and road lanes,\neven in adverse weather, is a paramount objective. This paper not only provides a comprehensive\nreview of the literature on object detection (OD) under adverse weather conditions but also delves\ninto the ever-evolving realm of the architecture of AVs, challenges for automated vehicles in adverse\nweather, the basic structure of OD, and explores the landscape of traditional and deep learning\n(DL) approaches for OD within the realm of AVs. These approaches are essential for advancing\nthe capabilities of AVs in recognizing and responding to objects in their surroundings. This paper\nfurther investigates previous research that has employed both traditional and DL methodologies for\nthe detection of vehicles, pedestrians, and road lanes, effectively linking these approaches with the\nevolving field of AVs. Moreover, this paper offers an in-depth analysis of the datasets commonly\nemployed in AV research, with a specific focus on the detection of key elements in various environ-\nmental conditions, and then summarizes the evaluation matrix. We expect that this review paper will\nhelp scholars to gain a better understanding of this area of research.\nKeywords: intelligent transportation system; autonomous vehicles; object detection; deep learning;\ntraditional approaches",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The World Health Organization (WHO) releases statistics each year on the number\nof people who have been hurt in traffic accidents. Around 1.3 million people worldwide\ndie each year, and 20 to 50 million suffer serious injuries [ 1], with young males under\n25 constituting the majority, 73%, of fatal traffic accidents. Extensive research on the wor-\nrying prevalence of traffic fatalities has led to the development of upgraded intelligent\ntransportation systems (ITS) with expanded capabilities. The cutting-edge of contem-\nporary automotive technology is represented by automated driving systems (ADS) and\nAlgorithms 2024, 17, 103. https://doi.org/10.3390/a17030103 https://www.mdpi.com/journal/algorithms\nAlgorithms 2024, 17, 103 2 of 36\nautonomous vehicles (AVs). AVs, especially self-driving cars, have generated a great deal\nof interest in the fields of intelligent transportation, computer vision, and artificial intel-\nligence [2]. No other invention since the creation of vehicles has had such a dramatic\nimpact on the automotive industry as self-driving vehicles. As per the forecasts presented\nin Figure 1 [ 3], the market for self-driving cars is expected to grow from 23.80 million\nunits in 2022 to 80.43 million units by 2032. These vehicles primarily rely on cameras\nand sensors, and examples include LiDAR (light detection and ranging), radar, ultrasonic,\netc., which have a number of autonomous features, including reduced use of fuel, cutting\ncarbon dioxide emissions by up to 10%, decreased traffic congestion [4], decreased road\naccidents, and utilizing roads more efficiently to optimize the transportation system. AVs\ncan assist in managing and studying traffic by gathering effective and valuable traffic\ndata. Along with other road-related capabilities, they are capable of recognizing static\nand non-static objects such as vehicles, pedestrians, and road lanes. Object detection (OD)\nis critical for AVs as it ensures safety by identifying and avoiding moving obstacles in\ntheir path. Numerous research works have investigated methods for identifying objects\nin AVs, broadly divided into manual, semi-automated, and fully automated systems [5],\nas shown in Figure 2. Roadside artifacts are visually assessed by human inspectors using\nmanual procedures; nonetheless, subjectivity and labor intensity are drawbacks. While\nsemi-automated methods gather data from moving cars and process them afterward, they\nare still labor-intensive [6]. High-resolution cameras and sensors on cars record pictures\nand videos in completely autonomous systems. Software-based models that have been\ntrained to detect objects evaluate the data either after they have been collected or in real\ntime. These techniques seek to solve safety problems while improving the precision and\neffectiveness of item identification on roadways and streets. Vehicle-based surveillance is a\nwidely used technique since it is a quick and efficient way to examine objects. However,\nit has always been difficult for autonomous programs to identify objects under adverse\nweather conditions such as rain, fog, snow, haze, storms, and low lighting effects.\n0.00 \n8.10 \n16.20 \n24.30 \n32.40 \n40.50 \n48.60 \n56.70 \n64.80 \n72.90 \n81.00 \n2022 2023 2024 2025 2026 2027 2028 2029 2030 2031 2032\n$23.8\n$26.78\n$30.15\n$33.98\n$38.33\n$43.27\n$48.9\n$55.3\n$62.6\n$70.93\n$80.43\nFigure 1. The global self-driving cars market size 2022–2032 in USD Million [3].\nThe weather has a number of negative consequences for mobility and traffic. Pre-\ncipitation is recorded roughly 11.0% of the time worldwide on average [7]. Studies have\nunequivocally shown that, in comparison to typical weather, rainfall can cause a 70%\nincrease in the likelihood of accidents [8]. Moreover, snowfall occurs in 77% of the countries\nworldwide. For example, according to US national data, annually, 24% of vehicle accidents\nrelated to weather conditions take place on slippery, snowy, slushy, or icy roads, while\n15% occur when snow is actively falling or mixed with sleet [9], highlighting the real risks\nassociated with snowy weather. Visibility is greatly reduced by environmental variables\nsuch as fog, haze, sandstorms, and strong sunlight, which presents real difficulties for\ndrivers [10].\nAlgorithms 2024, 17, 103 3 of 36\nManual Semi \nAutomated\nFully \nAutomated\nObject Detection Strategies\nFigure 2. Object identification strategies.\nTraditional and deep learning (DL) algorithms are crucial for enhancing OD in au-\ntonomous vehicles, especially in adverse weather. While traditional AI, based on statistical\nlearning, has been foundational, it faces limitations due to manual feature engineering\nand limited adaptability to dynamic environments, requiring extensive retraining and\nhindering its effectiveness in real-time applications.\nDL offers a powerful alternative to traditional machine learning methods for OD\nin AVs, addressing the limitations of manual feature engineering and adaptability in\ndynamic environments. DL’s multi-layer neural networks automatically extract features\nand learn from data, providing a more flexible and adaptable solution that enhances the\nperformance of surveillance systems, self-driving vehicles, and smart city applications [11].\nDL’s neural network-based approach is particularly adept at handling complex models that\ntraditional techniques cannot [12]. In AV object detection, hybrid models combining one-\nstage and two-stage detectors are effective, with two-stage models focusing on accuracy\nand one-stage models on speed, although the reasons for the latter’s lower accuracy are\nnot fully understood.\nThe research significance of this paper lies in its comprehensive analysis of the chal-\nlenges and advancements in OD for AVs in adverse weather conditions. It provides a\ncritical review of both traditional and DL approaches, offering insights into the limitations\nand potential improvements of the current detection algorithms. The paper contributes to\nthe broader field of intelligent transportation systems by emphasizing the need for robust\nand reliable detection systems that can operate effectively in a variety of weather scenarios,\nwhich is crucial for the safe deployment of AVs in real-world conditions. Building on this\nsignificance, this paper also contributes to the discussion regarding AV architecture and\nchallenges in adverse weather, and reviews the literature on detecting pedestrians, vehicles,\nand road lanes using traditional and DL methods. It also summarizes common evaluation\nmetrics for OD. In this paper, we contribute to the field by examining the fundamental\narchitecture of AVs and the specific challenges they face in adverse weather conditions. We\nhave compiled comprehensive datasets, leveraging real-world statistics from LiDAR and\ncamera sensors, to provide a robust foundation for our analysis. We detail the core structure\nof OD systems and elucidate both traditional and DL methodologies for AVs. Building\nupon these approaches, we provide a critical review of the existing literature, focusing\non the detection of three primary objects—pedestrians, vehicles, and road lanes—under\nchallenging weather conditions. The structure of this paper is shown in Figure 3.\nAlgorithms 2024, 17, 103 4 of 36\nO\nR\nG\nA\nN\nI\nZ\nA\nT\nI\nO\nN\nSection 1",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Introduction",
+      "level": 1,
+      "text": "Section 2  \nRelatedSurvey\nSection 3  \nOverviewof AVs\nSection 5\nOverviewof  \nTraditional /  \nDLApproaches\nSection 4\nOverview of OD\nSensor\nT echnologies\nActuators\nPerception\nPlanningand  \nControl\nChall engesfor  \nA Vsunder \nAdverse \nweather\nVehicle \nDetection\nPedestrian  \nDetection\nRoad Lane  \nDetection\nSection 6\nPrevious work in \nOD\nSection 7\nDiscussion /\nLimitation/ Future\nWork\nSection 8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "Conclusion",
+      "level": 1,
+      "text": "Figure 3. Paper organization, where OD = object detection.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Related Survey Papers",
+      "level": 1,
+      "text": "This section critically evaluates the existing literature on autonomous vehicle (AV)\nsensor performance under challenging weather conditions, with a focus on the integration\nof traditional and DL detection techniques. One study [ 13] presents an in-depth analy-\nsis of the impact of inclement weather on AV sensors, particularly the attenuation and\nbackscatter effects on millimeter-wave radar in heavy rain. Despite the study’s novel mod-\neling approach, it does not comprehensively address the multifaceted challenges posed\nby other weather phenomena, such as fog and snowfall, which is crucial for a holistic\nsensor performance evaluation. Research [ 14] offers a comprehensive review of sensor\nperformance in adverse weather conditions, emphasizing the importance of sensor fusion\nfor improved vehicle perception. However, the study’s focus on range and resolution does\nnot fully explore the nuanced challenges of object classification and sensor reliability in cold\nweather conditions, which is critical for AV operation. The study in [15] aims to develop a\nrobust operational system for AVs in various weather conditions, advocating for sensor\nfusion and infrastructure support. Yet, the study’s discussion on sensor reliability does not\nadequately address the practical considerations of sensor installation costs and benefits,\nwhich are significant factors in the practical implementation of AV technology. The study\nin [16] investigates the effects of adverse weather on LiDAR and camera lenses in AVs,\nsuggesting improvements in sensor hardware and the application of sophisticated machine\nlearning methods. While the study’s focus on sensor fusion and network infrastructure\nis commendable, it does not provide a comprehensive evaluation of these technologies\nacross different weather conditions. The research in [17] emphasizes the role of weather\nrecognition and categorization systems in AV decisionmaking, focusing on the detection\nof road lanes, vehicles, and pedestrians. While the study provides valuable insights, it ac-\nAlgorithms 2024, 17, 103 5 of 36\nknowledges that detecting smaller, obscured, or partially visible objects remains a challenge,\nindicating a need for further research in this area. The study in [ 18] serves as a tutorial\non advanced techniques addressing the impact of rainy conditions on AV object detection.\nThe study evaluates the performance of detection methods under clear and rainy scenarios,\nhighlighting the efficacy of deraining methods, DL-based domain adaptation, and image\ntranslation frameworks. However, it does not comprehensively address the limitations of\nthese methods in other adverse weather conditions. The study in [ 19] examines vehicle\ndetection approaches in video-based traffic surveillance, highlighting the challenges posed\nby dim illumination, variable weather, occlusion, and shadows. The study’s exploration\nof traditional approaches is valuable, but it does not fully integrate the advancements\nin DL methods for improved detection. Other [ 20] research focuses on DL methods for\ndetecting on-road vehicles, providing a valuable list of works. However, the study’s limited\nscope does not encompass the full range of challenges faced by AVs in adverse weather\nconditions. Another paper [ 21] exclusively examines 3D methods for vehicle detection,\noffering insights into a specific detection approach. Yet, the study’s narrow focus does\nnot address the broader context of AVs and their performance under various weather\nconditions.\nIn summary, while the surveyed literature provides a valuable foundation for un-\nderstanding AV sensor technologies and detection techniques, there is a critical gap in\nthe holistic examination of both traditional and DL approaches under adverse weather\nconditions. This survey paper focuses on traditional approaches, deep learning approaches,\nand their applications in object detection in AVs under adverse weather conditions. Fur-\nthermore, we have detailed our literature review methodology, which involves a systematic\nsearch across reputable digital repositories such as Springer Link, Elsevier, IEEE, MDPI, and\nWiley Online Library. We utilized targeted keywords to identify relevant research articles\nand focused on studies published in peer-reviewed journals and international conferences\nfrom 2001 to 2023. This approach ensured a comprehensive and high-quality selection of\nliterature for our review.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 An overview of A Vs",
+      "level": 1,
+      "text": "The Society of Automotive Engineers (SAE) has established a classification system\nthat divides Autonomous Driving Systems (ADS) into six levels of automation, ranging\nfrom Level 0 (No Automation) to Level 5 (Full Automation), as illustrated in Figure 4 [22].\nThis system is pivotal in understanding the evolution of autonomous vehicles (AVs), which\nare equipped with advanced sensors and software to navigate independently, thereby en-\nhancing safety technologies and autonomy. Such a progression necessitates a collaborative\neffort among scientists and engineers across various disciplines to address the complex\nchallenges associated with AV development [23]. The SAE automation levels provide a\nstandardized framework that is critical for evaluating the capabilities and limitations of\nAVs at different stages of their development. By categorizing AVs into these distinct levels,\nit becomes possible to systematically assess the technological advancements and hurdles\nencountered at each level. This structured approach is instrumental in setting realistic\nexpectations about AV performance, shaping regulatory frameworks, and educating the\npublic on the operational capabilities of AVs under various scenarios. Thus, the classifi-\ncation of AVs according to SAE levels is essential for advancing the field of autonomous\ndriving, guiding its regulatory landscape, and informing societal understanding of these\nemerging technologies.\nAlgorithms 2024, 17, 103 6 of 36\nAutomated\ncapabilities, such as\nstandard steering and\nacceleration, are\nintegrated, yet the\ndriver retains control\nand must oversee the\nremainder of the\ndriving task.\nWith automatic \nstee ring, braking,  \nAnd acceleration, the \nvehicle can operate \nindependently, but the\ndriver\nhas to be ready for \nhanding over .\nThe vehicle is driver-\ncontrolled,\nwith ce rtain functions  \nlike braking capable\nof being automatedby\nthe vehicle.\nUnder specific \nconditions, the \nvehicle is capable\nof  performing all\ndriving\nfunctions, but the\ndriver always has the\nchoice to take\ncontrol.\nThe vehicle operates  \nentirely \nautonomously, \nundertaking all \ndriving tasks without\nany nee d  for\nhuman attention or\ninteraction.\nFull manual control,\nwhere the driver is\nresponsible\nfor executing all\ndriving tasks.\nNo Automation Driver\nAssistance\nPartial\nAutomation\nConditional\nAutomation\nHigh\nAutomation Full Automation\nLevel 0 Level 1 Level 2 Level 3 Level 4 Level 5\nFigure 4. SAE automation levels for AVs.\nInitially, in the 1920s, AVs were referred to as “phantom autos” due to their lack of a\nhuman driver, relying on remote control [24]. Significant advancements in AV technology\nemerged in the 1980s, notably with Pomerleau’s “Autonomous Land Vehicle in a Neural\nNetwork” project [25]. This project demonstrated the potential of neural networks to signif-\nicantly enhance autonomous navigation systems. The Defense Advanced Research Projects\nAgency (DARPA) initiated the inaugural Grand Challenge in 2004 with the primary aim\nof stimulating research and the advancement of AVs. Subsequent to the 2004 challenge,\nDARPA hosted additional grand challenge events in 2005 and 2007, famously recognized\nas the Urban Challenge [ 25]. Developments in recent times have resulted in the global\nimplementation of AVs. Some manufacturers have achieved Level 4 SAE standard [ 26]\nautonomy through the use of LiDAR technology. Google started secretly building its first\nAV in 2009, and, on May 1, 2012, in Las Vegas, they successfully completed their first\nautonomous driving test [27]. The UK government launched a competition in 2014 with\nthe goal of encouraging and developing AVs [28]. The Mcity driverless shuttle project was\nstarted recently by the University of Michigan. It is the first Level 4 automated shuttle\nproject in the US [29]. However, due to safety considerations, AVs cannot operate in severe\nrain or snow. Although testing and research have been carried out in inclement weather,\nproblems such as the persistent usage of windshield wipers may result in an operational\nstoppage. Low temperatures impacted charging during the night and limited daily operat-\ning hours for the Sohjoa Baltic Project [30]. Tesla’s autopilot works well in mild rain and\nsnow and has obvious lane markers, but it struggles in inclement weather [31]. Regulation\n(EU) 2019/2144 was introduced by the European Parliament and Council in 2019. This was\nthe first time that guidelines pertaining to automated and fully autonomous vehicles had\nbeen established [32]. When Waymo (formerly Google’s self-driving division, rebranded\nas Waymo in 2016) announced that their “Waymo Driver” had successfully completed\n20 million self-driven miles and carried out simulations that equated to 15 billion miles, it\nmarked an important turning point in the growth of AVs [33]. While researchers are striving\nto develop sensors for different weather scenarios, thorough studies that address every\nfacet are still absent. The AVs use environment-sensing skills to function with the least\namount of human interaction [34]. Using an autonomous driving framework, the weather\nhas a significant impact on the data obtained from car sensors and the general state of the\nsurroundings. Adverse weather conditions create obstacles to object identification, moni-\ntoring, and localization, necessitating modifications to control and planning techniques.\nFurthermore, the efficiency of the vehicle can be directly impacted by meteorological factors\nlike wind, general weather, and road conditions.\nThis interaction results in an ongoing cycle whereby changes in the environment and\nvehicle states impact one another, highlighting the weather’s crucial role in autonomous\ndriving. Figure 5 shows the architecture of AVs.\nAlgorithms 2024, 17, 103 7 of 36\nSensors\nActuators\nHardware S/w Modules \nPerception\nPlanning\nControl\nStatic & non static \nobjects\nExternal\nV2V , V2I, VLC, V2X\nExternal Factors\nWeather\nforecasts\nAutonomous Car\nFigure 5. An architecture of AVs.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Sensor Technologies",
+      "level": 2,
+      "text": "In the pursuit of improving OD in inclement weather, selecting the right sensor\ntechnologies is essential to guaranteeing precise and dependable results. Unpredictable\nnatural events, like adverse weather, might have an impact on the operating environment\nof AVs. These changes in the surrounding environment bring about differences in how\nAV sensor systems, which are the fundamental parts of ADS, operate. The main sensory\nelements used in AVs for perception are described in the section that follows, and the\ncomparison of sensors is shown in Table 1.\nTable 1. Comparison of sensors [35].\nSensors Advantages Disadvantages\nLiDAR High resolution Long range Wide FOV Sensitive to weather Expensive\nRadar Long range Detection of velocity\nSuitable for all types of weather Low resolution Very sensitive\nCamera High resolution Detection of colors Sensitive to weather Sensitive to lighting\nUltrasonic Non-InvasiveReal-time feedback Low resolution Expensive",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1.1 LiDAR",
+      "level": 3,
+      "text": "LiDAR is considered the primary perceptive sensor in the self-driving car industry.\nEven though 3D-LiDAR has only been used in automobiles for slightly over ten years, it has\nalready been shown to be crucial to the development of AVs and ADS [36]. Its exceptional\nability to measure things precisely and its resilience to changing lighting conditions high-\nlight how vital it is. Critical features of 3D scanning using lasers include its form aspect,\naffordability, tolerance to external variables, measuring range, precision, pinpoint density,\nscanning acceleration, configurational versatility, and spectral qualities [37]. These sensors\nwork well in a range of weather conditions by using laser beams to measure distances and\nproduce accurate 3D point clouds. However, there could be problems when there is a great\ndeal of rain, snow, or fog since laser beams can disperse and potentially skew the data.\nOlder types, such as the Velodyne HDL64-S2 [38], continue to function better in dense fog,\nwhile the performance of more modern laser scanners decreases. While making manual\nmodifications can increase performance, it is still difficult to perceive reliably in deep fog.\nFor this reason, alternative technologies, including gated imaging, should be considered\nfor better performance in adverse conditions [39].\nAlgorithms 2024, 17, 103 8 of 36",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1.2 Radar",
+      "level": 3,
+      "text": "The fundamental components of ADS and self-driving automobiles are automotive\nradars and a variety of additional sensors. The successful use of these technical advances\ndepends on complex systems with long signal-processing chains that link the radars and\nsensors to the controller. The vital tasks of identifying objects and obstructions, pinpointing\ntheir exact location, and evaluating their relative speed in relation to the vehicle fall to\nautomotive radar equipment. Advances in millimeter-wave (mm-wave) semiconductor\ntechnology, along with the development of signal processing techniques, form the basis\nfor the progress of car radar systems. A variety of signal processing methods have been\ndeveloped to improve resolution and reliability in a range of measuring parameters, includ-\ning target velocities in the vicinity, azimuth elevation perspectives, and the radius of the\nvehicle [40]. Frequency Modulated Continuous Wave radar, or FMCW radar, modifies the\nbroadcast signal’s frequency continually at a predetermined pace. By measuring the gap\nbetween the sent and reflecting signals, which is inversely related to the amount of time\nrequired for the electrical signal to make its way to and from the object being targeted, we\ncan determine the range due to this modulation of frequency. FMCW radar has excellent\naccuracy and range resolution, as well as speed measurement features, which make it\nespecially useful for autonomous driving applications [41].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1.3 Ultrasonic",
+      "level": 3,
+      "text": "One typical vehicle sensor that is frequently left out of discussions regarding ADS\nis the ultrasonic sensor. Despite this error, it is positioned strategically on the vehicle’s\nbumpers and throughout its body, making it indispensable for parking assistance and\nblind spot surveillance. Surprisingly, ultrasonic sensors have proven to be dependable and\nreasonably priced over a long period of time, which makes them a useful sensor choice [42].\nThe frequency range of ultrasound sounds, which are audible only to humans, is normally\nbetween 30 and 480 kHz. In the field of ultrasonic sensing, the frequency range that is most\nfrequently utilized is between 40 and 70 kHz. The resolution and sensor range are highly\ndependent on the selected frequency. Longer sensing ranges are correlated with the lower\nones. For example, the measuring range is up to 11 m, and the accuracy is one centimeter\n(cm) at the commonly used frequency of 58 kHz. Conversely, higher frequencies such as\n300 kHz provide amazing resolution, maybe down to one millimeter, but at the penalty of\na shorter range, capped at about 30 cm [43]. Ultrasonic sensors are useful for close-quarters\napplications like parking because their normal operating range is 11 m [44]. However, they\ncan be used in autonomous driving; for example, Tesla’s “summon” capability can be used\nto navigate garage doors and parking lots [45].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1.4 Camera",
+      "level": 3,
+      "text": "As the eyes and storytellers of automobiles, cameras are essential components of ADS.\nThey are a crucial component of ADS, capturing the dynamic story of the surroundings,\neven though they are technologically more advanced than LiDAR. Installed on Windows,\ndashcams record continuously and have made a substantial contribution to the initial ADS\ndatasets. Fisheye-lens professional camera setups nowadays increase the volume of data\nthat may be collected. On the other hand, adverse weather can cause visual problems for\ncameras due to rain, snow, and fog. In low light, specialized cameras improve visibility,\nsuch as night vision versions. The potential to overcome weather-related constraints in\nsensor fusion methods through the integration of these cameras is encouraging. The\nfunction of cameras will change further as autonomous driving technology develops,\ninfluencing sensor technologies and how they interact with the outside world. In summary,\ncameras are the storytellers of autonomous cars; they are sensitive to bad weather yet\nversatile enough to be essential to safer autonomous systems.\nAlgorithms 2024, 17, 103 9 of 36",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Actuators",
+      "level": 2,
+      "text": "AVs use data from the planning stage to carry out the vehicle’s motions in the control\nstage. This entails giving actuators instructions for steering, braking, accelerating, and\nsignaling. A drive-by-wire method is frequently used to transmit commands effectively.\nThe control system is in charge of creating and monitoring trajectories, making sure that\nintended routes are taken. Methods for generating trajectory include sensor-based, which\nis appropriate for robotics, and dynamics-based, which is more appropriate for vehicles.\nThe majority of the time, trajectory tracking uses geometrical or model-based techniques.\nAlthough they have limits and only react to errors as they happen [ 46], feedback con-\ntrollers like the proportional-integral-derivative (PID) are employed to prevent deviations\nfrom intended trajectories. Two-degree independent controllers combine feedforward and\nfeedback controllers to circumvent these restrictions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.3 Perception",
+      "level": 2,
+      "text": "To highlight the importance of perception for AVs, it is important to emphasize how\nit helps the AV determine its location and its surroundings. In order to extract road fea-\ntures, detect objects, anticipate their behavior, and carry out Simultaneous Localization and\nMapping (SLAM) activities, the perception module uses data from sensors and commu-\nnication equipment [47]. For detecting the surroundings, a variety of active and passive\nsensors, such as cameras, LIDAR, and RADAR, can be employed; each has advantages\nand disadvantages of its own, as shown in Table 1. Emphasized are the benefits and\ndrawbacks of various sensors, illustrating the compromises made in terms of resolution,\nweather sensitivity, and accuracy. One way to overcome the limits of individual sensors\nis to introduce sensor fusion, a technique that combines data from several sensors. There\nare two main types of AV systems discussed: one is sensor fusion, which uses various\nsensors such as LIDAR, RADAR, and cameras, and the other is pure vision, which uses\ncameras and computer vision algorithms. It is mentioned that a pure vision-based system\nhas advantages like affordability and simplicity of implementation. In the parts that follow,\nthis research concentrates on the benefits of a pure vision-based method [48].",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.4 Planning and Control",
+      "level": 2,
+      "text": "Global route planning and local path planning are the two main planning challenges\nin autonomous driving. When given an origin and destination, the global planner’s job\nis to come up with possible road options and routes. Local path planning, on the other\nhand, concentrates on carrying out the chosen path without running into obstructions or\nbreaking any traffic laws. Other modules, such as OD, which guarantees safe navigation,\nfrequently supplement this role. Further details regarding motion planning can be found\nin [49] for a more thorough explanation. Like traditional cars, steering, throttle, and brake\ninputs are the main controls for AVs [50]. These inputs control the AV’s direction, speed,\nand acceleration, which in turn control its driving, under the supervision of the ADS\nmainframe’s judgments based on sensor data and analysis. Low-level safety precautions\ncan also be put in place using sensors like sonar and electrical control units. ADS sensors\nare challenged by weather conditions, which interfere with perception functions and have\nan impact on detection, planning, and control, among other factors. Weather factors like\nwind and variations in the road surface have an immediate effect on the vehicle and its\nstate, in addition to sensor-related problems. Environmental state changes result from these\nstate changes, which also have an impact on other nearby cars and sensor operations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.5 Challenges for AVs in Adverse Weather",
+      "level": 2,
+      "text": "Automation parts up to Level 3 have been added by automakers, and they rely on\nsensors and cameras. These devices function best in optimal conditions; thus, unfavorable\nweather presents obstacles. Weather has a major impact on AV performance, regardless of\nwhether it is road-related or generic. A few of these effects are shown in Figure 6, and these\nare explained in more detail below.\nAlgorithms 2024, 17, 103 10 of 36\nSensor performance\nGeneral Weather Road Weather\nThe sensor \ndetection range \nmight be affected \nby persistent rain \nor snow.\nSnow cover \nlane markers \nhave an impact \non LiDAR \nperformance. \nCameras performance\nGeneral Weather Road Weather\nThe cameras can't \nidentify obstacles \nin dense snow or \nfog. \nA detecting \nerror might \narise from ice \nreflection. \nCommunication \nGeneral Weather Road Weather\nThunderstorms \nmay interfere \nwith \ncommunication \nSnow, slush, or \nroad debris can \nharm vehicle \ncomm devices, \nresulting in link \ndisruption.\nDriver behavior \nGeneral Weather Road Weather\nDecreased \nvisibility impacts \nthe speed of \nconventional \nvehicle drivers.\nA longer \nstopping \ndistance is \nrequired in icy \nconditions. \nT echnical parameters \nGeneral Weather Road Weather\nSlow down when \nit's foggy outside. \nExtended \nheadways are \nnecessary in \nfoggy scenarios.\nFigure 6. Weather impacts on AVs.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.5.1 Performance of Sensors",
+      "level": 3,
+      "text": "Adverse weather conditions on roads provide serious difficulties for sensors in AVs.\nThe current sensing technologies, including LiDAR and cameras, perform well in clear\nweather but have trouble when the roadway is covered with snow and may contain\nerroneous reflections caused by rain or snow, making it difficult to discern between different\nobjects [13]. Even though forward radar is good at spotting large objects and piercing\nthrough weather, it cannot improve safety applications on its own. In snowy circumstances,\nultrasonic detectors may set off false alarms, and glare and surface reflection are just two\nexamples of weather-related variables that might affect sensor accuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.5.2 Performance of Cameras",
+      "level": 3,
+      "text": "While camera systems are crucial for applications involving driverless vehicles, unfa-\nvorable weather conditions such as fog, intense rain, snow, and dust reduce their effective-\nness. Although sophisticated techniques for image processing try to solve these problems,\naccuracy and dependability issues still exist, which presents significant obstacles to the\nadvancement of autonomous driving [51]. In the right circumstances, glare can potentially\naffect functionality. However, these systems may be able to identify hazardous weather\nconditions immediately.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.5.3 Technical Parameters of the Vehicle",
+      "level": 3,
+      "text": "Adverse weather affects a vehicle’s functioning factors. Slow speeds and longer fol-\nlowing distances are necessary for safety due to decreased road friction and slick conditions.\nAs was previously mentioned, during bad weather, driver behavior can also have a parallel\nimpact on vehicle operating parameters.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.5.4 Behavior of Driver",
+      "level": 3,
+      "text": "Driver conduct is still crucial once AVs are deployed, particularly in situations with\nmixed traffic. In order to ensure operational safety, AV applications need to take into\naccount the existence of other drivers and environmental elements. These factors include\ndriver-state surveillance and the ability to react to different weather conditions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.5.5 V2V , V2I, and VLC Communications",
+      "level": 3,
+      "text": "The influence of meteorological conditions on network latency can sometimes prevent\nvehicle-to-vehicle (V2V) and vehicle-to-infrastructure (V2I) communications from connect-\ning in a direct line of sight. For safety applications, minimal latency is essential. While\nradio-based communications are less impacted by snow, they are nevertheless susceptible\nAlgorithms 2024, 17, 103 11 of 36\nto problems like solar flares and thunderstorms. Communication interruptions can result\nfrom bad weather such as fog, heavy rain, snow, and hail obstructing the visible light\ncommunication (VLC) line of sight.\nThe process of OD in AVs unfolds in several key steps, beginning with the collection\nof image data by the sensor system. Following this, a Region of Interest (ROI) or regional\nproposal strategy is employed, marking a critical phase in object tracking. This approach is\ncommonly utilized in devices such as cameras and stereoscopic systems, where ROIs serve\nas the foundational elements for tracking objects. The subsequent step involves the use of\nclassifiers to meticulously analyze and refine shapes, edges, and lines. This analysis aids in\nthe classification of targets and their identification based on human categories, embedding\nthese ROIs within the image for object recognition.\nVarious techniques, including sliding windows, Locally De-correlated Channel Fea-\ntures (LDCF), and constrained searches, are applied to locate ROIs efficiently. The extraction\nof features from these ROIs represents the third stage of the process. At this juncture, ei-\nther DL-based methods or traditional manual OD algorithms can be employed for the\nextraction and classification of features. While manual feature extraction techniques can\nbe advantageous for models that rely on lower-level features by facilitating manual ROI\nsuggestions [52], their efficacy diminishes when dealing with complex features, rendering\nthem less reliable. However, to derive useful and relevant data from video or photographs\nusing a computing device, a great deal of computation has to be completed [53]. In contrast,\nDL methodologies enable systems to autonomously learn feature representations, thereby\nenhancing the accuracy and adaptability of feature extraction in dynamic and complex\ndriving environments.\nThe evolution of research on OD in bad weather depends heavily on datasets. They\nact as the building blocks for creating, refining, and testing algorithms and models. In this\npart, we are going to discuss a few of the datasets that are frequently utilized in this field\nof study. One of the most often used benchmarks for autonomous driving research is the\nKITTI [54] dataset. It features a range of various metropolitan settings. The collection offers\nLiDAR data, excellent-quality pictures, and annotations for cars. A2D2 [55] is a sizable\ndataset and delivers extensive annotations for several items, including vehicles, together\nwith high-resolution camera and LiDAR data. Waymo’s dataset [56], which is renowned for\nits comprehensive and varied gathering of data from AVs and includes information from\na range of weather and lighting circumstances, is a useful tool for research on inclement\nweather. Among the noteworthy datasets, NuScenes [57], BDD100K [58], ApolloScape [59],\nand SYNTHIA [60] datasets offer diverse and extensive resources for exploring vehicle\ndetection in challenging conditions. A quick overview of the weather conditions consid-\nered and the particular sensors utilized for gathering data for each dataset can be found in\nTable 2. The University of Michigan used a Segway robot to collect four seasons of LIDAR\ndata for the NCLT [ 61] on campus. The first AV dataset, called the Canadian Adverse\nDriving Conditions (CADC) [62] dataset, focuses on snow conditions. The Challenging\nConditions Dataset with Correspondences(ACDC) [54], created for training and testing lex-\nical techniques for segmentation in difficult visual conditions, was later introduced by the\nsame team. ACDC includes a high-quality pixel-level resolution collection of well-labeled\nphotos encompassing various categories of mist, at night, rain, and snowfall. The public’s\nDigital Video Collection now includes the IUPUI [63] Driving Video/Image Benchmark.\nExample views of varied lighting and roadway conditions captured by in-car webcams\nare included in this baseline. In these movies, patrolling and disaster response situations\ninvolving safety automobiles are shown. Together, these datasets provide priceless re-\nsources for developing the discipline and promoting creativity in the creation of reliable\nand weather-adaptive vehicle detection systems.\nAlgorithms 2024, 17, 103 12 of 36\nTable 2. Publicly available AVs datasets.\nRef. Year Dataset LiDAR Radar Camera Adverse Weather\n[37] 2020 LIBRE ✓ - ✓ Rain, fog, Daytime\n[51] 2013 Kitti ✓ - ✓ -\n[54] 2021 ACDC - - ✓ Rain, fog, snow\n[55] 2020 A2D2 ✓ - ✓ Rain\n[56] 2020 Waymo ✓ - ✓ Rain, night\n[57] 2020 NuScenes ✓ ✓ ✓ Rain, night\n[58] 2020 BDD100K - - ✓ Daytime, night\n[59] 2020 ApolloScape ✓ - - Rain, Night\n[60] 2016 SYNTHIA - - - Snow\n[61] 2016 NCLT ✓ - ✓ Snow\n[62] 2021 CADCD ✓ - ✓ Snow\n[64] 2020 End of the earth ✓ - ✓ Snow\n[65] 2020 nuImages - - ✓ -\n[66] 2019 Argoverse ✓ - ✓ -\n[67] 2019 Astyx ✓ ✓ ✓ -\n[68] 2020 DENSE ✓ ✓ ✓ Rain, snow, fog, night\n[69] 2018 Foggy Cityscape - - - Fog/haze\n[70] 2020 Berkley DeepDrive - - ✓ Rain, fog, snow, night\n[71] 2017 Mapillary - - ✓ Rain, fog, snow, night\n[72] 2019 EuroCity - - ✓ Rain, fog, snow, night\n[73] 2017 Oxford RobotCar ✓ ✓ ✓ Rain, snow, night\n[74] 2020 A* 3D ✓ - ✓ Rain, night\n[75] 2021 4Seasons - - ✓ Rain, night\n[76] 2018 WildDash - - ✓ Rain, fog, snow, night\n[77] 2018 KAIST multispectral - - ✓ Daytime, night\n[78] 2021 Radiate ✓ ✓ ✓ Rain, fog, snow, night\n[79] 2020 EU ✓ - ✓ Snow, night\n[80] 2022 Boreas ✓ ✓ ✓ Rain, snow, night\n[81] 2020 DAWN - - - Rain, snow, fog, sandstorm\n[82] 2021 PVDN - - ✓ night",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4 Overview of Object Detection in A Vs",
+      "level": 1,
+      "text": "Most OD algorithms primarily adhere to a common framework, as shown in Figure 7.\nIn OD, we have considered the following three issues:\n1. Vehicle Detection: Vehicle detection is the process by which AVs identify and locate\nother vehicles on the road. This capability is crucial for AVs to make informed\ndecisions about their own movement, such as maintaining safe distances, changing\nlanes, or responding to traffic situations.\n2. Pedestrian Detection: Pedestrian detection involves the recognition and tracking of\npeople walking near or crossing the road. This is a vital safety feature for AVs as it\nenables the vehicle to anticipate and react to the presence of pedestrians, preventing\ncollisions and ensuring the safety of both the vehicle’s occupants and those outside.\nAlgorithms 2024, 17, 103 13 of 36\n3. Road Lane Detection: Road lane detection is the ability of AVs to identify and under-\nstand the position and orientation of road lanes. This information is essential for the\nvehicle to navigate within its designated lane, follow traffic rules, and make correct\nturns, ensuring a smooth and safe driving experience.\na) Sensor b) ROI c) Feature Extraction\nd) Classification\n(\n(a) (b) (c)\n(d)\n1 2 3\nFigure 7. The basic framework for object detection systems.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 Overview of Traditional and DL Approaches for Object Detection in A Vs",
+      "level": 1,
+      "text": "The detection techniques are composed of three parts: the DL approach, the traditional\ntechnique, and a hybrid approach that utilizes both. The DL and traditional techniques are\nexplained in detail in the section that follows. The performance graph of both approaches\nis shown in Figure 8.\nperformance\nData\nDeep learning \nT raditional \napproaches\nFigure 8. Performance graph of traditional and DL approaches.",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5.1 Traditional Approach",
+      "level": 2,
+      "text": "Various algorithms were developed for the purpose of OD. Prominent traditional\nfeature extraction methods include Scale Invariant Feature Transform (SIFT) [83], Viola–\nJones rectangles [84], Haar-Like-wavelets and Histogram of Oriented Gradient (HOG) [85],\nAdaptive Boosting (AdaBoost), non-linear Support Vector Machines (SVMs), and linear\nSVMs, which are common classical approaches for object classification. A number of steps\nare involved in the SIFT algorithm [83], which is well known for its ability to determine\nscale and rotation-invariant features, making it resistant to partial occlusion, clutter, noise,\nand lighting variations. These include the detection of scale-space extrema, the localization\nof key points, the assignment of orientations, the creation of keypoint descriptors, and\nthe final step of using key point matching to recognize objects. Descriptors are used to\ncompare and identify items in a database using methods like nearest neighbor indexing\nand the Hough transform. Nevertheless, SIFT has some drawbacks, including the absence\nof ongoing key point consistency in dynamic objects, the significant dimensions of feature\ndescriptors that can affect matchmaking, and some restrictions related to patents.\nAlgorithms 2024, 17, 103 14 of 36\nThe Viola–Jones approach (Viola and Jones, [84] was developed for human face identi-\nfication using Haar-like feature extractors. It consists of four primary parts; the primary\nimage algorithm for effective image participation is AdaBoost. Haar-like feature extraction\nis used to uncover biased features. Cascade classifier implementation is used to filter out\nbackground data and concentrate on regions that are more likely to contain the object\nof interest. The algorithm performs remarkably well, taking only 0.067 s to process a\n384 × 288 pixel image. Its detection rate is 91.4%, and it produces 50 false positives. Never-\ntheless, it is not well adapted for the generic recognition of objects and has slow periods\nfor training. The HOG method was created for identifying humans in digital photos and\nwas first presented in [85]. In order to determine the gradient’s length and direction, this\nmethod examines input images employing gradient filters, both horizontal and vertical.\nThe filtered images are divided into 8 × 8 pixel cells, which are then further divided into\n2 × 2 cell blocks that have 50% overlap. For every cell, orientation histograms are produced,\nquantizing gradient directions into nine bins ranging from 0◦ to 180◦. The magnitudes of\nthese bins are used as votes. A vector representing the HOG is produced by concatenating\nthese histograms for every cell in a block. To take into consideration changes in illumination\nand contrast, these vectors are standardized. The final HOG descriptor, which consists of\nall the normalized blocks, is fed into a Support Vector Machine (SVM) to determine if an\nimage is human or not. Although the HOG algorithm’s dense grid method results in a\nlarger processing burden and less efficient performance in cases involving obscured objects,\nit is effective in decreasing false positives when compared with Haar wavelets.\nThese AI techniques, which have their roots in statistical principles, have traditionally\nformed the basis of machine learning models. These techniques enable computers to\nrecognize trends and forecast outcomes based on past data. However, even with their\nhistorical importance, traditional methods have clear drawbacks. Reliance on manual\nfeature engineering, as shown in Figure 9, in which experts carefully craft features for\nthe model necessitates domain knowledge and frequently fails to capture the nuances of\nintricate datasets. Furthermore, these models’ ability to adjust to unfavorable weather\nor dynamic surroundings is hindered by their inability to quickly incorporate new data\nwithout requiring significant retraining, which limits their usefulness in situations that\nchange quickly. The development of more sophisticated methods, or DL approaches, to\novercome these obstacles and improve the power of AI systems has been made possible by\nthis realization of their limitations.\nFeatures Car/not \na car \nInput Feature \nExtraction\nClassification Output\n(a) Traditional Approach\n(b) Deep Learning Approach\nInput Feature extraction \n+ classification\nCar/not \na car \nOutput\nFigure 9. Primary structure of feature extraction for traditional and DL approaches.",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "5.2 DL Approaches",
+      "level": 2,
+      "text": "DL emerged as a subfield of machine learning and artificial intelligence in the1990s [86].\nUnlike traditional methods, DL offers distinct advantages, including the ability to achieve\nhigher levels of abstraction, improved precision, and faster execution. These advantages\nmake DL a valuable choice for OD. The OD algorithm employing DL typically consists of",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The global self-driving cars market size 2022–2032 in USD Million [3]."
+    },
+    {
+      "id": "f2",
+      "caption": "Object identification strategies."
+    },
+    {
+      "id": "f3",
+      "caption": "Paper organization, where OD = object detection."
+    },
+    {
+      "id": "f4",
+      "caption": "SAE automation levels for AVs."
+    },
+    {
+      "id": "f5",
+      "caption": "An architecture of AVs."
+    },
+    {
+      "id": "f6",
+      "caption": "Weather impacts on AVs."
+    },
+    {
+      "id": "f7",
+      "caption": "The basic framework for object detection systems."
+    },
+    {
+      "id": "f8",
+      "caption": "Performance graph of traditional and DL approaches."
+    },
+    {
+      "id": "f9",
+      "caption": "Primary structure of feature extraction for traditional and DL approaches."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of sensors [35]."
+    },
+    {
+      "id": "t2",
+      "caption": "The University of Michigan used a Segway robot to collect four seasons of LIDAR"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

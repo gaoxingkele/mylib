@@ -1,0 +1,174 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2018__the_modern_research_data_portal_a_design_pattern_for_ne__8deea97a8b.pdf",
+  "n_pages": 30,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 University of Chicago, Chicago, IL, United States of America",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Argonne National Laboratory, Lemont, IL, United States of America",
+      "level": 1,
+      "text": "3 Energy Sciences Network, Lawrence Berkeley National Laboratory, Berkeley, CA, United States of America\nABSTRACT\nWe describe best practices for providing convenient, high-speed, secure access to\nlarge data via research data portals. We capture these best practices in a new design\npattern, the Modern Research Data Portal, that disaggregates the traditional monolithic\nweb-based data portal to achieve orders-of-magnitude increases in data transfer\nperformance, support new deployment architectures that decouple control logic from\ndata storage, and reduce development and operations costs. We introduce the design\npattern; explain how it leverages high-performance data enclaves and cloud-based\ndata management services; review representative examples at research laboratories and\nuniversities, including both experimental facilities and supercomputer sites; describe\nhow to leverage Python APIs for authentication, authorization, data transfer, and data\nsharing; and use coding examples to demonstrate how these APIs can be used to\nimplement a range of research data portal capabilities. Sample code at a companion\nweb site, https://docs.globus.org/mrdp, provides application skeletons that readers can\nadapt to realize their own research data portals.\nSubjects Computer Networks and Communications, Data Science, Distributed and Parallel\nComputing, Security and Privacy, World Wide Web and Web Science\nKeywords Portal, High-speed network, Globus, Science DMZ, Data transfer node",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "The need for scientists to exchange data has led to an explosion over recent decades in the\nnumber and variety of research data portals: systems that provide remote access to data\nrepositories for such purposes as discovery and distribution of reference data, the upload of\nnew data for analysis and/or integration, and data sharing for collaborative analysis. Most\nsuch systems implement variants of a design pattern ( Gamma et al., 1994) that we term\nthe legacy research data portal (LRDP), in which a web server reads and writes a directly\nconnected data repository in response to client requests.\nThe relative simplicity of this structure has allowed it to persist largely unchanged from\nthe first days of the web. However, its monolithic architecture—in particular, its tight\nintegration of control channel processing (request processing, user authentication) and\nHow to cite this article Chard et al. (2018), The Modern Research Data Portal: a design pattern for networked, data-intensive science.\nPeerJ Comput. Sci. 4:e144; DOI 10.7717/peerj-cs.144\ndata channel processing (routing of data to/from remote sources and data repositories)—\nhas increasingly become an obstacle to performance, usability, and security, for reasons\ndiscussed below.\nAn alternative architecture re-imagines the data portal in a much more scalable and\nperformant form. In what we term here the modern research data portal (MRDP)\ndesign pattern, portal functionality is decomposed along two distinct but complementary\ndimensions. First, control channel communications and data channel communications are\nseparated, with the former handled by a web server computer deployed (most often) in the\ninstitution’s enterprise network and the latter by specialized data servers connected directly\nto high-speed networks and storage systems. Second, responsibility for managing data\ntransfers, data access, and sometimes also authentication is outsourced to external, often\ncloud-hosted, services. The design pattern thus defines distinct roles for the web server,\nwhich manages who is allowed to do what; data servers, where authorized operations are\nperformed on data; and external services, which orchestrate data access.\nIn this article, we first define the problems that research data portals address, introduce\nthe legacy approach, and examine its limitations. We then introduce the MRDP design\npattern and describe its realization via the integration of two elements: Science DMZs (Dart\net al., 2013) (high-performance network enclaves that connect large-scale data servers\ndirectly to high-speed networks) and cloud-based data management and authentication\nservices such as those provided by Globus ( Chard, Tuecke & Foster, 2014 ). We then outline\na reference implementation of the MRDP design pattern, also provided in its entirety on\nthe companion web site, https://docs.globus.org/mrdp, that the reader can study—and, if\nthey so desire, deploy and adapt to build their own high-performance research data portal.\nWe also review various deployments to show how the MRDP approach has been applied\nin practice: examples like the National Center for Atmospheric Research’s Research Data\nArchive, which provides for high-speed data delivery to thousands of geoscientists; the\nSanger Imputation Service, which provides for online analysis of user-provided genomic\ndata; the Globus data publication service, which provides for interactive data publication\nand discovery; and the DMagic data sharing system for data distribution from light sources.\nWe conclude with a discussion of related technologies and summary.\nTHE RESEARCH DATA PORTAL\nThe exchange of data among researchers is a fundamental activity in science ( Borgman,\n2012; Hey, Tansley & Tolle, 2009 ; Tenopir et al., 2011), and the use of computer networks\nfor that purpose dates back to the earliest days of the Internet. Indeed, it was the need for\nconvenient data exchange that drove Tim Berners-Lee to invent the web in 1989 ( Berners-\nLee, 1989). He defined an architecture of extreme simplicity. A computer with access to\nboth a data repository and the Internet runs a web server application that performs upload\nand download operations on its local data repository based on client requests. Users issue\nsuch requests using a client program—typically a web browser, which provides a graphical\nuser interface (GUI). A uniform naming scheme for data objects makes it easy to share\nnames, for example by embedding them in specially formatted documents (web pages).\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 2/30\nBorder Router\nWAN\nFirewall\nEnterprise\nperfSONAR perfSONAR Filesystem\n(data store)\nPortal Server\nPortal server applications:\n· web server\n· search\n· database\n· authentication\n· data service\nEnterprise Network\nBrowsing path, Query path, Data path\nFigure 1 The legacy research data portal (LRDP) architecture. The portal web server runs all portal ser-\nvices and also manages all data objects and their transport to and from the wide area network (WAN).\nFull-size\n DOI: 10.7717/peerjcs.144/fig-1\nWeb technologies have since evolved tremendously. For example, web servers can now\nsupport client authentication and authorization, link to databases for efficient navigation\nof large repositories, and support Common Gateway Interface (CGI) access to server-side\ncomputation. Web browsers run powerful Javascript and support asynchronous requests\nto remote servers.\nYet as shown in Fig. 1, most systems used to exchange research data today are not so\ndifferent from that first web server. In particular, a single server handles request processing,\ndata access, authentication, and other functions. It is the simple and monolithic architecture\nthat characterizes this legacy research data portal (LRDP) design pattern that has allowed\nits widespread application and its adaptation to many purposes. Under names such as por-\ntals (Russell et al., 2001), science gateways (Wilkins-Diehr et al., 2008; Lawrence et al., 2015),\nand hubs ( Klimeck et al., 2008; McLennan & Kennell, 2010), LRDP instances variously\nsupport access to small and large scientific data collections, data publication to community\nrepositories, online data analysis and simulation, and other scientific workflows concerned\nwith managing the flow of scientific data between remote clients and a central server.\nA confluence of three factors has now rendered the monolithic LRDP architecture\nincreasingly problematic for its intended purpose, as we now discuss.\nThe first concerns performance. Both data volumes and network speeds have grown\ntremendously over the past decade, at rates far faster than can be supported by monolithic\nweb services applications running on individual servers connected to enterprise networks\nand secured by enterprise firewalls. In response, network architectures are proliferating to\nallow high-speed access to research data over separate data channels that are specifically\nengineered for high-performance data services. However, these developments do not mesh\nwell with the LRDP architecture. The LRDP server typically cannot be moved outside\nthe institutional firewall because it is a complex web services application with sensitive\ninformation (e.g., user databases) that must be defended using correspondingly complex\nsecurity protections. Also, the LRDP model forces all data objects through the web server\nsoftware stack, limiting performance and scalability.\nThe second is an increasing demand for high data transfer reliability. When download\nor upload requests involve just a few small files, transient errors are rare and can be handled\nby having users resubmit requests. When requests involve thousands or more files and\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 3/30\ngigabytes or terabytes, errors are more problematic. Increasingly, researchers expect the\nhigh reliability offered by transfer services such as Globus ( Chard, Tuecke & Foster, 2014 ),\nwhich use specialized techniques to minimiz",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 A reliable, high-performance external data management service with authentication",
+      "level": 1,
+      "text": "and other primitives based on standard web APIs (we use Globus as an example here).\nIn the remainder of this section, we describe the role of the Science DMZ and the data\nservers that reside within it, the role of Globus as a provider of outsourced data management\nand security services, and the integration of these components to form the MRDP design\npattern.\nScience DMZ and DTNs\nA growing number of research institutions are connected to high-speed wide area networks\nat high speeds: 10 gigabits per second (Gb/s) or faster. Increasingly, these wide area\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 4/30\n10GE10GE\n10GE\n10GE\nBorder Router\nWAN\nScience DMZ\nSwitch/Router\nFirewall\nEnterprise\nperfSONAR\nperfSONAR\n10GE\n10GE\n10GE\n10GE\nDTN\nDTN\nAPI DTNs\n(data access governed by portal)\nDTN\nDTN\nperfSONAR\n        Filesystem\n        (data store)\n10GE\nPortal Server\nBrowsing path\nQuery path\nPortal server applications:\n· web server\n· search\n· database\n· authentication\nData Path\nData Transfer Path\nPortal Query/Browse Path\nFigure 2 The MRDP design pattern from a network architecture perspective. The Science DMZ in-\ncludes multiple DTNs that provide for high-speed transfer between network and storage. Portal functions\nrun on a portal server, located on the institution’s enterprise network. The DTNs need only speak the API\nof the data management service (Globus in this case).\nFull-size\n DOI: 10.7717/peerjcs.144/fig-2\nnetworks are themselves connected to cloud providers at comparable speeds. Thus,\nin principle, it should be possible to move data between any element of the national\nresearch infrastructure—between institutions, laboratories, instruments, data centers,\nsupercomputer centers, and clouds—with great rapidity.\nIn practice, real transfers often achieve nothing like these peak speeds. Common\nreasons for poor performance are the complexity and architectural limitations of\ninstitutional networks, as well as complex and inefficient configurations on monolithic\nserver computers. Commodity network devices, firewalls, and other limitations cause\nperformance bottlenecks in the network between the data service and the outside world\nwhere clients are located.\nTwo constructs, the Science DMZ and the Data Transfer Node, are now widely deployed\nto overcome this problem. As shown in Fig. 2, the Science DMZ overcomes the challenges\nassociated with multi-purpose enterprise network architectures by placing resources that\nneed high-performance connectivity in a special subnetwork that is close (from a network\narchitecture perspective) to the border router that connects the institution to the high-speed\nwide area network. (The term DMZ, short for demilitarized zone, is commonly used in\ncomputer networking to indicate an intermediate role between external and internal\nnetworks.) Traffic between those resources and the outside world then has a clean path to\nthe analogous high-performance resources at collaborating institutions.\nA Data Transfer Node (DTN) is a specialized device dedicated to data transfer\nfunctions. These devices are typically PC-based Linux servers constructed with high quality\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 5/30\ncomponents, configured for both high-speed wide area data transfer and high-speed access\nto local storage resources, and running high-performance data transfer tools such as Globus\nConnect data transfer software. General-purpose computing and business productivity\napplications, such as email clients and document editors, are not installed; this restriction\nproduces more consistent data transfer behavior and makes security policies easier to\nenforce.\nThe Science DMZ design pattern also includes other elements, such as integrated\nmonitoring devices for performance debugging, specialized security configurations, and\nvariants used to integrate supercomputers and other resources. For example, Fig. 2 shows\nperfSONAR ( Hanemann et al., 2005) performance monitoring devices. But this brief\ndescription provides the essential information required for our discussion here. The US\nDepartment of Energy’s Energy Sciences Network has produced detailed configuration and\ntuning guides for Science DMZs and DTNs ( ESnet, 2017).\nGlobus services\nGlobus provides data and identity management capabilities designed for the research\ncommunity. These capabilities are delivered via a cloud-hosted software- and platform-as-\na-service model, enabling users to access them through their web browser and developers to\ninvoke them via powerful APIs. We describe here Globus capabilities that meet MRDP needs\nfor managing and transferring data ( Chard, Tuecke & Foster, 2014 ) and for authenticating\nusers and authorizing access ( Tuecke et al., 2015).\nGlobus allows data to be remotely managed across its pool of more than 10,000\naccessible storage systems (called ‘‘endpoints’’). A storage system is made accessible to\nGlobus, and thus capable of high performance and reliable data transfer, by installing\nGlobus Connect software. Globus Connect is offered in two versions: Globus Connect\nPersonal for single-user deployments (e.g., a laptop or PC) and Globus Connect Server\nfor multi-user deployments (e.g., a shared server or DTN). Globus Connect Server can be\ndeployed on multiple DTNs associated with a storage system; Globus then uses the pool of\nDTNs to increase transfer performance, with dynamic failover for increased reliability.\nGlobus Transfer capabilities provide high performance and reliable third party data\ntransfer. The Globus service manages the entire transfer process, including coordinating\nauthentication at source and destination; establishing a high performance data channel\nusing the GridFTP (Allcock et al., 2005) protocol, with configuration optimized for transfer;\nensuring data integrity by comparing source/destination checksums; and recovering from\nany errors during the transfer. Globus also provides secure (authorized) HTTPS access to\n(upload/download) data via a web browser or an HTTP command line client (e.g., for small\nfiles, inline viewers, or transitional support of LRDP usage models). Globus, by default,\nenforces the data access permissions represented by the underlying system; however, it\nalso allows these access decisions to be managed through the cloud service. In the latter\nmode, called Globus Sharing (Chard, Tuecke & Foster, 2014 ), users may associate user-\nor group-based access control lists (ACLs) with particular file paths. Globus checks and\nenforces these ACLs when other users attempt to read or write to those paths.\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 6/30\nGlobus Auth provides identity and access management platform capabilities. It brokers\nauthentication and authorization interactions between end-users, identity providers,\nresource servers (services), and clients (e.g., web, mobile, desktop, and command line\napplications, and other services). It implements standard web protocols, such as OAuth 2\nand OpenID Connect, that allow it to be integrated easily with external applications using\nstandard client libraries. These protocols enable third-party applications to authenticate\nusers (using their preferred identity) directly with the chosen identity provider. Globus\nAuth then returns access tokens that the third-party application can use to validate the\nuser’s identity and to perform actions on behalf of that user, within an agreed upon scope.\nGlobus Auth implements an identity federation model via which diverse identities can be\nlinked, and such that presentation of one identity may support authorization for the set\nof identities. Integration with Globus Groups ( Chard et al., 2016) supports group-based\nauthorization using user-managed groups.\nREST APIs allow Globus capabilities to be used as a platform. These APIs are used\nby client libraries, such as the Globus Python SDK, to support integration in external\napplications. We leverage the Globus Python SDK in the MRDP reference implement",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "7 HTTPS",
+      "level": 1,
+      "text": "GridFTP\nREST Other \nservices\nIdentity \nprovider\nGlobus web \nhelper pages\nGlobus Auth Globus \nTransferBrowser\nUser’s Globus \nendpoint (optional)\nPortal web \nserver (Client)\nPortal Globus \nendpoint\nOther Globus \nendpoints\nLogin\nFigure 3 MRDP basics. Clients (left) authenticate with any one of many identity providers (top) and\nconnect to the portal web server (center) that implements the domain-specific portal logic. The web\nserver sits behind the institutional firewall (red). The portal responds to client requests by using REST\nAPIs to direct Globus cloud services (top) to operate on research data in the Science DMZ (bottom center)\nand/or to interact with other services (center right). Data flows reliably and securely between Globus end-\npoints without traversing the firewall.\nFull-size\n DOI: 10.7717/peerjcs.144/fig-3\nWe review some highlights of this reference implementation here; more details are\navailable on the companion web site.\nFigure 3 shows the essential elements of this reference implementation. In addition\nto the Science DMZ and portal server already seen in Fig. 2, we see the user’s desktop\ncomputer or other device on which they run the web browser (or other client) used to\naccess the data portal, plus other elements (identity providers, Globus cloud, other services)\nthat we introduce in the following. Note the ‘‘Globus endpoints’’ (Globus Connect servers)\nlocated in the Science DMZ, on other remote storage systems, and (optionally) on the\nuser’s desktop. The cloud-hosted Globus transfer service orchestrates high-speed, reliable\nGridFTP transfers among these endpoints, under the direction of the portal server.\nAs already noted, the portal server is at the heart of the MRDP implementation. It sits\nbehind the institutional firewall, from where it serves up web pages to users, responds to\nHTTP requests, and issues REST communications to Globus services and optionally other\nservices to implement MRDP behaviors. The latter REST communications are central to\nthe power of the MRDP design pattern, as it is they that let the web server outsource many\nof the complex tasks associated with portal operations. Only the web server component\nneeds to be provided for a specific MRDP implementation.\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 9/30\nOverview of key points\nThe MRDP design pattern employs a collection of modern approaches to delivering critical\ncapabilities. We review some important points here, with comments on how they can be\nrealized with Globus mechanisms. More specifics are on the companion web site.\nOutsource responsibility for determining user identities. Operating an identity provider\nshould not need to be a core competency for a portal administrator. Globus Auth support\nfor the OAuth 2 and OpenID protocols allows for the validation of credentials from\nany one of a number of identity providers deemed acceptable by the portal: for example,\ninstitutional credentials via InCommon (Barnett et al., 2011), ORCID, or Google identities.\nOutsource control over who can access different data and services within the portal. Nor\nshould the portal developer or administrator need to be concerned with implementing\naccess control mechanisms. The Globus transfer service can be used to control who is\nallowed to access data.\nOutsource responsibility for managing data uploads and downloads between a variety of\nlocations and storage systems. Reliable, efficient, and secure data transfer between endpoints\nis a challenging task to do well. Again, simple APIs allow this task to be handed off to\nthe Globus transfer service. (A portal can also leverage Globus HTTPS support to provide\nweb-based download and inline viewers.) Thus, the portal does not need to provide its\nown (typically unreliable and/or slow) data download client, as some portals do.\nLeverage standard web user interfaces for common user actions. The implementation of\nthe portal’s web interface can be simplified via the use of standard components. Globus\nprovides web helper pages for such tasks as selecting endpoints, folders, and files for\ntransfers; managing group membership; and logging out.\nDispatch tasks to other services on behalf of requesting users. Good programming practice\noften involves decomposing a complex portal into multiple services. Globus Authdependent\ngrant flows (an OAuth concept) enable a portal to allow other services to operate on\nmanaged data. We discuss below how the reference implementation uses this mechanism\nto allow an external data analysis service to access a user’s data.\nLog all actions performed by users for purposes of audit, accounting, and reporting. The\nportal should store a historical log of all actions performed by the portal and its users such\nthat others can determine what data has been accessed, when, and by whom. Again, these\nfunctions can be outsourced to a cloud service.\nDiving into code\nThe reference implementation code is for a portal that allows users to browse for data of\ninterest and then request those data for download. The portal makes the data available via\nfour simple steps: (1) create a shared endpoint; (2) copy the requested data to that shared\nendpoint; (3) set permissions on the shared endpoint to enable access by the requesting\nuser, and email the user a URL that they can use to retrieve data from the shared endpoint;\nand ultimately (perhaps after days or weeks), (4) delete the shared endpoint.\nListing 1 presents a function rdp that uses the Globus Python SDK to implement these\nactions. This code is somewhat simplified: it does not perform error checking and does\nnot integrate with the web server that our data portal also requires, but otherwise it is a\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 10/30\ncomplete implementation of the core portal logic–in just 42 lines of code. In the following,\nwe first review some Globus background and then describe some elements of this program.\nEndpoints\nFigure 3 shows several Globus endpoints. Each endpoint implements the GridFTP protocol\n(thick green arrows) for high-speed endpoint-to-endpoint data transfer and the HTTPS\nprotocol (blue arrows) to enable access to endpoint storage from a web client. Endpoints\nare managed by the Globus Transfer service via the GridFTP control channel: the thin\ngreen dashed lines.\nIn order for Globus Transfer to perform operations on an endpoint filesystem, it must\nhave a credential to authenticate to the endpoint as a specific local user. The process of\nproviding such a credential to the service is called endpoint activation. Endpoints typically\nrequire credentials from one or more specific identity providers. A Globus Connect Server\ncan be configured with a co-located MyProxy OAuth ( Basney & Gaynor, 2011) server\nto allow local user accounts to be used for authentication. Alternatively, endpoints may\nbe configured to use one of the supported Globus Auth identity providers. In this case,\nendpoints contain a mapping between identity provider identities and local user accounts.\nEach Globus endpoint (and each user) is named by a universally unique identifier (UUID).\nIdentities and credentials\nWe see from Fig. 3 that the MRDP design pattern involves interactions among numerous\nentities: user, web client, Globus services, portal server, Globus endpoints, and perhaps\nother services as well. Each interaction requires authentication to determine the originator\nof the request and access management to determine whether the request should be granted.\nAccess management decisions are complicated by the fact that a single user may possess,\nand need to use, multiple identities from different identity providers. For example, a\nuser Jane Doe with an identity jane@uni.edu at her university and another identity\njdoe@lab.gov at a national laboratory may need to use both identities when transferring a\nfile from endpoint A at uni.edu to endpoint B at lab.gov.\nThe Globus Auth identity and access management service manages these complexities.\nWhen Jan",
+      "refs": {
+        "figures": [
+          "f2",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "H a I create directory to be shared",
+      "level": 1,
+      "text": "share_path ] G O~O G + str H uuid . uuidT HII + GO G\ntc . operation_mkdir H host_id , path ] share_path I",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "H b I create shared endpoint on directory",
+      "level": 1,
+      "text": "shared_ep_data ] {\nG data_type G: G shared_endpoint G,\nG host_endpoint G: host_id ,\nG host_path G: share_path ,\nG display_name G: G rdp shared endpoint G,\nG description G: G rdp shared endpoint G\n}\nr ] tc . c r e a t e _ s h a r e d _ e n d p o i n t H shared_ep_data I\nshare_id ] r { Gid G}",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "HRI copy data into the shared endpoint",
+      "level": 1,
+      "text": "tc . e n d p o i n t _ a u t o a c t i v a t e H share_id I\ntdata ] transferdata H tc , host_id , share_id ,\nlabel ] G rdp copy G, sync_level ] G checksum GI\ntdata . add_item H source_path , GO G, recursive ] true I\nr ] tc . submit_transfer H tdata I\ntc . task_wait H r { G task_id G} , timeout ]1PPP ,\npolli ng_inter val ]1PI",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "HSI enable access by user",
+      "level": 1,
+      "text": "r ] ac . get_identities H usernames ] email I\nuser_id ] r { G identities G }{P}{ Gid G}\nrule_data ] {\nG data_type G: G access G,\nG principal_type G: G identity G, C grantee is\nG principal G: user_id , C a user .\nG path G: GO G, C path is O\nG permissions G: Gr G, C read - only\nG notify_email G: email , C email invite\nG notify_message G: C invite msg\nG requested data are available . G\n}\ntc . a d d _ e n d p o i n t _ a c l _ r u l e H share_id , rule_data I",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "HTI ultimately , delete the shared endpoint",
+      "level": 1,
+      "text": "tc . delete_endpoint H share_id I\nChard et al. (2018), PeerJ Comput. Sci. , DOI 10.7717/peerj-cs.144 14/30",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The legacy research data portal (LRDP) architecture. The portal web server runs all portal ser-"
+    },
+    {
+      "id": "f2",
+      "caption": "The MRDP design pattern from a network architecture perspective. The Science DMZ in-"
+    },
+    {
+      "id": "f3",
+      "caption": "MRDP basics. Clients (left) authenticate with any one of many identity providers (top) and"
+    },
+    {
+      "id": "f4",
+      "caption": "A shared endpoint scenario."
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

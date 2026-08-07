@@ -1,0 +1,611 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p6_nsga_bls_feasibility_review/p6_nsga_bls_feasibility_review__05__a_two_tier_planning_approach_for_hybrid_energy_storage_syste__0e00a23b09.pdf",
+  "n_pages": 25,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In recent years, with the increasing integration of renewable energy into power grids, \nthe spatio-temporal mismatch between renewable energy generation and load demand \nhas become increasingly prominent. Issues such as wind and solar curtailment as well as \nload shedding pose signi ﬁcant challenges to the secure operation of regional grids [1]. \nFlexibility supply-demand balance refers to the extent to which the ﬂexibility provided \nby various resources exceeds the ﬂexibility requirement, at any moment, over any \ntimescale, and in any direction, exceeding a permissible threshold. As the penetration of \nrenewable energy continues to rise, ﬂexibility is becoming the core and critical aspect of \nReceived: 20 July 2025 \nRevised: 28 August 2025 \nAccepted: 10 September 2025 \nPublished: 19 September 2025 \nCitation: Huang, W.; Qu, D.; Wu, C.; \nHu, K.; Qiu, T.; Wei, W.; Yin, G.;  \nJia, X. A Two-Tier Planning \nApproach for Hybrid Energy \nStorage Systems Considering Grid \nPower Flexibility in New Energy \nHigh-Penetration Grids. Energies \n2025, 18, 4986. https://doi.org/ \n10.3390/en18184986 \nCopyright: © 2025 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and \nconditions of the Creative Commons \nAttribution (CC BY) license \n(https://creativecommons.org/license\ns/by/4.0/). \nEnergies 2025, 18, 4986 2 of 25 \n \n \nsystem operational characteristics [2]. Confronted with the challenge of renewable energy \nﬂuctuations spanning second-to-day timescales, short-term energy storage can safeguard \ninstantaneous system security and stability, while long-term energy storage signiﬁcantly \nreduces wind/solar curtailment and load shedding. Consequently, investigating hybrid \nshort- and long-term energy storage systems (ESSs) to overcome the temporal limitations \nof single-type storage and achieve ﬂexibility supply-demand matching across critical \ntimescales is crucial to ensuring bo th the secure operation and enhanced ﬂexibility of \nhigh-penetration renewable energy systems. \nAs a key approach to enhancing renewable energy accommodation capacity in high-\npenetration systems, wind-PV-storage integrat ed system planning has been extensively \nstudied regarding the collaborative conﬁguration of ﬂexibility resources. Zipeng Liang et \nal. proposed a planning framework based on a three-level structure involving \nbidirectional converters to enhance the re liability and robustness of hybrid AC/DC \nmicrogrid clusters with high renewable en ergy penetration [3]. Shutan Wu et al. \nconsidered the spatiotemporal ﬂexible resources and multi-network coupling eﬀects, and \nproposed a cyber-physical integrated planni ng model for distribution networks. They \nestablished a three-level planning model to iteratively solve the planning problem. Case \nstudies veri ﬁed that the proposed scheme can e ﬀectively alleviate the issue of voltage \nsurplus [4]. Dundun Li et al. considered that increased wind integration and coal-plant \nretirements would heighten operational pressures on power systems, proposing a three-\nlevel robust ESS planning model to accommodate uncertainties in wind power investment \nand coal unit retirements [5]. Zongxiang Lu et al. established a quantitative index system \nfor power system ﬂexibility and developed a collaborative ﬂexibility planning framework \nintegrating source-grid-load-storage resour ces [6]. Xiaorong Zhu et al. explored a \ncoordinated planning method for energy st orage and Soft Open Points (SOPs) in \ndistribution networks, optimizing resource allocation using multi-timescale ﬂexibility \nindices [7]. Lijun Liu et al. introduced a joint planning model for long- and short-duration \nstorage, employing a deep clustering algorithm to characterize annual chronological \nfeatures [2]. Deukyoung Lee et al. proposed a novel integrated planning method for \ngenerators, transmission lines, and ESSs, using a two-stage Benders decomposition \napproach [8]. Yanda Huo et al. developed a lightweight data-driven planning model and \nquantiﬁed the demand function for HESS in new power systems based on production \nsimulation [9]. However, the ﬂexibility resource synergy mechanism in the above \nliterature is imperfect and does not fully integrate the dynamic response characteristics of \nmulti-dimensional resources of source, network, load and storage. \nEnergy storage systems possess the capability for bidirectional energy ﬂow, oﬀering \nadvantages such as energy shifting capability, rapid response, and ﬂexible deployment. \nThese a ttributes enable ESS to e ﬀectively alleviate power su pply pressure during peak \nload periods, optimize power ﬂow distribution, and enhance grid operational e ﬃciency. \nIn recent years, extensive research on hybrid energy storage has been conducted. Rukang \nWang et al. addressed the challenge of wind-PV farm output \nﬂuctuations impacting grid \nstability by proposing a hybrid ESS strategy for mitigating composite power ﬂuctuations, \nspeciﬁcally considering the complementary characteristics between wind and PV power \ngeneration [10]. Xin Wang et al. leverage d Multi-Agent Deep Reinforcement Learning \n(MADRL); they ﬁrst analyzed the relationship be tween output power and wake e ﬀects, \nsubsequently establishing a power smoothing control model for multi-wind turbines and \nenergy storage systems [11]. Yutong Li proposed a method termed Principal Component \nAnalysis-based Incomplete Data Equivalence to build data-driven energy storage \ndispatch models under conditions of incomplete data [12]. Fatma Gül şen Erdinç \nintroduced an innovative approach for real-time energy management in residential \ncommunities, simultaneously considering the utilization of solar PV and ESS while \nEnergies 2025, 18, 4986 3 of 25 \n \n \ntargeting cost minimization as the optimization objective [13]. Notably, the existing \nliterature primarily focuses on wind-storage or PV-storage integrated systems, exploring \nthe construction of energy storage primarily to mitigate power ﬂuctuations from wind or \nsolar sources. Relatively limited attention has been paid to research on conﬁguring large-\nscale centralized energy storage systems within regional grids that host signi ﬁcant \npenetrations of both utility-scale photovoltaic and wind power generation. \nThe fundamental principle of power decomposition for HESS involves separating \nﬂuctuating power components by frequency, allocating components with di ﬀerent \nfrequencies and amplitudes to distinct fo rms of energy storage for absorption [14]. \nInappropriate allocation not only increases the burden on the storage system but also fails \nto achieve the complementary advantages of the hybrid system. To address this, \nresearchers have adopted various optimization strategies combined with modal \ndecomposition methods to decompose the total HESS power. Zeyu Ma et al. proposed a \ndouble-layer VMD strategy. To mitigate the mode mixing phenomenon in the secondary \nVMD layer, they incorporated energy entrop y thresholds to identify the demarcation \npoint for separating high-frequency and low-frequency components, aiming to achieve a \nmore precise power allocation strategy [15]. Jicheng Fang et al. combined VMD with the \nWigner-Ville Distribution algorithm to decompose the net load of an industrial park \nsystem [16]. Taiying Zheng et al. introduced a method utilizing VMD to con ﬁgure the \ncapacity of HESS participating in secondary frequency regulation [17]. Rongchuan Tang \net al. proposed a VMD-ST-QF load freque ncy division strategy, enabling precise \ndecomposition of chronological load curves into high-frequency and low-frequency \ncomponents [18]. Xinbo Zhou et al. proposed an IBWO-VMD-TCN algorithm that utilizes \nVMD to decompose historical industrial load into multiple modal components for \nsubsequent prediction [19]. Despite generating relatively e ﬀective power allocation \nstrategies, these existing methods exhibit signi ﬁcant subjectivity in selecting key \nalgorithm parameters and ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Methodology",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Modeling",
+      "level": 2,
+      "text": "The conﬁguration of HESS can enhance the power supply ﬂexibility of regional grids. \nIf a hybrid energy storage system with suﬃciently large power capacity is conﬁgured for \nrenewable energy farms, it can functionally balance imbalances in ramp rate, power \nmagnitude, and energy capacity. Howeve r, excessive energy storage capacity \nconﬁguration will lead to substantial unnecessary energy storage installation costs and \noperational maintenance costs, causing resource waste. \nThe planning problem for energy storage encompasses economic and stability \naspects. The economic aspect refers to the co sts throughout the entire lifecycle of energy \nstorage, including investment costs, oper ational costs, and penalty costs for insu ﬃcient \nsystem ﬂexibility. The stability aspect includes two dimensions: one is ﬂexibility \nregulation capability, meaning the stabilizing e ﬀect of energy storage on net load \nﬂuctuations; the other is the impact of ener gy storage operation on the distribution \nnetwork, including voltage ﬂuctuations and line losses. The power system architecture is \nshown in Figure 1. \n \nFigure 1. Power grid system.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1.1 HESS Model",
+      "level": 3,
+      "text": "This chapter selects a ﬂow ba ttery–lithium-ion ba ttery energy storage system to \naddress the system’s ﬂexibility requirements across di ﬀerent time scales. Flow ba tteries \noﬀer long lifespan, rapid response, and adjustable capacity; di ﬀerent storage capacity \n\nEnergies 2025, 18, 4986 5 of 25 \n \n \ndemands can be met by adjusting the concen tration and volume of the electrolyte. \nLithium-ion ba tteries feature high energy density, response times in the millisecond \nrange, and rapid response to ﬂexibility demands. In this study, the ﬂow ba ttery is \nconﬁgured as the long-duration ener gy storage and the lithium-ion ba ttery as the short-\nduration energy storage. Compared to single-type energy storage systems, hybrid energy \nstorage combines complementary advantages: it can frequently charge and discharge to \nsmooth high-frequency ﬂuctuation components, while also possessing large capacity to \nsmooth low-frequency ﬂuctuation components with signi ﬁcant energy magnitude, \noﬀering superior economic eﬃciency and performance. This paper employs an improved \nVMD algorithm to decompose the power of the energy storage system, generating power \nsignals for the ﬂow battery and lithium-ion battery within the system. \nVMD originates from the Empirical Mode Decomposition (EMD) algorithm. Both \nalgorithms can decompose a signal into multiple local oscillatory modes [20]. However, \nVMD exhibits signi ﬁcant advantages: it is fundamen tally grounded in optimization \ntheory, enabling the mathematical description of signals within a variational framework; \nthis ensures unique decomposition results and provides strong adaptability for non-\nstationary signals. VMD e ﬀectively mitigates the common issues in EMD and similar \nalgorithms, such as mode mixing and endpoint e ﬀects. It is particularly suitable for \nprocessing signals exhibiting signi ﬁcant local frequency variations and demonstrates \nfavorable local characteristics in time-frequency distributions. Consequently, VMD has \nfound widespread application across various domains including signal processing, image \nprocessing, and machine learning. \nVMD decomposition aims to identify K intrinsic mode functions \n()kut  from non-\nstationary signals. Each mode ()kut   possesses a speci ﬁc bandwidth and a central \nfrequency. The core objective of the soluti on process is to minimize the sum of the \nestimated bandwidths of all ()kut  . A fundamental constraint during this optimization \nprocess is that the sum of all modal components must equal the original input signal f. \nInitially, the K obtained ()kut  modes are processed via the Hilbert transform to derive \ntheir respective analytic signals, as shown in Equation (1): \n(( ) ) ( ) k\njtu t tδ π+∗ , (1)\nwhere ∗  is the convolution operator and ()tδ  is the step function. \nIn order to reduce the error between the reconstructed signal and the original signal, \nit is necessary to adjust the estimated center frequency of the reconstructed signal and \nintroduce an exponential term to modulate each spectrum into the corresponding \nfundamental frequency band, as shown in Equation (2): \n(( ) ) ( )\nkj t\nk\njtu t e t\nωδ π\n− +∗\n, (2)\nThe bandwidth of each ()kut   is estimated by solving the square L2 norm of the \ndemodulated signal using the above Equation. Thus, the variational problem is \nconstructed as follows: \n2\n2{} , { } 1\nmin ( ( ) ) ( )\nk\nkk\nK\njt\ntku k\njtu t e t\nω\nω\n∂δ π\n−\n=\n  +∗ \n, (3) \n1\n.. ()\nK\nkk\ns tu t f\n=\n = , (4) \nThe VMD algorithm decomposes the total energy storage target output into K modal \ncomponents across different frequency bands. The ultimate goal is to identify an appropriate \nEnergies 2025, 18, 4986 6 of 25 \n \n \nfrequency division point to reconstitute these modal components into high-frequency and \nlow-frequency signal components, with the low-frequency component serving as the target \npower for lithium-ion batteries and the high-frequency component as the target power for \nflow batteries. When the number of frequency divisions KL is too high, it leads to excessive \ndecomposition of the energy storage target output. In this case, the sum of the reconstructed \ncomponents will be less than the actual energy storage target output. Under such \ncircumstances, the actual output of the energy storage system cannot fully mitigate wind \npower fluctuations, resulting in poor mitigation performance of the energy storage system. \nIn order to eﬀectively suppress the spectral over-decomposition phenomenon during \nthe decomposition process and to maintain the physical integrity of the output \ncharacteristics of the energy storage system , this study proposes an improved energy \nstorage power allocation method incorporating Particle Swarm Optimization (PSO): \nStep 1: Optimize the modal component number K and penalty factor α using the PSO \nalgorithm; \nStep 2: Set the objective function of the composite loss form:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 orig11",
+      "level": 1,
+      "text": "1 () I M F()\nNK\nktk\nx tt KN λ\n==\n=  −  +⋅\n . (5)\nwhere the ﬁrst term characterizes the full-band reconstruction mean square error (MSE), \nIMF is the modal component, λ is the complexity penalty factor determined, and the \nsecond term K is used to suppress modal redundancy; \nStep 3: Solve for the energy center of gravity frequency of each IMF: \n2()\n[0, /2]\narg max {IMF }\ns\nk\nck ff\nf\n∈\n=  . (6) \nAmong them,   is the Fourier transform operator; \nStep 4: Divide the high-frequency component set ()\n{IMF | }\nk\nkc c f f>    and the low-\nfrequency component set , ()ic lP t ()\n{IMF | }\nk\nkc c f f≤    using the median frequency cf   as the \nthreshold. \nStep 5: Output the fused high-frequency  group superimposed signal with the \nreconstructed signal of the low-frequency group containing the residuals. \nThe VMD-PSO algorithm pseudocode is shown in Algorithm 1. \nAlgorithm 1. The pseudocode of VMD-PSO. \nAlgorithm 1: VMD-PSO Hybrid ESS Power Allocation \n1 Total ESS power PESS, Mode number K, Penalty factor a LIB power PLIB, FB power PFB \nInitialize PSO particles (K and 𝛼 combinations);",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 while not converged do",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 foreach  parlicle do",
+      "level": 1,
+      "text": "4    Perform VMD decomposition: \n2\n2{} , { } 1\nmin ( ( ) ) ( )\nK\njt k\ntku kkk\njtu t e t\nω\nω\n∂δ π\n−\n=\n  +∗  \n;       //Equation (3) \n5    s.t. ()kE S S\nK\nut P =                                             / / E q u a t i o n  ( 4 )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "6 Calculate composite loss 1 ()MSE K",
+      "level": 1,
+      "text": "N\nλ=+ ⋅  ;                   / / E q u a t i o n  ( 5 )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "7 Compute centroid frequency",
+      "level": 1,
+      "text": "2() arg max {IMF }k\nckf =  ;               / / E q u a t i o n  ( 6 )  \n8    Split components using median frequency cf ;",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "9 e n d",
+      "level": 1,
+      "text": "10   Update global best;",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "11 end",
+      "level": 1,
+      "text": "12 Reconstruct high-freg→P\nLIB, low-freg→PFB; \nEnergies 2025, 18, 4986 7 of 25",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.1.2 Upper Level Planning Model",
+      "level": 3,
+      "text": "The total economic cost totalC  incurred over the entire lifecycle of the energy storage \nsystem, comprising investment costs and operational costs, is expressed by Equation (7): \ntotal inv OMCC C=+ , (7) \n,, v ,()inv E V k E k k k v\nkk",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "C u S E S P",
+      "level": 1,
+      "text": "∈Ω ∈Ω\n=+= +  , (8) \n,\n,, ,\nESS\nESS\nki k",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "kv ikv",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "E E",
+      "level": 1,
+      "text": "PP\nφ\nφ\n∈\n∈\n =\n=\n\n\n\n, (9) \n(1 )\n(1 ) 1\nk\nk\nm\nm\nrru r\n+= +− , (10) \nwhere invC   denotes the total investment cost, and OMC   represents the daily operation \nand maintenance cost. Equation (8) represents the construction investment cost of the \nhybrid energy storage system, comprising capacity cost EC  and power cost VC , ,kES  is \nthe unit capacity cost for the k-th energy storage type and ,kvS  is the unit power cost for \nthe k-th energy storage type. Equation (9) de ﬁnes the rated power and rated capacity of \nenergy storage construction, where {1 :  , 2 : }  Batterky F l o mw BtahtutLi i ery∈   and ESSφ   denote \nthe sets of integrated energy storage units. In Equation (10), u   represents the present \nvalue, indicating the discounted current worth of an investment amount after km  years \nat an annual interest rate r . \nThe operation and maintenance (O&M) cost of an energy storage plant refers to the \nexpenses required to keep the storage syst em in good standby condition. This cost \nincludes routine maintenance expenses as well as the expected annualized cost needed to \nmaintain the system’s power and capacity wi thout degradation over its entire lifecycle. \nThe calculation is as follows: \n,, ,\n1\n(| ( ) | ) ( )\nT\nPQ\nOM OM k k ESS OM k k\nkt k",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "P tc E",
+      "level": 1,
+      "text": "∈Ω = ∈Ω\n+=   , (11)\nwhere ,\nP\nOM kc  and ,\nQ\nOM kc  represent the annual average power maintenance cost coe ﬃcient \nand annual average capacity maintenance cost coe ﬃcient of the kth type of energy \nstorage, respectively. T represents the number of samples, and , ()kE S SP t   represents the \nenergy storage operating power of energy storage k at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.1.3 Lower Level Operational Mode",
+      "level": 3,
+      "text": "To verify the impact of the energy stor age capacity and power obtained from the \nupper-level planning on the stability of new-type power systems, we constructed a lower-\nlevel multi-objective optimization model aiming to enhance system ﬂexibility and ensure \ngrid operational stability. The Equation is detailed as follows: \n1234min min , , ,f ff ff=  , (12)\nwhere F is the objective function for lower-level energy storage operation optimization, 1f  \nrepresents operational cost, 2f  denotes the gap between the actual operation power of \nenergy storage and the system ﬂexibility de ﬁciency penalty, 3f   indicates voltage \ndeviation, and 4f  signi ﬁes line loss. \nEnergies 2025, 18, 4986 8 of 25 \n \n \nBased on the research by Chen et al. [21], O&M costs incurred during energy storage \noperation share the same timescale with voltage ﬂuctuations, line losses, and ﬂexibility \ndeﬁciency penalties. Therefore, these O&M co sts are incorporated into the operational \noptimization model, with the cost Equation given in Equation (13). \n1 OMf C= , (13)\n2, 365 ( )\nn\ns\ns\nsFSD\nS\nfC p\n∈\n=⋅  , (14)\n1\n()\nT\nFSD penal FSD\nt\nCQ P t\n=\n=  , (15)\n() | () () |FSD ESSP tt P tθ=− ,\n \n(16)\n() () () ( () () () ) ()load grid PV WD aban TPPtP tP t P tP tPt P tθ =−−+ − − , (17)\n,() ()\nESS\nESS i ESS",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "Pt P t",
+      "level": 1,
+      "text": "φ∈\n=  . (18)\nFlexibility supply-demand equilibrium mean s that the system has more than the \npermitted level of abundance of ﬂexibility supply relative to ﬂexibility demand for each \ntype of resource at any moment, under any time scale, and in any direction. When the \nmodel in this chapter con ﬁgures energy storage, there is a situation where the storage \noutput power does not fully cover the system ﬂexibility power deﬁcit. In order to enhance \nthe system ﬂexibility regulation capability and redu ce the loss of energy storage due to \ninsuﬃcient capacity and power allocati on, this paper sets the system ﬂexibility \ninsuﬃciency penalty cost to limit the situation in which the energy storage output power \ncannot cover the system ﬂexibility power shortage. \nEquation (14) represents the annual ﬂexibility penalty cost of the power system \noperation. nS  represents the set of several typical scenarios for the joint output of wind \npower, photovoltaic power, and load. sp   represents the probability of occurrence for \neach scenario. Equation (15) represen ts the penalty cost caused by insu ﬃcient system \nﬂexibility supply under scenario S. For ease of expression, the cost is calculated for \ndiﬀerent scenarios, as shown in Equations (9)–(12). penalQ  represents the unit penalty cost \nfor insuﬃcient system ﬂexibility supply. Equation (16) represents the diﬀerence between \nthe energy storage operating power and the total system ﬂexibility power shortage at time \nt, where ()ESSP t  is the total energy storage operating power at time t. Equation (17) is the \ngrid ﬂexibility gap Equation. This paper cons iders the output of renewable energy, \nthermal power output, and energy storage output as the ﬂexibility supply resources of the \npower system, with the load demand being the ﬂexibility demand. Here, loadP  is the load \ndemand, g ridP   is the power exchange with the main grid, PVP   is the photovoltaic \ngeneration power, WDP  is the wind generation power, abanP  is the wind and photovoltaic \ncurtailment power, and TPPP   is the thermal power generation. The energy storage \noperating power is composed of the sum of the operating powers of all conﬁgured energy \nstorage nodes ( ESSi φ∈ ), as shown in Equation (18), where , ()iE S SP t  is the energy storage \noperating power at node i at time t. \n3 ()\nn\ns\nsS\nsf Up\n∈\nΔ=  , (19)\nEnergies 2025, 18, 4986 9 of 25 \n \n \n1\n|( ) ( ) |\nTN\ni\nti\nUU t U t\nφ=∈\nΔ= −  , (20)\n()\n()\nN\ni\ni\nUt\nUt N\nφ∈\n=\n\n. (21)\nEquation (19) is the power system voltage ﬂuctuation Equation (20) represents the \nsystem voltage ﬂuctuation level equation, where iU is the voltage at node i at time t, and \nn is the number of nodes. Equation (21) calculates the average voltage ()Ut  across all \nnodes in the system at time t. \n22\n,, ,,\n, 21, 1 ,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4 TN ij t ij t",
+      "level": 1,
+      "text": "ijti j it\nPQfR U==\n+=  , (22)\nEquation (22) is the system line loss equation, where ,ijR   is the resistance of the \nbranch between nodes i and j. ,ijP  and ,ijQ  are the active power and reactive power of \nthe branch between nodes i and j, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "2.1.4 Objective Function",
+      "level": 3,
+      "text": "The objective function is shown in Equation (23). Con ﬁguring energy storage can \npromote the accommodation of wind and ph otovoltaic power and reduce wind and \nphotovoltaic curtailment, but may simultaneously be accompanied by an increase in \ninvestment costs. Therefore, capacity con ﬁguration requires multi-dimensional \nconsideration. This chapter comprehensively considers the economy, ﬂexibility supply \ncapability, and power supply reliability of the hybrid energy storage system to establish \na multi-objective function, expressed as: \n1234 ,min min ( , , , )) (total f ffffFC=  . (23)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "2.1.5 Constraints",
+      "level": 3,
+      "text": "Considering the impact of centralized energy storage conﬁguration on grid stability, \nand combining the energy storage’s own charge–discharge balance constraint and \noperating power constraint, the following constraints are obtained: \nExcessive charging and discharging of the energy storage system will both lead to a \nsubstantial reduction in its cycle life. Di ﬀerent types of energy storage have di ﬀerent \noptimal capacity operating intervals. Limiting the operating interval of the energy storage \ncapacity within the optimal interval can e ﬀectively increase the number of cycles and \nservice life of the ba ttery. This paper focuses solely on capacity constraints for research, \nignoring the energy attenuation of the energy storage during use. \n,min ,max ()ii iSOC SOC n SOC≤≤ , (24)\nwhere ,miniSOC  and ,maxiSOC  represent the upper and lower limits of the remaining power \nof the i-th type of energy storage, respectively. \nThe actual charging and discharging powe r of the energy storage at each moment \nduring operation is less than the rated power con ﬁgured at each node. As shown in \nEquation (25): \nESS,min ESS ESS,max\nESS,min ESS ESS,max\nii i\nii i\nEE E\nPP P\n ≤≤ ≤≤\n, (25)\nEnergies 2025, 18, 4986 10 of 25 \n \n \nwhere ESS,min\niE  and ESS,max\niE  denote the upper and lower limits of the rated capacity of the \nenergy storage installed at node i; ESS,min\niP  and ESS,max\niP  denote the upper and lower limits \nof the rated power of the energy storage installed at node i, respectively. \n1\nk\ncha di\nrr\ns\nrR\nXX\n∈\n+= , (26)\nEnergy storage devices of the same type at moment t cannot be charged or discharged \nsimultaneously. Equation (26) represents the state of the energy storage device at moment \nt, where a\nr\nch",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "and s",
+      "level": 1,
+      "text": "r\ndi\nX , respectively, represent the charging and discharging state of the \nenergy storage device at time t, which are 0–1 variables, and {1 :  ,,k kL i t h iRB a t um tery∈  \n2: }   Vanadium Flow Batteryrepresents the type of energy storage. \n/() () () () () () ()TH wind PV aban grid load ESS clP tP tPtPtPtP tP t+ −+=+− , (27)\nEquation (27) represents the ﬂexibility supply-demand power balance of the power \ngrid system at time t. Here, ()THP t   represents the thermal power at time t, / ()wind PVP t  \nrepresents the joint output power of wind and photovoltaic at time t, ()loadP t  represents \nthe total load power of the regional power grid at time t, ()ESSP t  represents the charging \nand discharging power of the hybrid energy storage system at time t, ()abanP t  represents \nthe wind and photovoltaic curtailment power of the grid at time t, and ()clP t  represents \nthe load shedding power at time  t . ()gridP t   represents the tie-line power between the \nregional power grid and the main grid at time t, which is divided into downward power \n, ()grid DownPt   and upward power , ()grid UPPt  ; here, downward power represents the power \npurchased by the grid system from the main grid, and upward power represents the \npower sold to the main grid. \n,\n,\n( ) ( )         ( ) 0\n() ()        () 0\ngrid DOWN grid grid\ngrid UP grid grid\nP t Pt Pt\nP t Pt Pt\n=≥ =− <\n, (28) \n,,() () () () ()grid grid DOWN grid UP purc sellPt P tP t PtP t=− = − , (29) \n,min , ,max\n,min , ,max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "t i",
+      "level": 1,
+      "text": "ij ij t ij\nUU U\nII I\n≤≤ ≤≤\n, (30) \nEquation (30) represents the grid operation security constraint. Where ,maxiU   and \n,miniU   are the upper and lower limits of the voltage at node I, ,minijI   and ,maxijI   are the \nminimum and maximum values of the allowable branch current, respectively. \n()\n()\n2\n2\n() () () () 0\n() () () () 0\nca\nca",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "k i j i j i j",
+      "level": 1,
+      "text": "kj",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "k i j i j i j",
+      "level": 1,
+      "text": "kj\nPt P t P t r I t\nQt Q t Q t x I t\nφφ\nφφ\n∈∈\n∈∈\n +− − =\n+− − =\n\n\n\n, (31) \n22\n2\n2\n() ()() ()\nij ij\nij",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "Pt Q tIt Ut",
+      "level": 1,
+      "text": "+= , (32) \n() ( )\n22 2 2 2\n() () 2 () () ()j i ij ij ij ij ij ij ijUt U t P t r Qt x It r x=− + + + , (33) \nEquation (31) represents the active and reactive power balance of a node. Where cφ  \nis the set of head nodes of all branches whose end nodes are i. aφ  is the set of head nodes \nof all branches whose head nodes are i, ()iP t  and ()iQt  are the active and reactive loads \nEnergies 2025, 18, 4986 11 of 25 \n \n \nof node i at time t, respectively. iU  is the voltage of node i. ()ijPt  and ()ijQt  are the active \nand reactive power of branch ij at time t, respectively. \nEquation (32) represents the branch curr ent constraints in the power system, where \nijr  and ijx  are the resistance and reactance of branch ij, respectively. In this paper, each \nbranch is numbered according to the node number at its end point, and the branch power \nﬂows from the node with the smaller number to the node with the larger number in the \npositive direction. Equation (33) represents the node voltage balance constraint. \n,, / ,, , , ,() () () () () () () () ()i i load i WD PV i ESS i aban i grid i i cl i TPPPt P t P t P t P t P t v tP t P t=− − +−− − , (34) \n,, / , , ,() () () () () () ()i i load i WD PV i grid i i cl i TPPQt Q t Q t Q t vt Q t Q t=− −− − , (35) \nEquations (34) and (35) repr esent the active and reactive power balance constraints \nfor nodes, where , ()i loadPt  , ,/ ()iwP VPt  , , ()iE S SPt  , , ()i abanPt  , , ()ig r i dPt  , , ()ic lPt  , and , ()iT P PPt   denote \nthe active power load at node i at time  t, the active power output from wind and solar \npower plants, the charging and discharging power of energy storage systems, wind and \nsolar power curtailment power, active power injected from the upper-level main grid, \nactive power from interruptible load, and thermal power plant active power. If a node \ndoes not have these resources connected, the corresponding variables are set to 0. \n, ()il o a dQt , \n,/ ()iW D P VQt , , ()ig r i dQt , ,() ()ii c lvt Q t , and , ()iT P PQt  represent the reactive power of load, wind and \nsolar power generation, upper-level grid injection, interrupt able load, thermal power \nplant, and hydroelectric power at node i at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3 Problem Description and Modeling Double-Layer Optimization",
+      "level": 1,
+      "text": "Conﬁguration Solution Process \nThis study establishes a mixed-integer nonlinear bi-level optimization model for \nhybrid energy storage systems. The uppe r layer determines storage location, rated \ncapacity, and rated power to minimize annualized lifecycle costs. The lower layer \nallocates storage power to optimize ﬂexibility regulation and voltage stability. Power \nsignals are decomposed into high-frequency (lithium-ion ba tteries) and low-frequency \n(ﬂow ba tteries) components using frequency sepa ration. These results feed back to the \nupper layer for iterative re ﬁnement of capacity/power pla nning, creating a closed-loop \nbetween long-term planning and short-term operation. The Weighted Average Algorithm \n(WAA) solves both optimization layers. The solution process for hybrid energy storage \ndouble-layer optimization is shown in Figure 2. \n  \nFigure 2. HESS planning process. \n\nEnergies 2025, 18, 4986 12 of 25",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.1 Weighted Average Algorithm",
+      "level": 2,
+      "text": "In this paper, the upper level planning is a mixed integer nonlinear problem and the \nlower run is a non-convex optimization, which cannot be solved directly by traditional \nmathematical planning methods such as KKT conditions, and heuristic algorithms are \ncommonly used for energy storage planning problems of similar complexity [22]. \nWeighted average algorithm (WAA) is a novel metaheuristic algorithm inspired by the \nconcept of weighted average position. Unli ke previous swarm intelligence algorithms, \nthis algorithm requires constructing the weighted average position of the entire \npopulation during each iteration, preventing individuals in the population from \nbecoming trapped in local optima [23]. \nThe main idea of the WAA is to apply the weighted average position to search for \nnear-optimal solutions. When calculating the overall average position, it is necessary to \nconsider the weights of each element in the da taset; elements with larger weights exert a \nmore signiﬁcant inﬂuence on the ﬁnal average position.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "3.1.1 Population Initialization",
+      "level": 3,
+      "text": "The optimization process ﬁrst starts from a D × N dimensional space, where N is the \npopulation size, D represents the space dimension, and the position of each individual in \nthe population is deﬁned as X. Equation (36) represents that the individual position vector \nX is composed of N populations each of dimension d: \n(,)( )\nii i\nnn nXr a n d N D u bl b l b=× − + , (36) \n[1, ], [1, ]nN iD∈∈ , (37) \nwhere i\nnub  is the upper search bound of the n-th population in the i-th dimension, and \ni\nnlb  is the lower search bound of the n-th population in the i-th dimension.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "3.1.2 Weighted Average Position",
+      "level": 3,
+      "text": "In the WAA, it is ﬁrst necessary to calculate the ﬁtness of each participant and \nrearrange the population based on one of two quality characteristics—that is, whether a \nlarger individual indicates superior population ﬁtness or a smaller one indicates superior \nﬁtness—thereby rearranging the population. Then, the top CandidateN   individuals are \nselected from the population. \nCandidate\n1(4 ) Maxit\nitN nP nP −=− + , (38)\n1\n()\nCandidateN\nFitness i i\nSum Fitness X\n=\n=  , (39)\nCandidate\nFitness1\nMiu\nFitness Candidate\n(( ) )\n(1 )\nN",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "X Sum Fitness X",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "Sum N",
+      "level": 1,
+      "text": "=\n −\n= − , (40)\nCandidate\nMiu Fitness 1\n() /\nN",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "XX F i t n e s s X S u m",
+      "level": 1,
+      "text": "=\n=  ⋅ , (41)\nEquation (38) represents the number of individuals selected from the population, \nwhere nP   is the population size, it   is the current iteration number, and Maxit   is the \nmaximum iteration number. FitnessSum   is the sum of all ﬁtness values of the selected \ncandidates. Equations (39) and (40) are the calculation equations for the high-quality \nregion center of the current population. Eq uations (39) and (40) represent the update \nmethods of the weighted average position in minimization problems and maximization \nEnergies 2025, 18, 4986 13 of 25 \n \n \nproblems, respectively. min represents the quality center of the current population, \nguiding the subsequent movement direction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "3.1.3 Exploration and Exploitation Switching Mechanism",
+      "level": 3,
+      "text": "During the iteration process, Equation (42) is applied to determine the search phase \nfor candidate solutions, namely exploration or exploitation: \n() ( 1 ) s i n\nIt\nitf it rand Maxαπ =⋅ − \n, (42)\nwhere it  is the current iteration number, ItMax  is the maximum iteration number, α  is \na constant used to control the balance between exploration and exploitation phases. In this \npaper, 0.5 is set as the threshold to achieve balance between exploitation and exploration. \nMore speciﬁcally, candidate solutions with () 0 . 5fi t ≥  will move according to exploitation \ncapability. Under conditions below the threshold, candidate solutions will move \naccording to exploration capability. It is conceived that mutual cooperation between \nexploration and exploitation will yield a better search space. \nThe ﬁrst strategy focuses on utilizing the search space, which is determined by the \nweighted average position of the entire current population as well as the individual best \nposition and the global best position, as shown below: \n11 12 13( 1 ) ( () () ) ( () () ) ()\nBext Besti Miu Global Miu Personal MiuX it w X it X it w X it X it w X it+= ⋅ − + ⋅ − + ⋅ , (43)\nwhere 11w  , 12w  , and 13w   are random numbers between 0 and 1, used to adjust the \nsearchable space of the individual best position \nBestPersonalX   and the global best position \nBextGlobalX . \nThe second approach concentrates on utilizing the region de ﬁned by the weighted \nmean location of all individuals and each particle’s own optimal position. Unlike the ﬁrst \napproach, this method disregards the global optimum, thereby reducing the extent of the \nsearch area. The corresponding search region is formulated in Equation (44). \n21 22(1 ) ( ( ) ( ) ) ( )\nBest Besti Miu Personal PersonalX it w X it X it w X it+= ⋅ − + ⋅ , (44)\nwhere 21w  and 22w  are random values between 0~1. Compared to the ﬁrst strategy, this \nmovement strategy is more inclined to enhance convergence speed and accuracy. \nThe third approach targets the search region bounded by the global optimal position \nand the population’s weighted mean position. In this method, each candidate’s new \nposition is determined according to the following calculation: \n31 32( 1 ) ( () () ) ()\nBest Besti Miu Global GlobalX it w X it X it w X it+= ⋅ − + ⋅ , (45)\nwhere 31w  and 32w  are random values between 0~1. The search space of this strategy will \nbe smaller than that of the ﬁrst and second strategies. Movement from the global best \nposition to the weighted average position will enhance convergence speed and accuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "3.1.4 Exploration Phase",
+      "level": 3,
+      "text": "In the WAA algorithm, two strategies ar e employed to balance the relationship \nbetween global and local search during the optimization process within the feasible \nsolution space, enabling the algorithm to identify the optimal solution. \nLévy ﬂight is a random walk model conforming to the Lévy distribution, exhibiting \nMarkov properties during its process. The step sizes simulated in the Lévy ﬂight model \nare predominantly small but occasionally exhibit large steps, as shown in Equation (48). \nEnergies 2025, 18, 4986 14 of 25 \n \n \n1/\nUS\nV\nβ= , (46) \n()\n2\n,~ 0 , uUV N σ , (47) \n1/\n(1 ) / 2\nΓ(1 ) sin( / 2)\n(1 )Γ 22\nu\nβ\nβ\nβπ βσ β β\n−\n\n +=  +  \n, (48) \nEquation (46) represents the step size of Lévy’s ﬂight, where β  is the step control \nparameter that takes into account the long and short distance movement of the individual. \nBased on the controlled adjustment of the step length S, the ﬁrst exploration strategy \nis given by the following Equation (49): \n,, (1 ) ( )\nBest ji j GlobalXi t X i t S+= + , (49)\nwhere S  represents the step size of the Lévy ﬂight, and \n,\n()\nBest jGlobalXi t  denotes the global \noptimal solution at position j during the it  -th iteration. , (1 )ijXi t +   indicates the  j -th \nposition of the i-th solution after (1 )it +  iterations. \nTo enable the population to escape local optima when following the ﬁrst strategy, the \nWAA applies a second movement strategy to adjust the search space: \n, (1 ) ( )ij m i n m i n m i nX it rand ub lb LB+= ⋅ − + , (50)\nwhere minlb  and minub  are de ﬁned as the minimum values of the lower and upper bounds \nfor each dimension. Through this movement strategy, the search agent will move to a new \nposition to seek other better regions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "3.2 Improvement Strategy",
+      "level": 2,
+      "text": "The standard WAA provides a robust foun dation for optimization but exhibits two \nprimary limitations when solving the complex, high-dimensional bi-level HESS planning \nproblem formulated in this study: \nIn preliminary tests, the standard WAA occasionally converged to local optima, \nparticularly when initial populations were distributed in less favorable regions of the \nsearch space. This is a ttributed to its exploitation-dominated search strategy in later \nstages, which lacks an eﬀective mechanism to escape local basins of attraction. \nFor multi-objective optimization, maintaining a diverse and well-distributed set of \nnon-dominated solutions is critical. The conventional crowding distance calculation, used \nfor niching and selection, often fails to pres erve solution diversity uniformly across the \nobjective space, especially with more than two objectives. To address these challenges, the \nImproved WAA (IWAA) incorporates two targeted strategies. \n3.2.1. Reﬂective Reverse Learning Strategy \nThis paper introduces the re fraction opposition-based learning strategy into the \nsecond optimization approach of the WAA exploration phase. The refraction opposition-\nbased learning mechanism is an excellent improvement mechanism for optimizing initial \nassignments and candidate solutions. Buildi ng upon opposition-based learning, it \ncombines the law of light refraction to search for the optimal solution, enabling the \nalgorithm to jump out of the current optimiza tion position region and direction during \nthe WAA exploration phase. The Equation is as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Power grid system."
+    },
+    {
+      "id": "f2",
+      "caption": "HESS planning process."
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "The pseudocode of VMD-PSO."
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Equation (3)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "Equation (15)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "Equation (19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "Equation (20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "Equation (21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "Equation (22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "Equation (23)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "Equation (25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "Equation (26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "Equation (27)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "Equation (30)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "Equation (31)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "Equation (32)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "Equation (33)"
+    },
+    {
+      "id": "e36",
+      "latex_or_text": "Equation (36)"
+    },
+    {
+      "id": "e38",
+      "latex_or_text": "Equation (38)"
+    },
+    {
+      "id": "e42",
+      "latex_or_text": "Equation (42)"
+    },
+    {
+      "id": "e44",
+      "latex_or_text": "Equation (44)"
+    },
+    {
+      "id": "e48",
+      "latex_or_text": "Equation (48)"
+    },
+    {
+      "id": "e46",
+      "latex_or_text": "Equation (46)"
+    },
+    {
+      "id": "e49",
+      "latex_or_text": "Equation (49)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 32
+  }
+}

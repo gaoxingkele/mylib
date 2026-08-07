@@ -1,0 +1,280 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/nature-scientific-reports/nature-scientific-reports__2017__swissadme_a_free_web_tool_to_evaluate_pharmacokinetics___501b0db826.pdf",
+  "n_pages": 13,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Computer models have been fostered as a valid alterna-",
+      "level": 1,
+      "text": "tive to experimental procedures for prediction of ADME, especially at initial steps, when investigated chemical \nstructures are numerous but the availability of compounds is scarce\n2.\nA large variety of in silico methods share the objective of predicting ADME parameters from molecular structure3.  \nNoteworthy, the pioneer work of Lipinski et al. examined orally active compounds to define physicochemical \nranges for high probability to be an oral drug (i.e. the drug-likeness)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "4 This so-called Rule-of-five delineated the",
+      "level": 1,
+      "text": "relationship between pharmacokinetic and physicochemical parameters.\nWhereas physicochemical parameters give a global description of the structure, molecules can be directly \ndescribed by substructure searches. These techniques are at the root of Structural Alert5, the PAINS6 or the Lilly \nMedChem7 filters applied to cleanse chemical libraries from compounds most likely unstable, reactive, toxic, or \nprone to interfere with biological assays because unspecific frequent hitters, dyes or aggregators8.\nCheminformaticians developed different molecular descriptors mined from chemical structures. One \nof the most popular examples is the molecular fingerprint (FP), which consists in a sequence of bits defining \n1SIB Swiss Institute of Bioinformatics, Molecular Modeling Group, Quartier Sorge, Bâtiment Génopode, CH-1015 \nLausanne, Switzerland. 2Department of Oncology, Centre Hospitalier Universitaire Vaudois, CH-1015 Lausanne, \nSwitzerland. 3Ludwig Institute for Cancer Research, University of Lausanne, CH-1015 Lausanne, Switzerland. \nCorrespondence and requests for materials should be addressed to O.M. (email: olivier.michielin@sib.swiss) or V.Z \n(email: vincent.zoete@sib.swiss)\nreceived: 05 October 2016\naccepted: 13 January 2017\nPublished: 03 March 2017\nOPEN\nwww.nature.com/scientificreports/\n2\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nthe presence or absence of chemical features in a molecule. The FP2 method 9 is one archetype of topological \n(or path-based) FP , which considers all fragments of the molecular structure following a linear path up to a \ngiven number of bonds. Every possible path is hashed to generate the bit string (i.e. the FP). A major advantage \nof FP is the efficiency by which computers handle such bit strings 10, allowing for instance large-scale virtual \nscreening or the rapid estimation of synthetic accessibility of molecules11. FP are also employed in classification \nmodels for ADME behaviours built by support vector machine (SVM) or Bayesian techniques 12. Remarkably, \ncomputer-aided drug design (CADD) has been a pioneer field for the application of such machine learning \ntechnologies13.\nBecause most freely available in silico ADME tools focus on one specific property or model only, while gener-\nalist ADME packages are commercial software, we felt the need of gathering what we consider the most relevant \ncomputational methods to provide a global appraisal of the pharmacokinetics profile of small molecules. The \nmethods were selected for robustness, speed, but also and importantly for ease of interpretation to enable efficient \ntranslation to medicinal chemistry through molecular design. Some of them were adapted with open-source algo-\nrithms to ensure freedom to operate for the global scientific community. Others are our own models developed \nand tested on purpose. When applicable, multiple predictions of the same parameter are provided to allow for a \nconsensus view of a given property.\nThe SwissADME web tool presented here is freely accessible at http://www.swissadme.ch and meant \nfor user-friendly submission and easy analysis of the results, also for nonexpert in CADD. Compared to the \nstate-of-the art of free web-based tools for ADME and pharmacokinetics (e.g. pk-CSM 14 and admetSAR15) and \napart from unique access to proficient methods (e.g. iLOGP16 or the BOILED-Egg17), SwissADME strong points \nare, non-exhaustively: different input methods, computation for multiple molecules, and the possibility to dis -\nplay, save and share results per individual molecule or through global intuitive and interactive graphs. Finally, \nSwissADME is integrated in the SwissDrugDesign workspace. One-click interoperability gives access to vari -\nous CADD tools developed by the Molecular Modeling Group of the SIB Swiss Institute of Bioinformatics, e.g. \nligand-based virtual screening (SwissSimilarity 18), biotarget prediction (SwissTargetPrediction 19), molecular \ndocking (SwissDock20), bioisosteric design (SwissBioisostere21), or molecular mechanics (SwissParam22).\nSubmission Web page\nAccessing http://www.swissadme.ch in a web browser displays directly the submission page of SwissADME, \nwhere molecules to be estimated for ADME, physicochemistry, drug-likeness, pharmacokinetics and medic -\ninal chemistry friendliness properties can be input. As shown in Fig. 1, a black toolbar at the top of the Web \nFigure 1. SwissADME submission page. The actual input is a list of SMILES, which contains one molecule per \nline with an optional name separated by a space. Molecules can be directly pasted or typed in SMILES format, \nor inserted through the molecular sketcher. The latter enables importing from databases, opening a local file or \ndrawing a 2D chemical structure to be transferred to the list by clicking on the double-arrow button. When the \nlist of molecules is ready to be submitted, the user can start the calculations by clicking on the “Run” button.\nwww.nature.com/scientificreports/\n3\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\npage allows the user to navigate within the different SwissDrugDesign tools. A second bar gives access to differ-\nent information regarding SwissADME, among which the FAQ and Help pages as well as legal disclaimer and \ncontacts.\nThe input zone itself comprises a molecular sketcher based on ChemAxon’s Marvin JS (http://www.chemaxon.\ncom) that enables the user to import (from a file or an external database), draw, and edit a 2D chemical structure, \nand to transfer it to a list of molecules. This list, on the right-hand side of the submission page, is the actual input \nfor computation. It can be edited as a standard text, allowing for typing or pasting SMILES. The list is made to \ncontain one input molecule per line, defined by a SMILES and optionally a name separated by a space. If name is \nomitted, SwissADME will automatically provide an identifier.\nNoteworthy, both buttons for transferring the sketch to SMILES list and for running the computation are \ndynamic, in the sense that they are active only if the action is possible. At the time of writing, one can expect a \nresult in 1 to 5 seconds for a drug-like molecule.\nExamples can be loaded in the SMILES list by clicking on the “Fill with an example” button.\nOne-panel-per-molecule Output\nThe output panels are loaded in the same Web page. There is one panel compiling all values for each molecule. It \nis filled immediately after calculation completion, one molecule after the other. This way it is possible to inspect \nthe results for the first compounds without waiting for the whole list to be treated. This one-panel-per-molecule \n(Fig. 2) is headed by the molecule name and divided into different sections.\nChemical Structure and Bioavailability Radar. The first section, including two-dimensional chemical \nstructure and canonical SMILES, is located below the title (Fig. 2). It shows on which chemical form the pre -\ndictions were calculated (refer to Computational Methods). Moreover, our Bioavailability Radar is displayed for \na rapid appraisal of drug-likeness (refer to Fig. 3). Six physicochemical properties are taken into account: lipo -\nphilicity, size, polarity, solubility, flexibility and saturation. A physicochemical range on each axis was defined by \ndescriptors adapted from refs 23 and 24 and depicted as a pink area in which the radar plot of the molecule has \nto fall entirely to be considered drug-like. Leaving the mouse over the radar gives further information about the \ndescriptors (see also Physicochemical Properties and Computational Methods).\nPhysicochemical Properties.  Simple molecular and physicochemical descriptors like molecular weight \n(MW), molecular refractivity (MR), count of specific atom types and polar surface area (PSA) are compiled in \nthis section. The values are computed with OpenBabel9, version 2.3.0. The PSA is calculated using the fragmental \nFigure 2. Computed parameter values are grouped in the different sections of the one-p",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "50 It is therefore of great importance for drug discovery to predict the propen-",
+      "level": 1,
+      "text": "sity with which the molecule will cause significant drug interactions through inhibition of CYPs, and to deter -\nmine which isoforms are affected.\nSwissADME enables the estimation for a chemical to be substrate of P-gp or inhibitor of the most important \nCYP isoenzymes. We applied the support vector machine algorithm (SVM)51 on meticulously cleansed large data-\nsets of known substrates/non-substrates or inhibitors/non-inhibitors (for details, see Computational Methods). \nIn similar contexts, SVM was found to perform better than other machine-learning algorithms for binary clas-\nsification\n40,52. The models return “Y es” or “No” if the molecule under investigation has higher probability to be \nsubstrate or non-substrate of P-gp (respectively inhibitor or non-inhibitor of a given CYP). The statistical per -\nformance of the classification models is given in Table 1, in comparison with previous SVM models on the same \ntargets. We restricted the benchmark to state-of-the-art methods, published after 2010.\nThe quantification of the models performance is not straightforwardly comparable, because the training sets \nare different, most of the published models are less than 10-fold cross-validated and some statistical parameters \nModel\nSwissADME Previous models\nTR/TS[a] ACCCV\n[b] AUCCV\n[c] ACCext\n[d] AUCext\n[e] TR/TS ACCCV AUCCV ACCext AUCext Reference\nP-gp substrate 1033/415 0.72 0.77 0.89 0.94 544/n.c. 0.71[f] n.c. n.c. n.c. 53\n484/300 0.64 n.c. 0.59 n.c. 71\n332/n.c. 0.74[f] 0.77[f] n.c. n.c. 15\n212/120 0.74 n.c. 0.88 n.c. 57\nCYP1A2 inhibitor 9145/3000 0.83 0.90 0.84 0.91 9145/3000 n.c. n.c. 0.88 0.95 54\n12099/2804 0.82[f] n.c. 0.68 0.81 77\n7208/7128 0.88[g] n.c. n.c. 0.93 55\nCYP2C19 inhibitor 9272/3000 0.80 0.86 0.80 0.87 9272/3000 n.c. n.c. 0.85 0.91 54\n11885/2691 0.79[f] n.c. 0.81 0.84 77\n6038/5923 0.81[g] n.c. n.c. 0.89 55\nCYP2C9 inhibitor 5940/2075 0.78 0.85 0.71 0.81 8720/3000 n.c. n.c. 0.83 0.90 54\n12130/2579 0.78[f] n.c 0.89 0.86 77\n6627/6530 0.83[g] n.c. n.c. 0.89 55\nCYP2D6 inhibitor 3664/1068 0.79 0.85 0.81 0.87 9726/3000 n.c. n.c. 0.84 0.88 54\n11881/2860 0.84[f] n.c. 0.88 0.88 77\n7788/7761 0.90[g] n.c. n.c. 0.85 55\nCYP3A4 inhibitor 7518/2579 0.77 0.85 0.78 0.86 8893/5135 n.c. n.c. 0.84 0.92 54\n11536/7025 0.78[f] n.c. 0.76 0.78 77\n2334/6738 0.81[g] n.c. n.c. 0.87 55\nTable 1.  Statistical performance of SVM classification models for substrate or inhibitor of \npharmacokinetics-relevant protein, P-gp and CYP . aNumber of molecules in the training set (TR) and in \nthe test set (TS); b10-fold cross-validation accuracy; c10-fold cross-validation area under receiver operating \ncharacteristic (ROC) curve; dexternal validation accuracy; eexternal validation area under ROC curve; f5-fold \ncross-validation; g7-fold cross-validation.\nwww.nature.com/scientificreports/\n6\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nare missing. Nevertheless, the SwissADME classifiers are competitive with previous models in term of robust-\nness, with cross-validation accuracy (ACCCV) grossly at the same level. Furthermore, cross-validated areas under \nreceiver operating characteristic (ROC) curves (AUCCV) are equal to the corresponding values found in the lit-\nerature. Likewise, external prediction power is difficult to compare, as each test set includes different molecules. \nHowever, the predictive capacity of SwissADME classifiers is grossly equivalent to the related SVM methods, \nboth in terms of external accuracy (ACC\next) and external area under ROC curve (AUCext). The models for which \nexternal validation was not found (P-gp of refs 15 and 53) have to be taken with extreme caution since they \npossibly suffer from overfitting biases. Noteworthy, some of the published models (e.g. CYP2C9 and CYP3A4 \nof ref. 54 or CYP2C9 of ref. 55) were built on severely unbalanced training sets and tested on clearly unbalanced \nexternal sets. As demonstrated by Carbon-Mangels et al.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "56 the relevance of machine-learning classification meth-",
+      "level": 1,
+      "text": "ods, and especially SVM, are negatively impacted by datasets with one significantly more populated class. In that \ncase, accuracy measurements are overestimated and prone to mislead the construction and the evaluation of the \nmodel. Moreover, some SVM models were published with small training and test sets (P-gp of refs 15 and 57), \nwhich imply questionable capacity of generalization and broadness of applicability domains. We emphasize that \nfor SwissADME classifiers, both training and test sets were carefully cleansed and checked for size, diversity and \nbalance between classes. Furthermore, our SVM models rely merely on molecular and physicochemical descrip-\ntors generated by SwissADME. We believe that this improves robustness and sustainability of the underlying \nmethodologies. In particular, not using molecular fingerprints, molecular graphs or other structural descriptions \ncan be an handicap to generate high statistical values but should also limit overfitting biases and yield more gener-\nalist predictive models, not necessarily influenced by specific chemical scaffolds or moieties. In our practice, these \nwell-performing models able to estimate important ADME behaviours are of great support for pharmacokinetics \noptimization and evaluation of small molecules.\nDrug-likeness. As defined earlier, “drug-likeness” assesses qualitatively the chance for a molecule to become \nan oral drug with respect to bioavailability. Drug-likeness was established from structural or physicochemical \ninspections of development compounds advanced enough to be considered oral drug-candidates. This notion is \nroutinely employed to perform filtering of chemical libraries to exclude molecules with properties most probably \nincompatible with an acceptable pharmacokinetics profile. This SwissADME section gives access to five different \nrule-based filters, with diverse ranges of properties inside of which the molecule is defined as drug-like. These \nfilters often originate from analyses by major pharmaceutical companies aiming to improve the quality of their \nproprietary chemical collections. The Lipinski (Pfizer) filter is the pioneer rule-of-five implemented from ref. 4.  \nThe Ghose (Amgen), Veber (GSK), Egan (Pharmacia) and Muegge (Bayer) methods were adapted from refs \n58–61, respectively. Multiple estimations allow consensus views or selection of methods best fitting the end-user’s \nspecific needs in terms of chemical space or project-related demands. Any violation of any rule described here \nappears explicitly in the output panel.\nThe Abbot Bioavailability Score",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "62 is similar but seeks to predict the probability of a compound to have at least",
+      "level": 1,
+      "text": "10% oral bioavailability in rat or measurable Caco-2 permeability. This semi-quantitative rule-based score relying \non total charge, TPSA, and violation to the Lipinski filter defines four classes of compounds with probabilities \nof 11%, 17%, 56% or 85%. Like the other methods in this section, it primary focuses on the fast screening of \nchemical libraries, to select the best molecules to be purchased, synthetized or promoted at a further stage of a \nmedicinal chemistry project.\nMedicinal Chemistry.  The purpose of this section is to support medicinal chemists in their daily drug \ndiscovery endeavours. Two complementary pattern recognition methods allow for identification of potentially \nproblematic fragments. PAINS (for pan assay interference compounds, a.k.a. frequent hitters or promiscuous \ncompounds) are molecules containing substructures showing potent response in assays irrespective of the protein \ntarget. Such fragments, yielding false positive biological output, have been identified by Baell et al.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "6 in analysing",
+      "level": 1,
+      "text": "six orthogonal assays and breaking down the molecules active on 2 or more assays into 481 recurrent fragments, \nconsidered as potentially leading to promiscuous compounds. SwissADME returns warnings if such moieties are \nfound in the molecule under evaluation.\nBesides, we implemented Structural Alert, which consists in a list of 105 fragments identified by Brenk et al.\n5 \nto be putatively toxic, chemically reactive, metabolically unstable or to bear properties responsible for poor phar-\nmacokinetics. In SwissADME, it is possible to have a chemical description of the problematic fragments found in \na given molecule by flying over the “question mark” icon appearing after the fragment list. This is implemented \nfor both PAINS and Brenk filters. By applying these and other physicochemical filters to design screening librar-\nies, Brenk et al.\n5 observed that most of the remaining compounds satisfy criteria for “leadlikeness” . This concept \nis similar to drug-likeness, yet focusing on physicochemical boundaries defining a good lead, i.e. a molecular \nentity suitable for optimization. By definition, leads are subjected to chemical modifications that will most likely \nincrease size and lipophilicity",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "63 As a consequence, leads are required to be smaller and less hydrophobic than",
+      "level": 1,
+      "text": "drug-like molecules. Since it is crucial for a chemist to judge whether a given molecule is suitable to initiate lead \noptimization, in addition to structural filters, we implemented a rule-based method for leadlikeness, which was \nadapted from ref. 64.\nOne of the key aspects of CADD activities is to help the selection of the most promising virtual molecules \nthat will be synthetized and submitted to biological assays or other experiments. Synthetic accessibility (SA) is \na major factor to consider in this selection process. Obviously, for a reasonable number of molecules, medicinal \nchemists are the best able to determine SA. However, when too many molecular structures prevent an expert \nevaluation, in silico estimation can be used for pre-filtering. Ertl & Schuffenhauer",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "11 proposed a fingerprint-based",
+      "level": 1,
+      "text": "approach for SA estimation but including closed-source information about fingerprint definition that prevents \na straightforward implementation in our tool open to the scientific community. As a consequence, we have built \nwww.nature.com/scientificreports/\n7\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nour own fragmental method by analysing more than 13 millions compounds immediately deliverable by vendors. \nWe assumed that the most frequent molecular fragments (technically, FP2 bits, refer to Computational Methods) \nin this large collection indicates a probably high SA, while rare fragments imply a difficult synthesis. For a given \nmolecule, the fragmental contributions to SA are summed and corrected by the terms describing size and com-\nplexity, such as macrocycles, chiral centres, or spiro functions as defined by Ertl & Schuffenhauer",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "11 After nor-",
+      "level": 1,
+      "text": "malization, the SA Score ranges from 1 (very easy) to 10 (very difficult). To assess the performance of the method \ndeveloped for SwissADME, we retrieved two test sets of SA previously published. Both sets involved external \nmolecules, whose difficulty of synthesis was marked from 1 to 10 by nine",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "11 and four65 medicinal chemists, respec-",
+      "level": 1,
+      "text": "tively. The averaged expert score can then be compared to an in silico SA Score. As seen in Table 2, the predictive \ncapacity of all three methods appears very dependent of the test set. Indeed the SAs of set 1, smaller and evaluated \nby more chemists, turned out to be much more robustly predictable than set 2. Human evaluation of synthetic \ncomplexity is undeniably subjective and relies on individual chemist’s training and experience. However, signifi-\ncant linear correlation and small errors — especially with SwissADME SA Score that outperformed the reference \nmethods on both sets with smaller errors, and equal or higher linear correlation coefficients — demonstrate how \nthis simple and fast methodology can help prioritizing molecules to synthetize.\nGraphical output\nAfter all calculations completed, the “Show BOILED-Egg” red button appears below the sketcher to display the \ngraphical output on the same page (as exemplify in Fig. 4). This consists primarily in the BOILED-Egg, an intu-\nitive method to predict simultaneously two key ADME parameters, i.e. the passive gastrointestinal absorption \n(HIA) and brain access (BBB). Although conceptually very simple as it relies on two physicochemical descrip -\ntors only (WLOGP and TPSA, for lipophilicity and apparent polarity), this classification model was built with \nextreme care regarding statistical significance and robustness\n17. As shown in Fig. 4, the egg-shaped classification \nplot includes the yolk (i.e. the physicochemical space for highly probable BBB permeation) and the white (i.e. the \nphysicochemical space for highly probable HIA absorption). Both compartments are not mutually exclusive and \nthe outside grey region stands for molecules with properties implying predicted low absorption and limited brain \npenetration. In practice, the BOILED-Egg has proven straightforward interpretation and efficient translation to \nmolecular design in a variety of drug discovery settings. Whereas the predictive power of the BOILED-Egg is \nbroad in term of chemical space, it is restricted to passive penetration through gastro-intestinal wall and BBB. We \ntook benefit of its implementation within SwissADME to enrich the graphical output with the prediction of P-gp \nsubstrate, which is the most important active efflux mechanism involved in those biological barriers\n40 (refer to the \nSVM model described in Pharmacokinetics). As a result, the user conveniently obtains on the same graph a global \nevaluation about passive absorption (inside/outside the white), passive brain access (inside/outside the yolk) and \nactive efflux from the CNS or to the gastrointestinal lumen by colour-coding: blue dots for P-gp substrates (PGP+ )  \nand red dots for P-gp non-substrate (PGP− ).\nContrary to the one-panel-per-molecule concept for other parameters, the graphical output includes predic-\ntion for all molecules submitted to SwissADME, thus additional capacities were implemented to enable interac-\ntive navigation and easy evaluation. Flying over a specific point makes a semi-transparent box appear including \nthe name and structure of the molecule. Clicking on a specific point makes the page scroll to the corresponding \noutput panel including all predictions for the molecule. Getting back to the graphical output is achieved by click-\ning on the red up-arrow on the top-right corner of the panel. Moreover, on the right of the plot are displayed \npossible actions (at the moment, to show the name of the molecules on the graph, only), legends and possible \nremarks (the number of molecules outside the range of the plot). The user may want to hide the plot by clicking \nthe “Hide BOILED-Egg” red button.\nHelp, saving and interoperability\nSwissADME is user-friendly and has been conceived for a variety of users, including nonexpert in cheminfor -\nmatics or computational chemistry. Efforts were put to insure ease of input and interpretability of output. These \naspects are supported by the Help page, which provides technical guidance on the usage of the website and by \nthe FAQ, where we collected not only technical but also scientific and general questions. Contextual help about \nspecific items can be displayed by leaving the mouse over question marks or some boxes on the pages.\nMoreover, SwissADME is an integral part of the SwissDrugDesign program, an ambitious initiative driven by \nthe Molecular Modeling Group of the SIB Swiss Institute of Bioinformatics that aims at providing a collection of \nfree Web-based tools covering many aspects of CADD. As such, SwissADME users can access the different Web \nsites, through the black toolbar at the top of the page. By clicking on the name of the tool, a new tab opens with \nthe corresponding submission page. We have undertaken the implementation of more advanced interoperability \ncapabilities. At the time of writing this manuscript, three icons were placed top left of the output panel (below \nTest set SwissADME Original models published with the test set\n#molecule[a] #chemist[b] MAE[c] RMSE [d] r[e] MAE RMSE r Reference\n1 40 9 0.63 0.81 0.96 0.91 1.13 0.94 11\n2 114 4 1.02 1.33 0.62 1.07 1.41 0.62 65\nTable 2. Statistical performance of synthetic accessibility (SA) scores on two external test sets. aNumber of \nexternal molecules; bnumber of chemist marks; cmean average error; droot mean square error; elinear correlation \ncoefficient.\nwww.nature.com/scientificreports/\n8\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nthe name of the molecule, see Fig. 2). They allow one-click submission of the molecule to SwissTargetPrediction \n(for reverse screening to predict protein target, by clicking on the red target), SwissSimilarity (for ligand-based \nvirtual screening, by clicking on the red twins) and to re-submit the molecule to SwissADME (for instance to get \na single compound graphical output, by clicking the red pill). Reversely, other SwissDrugDesign websites include \nthe SwissADME pill icon for estimation of ADME, pharmacokinetics, drug-likeness and medicinal chemistry \nfriendliness regarding a small molecule output of any CADD process.\nImportantly, the user has the opportunity to save or share SwissADME results in files (CSV) or by copy -\ning the values in the clipboard of the local computer and pasting in text or spreadsheet applications for further \nprocessing.",
+      "refs": {
+        "figures": [
+          "f2",
+          "f4"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "Conclusions",
+      "level": 1,
+      "text": "The SwissADME Web tool enables the computation of key physicochemical, pharmacokinetic, drug-like and \nrelated parameters for one or multiple molecules. In one hand, efforts were put in the backend to embed free \nopen-access and fast predictive models showing statistical significance, predictive power, intuitive interpreta -\ntion, and straightforward translation to molecular design. These models are adapted from published renowned \napproaches or in-house original methods, specially developed and thoroughly benchmarked. On the other \nhand, we focused on an ergonomic and user-friendly graphical interface for the cost- and login-free Web site \nhttp://www.swissadme.ch. The latter enables easy input and efficient analysis of the output through interactive \ncapabilities, and does not require any prior knowledge in CADD. Moreover, interoperability allows for direct \naccess to other SwissDrugDesign web tools, including SwissSimilarity 66 (virtual screening), SwissBioisostere 21 \n(ligand-based design), SwissTargetPrediction 19 (prediction of biotargets), SwissDock 20 (molecular docking), \nSwissSideChain67 (protein modeling) and SwissParam22 (molecular mechanics).\nAs a result, SwissADME has been designed to support the entire community (specialists and nonexperts) in \ntheir drug discovery endeavours.\nComputational methods\nProgramming and scripting.  The SwissADME website was written in HTML, PHP5, and JavaScript, \nwhereas the backend of computation was mainly coded in Python 2.7. The use of additional libraries or software \nfor specific tasks is mentioned in the corresponding paragraph.\nSubmission Page. The molecule inputted through the sketcher Marvin JS (version 16.4.18, 2016, www.che-\nmaxon.com) are converted into SMILES by JChem Web Services (version 14.9.29, 2013, www.chemaxon.com) \ninstalled on one of our servers. This on-the-fly conversion allows seamless paste of SMILES in the input list. The \nuser has the possibility to edit this list as a standard text, e.g. to modify SMILES or add a name to the molecule. \nFigure 4. The BOILED-Egg17 allows for intuitive evaluation of passive gastrointestinal absorption (HIA) \nand brain penetration (BBB) in function of the position of the molecules in the WLOGP-versus-TPSA \nreferential. The white region is for high probability of passive absorption by the gastrointestinal tract, and \nthe yellow region (yolk) is for high probability of brain penetration. Y olk and white areas are not mutually \nexclusive. In addition the points are coloured in blue if predicted as actively effluxed by P-gp (PGP+ ) and in \nred if predicted as non-substrate of P-gp (PGP− ). For an interactive analysis, the user can leave the mouse over \na dot to show the structure of the molecule and click on the dot to scroll to the corresponding output panel. In \nthis example, Lapatinib is predicted as not absorbed and not brain penetrant (outside the Egg), Omeprazol is \npredicted well-absorbed but not accessing the brain (in the white) and PGP+  (blue dot), Sunitinib is predicted \nas passively crossing the BBB (in the yolk), but pumped-out from the brain (blue dot), and Palonosetron is \npredicted as brain-penetrant (in the yolk) and not subject to active efflux (red dot). One molecule is predicted \nnot absorbed and not BBB permeant because outside of the range of the plot (streptomycin with a TPSA of \n331.43 Å 2 and a WLOGP of − 7.74).\nwww.nature.com/scientificreports/\n9\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nUpon calculation submission by clicking the “Run” button, the SMILES of each molecule is canonicalised by \nOpenBabel (version 2.3.0, 2012, http://openbabel.org)9 and processed individually. Several actions are performed \nthrough JChem Web Services APIs. First hydrogen atoms are added to the molecular structure, which is dearo-\nmatised (i.e. kekulised), neutralised and checked by the Standardizer API. Then a tridimensional conformation is \ngenerated though the StringMolExport function with the Clean3D option and stored in MOL2 format. Besides, \na two-dimensional image created through the MolConverter API is displayed on demand when scrolling the \noutput web page.\nOne-panel-per-molecule Output. The Bioavailability Radar in the first section of the One-panel-per-molecule  \noutput complements the two-dimensional image from the JChem webserver and the canonical SMILES calcu-\nlated by OpenBabel. We use the JpGraph PHP library (version 3.5.0b1, 2016, http://jpgraph.net) to produce the \nradar plot, which bears six axes for six important properties for oral bioavailability. Each property is defined by \na descriptor of SwissADME and a range of optimal values is depicted as a pink area. The latter is inspired from \ncommonly accepted bioavailability and drug-likeness guidelines\n23,24. For saturation, the ratio of sp3 hybridized \ncarbons over the total carbon count of the molecule (Fraction Csp3) should be at least 0.25. For size, the molec-\nular weight (MW calculated by OpenBabel) should be between 150 and 500 g/mol. For polarity, the TPSA 25 \nshould be between 20 and 130Å 2. For solubility, log S (calculated with the ESOL model 36) should not exceed 6. \nFor lipophilicity, XLOGP329 should be in the range from −  0.7 to + 6.0. For flexibility, the molecule should not \nhave more than 9 rotatable bonds. To be estimated as drug-like, the red line of the compound under study must \nbe fully included in the pink area. Any deviation represents a suboptimal physicochemical property for oral \nbioavailability.\nAll descriptors and molecular parameters of the Physicochemical Properties  section are computed through \nthe OpenBabel API (version 2.3.0, 2012, http://openbabel.org)",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "9 Noteworthy, the topological polar surface area",
+      "level": 1,
+      "text": "(TPSA) is strictly based on the fragmental system provided by Ertl et al.25 including polar sulfur and phosphorus \natoms.\nMultiple freely available computational methods to predict n -octanol/water partition coefficient (log P o/w) \nvalues are made available in the Lipophilicity  section. iLOGP (for implicit log P ) is an in-house physics-based \nmethods relying on Gibbs free energy of solvation calculated by GB/SA in water and n-octanol. Generalized-born \n(GB) parameters are computed through the GBMV2 method 68 and solvent-accessible surface area (SA) is the \nanalytical approximation generated by CHARMM (version c36b1, 2011, https://www.charmm.org)69. The iLOGP \nimplemented in SwissADME corresponds to Model9 of the seminal publication16, which was trained on 11,993 \nmolecules (r =  0.72, MAE =  0.89, and RMSE =  1.14 against experimental log P). 5-fold crossvalidation ensured \nrobustness (q2\nCV =  0.52, MAECV =  0.89, and RMSECV =  1.14) and external test benchmarks showed the excellent \npredictive power and extended applicability domain compared to well-established methods. XLOGP3 values \nare obtained through the command-line Linux program (version 3.2.2, courtesy of CCBG, Shanghai Institute of \nOrganic Chemistry) including the knowledge-based corrections",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "29 WLOGP is our own implementation of the",
+      "level": 1,
+      "text": "atomistic method developed by Wildman and Crippen 30. MLOGP values are computed through an in-house \nimplementation of Moriguchi’s topological method31,32. SILICOS-IT is the log Po/w estimation returned by exe-\ncuting the FILTER-IT program (version 1.0.2, 2013, http://silicos-it.be.s3-website-eu-west-1.amazonaws.com/\nsoftware/filter-it/1.0.2/filter-it.html). Finally, SwissADME gives a consensus log P\no/w value, which is the arithmetic \nmean of the five predictive values mentioned above.\nSimilarly to lipophilicity, the Water Solubility  section includes multiple predictive methods for the user to \nchoose between the most accurate model for a given chemical series and an averaged consensus value. The ESOL \nmodel\n36 is a QSPR model establishing the linear relationship between log S and five molecular parameters, i.e. \nMW , the number of rotatable bonds, the fraction of aromatic heavy atoms and Daylight’s CLOGP . Because the \nlipophilicity descriptor is not freely available, the implementation of ESOL in SwissADME replaces CLOGP by \nXLOGP3 as parameter in the linear equation to predict log S. XLOGP3 is known to perform well on exter -\nnal datasets and to return similar predictions as CLOGP",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "28 The other three parameters were computed with",
+      "level": 1,
+      "text": "OpenBabel. Likewise, Ali et al. 37 linked log S with log Po/w and TPSA. The model implemented in SwissADME \ncorresponds to the model 3 of the original publication, with XLOGP3 as lipophilicity descriptor. The third sol-\nubility method available in SwissADME is the log S  estimated by the FILTER-IT program (version 1.0.2, 2013, \nhttp://silicos-it.be.s3-website-eu-west-1.amazonaws.com/software/filter-it/1.0.2/filter-it.html). This prediction is \nbased on a system of 16 fragmental contributions modulated by the squared root of MW . All three models are \npredicting log S values, which are also translated within SwissADME into solubility in mol/l and mg/ml. Finally \na qualitative estimation of the solubility class is given according to the following log S  scale: insoluble < − 10 < \npoorly < − 6 < moderately < − 4 < soluble < − 2 < very < 0 < highly.\nThe Pharmacokinetics section proposes one linear method for skin permeation, which relies on the simple \nQSPR model by Potts and Guy",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "39 linking the decimal logarithm of the skin permeability coefficient (log K p in",
+      "level": 1,
+      "text": "cm/s) with MW and log Po/w. The model implemented in SwissADME uses XLOGP3 as lipophilicity descriptor. \nBesides, most of the models in this section are machine-learning binary classifiers for important ADME behav-\niours. Passive gastro-intestinal (HIA) absorption and blood-brain barrier (BBB) permeation are predicted with \nthe BOILED-Egg model, which defines favourable and unfavourable zones in the log P\no/w versus PSA physic-\nochemical space for passive diffusion through both physiological barriers 17. The classification showed 10-fold \ncross-validation accuracy of 92% and 88% for BBB and HIA, respectively (refer to Graphical Output).\nSix other classification models are part of the Pharmacokinetics  section to predict the propensity of the \nmolecule under investigation to be substrate or inhibitor of important pharmacokinetics-related proteins, for  \nwhich large diverse and balanced datasets were retrieved and meticulously cleansed. For P-glycoprotein1 (P-gp), \nthe training set consists of 521 substrates and 512 non-substrates extracted from the Metrabase database 70  \n(http://www-metrabase.ch.cam.ac.uk, accessed January 2016), whereas the test set was obtained from ref. 71. \nwww.nature.com/scientificreports/\n10\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\nTo ensure truly external validation, molecules overlapping with the training set were removed from the test set, \nwhich finally includes 215 substrates and 200 non-substrates. For CYP major isoforms, all datasets were those \nof Veith et al.\n50 and downloaded from the PubChem database 72 (http://pubchem.ncbi.nlm.nih.gov, accessed \nFebruary 2016). In case of unbalanced dataset (all except CYP1A2 and CYP2C19), sufficient chemical diversity \nwas guaranteed by clustering with the Ward method and a reciprocal nearest neighbour (RNN) algorithm\n73, the \nmore populated class to lessen. The number of molecules (described by circular fingerprints) of the large class is \nreduced by defining clusters with the JKlustor program (version 14.9.29, 2014, http://www.chemaxon.com). Only \nthe centre of each cluster (i.e. the molecule that has the smallest sum of dissimilarities to the other molecules \nin the cluster) is included in the training or test set to balance. As a result, the training sets involved respec-\ntively 4301 CYP1A2 inhibitors and 4844 CYP1A2 non-inhibitors; 4284 CYP2C19 inhibitors and 4988 CYP2C19 \nnon-inhibitors; 2940 CYP2C9 inhibitors and 3000 CYP2C9 non-inhibitors; 1814 CYP2D6 inhibitors and 1850 \nCYP2D6 non-inhibitors; and 3758 CYP3A4 inhibitors and 3760 CYP3A4 non-inhibitors. The test sets involved \nrespectively 1412 CYP1A2 inhibitors and 1588 CYP1A2 non-inhibitors; 1386 CYP2C19 inhibitors and 1614 \nCYP2C19 non-inhibitors; 1020 CYP2C9 inhibitors and 1055 CYP2C9 non-inhibitors; 528 CYP2D6 inhibitors \nand 540 CYP2D6 non-inhibitors; and 1289 CYP3A4 inhibitors and 1290 CYP3A4 non-inhibitors.\nSwissADME’s backend calculations were ran to generate 50 molecular and physicochemical descriptors per \nmolecule (described in the Supplementary Table S1). For a given model, a descriptor was rejected if non-zero \nvalues for all molecules in the training set are less than 20% or if the coefficient of variation is less than 3%. In case \nof correlation higher than 0.9 between remaining descriptors, a selection is made based on F-score. The selected \ndescriptors for each model are shown in Supplementary Tables S2–S7. These tables also include the minimum \nand maximum values for each descriptor among all molecules used in the training. This enables beholding the \nbroadness of physicochemical space involved and the applicability domain of the SVM models. The predictive \ncapability of each model can be further appraised on Supplementary Table S8, where external accuracy was split \nin sensitivity and specificity to ensure that positive and negative molecules are predicted with the same level of \nrobustness. The final training and test sets with selected descriptors were normalized and the respective model \nready to be built. First, the libSVM support vector machine python library (version 3.20, 2015, https://www.\ncsie.ntu.edu.tw/~cjlin/libsvm/)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "74 was used for multi-step grid-based optimization of the best coefficients for the",
+      "level": 1,
+      "text": "above-selected descriptors as well as for the soft-margin permissivity (C) and the hyper-parameter (ϒ  ) of the \nRBF Gaussian kernel function. The 10-fold crossvalidated accuracy (ACCCV) for each model was so maximized \nand AUCCV was calculated. In a second step, the so-built models were used on the external test sets (normal-\nized according to the training set) in order to evaluate predictive power in terms of external accuracy (ACC ext) \nand AUCext. All final SVM models were stored in separate files, which are read through the libSVM API upon \nSwissADME job submission.\nThe Drug-likeness section includes six rule-based methods. The Lipinski rule-of-five is exactly as described in \nref. 4 including MLOGP < 4.15 as lipophilicity threshold. The Ghose filter is the method detailed in the original \npublication58, where the atomic log P is calculated with WLOGP . The very simple yet efficient Veber filter is imple-\nmented directly from the seminal paper59. The Egan filter is yielded from the Egan Egg60,75, but the closed-source \nALOGP98 was replaced by WLOGP17. The Muegge filter61 was adapted to fit SwissADME implementation and \nusage by calculating XLOGP3 as lipophilicity descriptor. The Bioavailability Score was implemented without \nchanges from Martin et al. 62. Similarly, the leadlikeness filter included in the Medicinal Chemistry section was \nadapted from the original rule64 by using XLOGP3 as lipophilicity descriptor.\nBoth methods for identification of problematic fragments within the Medicinal Chemistry section, i.e. PAINS6 \nand Brenk’s Structural Alert5, were implemented using the SMARTS recognition capability of OpenBabel API. \nThe SMARTS definitions for PAINS were retrieved from the Filter-it distribution (version 1.0.2, 2013, http://\nsilicos-it.be.s3-website-eu-west-1.amazonaws.com/software/filter-it/1.0.2/filter-it.html). Little formatting and \ncleansing were needed to obtain a screenable collection of 481 fragments. Brenk provided directly the SMARTS \ndescriptions of 105 unwanted chemical groups in the supplementary material of the seminal paper\n5.\nSwissADME Synthetic Accessibility (SA) Score is based primarily on the assumption that the frequency of \nmolecular fragments in ‘really’ obtainable molecules correlates with the ease of synthesis. The fragmental con -\ntribution to SA should be favourable for frequent chemical moieties and unfavourable for rare moieties. We \nexamined the ‘ All Now’ subset of ZINC database\n76 (version 12, 2014, http://zinc.docking.org/subsets/all-now \naccessed April 2015) including 12′ 782′ 590 compounds immediately deliverable by vendors. This collection was \nnot submitted to any other filter. FP2 fingerprints of all molecules were computed by OpenBabel9 thus generating \n12′ 782′ 590 bit strings (i.e. the fingerprints). The frequency of occupancy of each of the 1024 bits for the entire \nlibrary was calculated and its contribution to SA obtained by applying natural logarithm to the normalized bit \ncount. As a result, this fragmental system of bits allows extremely fast evaluation of any input molecule by reading \nits FP2 string. Fragmental contribution of bit occupancy is summed and linearly modulated by corrective factors, \nwhich are penalties for size (MW) and complexity. This latter is based on SMARTS recognition of chiral centres, \nspiro functions, bridged rings and macrocycles (more than 8-membered rings). The coefficients of the corrective \nterms are those defined by Ertl & Schuffenhauer",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "11 Finally the score is normalized to range from 1 (very easy) to",
+      "level": 1,
+      "text": "10 (very difficult to synthetize). As crude as it may seem, SwissADME SA Score is extremely fast and performing \nslightly better than two similar methods previously published\n11,65 (refer to Table 2).\nGraphical output. The graphical output of SwissADME consists of the BOILED-Egg directly implemented \nfrom ref. 17 to predict passive diffusion through HIA and BBB by position in a WLOGP-versus-TPSA physico-\nchemical space. The HIA model was trained on 660 well-absorbed and non-absorbed molecules and a 10-fold \ncrossvalidation returned an accuracy (ACC\nCV) of 92% and a Matthews correlation coefficient (MCCCV) of 0.65. \nThe BBB model was built on a training set of 260 permeant and non-permeant molecules and displayed excellent \nwww.nature.com/scientificreports/\n11\nSCientifiC  REpORtS  | 7:42717 | DOI: 10.1038/srep42717\ninternal statistics as well: ACC CV =  88% and MCC CV =  0.75. The plot is enriched by color-coding referring to \nP-gp active efflux predicted by a SVM classifier (refer to Pharmacokinetics). We aimed at providing a global and \nefficient analysis of absorption and brain access for multiple molecules at once. For more advanced interactive fea-\ntures, the graph is generated in JavaScript using the Flot plotting library (version 0.8, 2015, http://www.flotcharts.\norg/). The user has the possibility to visualize the position of the molecules between the different BOILED-Egg \ncompartments and their propensity of being substrate of P-gp by coloured points: blue for substrate (PGP+ ) and \nred for non-substrate (PGP− ). The dots are also the mean to visualize name and chemical structure of the mol-\necules (generated on-the-fly by the dedicated Chemaxon web server as described above) by leaving the mouse \nover the dot. As well, it is possible to access the corresponding output panel summarizing all calculated values for \nthe molecule by clicking on the corresponding dot. Getting back to the BOILED-Egg is as simple as clicking on \nthe up arrow at the top-right corner of the panel. All these functionalities, as well as interoperability with other \nSwissDrugDesign web tools are coded in PHP and Javascript.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "SwissADME submission page. The actual input is a list of SMILES, which contains one molecule per"
+    },
+    {
+      "id": "f2",
+      "caption": "Computed parameter values are grouped in the different sections of the one-panel-par-molecule"
+    },
+    {
+      "id": "f3",
+      "caption": "The Bioavailability Radar enables a first glance at the drug-likeness of a molecule. The pink"
+    },
+    {
+      "id": "f4",
+      "caption": "The BOILED-Egg17 allows for intuitive evaluation of passive gastrointestinal absorption (HIA)"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Statistical performance of SVM classification models for substrate or inhibitor of"
+    },
+    {
+      "id": "t2",
+      "caption": "Statistical performance of synthetic accessibility (SA) scores on two external test sets. aNumber of"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e38",
+      "latex_or_text": "equation 38"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

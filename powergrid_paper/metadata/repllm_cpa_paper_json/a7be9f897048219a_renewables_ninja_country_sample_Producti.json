@@ -1,0 +1,274 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/renewables_ninja_country_sample/renewables_ninja_country_sample__Production_cost_modeling_with_renewables__71f7b8cc80.pdf",
+  "n_pages": 11,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "Lung cancer is the most common cause of cancer death worldwide.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 An important goal toward improv-",
+      "level": 1,
+      "text": "ing lung cancer survival is to detect the disease at an early stage, t hereby giving an opportunity for the most\neﬀective treatment options. Lung cancer begins when lesions deve lop in the bronchial epithelium of the lung\nmucosa. These bronchial lesions, which can eventually evolve into sq uamous cell lung cancer, also help predict\nthe potential development of other lung cancers. Hence, method s for early detection of bronchial lesions are\nessential to help improve lung cancer patient care. A noninvasive wa y for physicians to search for such lesions\nis to use bronchoscopy for imaging the airway epithelium during a rout ine airway exam. 2 Among the current\nadvanced videobronchosopic techniques, autoﬂuorescence bro nchoscopy (AFB) exhibits high sensitivity to suspi-\ncious bronchial lesions and eﬀectively distinguishes developing bronc hial lesions from the normal epithelium. In\nAFB video, lesions appear reddish brown, while normal tissue appear s green. Unfortunately, current standard\npractice entails manual inspection of an incoming AFB video stream, w hich is extremely tedious and error prone.\nA promising strategy for improving this situation is to consider compu ter-based lesion analysis methods for\nAFB video frames. A simple, but largely ineﬀective, approach applied in some clinical work is to measure the\n∗ Correspondence: Email: weh2@psu.edu; WWW: http://mipl.e e.psu.edu/; Telephone: 814-865-0186\nred/green ratio. 3 Other more recent work has considered standard computer-bas ed image processing methods\nand/or conventional machine learning techniques: 4–6 Unfortunately, these works all have at least one of the\nfollowing limitations:\n1. Need complicated image preprocessing, including image enhanceme nt and/or feature extraction before\nreaching lesion decisions.\n2. Do not provide robust, accurate segmentation of abnormal les ion regions as an aid toward locating potential\nlesions.\n3. Can’t process an input AFB video stream in real-time, thereby mak ing the methods unsuitable for making\nlesion decisions during a live bronchoscopic airway exam.\nThese limitations make the methods unsuitable for lesion segmentatio n and detection during a live bronchoscopic\nairway exam.\nRecent deep-learning-based architectures, which have achieved great success in medical image analysis, show\nmuch promise for handling these limitations. As an example, Unet++ is a powerful and widely used architecture\nfor semantic medical image segmentation. 7 The Unet++ adds eﬃcient and densely-connected nested-decode r\nsubnetworks to the popular Unet architecture. 8 It also applies a deep supervision mechanism that allows for\nimproved aggregation of features across diﬀerent semantic scale s. Although Unet++ can provide more accurate\nsegmentations than Unet, the requisite dense connections deman d extensive computation.\nAs another example, the Caranet also utilizes deep supervision to en hance the use of aggregative features. 9\nYet, in contrast to the complicated sub-networks of Unet++, the Caranet includes the advantageous self-attention\nmechanism and draws on the context axial reverse attention tech nique on a pretrained Res2Net backbone. Hence,\nit has been shown to enable faster processing time and better segm entation performance than Unet++ when\ntested over multiple public medical datasets. Nevertheless, the de sign of the self-attention mechanism in the\nCaranet is complex. On another front, the Segformer has shown m uch success in the semantic segmentation\ndomain.10 The Segformer provides a simple and eﬃcient layout that utilizes the a ttention technique referred\nto as “Mix Transformer (MiT) encoders.” In a later development, th e SSFormer architecture extracts aggregate\nlocal and global step-wise features from pretrained MiT encoders to predict abnormal regions. 11 Tests with\nthe CVC-ColonDB and Kvasir-SEG datasets demonstrate the gene ralizability and superior performance of the\nSSFormer (and its use of the MiT encoders) over Caranet for medic al imaging applications. Yet, the feature\npyramid used by SSFormer could be made more eﬃcient, thereby red ucing the processing time and network\ncomplexity. Note that the number of parameters deﬁning a networ k gives a direct indication of the number of\nﬂoating-point operations (FLOPS) needed to process an input and , hence, its computational eﬃciency (execution\ntime). (Table 2 later illustrates this point.)\nWe propose a more eﬃcient deep-learning-based architecture tha t enables real-time segmentation and detec-\ntion of bronchial lesions in an AFB video. Our architecture draws on p retrained Mix Transformer (MiT) encoders\nas the backbone and a decoder structure that incorporates an e ﬃcient stage-wise feature pyramid (ESFP) to\nhelp promote accurate lesion segmentation.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 METHODS",
+      "level": 1,
+      "text": "For a given AFB video sequence, our goal is achieve both high lesion de tection accuracy and high com-\nputational throughput. At the outset, we point out that state- of-the-art deep-learning-based neural network\narchitectures generally require a large amount of data to adequat ely train and test them (the “data hunger”\nproblem). This is because of the large number of network paramete rs that require precise tuning during the\ntraining process. Unfortunately, for our AFB video analysis applica tion, while we seemingly have a large dataset\navailable to training and testing, the amount of data we have still pro ves to be insuﬃcient. Our proposed\napproach oﬀers a solution to all of these issues.\nFigure 1 depicts the proposed ESFPNet architecture, which utilizes the Mix T ransformer (MiT) encoder as\nthe backbone and uses an eﬃcient stage-wise feature pyramid (ES FP) as the decoder to generate segmentation\noutputs. The basic input is a raw AFB video frame, while the output is a frame that either presents a segmented\ndetected lesion or no output (a normal frame).\nSections 2.1-2.2 describe each component of the architecture. Section 2.3 then discusses implementation\ndetails.\nFigure 1. Block diagram of the ESPFNet architecture.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Backbone",
+      "level": 2,
+      "text": "CNN-based encoders, such as the Unet and SegNet implementation s, have enjoyed much success for image\nsegmentation tasks (CNN = convolutional neural network). 8, 12 A CNN-based encoder, motivated by the idea\nthat every image pixel depends on its neighboring pixels, uses ﬁlters on an image patch to extract relevant\nlocal features. Yet, if a processing model utilized all image data inst ead of only the patches considered by the\nﬁlters, then processing performance would be expected to improv e. This concept helps the so-called Vision\nTransformers (ViT) work better than most CNN models. 13 The Mix Transformer encoder (MiT) is a module\nthat takes advantage of the idea of the ViT network and uses four overlapping path-merging modules and self-\nattention prediction in four stages. 10 These stages not only furnish high-resolution coarse features, b ut also\nprovide low-resolution ﬁne-grained features. In addition, the high - and low-resolution features are commonly\nused to boost the performance of semantic segmentation.\nOn the other hand, the limitation of using transformers as encoder s is obvious. The self-attention layers used\nby transformers lack locality inductive bias (the notion that image pix els are locally correlated and that their\ncorrelation maps are translation-invariant) and lead to the problem of data hunger. 13 To alleviate the challenge\nof data hunger for applications limited by small datasets, one can ex ploit the widely used concept of transfer\nlearning. The MiT encoders, which take advantage of this idea, are p retrained on the large ImageNet database. 14\nFor our ESPFNet architecture, we integrate these pretrained MiT encoders as our backbone and train them again\nwith the initialized decoders. This proves to be a straightforward wa y to facilitate good performance over our\nsmall task-speciﬁc datasets, while also being able to exceed the per formance of state-of-the-art CNN models.\n2.2 Eﬃcient stage-wise feature pyramid (ESFP)\nThe prediction results of the decoder rely on multi-level features f rom the encoder, where local (low-level)\nfeatures are extracted from the shallow parts of the encoders, while global (high-level) features are extracted\nfrom the deeper parts. Previous research has demonstrated th at the suﬃciency of local features obtained in\nthe shallow part of the transformer directly aﬀects the model’s per formance.15 The existing Segformer model,\nhowever, equally concatenates these multi-level features to pre dict segmentation results and, hence, lacks the\nability to suﬃciently and selectively use the local features. 10 To address this issue, the SSFormer architecture\nincludes an aggregating feature pyramid architecture that ﬁrst u tilizes two layers of convolution to preprocess\nfeature outputs from each MiT stage. It then fuses any two feat ures in reverse order (from deep to shallow) until\nﬁnal prediction. 11 In this way, local features gradually guide the model’s attention to c ritical regions.\nWe point out, however, that high-level (global) features contribu te more to overall segmentation performance\nthan low-level (local) features. Although SSFormer enhances the contribution of local features, the usage of\nhigh-level features is weakened. Furthermore, the SSFormer ar chitecture’s usage of the two convolution layers\nis ineﬃcient. Inspired by the structure of a lightweight channel-wise feature pyramid network (CfpNet) that\nfuses every pair of features and concatenates multi-level fused elements for the ﬁnal prediction, we propose a\nnovel and eﬃcient stage-wise feature pyramid (ESFP) to exploit mu lti-stage features. 16 ESFP starts with linear\npredictions of each stage output (eﬃcient in the number of connec ting channels) and then linearly fuses these\npreprocessed features from global to local. These intermediate a ggregating features are concatenated and work\ncooperatively to produce ﬁnal segmentations.\nAs a ﬁnal comment, we tested several diﬀerent versions of the pr oposed ESFPNet architecture based of the\ndiﬀerent MiT encoder scales available: 10 ESFPNet-T (tiny model), ESFPNet-S (standard model), and ESFPN et-\nL (large model), which are based on the MiT-B0, -B2, and -B4 encode rs, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3 Implementation details",
+      "level": 2,
+      "text": "We implemented our model in Pytorch and accelerated training via NVI DIA GPUs. Given the diﬀerence in\nMiT encoders’ scales and the GPU memory required to train, we train ed these networks either on an NVIDIA\nRTX 3090 or on an NVIDIA TESLA A100 GPU. Before training, we resiz ed the inputs to 352 × 352 pixels and\nnormalized them for segmentation. We also employed random ﬂipping, rotation, and brightness changing as data\naugmentation operations on the inputs. Our loss function combines the weighted intersection over union (IoU)\nloss and the weighted binary cross-entropy (BCE) loss:\nL = Lw\nIoU + Lw\nBCE . (1)\nWe used the default AdamW optimizer with the learning rate 1 e− 4 and trained our models for 200 epochs.\nDetails for the training and validation data sets appear in Section",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Next, Section 4 gives a series of",
+      "level": 1,
+      "text": "experiments that not only measure the performance of our propo sed ESFPNET model, but also compares it to\nother recent deep learning models.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 EXPERIMENT AL DA T ASETS AND METRICS",
+      "level": 1,
+      "text": "This section summarizes the test datasets and validation metrics us ed for the experiments. Section 3.1 sum-\nmarizes our AFB dataset. As an additional validation experiment to m easure our network’s general applicability\nto other domains, we also performed tests with ﬁve public datasets , as summarized in Section 3.2: Kvasir, 17\nCVC-ClinicDB,18 CVC-T,19 CVC-ColonDB,20 and ETIS-LaribPolypDB. 21 Finally, Section 3.3 discusses the test\nmetrics employed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1 AFB image dataset",
+      "level": 2,
+      "text": "Table\n1 summarizes the details of our AFB image dataset. For our dataset, we isolated 208 lesion frames\n(frame size, 720 × 720), which depicted clear ground truth bronchial lesions, and also selected 477 normal frames.\nThese frames were drawn from the AFB airway exams from 20 lung ca ncer patients seen at our University\nHospital. These cases were collected under informed consent and a n approved IRB protocol. Because a lesion\ntypically appears in many frames within a given video sequence, we sele cted Lesion frames to ensure variations\nin airway location, size, and viewing direction. Also, all frames were lab eled by an expert. Regarding the normal\nframes, we selected these randomly around the vicinity of each obs erved airway bifurcation, taking care not\ninvolve any lesions or lesion components in selected frames.\nAs Table 1 shows, we split the AFB dataset into train, test, and validation subs ets using approximately a\n50%, 25%, and 25% split, respectively. Every lesion and normal fram e from a given case was placed in the\nsame subset to guarantee independence between training, testin g, and validation phases. Lastly, the lesion sizes\nsummarized in Table 1 are given as percentages, where 100% = 352 × 352× π pixels (this is the pixel-based area\nof an AFB frame’s circular scan region).\nDataset case / (lesion frames, normal frames) total lesion / normal frames lesion/normal split ratio lesion size range\nTrain\n156 / (35,16); 176 / (8,24); 178 / (7,17);\n192 / (19,24); 188 / (12,11); 172 / (0,39);\n189 / (0,30); 191 / (0,26); 182 / (5,22);\n187 / (11,14)\n97 / 223 46.7% / 46.8% 0.31% - 54.30%\nValidation 171 / (58,3); 181 / (0,43); 173 / (0,35);\n179 / (0,35); 180 / (0,23) 58 / 139 27.9% / 27.1% 0.20% - 75.15%\nTest 184 / (33,3); 174 / (9,25); 195 / (11,16);\n157 / (0,35); 190 / (0,36) 53 / 115 25.4% / 24.1% 0.47% - 45.87%\nTable 1. AFB dataset details. “case” = patient case number, “ lesion/normal frames” = the number of lesion or normal\nframes selected from a case, “total lesion/normal frames” = the total number of selected lesion or normal frames for a\nparticular data subset, while “lesion/normal split ratio” gives the percentage of frames in a given class (lesion or nor mal)\nassigned to a particular data subset. Finally, “lesion size range” indicates the range of lesion sizes encountered in a\nparticular subset, where the values indicate what percent o f a frame’s circular scan area contains a lesion.\nIn addition, Figure 2 gives sample frames in the training and validation dataset that illustra te the variations\nin lesion size ratio. Each frame pair gives the original frame (left) and ground truth segmentation (right). As\none looks from left to right in the ﬁgure, lesion size increases. We not e in passing that the lesion size ratio in\nthe validation dataset is broader than for the training dataset. No te that our dataset often draws on multiple\nframes depicting the same lesion area. Yet, these frames show ver y diﬀerent appearances of the lesion, because of\ninter-frame variations in viewing direction and distance. For instanc e, the ﬁrst two pairs in Figure 2 correspond\nto same lesion appearing in the left lower lobe of patient case 171: the second pair is captured from a position\ncloser to the lesion than the ﬁrst pair.\nFigure 2. AFB lesion examples from four cases: two from the tr aining subset (ﬁrst row) and two from the validation subset\n(second row). Each frame pair gives the original frame (left ) and ground truth lesion segmentation (right). Note that th e\nlesions contained in these frames increase in size left to ri ght in each row. Lastly, for each row, the ﬁrst two image pairs\n(row 1: case 192; row 2: case 171) correspond to the same lesio n observed from diﬀerent bronchoscope viewing positions.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.2 Polyp segmentation datasets",
+      "level": 2,
+      "text": "An eﬀective image pattern-recognition model ideally exhibits strong capabilities for learning and generaliz-\nability. In particular, if a model is trained with a particular dataset, t hen the model’s learning ability indicates\nits prediction accuracy. Similarly, generalizability refers to a model’s a bility to adapt to previously unseen\ndatasets. To ascertain the EPFSNet model’s learning capabilities and generalizability, in Section 4.2, we com-\npare our ESFPNet to several state-of-the-art medical image-s egmentation models: Unet++, 7 Deeplabv3+,22\nSF A,23 CaraNet,9 MSRF-Net,24 and SSFormer. 11 In particular, for these datasets, we set up three additional\nexperiments summarized below.\nLearning ability experiment: Following the experimental scheme of MSRF-Net,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "24 we train, validate, and",
+      "level": 1,
+      "text": "test ESFPNet on the Kavsir and CVC-ClinicDB benchmark datasets. We randomly split each dataset into three\nsubsets: 80% training, 10% validation, and 10% test. We freeze the model when it reaches the optimized dice\ncoeﬃcient on the validation dataset. We then use the frozen model to generate prediction results for the test\ndataset.\nGeneralizability experiment: We use the same dataset splitting as recommended in the experiment al scheme\nof ParaNet,\n25 which used 1450 (90%) video frames from the Kvasir and CVC-ClinicDB datasets for training. All\nimages from CVC-ColonDB and ETIS-LaribPolypDB are used for test ing. We keep the best attained performance\nfor each dataset as measures of a model’s forecasting performan ce on an unseen dataset.\nPower balance experiment: We use the same training dataset as in the generalizability experiment . The\nremaining frames from the Kvasir and CVC-ClinicDB datasets and all im ages from CVC-ColonDB, CVC-T, and\nETIS-LaribPolypDB are used for testing. A model is frozen when it r eaches convergence and later utilized in\nthe testing phase to analyze the segmentation performance over 5 test datasets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.3 Baseline and measurement metrics",
+      "level": 2,
+      "text": "To evaluate our results, we use the following metrics: mean dice; mea n IoU; structural measurement Sα ;26\nenhanced alignment metric Emax\nφ ;27 and the average mean absolute error (MAE), which gives a measure of\npixel-level accuracy. In addition, we use Sα to measure the structural similarity between predictions and grou nd\ntruth and the recently proposed Emax\nφ to assess both the pixel-level and global-level similarity. We compute d all\nmetrics using the freely available ParaNet tool. 25 When making comparisons to other models, we only use mean\ndice and mean IoU as the unifying measures in the learning ability and th e power balance experiments.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4 RESUL TS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.1 AFB dataset experiments",
+      "level": 2,
+      "text": "We trained ESFPNet-T, ESFPNet-S, and ESFPNet-L on our AFB dat aset with batch size 16. Since the\nnumber of lesion and normal frames is not balanced, we added weight s on these two classes to the sampler\nto guarantee balance when sampling a batch. We also trained the Une t++ , SSFormer-S, SSFormer-L, and\nCARANet models under the same conditions. 7, 9, 11 Lastly, results for the R/G method and previously tested\nmachine learning method are given by Chang et al. 6 Table 2 gives the quantitative comparison between various\nmethods. To help assess a model’s complexity and processing time, th e table also lists two attributes of the various\nmodels: number parameters in a model and the amount of computat ion (number of ﬂoating-point operations)\nrequired to derive an output.\nAmong the various analysis methods, only R/G analysis and our previo usly proposed machine learning\nmethod missed lesion frames; also these two approaches gave the la rgest number of frames falsely identiﬁed as\nlesion frames. Overall, our proposed ESFPNet-S model achieved th e best segmentation results, while utilizing\nthe third-fewest network parameters and giving the second fast est execution time. Although Unet++ requires\nthe second fewest parameters, it generated 5 FP frames. No oth er deep learning network gave any FN or FP\nframes. Notably, ESFPNet-S uses the same backbone as the SSFo rmer-S. Yet, it performs better in terms of the\nmDice and mIoU indices while also requiring fewer GFLOPs for computat ion SSFormer-S. These same results\nalso when comparing ESFPNet-L to SSFormer-L. The CaraNet and S SFormer-S give nearly identical results, yet\nCaraNet requires more parameters and computation than either S SFormer-S or ESFPNet-S. Overall, ESFPNet-S\nappears to oﬀer the best balance between analysis performance a nd architectural eﬃciency for the AFB dataset.\nFigure 3 depicts sample AFB segmentation results. These results organized in order of the best segmentation\nresults (by ESPFNet-S) to the worst (by SVM-EMBC); this order a lso reﬂects decreasing mDice and mIoU\nArchitecture Attribute AFB Results\nArchitecture Parameters GFLOPs Mean Dice Mean IoU FN Frames FP Frames\nMasked R/G N/A N/A 0.549 0.418 5 10\nSVM-EMBC N/A N/A 0.329 0.219 1 26\nESFPNet-T (B0) 3.5 1.4 0.717 0.574 0 0\nESFPNet-S (B2) 25.0 9.3 0.756 0.624 0 0\nSSFormer-S (B2) 29.6 20.0 0.746 0.612 0 0\nESFPNet-L (B4) 61.7 23.9 0.738 0.600 0 0\nSSFormer-L (B4) 66.2 34.6 0.737 0.604 0 0\nUnet++ 9.2 65.7 0.722 0.587 0 5\nCaraNet 46.6 21.8 0.745 0.610 0 0\nTable 2. AFB experimental results. “Parameters” = number of architecture parameters in millions, GFLOPs = gigaﬂops\n(ﬂops = ﬂoating-point operations). The GFLOPs count assume s input dimensions = (1,3,352,352). FN = frame is\nmisclassiﬁed as a normal frame, but is actually a lesion fram e (false negative). FP = frame is misclassiﬁed as a lesion\nframe, but is actually a normal frame (false positive). FN an d FP results are over 53 lesion and 115 normal frames,\nrespectively. “SVM” refers to a machine learning method pro posed previously by Chang et al. 6 “N/A” = not applicable.\nBOLD numbers indicate the best measures.\nvalues. ESFPNet-S gives the best results among the various metho ds. While the masked R/G analysis method,\nthe clinical baseline standard approach, does detect most lesions, it unfortunately misses the bottom right lesion\nin frame 1627 of patient case 195.\nFigure 3. AFB Segmentation results. The ﬁrst column is the or iginal frame, and the second column gives the reference\nground truth segmentation. Results for the other methods ar e ordered from best to worst.\nFigure 4 next illustrates processing results for a 500-frame video clip from p atient case 198, a new case that\nwas not a part of our original train/validate/test AFB image datase t. The video clip illustrates a bronchoscopy\nexam as it starts in the main carina and then progresses to the right main bronchus and right upper lobe\nbronchus; it terminates at the lateral segmental bronchus inside the right middle lobe. As highlighted by red\nboxes in the ﬁgure, two lesions have been correctly found in the righ t middle lobe (duration ≈ 20 frames) and\nthe lateral segmental bronchus (duration only a few frames). As the ﬁgure clearly shows, both SSFormer-S and\nESFPNet-S successfully detect the lesions with high IoU value, with E SFPNet-S signaling fewer false positive\nframes.\nAs a ﬁnal test, we implemented the ESFPNet-S into C++ on a Windows- 10-based PC, which includes an\nIntel Xeon Gold 6230 CPU and NVIDIA RTX 3090 GPU. With this set up, we could then test the live real-time\nFigure 4. Test with a new 500-frame AFB bronchoscopy video cl ip using SSFormer-S and ESFPNet-S. Both SSFormer-S\nand ESFPNet-S successfully detect the lesions with high IoU values, while ESFPNet-S outputs fewer false positive frame s.\nperformance of the method for a complete end-to-end segmenta tion procedure. The complete procedure consisted\nof reading frames from the AFB video stream, image normalization an d resizing, ESFPNet prediction analysis,\nand displaying the lesion segmentation results on the computer monit or. For a 1000-frame test, we achieved an\naverage frame rate of 27 frames per second (FPS), essentially a r eal-time rate.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.2 T ests on the polyp datasets",
+      "level": 2,
+      "text": "Tables 3-5 give experimental results for learning ability, generalizability, and po wer balance for the polyp\ndatasets. These results clearly demonstrate the overall state- of-the-art capabilities of our proposed ESFPNet-L\narchitecture for polyp segmentation. In particular, ESFPNet-L a chieved the following:\n1.) State-of-the-art (SOTA) learning ability on the CVC-ClinicDB ben chmark dataset (Table 3).\n2.) SOTA generalizability and power balance over the ETIS-LaribPolyD B benchmark data set (Tables 4-5).\nThus, we conclude that our architecture is very much a viable altern ative for polyp segmentation, given its\naoverall performance over these various benchmark datasets.\nAs ﬁnal evidence, Figure 5 gives example polyp segmentation results, based on the models of Ta ble 5. For\nthe ﬁve polyp datasets, our ESFPNet-L shows its outstanding per formance on both generalizability and learning\nability.\nTable 3. Quantitative comparison of learning ability\nCVC-ClinicDB Kvasir\narchitectures mDice mIoU mDice mIoU\nU-net++ 0.915 0.865 0.863 0.818\nDeeplabv3+ 0.888 0.871 0.897 0.858\nMSRF-Net 0.942 0.904 0.922 0.891\nSSFormer-L 0.945 0.899 0.936 0.891\nESFPNet-L 0.949 0.907 0.931 0.887\nTable 4. Generalizability test.\ndatasets architectures mDice mIoU Sα Emax\nφ MAE\nETIS-\nLaribPolypDB\nESFPNet-T 0.781 0.701 0.866 0.910 0.016\nESFPNet-S 0.807 0.730 0.879 0.916 0.015\nESFPNet-L 0.827 0.752 0.892 0.935 0.011\nCVC-\nColonDB\nESFPNet-T 0.781 0.699 0.843 0.895 0.036\nESFPNet-S 0.795 0.711 0.854 0.905 0.032\nESFPNet-L 0.823 0.741 0.871 0.917 0.029\nBOLD values indicate the best results and underlined values indicate the second best results.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5 DISCUSSION AND CONCLUSION",
+      "level": 1,
+      "text": "Bronchial lesions can be treated as biomarkers that signal lung can cer. These lesions, which can be detected\nby autoﬂuorescence bronchoscopy, are useful for detecting lu ng cancer at the early stage. We have proposed\nTable 5. Power balance experimental results.\narchitectures Kvasir CVC-ClinicDB CVC-T CVC-ColonDB ETIS-LaribPolypDB\nmDice mIoU mDice mIoU mDice mIoU mDice mIoU mDice mIoU\nUnet++ 0.818 0.746 0.823 0.750 0.710 0.627 0.512 0.444 0.398 0.335\nSF A 0.723 0.611 0.700 0.607 0.297 0.217 0.469 0.347 0.467 0.329\nCaraNet 0.918 0.865 0.936 0.887 0.903 0.838 0.773 0.689 0.747 0.672\nSSFormer-L 0.917 0.864 0.906 0.855 0.895 0.827 0.802 0.721 0.796 0.720\nESFPNet-L 0.917 0.866 0.928 0.883 0.902 0.836 0.811 0.730 0.823 0.748\nBOLD values indicate the best results and underlined values indicate the second best results.\nFigure 5. Polyp segmentation results.\nESFPNet for bronchial lesion segmentation and have applied it to a 20 -patient AFB lung cancer patient dataset.\nOur results demonstrate superior segmentation performance ov er competing deep-learning architectures. Also,\ngiven the ESPFNet’s ability to produce results at essentially a real-tim e frame rate, it shows potential utility\nduring live bronchoscopic airway exams. Finally, to the best of our kn owledge, this is the ﬁrst work for automatic\nreal-time segmentation of bronchial lesions in AFB video.\nAs a second result, when ESFPNet was tested for colonic polyp segm entation over ﬁve standard publicly\navailable datasets, it again showed excellent performance. These r esults therefore illustrates its general strong\ncapability for medical image segmentation in other domains.\nThe proposed ESPFNet architecture incorporates a novel light-le vel feature pyramid decoder structure based\non MiT encoders to eﬃciently and comprehensively use extracted ima ge features. Through experiments with our\nAFB dataset, we showed that ESFPNet-S outperforms other fam ous models for the mDice and mIoU metrics.\nIn addition, ESFPNet-S was shown to be a viable approach for real-t ime lesion segmentation and detection\nwith AFB video clips. Finally, as demonstrated by the colonic polyp segm entation results, ESFPNet exhibits\noutstanding performance in terms of generalizability and learning ab ility over several large datasets.\nNevertheless, further improvements are possible to our work. Fir st, using only 208 lesion frames to train our\ndeep learning architecture is not realistically suﬃcient. Because of t he high cost and diﬃculty in collecting further\nlive human video data, we could use semi-supervised learning methods , such as contrastive learning, to train our\nmodel more rigorously. Second, far more extensive tests on AFB v ideo clips, in addition to testing the method\nduring a live procedure would give a more complete understanding of o ur architecture’s overall performance and\nviability for live clinical early lung cancer lesion detection. Third, we nee d to create more evidence that our\nfeature pyramid is eﬃcient and comprehensive in its use of the featu res extracted by the ESPFNet’s encoders; a\npossibility is to use attention heat maps to reﬂect the functionality o f each decoding linear prediction layer.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "depicts the proposed ESFPNet architecture, which utilizes the Mix T ransformer (MiT) encoder as"
+    },
+    {
+      "id": "f2",
+      "caption": "AFB lesion examples from four cases: two from the tr aining subset (ﬁrst row) and two from the validation subset"
+    },
+    {
+      "id": "f3",
+      "caption": "depicts sample AFB segmentation results. These results organized in order of the best segmentation"
+    },
+    {
+      "id": "f4",
+      "caption": "next illustrates processing results for a 500-frame video clip from p atient case 198, a new case that"
+    },
+    {
+      "id": "f5",
+      "caption": "Polyp segmentation results."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "summarizes the details of our AFB image dataset. For our dataset, we isolated 208 lesion frames"
+    },
+    {
+      "id": "t2",
+      "caption": "AFB experimental results. “Parameters” = number of architecture parameters in millions, GFLOPs = gigaﬂops"
+    },
+    {
+      "id": "t3",
+      "caption": "Quantitative comparison of learning ability"
+    },
+    {
+      "id": "t4",
+      "caption": "Generalizability test."
+    },
+    {
+      "id": "t5",
+      "caption": "Power balance experimental results."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

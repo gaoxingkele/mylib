@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+  # Pin / bump the scientific stack that three workflows (`validate-catalog`,
+  # `sync-aer-skills`, `sync-statspai-skill`) install via `pip install -r
+  # requirements.txt`. Without this entry, three inline `pip install numpy
+  # pandas ...` lines would drift on every upstream release without any
+  # automatic PR. See requirements.txt for the current version range.
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      python-runtime:
+        patterns:
+          - "requirements.txt"

@@ -1,0 +1,638 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p5_hybrid_moea_feasibility_review/p5_hybrid_moea_feasibility_review__12__multi_objective_optimization_of_energy_storage_station_co__098de18b83.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Against the backdrop of the deepening global energy transition and the increasing\nchallenges of climate change, improving power grid adaptability and reliability has become\na focal point in the field of academic research and strategic policy formulation. Nowadays,\nthe continuous incorporation of RE, especially distributed wind as well as photovoltaic\nsystems, which account for an increasing share of the power system, has created unprece-\ndented challenges to the overall power system [1]. These challenges primarily stem from\nthe variability and unpredictability of RE. On the one hand, the variability of RE prevents\nEnergies 2025, 18, 2527 https://doi.org/10.3390/en18102527\nEnergies 2025, 18, 2527 2 of 20\nthe power supply from maintaining a stable and continuous state, leading to fluctuating\npower output that disrupts the smooth operation of the power system [ 2]. On the other\nhand, its uncertainty complicates grid scheduling, making it challenging to accurately plan\nand optimize the power distribution and transmission. In addressing these challenges [3],\nefficient energy storage technology has become key, playing a buffering and regulatory\nrole in stabilizing RE output and ensuring the normal operation of the power system and\nthe orderly development of grid scheduling [4]. The construction phase of energy storage\nequipment requires the purchase of expensive core components, the installation and com-\nmissioning processes are complex, and in the subsequent operation process, maintenance\nand other aspects of the high cost, ultimately lead to its poor economic efficiency, so the\nreturn on investment cycle is prolonged. These factors not only discourage investor enthu-\nsiasm, but also hinder the overall development of the energy storage industry. Therefore, it\nis very important to strengthen the research on the optimal allocation of ESSs in the power\ngrid [5].\nSignificant research efforts have been devoted to the optimal energy storage configura-\ntion by numerous scholars. Reference [6] examined the implications of the high penetration\nof RE on the power grid, which reduces the system’s rotational inertia, and adopted an\noptimized energy storage configuration method to enhance the system frequency stability.\nReference [7] introduced an approach to energy storage configuration on the wind farm side\nto mitigate output fluctuations, ensuring that they remained within the permissible schedul-\ning range. In [8], the authors considered the wind and solar complementary characteristics\nand realized the optimized allocation of wind farm and photovoltaic power station energy\nstorage sharing through planning. Reference [9] integrated the construction and whole life\ncycle operation and maintenance costs of ESSs into the capacity optimization model. Their\nresults indicated that investment costs play a crucial role among the various influencing\nfactors and significantly impact the investment returns of energy storage facilities. Never-\ntheless, the aforementioned research has overlooked the substantial flexibility potential of\nthe load side in microgrid systems, the full exploitation of which could significantly lower\nthe energy storage configuration costs.\nSimultaneously, fully exploiting the flexibility of temperature-controlled loads can\nsignificantly enhance the operational efficiency of the power grid. Air conditioning en-\nergy consumption accounts for more than 50% of the total building energy use. By fully\nleveraging the temperature-controlled load flexibility [ 10], the energy use flexibility of\nair conditioning systems can be effectively enhanced. In Reference [ 11], office buildings\nwith integrated air conditioning systems were further incorporated into a hybrid energy\nmicrogrid, where the virtual energy storage effect of air conditioning loads was leveraged to\nachieve a reduction in the operating costs. In [12], the study applied temperature-controlled\nload flexibility to the cogeneration system, greatly enhancing the cogeneration system’s\noperational flexibility. Reference [13] established a combined heat and power system model\nbased on temperature-controlled load flexibility, which fully considered the interaction and\nsynergistic relationship between the two forms of energy, electricity and heat, and realized\nthe best economy. However, the existing studies exhibited significant limitations in the\ncoordinated optimization of energy storage stations and power grids. Most notably, the\ntemperature-controlled load model of the load side has not been systematically incorpo-\nrated into system modeling and optimization processes, thereby neglecting the substantial\npotential for flexible regulation. In addition, the role of energy storage stations in reducing\nthe grid operation costs and the exploitation of temperature-controlled load flexibility have\nnot been sufficiently addressed, resulting in the failure to achieve coordinated minimization\nof the microgrid and energy storage station operation costs.\nEnergies 2025, 18, 2527 3 of 20\nMeanwhile, in terms of multi-objective optimal configuration algorithms for grid\nenergy storage power stations, a high-quality algorithm with fast convergence speed, good\nparameter adaptability, and high engineering practicability is crucial. In [ 14], in light\nof the aging and wear and tear of photovoltaic power station equipment prone to fire,\nthe authors proposed a fire control system based on the multi-objective particle swarm\nalgorithm and Internet of Things technology, which effectively improved the fire control\nefficiency and ensured the safe and stable operation of the ESS. Reference [ 15], in light\nof the complexity of grid reactive power optimization, proposed improving the genetic\nsimulated annealing algorithm so that the algorithm could reduce the loss and accelerate\nthe convergence. However, the multi-objective particle swarm optimization algorithm\ntended to converge to the local optima, and its performance was highly dependent on\nparameter selection. At the same time, the improved genetic simulated annealing algo-\nrithm was computationally complex when dealing with large-scale power grids, and the\nparameter settings depended on empirical debugging, which will affect the results if the\nparameters are not appropriate. Reference [16] proposed an optimization method based\non an improved pelican optimization algorithm for the optimal economic operation of the\nenergy management strategy in multi-terminal AC/DC flexible interconnection systems.\nThis method enabled optimal scheduling of the system, exhibiting strong global search\ncapabilities and effectively avoiding entrapment in the local optima. However, it suffered\nfrom a relatively long convergence time and low computational efficiency.\nTherefore, this paper proposes a multi-objective optimization method based on the\nPOA-GWO-CSO, which simultaneously considers both the grid operation cost and the\nenergy storage station configuration cost. An optimization model was established with\nthe objectives of minimizing the grid operation costs and minimizing the energy storage\nstation configuration costs. The method introduces the leader strategy from the grey\nwolf optimization algorithm (GWO) and the crisscross optimization algorithm (CSO)\nto enhance the pelican position update mechanism in the original pelican optimization\nalgorithm (POA). Finally, the improved POA-GWO algorithm was applied to solve the\nmulti-objective optimization model for the grid and energy storage system, demonstrating\nthat the enhanced algorithm achieved higher computational efficiency.\nIn summary, the current research still has two main limitations. First, traditional\nenergy storage configuration approaches often overlook the impact of demand-side load\nflexibility, resulting in limited potential for economic performance improvement. Second,\nexisting optimization algorithms still require further enhancement in terms of computa-\ntional efficiency and global search capability. To address these issues, this pap",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Operational Framework for ESS in the Power Grid",
+      "level": 1,
+      "text": "The framework is shown in Figure 1. In this framework, it includes the ESS, numerous\ncontrollable building loads, and the distribution system. The controllable building loads\ncan be powered by photovoltaics, wind power, energy storage stations, and the grid.\nTheir energy primarily originates from conventional electrical loads and air-conditioning\nloads [17,18]. The ESS features a control center that manages scheduling instructions\naccording to the charging and discharging requirements of controllable building loads in\neach time period. When a building load requires charging, the control center utilizes the\nenergy storage system to retain surplus electricity and adjusts the charging or discharging\nbased on the load demands [19]. The energy storage power station control center determines\nthe appropriate capacity and peak charging and discharging power by analyzing the cyclic\nbehavior of all controllable building loads. Furthermore, it administers user payments\nand pricing in alignment with time-of-use electricity tariffs. This mechanism optimizes\nenergy storage utilization, supports the local integration of renewable energy, and ensures\nmutually beneficial outcomes for all stakeholders [20,21].\nEnergies 2025, 18, x FOR PEER REVIEW 4 of 22 \n \n \nstation; Section 3 establishes the mathematical models for the power grid, the energy stor-\nage system, and temperature-controlled loads; Section 4 presents the multi-objective op-\ntimization strategy focusing on the ESS con ﬁguration and grid operating costs; Section 5 \nprovides a detailed explanation of the PO A-GWO-CSO hybrid optimization algorithm \nand its implementation process; Section 6 analyzes the system operational characteristics \nand economic performance under di ﬀerent conﬁguration scenarios through case studies \nto validate the e ﬀectiveness of the proposed method; and Section 7 concludes the paper \nby summarizing the main ﬁndings and outlining future research directions.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Operational Framework for ESS in the Power Grid",
+      "level": 1,
+      "text": "The framework is shown in Figure 1. In this framework, it includes the ESS, numer-\nous controllable building loads, and the dist ribution system. The controllable building \nloads can be powered by photovoltaics, wind power, energy storage stations, and the grid. \nTheir energy primarily originates from conventional electrical loads and air-conditioning \nloads [17,18]. The ESS features a control center that manages scheduling instructions ac-\ncording to the charging and discharging requir ements of controllable building loads in \neach time period. When a building load requires charging, the control center utilizes the \nenergy storage system to retain surplus electricity and adjusts the charging or discharging \nbased on the load demands [19]. The energy storage power station control center deter-\nmines the appropriate capacity and peak charging and discharging power by analyzing \nthe cyclic behavior of all controllable building loads. Furthermore, it administers user pay-\nments and pricing in alignment with time-of-use electricity tari ﬀs. This mechanism opti-\nmizes energy storage utilization, supports the local integration of renewable energy, and \nensures mutually beneﬁcial outcomes for all stakeholders [20,21]. \n \nFigure 1. Operational framework for ESS in the power grid.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Power Grid and ESS Model",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Power Grid Model",
+      "level": 2,
+      "text": "The building load model considered in this paper was the temperature controlled \nload model, as shown in Equations (1)–(3): \nFigure 1. Operational framework for ESS in the power grid.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Power Grid and ESS Model",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Power Grid Model",
+      "level": 2,
+      "text": "The building load model considered in this paper was the temperature controlled load\nmodel, as shown in Equations (1)–(3):\nTmin ≤ Tt ≤ Tmax (1)\nEnergies 2025, 18, 2527 5 of 20\n0 ≤ Pt ≤ Pmax (2)\nC(Tt+1 − Tt) = ∆t\n\u0012 Tout,t − Tt\nRwa\n+ Tout,t − Tt\nRw\n+ CGP · Pt + Mrad\nt · k · Fw + Qin\n\u0013\n(3)\nwhere Tmin and Tmax indicate the minimum and maximum limits of the comfort tempera-\nture, respectively; Tt indicates the indoor temperature; C indicates the heat capacity of the\nwall; Tout,t indicates the outdoor temperature; CGP indicates the EER of the air condition-\ning; Pmax indicates the rated power of the air conditioning; Rwa, Rw indicate the thermal\nresistance of the wall and the window, respectively; k indicates the transmission rate of the\nwindow; Mrad\nt indicates the intensity of the sunlight; Qin indicates the heating power of the\ninternal heat source; and Fw indicates the area of the external window.\nThe operating costs of the grid include the power purchase costs, generation costs,\nnetwork loss costs, and load costs as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "1 Cost of purchasing electricity Cgrid",
+      "level": 1,
+      "text": "Cgrid =\n24\n∑\nt=1\nct\nbuyPt\ngrid∆t (4)\nwhere ct\nbuy is the electricity purchase price in period t; Pt\ngrid is the power transfer\nbetween the grid and the system in period t; ∆t is the length of the scheduling\ninterval.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2 Power generation costs",
+      "level": 1,
+      "text": "CDG =\n24\n∑\nt=1\n∑\ni∈ΩMG\n(cfuel\nMG\nPt\nMG,i\nηi\n+ coper\nMG Pt\nMG,i)∆t (5)\nwhere ΩMG is the set of micro-gas turbine units for any micro-gas turbine i in the set\nΩMG; cfuel\nMG and coper\nMG are the unit fuel operation and maintenance costs, respectively;\nPt\nMG,i is the power generated; ηi is the conversion efficiency.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3 Network loss costs",
+      "level": 1,
+      "text": "Closs =\n24\n∑\nt=1\nct\nbuy\nNnode\n∑\nj=1\nut\nj ∑\nk∈ΩL\nj\nut\nkGjk cos δt\njk∆t (6)\nwhere Nnode represents the total number of nodes; ut\nj, ut\nk represent the voltage ampli-\ntude of nodes j and k at time t, respectively; Gjk represents the conductance between\nnodes j and k; δt\njk and represents the phase angle difference of the voltages of nodes j\nand k.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Load cost",
+      "level": 1,
+      "text": "CLO =\n24\n∑\nt=1\nct\nbuy(Pt + Pload ) (7)\nwhere Pload is the conventional electrical load.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 ESS Model",
+      "level": 2,
+      "text": "Among the many types of equipment that can be selected for the ESS, battery energy\nstorage technology has a high degree of maturity, has been realized in many areas of\nlarge-scale application, and is one of the most common energy storage devices in the power\ngrid. The relationship between the remaining battery power SSB(t) at moment t and the\nremaining battery power SSB(t − 1) at the moment of t − 1 is shown in Equation (8); in the\ncase of discharge, the relationship between the two is as shown in Equation (9).\nEnergies 2025, 18, 2527 6 of 20\nWhen charging, the ESS is as follows:\nSSB(t) = SSB(t − 1) + ηchPch(t)∆t − λQSB (8)\nWhen discharging, the ESS is as follows:\nSSB(t) =SSB(t − 1) − Pdis(t)\nηdis\n∆t − λQSB (9)\nwhere Pch(t), ηch, Pdis(t), ηdis represent the battery’s charging and discharging power and\nefficiency, respectively; λ, QSB represent the self-discharge rate and capacity of the battery,\nrespectively. The optimization of the ESS configuration costs specifically involves the\nfollowing aspects.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "1 Acquisition costs",
+      "level": 1,
+      "text": "The acquisition cost of the ESS is the main component of its comprehensive configura-\ntion cost, which significantly affects the economic performance of the optimal configuration\nof the system. In the economic analysis of the energy storage system and the optimal\nconfiguration decision, it is not enough to only consider the acquisition cost, but there is\nalso a need to use the whole life cycle cost model to calculate and predict the comprehensive\ncost of the energy storage system. The acquisition cost of the ESS is shown in Equation (10)\nas follows:\nC1 =\nn\n∑\ni=1\nr(1 + r)D\n(1 + r)D − 1\n[Qici(ni + 1)] (10)\nwhere N represents the ESS count; r represents the prime rate; Qi represents the configured\ncapacity of the ith ESS; ni represents the number of replacement times of the ith ESS in the\nplanning years.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2 Installation costs",
+      "level": 1,
+      "text": "During the construction of the ESS, procurement and installation often involve differ-\nent manufacturers and companies. Even if the procurement and installation are carried\nout by the same company, the installation cost needs to be calculated separately because\nthe scale of the energy storage project is usually large [22]. Therefore, a detailed modeling\nanalysis is needed when considering the comprehensive optimal configuration cost of the\nESS, which is shown in Equation (11).\nC2 =\nN\n∑\ni=1\nni\n∑\nj=1\nr(1 + r)D\n(1 + r)D − 1\n(1 + r)−di j(1 − αi)di jCi,j\nrepNi (11)\nwhere Ci,j\nrep represents the jth installation cost of the ith ESS; αi represents the average\nannual decrease factor of the installation cost of the ith ESS.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3 Operation and maintenance (O&M) costs",
+      "level": 1,
+      "text": "The daily operation of the ESS involves storing and releasing electricity, and costs\nare invested to ensure the safe and reliable operation of the system. These costs cover\npersonnel, management, and parts replacement. Personnel costs include daily monitoring,\nfault diagnosis and elimination, and regular inspections by a professional operation and\ntechnical maintenance team; management costs include project management, financial\nmanagement, and other management activities; and the regular inspection and replacement\nof parts, if necessary, are also important operation and maintenance expenses. These inputs\nEnergies 2025, 18, 2527 7 of 20\nensure the performance and reliability of the ESS throughout its life cycle [ 23], and the\nO&M cost of the ESS during its full life cycle is shown in Equation (12):\nC3 =\nN\n∑\ni=1\nT\n∑\nt=1\n[ui,1(t)|PSB,i(t)|kch + u2,i(t)|PSB,i(t)|kdis] (12)\nwhere PSB,i(t) represents the charging and discharging power of theith ESS in the t moment\nperiod; the ESS is in the discharging state when PSB,i(t) ≥ 0, the ESS is in the charging\nstate when PSB,i(t) ≤ 0. kch,i represents the O&M cost coefficient when charging the\nith ESS; ui,1(t) represents the storage charging coefficient, u2,i(t) represents the storage\ndischarging coefficient when charging the storage, ui,1(t) = 1 and u2,i(t) = 0, when\ndischarging the storage, ui,1(t) = 0 and u2,i(t) = 1; kdis,i represents the O&M cost of the ith\nstorage discharging coefficient, which is calculated as shown in Equations (13) and (14),\nrespectively.\nkch,i = Cinit\nN(x) · cch\n−PSB,i(t)SSB,start\n· Smax\nSB\nSSB,end\n(13)\nkdis,i = Cinit\nN(x) · cdis\nPSB,i(t)SSB,end\n· SSB,start\nSmax\nSB\n(14)\nwhere N(x) represents the maximum number of cycles; Cinit represents the initial fixed\ninvestment cost of the ESS; SSB,start, SSB,end are the initial and final charge state of the ESS,\nrespectively; Smax\nSB represents the maximum residual power; cch and cdis are the charging\nand discharging impact factors, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4 Equipment residual value recovery",
+      "level": 1,
+      "text": "When the ESS reaches the end of its service life, the residual value of its equipment\ncan be obtained through recycling, reuse, or transfer, etc. Including this part of the residual\nvalue in the calculation of the comprehensive configuration cost can effectively reduce\nthe overall investment cost of the project, improve the return on investment, enhance the\neconomic benefits of the whole project, and reduce the waste of resources and promote the\ndevelopment of a circular economy. Therefore, when carrying out the economic assessment\nand configuration decision-making work of the ESS, it is crucial to fully consider the factor\nof the equipment residual value recovery to optimize the economy and sustainability of the\nproject [24], which is calculated as shown in Equation (15):\nC4 =\nN\n∑\ni=1\nni\n∑\nj=0\nr(1 + r)D\n(1 + r)D − 1\n(1 + r)−di jC4,i Ni (15)\nwhere C4,i represents the residual value of the ith ESS. In Equation (16),\nC4,i = kνal Qi (16)\nwhere kνal represents the residual value coefficient of the energy storage station.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3 Constraints",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 Grid node voltage and line current constraints",
+      "level": 1,
+      "text": "(\nUmin ⩽ Ui,(t) ⩽ Umax\f\f\fIij,(t)\n\f\f\f ⩽ Iij,max\n(17)\nEnergies 2025, 18, 2527 8 of 20\nwhere Umax, Umin are the upper and lower limit values of the node voltage, respec-\ntively; Iij,max indicates the maximum current carrying capacity of the line between\nnode i and node j.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "2 Power balance constraints",
+      "level": 1,
+      "text": "∑\n\u0010\nPES + PESS + PPV + PWT\n\u0011\n= ∑\n\u0010\nPload + Ploss\n\u0011\n(18)\nwhere PES, PESS, PPV, PWT are the grid power, energy storage system, photovoltaic,\nwind power grid power, respectively; Pload, Ploss are the system load power and\nsystem active loss, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3 Grid tributary current constraints",
+      "level": 1,
+      "text": "vm,t − vn,t = 2(rmn Pmn,t + xmn Qmn,t) −\n\u0010\nr2\nmn + x2\nmn\n\u0011\nimn,t (19)\nimn,tvm,t = P2\nmn,t + Q2\nmn,t (20)\nPin,n,t = ∑\nl:n→l\nPnl,t − (Pmn,t − inm,trnm) (21)\nQin,n,t = ∑\nl:n→l\nQnl,t − (Qmn,t − imn,txmn) (22)\nwhere vm,t and vn,t are the squares of the voltage magnitudes at nodes m and n,\nrespectively; imn,t is the square of the current magnitude of line mn; rnm and xmn\nare the resistance and reactance of line mn, respectively; l is a sub-node of node n.\nPmn,t and Pin,n,t denote the active power injected into the sides of nodes m and n,\nrespectively; Qmn,t and Qin,n,t denote the reactive power injected into the sides of\nnodes m and n, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4 Energy storage battery (ESB) capacity and energy multiplier constraints",
+      "level": 1,
+      "text": "(\nEESS\nB,min ⩽ EESS\nB ⩽ EESS\nB,max\nEESS\nB = β · PESS\nB\n(23)\nwhere β is the energy multiplier of the ESB; EESS\nB,max, EESS\nB,min are the upper and lower\nlimits of the rated capacity of the ESB, respectively; PESS\nB,max, PESS\nB,min are the upper and\nlower limits of the charging and discharging power of the ESB, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 ESB charge state constraints",
+      "level": 1,
+      "text": "\n\n\nSSOC\nmin ⩽ SSOC\n(t) ⩽ SSOC\nmax\f\f\fPESS\nB,min\n\f\f\f ⩽\n\f\f\fPESS\n(i)\n\f\f\f ⩽\n\f\f\fPESS\nB,max\n\f\f\f\nSSOC\ns = SSOC\ne\n(24)\nwhere SSOC\nmax , SSOC\nmin ,PESS\nB,max, PESS\nB,min represent the depth of charge and discharge and the\nupper and lower power limits of the ESB, respectively.;SSOC\ns , SSOC\ne are the charging\nstate of the ESB at the beginning and the end of the operating cycle, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6 Voltage offset constraints",
+      "level": 1,
+      "text": "Ulev = 1\nT\nn\n∑\ni=1\n\"\nN\n∑\ni=1\n\u0012 Ui,(t) − U∗\ni\n∆Ui,max\n\u00132#\n(25)\n0 ≤ Ulev ≤ Umax\nlex (26)\nEnergies 2025, 18, 2527 9 of 20\nwhere Ulev is the voltage offset during grid operation; N is the number of load nodes;\nT is the time period; Ui,(t) and U∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "are the voltage of the ith node and the reference",
+      "level": 1,
+      "text": "voltage at time t, respectively; ∆Ui,max is the maximum permissible deviation of\nthe voltage of the ith node; Umax\nlex is the maximum permissible voltage offset during\ngrid operation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4 Multi-Objective Optimization Strategy for Grid Energy Storage",
+      "level": 1,
+      "text": "Stations Taking into Account Temperature-Controlled Load Flexibility\nThe multi-objective optimal allocation method of the ESS taking into account the\ncontrollable load flexibility and grid balance aims to obtain the solution with the lowest\ngrid operating cost and the smallest allocation cost of the ESS [25].\n(\nF1 = min\nn\nCgrid + Closs + CDG + CLO\no\nF2 = min{C1 + C2 + C3 − C4}\n(27)\nThe grid-side modeling of the above model is mainly based on the grid branch current\nmodel. However, the nonlinear nature of the power system makes finding the global\noptimal solution extremely difficult. This is because the nonconvex problem may contain\nmultiple local optimal solutions, and the optimization algorithm may fall into these local\nsolutions instead of finding the global optimal solution. To solve this problem, the second-\norder cone relaxation (SOCR) technique can be used. This method converts the original\nproblem into a convex problem that is easier to solve by relaxing the nonconvex part of the\nproblem. Specifically, SOCR converts the nonconvex quadratic constraints into a series of\nsecond-order cone constraints, thus obtaining a second-order cone programming (SOCP)\nmodel. SOCP is a special kind of convex optimization problem, whose standard form is\nas follows:\nFsocp = min\nn\ncT x\n\f\f\fAx = b, x ∈ H\no\n(28)\nwhere x is a vector of decision variables; b, c, and A are vectors of constants; cT x is a linear\nfunction of x; H is as follows:\nSecond-order cone:\nH =\n(\nxi ∈ RN|y2 ≥\nN\n∑\ni=1\nx2\ni , y ≥ 0}\n)\n(29)\nRotate the second-order cone:\nH =\n(\nxi ∈ RN|yz ≥\nN\n∑\ni=1\nx2\ni , y, z ≥ 0}\n)\n(30)\nThe SOCP model has been widely recognized and applied in the field of power system\noptimization due to its balance between computational efficiency and solution accuracy.\nIt transforms complex problems containing nonconvex nonlinear constraints into convex\noptimization problems through mathematical transformations, which substantially improve\nthe solution efficiency and solution quality. Based on the SOCP model, Equation (20) can\nbe written as: \r\r\r [2Pmn,t 2Qmn,t imn,t − vm,t]T\n\r\r\r\n2\n≤ imn,t + vm,t (31)\nTo calibrate the accuracy of the above model, the SOCR error gap needs to be further\ncalculated with the following relaxation:\n∆diff,t = P2\nmn,t + Q2\nmn,t − imn,tVm,t (32)\nEnergies 2025, 18, 2527 10 of 20\nWhen the error gap reaches the set accuracy, the corresponding optimal solution can\nbe considered to be equivalent to the actual optimal solution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "5 POA-GWO-CSO Algorithm",
+      "level": 1,
+      "text": "This paper employed the POA-GWO-CSO algorithm to solve the multi-objective\noptimal allocation problem of an energy storage station that takes into account controllable\nload flexibility and grid balance. The algorithm combines three optimization strategies:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "1 Pelican optimization algorithm",
+      "level": 1,
+      "text": "This algorithm is a meta-heuristic optimization algorithm that operates by simulating\nthe pelican’s predatory behavior in order to carry out the optimization search. The algo-\nrithm consists of a move-to-prey phase and a skimming-over-the-water phase, in which the\nposition of the pelican is continuously updated to get closer to the optimal solution.\nIn the initial phase of the POA, a population of individuals with uniformly distributed\nrandom values is generated, similar to traditional optimization algorithms. Each individual\ncorresponds to a set of variable values for the objective function. This random initialization\nensures population diversity, facilitating an exploration of the solution space from various\ndirections and thereby increasing the likelihood of identifying superior solutions.\nThe specific steps are as follows: the first step is population initialization. If there are n\npelicans in them-dimensional space, the position of theith pelican is Xi = [Xi1, Xi2, . . ., Xim],\nand the positions of the n pelicans are\nX =\n\n\nX1\nX2\n...\nXn\n\n\n\n\nx11 x12 . . . x1m\nx21 x22 . . . x2m\n... ... ... ...\nxn1 xn2 . . . xnm\n\n\n(33)\nThe population initialization can be expressed as\nxij = fj + R( fj − gj) (34)\nwhere R is a rand number in [0,1]; fj, gj are the upper and lower bounds of the solution\nproblem in dimension j, respectively.\nThe second phase, known as the move-to-prey stage, models the ability of the pelican\ngroup to enhance the search space exploration and identification of potential solutions\nthrough collective cooperation and information sharing upon locating prey. During this\nphase, each individual pelican updates its position relative to the currently best-known\nposition, following a strategy that incorporates both randomness and directionality, thereby\nmaintaining a balance between global exploration and convergence toward superior solu-\ntions. Its specific mathematical expression is as follows\nxp1\nij =\n(\nxij + δ\n\u0000\nPj − Ix ij\n\u0001\n, fP\n\u0010\nxp1\nij\n\u0011\n< f\n\u0010\nxp1\nij\n\u0011\nxij + δ\n\u0000\nxij − Pj\n\u0001\n, else\n(35)\nwhere xp1\nij is the position of the ith pelican in the jth dimension after the first step; Pj is the\nposition of the prey in the jth dimension; δ is any number in [0,1]; I is randomly 1 or 2;\nfP\n\u0010\nxp1\nij\n\u0011\n, f\n\u0010\nxp1\nij\n\u0011\nare the fitness function values of the prey and the pelican, respectively.\nAfter the update, if the objective function value at the new position improves, the\nposition is updated according to Equation (36). This adaptive mechanism allows the\nalgorithm to dynamically adjust its search strategy based on changes in the objective\nfunction value, thereby concentrating the search process more effectively in the vicinity of\nEnergies 2025, 18, 2527 11 of 20\npotential optimal solutions. As a result, both the search efficiency and the quality of the\nobtained solutions are significantly enhanced.\nXi =\n(\nX p1\ni , f p1\ni\n\u0010\nxp1\nij\n\u0011\n< f\n\u0010\nxp1\nij\n\u0011\nXi, else\n(36)\nwhere X p1\ni is the new position of the ith pelican in the first step; f p1\ni\n\u0010\nxp1\nij\n\u0011\nis the adaptation\nvalue of the ith pelican in the new position after updating in the first step.\nThe third step is the skimming-over-the-water phase, which balances the character-\nistics of the objective function and the trade-off between exploration and exploitation by\nsimulating the pelican’s feeding behavior during skimming. In this phase, the pelican\nsearches in the vicinity of the current solution, focusing on potential high-quality solutions,\nanalogous to the pelican spreading its wings to lift fish toward the surface. This strategy\nenables the algorithm to concentrate on the surroundings of promising solutions, thereby\nenhancing the search efficiency and solution quality while maintaining the global explo-\nration capabilities and strengthening the local search performance, ultimately leading to\nfaster convergence toward the optimal solution.\nxp2\nij = xij + Y(1 − t\nT )\n\u0012 1\nY β − 1\n\u0013\nxij (37)\nwhere xp2\nij is the position of the ith pelican in the jth dimension after the second stage\nupdate; Y is a non-zero number within 0~1; t\nT is the ratio of the number of iterations; β is\nrandomly 1 or 2.\nAfter the second stage update, if the position leads to a better objective function value,\nthen the position is updated to the newly discovered position\nXi =\n(\nX p2\ni , f p2\ni\n\u0010\nxp2\nij\n\u0011\n< f\n\u0010\nxp2\nij\n\u0011\nXi, else\n(38)\nwhere X p2\ni is the new position of the ith pelican in the second step; f p2\ni\n\u0010\nxp2\nij\n\u0011\nis the fitness\nvalue of the ith pelican in the new position after the update in the second step.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "2 Gray wolf optimization algorithm",
+      "level": 1,
+      "text": "By introducing the wolf pack leader strategy, the behavior ofα, β, and δ wolf leadership\ngroups in the gray wolf society is simulated in order to carry out the search, which can\nenhance the algorithm’s global search ability and effectively avoid falling into the dilemma\nof local optimal solutions.\nThe specific steps are as follows. First, a nonlinear inertia weight factor p and a\nnonlinear inertia weight coefficient q are introduced to ensure that the inertia weight factor\np can be dynamically adjusted according to the requirements of the current search state.\nThis adjustment enhances the adaptability and flexibility of the algorithm, enabling it to\nbetter cope with complex search spaces. The expression for the weight value p(t) of the\nnumber of iterations at time t is as follows:\np(t) = pmax − pmin\n1 + exp\nh\n−q\n\u0010\nt − T\n2\n\u0011i + pmin (39)\nwhere pmax and pmin are the maximum/minimum weight factors, respectively.\nA wolf pack is usually led byα, β, and δ wolves in the hunting process, which represent\nthe leader, sub-leader, and third leader in the pack, respectively. These three types of wolves\nEnergies 2025, 18, 2527 12 of 20\nguide the wolf pack close to the prey through collaborative cooperation while constantly\nadjusting individual positions in the process to optimize the search strategy.\n\n\n\nK1 = Iα − A1 · |C1 × Iα(t) − I(t)|\nK2 = Iβ − A2 ·\n\f\fC2 × Iβ(t) − I(t)\n\f\f\nK3 = Iδ − A3 · |C3 × Iδ(t) − I(t)|\n(40)\nK = (K1 + K2 + K3)/3 (41)\nwhere K1, K2, K3 is the influence between the α, β, δ wolf and other wolves, respectively;\nA1, A2, A3 is a random number; C1, C2, C3 is the perturbation coefficient parameter; Iα, Iβ, Iδ\nis the current position of the prey; I(t) is the position of the individual gray wolf after\nt iterations.\nGWO simulates the social hierarchical structure and hunting behavior of gray wolves,\nwhich not only ensures good convergence, but also maintains the population diversity and\navoids premature convergence to local optimal solutions. The algorithm guides the search\nprocess through a set of dynamic update formulas, which are formulated as follows:\nx1\nt =\n(\nFt + K[(ub − lb)a1 + lb], a2 ⩾ 0.5\nFt − K[(ub − lb)a1 + lb], a2 < 0.5 (42)\nwhere x1\nt , Ft are denoted as the position of the individual and food in dimension t, re-\nspectively; ub, lb are the upper and lower limits of the optimization seeking position,\nrespectively; a1, a2 are random numbers.\nBased on the GWO strategy, Equation (35) can be written as\nxp1\nij =\n\n\n\nwxij + x1\nt −Ft\n(1+a2)·ub (Pj − Ix ij ), FP < F and a2 ⩾ 0.5\nwxij + Ft−x1\nt\n(1+a2)·ub (xij − Pj), else\n(43)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "3 Crisscross optimization algorithm",
+      "level": 1,
+      "text": "The CSO incorporates both horizontal and vertical crossover strategies. By performing\nhorizontal crossover to search the pelicans’ positions, the algorithm helps reduce search\nblind spots and thereby enhances its global exploration capability. This strategy enables a\nmore comprehensive exploration of the search space, improving the algorithm’s ability to\nidentify global optima. Specifically, horizontal crossover is performed through an arithmetic\ncrossover between the positions of two different pelicans during the second phase.\nThe specific steps are as follows. First of all, we need to carry out the random matching\nwork on the pelican position, and the specific computational formula is\n\n\n\nZx p2\ni1j = r1xp2\nij + (1 − r1)xp2\nik + c1\n\u0010\nxp2\nij − xp2\nik\n\u0011\nZx p2\ni2j = r2xp2\nik + (1 − r2)xp2\nij + c2\n\u0010\nxp2\nik − xp2\nij\n\u0011 (44)\nwhere Zx p2\ni1j, Zx p2\ni2j is the pelican position of the offspring after the horizontal crossover;\nr2xp2\nik is the pelican position in any dimension except dimension j; xp2\nij is the parent pelican\nposition; r1, r2, and c1, c2 are random numbers within (0,1) and (−1,1), respectively.\nTo address the issue of premature convergence in intelligent algorithms caused by\nstagnation in certain dimensions during the iteration process, this study adopted the CSO to\nactivate stagnant dimensions within the population, thereby preventing early convergence.\nThis approach increases the likelihood of escaping the local optima and enhances the global\nsearch capability of the algorithm. Vertical crossover is performed in the second phase by\nEnergies 2025, 18, 2527 13 of 20\nconducting arithmetic crossover among all pelican positions, and the specific calculation\nformula is given as follows:\nXx p2\nij = r3xp2\nij + (1 − r3)xp2\nik (45)\nAfter performing the crossover operation, the newly generated offspring and the\noriginal individual calculate their fitness separately. If the fitness of the offspring is better\nthan that of the original individual, the position of the original individual is replaced with\nthe offspring to realize the position update. This mechanism ensures that the algorithm can\neffectively explore the new search space as well as utilize the information of the current\noptimal solution, thus maintaining a good balance between population diversity and\nconvergence speed and improving the overall optimization performance.\nThe flow of the POA-GWO-CSO based optimization algorithm is shown in Figure 2.\nEnergies 2025, 18, x FOR PEER REVIEW 14 of 22 \n \n \n22 2\n33 (1 )\np pp\nij ij ikXx r x r x=+ −  (45)\nAfter performing the crossover operation, the newly generated o ﬀspring and the \noriginal individual calculate their ﬁtness separately. If the ﬁtness of the oﬀspring is better \nthan that of the original individual, the position of the original individual is replaced with \nthe oﬀspring to realize the position update. Th is mechanism ensures that the algorithm \ncan eﬀectively explore the new search space as we ll as utilize the information of the cur-\nrent optimal solution, thus maintaining a good balance between population diversity and \nconvergence speed and improving the overall optimization performance. \nThe ﬂow of the POA-GWO-CSO based optimization algorithm is shown in Figure 2. \n \nFigure 2. POA-GWO-CSO algorithm ﬂow diagram.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "6 Analysis of the Calculations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "6.1 Basic Data",
+      "level": 2,
+      "text": "The data utilized in this study were derived from a typical summer day in a selected \nregion of Shanxi Province [26]. The variations in outdoor solar irradiance and ambient \ntemperature are illustrated in Figure 3, while the maximum forecasted outputs of photo-\nvoltaic and wind power, together with the forecasted conventional load pro ﬁle, are pre-\nsented in Figure 4. The lifetime of the ESS was set to 10.5 years [27]. The upper limit of the \nindoor air conditioning operation power was set to 1.6 kW, and the air conditioning en-\nergy eﬃciency ratio was set to 3.0. \nStart\npopulation size N, Maximum \nnumber of iterations T\nCalculating fitness values for \npelican populations\nRandomly generated prey\nImproved Pelican Position \nFormula Update\nVertical and horizontal \ncrossover to Phase II pelican \nposition\nUpdated Phase II Pelican \nPosition\nWhether the fitness\n value is improved?\nUpdating Phase I Adaptation \nValues\nWhether the fitness\n value is improved?\nUpdating Phase II adaptation \nvalues\nDetermine if the iteration \ncondition is satisfied?\noutput solution\nEnd\nY\nY\nY\nY N\nN\n1p\nix\n2p\nix\nFigure 2. POA-GWO-CSO algorithm flow diagram.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "6 Analysis of the Calculations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "6.1 Basic Data",
+      "level": 2,
+      "text": "The data utilized in this study were derived from a typical summer day in a selected\nregion of Shanxi Province [26]. The variations in outdoor solar irradiance and ambient tem-\nperature are illustrated in Figure 3, while the maximum forecasted outputs of photovoltaic\nand wind power, together with the forecasted conventional load profile, are presented in\nFigure 4. The lifetime of the ESS was set to 10.5 years [27]. The upper limit of the indoor air\nconditioning operation power was set to 1.6 kW, and the air conditioning energy efficiency\nratio was set to 3.0.\nEnergies 2025, 18, 2527 14 of 20\nEnergies 2025, 18, x FOR PEER REVIEW 15 of 22 \n \n \n \nFigure 3. Outdoor light intensity and temperature curve. \n \nFigure 4. Maximum forecasted output data for the photovoltaic and wind power and conventional \nload curves.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "6.2 Example Analysis",
+      "level": 2,
+      "text": "The scenarios of the algorithm setup were as follows: \n(1) Scenario 1: No energy storage station is conﬁgured and temperature-controlled load \nﬂexibility is not considered. \n(2) Scenario 2: Conﬁguration of energy storage station without considering temperature-\ncontrolled load ﬂexibility. \n(3) Scenario 3: Conﬁguration of energy storage station and consideration of temperature-\ncontrolled load ﬂexibility. \nFigure 5 shows the behavior of the load power consumption and the amount of wind \nand light discarded in Scenario 1. From the ﬁgure, when the grid price is in the peak range, \nthe load still purchases power from the grid, which signiﬁcantly increases the cost of pur-\nchasing power. The data in the ﬁgure show that the grid price peaked at 18–20 h, when \nthe power purchased from the grid was also higher. At other times of the day, such as 0–\n6 pm at night, grid tariﬀs were lower, but loads were not storing power or adopting other \nstrategies to reduce costs during the low tariﬀ hours. At the same time, the graph showed \nthe presence of wind and light rejection. The amount of wind and light waste was more \nobvious during certain hours such as 12–14 h and at night. This not only results in a wast-\nage of RE, but also leads to loads purchasing power from the grid during high price hours, \nwhich increases the overall cost of purchasing power. \n0\n100\n200\n300\n400",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "500 Time(h)",
+      "level": 1,
+      "text": "-18\n-15\n-12\n-9\n-6\n-3NorthSouth West Outdoor temperature\nOutdoor temperature (℃)\nLight intensity (kW/m2)\n2 6 10 14 18 22\nEast\n4 8 12 16 19 24\nFigure 3. Outdoor light intensity and temperature curve.\nEnergies 2025, 18, x FOR PEER REVIEW 15 of 22 \n \n \n \nFigure 3. Outdoor light intensity and temperature curve. \n \nFigure 4. Maximum forecasted output data for the photovoltaic and wind power and conventional \nload curves.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "6.2 Example Analysis",
+      "level": 2,
+      "text": "The scenarios of the algorithm setup were as follows: \n(1) Scenario 1: No energy storage station is conﬁgured and temperature-controlled load \nﬂexibility is not considered. \n(2) Scenario 2: Conﬁguration of energy storage station without considering temperature-\ncontrolled load ﬂexibility. \n(3) Scenario 3: Conﬁguration of energy storage station and consideration of temperature-\ncontrolled load ﬂexibility. \nFigure 5 shows the behavior of the load power consumption and the amount of wind \nand light discarded in Scenario 1. From the ﬁgure, when the grid price is in the peak range, \nthe load still purchases power from the grid, which signiﬁcantly increases the cost of pur-\nchasing power. The data in the ﬁgure show that the grid price peaked at 18–20 h, when \nthe power purchased from the grid was also higher. At other times of the day, such as 0–\n6 pm at night, grid tariﬀs were lower, but loads were not storing power or adopting other \nstrategies to reduce costs during the low tariﬀ hours. At the same time, the graph showed \nthe presence of wind and light rejection. The amount of wind and light waste was more \nobvious during certain hours such as 12–14 h and at night. This not only results in a wast-\nage of RE, but also leads to loads purchasing power from the grid during high price hours, \nwhich increases the overall cost of purchasing power. \n0\n100\n200\n300\n400",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "500 Time(h)",
+      "level": 1,
+      "text": "-18\n-15\n-12\n-9\n-6\n-3NorthSouth West Outdoor temperature\nOutdoor temperature (℃)\nLight intensity (kW/m2)\n2 6 10 14 18 22\nEast\n4 8 12 16 19 24\nFigure 4. Maximum forecasted output data for the photovoltaic and wind power and conventional\nload curves.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "6.2 Example Analysis",
+      "level": 2,
+      "text": "The scenarios of the algorithm setup were as follows:\n(1) Scenario 1: No energy storage station is configured and temperature-controlled load\nflexibility is not considered.\n(2) Scenario 2: Configuration of energy storage station without considering temperature-\ncontrolled load flexibility.\n(3) Scenario 3: Configuration of energy storage station and consideration of temperature-\ncontrolled load flexibility.\nFigure 5 shows the behavior of the load power consumption and the amount of wind\nand light discarded in Scenario 1. From the figure, when the grid price is in the peak\nrange, the load still purchases power from the grid, which significantly increases the cost\nof purchasing power. The data in the figure show that the grid price peaked at 18–20 h,\nwhen the power purchased from the grid was also higher. At other times of the day, such\nas 0–6 pm at night, grid tariffs were lower, but loads were not storing power or adopting\nother strategies to reduce costs during the low tariff hours. At the same time, the graph\nshowed the presence of wind and light rejection. The amount of wind and light waste was\nmore obvious during certain hours such as 12–14 h and at night. This not only results in a\nwastage of RE, but also leads to loads purchasing power from the grid during high price\nhours, which increases the overall cost of purchasing power.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Operational framework for ESS in the power grid."
+    },
+    {
+      "id": "f2",
+      "caption": "POA-GWO-CSO algorithm ﬂow diagram."
+    },
+    {
+      "id": "f4",
+      "caption": "The lifetime of the ESS was set to 10.5 years [27]. The upper limit of the indoor air"
+    },
+    {
+      "id": "f3",
+      "caption": "Outdoor light intensity and temperature curve."
+    },
+    {
+      "id": "f5",
+      "caption": "shows the behavior of the load power consumption and the amount of wind"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation (11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "Equation (15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "(30)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "Equation (20)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    },
+    {
+      "id": "e35",
+      "latex_or_text": "(35)"
+    },
+    {
+      "id": "e36",
+      "latex_or_text": "Equation (36)"
+    },
+    {
+      "id": "e38",
+      "latex_or_text": "(38)"
+    },
+    {
+      "id": "e40",
+      "latex_or_text": "(40)"
+    },
+    {
+      "id": "e43",
+      "latex_or_text": "(43)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 26
+  }
+}

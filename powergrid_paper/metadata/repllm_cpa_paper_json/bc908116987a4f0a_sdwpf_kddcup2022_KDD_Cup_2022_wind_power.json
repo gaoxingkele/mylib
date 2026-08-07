@@ -1,0 +1,223 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/sdwpf_kddcup2022/sdwpf_kddcup2022__KDD_Cup_2022_wind_power_forecasting_solutions__139bdeb610.pdf",
+  "n_pages": 4,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "Wind Power Forecasting (WPF) aims to accurately estimate the\nwind power supply of a wind farm at different time scales. Wind\npower is a kind of clean and safe source of renewable energy, but\ncannot be produced consistently, leading to high variability. Such\nvariability can present substantial challenges to incorporating wind\npower into a grid system. To maintain the balance between elec-\ntricity generation and consumption, the fluctuation of wind power\nrequires power substitution from other sources that might not be\n∗ Equal contribution.\nPermission to make digital or hard copies of all or part of this work for personal or\nclassroom use is granted without fee provided that copies are not made or distributed\nfor profit or commercial advantage and that copies bear this notice and the full citation\non the first page. Copyrights for components of this work owned by others than ACM\nmust be honored. Abstracting with credit is permitted. To copy otherwise, or republish,\nto post on servers or to redistribute to lists, requires prior specific permission and/or a\nfee. Request permissions from permissions@acm.org.\nBaidu KDD Cup 2022, Mar. 16 – Jul. 17, 2022,\n© 2025 Association for Computing Machinery.\nACM ISBN 978-x-xxxx-xxxx-x/YY/MM. . . $15.00\nhttps://doi.org/10.1145/nnnnnnn.nnnnnnn\navailable at short notice (for example, usually it takes at least 6\nhours to fire up a coal plant). Thus, WPF has been widely recog-\nnized as one of the most critical issues in wind power integration\nand operation. There has been an explosion of studies on wind\npower forecasting problems appearing in the data mining and ma-\nchine learning community. Nevertheless, how to well handle the\nWPF problem is still challenging, since high prediction accuracy is\nalways demanded to ensure grid stability and security of supply.\nWe present a unique Spatial Dynamic Wind Power Forecast-\ning dataset: SDWPF, which includes the spatial distribution of\nwind turbines, as well as the dynamic context factors like tempera-\nture, weather, and turbine internal status. Whereas, many existing\ndatasets and competitions treat WPF as a time series prediction\nproblem without knowing the locations and context information\nof wind turbines.\nSDWPF is obtained from the real-world data from Longyuan\nPower Group Corp. Ltd. (the largest wind power producer in China\nand Asia). There are two unique features for this competition task\ndifferent from previous WPF competition settings: 1) Spatial distri-\nbution: this competition provides the relative location of all wind\nturbines given a wind farm for modeling the spatial correlation\namong wind turbines. 2) Dynamic context: the weather situations\nand turbine internal status detected by each wind turbine are pro-\nvided to facilitate the forecasting task.\nWith aiming to examine the limit of WFP methods, we use the\nSDWPF dataset to launch the Baidu KDD Cup 2022 Challenge. SD-\nWPF contains the wind power data obtained from the Supervisory\nControl And Data Acquisition (SCADA) system of a wind farm\nwhich has 134 wind turbines. The dataset provide the information\nabout the wind, temperature, turbine angle and historical wind\npower. The time range of the dataset is over half a year. We also\nprovide a baseline for this dataset 1. The introduction about the\nchallenge can found in the Baidu KDD Cup 2022 website2 and the\ndataset can be down after registration3.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 RELATED WORK",
+      "level": 1,
+      "text": "Wind power forecasting (WPF) has been extensively investigated\nover the past decades [4, 5, 13, 15]. According to the spatial scale\nof the wind power, the problem can be categorised as a single wind\nturbine, a wind farm and a group of wind farms [ 9]. The dataset\nof this challenge belongs to the wind farm scale. A few of delicate\nmodels have been specially designed for WPF problem with variant\nof spatial and temporal scales based on statistic models [ 12, 13],\nmachine learning methods [8, 17] and deep learning methods [6, 14].\n1https://github.com/PaddlePaddle/PaddleSpatial/tree/main/apps/wpf_baseline_gru\n2https://aistudio.baidu.com/aistudio/competition/detail/152/0/introduction\n3https://aistudio.baidu.com/aistudio/competition/detail/152/0/datasets\narXiv:2208.04360v2  [cs.LG]  30 Apr 2025\nBaidu KDD Cup 2022, Mar. 16 – Jul. 17, 2022, Zhou, et al.\nFigure 1: An illustration of a wind farm.\nMany advanced time series prediction methods like [7, 10, 11, 16,\n18, 19] also have great potential to tackle this problem.\nThough there are a few of public WPF datasets, they usually\nhave only a limited number of wind turbines and do not provide the\nspatial information of each turbine. For example, the Penmanshiel\ndataset has only 14 turbines [1], and the Kaggle dataset has only 1\nturbine [2]. We leave a comprehensive discussion about the WPF\nmethods and WPF datasets as a future work.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 SDWPF DATASET",
+      "level": 1,
+      "text": "In this section, we provide an brief introduction of the SDWPF\ndataset, including data source, overall statistics, schema and spatial\ndistribution. The SDWPF dataset is collected from the Supervisory\nControl and Data Acquisition (SCADA) system of a wind farm.\nThe SCADA data are sampled every 10 minutes from each wind\nturbine in the wind farm which consists of 134 wind turbines. The\nstatistics of the important information of the SDWPF dataset is\nshown in the Table 1.\nDays Interval # of columns # of turbines # of records\n245 10 minutes 13 134 4,727,520\nTable 1: Statistics of the SDWPF data.\nThe dataset includes critical external features, such as wind\nspeed, wind direction and external temperature, that influence the\nwind power generation; as well as essential internal features, such\nas the inside temperature, nacelle direction and Pitch angle of blades,\nwhich can indicate the operating status of each wind turbine.\nEach wind turbine can generate the wind power𝑃𝑎𝑡𝑣 𝑖 separately,\nand the outcome power of the wind farm is the sum of all the wind\nturbines. In other words, at time t, the output power of the wind\nfarm is𝑃 = Í\n𝑖𝑃𝑎𝑡𝑣 𝑖. An illustration of a wind farm is shown in\nFigure 1. We also provide a detailed introduction about the main\nattributes of the data in Table 2. Please refer to Wikipedia for more\ndetails about components of wind turbines4.\nThe relative position of all wind turbines in the wind farm is\nalso released to characterize the spatial correlation between wind\nturbines. An illustration of the spatial distribution of the totally 134\nwind turbines are shown in Figure 2. The units of x and y are meter.\n4We suggest to refer to https://en.wikipedia.org/wiki/Wind_turbine#Horizontal_axis\nand https://en.wikipedia.org/wiki/Wind_turbine#Components\nFigure 2: Spatial distribution of all wind turbines (x and y\nare with the meter unit).",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 EV ALUATION",
+      "level": 1,
+      "text": "The Baidu KDD Cup 2022 requires to address the Spatial Dynamic\nWind Power Forecasting ahead of 48 hours. For example, given\nat 6:00 A.M. today, it is required to effectively forecast the wind\npower generation beginning from 6:00 A.M. on this day to 5:50\nAM on the day after tomorrow, given a series of historical records\nof the wind farm and the related wind turbines. It is required to\noutput the predicted values every 10 minutes. To be specific, at one\ntime point, it is required to predict a future length-288 wind power\nsupply time-series. The average of RMSE (Root Mean Square Error)\nand MAE (Mean Absolute Error) is used as the main evaluation\nscore.\nNote in our settings, we aim to forecast the power generated by\na wind farm with the SCADA data and spatial data on top of the\nspatiotemporal modeling paradigm without knowing the future\nmeteorological data (wind speed, temperature, etc.). During the\nBaidu KDD Cup 2022 challenge, except the released data of 245\ndays, we still privately hold data of several months to evaluate the\nsubmitted models by participants. Before giving a formal definition\nof the metric, we first present some caveats about the data.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "4.1 Caveats about the data",
+      "level": 2,
+      "text": "Here we introduce a few of caveats when to use this data to train\nand evaluate the models.\nZero values. There are some active power and reactive power\nwhich are smaller than zeros. We simply treat all the values which\nare smaller than 0 as 0, i.e. if𝑃𝑎𝑡𝑣 < 0, then𝑃𝑎𝑡𝑣 = 0.\nMissing values. Note that due to some reasons, some values at\nsome time are not collected from the SCADA system. These missing\nvalues will not be used for evaluating the model. In other word, if\n𝑝𝑡0+𝑗 is a missing value, we set|𝑃𝑎𝑡𝑣 𝑡0+𝑗−𝑃𝑎𝑡𝑣 𝑡0+𝑗| = 0 regardless\nof the actual predicted value of𝑃𝑎𝑡𝑣 𝑡0+𝑗 .\nUnknown values. In some time, the wind turbines are stopped\nto generate power by external reasons such as wind turbine renova-\ntion and/or actively scheduling the powering to avoid overloading\nthe grid. In these cases, the actual generated power of the wind\nturbine is unknown. These unknown values will also not be used for\nevaluating the model. Similarly with the missing values, if𝑃𝑎𝑡𝑣 𝑡0+𝑗\nis a unknown value, we always set|𝑃𝑎𝑡𝑣 𝑡0+𝑗−𝑃𝑎𝑡𝑣 𝑡0+𝑗| = 0. Here\nwe introduce two conditions to determine whether the target vari-\nable is unknown:\nSDWPF: A Dataset for Spatial Dynamic Wind Power Forecasting Challenge at KDD Cup 2022 Baidu KDD Cup 2022, Mar. 16 – Jul. 17, 2022,\nColumn Column Name Specification",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "1 TurbID Wind turbine ID",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2 Day Day of the record",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Tmstamp Created time of the record",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Wspd (m/s) The wind speed recorded by the anemometer",
+      "level": 1,
+      "text": "5 Wdir( °) The angle between the wind direction and the position of turbine nacelle\n6 Etmp ( °C) Temperature of the surounding environment\n7 Itmp ( °C) Temperature inside the turbine nacelle\n8 Ndir ( °) Nacelle direction, i.e., the yaw angle of the nacelle\n9 Pab1 ( °) Pitch angle of blade 1\n10 Pab2 ( °) Pitch angle of blade 2\n11 Pab3 ( °) Pitch angle of blade 3",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "12 Prtv (kW) Reactive power",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "13 Patv (kW) Active power (target variable)",
+      "level": 1,
+      "text": "Table 2: Column names and their specifications of the SDWPF data.\n• If at time𝑡,𝑃𝑎𝑡𝑣 ≤ 0 and𝑊𝑠𝑝𝑑 > 2.5, then the actual active\npower𝑃𝑎𝑡𝑣 of this wind turbine at time𝑡 is unknown;\n• If at time𝑡,𝑃𝑎𝑏 1 > 89◦ or𝑃𝑎𝑏 2 > 89◦ or𝑃𝑎𝑏 3 > 89◦, then\nthe actual active power𝑃𝑎𝑡𝑣 of this wind turbine at time𝑡 is\nunknown.\nAbnormal values There are some abnormal values from the\nSCADA system. If a data record has any abnormal value of any\ncolumn, these values also will not be used for evaluating the model.\nIf𝑃𝑎𝑡𝑣 𝑡0+𝑗 is a abnormal value, we always set|𝑃𝑎𝑡𝑣 𝑡0+𝑗−𝑃𝑎𝑡𝑣 𝑡0+𝑗| =\n0. Here we define two rules to identify the abnormal values:\n• The reasonable range for Ndir is [-720°, 720°], as the turbine\nsystem allows the nacelle to turn at most two rounds in one\ndirection and would force the nacelle to return to the original\nposition otherwise. Therefore, records beyond the range can\nbe seen as outliers caused by the recording system. Thus,\nif at time𝑡 there are Nidir > 720° or Nidir < -720°, then the\nactual active power 𝑃𝑎𝑡𝑣 of this wind turbine at time 𝑡 is\nabnormal.\n• The reasonable range for Wdir is [-180°, 180°]. Records be-\nyond this range can be seen as outliers caused by the record-\ning system. If at time𝑡 there are Widr > 180° or Widr < -180°,\nthen the actual active power 𝑃𝑎𝑡𝑣 of this wind turbine at\ntime𝑡 is abnormal.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 Evaluation metrics",
+      "level": 2,
+      "text": "Formally, at a time step 𝑡0, it is required to predict a time series\nof wind power of the wind farm 𝑃 ={𝑝𝑡0+1,𝑝 𝑡0+2,··· ,𝑝 𝑡0+288} .\nHowever, due to the missing and unknown values for each wind\nturbine, in this challenge, we evaluate the prediction results for\neach wind turbine, and then sum the prediction scores as the final\nscore of the model. The evaluation score 𝑠𝑖\n𝑡0for wind turbine𝑖 at\nthe time step𝑡0 is defined as:\n𝑠𝑖\n𝑡0 = 1\n2(\nvt Í288\n𝑗=1(𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗−𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗)2\n288 +\nÍ288\n𝑗=1|𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗−𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗|\n288 )\n(1)\nwhere𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗 is the actual power of wind turbine𝑖 and𝑃𝑎𝑡𝑣 𝑖\n𝑡0+𝑗\nis the predicted power of the wind turbine 𝑖 at time step 𝑡0+ 𝑗.\nNote that each time step of𝑗 is 10 minutes. The overall score of the\nprediction model𝑆𝑡0 at time𝑡0 is the sum of the prediction score\non all wind turbine, i.e.:\n𝑆𝑡0 =\n134∑︁\n𝑖=1\n𝑠𝑖\n𝑡0 (2)\nA length-𝐿𝑥 -length-288 prediction window is adopted to roll the\nwhole test set with stride Δ𝑡 time steps (Each time step of Δ𝑡 is 10\nminutes), and the averaged evaluation score is reported. Note that,\n𝐿𝑥 denotes the length of input time-series.\nWe use K data instances to evaluate the performance of the\nprediction model. For each data instances𝑘, we randomly sample a\nstride time step Δ𝑡𝑘 from the range [1, 10]. In other word, the stride\ntime step are randomly ranged from 10 minutes to 100 minutes.\nFormally, the evaluation score of the model is:\n𝑠𝑐𝑜𝑟𝑒 = 1\n𝐾\nK∑︁\n𝑘=0\n𝑆𝑡0+Í𝑘\n𝑟 =0 Δ𝑡𝑟\n(3)\nThe code to calculate the score is available in our sample code.\nHere we would like to highlight the following important points:\n• In our evaluation, we set the maximum length of the input\ntime series𝐿𝑥 as 14 days.\n• As shown in our sample code, since we sum the error from\nall wind turbines, in order to avoid the large value, we use\nthe Mega Watt (instead of Kilo Watt) as the unit to represent\nthe final score.\n• For the evaluation in our submission system (starting from\nMay 10), we use 195 random sampled stride time steps (i.e.\n{Δ𝑡0, Δ𝑡1,..., Δ𝑡194} in Eqn. 3) over several months to evalu-\nate the submitted models. This test time range and sampled\nstride time steps will be updated in future phases (June 20\nand July 15).\nBaidu KDD Cup 2022, Mar. 16 – Jul. 17, 2022, Zhou, et al.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5 BASELINE CODE",
+      "level": 1,
+      "text": "We have released a simple baseline code with Gated Recurrent Unit\n[3] in PaddleSpatial5. In our experiment, we sum the active power\nof all the wind turbines to form a wind power time series. And then\nwe use the data of first 214 days as training data and the remain\n31 days as validation data. According to our statistics, the score\nof our baseline over the tested time series of 195 predictions (i.e.\n𝐾 = 195) is: RMSE: 47.081286, MAE: 37.558233, and the overall score\nis 42.319760. The evaluation time for 195 predictions is 1129.722821\nseconds on a Linux machine with Nvidia P40 GPU. Note that, the\nbatch size impacts the performance evaluation. To alleviate this,\nthe evaluation adopts the strategy without batching and tests the\nperformance on one instance at a time.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "An illustration of a wind farm."
+    },
+    {
+      "id": "f2",
+      "caption": "Spatial distribution of all wind turbines (x and y"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Statistics of the SDWPF data."
+    },
+    {
+      "id": "t2",
+      "caption": "Column names and their specifications of the SDWPF data."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

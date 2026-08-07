@@ -1,0 +1,279 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_ai_10/pdf/applsci-13-12690.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "27100 Pavia, Italy",
+      "level": 1,
+      "text": "* Correspondence: alessandro.bosisio@unipv.it\nFeatured Application: Medium voltage networks that face voltage regulation issues due to high\npenetration of distributed generation.\nAbstract: This paper makes use of machine learning as a tool for voltage regulation in distribution\nnetworks that contain electric vehicles and a large production from distributed generation. The\nmethods of voltage regulation considered in this study are electronic on-load tap changers and\nline voltage regulators. The analyzed study-case represents a real-life feeder which operates at\n10 kV. It has 9 photovoltaic systems with various peak installed powers, 2 electric vehicle charging\nstations, and 41 secondary substations, each with an equivalent load. Measurement data of loads and\nirradiation data of photovoltaic systems were collected hourly for two years. Those data are used as\ninputs in the feeder’s model in DigSilent PowerFactory where Quasi-Dynamic simulations are run.\nThat will provide the correct tap positions as outputs. These inputs and outputs will then serve to\ntrain a Deep Neural Network which later will be used to predict the correct tap positions on input\ndata it has not seen before. Results show that ML in general and DNN speciﬁcally show usefulness\nand robustness in predicting correct tap positions with very small computational requirements.\nKeywords: automatic voltage control; deep learning; electric vehicles; neural networks; photovoltaic\nsystems; power distribution networks",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The increase in distributed generation (DG) has changed the traditional direction\nof power ﬂows in medium voltage (MV) networks. Up until recently, power ﬂew from\nhigher voltage towards the loads which are connected on the low voltage (LV). Now, in\ninstances when the generation from plants that are connected on the LV side is higher\nthan the load itself, the power will ﬂow upstream [1,2]. There are several reasons for the\npopularization of distributed generation (DG). The ﬁrst one is the rapid decline of costs of\ndevices and technologies that are needed to build and operate plants based on Renewable\nEnergy Sources (RESs). One of the signiﬁcant price declines is that of the photovoltaic\npanels, which became 99% cheaper in 40 years, as the price dropped from 105.7 USD/Watt\nin 1975 to only 0.2 USD/Watt in 2020 [3].\nOther reasons are the public’s raised interest and awareness towards climate change,\ngovernmental incentives, and common goals from various international organizations [4–6].\nWithout doubt, RESs have their advantages, the main one being the fact that they\ndecrease the overall CO2 emissions. RESs, however, also have their disadvantages. Their\nunpredictable nature poses new challenges for the operation of the power system [7]. One\nof the issues this causes is over-voltages [8]. Due to that, this paper investigates two voltage\nregulation mechanisms that will be controlled by a machine-learning (ML) algorithm.\nAlthough voltage is closely related to reactive power, no reactive power methods of voltage\nAppl. Sci. 2023, 13, 12690. https://doi.org/10.3390/app132312690 https://www.mdpi.com/journal/applsci\nAppl. Sci. 2023, 13, 12690 2 of 17\nregulation such as reactors or capacitors are considered in this paper. Instead, the voltage\nregulation mechanisms considered are the line voltage regulator (LVR) and the electronic\non-load tap changer (E-OLTC). The intention is to use an ML algorithm as the controller\nof the correct tap positions of E-OLTCs and LVRs, in such a manner that voltages are\nkept within±10% of the nominal voltage. Different geographical areas have different\nDistribution Codes that decide the allowed voltage range. In the feeder used in this study\ncase, the allowed voltage range is±0.1 Vn in normal operation and down to−0.15 Vn in\ncritical conditions.\nThe effectiveness of LVRs and E-OLTCs depends greatly on the topology of the feeder\nand their positioning in it. Since LVRs are installed longitudinally, they become useful\nin long feeders that do not have many side branches, while E-OLTCs perform better in\nbranchy feeders. In cases where feeders seem to have a main long axis, LVRs can prove to\nbe an excellent choice if installed at a point along the axis where there are signiﬁcant voltage\ndrops or under-voltages [9,10]. That usually is valid for villages and other extra urban\nfeeders that go on for tens of kilometers. On the other hand, for feeders in cities, LVRs\nmay not be helpful due to these feeders typically having several branches. In the latter\ncase, E-OLTCs that are part of the usual MV/LV transformers are better suited. E-OLTCs\nmake it possible to directly regulate the voltage of their busbars to which the loads are\nconnected, without affecting a larger portion of the feeder [11,12]. This paper does compare\ntheir individual and combined effects on voltage regulation.\nML algorithms are receiving increasing attention in many ﬁelds, with no exception\nfor power systems [ 13]. For instance, in [ 14], the authors used an ML and geographic\ninformation systems (GIS) approach for electrical load assessment to increase resilience in\ndistribution networks. In [15], the authors conducted research on the ML-based application\nto predict cascading failure propagation. Paper [ 16] proposes a bottom-up data-driven\nmultistage adaptive robust optimization (MARO) framework to address the power systems’\nrenewable transition under uncertainty, while paper [ 17] proposes a machine-learning\nmethod to evaluate the low-frequency oscillation stability of the power system accurately\nand efﬁciently considering the random response data containing the uncertainties of the\npower grid. In the ﬁeld of ML applied to voltage control, paper [ 18] is a step forward\nin the path of reinforcement learning applications of Multiterminal Soft Open Points\n(M-SOPs) using Deep Deterministic Policy Gradient (DDPG). It offers quicker-than-before\nadjustments because it is data-driven and performs voltage control locally using a Markov\nDecision Process (MDP) and real-time measurement data. Paper [19] makes use of similar\ntools. Once again, reinforcement learning and Deep Deterministic Policy Gradient (DDPG)\nis used, including the Markov Decision Process (MDP) as a means to formulate the problem.\nIt possesses the uncommon advantage of a model which is expected to perform well when\nthe network data is unreliable or missing.\nThe remaining four sections of the paper are organized as follows: Section 2 explains\nthe proposed methodology for incorporating ML in voltage regulation. Section 3 is con-\ncerned with the creation and preparation of data for loads and PVs. Section 4 covers the\nQuasi-Dynamic (Q-D) simulations performed using PowerFactory. Section 5 represents the\nbuilding, training, and testing of the Deep Neural Network (DNN). Section 6 measures the\neffect of incremental DG penetration levels. Section 7 offers a potential improvement in\nthe lifecycle of tap changers by reducing their operations. Finally, Section 8 contains the\nconcluding remarks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Proposed Methodology",
+      "level": 1,
+      "text": "Speaking in high-level terms, the methodology is to ﬁrst gather data of loads, PVs and\nEVs which will serve as inputs. Then, a real-life feeder is modeled using PowerFactory 2022\nsoftware, on which the prepared and cleaned inputs are inserted. Quasi-Dynamic analyses\nare run and the software’s results are exported. These results are then prepared, cleaned,\nand divided into the training set and the test set. These datasets are used to build a Deep\nNeural Network architecture and train/tweak it as necessary. After a good ML model is\nAppl. Sci. 2023, 13, 12690 3 of 17\nbuilt, it is tested using the validation set, then the model’s predictions on the test set are\nexported back to PowerFactory, where the ﬁnal comparison of the results given by DNN\nand PowerFactory software are made. Besides these, secondary analyses are run to make\nthe understanding more profound, such as the effects of PV penetration level changes and\ntap operations number reduction.\nThis section further explains the approach to gathering the relevant data that will later\nbe used to train and test the DNN. The topology of the 10 kV network of this study-case is\nshown in Figure 1. The feeder lies in a rural mountainous area, and it has around 60 km of\nlines in total.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 3 of 18 \n \nanalyses are run and the software’s results are exported. These results are then prepared, \ncleaned, and divided into the training set and the test set. These datasets are used to build \na Deep Neural Network architecture and train/tweak it as necessary. After a good ML \nmodel is built, it is tested using the validation set, then the model’s predictions on the test \nset are exported back to PowerFactory, where the ﬁnal comparison of the results given by \nDNN and PowerFactory software are made. Besides these, secondary analyses are run to \nmake the understanding more profound, such as the e ﬀects of PV penetration level \nchanges and tap operations number reduction. \nThis section further explains the approach to gathering the relevant data that will \nlater be used to train and test the DNN. The topology of the 10 kV network of this study-\ncase is shown in Figure 1. The feeder lies in  a rural mountainous area, and it has around \n60 km of lines in total. \n \nFigure 1. The 10 kV feeder considered. \nIn Figure 1, the primary substation is shown in a red square, the secondary substa-\ntions are shown in blue triangles, and the lines are shown in yellow. There are 41 equiva-\nlent loads, each connected to a secondary substation (SS). As of now, there are no Electric \nVehicle (EV) charging stations and little to no photovoltaic generation. To study the eﬀects \nof high DG, nine photovoltaic systems and tw o EV charging stations will be added. To \nbetter understand the role of the penetration level of DGs, ﬁve diﬀerent analyses were \nconducted, each with a relative percentage of power generation, starting at 60% Pn and \nending at 140% Pn.  \nThe voltage regulation will be performed by the automatic tap changer of the HV/MV \ntransformer, by four LVRs installed at various points in the feeder and by transformers \nequipped with E-OLTCTs. The primary substation has 21 tap positions, ranging from −10 \nto +10, each with ±1.25%Vn per tap. LVRs and E-OLTCS have ﬁve taps with a regulation \nrange of ±2.5% per tap when moved from the neutral position. The feeder’s model made \nin PowerFactory is shown in Figure 2. \nFigure 1. The 10 kV feeder considered.\nIn Figure 1, the primary substation is shown in a red square, the secondary substations\nare shown in blue triangles, and the lines are shown in yellow. There are 41 equivalent\nloads, each connected to a secondary substation (SS). As of now, there are no Electric Vehicle\n(EV) charging stations and little to no photovoltaic generation. To study the effects of high\nDG, nine photovoltaic systems and two EV charging stations will be added. To better\nunderstand the role of the penetration level of DGs, ﬁve different analyses were conducted,\neach with a relative percentage of power generation, starting at 60% Pn and ending at\n140% Pn.\nThe voltage regulation will be performed by the automatic tap changer of the HV/MV\ntransformer, by four LVRs installed at various points in the feeder and by transformers\nequipped with E-OLTCTs. The primary substation has 21 tap positions, ranging from\n−10 to +10, each with ±1.25%Vn per tap. LVRs and E-OLTCS have ﬁve taps with a\nregulation range of±2.5% per tap when moved from the neutral position. The feeder’s\nmodel made in PowerFactory is shown in Figure 2.\nTo train the DNN, we need as many training examples as possible. These training\nexamples will have to contain input data and outputs. The inputs, called features, will be\nthe active loads, reactive loads, charging stations loads, and photovoltaic generations. The\noutputs, called labels, will be the correct tap positions of each E-OLTC and LVR. The data\nare real and come from smart meter measurements exported hourly. The data pertain to\ntwo full years, which translates to 17,520 values for each parameter. With 109 parameters\nin total, there will be 1,909,680 values. This feeder has a peak load of around 2.5 MW, while\nthe aggregate peak installed power PVs is around 1.9 MWp. That means the ratio of PV\ngeneration to the peak load is roughly 76%. However, it is important to note that the peak\nload of the feeder and peak generation of PVs do not occur at the same hours as these are\ntwo different characteristics which depend on the location, which means that the ratio may\nwell go beyond 100%.\nAppl. Sci. 2023, 13, 12690 4 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 4 of 18 \n \n \nFigure 2. The 10 kV feeder model ﬁrst half, including the added LVRs. \nTo train the DNN, we need as many training examples as possible. These training \nexamples will have to contain input data and outputs. The inputs, called features, will be \nthe active loads, reactive loads, charging stations loads, and photovoltaic generations. The \noutputs, called labels, will be the correct tap positions of each E-OLTC and LVR. The data \nare real and come from smart meter measurements exported hourly. The data pertain to \ntwo full years, which translates to 17,520 values for each parameter. With 109 parameters \nin total, there will be 1,909,680 values. This feeder has a peak load of around 2.5 MW, \nwhile the aggregate peak installed power PVs is around 1.9 MWp. That means the ratio of \nPV generation to the peak load is roughly 76%. However, it is important to note that the \npeak load of the feeder and peak generation of PVs do not occur at the same hours as these \nare two diﬀerent characteristics which depend on the location, which means that the ratio \nmay well go beyond 100%. \nTo better assess the eﬀect of the penetration level of DG for a ﬁxed peak load, a char-\nacteristic against voltage constraint violations will be plo tted later. Various scenarios are \ntested to have a clearer understanding of the individual impact of E-OLTCs and LVRs on \nthis MV feeder. Scenario I corresponds to the actual conditions where neither the E-OLTCs \nnor LVRs have automatic tap changing. Scenario II is the case where LVRs have automatic \ntap changing but E-OLTCs do not. Scenario III is the case where E-OLTCs have automatic \ntap changing while LVRs do not. The last one, Scenario IV, is the case where both E-OLTCs \nand LVRs are equipped with automatic tap changing, so they both serve as real-time volt-\nage regulators. This paper is not concerned with mechanical tap-changing transformers \nwhich require de-energization when operated. \nThe results from each of these scenarios contain inputs and outputs which are then \nexported, prepared, and used as examples to train the DNN. The training examples are \nﬁrst shuﬄed, then separated into a training set (around 75%) and a test set (around 25%). \nFigure 2. The 10 kV feeder model ﬁrst half, including the added LVRs.\nTo better assess the effect of the penetration level of DG for a ﬁxed peak load, ",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Creating Loads and PV Generation Data",
+      "level": 1,
+      "text": "This section reports the details of the characteristics that are built based on loads and \nPV productions. These proﬁles will be the inputs in PowerFactory and the ML model. The \nload proﬁles are real as they are supplied by re al measurements. On the other hand, PV \ngeneration characteristics are built using irradiation data for the relevant location using \nPVGIS [20].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Secondary Substation Load Data",
+      "level": 2,
+      "text": "Using smart meters, the data is collected in real time and exported hourly in a data-\nbase. These meters measure both active and re active components of loads. Active power \nof loads for the period from September 2021 to September 2022 is shown in Figure 4. Since \nFigure 3. Flowchart of the methodology.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Creating Loads and PV Generation Data",
+      "level": 1,
+      "text": "This section reports the details of the characteristics that are built based on loads and\nPV productions. These proﬁles will be the inputs in PowerFactory and the ML model. The\nload proﬁles are real as they are supplied by real measurements. On the other hand, PV\ngeneration characteristics are built using irradiation data for the relevant location using\nPVGIS [20].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Secondary Substation Load Data",
+      "level": 2,
+      "text": "Using smart meters, the data is collected in real time and exported hourly in a database.\nThese meters measure both active and reactive components of loads. Active power of loads\nfor the period from September 2021 to September 2022 is shown in Figure 4. Since there is\nonly one load per secondary substation LV side, it means this is the equivalent or sum of\nall LV feeders connected to it.\nThe reactive powers of loads are shown in Figure 5.\nThere are 41 SSs in total, each has active and reactive components. That gives us\n82 vectors of hourly data. Then, four more vectors belong to the hourly loads of the two\ncharging stations, each with two ports, one 11 kW and the other 50 kW. Getting these\nvectors together builds the matrix of loads ( L17,520×86). This matrix is exported to “.csv”\nformat and processed in Python. This matrix will serve as input for the training examples\nwhich are needed by the DNN.\nAppl. Sci. 2023, 13, 12690 6 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 6 of 18 \n \nthere is only one load per secondary substation LV side, it means this is the equivalent or \nsum of all LV feeders connected to it. \n \nFigure 4. Active power of the 41 SSs. \nThe reactive powers of loads are shown in Figure 5. \n \nFigure 5. Reactive powers of loads. \nThere are 41 SSs in total, each has active and reactive components. That gives us 82 \nvectors of hourly data. Then, four more vectors belong to the hourly loads of the two \ncharging stations, each with two ports, one 11 kW and the other 50 kW. Ge tting these \nFigure 4. Active power of the 41 SSs.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 6 of 18 \n \nthere is only one load per secondary substation LV side, it means this is the equivalent or \nsum of all LV feeders connected to it. \n \nFigure 4. Active power of the 41 SSs. \nThe reactive powers of loads are shown in Figure 5. \n \nFigure 5. Reactive powers of loads. \nThere are 41 SSs in total, each has active and reactive components. That gives us 82 \nvectors of hourly data. Then, four more vectors belong to the hourly loads of the two \ncharging stations, each with two ports, one 11 kW and the other 50 kW. Ge tting these \nFigure 5. Reactive powers of loads.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 Secondary Substation PV Generation Data",
+      "level": 2,
+      "text": "Since the PV plants considered here are ﬁctive, their power generation data cannot\nbe taken from measurements. Instead, the production proﬁles of PVs are built using\nirradiation data converted to output power. There are several online tools that provide such\ninformation by choosing the geographical location of interest. In this paper, the SARAH2\ndatabase of PVGIS was used, which is a tool offered by the European Commission. It is\npossible to obtain the data for a unit 1 kWp PV plant and build the unit production proﬁle\nfor that geographical territory. That is much easier than processing parameters such as\nAppl. Sci. 2023, 13, 12690 7 of 17\nDNI (Direct Normal Irradiation), DHI (Diffuse Horizontal Irradiation), or GHI (Global\nHorizontal Irradiation).\nUpon building the unit production vector, it can be used for all other PVs, as they\nare all subject to the same irradiation, only their installed peak power changes. Next, that\nprocess is explained in steps.\nFirst, using the 1 kWp PV plant’s outputs for two years, the unit production vector is built.\nIpv = (0, 0, 0, . . . , 0.89, 0.93, 0.88, . . .)1×17,520 (1)\nThen, another vector containing the installed peak powers of the PVs is built:\nPpv = (PP1, PP2, . . . ,PP9)1×9 (2)\nWhen multiplying Ipv transposed and Ppv, we get the matrix which contains the hourly\npower outputs for all nine plants for the entire two years:\nP0 =\n(\nIpv′× Ppv\n)\n17,520×9\nThe PV outputs for the ﬁrst half of the data are shown in Figure 6. There are nine joint\ncharacteristics, so a zoomed-in picture is shown in Figure 7.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 8 of 18 \n \n \nFigure 6. PV outputs of the ﬁrst half of the analysis. \n \nFigure 7. PV outputs–zoomed in a random short period.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Quasi-Dynamic Simulation in PowerFactory",
+      "level": 1,
+      "text": "Since the input data is now ready and for each parameter there is a separate comma-\nseparated value ﬁle, they can be assigned to their respective elements on PowerFactory. \nThe next step is to run the Quasi-Dynamic (Q-D) simulation. The Q-D simulation is run \nin hourly steps for a period of two years. For software reasons, in the backstage, the sim-\nulations are run separately for each year and then concatenated. The Q-D analysis means \nFigure 6. PV outputs of the ﬁrst half of the analysis.\nSimilar to the loads, the matrix’s columns represent a 2-year characteristic for each\nPV . Those columns are exported individually to separate ‘.csv’ ﬁles. They are ﬁrst used in\nPowerFactory, and later, they will also be used as inputs to build and train the DNN. The\nreactive components of the PVs are added although their power factor is assumed to be\nﬁxed in these simulations.\nAppl. Sci. 2023, 13, 12690 8 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 8 of 18 \n \n \nFigure 6. PV outputs of the ﬁrst half of the analysis. \n \nFigure 7. PV outputs–zoomed in a random short period.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 Quasi-Dynamic Simulation in PowerFactory",
+      "level": 1,
+      "text": "Since the input data is now ready and for each parameter there is a separate comma-\nseparated value ﬁle, they can be assigned to their respective elements on PowerFactory. \nThe next step is to run the Quasi-Dynamic (Q-D) simulation. The Q-D simulation is run \nin hourly steps for a period of two years. For software reasons, in the backstage, the sim-\nulations are run separately for each year and then concatenated. The Q-D analysis means \nFigure 7. PV outputs–zoomed in a random short period.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Quasi-Dynamic Simulation in PowerFactory",
+      "level": 1,
+      "text": "Since the input data is now ready and for each parameter there is a separate comma-\nseparated value ﬁle, they can be assigned to their respective elements on PowerFactory.\nThe next step is to run the Quasi-Dynamic (Q-D) simulation. The Q-D simulation is run\nin hourly steps for a period of two years. For software reasons, in the backstage, the\nsimulations are run separately for each year and then concatenated. The Q-D analysis\nmeans that PowerFactory will run a load ﬂow for each hour, every single time with different\ndata for the inputs. And for each of the 17,520 h, it will store the correct position of all\nautomatic tap changers. When the simulation is ﬁnished, the results can be exported\nexternally and processed as needed. The exported data will be organized into inputs, or\nfeatures, that were fed to PowerFactory, and the outputs, or labels, which were calculated\nby PowerFactory. Data for each hour will serve as one training example and it will be used\nto train the DNN. The tap positions of all E-OLTCs and LVRs that change hour by hour are\nshown in Figure 8. The ﬁgure shows visually how the taps are adjusted to keep the voltage\nwithin the set range of±10%Vn. Depending on the transformer, the tap changer will be on\neither the HV side or the LV side.\nThe four scenarios mentioned in Section 2 are run individually to better understand\nand compare E-OLTCs and LVRs as voltage regulating methods:\n• S1: E-OLTC off and LVR off (Figure 9)\n• S2: E-OLTC off and LVR on (Figure 10)\n• S3: E-OLTC on and LVR off (Figure 11)\n• S4: E-OLTC on and LVR on (Figure 12)\nAppl. Sci. 2023, 13, 12690 9 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 9 of 18 \n \nthat PowerFactory will run a load ﬂow for each hour, every single time with diﬀerent data \nfor the inputs. And for each of the 17,520 h, it will store the correct position of all automatic \ntap changers. When the simulation is ﬁnished, the results can be exported externally and \nprocessed as needed. The exported data will be  organized into inputs, or features, that \nwere fed to PowerFactory, and the outputs, or labels, which were calculated by Power-\nFactory. Data for each hour will serve as one training example and it will be used to train \nthe DNN. The tap positions of all E-OLTCs and LVRs that change hour by hour are shown \nin Figure 8. The ﬁgure shows visually how the taps are adjusted to keep the voltage within \nthe set range of ±10%Vn. Depending on the transformer, the tap changer will be on either \nthe HV side or the LV side. \n \nFigure 8. Tap positions in a random period resulting from PowerFactory simulation. \nThe four scenarios mentioned in Section 2 are run individually to be tter understand \nand compare E-OLTCs and LVRs as voltage regulating methods:  \n• S1: E-OLTC oﬀ and LVR oﬀ (Figure 9) \n• S2: E-OLTC oﬀ and LVR on (Figure 10) \n• S3: E-OLTC on and LVR oﬀ (Figure 11) \n• S4: E-OLTC on and LVR on (Figure 12) \nSince the DG penetration is very high, the feeder experiences unacceptable levels of \nover-voltages in cases where there is no type of voltage regulation in place such as in \nscenario S1. \nFigure 8. Tap positions in a random period resulting from PowerFactory simulation.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 10 of 18 \n \n \nFigure 9. Voltage proﬁles along the feeder when E-OLTCs are oﬀ and LVRs are oﬀ. \n \nFigure 10. Voltage proﬁles along the feeder when E-OLTCs are oﬀ and the LVRs are on. \nFigure 9. Voltage proﬁles along the feeder when E-OLTCs are off and LVRs are off.\nAppl. Sci. 2023, 13, 12690 10 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 10 of 18 \n \n \nFigure 9. Voltage proﬁles along the feeder when E-OLTCs are oﬀ and LVRs are oﬀ. \n \nFigure 10. Voltage proﬁles along the feeder when E-OLTCs are oﬀ and the LVRs are on. \nFigure 10. Voltage proﬁles along the feeder when E-OLTCs are off and the LVRs are on.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 11 of 18 \n \n \nFigure 11. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are oﬀ. \n \nFigure 12. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are on. \nFigure 11. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are off.\nAppl. Sci. 2023, 13, 12690 11 of 17\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 11 of 18 \n \n \nFigure 11. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are oﬀ. \n \nFigure 12. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are on. \nFigure 12. Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are on.\nSince the DG penetration is very high, the feeder experiences unacceptable levels\nof over-voltages in cases where there is no type of voltage regulation in place such as in\nscenario S1.\nThe over-voltage constraint violations are counted for each scenario and summarized\nin Table 1. The count considers each busbar for each hour of the entire duration of the\nanalysis. So, the theoretical maximum of constraints would be 17,520*9.\nTable 1. Over-voltage violations in one year.\nE-OLTC Off\nLVR Off\nE-OLTC Off\nLVR On\nE-OLTC On\nLVR Off\nE-OLTC On\nLVR On\nV > 1.05 p.u 15,652 6754 473 443\nV > 1.10 p.u 3742 655 0 0\nThe results are within expectations. The more regulations, the fewer violations.\nThat is why, when combining both LVRs and E-OLTCs, there are the fewest instances\nof over-voltages. The second-best method is using E-OLTCs only. Signiﬁcantly worse\nperformance is noted if only LVRs are used. It must be noted that this may be due to the\nspeciﬁc topology of this feeder, and as such, it does not represent a generalized ﬁnding.\nLastly, as expected, the highest number of over-voltage instances occur when there is no\nvoltage regulation at all. It could be said that the topology and the length of lines, the\nload distribution throughout the feeder, and DG penetration, are all contributing factors to\nrender one method better or worse than the other. In any case, combining both methods\nyields the best results in any feeder conﬁguration.\nAppl. Sci. 2023, 13, 12690 12 of 17\n5. Over-Voltage’s Dependence on Penetration Levels of DG\nA core question is how much DG can be injected relative to its feeder’s load without\ncausing too much trouble? An analysis was performed on this feeder when both E-OLTCs\nand LVRs were on. The input data comes from only a random portion of the dataset.\nFive levels of DG penetration levels were simulated. Each level represents the per-\ncentage of the nominal installed DG. This is done by using scaling factors ranging from\n0.6 Pn to 1.4 Pn in increments of 0.2 Pn. For each level, a count of over-voltage constraint\nviolations has been taken. The results are presented in Table 2.\nTable 2. Over-voltage violations in one year as a function of penetration level of PVs.\n60% Pn 80% Pn 100% Pn 120% Pn 140% Pn\nV > 1.05 p.u 0 0 265 894 1643\nV > 1.10 p.u 0 0 0 1 80\nFigure 13 is a graphical representation of the number of over-voltages depending on\nthe percentage of DG.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 12 of 18 \n \nThe over-voltage constraint violations are counted for each scenario and summarized \nin Table 1. The count considers each busbar fo r each hour of the entire duration of the \nanalysis. So, the theoretical maximum of constraints would be 17,520*9. \nTable 1. Over-voltage violations in one year. \n E-OLTC Oﬀ \nLVR Oﬀ \nE-OLTC Oﬀ \nLVR On \nE-OLTC On \nLVR Oﬀ \nE-OLTC On \nLVR On \nV > 1.05 p.u 15,652 6754 473 443 \nV > 1.10 p.u 3742 655 0 0 \nThe results are within expectations. The more regulations, the fewer violations. That \nis why, when combining both LVRs and E-OLTCs, there are the fewest instances of over-\nvoltages. The second-best method is using E-OLTCs only. Signi ﬁcantly worse perfor-\nmance is noted if only LVRs are used. It must be noted that this may be due to the speciﬁc \ntopology of this feeder, and as such, it does not represent a generalized ﬁnding. Lastly, as \nexpected, the highest number of over-voltage  instances occur when there is no voltage \nregulation at all. It could be said that the topology and the length of lines, the load distri-\nbution throughout the feeder,",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9",
+          "f12",
+          "f11",
+          "f10",
+          "f13"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "6 DNN Modeling, Training, and Testing",
+      "level": 1,
+      "text": "At this point, the input data or features and the output data or labels are ready to\nform training examples. The next step is for the DNN model to be created. The training\nexamples will ﬁrst be randomly shufﬂed, then divided into two sets, a training set and a\ntest set, usually in a ratio of around 70/30 or so, respectively. The training set will be used\nby the DNN to learn, while the test set will not be seen until the learning is completed.\nThe training data makes up 75% of the total 17,520 training examples of\n• 104 inputs, from which\ni. 41 Loads–active power,\nii. 41 Loads–reactive power,\niii. 9 PVs–active power,\niv. 9 PVs–reactive power,\nv. 4 EV charging station active powers (2 ports for each charging station),\n• 86 outputs, a neuron for each of the following transformer taps:\ni. 45 neurons: 5 taps × 9 E-OLTCs,\nii. 20 neurons: 5 taps × 4 LVRs,\niii. 21 neurons: 21 taps × 1 Primary SS.\nEach of the output neurons will assume values between zero and one. That value\nrepresents the probability of that certain tap of that certain transformer to be the correct one.\nAppl. Sci. 2023, 13, 12690 13 of 17\nAs for the machine-learning algorithm, a signiﬁcant amount of time was taken trying\nout different learning rates, batch sizes, number of epochs, number of neurons in the hidden\nlayer, activation functions, and various optimization algorithms and architectures.\nThis speciﬁc algorithm was chosen while keeping in mind that the voltage in busbars in\nreality can vary around 10% without breaching any limits, which means that the immediate\ntransformer’s tap position can assume more than one correct position. That automatically\nleads us to a multi-output output layer and a non-exclusive algorithm with an adequate\nloss function which allows for multiple neurons to show a high probability simultaneously.\nConsidering all that, the following settings were chosen:\n• The DNN is ‘multi-output’.\n• The algorithm is ‘non-exclusive’.\n• Classification should be binary , using the ‘Sigmoid activation function’ in the output layer.\n• The loss function is ‘Binary Cross-entropy’.\n• In the input layer, there are 104 neurons.\n• There are two hidden layers: the first, with 96 neurons, and the second, with 90 neurons.\n• The number of neurons in the output layer will be 5·Ndevices (E-OLTC, LVRs, and\nPSS). So, 86 neurons in total.\nThe DNN has basic architecture as shown in Figure 14.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 14 of 18 \n \n \nFigure 14. Scheme of the DNN architecture. \nSpeaking at a high level, the DNN has the following ﬂow process: \n1. The input (feature) and output (label) data are imported. \n2. The dataset is shuﬄed randomly and split into a training set and a test set. \n3. The data is scaled. \n4. The DNN is built by choosing the number of  neurons in layers, the activation func-\ntions, the optimizer, etc. \n5. The DNN is trained. \n6. The DNN is tested. \n7. The DNN predictions are exported. \nWhen the DNN has learned well enough, the test set will be fed to it. This way, the \nDNN will have to predict the outputs for inputs it has never seen before. The loss function \nthat measures the nume rical performance of the DNN in this model is Binary Cross-en-\ntropy. It is a logarithmic function, expressed as follows: \n𝐶𝐸 = െ𝑡ଵ log൫𝑓(𝑠ଵ)൯െ( 1െ𝑡ଵ)l o g ( 1െ𝑓(𝑠ଵ)) \nwhere 𝑓(𝑠ଵ) =\nଵ\nଵା௘ೞభ \nThis loss function is represented in Figure 15. It can be seen from this logarithmic \ngraph that DNN is learning fast, as it sees a signi ﬁcant decrease after only around 15 \nepochs. In order to avoid overﬁtting, some measures are taken such as the use of a Cross-\nValidation set, setting up the Early-Stop command, employing a 50% Dropout in the hid-\nden layer, etc. \nFigure 14. Scheme of the DNN architecture.\nSpeaking at a high level, the DNN has the following ﬂow process:\n1. The input (feature) and output (label) data are imported.\n2. The dataset is shufﬂed randomly and split into a training set and a test set.\n3. The data is scaled.\n4. The DNN is built by choosing the number of neurons in layers, the activation functions,\nthe optimizer, etc.\n5. The DNN is trained.\n6. The DNN is tested.\n7. The DNN predictions are exported.\nWhen the DNN has learned well enough, the test set will be fed to it. This way, the\nDNN will have to predict the outputs for inputs it has never seen before. The loss function\nthat measures the numerical performance of the DNN in this model is Binary Cross-entropy.\nIt is a logarithmic function, expressed as follows:\nCE =−t1log ( f (s1))− (1− t1)log(1− f (s1))\nAppl. Sci. 2023, 13, 12690 14 of 17\nwhere f (s1) = 1\n1 + es1 .\nThis loss function is represented in Figure 15. It can be seen from this logarithmic\ngraph that DNN is learning fast, as it sees a signiﬁcant decrease after only around 15 epochs.\nIn order to avoid overﬁtting, some measures are taken such as the use of a Cross-Validation\nset, setting up the Early-Stop command, employing a 50% Dropout in the hidden layer, etc.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 15 of 18 \n \n \nFigure 15. Loss function–training set (blue) and validation set (orange). \nAttention must be paid to the fact that the loss function of the validation set is one \nepoch behind the training set’s loss function; hence, it is signiﬁcantly lower.  \nAfter the DNN has been trained and tested, its predictions can be measured in a de-\nterministic way by running the resu lts back to PowerFactory. Now, di ﬀerently from be-\nfore, PowerFactory will use characteristics for correct tap positions hour by hour, but \nwhich were created by the ML algorithm inst ead of coming from measurement data or \nsoftware calculations. When that is done, th e voltages will be monitored, and the over-\nvoltage instances will be counted. The voltages of the Q-D simulation for the duration of \nthe test set are shown in Figure 16. \n \nFigure 16. Voltage proﬁles gathered from PowerFactory when the ML predicts the taps of LVRs and \nE-OLTCs. \nThe test set is 25% of the 2 years’ hourly data, which translates to 6 months or around \n4380 h. Plugging the ML predictions of taps back into the software shows that there are \nFigure 15. Loss function–training set (blue) and validation set (orange).\nAttention must be paid to the fact that the loss function of the validation set is one\nepoch behind the training set’s loss function; hence, it is signiﬁcantly lower.\nAfter the DNN has been trained and tested, its predictions can be measured in a\ndeterministic way by running the results back to PowerFactory. Now, differently from\nbefore, PowerFactory will use characteristics for correct tap positions hour by hour, but\nwhich were created by the ML algorithm instead of coming from measurement data or\nsoftware calculations. When that is done, the voltages will be monitored, and the over-\nvoltage instances will be counted. The voltages of the Q-D simulation for the duration of\nthe test set are shown in Figure 16.\nAppl. Sci. 2023, 13, x FOR PEER REVIEW 15 of 18 \n \n \nFigure 15. Loss function–training set (blue) and validation set (orange). \nAttention must be paid to the fact that the loss function of the validation set is one \nepoch behind the training set’s loss function; hence, it is signiﬁcantly lower.  \nAfter the DNN has been trained and tested, its predictions can be measured in a de-\nterministic way by running the resu lts back to PowerFactory. Now, di ﬀerently from be-\nfore, PowerFactory will use characteristics for correct tap positions hour by hour, but \nwhich were created by the ML algorithm inst ead of coming from measurement data or \nsoftware calculations. When that is done, th e voltages will be monitored, and the over-\nvoltage instances will be counted. The voltages of the Q-D simulation for the duration of \nthe test set are shown in Figure 16. \n \nFigure 16. Voltage proﬁles gathered from PowerFactory when the ML predicts the taps of LVRs and \nE-OLTCs. \nThe test set is 25% of the 2 years’ hourly data, which translates to 6 months or around \n4380 h. Plugging the ML predictions of taps back into the software",
+      "refs": {
+        "figures": [
+          "f14",
+          "f15",
+          "f16"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The 10 kV feeder considered."
+    },
+    {
+      "id": "f2",
+      "caption": "The 10 kV feeder model ﬁrst half, including the added LVRs."
+    },
+    {
+      "id": "f3",
+      "caption": "Flowchart of the methodology."
+    },
+    {
+      "id": "f4",
+      "caption": "Active power of the 41 SSs."
+    },
+    {
+      "id": "f5",
+      "caption": "Reactive powers of loads."
+    },
+    {
+      "id": "f6",
+      "caption": "PV outputs of the ﬁrst half of the analysis."
+    },
+    {
+      "id": "f7",
+      "caption": "PV outputs–zoomed in a random short period."
+    },
+    {
+      "id": "f8",
+      "caption": "Tap positions in a random period resulting from PowerFactory simulation."
+    },
+    {
+      "id": "f9",
+      "caption": "Voltage proﬁles along the feeder when E-OLTCs are oﬀ and LVRs are oﬀ."
+    },
+    {
+      "id": "f10",
+      "caption": "Voltage proﬁles along the feeder when E-OLTCs are oﬀ and the LVRs are on."
+    },
+    {
+      "id": "f11",
+      "caption": "Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are oﬀ."
+    },
+    {
+      "id": "f12",
+      "caption": "Voltage proﬁles along the feeder when E-OLTCs are on and LVRs are on."
+    },
+    {
+      "id": "f13",
+      "caption": "is a graphical representation of the number of over-voltages depending on"
+    },
+    {
+      "id": "f14",
+      "caption": "Scheme of the DNN architecture."
+    },
+    {
+      "id": "f15",
+      "caption": "Loss function–training set (blue) and validation set (orange)."
+    },
+    {
+      "id": "f16",
+      "caption": "Voltage proﬁles gathered from PowerFactory when the ML predicts the taps of LVRs and"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Over-voltage violations in one year."
+    },
+    {
+      "id": "t2",
+      "caption": "Over-voltage violations in one year as a function of penetration level of PVs."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 16,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

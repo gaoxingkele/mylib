@@ -1,0 +1,448 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2022__relational_graph_convolutional_networks_a_closer_look__60f28d3630.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Knowledge Graphs are graph-structured knowledge bases, representing entities and relations between pairs of\nentities [NMTG15]. They have become critical for large-scale information systems for tasks ranging from\nquestion answering to search [ NGJ+19]. The ability to perform statistical relational learning over such data\nenables new links, properties, and types to be inferred [ NMTG15], and performing this at a large scale\nis fundamental for the advancement of the Semantic Web. Additionally, models that can be applied to\nKnowledge Graphs can also be applied to Relational Database Management Systems, because there is a\none-to-one mapping between the two [BDK +13].\nRelational Graph Convolution Networks (RGCNs) [SKB+18] are message passing frameworks for learning\nvaluable latent features of relational graphs. RGCNs [ SKB+18] have become been widely adopted for\ncombining Knowledge Graphs with machine learning applications 1 for their uses include Knowledge Graph\nreﬁnement [Pau17], soft-query answering [DC20], and logical reasoning [ SSPH20]. The original reference code\nfor the RGCN is built on older platforms that are no longer supported. Furthermore, other reproductions\n[WZY+19, FL19] are incomplete. 2 Existing descriptions of the model are are mathematically dense, with\nlittle exposition, and assume prior knowledge about geometric deep learning.\nWe reproduced the model in PyTorch, a widely-used framework for deep learning [ PGM+19]. Using our\nreproduction, we provide a thorough and friendly description for a wider audience. The contributions of this\npaper are as follows:\n1. A reproduction of the experiments as described in the original paper by Schlichtkrull et al. [SKB+18];\n2. A new publicly available PyTorch implementation of the model called Torch-RGCN;\n3. A description of the subtleties of the RGCN that are crucial for its understanding, use and eﬃcient\nimplementation;\n4. New conﬁgurations of the model that are parameter eﬃcient.\n∗Informatics Institute, University of Amsterdam, 1098XH Amsterdam,The Netherlands\n†Vrije Universiteit Amsterdam, 1081HV Amsterdam, The Netherlands\n1The original paper has received over 1200 citations.\n2At the time of writing, we are aware of additional implementations in PyTorch Geometric [ FL19], which reproduces only the\nRGCN layer, and in Deep Graph Library [ WZY+19], which provides the node classiﬁcation and link prediction model. However,\nthey are not focused on scientiﬁc reproducibility.\n1\narXiv:2107.10015v1  [cs.LG]  21 Jul 2021\nThe rest of the paper is organized as follows. We begin with an overview of the related work in Section 2.\nThen, we introduce the RGCN in Section 3, followed by a description of our reimplementation (Section 4).\nWe then proceed to describe the reproduction of node classiﬁcation (Section 5) and link prediction models\nwith associated experiments (Section 6). These sections include the model variants mentioned above. In\nSection 7, we discuss the lessons learned from reproducing the original paper and the implications of our\nﬁndings. Finally, we discuss our results and conclude.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "Machine learning over Knowledge Graphs involves learning low-dimensional continuous vector representations,\ncalled Knowledge Graph Embeddings. Here, we brieﬂy review relevant works in the literature.\nCommonly, Knowledge Graph Embedding (KGE) models are developed and tested on link prediction\ntasks. Two key examples of KGEs are TransE [ BUGD+13], in which relations are translational operations\nused learned to entities as low-dimensional vectors, and DistMult [ YYH+14] where the likelihood of a triple\nis quantiﬁed by a multiplicative scoring function. Ruﬃnelli et al. [RBG19] provide an overview of the most\npopular KGE methods and their relative performance. The RGCN is a type of Knowledge Graphs Embedding\nmodel. However, RGCNs are diﬀerent from traditional link predictors, such as TransE and DistMult, because\nRGCNs explicitly uses nodes’ neighborhood information for learning vector representations for downstream\ntasks [BHB+18].\nBesides RGCNs, there are other graph embedding models for relational data. Relational Graph Attention\nNetworks uses self-attention layers to learn attention weights of edges in relational graphs but yields similar,\nor in some cases poor, performance when compared to the RGCN. [ BSCH19]. Heterogenous Information\nNetwork (HIN) exploit meta-paths (a sequence consisting of node types and edge types for modelling particular\nrelationships) to low-dimensional representation of networks [ HM17]. HIN do not use message passing and\ntheir expressivity depends on the selected meta-paths.\nBeyond node classiﬁcation and link prediction, RGCN’s have other practical uses. For example, Daza et al.\n[DC20] explored RGCNs for soft query answering by embedding queries structured as relational graphs which\ntypically consists of a few nodes. Recently, Hsu et al. shows that RGCN can be used to extract dependency\ntrees from natural language [GHA +21].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Relational Graph Convolutional Network",
+      "level": 1,
+      "text": "In [SKB+18], Schlichtkrull et al. introduced the RGCN as a convolution operation that performs message\npassing on multi-relational graphs. In this section, we are going to explain the Graph Convolutional [ KW16]\nand how they can be extended for relational graphs. We will describe message passing in terms of matrix\nmultiplications and explain the intuition behind these operations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Message Passing",
+      "level": 2,
+      "text": "We will begin by describing the basic Graph Convolutional Network (GCN) layer for directed graphs.3 This\nwill serve as the basis for the RGCN in Section 3.2.\nThe GCN [ KW16] is a graph-to-graph layer that takes a set of vectors representing nodes as input,\ntogether with the structure of the graph and generates a new collection of representations for nodes in the\ngraph. A directed graph is deﬁned as G = (V,E), whereV is a set of vertices (nodes) and ⟨i,j⟩∈E is a set of\ntuples indicating the presence of directed edges, pointing from node i to j. Equation 1 shows the message\npassing rule of a single layer GCN for an undirected graph, G.\nH =σ (AXW ), (1)\n3The original Graph Convolutional Network [KW16] operates over undirected graphs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 added edges",
+      "level": 1,
+      "text": "self-looping edges\ndata edges\nincoming edges\nOutput\ni\ne\nd\ncb\na\nMessage PassingInput\nFigure 3.1: A schematic diagram of message passing in a directed graph with 6 nodes. hi is a vector that\nrepresents the node embedding of the node i (in orange). h(l)\ni and h(l+1)",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "show the node embedding before",
+      "level": 1,
+      "text": "and after the message passing step, respectively. The neighboring nodes are labelled from a to e.\nHere, X is a node feature matrix, W represents the weight parameters, and σ is a non-linear activation\nfunction. A is a matrix computed by row-normalizing 4 the adjacency matrix of the graph G. The row\nnormalization ensures that the scale of the node feature vectors do not change signiﬁcantly during message\npassing. The node feature matrix, X, indicate the presence or absence of a particular feature on a node.\nTypically, more than a single convolutional layer is required to capture the complexity of large graphs.\nIn these cases, the RGCN layers are stacked one after another so that the output of the preceeding RGCN\nlayerH (l−1) is used as the input for the current layer H (l), as shown in Equation 2. In our work, we will use\nsuperscript l to denote the current layer.\nH (l) =σ\n(\nAH (l−1) W\n)\n, (2)\nIf the data comes with a feature vector for each node, these can be used as the input X for the ﬁrst layer\nof the model. If feature vectors are not available, one-hot vectors, of length N with the non-zero element\nindicating the node index, are often used. In this case, the input X becomes the identity matrix I, which can\nthen be removed from Equation 1.\nWe can rewrite Equation 1 to make it explicit how the node representations are updated based on a\nnode’s neighbors:\nhi =σ\n[∑\nx∈Ni\n1\n|Ni| xi\nTW\n]\n. (3)\nHere, xi is an input vector representing node i, hi is the output vector for node i, and Ni is the collection\nof the incoming neighbors of i, that is the nodes j for which there is an edge ( j, i) in the graph. For\nsimplicity, the bias term is left out of the notation but it is usually included. We see that the GCN takes the\naverage of i’s neighbouring nodes, and then applies a weight matrix W and an activation σ to the result.\nMultipliying xiTW by 1\n|Ni| means that we sum up all the feature vectors of all neighboring nodes. This\nmakes every convolution layer permutation equivariant, and that is: if either the nodes (in A) are permuted,\nthen the output representations are permuted in the same way. Overall, this operation has the eﬀect of\npassing information about neighboring nodes to the node of interest, i and this called message passing.\nMessage passing is graphically represented in Figure 3.1 for an undirected graph, where messages from\nneighboring nodes (a−e) are combined to generate a representation for node i. After message passing, the\nnew representation of node i is a mixture of the vector embeddings of neighboring nodes.\n4For undirected graphs, a symmetrically normalized Laplacian matrix is used instead [KW16].\n3\nIf a graph is sparsely connected, a single graph-convolution layer may suﬃce for a given downstream task.\nUsing more convolutional layers encourages mixing with nodes more than 1-hop away, however it can also\nlead to output features being oversmoothed [ LHW18]. This is an issue as the embeddings for diﬀerent nodes\nmay be indistinguishable from each other, which is not desirable.\nIn summary, GCNs perform the following two operations: 1) They replace each node representation by\nthe average of its neighbors, and 2) They apply a linear layer with a nonlinear activation function σ. There\nare two issues with this deﬁnition of the GCN. First, the input representation of node i does not aﬀect the\noutput representation, unless the graph contains a self-loop for i. This is often solved by adding self-loops\nexplicitly to all nodes. Second, only the representations of nodes that have incoming links to i are used in the\nnew representation of i. In the relational setting, we can solve both problems elegantly by adding relations to\nthe graph which we will describe in the next section.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Extending GCNs for multiple relations",
+      "level": 2,
+      "text": "In this section, we explain how the basic message passing framework can extended to Knowledge Graphs.\nWe deﬁne a Knowledge Graph as a directed graph with labelled vertices and edges. Formally, a KG can be\ndeﬁned asG = (V,E,R), whereR represents the set of edge labels (relations) and ⟨s,r,o⟩∈E is a set of\ntuples representing that a subject node s and an object node o are connected by the labelled edge r∈R .\nThe Relational Graph Convolutional Network extends graph convolutions to Knowledge Graphs by\naccounting for the directions of the edges and handling message passing for diﬀerent relations separately.\nEquation 4 is an extension of the regular message passing rule (Equation 1).\nH =σ\n( R∑\nr=1\nArXWr\n)\n, (4)\nwhere R is the number of relations, Ar is an adjacency matrix describing the edge connection for a given\nrelation r and Wr is a relation-speciﬁc weight matrix. The extended message passing rule deﬁnes how the\ninformation should be mixed together with neighboring nodes in a relational graph. In the message passing\nstep, the embedding is summed over the diﬀerent relations. 5\nWith the message passing rule discussed thus far, the problem is that for a given triple⟨s,r,o⟩ a message is\npassed froms too, but not fromo tos. For instance, for the triple⟨Amsterdam,located in,The Netherlands⟩\nit would be desirable to update bothAmsterdam with information from The Netherlands, and The Netherlands\nwith information from Amsterdam, while modelling the two directions as meaning diﬀerent things. To allow\nthe model to pass messages in two directions, the graph is amended inside the RGCN layer by including inverse\nedges: for each existing edge ⟨s,r,o⟩, a new edge ⟨o,r′,s⟩ is added where r′ is a new relation representing\nthe inverse of r. A second problem with the naive implementation of the (R)GCN is that the output\nrepresentation for a node i does not retain any of the information from the input representation. To allow\nsuch information to be retained, a self-loop ⟨s,rs,s⟩ is added to each node, where rs is a new relation that\nexpresses identity. Altogether, if the input graph contains R relations, the amended graph contains 2R + 1\nrelations:R+ =R∪R ′∪Rs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Reducing the number of parameters",
+      "level": 2,
+      "text": "We useNin and Nout to represent the input and output dimensions of a layer, respectively. While the GCN\n[KW16] requires Nin×Nout parameters, relational message passing uses R+×Nin×Nout parameters. In\naddition to the extra parameters required for a separate GCN for every relation, we also face the problem\nthat Knowledge Graphs do not usually come with a feature vector representing each node. As a result, as we\nsaw in the previous section, the ﬁrst layer of an RGCN model is often fed with a one-hot vector for each\nnode. This means that for the ﬁrst layer Nin is equal to the number of nodes in the graph.\n5Since RGCN layers are stacked such that the input of a layer is the ouput of the previous layer, taking the sum over R\nactually inﬂats the activations. However, for two-layer networks this does not seem to aﬀect performance. For deeper models,\ntaking the mean over the relations rather than the sum may be more appropriate.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 added edges",
+      "level": 1,
+      "text": "inverse edges\nof  incoming edges \ninverse edges of  \noutgoing edges self-looping edges\ndata edges\nincoming edges outgoing edges\nOutput\nMessage Passing\ni\na\nb",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "d e",
+      "level": 1,
+      "text": "a b c\nd eInput\nFigure 3.2: A diagram of message passing in a directed, labelled graph with 6 nodes. hi is a vector that\nrepresents the node embedding of the node i (in orange). h(l)\ni and h(l+1)",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "show the node embedding before",
+      "level": 1,
+      "text": "and after the message passing step, respectively. The neighboring nodes are labelled from a to e.\nIn their work, Schlichtkrull et al. introduced two diﬀerent weight regularisation techniques to improve\nparameter eﬃciency: 1) Basis Decomposition and 2) Block Diagonal Decomposition. Figure 3.3 shows visually\nhow the two diﬀerent regularisation techniques work.\nBasis Decomposition does not create a separate weight matrix Wr for every relation. Instead, the\nmatrices Wr are derived as linear combinations of a smaller set of B basis matrices Vb, which is shared across\nall relations. Each matrix Wr is then a weighted sum of the basis vectors with component weight Crb:\nWr =\nB∑\nb=1\nCrbVb, (5)\nBoth the component weights and the basis matrices are learnable parameters of the model, and in total\nthey contain fewer parameters than Wr. With lower number of basis functions, B, the model will have\nreduced degrees of freedom and possibly better generalisation.\nBlock Diagonal Decomposition creates a weight matrix for each relation, Wr, by partitioning Wr into\nNin\nB by Nout\nB blocks, and then ﬁxing the oﬀ-diagonal blocks to zeros (shown in Figure 3.3). 6 This deactivates\nthe oﬀ-diagonal blocks, such that only the diagonal blocks are updated during training. An important\nrequirement for this decomposition method is that the width/height of Wr need to be divisible by B.\nWr =\n\n\nQr1 0 ... 0",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "0 Qr2 0 0",
+      "level": 1,
+      "text": "... 0 ... ...\n0 0 ... Q rB\n\n (6)\nHere, B represents the number of blocks that Wr is decomposed into and Qrb are the diagonal blocks\ncontaining the relation-speciﬁc weight parameters. Equation 6 shows that taking the direct sum of Qr over\nall the blocks gives Wr, which can also be expressed as the sum of diag(Qrb) over all the diagonal elements in\n6The oﬀ-diagonal blocks are Nin\nB by Nout\nB matrices containing only zeros. In Equation 6, we present these zeroed blocks\nsimply with 0.\n5\nthe block matrix. The higher the number of blocks b, the lower the number of trainable weight parameters\nfor each relation, Wr, and vice versa. Block diagonal decomposition is not applied to the weight matrix of\nthe identity relation rs, which we introduced in Section 3.2 to add self-loops to the graph.\nBlock Diagonal Decomposition\noff-diagonal blocks (zeroed)\ndiagonal blocks (parameters)\n=\nBasis Decomposition\nComponentsBases\n=\nFigure 3.3: A simpliﬁed visualisation of the weight regularisation methods. Left: A weight matrix, Wr, is\ndecomposed into 2 bases (B = 2). Bases are represented by a tensor V ∈ RB×Nin×Nout and components by\nmatrix C∈ RR+×B. Right: A diﬀerent weight matrix, Wr, is decomposed into 3 blocks ( B = 3). Blocks are\ntensors Qrb∈ RB× Nin\nB × Nout\nB . Nin and Nout are the input and output dimensions of layer, respectively.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 Torch-RGCN",
+      "level": 1,
+      "text": "The original implementation of the RGCN by Schlichtkrull et al. was written using two diﬀerent dif-\nferentiable programming frameworks (Theano 0.9 [ ARAA+16] and TensorFlow 1.4 [ AAB+15] 7) both\nwhich have become obsolete in the past two years. Therefore, we have reproduced the RGCN using\nPyTorch [PGM+19]. We will refer to our implementation as Torch-RGCN and the original implemen-\ntation from [ SKB+18] as TensorFlow-RGCN ( TF-RGCN ). Our RGCN implementation is available at\nhttps://github.com/thiviyanT/torch-rgcn.\nIn this Section, we will describe how we implemented the Relational Graph Convolutional Network. We\nbegin by introducing crucial concepts for the implementation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1 Einstein Summation",
+      "level": 2,
+      "text": "Message passing requires manipulating high-dimensional matrices and tensors using many diﬀerent operations\n(e.g. transposing, summing, matrix-matrix multiplication, tensor contraction). We will use Einstein summation\nto express these operations concisely.\nEinstein summation (einsum) is a notational convention for simplifying tensor operations [Kup14]. Einsum\ntakes two arguments: 1) an equation 8 in which characters identifying tensor dimensions provide instructions\non how the tensors should be transformed and reshaped, and 2) a set of tensors that need to be transformed\nor reshaped. For example, einsum(ik,jk →ij,A,B ) represents the following matrix operation:\n7TensorFlow 2 is not backward compatible with TensorFlow 1 code.\n8We use a notation that maps directly to the way einstein summation is used in code, rather than the standard notation.\n6\nCij =\n∑\nk\nAik·Bjk, (7)\nThe general rules of an einsum operation are that indices which are excluded from the result are summed\nout, and indices which are included in all terms are treated as the batch dimension. We use einsum operations\nin our implementation to simplify the message passing operations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.2 Sparsity",
+      "level": 2,
+      "text": "Since many graphs are sparsely connected, their adjacency matrices can be eﬃciently stored on memory\nas sparse tensors. Sparse tensors are memory eﬃcient because, unlike dense tensors, sparse tensors only\nstore non-zero values and their indices. We make use of sparse matrix multiplications. 9 For sparse matrix\noperations on GPUs, the only mulitplication operation that is commonly available is multiplication of a sparse\nmatrix S by a dense matrix D, resulting in a dense matrix. We will refer to this operation as spmm( S, D).\nFor our implementation, we endeavour to express the sparse part of the RGCN message passing operation\n(Equation 4), including the sum over relations, in a single sparse matrix multiplication.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3 Stacking Trick",
+      "level": 2,
+      "text": "Using nested loops to iteratively pass messages between all neighboring nodes in a large graph would be very\nineﬃcient. Instead, we use a trick to eﬃciently perform message passing for all relations in parallel.\nEdge connectivity in a relational graph is represented as a three-dimensional adjacency tensor A∈\nRR+×N×N, where N represents the number of nodes and R+ represents the number of relations. Typically,\nmessage passing is performed using batch matrix multiplications as shown in Equation 4. However, at the\ntime of writing, batch matrix operations for sparse tensors are not available in most Deep Learning libraries.\nUsing spmm is the only eﬃcient operation available, so we stack adjacency matrices and implement the whole\nRGCN in terms of this operation.\nWe augmentA by stacking the adjacency matrices corresponding to the diﬀerent relations Ar vertically\nand horizontally into Av∈ R(N +R+)×N and Ah∈ RN×(N +R+), respectively.\nAv =\n\n\nA1\nA2\n...\nA1′\nA2′\n...\nAs\n\n\n(8)\nAh =\n[ A1 A2··· A1′ A2′ ··· As\n]\n(9)\nHere, [·] represents a concatenation operation, and Av and Ah are both sparse matrices. By stacking Ar\neither horizontally or vertically, we can perform message passing using sparse matrix multiplications rather\nthan expensive dense tensor multiplications. Thus, this trick helps to keep the memory usage low.\nAlgorithm 1 shows how message passing is performed using a series of matrix operations. All these are\nimplementations of the same operation, but with diﬀerent complexities depending on the shape of the input.\n1) If the inputs X to the RGCN layer are one-hot vectors, X can be removed from the multiplication. The\nfeatureless message passing simply multiplies A with W , because the node feature matrix X is not given.\nNote that X, in this case, can also be modelled using an identity matrix I. However, since AW =AIW , we\nskip this step to reduce computational overhead.\n9Recent advances in CUDA implementations have made it possible to perform computations involving sparse matrix\nmultiplications to run on the GPU.\n7\n2) In the horizontal stacking approach , X multiplied with W . This yields the XW tensor, which is\nthen reshaped into a NR× N matrix. The reshaped XW matrix is then multiplied with Ah using spmm.\n3) In the vertical stacking approach , the X is mixed with Av using spmm. The product is reshaped\ninto a tensor of dimension R× N×N. The tensor AX is then multiplied with W .\nAny dense/dense tensor operations can be eﬃciently implemented with einsum, but sparse/dense operations\nonly allow multiplication of sparse matrix by dense matrix. Therefore, we adopt the two diﬀerent stacking\napproaches for memory eﬃciency. The vertical stacking approach is suitable for low dimensional input and\nhigh dimensional output, because the projection to low dimensions is done ﬁrst. While the horizontal stacking\napproach is good for high dimensional input and low dimensional output as the projection to high dimension\nis done last. These matrix operations are visually illustrated in Figure 4.1.\nvertical stacking\nreshape\nhorizontal stacking\nreshape\nfeatureless message passing\ndense matrix multiplication or tensor contraction \n(einsum)\nsparse-by-dense matrix multiplication (spmm)\nFigure 4.1: A simpliﬁed visual representation of diﬀerent message passing approaches: (Top-Left) Featureless-\nmessage passing, (Bottom-Left) Message passing using horizontally stacked of adjacency matrices, and\n(Top-Right) Message passing using vertically stacked adjacency matrices. ⨂ indicates multiplication between\ndense tensors, which can be implemented with an einsum operator. ⨂ refers to sparse-by-dense multiplication,\nfor which the spmm operation is required. Black arrow indicates tensor reshaping.\n8\nAlgorithm 1: Message Passing Layer\nInput: A, σ, [X]\nResult: H\nif featureless then\nx⇐einsum(‘ni,io→no’,Ah,W )\nH⇐σ (x)\nelse\nif horizontally stacked then\nx⇐einsum(‘ni,rio→rno’,X,W )\nreshape x into a matrix with the dimensions NR +×Nout\nx⇐spmm(Ah,x )\nelse\nx⇐spmm(Av,X )\nreshape x into a tensor with the dimensions R+×N×Nin\nx⇐einsum(‘rio,rni →no’,W,x )\nend\nH⇐σ (x)\nend\nThus far, we focused on how Relational Graph Convolutional layers work and how to implement them.\nAs mentioned in Section 2, RGCNs can be used for many downstream tasks. Now, we will discuss how these\ngraph-convolutional layers can be used as building blocks in larger neural networks to solve two downstream\ntasks implemented in the original RGCN paper [ SKB+18]: node classiﬁcation and link prediction. In the\nnext two sections, we detail the model setup, our reproduction experiments and new conﬁgurations of the\nmodels. We begin with node classiﬁcation.\n5 Downstream Task: Node Classiﬁcation\nIn the node classiﬁcation task, the model is trained under a transductive setting which means that the whole\ngraph, including the nodes in the test set, must be available during training, with only the labels in the test\nset withheld. The majority of the nodes in the graph are unlabelled and the rest of the nodes are labelled\n(we call these target nodes). The goal is to infer the missing class information, for example, that Amsterdam\nbelongs to the class City.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5.1 Model Setup",
+      "level": 2,
+      "text": "Figure 5.1 is a diagram of the node classiﬁcation model with a two-layer RGCN as described in [ SKB+18].\nFull-batch training is used for training the node classiﬁcation model, meaning that the whole graph is\nrepresented in the input adjacency matrix A for the RGCN. The input is the unlabeled graph, the output are\nthe class predictions and the true predictions are used to train the model. The ﬁrst layer of the RGCN is\nReLU activated and it embeds the relational graph to produce low-dimensional node embeddings. The second\nRGCN layer further mixes the node embeddings. Using softmax activation the second layer generates a\nmatrix with the class probabilities, Y ∈ RN×C, and the most probable classes are selected for each unlabelled\nnode in the graph. The model is trained by optimizing the categorical cross entropy loss:\nL =−\nY∑\ni=1\nK∑\nk=1\ntik ln h(L)\nik , (10)\nwhereY is the set of labelled nodes, K represents the number of classes, tik is one-hot encoded ground\ntruth labels and h(L)\nik represents node representations from the RGCN. The last layer ( L) of the RGCN is\nsoftmax-activated. The trained model can be used to infer the classes of unlabelled nodes.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "9 OutputMessage Passing",
+      "level": 1,
+      "text": "Class Probabilities\nRGCN Layer 2RGCN Layer 1\n?\nNode Embeddings\nData\nOne-Hot Encodings\nFigure 5.1: An overview of the node classiﬁcation model with a two-layer RGCN. Diﬀerent colour (magenta,\ngreen, blue yellow, violet) is used to highlight diﬀerent entity types. Unlabelled entities are in grey.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.2 e-RGCN",
+      "level": 2,
+      "text": "In GCNs [KW16], the node features X are represented by a matrix X∈ RN×F , where N is the number of\nnodes and F is the number of node features. When node features are not available, one-hot vectors can be\nused instead. An alternative approach would be to represent the features with continuous values E∈ RN×D,\nwhere D is the node embedding dimension.\nIn the GCN setting [ KW16], using one hot vectors is functionally very similar to using embedding vectors:\nthe multiplication of the one hot vector by the ﬁrst weight matrix W , essentially selects a row of W , which\nthen functions as an embedding of that node. In the RGCN setting, the same holds, but we have a separate\nweight matrix for each relation, so using one-hot vectors is similar to deﬁning a separate node embedding for\neach relation. When we feed the RGCN a single node embedding for each node instead, we should increase\nthe embedding dimension D to compensate.\nInitial experiments showed that this approach slightly underperforms the one-hot approach on the\nbenchmark data used in [ SKB+18]. After some experimentation, we ended up with the following model,\nwhich we call the embedding-RGCN (e-RGCN). Its message passing rule is described in Equation 11. The\nweight matrix is restricted to a diagonal matrix (with all oﬀ diagonal elements ﬁxed to zero). 10 and then the\nproduct is multiplied by the adjacency matrix.\nh =σ\n( R∑\nr=1\nAr E diag(wr)\n)\n, (11)\nHere, E is the node embeddings broadcasted across all the relations R, wr is a vector containing weight\nparameters for relation r. Here, diag(·) is a function that takes a vector L∈ RQ as an input and outputs a\ndiagonal matrix N∈ RQ×Q, where the diagonal elements are elements from the original vector L.\nUsing a diagonal weight matrix improves parameter eﬃciency, while enabling distinction between relations.\nWe created a new node classﬁcation model, where the ﬁrst layer is an e-RGCN layer and the second layer is a\nstandard RGCN (without regularisation) that predicts class probabilities. This model provides competitive\nperformance with the RGCN, using only 8% of the parameters.\n10This is a special case of the block decomposition with 1x1 blocks.\n10\n5.3 Node Classiﬁcation Experiments\nAll node classiﬁcation models were trained following Schlichtkrull et al. using full-batch gradient descent\nfor 50 epochs. However, we used 100 epochs for e-RGCN on the AM dataset. Glorot uniform initialisation\n[GB10] was used to initialise parameters with a gain of\n√\n2 corresponding to the ReLU activation function.\nKaiming initialization [HZRS15] was used to initialise the node embeddings in the e-RGCN node classiﬁcation\nmodel.11 Basis decomposition was used for the RGCN-based node classﬁcation. 12 All RGCN and e-RGCN\nmodels, except for the e-RGCN on the AM dataset, were trained using a GPU.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5.3.1 Datasets",
+      "level": 3,
+      "text": "We reproduce the node classiﬁcation experiments using the benchmark datasets that were used in the original\npaper: AIFB [ BS07], MUTAG [DLdCD+91], BGS [dV13] and AM [ DBWVG+12]. We also evaluate e-RGCN\non the same datasets. AIFB is a dataset that describes a research institute in terms of its staﬀ, research\ngroup, and publications. AM (Amsterdam Museum) is a dataset containing information about artifacts in the\nmuseum. MUTAG is derived as an example dataset for the machine learning model toolkit about complex\nmolecules. The BGS (British Geological Survey) dataset contains information about geological measurements\nin Great Britain.\nSince the messages in a two-layer RGCN cannot propagate further than two hops, we can prune away the\nunused nodes from the graph. This signiﬁcantly reduces the memory usuage for large datasets (BGS & AM)\nwithout any performance deterioration. To the best of our knowledge, this was ﬁrst implemented in the DGL\nlibrary [WZY+19]. For the AM and BGS datasets, the graph was pruned by removing any nodes that are 2\nhops away from the target nodes. Pruning signiﬁcantly reduces the number of entities, relations and edges\nand thus, lowers the memory consumption of the node classiﬁcation model, making it feasible to train it on a\nGPU with 12GB of memory. Table 1 shows the statistics for the node classiﬁcation datasets. We use the\nsame training, validation and test split as in [SKB +18].\nTable 1: Number of entities, relations, edges and classes along with the number of labeled entities for each of\nthe datasets. Labeled denotes the subset of entities that have labels and entities are the nodes without any\nlabels. (*) indicates that entities more than two hops away from the target label were pruned.\nDataset AIFB MUTAG BGS* AM*\nEntities 8,285 23,644 87,688 246,728\nRelations 45 23 70 122\nEdges 29,043 74,227 230,698 875,946\nLabeled 176 340 146 1,000\nClasses 4 2 2 11",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5.3.2 Results",
+      "level": 3,
+      "text": "Table 2 shows the results of the node classiﬁcation experiments in comparison to the original RGCN paper.\nTorch-RGCN achieves similar performances to TF-RGCN reported in [ SKB+18]. We observed that the\ntraining times of the node classiﬁcation models largely depended on the size of the graph dataset. The CPU\ntraining times varied from 45 seconds for the AIFB dataset to 20 minutes for the AM dataset. Since our\nimplementation makes use of GPU’s, we were able to run the Torch-RGCN models on a GPU and train the\nmodel within a few minutes.\n11The gain parameter is taken from the DGL implementation [ WZY+19]. The original implementation does not appear to\napply a gain. This choice does not seem to aﬀect the classiﬁcation performance.\n1240 bases for the AM & BGS. 30 bases for MUTAG.\n11\nTable 2: Node classiﬁcation accuracy for TF-RGCN, Torch-RGCN and e-RGCN. Results for TF-RGCN were\ntaken from the original paper. These are averages over 10 runs, with standard deviations.\nDataset Model Accuracy (%)\nTF-RGCN Torch-RGCN e-RGCN\nAIFB 95.83 ±0.62 95.56 ±0.61 89.17 ±0.28\nAM 89.29 ±0.35 89.19 ±0.35 89.04 ±0.25\nBGS 83.10 ±0.80 82.76 ±0.89 81.72 ±0.53\nMUTAG 73.23 ±0.48 73.38 ±0.60 71.03 ±0.58\nDecoder (DistMult)\n?\nMixed \nNode Embeddings\nRelation Embeddings\nTraditional Link Predictors\nEncoder\nRGCN Layer 2\nRGCN Layer 1\nNode Embeddings\nEdge Sampling\n?\nData\nFigure 6.1: A schematic visualisation of link prediction models. Edges are coloured (red and green) to indicate\ndiﬀerent edge labels. RGCN-based encoders can be seen an extension to traditional link predictors, such as\nDistMult [YYH+14] and TransE [BUGD+13]. RGCNs enrich the node representations used by these models\nby mixing them along the edges of the graph, before applying the score function. In this case, removing the\nRGCN layers and the upstream edge sampling, recovers the original DistMult. In the last step, the vectors\ncorresponding to entities and relation are element-wise multiplied and the product x is summed. For a given\ntriple⟨s,r,o⟩, the model produces a single scalar value x which indicates how likely the triple is to be true.\n6 Downstream Task: Link Prediction\nWe now turn towards the second task performed in the original paper, multi-relational link prediction. The\naim is to learn a scoring function that assigns true triples high scores and false triples low scores [ BUGD+13],\nwith the correct triple ranking the highest. After training, the model can be used to predict which missing\ntriples might be true, or which triples in the graph are likely to be incorrect.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "6.1 Model Setup",
+      "level": 2,
+      "text": "We follow the procedure outlined by Schlichtkrull et al. Figure 6.1 shows a schematic representation of\nthe link prediction model as described in the original paper. During training, traditional link predictors\n[BUGD+13, YYH+14] simultaneously update node representations and learn a scoring function (decoder)\nthat predicts the likelihood of the correct triple being true. RGCN-based link predictors introduce additional\nsteps upstream.\nWe begin by sampling 30,000 edges from the graph using an approach called neighborhood edge sampling\n(see Section 6.1.2). Then, for each triple we generate 10 negative training examples, generating a batch size of\n12\n330,000 edges in total. Node embeddings E∈ RN×D are used an input for the RGCN. 13 The RGCN performs\nmessage passing over the sampled edges and generates mixed node embeddings. Finally, the DistMult scoring\nfunction [YYH+14] uses the mixed node embeddings to compute the likelihood of a link existing between a\npair of nodes. For a given triple ⟨s,r,o⟩, the model is trained by scoring all potential combination of the\ntriple using the function:\nf(s,r,o ) =\n∑\ni\n(es\n⨂r⨂eo)i =x (12)\nHere, es and eo are the corresponding node embedding of entities s and o, generated by the RGCN\nencoder. r is a low-dimensional vector of relation r, which is part of the DistMult decoder. As Schlichkrull et\nal. highlighted in their work, the DistMult decoder can be replaced by any Knowledge Graph scoring function.\nWe refer the reader to [RBG19] and [RBF +21] for a comprehensive survey of state-of-the-art KGE models.\nSimilar to previous work on link prediction [ YYH+14], the model is trained using negative training\nexamples. For each observed (positive) triple in the training set, we randomly sample 10 negative triples\n(i.e. we use a negative sampling rate of 10). These samples are produced by randomly corrupting either the\nsubject or the object of the positive example (the probability of corrupting the subject is 50%). Binary cross\nentropy loss14 is used as the optimization objective to push the model to score observable triples higher than\nthe negative ones:\nL =−∑\n(s,r,o,y)∈T y logl(f(s,r,o )) + (1−y) log(1−l(f(s,r,o ))), (13)\nwhereT is the total set of positive and negative triples, l is the logistic sigmoid function, and y is an indicator\nset to y = 1 for positive triples and y = 0 for negative triples. f(s,r,o ) includes entity embeddings from the\nRGCN encoder and relations embeddings from the DistMult decoder.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6.1.1 Edge Dropout",
+      "level": 3,
+      "text": "In their work, Schlickrull et al. [SKB+18] apply edge dropout to the link prediction model which acts as an\nadditional regularisation method. This involves randomly selecting edges and removing them from a graph.\nAs described in Section 3, for every edge in the graph inverse edges Ar′ and self-loops As are added within\nthe RGCN layer. Dropping edges after this step poses a potential data leakage issue because inverse edges\nand self-loops of dropped edges will be included in the message passing step and thus, invalidate the model\nperformance. To circumvent this issue, edges are dropped from a graph before feeding it into the RGCN.\nEdge dropout is applied such that the dropout rates on the self-loops Rs are lower than for the data edges\nR and inverse edgesR′. One way to think about this that this ensures that the message from a node to itself\nis prioritised over incoming messages from neighboring nodes. In our implementation, we separate out As\nfrom A and then apply the diﬀerent edge dropout rates separately. The edge dropout is performed before\nrow-wise normalising A.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "6.1.2 Edge Sampling",
+      "level": 3,
+      "text": "Graph batching is required for training the RGCN-based link prediction model, because it is computationally\nexpensive to perform message passing over the entire graph due to the large number of hidden units used for\nthe RGCN.15\nSchlichtkrull et al. sample an edge with the probability proportional to its weight. In uniform edge\nsampling, equal weights are given to all the edges. However, in neighborhood edge sampling, initial weights are\n13In the original implementation, the embeddings are implemented as aﬃne operation ( i.e. biases are included) and they\nare ReLU activated. We reproduce this behaviour but it is not clear whether this gives any beneﬁts over simple, unactivated\nembeddings (as used in the e-rgcn).\n14Schlichtkrull et al. multiply their loss by 1\n(1+ω)| ˆE| . ω is the negative sampling rate and | ˆE| is the number of edges sampled.\nWe leave this term out of our implementation, because it is a constant and thus it would not aﬀect the training.\n15Schlichtkrull et al. use a large number of hidden units: 200 for FB15k and WN18; 500 for FB15k-237. In the node\nclassiﬁcation fewer hidden units are required in the RGCN. This makes the link prediction model more memory demanding.\n13\nproportional to the node degrees of vertices connected to edges. Then as edges are being sampled, the weight\nof its neighboring edges is increased and this increases the probability of these edges being sampled [ KW18].\nThis sampling approach beneﬁts link prediction because the neighboring edges provide context information\nto deduce the existence of a relation between a given pair of entities. In contrast, uniform edge sampling\nassumes that all edges are independent of each other, which is not be applicable to Knowledge Graphs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6.2 Link Prediction Experiments",
+      "level": 2,
+      "text": "As in the original paper, the models are evaluated using Mean Reciprocal Rank (MRR) and Hits@ k (k = 1, 3\nor 10). The Torch-RGCN model was trained for 7,000 epochs. We monitored the training of our models by\nevaluating it at regular intervals every 500 epochs. Schlichtkrull initialisation ( see Appendix) was used to\ninitialise all parameters in the link prediction models [ SKB+18] and in our reproductions. Schlichtkrull et al.\n[SKB+18] trained their models on the CPU. Our Torch-RGCN implementation and c-RGCN models run on\nthe GPU. Early stopping was not used. We used the hyperparameters described in [SKB +18].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "6.2.1 Datasets",
+      "level": 3,
+      "text": "To evaluate link prediction, Schlichtkrull et al. used subsets of Freebase (FB-15k and FB15k-237)[ SKB+18],\nand WordNet (WN18) [BUGD +13]. We only use WN18 16. WN18 is a subset of WordNet the graph which\ndescribes the lexical relations between words. To check our reproduction, we also used FB-Toy [ RBG19]\nwhich was not in the original paper. FB-Toy is a dataset consisting of a subset of FB15k. In Table 3, we\nshow the statistics corresponding to these graph datasets.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "6.2.2 Details",
+      "level": 3,
+      "text": "For link prediction, a single-layer RGCN with basis decomposition for WN18 and for FB-Toy a two-layer\nRGCN with block diagonal decomposition is used. An L2 regularisation penalty of 0.01 for the scoring\nfunction is applied. To compute the ﬁltered link prediction scores, triples that occur in the training, validation\nand test are ﬁltered. The Torch-RGCN model is trained on WN18 using batched training, in which 30,000\nneighboring edges are sampled at every epoch. An edge dropout rate of 0.2 is applied for self-loops and 0.5 for\ndata edges and inverse edges. Edges are randomly sampled from a Knowledge Graph using the neighborhood\nedge approach. In our reproduction attempts, we have found that this approach enables the model to perform\nbetter than uniform edge sampling. The RGCN is initialised using Schlichtkrull normal initialisation ( see\nAppendix), while the DistMult scoring function is initialised using standard normal initialisation.\nWe follow the standard protocol for link prediction. See [ RBG19] for more details. Some of the\nhyperparameters used in training were not detailed in [ SKB+18]. To the furthest extent possible, we followed\nthe same training regime as the original paper and code base, and we recovered missing hyperparameters.\nThe hyperparameters for all experiments are provided in documented conﬁguration ﬁles on https://github.\ncom/thiviyanT/torch-rgcn.\nTable 3: Number of entities and relation types along with the number of edges per split for the three datasets.\nDataset WN18 FB-Toy\nEntities 40,943 280\nRelations 18 112\nTrain edges 141,442 4565\nVal. edges 5,000 109\nTest edges 5,000 152\n16The link prediction model was expensive to train (3-5 days of training for a single model). WN18 was suﬃcient to establish\nreproduction.\n14",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f3",
+      "caption": "1: A schematic diagram of message passing in a directed graph with 6 nodes. hi is a vector that"
+    },
+    {
+      "id": "f4",
+      "caption": "1: A simpliﬁed visual representation of diﬀerent message passing approaches: (Top-Left) Featureless-"
+    },
+    {
+      "id": "f5",
+      "caption": "1 is a diagram of the node classiﬁcation model with a two-layer RGCN as described in [ SKB+18]."
+    },
+    {
+      "id": "f6",
+      "caption": "1: A schematic visualisation of link prediction models. Edges are coloured (red and green) to indicate"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Number of entities, relations, edges and classes along with the number of labeled entities for each of"
+    },
+    {
+      "id": "t2",
+      "caption": "shows the results of the node classiﬁcation experiments in comparison to the original RGCN paper."
+    },
+    {
+      "id": "t3",
+      "caption": "Number of entities and relation types along with the number of edges per split for the three datasets."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "shows how message passing is performed using a series of matrix operations. All these are"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation 1"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation 2"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation 4"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation 6"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "equation 8"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation 11"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 3,
+    "n_algorithms": 1,
+    "n_equations": 7
+  }
+}

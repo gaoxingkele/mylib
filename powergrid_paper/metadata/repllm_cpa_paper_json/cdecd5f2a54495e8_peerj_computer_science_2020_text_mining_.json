@@ -1,0 +1,264 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/peerj-computer-science/peerj-computer-science__2020__text_mining_forma_mentis_networks_reconstruct_public_pe__84e6d3ad0e.pdf",
+  "n_pages": 37,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Perception is in the mind of the beholder. Every experience contributes to building a\nmemory or mental reconstruction of the outer world which, in turn, deeply impacts future\nbehaviour [1, 2, 3, 4]. Negative perceptions can inhibit eﬃcient learning [5] or drastically\nalter information processing and management [6], while positive perceptions can contribute\nto the acceptance and establishment of social norms [1, 2]. In this way, reconstructing and\nPreprint submitted to Elsevier March 20, 2020\narXiv:2003.08835v1  [cs.SI]  18 Mar 2020\nunderstanding the cognitive perceptions of social groups is key to achieving insights about\nhuman behaviour and social patterns.\nGiven the extraordinary possibility for humans to communicate their mental constructs\nthrough language [3], a key way of detecting perceptions is through communication. Both in\ncomputer science and linguistics, the problem of detecting positive or negative perceptions\nfrom language is known as stance detection [7, 8]. Rather than focusing on language in itself,\nthis work shifts the attention to the cognitive reﬂection of language in the human mind, in\nthe so-called mental lexicon [2, 3, 9, 10]. Such lexicon includes semantic memory, a well-\nstudied repository of conceptual meanings and word features [11, 4, 9], an also other memory\nsupports storing syntactic/phonological/orthographic and even aﬀective knowledge, together\nwith other aspects of language [9]. Whereas syntax, phonology and orthography express\nword-level conceptual knowledge [3], aﬀective knowledge links concepts to the emotions they\nelicit [2] and therefore it represents an important component of any stance/perception.\nHarnessing the complex cognitive structure of the mental lexicon means accessing how\nconceptual knowledge is structured and emotionally perceived by individuals as the out-\ncome of their previous experiences and current attitudes [3, 12, 13]. In other words, access-\ning the conceptual and aﬀective representation of knowledge in the mental lexicon means\nreading minds(ets), with strong repercussions for information processing and management.\nDiscovering how an audience perceives a given topic, i.e. performing mindset reconstruc-\ntion, can provide crucial knowledge for understanding and intervening upon speciﬁc trends\n[14, 15, 12]. An example is cognitive marketing [16], where cognitive biases and emotional\ninﬂuence/spread are carefully designed in order to maximise product placement in targeted\naudiences whose stance over speciﬁc topics is known. These designs rely on the phenomenon\nthat the consumers’ perception of a given brand personality, and the emotions elicited by it,\ncan strongly enhance or inhibit any willingness to perform purchases [16]. Another example\nfor the relevance of mindset reconstruction is uncovering and acting upon traces of science\nanxiety in student populations in order to improve their learning experiences [13, 17].\nDiscovering the perception of a given audience is a challenge that can be broken mainly\nin two parts: (i) acquiring cognitive data, reﬂecting how the public perceives a certain phe-\nnomenon, and (ii) processing such data in an eﬃcient way, suitable for the extraction of\n2\nnew knowledge [18]. Data can be gathered by mining social media [19, 20], which represent\nan invaluable source of information about the users’ experiences and perceptions of speciﬁc\ntopics [14]. In the last few years, Twitter in particular has been increasingly analysed by the\nscientiﬁc community in order to detect complex phenomena such as the emotional dynamics\nof voting events [19, 20], the promotion of self-branding and journalistic content also through\nsocial bots [21] and the spread of disinformation [22].\nAlthough Twitter messages provide several types of information, such as visual cues (e.g.,\npictures and videos) or multi-language cues (e.g., emojis and hashtags), their nature is mainly\ntextual [14]. In this way, the problem of quantifying how an audience perceives a given topic\ncan be related to stance detection from their tweets [8]. Approaching stance detection by\nhuman coding [7] becomes quickly intractable when faced with the large volumes of messages\nexchanged daily on the Twittersphere. This limitation leads to the above need for developing\nand adopting eﬃcient techniques for knowledge extraction from massive amounts of text as\nexchanged on social media [23].\nAs a novel knowledge extraction and summarisation technique, this manuscript introduces\ntextual forma mentis networks (TFMN), i.e. quantitative tools for extracting, representing\nand understanding the structured perception/mindset of a given population in terms of se-\nmantic, syntactic and aﬀective conceptual associations embedded in text. Previous works\nsuccessfully used word co-occurrences in text (e.g. “like” and “stem” occurring one after the\nother in text, cf. [24]) in order to characterise language through average statistical markers\n[15, 18, 25] or time-evolving dynamics [26]. These networks were considerably powerful at\na global level and very successful in tasks like author identiﬁcation [18, 26]. However, the\nvalidity of co-occurrence networks as representations of the mental lexicon at the microscopic\nlevel of individual conceptual associations has been recently reconsidered [27, 28]. In fact,\nco-occurrences can lead to spurious conceptual links, whose inﬂuence vanishes in global sta-\ntistical approaches and that do not represent syntactic similarities in text [27]. In order to\novercome this limitation and achieve a more faithful microscopic representation of the mental\nlexicon, TFMNs directly harness the full ensemble of syntactic associations of a sentence (e.g.\n“like” being a verb referring to the object “stem”, cf. [29]) and enrich them by considering\nalso semantic overlap between words (e.g. “appreciate” and “like” being synonyms across\n3\ndiﬀerent sentences, cfr. [30, 15]). Textual forma mentis networks automatically extract these\nconceptual associations from text without requiring human supervision and are therefore\nsuitable for processing large volumes of text. The resulting network structure is informative\nof the cognitive layout of conceptual associations emerging from a given textual corpus and\nhence represents how text authors organised, structured and associated microscopically their\nknowledge around topics and concepts. This makes TFMNs “glass boxes” [31], where the\nknowledge structure of a certain stance can be accessed and directly read, diﬀerently from\nprevious “black box” machine learning approaches which accurately reproduced the posi-\ntive or negative nature of a stance without providing information on its semantic content\n[8, 32, 33]. In addition to conceptual associations, TFMNs are endowed also with senti-\nment labels, indicating the sentiment [34] and the basic emotions [35, 36] elicited by a given\nconcept in a population of individuals involved in behavioural studies. Sentiment scores of\npositive/negative aﬀect are also called word valence in psycholinguistics [34, 37] and repre-\nsent how positively or negatively a given concept was perceived in a behavioural study. Word\nvalence and emotional proﬁles add more emotional contextual information about the stance\nreconstructed by conceptual associations [13].\nTo sum up, text-based forma mentis networks represent multiplex lexical networks [38] of\nconcepts interconnected through syntactic and semantic associations and enriched with sen-\ntiment and emotional labels. Diﬀerently from behavioural forma mentis networks (BFMNs)\n[17], textual forma mentis networks do not require behavioural experiments but can rather\nbe built starting from any written text.\nThis work uses textual forma mentis networks as quantitative tools for reconstructing the\nmindset of online users engaging in social discourse. TFMNs were used for investigating the\nstance of Twitter users towards a complex phenomenon, increasingly capturing the attention\nof larger audiences: the gender gap in science [",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Methods",
+      "level": 1,
+      "text": "This section introduces the following elements: (i) the dataset about the online perception\nof the gender gap in STEM as retrieved from Twitter, (ii) the methodology behind the con-\nstruction of text-based forma mentis networks, and (iii) the cognitive data used for detecting\nconceptual overlap in meaning between words and their valence. This section also reports\non the benchmark data used for testing TFMNs, namely the text “Complexity Explained”\n(https://complexityexplained.github.io/ - Last Accessed: 16/03/2020) and the behavioural\nforma mentis network of international STEM researchers analysed in [12] and [13].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Twitter dataset",
+      "level": 2,
+      "text": "The main dataset used in this investigation was a collection of 10384 tweets publicly\navailable on Twitter and produced between October 8 2019 and October 22 2019. Tweets\nwere gathered through the ServiceConnect[] function for Twitter crawling implemented in\nMathematica 11. Crawling was performed in accordance with Twitter’s policies via the\naccount of Complex Science Consulting, which received authorisation by Twitter for research-\nfocused text mining. Tweets were included in the dataset if they contained either the hashtags\n(or the words) “#science” or “#stem” and “#women” or “#gendergap”. Twitter’s policy\nprevents the redistribution of these tweets outside of the Twitter platform. Nonetheless, for\nthe sake of scientiﬁc reproducibility, the IDs of these tweets were attached to this manuscript\nas Supplementary Information.\nEach tweet contained a short text. Pictures and emoticons were discarded. Hashtag\ncharacters were removed. Tweets with less than three words were not included in the analysis\nbut constituted less than 1% of the whole dataset.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Network construction",
+      "level": 2,
+      "text": "Text-based forma mentis networks were built in three diﬀerent stages:\n7\n1. Extraction of syntactic relationships between concepts/words from a sentence;",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Addition of semantic relationships (synonyms) between concepts as indicated by an",
+      "level": 1,
+      "text": "external dataset;\n3. Addition of valence labels (“positive”, “negative”, “neutral”) to each single concept as\nindicated by another external dataset.\nThe above three steps were repeated for all the sentences in a given tweet. At the\nend, all connections between the extracted and labelled concepts formed a multiplex lexical\nnetwork [38] where nodes represented words/concepts and were connected across multiple\nlinguistic layers, namely: (i) a semantic layer indicating meaning overlap between words\n(e.g., “famous” and “notable” sharing the same meaning), and (ii) a syntactic layer indicating\ndependencies in meanings as encapsulated within a sentence. In general, syntactic structure\ndeﬁnes how entities (e.g. nouns) are speciﬁed in a given sentence through verbs, determiners,\nprepositions, adjectives and adverbs [29, 55]. Although more or less convoluted syntactic\nstructures can be encoded in sentences, the simplest form of the syntactical dependencies\nis a subject being speciﬁed as an object. For instance, in the sentence “love is weakness”,\n“love” is speciﬁed as “weakness” through the verb “is”. The verb “is” does not encapsulate\nany intrinsic meaning but it can be replaced by a link between “love” and “weakness”.\nSyntactic dependencies can be more general, for instance in the sentence “the cat sat on the\nchair” the nominal subject “cat” is linked to the prepositional object “chair” through the\nverb “to sit”, which retains some meaning. The determiner “the” and the preposition “on”\ndo not retain meaning by themselves but connect the other parts of speech and are thus\nessential for extracting syntactic dependencies. The speciﬁcation of such dependencies was\nimplemented through the TextStructure[] command in Mathematica 11, which produces all\nsyntactic relationships between the parts of speech of a given sentence. From the resulting\nnetwork of directed dependencies, prepositions and auxiliary verbs were removed as nodes\nand replaced by syntactic links. In order to avoid the inﬂection of lemmas with the same\nmeaning, i.e. having “weak” and “weakness” in the same network, word stemming was\nperformed at the network level.\nAfter the extraction of syntactic dependencies, the resulting syntactic network identiﬁed a\nset of connected, stemmed concepts. Syntactic structure can be informative about conceptual\n8\nlinks in the mental lexicon and be predictive of language learning and processing [29, 55].\nHowever, syntactic dependencies neglect the possibility of using and exchanging synonyms\nin the same syntactic structure providing the same meaning (e.g. saying “he has a quiet\ncharacter” conveys the same meaning of saying “he has a quiet nature”). In order to account\nalso for meaning overlap, the syntactic structure was enriched with synonym relationships\nfrom WordNet 3.0 [56, 30], as implemented in the curated repository WordData[] available\nin Mathematica 11. Meaning overlap between concepts is also representative of semantic\nmemory patterns in the mental lexicon, with previous works showing how synonym networks\ncan predict language learning and facilitate conceptual navigation [38, 30, 57].\nAfter the construction of the network layers of syntactic relationships and of synonyms,\nevery concept was connected either by syntactic or semantic links. From the aﬀective mega-\nstudy of Warriner and colleagues [34], each concept was endowed with a valence label, e.g.\n“positive”, “neutral” or “negative”. These labels represented the average valence attributed\nto each concept by a population of individuals involved in a large-scale behavioural study\nrating more than 13,900 English words [34]. Words were classiﬁed as positive, neutral or\nnegative, respectively, according to their location in the upper quartile (higher valence),\ninterquartile range (neutral valence), or lower quartile (lower valence) in the distribution of\nvalence scores for over 9000 diﬀerent word stems. These valence scores were obtained from\naveraging over words with the same stemmed root.\nFigure 1 provides an example of a text-based forma mentis network. A TFMN can be\nrepresented either as an edge-coloured graph or as a multiplex network [38]. These two\nrepresentations are equivalent and their only purpose is to distinguish between syntactic and\nsemantic links.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.3 Additional cognitive data",
+      "level": 2,
+      "text": "In order to test the power of text-based forma mentis network in identifying relevant\nconcepts in text, additional cognitive data was used as benchmark. Semantic similarity and\nrelevance of scientiﬁc concepts, as extrapolated from short scientiﬁc texts, was investigated\nand compared against free association data from the Complex Forma Mentis project [12].\nThe benchmark text adopted here was the booklet “Complexity Explained”, co-authored\n9\nFigure 1: Example of a text-based forma mentis network. A TFMN can be represented either as an edge-\ncoloured graph (left) or as a multiplex network (right). Positive (negative) words are highlighted in cyan\n(red). Syntactic links between positive (negative) words are highlighted in cyan (red) too. Syntactic links\nbetween positive and negative concepts are in purple. All semantic links of meaning overlap are highlighted\nin green.\nby several researchers in complexity science and composed of 7 short paragraphs describ-\ning one speciﬁc concept each (cf. https://complexityexplained.github.io/, Last Accessed:\n16/03/2020). The analysed paragraphs were about: “interactions”, “emergence”, “dynam-\nics”, “self-organisation”, “adaptation”, “interdisciplinarity” and “methods”. The results of\nsuch benchmark are reported at the beginning of the Results section.\n2.4. Emotional proﬁling\nCompared to previous approaches using behavioural forma mentis networks [13, 17, 12],\nthe current analysis introduces also an emotional proﬁling of stances as encapsulated in the\nreconstructed mindsets. Emotional proﬁling is deﬁned in terms of considering how many\nassociates of a concept, in the TFMN, elicit a given emotion. Concepts linked to a nega-\ntion (e.g. “not”) were transformed into their antonyms, so that both original concepts and\ntheir negated meanings were considered for reconstructing an emotional proﬁle. Considered\n10\nemotions included:\n• Anger, a negative emotion representing reactions of irritation and rage towards an\nexternal threat;\n• Disgust, a negative emotion indicating aversion and closure;\n• Fear, a negative emotion indicating a need to actively avoid and prevent potential\nthreats;\n• Trust, a positive emotion indicating openness towards the outer world;\n• Joy, a positive emotion of excitement and satisfaction;\n• Sadness, a neutral emotion, neither positive nor negative, indicating states of sorrow,\nthoughtfulness and inhibition;\n• Surprise, a neutral emotion relative to being upset or startled by an unexpected event;\n• Anticipation, a neutral emotion indicating one’s projection into future events, includ-\ning desire or anxiety.\nThe above constitute basic building blocks of a wide spectrum of emotional states [35].\nFor a more detailed description of emotions, please see [35] and [36]. The mega-study by\nMohammad and colleagues is also known as the Word-Emotion Association Lexicon, indi-\ncating how human participants associated individual concepts to emotional states. In other\nwords, the resulting dataset indicated which emotions were elicited or evoked in human sub-\njects reading individual concepts. The study used crowd-sourcing on Mechanical Turk for\nachieving a large-scale mapping of English words (including 14,000 unique lemmas) and was\nused also in other successful investigations about aﬀect patterns (cf. [58]).",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.5 Cognitive measures of semantic similarity on language networks",
+      "level": 2,
+      "text": "This work built networks of conceptual associations between concepts. Several indepen-\ndent studies have reported that on such networks, metrics like network distance are powerful\nproxies for quantifying semantic and phonological relatedness [59, 11, 17]. Network distance\n11\ndij is deﬁned as the minimum number of links (here conceptual associations) connecting any\ntwo words i and j on a network structure [57]. On multiplex lexical networks, links of any\ncolour/layer can be used [38, 60]. Measures based on network distance such as closeness\ncentrality have been found to identify also concepts of relevance from a cognitive perspective\nwhen detecting key words for word learning [38, 60], language processing [59, 57, 61] and\nknowledge exploration [17]. Closeness centrality [57] c(i) is attributed to node i by checking\nhow distant it is to its connected neighbours, in formulas:\nc(i) = N∑N\nj=1 dij\n. (1)\nNotice that the above formula applies to fully connected components of a network but\ndoes not enable direct comparison of components including diﬀerent numbers of nodes (e.g.\na component including only 5 nodes versus a component with 1000 nodes).\nForma mentis networks included also structural features of the mental lexicon of individ-\nuals combined with aﬀective patterns [34]. This unique combination allowed for Stella and\ncolleagues [12] to introduce the network metric ofvalence auras, i.e. the mode of valence labels\nin a given neighbourhood. In [12] a word was deﬁned as having a positive (negative) valence\naura if mostly linked to positive (negative) words. This measure was used also in the current\nanalysis, although it has to be underlined that in here these aﬀect measures represented how\na large-scale population, independent from the one producing the texts, perceived individual\nconcepts. Since valence auras still depended on the connectivity of conceptual associations\nas assembled by text authors, this metric quantiﬁed how groups of these authors structured\nand perceived their knowledge. In the current analysis, valence auras rather than single-word\nvalence labels were key to reconstructing positive/negative perceptions of individual concepts\nby checking their conceptual associates in the analysed online discourse.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Results",
+      "level": 1,
+      "text": "The main results of this manuscript are twofold. On the one hand, the current analysis\nprovides a cross-validation of the information revealed by TFMNs through a benchmark on\nshort texts, revolving around speciﬁc topics. Comparison with validated behavioural cogni-\ntive data indicates that the structure of TFMNs captures semantically relevant information\n12\nTable 1: Top-ranked concepts in the TFMNs obtained from the 7 paragraphs of the booklet Complexity\nExplained. The ranking is based on closeness centrality. Every paragraph revolves around one topic, clearly\nestablished by the authors and reported here too.\nRank/TopicInteractionsEmergenceDynamicsSelf-organisationAdaptationInterdisciplinarityMethods",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "1 component system system pattern adapt system compute",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2 interact property change emerge system understand model",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 whole part state may able science method",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4 study component behaviour organ become complex mathematics",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5 system whole point become function use lead",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "6 make sum show interact damage variety require",
+      "level": 1,
+      "text": "7 diﬃcult phenomenonvariable system evolve manage involve",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "8 part complex dynamic produce go domain analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "9 new exhibit tend property may ecology forecast",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "10 consist deduce depend lead robust biology rule",
+      "level": 1,
+      "text": "about text like topics or conceptual relevance. On the other hand, the rest of the Results\nsection focuses around reconstructing and analysing a data-driven picture of the online per-\nception of women in science and the gender gap as reported by online users on Twitter.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.1 Benchmark of text-based forma mentis networks on short texts",
+      "level": 2,
+      "text": "This subsection reports results of the benchmarking analysis of “Complexity Explained”\n(see Methods) through TFMNs. For each of the seven paragraphs of the booklet a TFMN\nwas built. Closeness centrality was used for identifying the most central concepts in every\nTFMN and produce rankings of the most relevant words in each text. Overall, the resulting\nforma mentis network contained a median of 49 concepts and were fully connected. Table 1\nreports the 10 most central words in each network and their underlying topic.\nTable 1 indicates that, beyond an overall agreement between key concepts and topics, as\nidentiﬁed by TFMNs, the network topology of syntactic/semantic associations identiﬁed the\nmost distinctive conceptual features of topics. For instance, while the ranking for the topic\n“Interactions” reported mainly concepts relative to structure (e.g., component, part, whole,\nconsist), the ranking of “Dynamics” identiﬁed concepts related to the evolution over time of a\nsystem (e.g., change, state, behaviour, dynamic ). Words expressing resilience and robustness\nto attacks, like “damage”, “function”, “evolve”, “adapt” and “robust”, were found to be\n13\ncentral in the textual forma mentis network of “Adaptation”. TFMNs detected “domain”\nas being a relevant concept in the “Interdisciplinarity” paragraph. This was expected in a\ntext describing complexity science as an umbrella for diﬀerent research areas. The “Methods”\nparagraph revolved, as expected, around quantitative concepts, e.g. forecast, compute, model,\nmethod, analysis, rule. In the same paragraph, mathematics was found to be highly relevant,\nin agreement with the necessity of a mathematical language for investigating complex systems\nreported also in other venues [62].\nAlthough the above qualitative analysis indicated an overall agreement between topics\nand identiﬁed key concepts, a more quantitative approach was further pursued. With the\naim of assessing whether the identiﬁed concepts were more or less semantically related to\nthe topics designed by text authors, free associations and semantic network distance were\nadopted. In networks of free associations, nodes/words are linked if they elicit a quick\nrecall of each other in a behavioural task [10]. Previous studies have shown how semantic\nnetwork distance on networks of free associations are a good proxy of semantic relatedness,\nsuperior also to semantic latent analysis [11]. Although several datasets for free associations\nare available in the literature, this benchmark considered two: the large-scale Small World\nof Words gathered by De Deyne and colleagues [10] and the small-scale Complex Forma\nMentis project gathered by Stella and colleagues [12]. Many of the scientiﬁc terms present\nin Complexity Explained were absent in the Small World of Words but present in the STEM\nfree associations provided by Stella et al. [12]. Therefore, this analysis focused on the second\ndataset of free associations.\nThe distance between every relevant word and its reference topic on the network of free\nassociations by [12] was computed for all topics within the networked mindset of 59 complexity\nresearchers. These topics were “interaction”, “emergence”, “dynamics”, “self-organisation”,\n“interdisciplinary” and “methods” and the relevant concepts were the ones in Table 1. The\nresulting set of empirical semantic network distances was then compared against a reference\nnull model with randomised TFMNs having the same number of links and nodes of the\noriginal networks but with randomly reshuﬄed links (i.e. conﬁguration models [38]). The\nreshuﬄing disrupted semantic relationships between network structure and meaning [38]. A\nlocation test between the empirical and the randomised network distances (over 50 network\n14",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "provides an example of a text-based forma mentis network. A TFMN can be"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Top-ranked concepts in the TFMNs obtained from the 7 paragraphs of the booklet Complexity"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

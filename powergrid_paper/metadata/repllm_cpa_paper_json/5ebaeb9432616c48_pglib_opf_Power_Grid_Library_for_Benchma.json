@@ -1,0 +1,328 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pglib_opf/pglib_opf__Power_Grid_Library_for_Benchmarking_AC_OPF__06ad38624e.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 The Power Grid Library for Benchmarking",
+      "level": 1,
+      "text": "AC Optimal Power Flow Algorithms\nContributors to the IEEE PES PGLib-OPF Task Force\nSogol Babaeinejadsarookolaee Adam Birchﬁeld\nElectrical and Computer Engineering Electrical and Computer Engineering\nUniversity of Wisconsin-Madison, WI, USA Texas A&M University, TX, USA\nRichard D. Christie Carleton Coffrin ∗\nElectrical and Computer Engineering Advanced Network Science Initiative\nUniversity of Washington, W A, USA Los Alamos National Laboratory, NM, USA\nChristopher DeMarco Ruisheng Diao\nElectrical and Computer Engineering AI & System Analytics\nUniversity of Wisconsin-Madison, WI, USA GEIRI North America, CA, USA\nMichael Ferris St ´ephane Fliscounakis\nComputer Sciences Research and Development Division\nUniversity of Wisconsin-Madison, WI, USA Reseau de Transport d’Electricite (RTE), Paris, France\nScott Greene Renke Huang\nElectrical and Computer Engineering Electricity Infrastructure Group\nUniversity of Wisconsin-Madison, WI, USA Paciﬁc Northwest National Laboratory, W A, USA\nC´edric Josz Roman Korab\nIndustrial Engineering and Operations Research Electrical Engineering\nColumbia University, NY , USA Silesian University of Technology, Gliwice, Poland\nBernard Lesieutre Jean Maeght\nElectrical and Computer Engineering Research and Development Division\nUniversity of Wisconsin-Madison, WI, USA Reseau de Transport d’Electricite (RTE), Paris, France\nTerrence W. K. Mak Daniel K. Molzahn\nIndustrial and Systems Engineering Electrical and Computer Engineering\nGeorgia Institute of Technology, GA, USA Georgia Institute of Technology, GA, USA\nThomas J. Overbye Patrick Panciatici\nElectrical and Computer Engineering Research and Development Division\nTexas A&M University, TX, USA Reseau de Transport d’Electricite (RTE), Paris, France\nByungkwon Park Jonathan Snodgrass\nComputational Sciences and Engineering Division Electrical and Computer Engineering\nOak Ridge National Laboratory, TN, USA University of Wisconsin-Madison, WI, USA\nAhmad Tbaileh Pascal Van Hentenryck\nElectricity Infrastructure Group Industrial and Systems Engineering\nPaciﬁc Northwest National Laboratory, W A, USA Georgia Institute of Technology, GA, USA\nRay Zimmerman\nApplied Economics and Management\nCornell University, Ithaca, NY , USA\nThe PGLib-OPF benchmarks are available at https://github.com/power-grid-lib/pglib-opf.\n∗ Corresponding author carleton@coffrin.com.\narXiv:1908.02788v2  [math.OC]  4 Jan 2021\n2\nAbstract—In recent years, the power systems research com-\nmunity has seen an explosion of novel methods for formulating\nthe AC power ﬂow equations. Consequently, benchmarking\nstudies using the seminal AC Optimal Power Flow (AC-OPF)\nproblem have emerged as the primary method for evaluating\nthese emerging methods. However, it is often difﬁcult to directly\ncompare these studies due to subtle differences in the AC-OPF\nproblem formulation as well as the network, generation, and\nloading data that are used for evaluation. To help address these\nchallenges, this IEEE PES Task Force report proposes a stan-\ndardized AC-OPF mathematical formulation and the PGLib-OPF\nnetworks for benchmarking AC-OPF algorithms. A motivating\nstudy demonstrates some limitations of the established network\ndatasets in the context of benchmarking AC-OPF algorithms\nand a validation study demonstrates the efﬁcacy of using the\nPGLib-OPF networks for this purpose. In the interest of scientiﬁc\ndiscourse and future additions, the PGLib-OPF benchmark\nlibrary is open-access and all the of network data is provided\nunder a creative commons license.\nIndex Terms —Nonlinear Optimization, Convex Optimization,\nAC Optimal Power Flow, Benchmarking\nNOMENCLATURE\nN - The set of buses in the network\nG - The set of generators in the network\nE - The set of from branches in the network\nER - The set of to branches in the network\ni - Imaginary number constant\ne - Exponential constant\nS =p +iq - AC power\nV =v∠θ - AC voltage\nZ =r +ix - Branch impedance\nY =g +ib - Branch admittance\nT =t∠θt - Branch transformer properties\nY s =gs +ibs - Bus shunt admittance\n˙v - Nominal base voltage\nbc - Line charging\nsu - Branch apparent power limit",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "u - Branch current magnitude limit",
+      "level": 1,
+      "text": "θ∆ - V oltage angle difference limit\nSd =pd +iqd - AC power demand\nSg =pg +iqg - AC power generation\nc0,c 1,c 2 - Generation cost coefﬁcients\nℜ(·),ℑ(·) - Real and imag. parts of a complex number\n|·| ∠· - Magnitude and angle of a complex number\n(·)∗ - Conjugate of a complex number\nxl,x u - Lower and upper bounds of x, respectively\nx - A constant value\nˆx - An estimation of x\nµ - Mean of a normal distribution\nσ - Standard deviation of a normal distribution\nλ - Rate of an exponential distribution",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Over the last decade, power systems research has expe-\nrienced an explosion in variations of the steady-state AC\npower ﬂow equations. These include approximations such\nas the LPAC [1], IV-Flow [2] and relaxations such as the\nSecond-Order Cone (SOC) [3], Convex-DistFlow (CDF) [4],\nQuadratic Convex (QC) [5], [6], Semideﬁnite Programming\n(SDP) [7], and Moment / Sum-of-Squares Hierarchies [8]–\n[11], just to name a few. Surveys of the power ﬂow relaxation\nand approximation literature are provided in [12]–[14]. Much\nof the excitement underlying this line of research was ignited\nwhen [15] demonstrated that the SDP relaxation could provide\nglobally optimal solutions to a variety of the transmission sys-\ntem networks distributed with M ATPOWER [16]. Combining\nthese results with industrial-strength convex optimization tools\n(e.g., Gurobi [17], Cplex [18], Mosek [19]) promises efﬁcient\nand reliable algorithms for a wide variety of applications in\npower systems such as optimal power ﬂow [20]–[23], optimal\ntransmission switching [24], and network expansion planning\n[25], just to name a few.\nIndependent of the speciﬁc problem domain or the power\nﬂow model under consideration, all of these novel methods\nrequire AC power network data for experimental validation\nand it is important that suitable data are used to validate these\nemerging techniques [26]. However, due to the sensitive nature\nof critical infrastructure, detailed real-world network data is\noften difﬁcult to obtain, even under non-disclosure agreements.\nConsequently, many of the available power network datasets\nare over thirty years old (e.g. [27]), were originally designed\nfor testing AC Power Flow algorithms, and lack the parameters\nneeded for testing the AC Optimal Power Flow algorithms, e.g.\nbranch thermal limits and generator cost functions. The lack\nof comprehensive and modern AC power network data has\nbeen recognized by the Advanced Research Projects Agency-\nEnergy (ARPA-e) and the GRID DATA program [28] has\nresulted in a number of new network datasets, which are\nsynthetically generated to match the statistics of real-world\nnetworks and provided as open-access.\nTo help improve the evaluation of AC-OPF algorithms,\nthis IEEE PES Task Force report introduces the Power Grid\nLibrary for benchmarking the AC-OPF problem, PGL IB-\nOPF. PGL IB-OPF is a comprehensive collection of creative-\ncommons AC transmission system networks curated in the\nMATPOWER data format with all of the data required for\nmodeling the proposed AC-OPF problem. This report is a\ncompanion document to the PGL IB-OPF data. Section II\nbegins with a detailed speciﬁcation of the AC-OPF prob-\nlem. Section III provides a brief overview of the established\nAC-OPF cases provided with MATPOWER and highlights some\nlimitations in using these cases for benchmarking AC-OPF\nalgorithms. Section IV provides a survey of known creative-\ncommons transmission system network data and highlights the\nmissing information in each network data source. Section V\nbrieﬂy introduces methods for addressing the missing infor-\nmation in these datasets. Section VI introduces the PGL IB-\n3\ntl∠θt\nl :1 rl xl\nbc\nl\n2\nbc\nl\n2\nFig. 1. Π-circuit branch model with an ideal transformer. This is the branch\nmodel used by M ATPOWER [16].\nOPF networks and conducts a baseline validation study to\ndemonstrate that they are suitable for benchmarking the AC-\nOPF problem. Section VII provides concluding remarks. An\nappendix summarizes some variants of the proposed AC-OPF\nmodel and discusses the additional data that may be necessary\nin order to make the PGL IB-OPF test cases applicable to other\nclasses of power system optimization and control problems.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "T HE AC O PTIMAL POWER FLOW FORMULATION",
+      "level": 1,
+      "text": "Many variations of the AC-OPF problem are relevant\nto power system analysis. However, in accordance with\nPGL IB repository requirements, this section nominates a spe-\nciﬁc version of the AC-OPF problem for algorithmic bench-\nmarking. The following mathematical model presents a variant\nof the AC-OPF problem that is often used in related AC-OPF\npublications (e.g. [1]–[5], [11], [15]) and is readily encoded\nin the M ATPOWER network data format.\nThe proposed AC-OPF problem requires the following\nnetwork parameters: a set of bus ids N; a set of branch ids\nE with an arbitrary orientation; a set ER that captures the\nreverse orientation of the branches; and a set of generator ids\nG. For each busi∈N: the setsEi andER",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "indicate the subset",
+      "level": 1,
+      "text": "of edges that are incident to that bus; the set Gi reﬂects the\nsubset of generator ids that are connected to that bus; Sd\ni is\nthe constant power demand; Y s\ni is the bus shunt admittance;\nand vl\ni,vu\ni indicate the operating range of the bus’ voltage\nmagnitude. For each generator k∈ G:Sgl\nk ,Sgu\nk indicate the\ngenerator’s power injection range; and c2k,c1k,c0k provide\nthe coefﬁcients of a quadratic active power cost function. For\neach branch (l,i,j )∈ E: i and j are the from and to buses\nrespectively and l is the branch id; the series admittance, line\ncharge, and transformer parameters are given by Yl,bc\nl,Tl\nrespectively; the branch’s thermal limit in given by su\nl ; and\nthe branch voltage angle difference range is θ∆l\nl ,θ∆u\nl . Lastly,\na voltage angle reference bus ref∈N is speciﬁed. Most of\nthese parameters are speciﬁed directly in a M ATPOWER data\nﬁle. However, the following parameters need to be computed\nfrom the raw data as follows,\nYl =Z−1\nl = rl\nr2\nl +x2\nl\n−i xl\nr2\nl +x2\nl\n(1a)\nTl =tl cos(θt\nl) +it l sin(θt\nl) (1b)\nModel 1 The AC Optimal Power Flow Problem (AC-OPF)\nvariables:\nSg\nk ∀k∈G\nVi ∀i∈N\nSlij ∀(l,i,j )∈E∪ER\nminimize:\n∑\nk∈G\nc2k(ℜ(Sg\nk))2 +c1kℜ(Sg\nk) +c0k (2a)\nsubject to:\n∠Vref = 0 (2b)\nSgl\nk ≤Sg\nk≤Sgu\nk ∀k∈G (2c)\nvl\ni≤|Vi|≤ vu\ni ∀i∈N (2d)∑\nk∈Gi\nSg\nk−Sd\ni −Y s\ni|Vi|2 =\n∑\n(l,i,j)∈Ei∪ER\ni\nSlij ∀i∈N (2e)\nSlij =\n(\nY∗\nl −ibc\nl\n2\n)|Vi|2\n|Tl|2−Y∗\nl\nViV∗\nj\nTl\n∀(l,i,j )∈E (2f)\nSlji =\n(\nY∗\nl −ibc\nl\n2\n)\n|Vj|2−Y∗\nl\nV∗\ni Vj\nT∗\nl\n∀(l,i,j )∈E (2g)\n|Slij|≤ su\nl ∀(l,i,j )∈E∪ER (2h)\nθ∆l\nl ≤ ∠(ViV∗\nj )≤θ∆u\nl ∀(l,i,j )∈E (2i)\nFigure 1 shows the circuit model used to represent each\nbranch.\nModel 1 presents the AC-OPF problem as a non-convex\nnonlinear mathematical program over complex values and\nvariables. A detailed description of the model’s notation and\nderivation can be found in [5]. The objective function (2a)\nstrives to minimize the cost of active power injections. Con-\nstraint (2b) ﬁxes the voltage angle of the reference bus. Con-\nstraint (2c) sets the generator injection limits and constraint\n(2d) sets the bus voltage magnitude limits. Constraint (2e)\ncaptures the nodal power balance and constraints (2f)–(2g)\nensure that the branch power ﬂows are consistent with Ohm’s\nLaw. Finally, constraints (2h) and (2i) capture the branch\nthermal and voltage angle difference limits. It is important\nto note that solving Model 1 is NP-Hard [29] in general, even\nif the network has a tree topology [30]. Consequently, it is\nexpected that solution methods for Model 1 will exhibit a wide\nvariety of quality-runtime tradeoffs and will be specialized to\ndifferent classes of inputs.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "M OTIVATION",
+      "level": 1,
+      "text": "To motivate the need for a careful curation of the network\ndata in PGL IB-OPF, this section conducts a preliminary\nstudy of thirty-ﬁve AC transmission system datasets that are\ndistributed with M ATPOWER v6.0 [16], [48]. The optimality\ngap measure is used as a simple and preliminary test of AC-\nOPF difﬁculty, as one expects that challenging cases will\nexhibit a large optimality gap. Given a feasible solution to\nthe AC-OPF problem and the solution to a convex relaxation,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 TABLE I",
+      "level": 1,
+      "text": "AC-OPF O PTIMALITY GAPS ON NETWORK DATASETS DISTRIBUTED WITH MATPOWER V 6.0.\n$/h Gap (%) Runtime (seconds)\nTest Case |N| |E| AC SOC AC SOC\ncase5 5 6 1.7552e+04 14.55 <1 <1\ncase6ww 6 11 3.1440e+03 0.63 <1 <1\ncase9 9 9 5.2967e+03 0.01 <1 <1\ncase9target 9 9 n.s. inf. <1 <1\ncase14 14 20 8.0815e+03 0.08 <1 <1\ncase24 ieee rts 24 38 6.3352e+04 0.02 <1 <1\ncase30 30 41 5.7689e+02 0.58 <1 <1\ncase ieee30 30 41 8.9061e+03 0.05 <1 <1\ncase39 39 46 4.1864e+04 0.03 <1 <1\ncase57 57 80 4.1738e+04 0.07 <1 <1\ncase89pegase 89 210 5.8198e+03 0.17 <1 <1\ncase118 118 186 1.2966e+05 0.25 <1 <1\ncase145 145 453 n.s. inf. 14 7\ncase illinois200 200 245 3.6748e+04 0.02 <1 <1\ncase300 300 411 7.1973e+05 0.15 <1 <1\ncase1354pegase 1354 1991 7.4069e+04 0.08 4 5\ncase1951rte 1951 2596 8.1738e+04 0.08 17 26\ncase2383wp 2383 2896 1.8685e+06 1.05 9 6\ncase2736sp 2736 3504 1.3079e+06 0.30 8 5\ncase2737sop 2737 3506 7.7763e+05 0.26 6 4\ncase2746wop 2746 3514 1.2083e+06 0.37 7 4\ncase2746wp 2746 3514 1.6318e+06 0.33 7 5\ncase2848rte 2848 3776 5.3022e+04 0.08 46 7\ncase2868rte 2868 3808 7.9795e+04 0.07 28 8\ncase2869pegase 2869 4582 1.3400e+05 0.09 9 58\ncase3012wp 3012 3572 2.5917e+06 0.78 12 6\ncase3120sp 3120 3693 2.1427e+06 0.54 11 6\ncase3375wp 3374 4161 7.4120e+06 0.26 13 98\ncase6468rte 6468 9000 8.6829e+04 0.23 67 226\ncase6470rte 6470 9005 9.8345e+04 0.17 61 105\ncase6495rte 6495 9019 1.0628e+05 0.45 44 239\ncase6515rte 6515 9037 1.0980e+05 0.38 45 36\ncase9241pegase 9241 16049 3.1591e+05 1.75 61 230\ncase13659pegase 13659 20467 3.8611e+05 1.52 228 215\nthe optimality gap is deﬁned as the relative difference between\nthe objective values of the feasible solution and the relaxation:\nAC Heuristic− AC Relaxation\nAC Heuristic (3)\nThere are a wide variety of both AC heuristics (i.e., methods\nfor obtaining feasible solutions to AC OPF problems [21]–\n[23]) and convex relaxation techniques [12]–[14]. In the inter-\nest of simplicity, this preliminary study will use a nonlinear op-\ntimization solver that converges to a KKT point as a heuristic\nfor ﬁnding AC feasible solutions and a simple Second-Order\nCone (SOC) relaxation [3] for providing objective bounds. All\nof the results were computed using IPOPT 3.12 [49] with the\nHSL [50] linear algebra library on a server with two 2.10GHz\nIntel CPU and 128GB of RAM. PowerModels.jl v0.9 [51] was\nused to formulate and solve both mathematical programs.\nThe results of this study are presented in Table I. The\ndata highlights two core points: (1) By-in-large the optimality\ngaps are less than 1%. Although a large optimality gap is\nnot a necessary condition for AC-OPF hardness, it provides\na good indication of a challenging instance. This work will\ndemonstrate that much more signiﬁcant gaps are possible,\nproviding a signiﬁcant increase in the variety of network cases\nfor AC-OPF algorithm benchmarking; (2) No feasible solution\nwas found in two cases, case9target and case145. This could\nsuggest that these cases are challenging for AC heuristics.\nHowever, the SOC relaxation provides a numerical proof that",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 TABLE II",
+      "level": 1,
+      "text": "A SURVEY OF TRANSMISSION SYSTEM DATA SOURCES ∗\nOriginal Generator Generator Thermal\nName Source Injection Limits Costs Limits\nPublication Test Cases\n3-Bus [31] [31] [31] [31]\ncase5 [32] [32] [32] —\ncase30-as [33] [33] [33] [33]\ncase39 [35] [35], [36] [37] [38]\nIEEE Power Flow Test Cases\n14 Bus [27] — — —\n30 Bus [27] — — —\n57 Bus [27] — — —\n118 Bus [27] — — —\n300 Bus [27] — — —\nIEEE Dynamic Test Cases\n17 Generator [27] — — —\nIEEE Reliability Test Systems (RTS)\nRTS-79 [39] [39] [39], [40] [39]\nRTS-96 [41] [39] [40] [39]\nPolish Test Cases\ncase2383wp [16] [16] [16] [16]\ncase2736sp [16] [16] [16] [16]\ncase2737sop [16] [16] [16] [16]\ncase2746wop [16] [16] [16] [16]\ncase2746wp [16] [16] [16] [16]\ncase3012wp [16] [16] [16] —\ncase3120sp [16] [16] [16] —\ncase3375wp [16] — [16] —\nPEGASE Test Cases\ncase89pegase [42] [42] — [42], partial\ncase1354pegase [42] [42] — [42], partial\ncase2869pegase [42] [42] — [42], partial\ncase9241pegase [42] [42] — [42], partial\ncase13659pegase [42] [42] — [42], partial\nRTE Test Cases\ncase1888rte [42] [42] — [42], partial\ncase1951rte [42] [42] — [42], partial\ncase2848rte [42] [42] — [42], partial\ncase2868rte [42] [42] — [42], partial\ncase6468rte [42] [42] — [42], partial\ncase6470rte [42] [42] — [42], partial\ncase6495rte [42] [42] — [42], partial\ncase6515rte [42] [42] — [42], partial\nACTIVSg Test Cases\nACTIVSg200 [43] [43] [43] [43]\nSustainable Data Evolution Technology Test Cases\nSDET 500 [44] [44] — [44]\nSDET 3000 [44] [44] — [44]\nSDET 4000 [44] [44] — [44]\nPower Systems Engineering Research Center Test Cases\nWECC 240 Bus [46], [47] [47] [47] [47]\nGrid Optimization Competition Test Cases\n179 Bus [45] [45] — —\nNetwork 02, 173 scenarios [45] [45] [45] [45]\nNetwork 03, 200 scenarios [45] [45] [45] [45]\nNetwork 06, 124 scenarios [45] [45] [45] [45]\nNetwork 08, 373 scenarios [45] [45] [45] [45]\nNetwork 09, 195 scenarios [45] [45] [45] [45]\nNetwork 12, 50 scenarios [45] [45] [45] [45]\nNetwork 13, 103 scenarios [45] [45] [45] [45]\nNetwork 14, 50 scenarios [45] [45] [45] [45]\nNetwork 20, 100 scenarios [45] [45] [45] [45]\nNetwork 25, 60 scenarios [45] [45] [45] [45]\nNetwork 30, 48 scenarios [45] [45] [45] [45]\nNetwork 70, 422 scenarios [45] [45] [45] [45]\nNetwork 75, 40 scenarios [45] [45] [45] [45]\nNetwork 82, 10 scenarios [45] [45] [45] [45]\nNetwork 82, 40 scenarios [45] [45] [45] [45]\nNetwork 83, 130 scenarios [45] [45] [45] [45]\nNetwork 86, 40 scenarios [45] [45] [45] [45]\nNetwork 88, 30 scenarios [45] [45] [45] [45]\n∗ - only creative commons data sources were considered",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "6 these cases have no feasible AC-OPF solution,1 suggesting that",
+      "level": 1,
+      "text": "data quality is the source of infeasibility and not algorithmic\ndifﬁculty. Overall, this simplistic study demonstrates some of\nthe shortcomings of focusing exclusively on the network data\nthat is distributed with M ATPOWER v6.0 for benchmarking\nAC-OPF algorithms. The careful curation of AC network\ndata developed in the following sections results in modiﬁed\nnetwork datasets featuring signiﬁcant optimality gaps, which\nwill help to emphasize the differences between various AC-\nOPF solution methods.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "P UBLICLY AVAILABLE NETWORK DATA",
+      "level": 1,
+      "text": "In the interest of curating a comprehensive collection of\nAC-OPF networks, we begin with a survey of available\nnetwork datasets. To the best of our knowledge, Table II\nsummarizes all of the readily available transmission system\ndatasets.2 A careful investigation of these datasets reveals\nthat very few networks include all of the data required to\nstudy Model 1. Table II highlights the source of, or lack\nof, generation capacity limits, generation cost functions, and\nbranch thermal limits in these datasets. Cells containing “—”\nindicate missing data that must be added before the network\nwill be suitable for benchmarking Model 1. To address the\ninformation that is missing in these datasets, the next section\nreviews a number of data-driven models that can be used to\nﬁll in these gaps.\nA. Network Omissions\nSome notable networks have not been included in Table II\nfor the following reasons.\n1) IEEE 30 Bus “New England” Dynamic Test System:\nThis test case is nearly identical to the IEEE 30 test case and\nwould not bring additional value to the proposed collection of\ncases.\n2) 30 Bus System of Ferrero, Shahidehpour , Ramesh:\nIn PGL IB-OPF v20.07 the 30 Bus System of Ferrero,\nShahidehpour and Ramesh [34] was removed due to being\nvery similar to the 30 Bus System of Alsac and Stott [33] and\nwould not bring additional value to the proposed collection of\ncases.\n3) IEEE 50 Generator Dynamic Test System: In its speci-\nﬁed state, this test case does not converge to an AC power ﬂow\nsolution. However, if the active generation upper bounds are\nincreased to 1.5 times their given value and voltage bounds\nare set to 1± 0.16, then a solution can be obtained. This\nsolution still exhibits signiﬁcant voltage drops, atypical of\nother networks. Many of the lines in this network have negative\nr andx values, which is likely the result of a network reduction\n1That is, there does not exist an assignment of the variables that can\nsimultaneously satisfy all of the constraints in Model 1.\n2Only creative commons datasets were considered to comply with\nPGL IB data requirements.\nprocedure. Also, the size of the generating units are one or two\norders of magnitude larger than any documented generation\nunit in the U.S., which suggests that these “generators” may\nactually be modeling imports and exports of power. Since\nmany of these characteristics are atypical compared to the\nother test cases, this network is omitted.\n4) SDET 2000 System: This system was omitted starting\nwith PGL IB-OPF v20.07, due to being similar to the Network\n70 systems from the Grid Optimization Competition [45].\n5) ACTIVGs 500, 2000 and 10000 Bus Systems: These\nthree systems were omitted starting with PGL IB-OPF v20.07,\ndue to being similar to the Network 02, Network 06 and\nNetwork 13 systems from the Grid Optimization Competition\n[45].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "D ATA DRIVEN MODELS",
+      "level": 1,
+      "text": "Ideally, the data missing from Table II would be incorpo-\nrated by returning to the original network design documents\nand extracting the required information, such as a generator’s\nnameplate capacity and line conductor speciﬁcations. Unfortu-\nnately, due to the age or the synthetic nature of these test cases,\nthis approach to data completion is impractical. This work\nproposes to leverage publicly available data sources to build\ndata-driven models that can complete the missing data. Such\nmodels may not reﬂect any speciﬁc real-world network, but at\nleast they will reﬂect many of the statistical features found in\nrealistic networks. As identiﬁed in Section IV, the key pieces\nof missing data are generator injection limits, generation costs\nfunctions, and branch thermal limits. The rest of this section\nreviews several data-driven models proposed in [52], which\ncan be used to ﬁll the gaps in these networks.\nA. Generator Models\nMost AC transmission datasets are brief in their description\nof the generation units. Typically, only the active power\ninjection limits, reactive power injection limits, and a speciﬁc\ngeneration dispatch point are provided. A notable omission is\nan active power generation cost function, which is critical in\nformulating the objective in Model 1. Two key observations\ncan be used to address the limited information on generation\nunits: (1) The U.S. Energy Information Administration (EIA)\ncollects extensive data on generation units throughout the\nUnited States. Two reports are particularly useful to this work,\nthe detailed generator data (EIA-860 2012 [53]) and state\nfuel cost data (SEDS [54]); (2) The bulk of a generator’s\nproperties are driven by its mechanical design, which is in turn\nsigniﬁcantly inﬂuenced by its fuel type. This work begins by\ndeveloping a data-driven model for generators by assigning\nthem a fuel category. Once a fuel category is determined,\nprobabilistic models for both fuel costs and power injection\nlimits can be derived from publicly available data sources. In\nthe interest of simplicity, this work focuses on the four primary",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "7 dispatchable fuel types, Petroleum (PEL), Natural Gas (NG),",
+      "level": 1,
+      "text": "Coal (COW), and Nuclear Fuel (NUC).\n1) The Generation Fuel Category Model: Assuming that\na generator’s active power injection limit (i.e. ℜ(Sgu)) is\na sufﬁcient proxy for its nameplate capacity, one can use\nthe empirical distribution presented in Figure 2 for making\na probabilistic guess of the fuel type of a given generation\nunit. The fuel category classiﬁer is built by selecting the\ncorresponding nameplate capacity bin in Figure 2 and rolling\na weighted die to select the fuel type.\n0.1 0.8 1.3 2 2.8 5 9.5 20 41.6 60.5 100 181.9 342\nGeneration Capacity Distribution\nNameplate Capacity (MW)\nProbability\n0.0 0.2 0.4 0.6 0.8 1.0\nPEL\nNG\nCOW\nNUC\nFig. 2. An Empirical Distribution of Generation Fuel Categories by Nameplate\nCapacity.\nOne important point is the identiﬁcation of synchronous\ncondensers. In Model 1 such devices are not explicitly identi-\nﬁed but are modeled as generators with no active generation\ncapabilities. To identify such devices, one can introduce a new\nfuel category (e.g. SYNC), and any generator with active gen-\neration upper and lower bounds of 0 is assigned this category.\nThe empirical distribution shown in Figure 2 combined with\nthis special case forms the generation fuel classiﬁcation model\n(GF-Stat).\n2) Generation Capacity Models: Some AC transmission\nsystem datasets lack reasonable generation injection limits,\nespecially in cases that where originally designed for bench-\nmarking AC Power Flow algorithms. Two simple generation\ncapability models are developed to address such cases.\na) Active Generation Capability: An investigation of the\nnameplate capacities of each fuel type in [52] revealed that an\nexponential distribution is a suitable model for PEL, NG, and\nCOW generators, while a normal distribution is suitable for\nNUC generators. The parameters from maximum likelihood\nestimation of these distributions are presented in Table III.\nUsing these distributions the active generation capacity model\n(AG-Stat) is constructed as follows. Given a fuel category\nf and an active generation upper limit or present output\nℜ(Sg), the fuel category nameplate capacity distribution is\nsampled as pgu, until pgu > ℜ(Sg). Then the maximum\nactive power generation capacity is updated to the sampled\nvalue, i.e.ℜ(Sgu) =pgu.\nTABLE III\nDISTRIBUTION PARAMETERS FOR GENERATOR CAPACITY MODELS .\nNameplate Capacity (MW)\nFuel Type ˆλ\nPEL 0.023254\nNG 0.009188\nCOW 0.003201\nNameplate Capacity (MW)\nFuel Type ˆµ ˆσ\nNUC 1044.56 219.27\nb) Reactive Generation Capabilities: In synchronous\nmachines, reactive generation capabilities are tightly coupled\nwith active generation capabilities. Lacking detailed informa-\ntion about the generator’s speciﬁcations it is observed in [52]\nthat the reactive power capability of a synchronous machine\nis roughly ±50% of its nameplate capacity leading to the\nRG-AM50 model. This model assumes the given reactive\npower bounds are accurate, unless they exceed 50% of the\nnameplate capacity, in which case, they are reduced to ±50%\nof the nameplate capacity. This provides a pessimistic model\nof the generator’s capabilities.\n3) Generation Cost Model: Observing the simplicity of the\ncost function in Model 1, this work proposes to focus on\nthe marginal costs of power generation in an idealized non-\ncompetitive environment. Fuel price information is available\nin the “Primary Energy, Electricity, and Total Energy Price\nEstimates, 2012” in the SEDS dataset [54]. In [52] it was\nobserved that for the fuel categories of interest, the fuel\ncosts are roughly normally distributed, with the parameters\nspeciﬁed in Table IV. Using these distributions the model for\ngeneration costs ( AC-Stat) is built as follows. The fuel cost\nparameters from Table IV are assumed to be representative\nof the price variations across the various generating units, so\nthat, given a fuel category, one simply draws a sample from\nthe associated normal distribution to produce a linear fuel\ncost value ($/BTU) for that generator. The conversion from\nheat energy input (BTU) to electrical energy output (MWh)\ndepends on a generator’s heat rate , which differs based on\nthe efﬁciency of the generating plant. Representative heat rate\nvalues are adopted from 2016 EIA data [55].\nB. Branch Thermal Limit Models\nDetermining a transmission line’s operational thermal rating\nis a intricate tasks that combines a wide variety of information\nsuch as the conductor’s design, location, age and the season\nof the year. Unfortunately, this information is unavailable in\nall of the network datasets presented in Table II. The only\navailable branch parameters are the impedance ( Z = r +ix",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "8 TABLE IV",
+      "level": 1,
+      "text": "GENERATOR COST MODEL .\nCost ($/MWh)\nFuel Category SEDS Label ˆµ ˆσ\nPEL Distillate Fuel Oil 111.3398 9.6736\nNG Natural Gas 34.2731 10.9810\nCOW Coal 24.7919 8.0866\nNUC Nuclear Fuel 7.2504 0.7534\np.u.), line charge (bc p.u.), and often the nominal voltage ( ˙v)\non the connecting buses. This work leverages two models for\nproducing reasonable thermal limits, a data-driven approach\nand an arithmetic approach leveraging other model parameters.\n1) A Statistical Model: After reviewing a number of net-\nwork datasets with realistic thermal limits, [52] concluded that\nthe following exponential model was reasonable estimator of\nthermal limits when the impedance ( Z = r +ix p.u.) and\nnominal voltage ( ˙v) is known,\nsu = ˙ve−5.0886\n(x\nr\n)0.4772\n(4)\nThis model is referred to as TL-Stat. The intuition of the\nmodel is that the ratio of resistance to impedance provides\nsome insight into the branch’s conductor type and conﬁgura-\ntion, since this ratio should be independent of the line length.\n2) A Reasonable Upper Bound: Although the statistical\nmodel for branch thermal limits is quite useful, it cannot be\napplied in cases where data for r, x, or ˙v is missing. Notable\nexamples include: transformers, where the nominal voltage\nvalue differs on both sides of the line, and ideal lines, which\ndo not have an r value. For these cases, it is helpful to have\nan alternate method for producing reasonable thermal limits.\nGiven that Model 1 includes reasonable bounds on |V| and\nθ∆, a reasonable thermal limit can be computed as follows.\nFor a branch (l,i,j )∈E, let θ∆m\nl = max(|θ∆l\nl |,|θ∆u\nl |). A\nreasonable value for su\nl is\n(su\nl )2 = (vu\ni )2|Yl|2((vu\ni )2+ (vu\nj )2− 2vu\nivu\nj cos(θ∆m\nl ))\n(5)\nThis model is referred to as TL-UB and a more detailed\ndiscussion can be found in [52].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "V oltage Angle Difference Bounds",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "oltage angle difference bounds are often used as a proxy",
+      "level": 1,
+      "text": "for capturing voltage angle stability limits on long transmis-\nsions lines [56]. Unfortunately, no available network datasets\ninclude detailed information for these bounds, which are\nspeciﬁed in Model 1. To ﬁll this gap all of the PGL IB-\nOPF models are given generous voltage angle difference\nbound of θ∆l=−30◦, θ∆u=30◦, which are easily justiﬁed\nby practical voltage stability requirements [56] and do not\nimpact the best-known solution of any available network. It is\nimportant to emphasize that a voltage angle difference bound\nof 30◦ is generous enough to be subsumed by the thermal\nlimits provided with all of the networks considered here. Still,\neven this generous value has signiﬁcant implications for the\ndevelopment of power system optimization methods (e.g. [1],\n[5], [6], [57], [58]).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "T HE PGL IB-OPF N ETWORKS",
+      "level": 1,
+      "text": "Leveraging the proposed models for completing the missing\ndata in Table II, the PGL IB-OPF networks are developed.\nTable V summarizes which models are used to convert the\nbase network data into PGL IB-OPF networks.\nA. Results\nTo verify the usefulness of the proposed PGL IB-OPF net-\nworks for benchmarking AC-OPF algorithms, the study from\nSection III is revisited. PowerModels.jl v0.17 [51] was used\nto formulate Model 1 and its Second-Order Cone (SOC)\nrelaxation [3], [5] and both models were solved with IPOPT\n3.12 [49] using the HSL [50] linear algebra library on a server\nwith two 2.10GHz Intel CPU and 128GB of RAM.\nTable VI presents the results of the base PGL IB-\nOPF networks, which are called the Typical Operating\nConditions (TYP) cases. Many of the optimality gaps have\nremained small (i.e. below 1%). However, a number\nof networks do exhibit signiﬁcant optimality gaps,\nsuch as pglib opf case5 pjm, pglib opf case30 ieee,\npglib opf case162 ieee dtc, pglib opf case6495 rte, and\npglib opf case6515 rte. This suggests that at least a subset\nof these cases are interesting for benchmarking AC-OPF\nalgorithms.\nB. Building More Challenging Test Cases\nThe typical operating conditions networks presented in\nTable VI provide a suitable start for benchmarking AC-OPF\nalgorithms. However, it is worthwhile to explore if even more\nchallenging test cases can be devised. To that end, PGL IB-\nOPF includes two variants of the base PGL IB-OPF networks\nthat exhibit even more extreme optimality gaps, the Active\nPower Increase (API) and Small Angle Difference (SAD)\ncases.\nActive Power Increase (API) Cases: It was observed in\n[59], [60] that power ﬂow congestion is a key feature of inter-\nesting AC Optimal Transmission Switching test cases. Inspired\nby this observation, the following Active Power Increase (API)\nPGL IB-OPF networks are proposed. For each of the standard\nPGL IB-OPF networks, an optimization problem is solved,\nwhich increases the active power demands proportionally\nthroughout the network until the branch thermal limits are\nbinding. Once a maximal increase in active power demand is\ndetermined, the statistical models are applied to appropriately",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "9 TABLE V",
+      "level": 1,
+      "text": "PGL IB-OPF I NSTANCE GENERATION DETAILS\nModel\nPGL IB Original Active Reactive Gen. Thermal V oltage Angle\nName Name Gen. Gen. Cost Limit Diff. Bound\nPublication Test Cases\npglib opf case3 lmbd 3-Bus — — — — 30◦\npglib opf case5 pjm case5 — — — TL-Stat 30◦\npglib opf case30 as 30 Bus-as — — — — 30◦\npglib opf case39 epri case39 — — — — 30◦\nIEEE Power Flow Test Cases\npglib opf case14 ieee 14 Bus AG-Stat RG-AM50 AC-Stat TL-Stat 30◦\npglib opf case30 ieee 30 Bus AG-Stat RG-AM50 AC-Stat TL-Stat 30◦\npglib opf case57 ieee 57 Bus AG-Stat RG-AM50 AC-Stat TL-Stat 30◦\npglib opf case118 ieee 118 Bus AG-Stat RG-AM50 AC-Stat TL-Stat 30◦\npglib opf case300 ieee 300 Bus AG-Stat RG-AM50 AC-Stat TL-UB 30◦\nIEEE Dynamic Test Cases\npglib opf case162 ieee dtc 17 Generator AG-Stat RG-AM50 AC-Stat TL-Stat 30◦\nIEEE Reliability Test Systems (RTS)\npglib opf case24 ieee rts RTS-79 — — — — 30◦\npglib opf case73 ieee rts RTS-96 — — — — 30◦\nPolish Test Cases\npglib opf case2383wp k case2383wp — — — — 30◦\npglib opf case2736sp k case2736sp — — — — 30◦\npglib opf case2737sop k case2737sop — — — — 30◦\npglib opf case2746wop k case2746wop — — — — 30◦\npglib opf case2746wp k case2746wp — — — — 30◦\npglib opf case3012wp k case3012wp — — — TL-Stat 30◦\npglib opf case3120sp k case3120sp — — — TL-Stat 30◦\npglib opf case3375wp k case3375wp — RG-AM50 — TL-Stat 30◦\nPEGASE Test Cases\npglib opf case89 pegase case89pegase — — AC-Stat TL-UB 30◦\npglib opf case1354 pegase case1354pegase — — AC-Stat TL-UB 30◦\npglib opf case2869 pegase case2869pegase — — AC-Stat TL-UB 30◦\npglib opf case9241 pegase case9241pegase — — AC-Stat TL-UB 30◦\npglib opf case13659 pegase case13659pegase — — AC-Stat TL-UB 30◦\nRTE Test Cases\npglib opf case1888 rte case1888rte — — AC-Stat TL-UB 30◦\npglib opf case1951 rte case1951rte — — AC-Stat TL-UB 30◦\npglib opf case2848 rte case2848rte — — AC-Stat TL-UB 30◦\npglib opf case2868 rte case2868rte — — AC-Stat TL-UB 30◦\npglib opf case6468 rte case6468rte — — AC-Stat TL-UB 30◦\npglib opf case6470 rte case6470rte — — AC-Stat TL-UB 30◦\npglib opf case6495 rte case6495rte — — AC-Stat TL-UB 30◦\npglib opf case6515 rte case6515rte — — AC-Stat TL-UB 30◦\nACTIVSg Test Cases\npglib opf case200 activ ACTIVSg200 — — — — 30◦\nSustainable Data Evolution Technology Test Cases\npglib opf case588 sdet SDET 500 — — AC-Stat — 30◦\npglib opf case2853 sdet SDET 3000 — — AC-Stat — 30◦\npglib opf case4661 sdet SDET 4000 — — AC-Stat — 30◦\nPower Systems Engineering Research Center Test Cases\npglib opf case240 pserc WECC 240 Bus — — AC-Stat TL-UB 30◦\nGrid Optimization Competition Test Cases\npglib opf case179 goc 179 Bus — — AC-Stat TL-UB 30◦\npglib opf case500 goc 02O-173, scenario 72 — — — — 30◦\npglib opf case793 goc 03O-200, scenario 72 — — — — 30◦\npglib opf case2000 goc 06O-124, scenario 95 — — — — 30◦\npglib opf case2312 goc 70O-422, scenario 335 — — — — 30◦\npglib opf case2742 goc 75O-040, scenario 7 — — — — 30◦\npglib opf case3022 goc 08O-373, scenario 261 — — — — 30◦\npglib opf case3970 goc 82O-040, scenario 34 — — — — 30◦\npglib opf case4020 goc 83O-130, scenario 47 — — — — 30◦\npglib opf case4601 goc 82O-010, scenario 10 — — — — 30◦\npglib opf case4619 goc 86O-040, scenario 17 — — — — 30◦\npglib opf case4837 goc 88O-030, scenario 6 — — — — 30◦\npglib opf case4917 goc 09O-195, scenario 40 — — — — 30◦\npglib opf case9591 goc 12O-050, scenario 33 — — — — 30◦\npglib opf case10000 goc 13O-103, scenario 81 — — — — 30◦\npglib opf case10480 goc 14O-050, scenario 9 — — — — 30◦\npglib opf case19402 goc 20O-100, scenario 42 — — — — 30◦\npglib opf case24464 goc 25O-060, scenario 37 — — — — 30◦\npglib opf case30000 goc 30O-048, scenario 36 — — — — 30◦",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "10 TABLE VI",
+      "level": 1,
+      "text": "AC-OPF B OUNDS ON PGL IB-OPF TYP N ETWORKS .\n$/h Gap (%) Runtime (sec.)\nTest Case |N | |E| AC SOC AC SOC\nTypical Operating Conditions (TYP)\npglib opf case3 lmbd 3 3 5.8126e+03 1.32 <1 <1\npglib opf case5 pjm 5 6 1.7552e+04 14.55 <1 <1\npglib opf case14 ieee 14 20 2.1781e+03 0.11 <1 <1\npglib opf case24 ieee rts 24 38 6.3352e+04 0.02 <1 <1\npglib opf case30 as 30 41 8.0313e+02 0.06 <1 <1\npglib opf case30 ieee 30 41 8.2085e+03 18.84 <1 <1\npglib opf case39 epri 39 46 1.3842e+05 0.56 <1 <1\npglib opf case57 ieee 57 80 3.7589e+04 0.16 <1 <1\npglib opf case73 ieee rts 73 120 1.8976e+05 0.04 <1 <1\npglib opf case89 pegase 89 210 1.0729e+05 0.75 <1 <1\npglib opf case118 ieee 118 186 9.7214e+04 0.91 <1 <1\npglib opf case162 ieee dtc 162 284 1.0808e+05 5.95 <1 <1\npglib opf case179 goc 179 263 7.5427e+05 0.16 <1 <1\npglib opf case200 activ 200 245 2.7558e+04 0.01 <1 <1\npglib opf case240 pserc 240 448 3.3297e+06 2.78 3 2\npglib opf case300 ieee 300 411 5.6522e+05 2.63 <1 <1\npglib opf case500 goc 500 733 4.5495e+05 0.25 <1 <1\npglib opf case588 sdet 588 686 3.1314e+05 2.14 <1 <1\npglib opf case793 goc 793 913 2.6020e+05 1.33 2 <1\npglib opf case1354 pegase 1354 1991 1.2588e+06 1.57 4 3\npglib opf case1888 rte 1888 2531 1.4025e+06 2.05 8 31\npglib opf case1951 rte 1951 2596 2.0856e+06 0.14 18 5\npglib opf case2000 goc 2000 3639 9.7343e+05 0.31 7 4\npglib opf case2312 goc 2312 3013 4.4133e+05 1.90 6 3\npglib opf case2383wp k 2383 2896 1.8682e+06 1.04 7 5\npglib opf case2736sp k 2736 3504 1.3080e+06 0.31 6 4\npglib opf case2737sop k 2737 3506 7.7773e+05 0.27 5 3\npglib opf case2742 goc 2742 4673 2.7571e+05 1.35 28 6\npglib opf case2746wop k 2746 3514 1.2083e+06 0.37 5 4\npglib opf case2746wp k 2746 3514 1.6317e+06 0.33 6 5\npglib opf case2848 rte 2848 3776 1.2866e+06 0.13 16 7\npglib opf case2853 sdet 2853 3921 2.0524e+06 0.91 9 6\npglib opf case2868 rte 2868 3808 2.0096e+06 0.10 14 8\npglib opf case2869 pegase 2869 4582 2.4628e+06 1.01 12 7\npglib opf case3012wp k 3012 3572 2.6008e+06 1.03 9 12\npglib opf case3022 goc 3022 4135 6.0138e+05 2.77 10 5\npglib opf case3120sp k 3120 3693 2.1480e+06 0.56 9 5\npglib opf case3375wp k 3374 4161 7.4382e+06 0.55 11 6\npglib opf case3970 goc 3970 6641 9.6099e+05 0.34 18 12\npglib opf case4020 goc 4020 6988 8.2225e+05 1.23 21 13\npglib opf case4601 goc 4601 7199 8.2624e+05 0.54 22 14\npglib opf case4619 goc 4619 8150 4.7670e+05 0.91 19 23\npglib opf case4661 sdet 4661 5997 2.2513e+06 1.99 15 11\npglib opf case4837 goc 4837 7765 8.7226e+05 0.47 20 11\npglib opf case4917 goc 4917 6726 1.3878e+06 2.50 17 9\npglib opf case6468 rte 6468 9000 2.0697e+06 1.13 63 27\npglib opf case6470 rte 6470 9005 2.2376e+06 1.76 33 23\npglib opf case6495 rte 6495 9019 3.0678e+06 15.11 67 24\npglib opf case6515 rte 6515 9037 2.8255e+06 6.40 54 22\npglib opf case9241 pegase 9241 16049 6.2431e+06 2.54 48 36\npglib opf case9591 goc 9591 15915 1.0617e+06 0.62 60 43\npglib opf case10000 goc 10000 13193 1.3540e+06 1.54 47 26\npglib opf case10480 goc 10480 18559 2.3146e+06 1.23 65 42\npglib opf case13659 pegase 13659 20467 8.9480e+06 1.39 54 61\npglib opf case19402 goc 19402 34704 1.9778e+06 1.19 139 110\npglib opf case24464 goc 24464 37816 2.6295e+06 0.97 118 98\npglib opf case30000 goc 30000 35393 1.1423e+06 2.89 258 119\n11\nupdate the other network parameters (e.g. generator capabil-\nities and cost functions). The results of the API networks\nare presented in Table VII. As expected, the optimality gaps\nin these networks have increased signiﬁcantly with 60% of\ncases having optimality gaps above 1% and eight cases with\noptimality gaps above 10%. This suggests that many of these\ncases will be useful for benchmarking AC-OPF algorithms.\nSmall Angle Difference (SAD) Cases: A second ap-\nproach to modifying the PGL IB-OPF networks is inspired\nby recent lines of research [1], [5], [6], [57] that indicate\nvoltage angle difference bounds can have signiﬁcant impacts\non power system optimization approaches. To emphasize these\nimpacts, the following Small Angle Difference (SAD) PGL IB-\nOPF networks are proposed. For each of the standard PGL IB-\nOPF networks, an optimization problem is solved in order to\nﬁnd the minimum value of θ∆ that can be applied on all of\nthe branches in the network, while retaining a feasible AC\npower ﬂow. Once this small value of θ∆ is determined, the\noriginal test case is updated with this value, which introduces\nvoltage angle difference congestion on the network branches.\nThe results of the SAD networks are presented in Table VIII.\nInterestingly, this entirely different approach to modifying the\nbase networks also leads to signiﬁcant optimality gaps, with\n75% of the SAD networks having optimality gaps above 1%.\nThis suggest that many of these cases will be useful for\nbenchmarking AC-OPF algorithms.\nIt is important to note that in all three result tables, the\nsigniﬁcant optimality gaps can be caused by two factors: (1)\nthe heuristic for ﬁnding feasible AC-OPF solution fails to\nﬁnd the global optimum (e.g. see [61]); (2) the SOC convex\nrelaxation is weak (e.g. see [5]) and does not provide a\ntight bound on the quality of the AC-OPF solution. Both\nfactors present interesting avenues for research on AC-OPF\nalgorithms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "C ONCLUSIONS",
+      "level": 1,
+      "text": "This report has highlighted some of the shortcomings of\nusing existing network datasets for benchmarking AC Opti-\nmal Power Flow algorithms and has proposed the PGL IB-\nOPF networks to mitigate them. Leveraging data-driven mod-\nels, PGL IB-OPF ensures that all of the networks have rea-\nsonable values for key power network parameters, including\ngeneration injection limits, generation costs, and branch ther-\nmal limits. Furthermore, the active power increase and small\nangle difference network variants are developed to provide\nadditional challenging cases for benchmarking. A detailed\nvalidation study demonstrates that the majority of the PGL IB-\nOPF networks exhibit signiﬁcant optimality gaps and are\ntherefore useful for benchmarking AC-OPF algorithms.\nIt is important to emphasize that while the primary challenge\nof this work has been to develop realistic and challenging\nnetwork datasets for benchmarking the AC-OPF problem\npresented in Model 1, there is still a signiﬁcant gap in the\nmodels used for industry-grade AC optimal power ﬂow studies\n[62]–[64]. Some of the key extensions include: information\nabout conﬁgurable assets such as bus shunts, switches, and\ntransformer tap settings; N-1 contingency cases; branch ther-\nmal limits for short- and long-term overloading; and generator\ncapability curves. As the research community is able to ad-\ndresses the challenges presented in the PGL IB-OPF networks,\nit is important to also consider more realistic extensions of\nModel 1 and to curate new PGLIB repositories for those model\nvariants.\nAlthough PGL IB-OPF has highlighted some advantages for\nAC-OPF benchmarking, its network datasets are still by-in-\nlarge synthetically generated. This highlights the continued\nneed for industry engagement in the development of more\ndetailed and realistic network datasets for benchmarking AC-\nOPF algorithms. We hope that the PGL IB-OPF networks\nproposed herein will be sufﬁcient for the research community\nto benchmark AC-OPF algorithms, while more real-world\nnetwork datasets are developed and contributed to the PGL IB-\nOPF repository in the years to come.\nAPPENDIX\nEXTENSIONS AND ALTERNATIVE APPLICATIONS\nWhile this report focuses on the AC-OPF formulation\ndescribed in Model 1, there are a variety of possible modi-\nﬁcations, extensions, and other problems that are relevant to\nmany power system researchers. This appendix ﬁrst presents\ncommon modiﬁcations of Model 1 and then summarizes\nseveral possible alternative uses of the PGL IB data.\nA. Current Flow Limits\nThe OPF formulation in Model 1 considers line-ﬂow limits\nthat are based on apparent power (2h) and voltage angle differ-\nences (2i). A common modiﬁed problem formulation limits the\nmagnitudes of the current ﬂows on each line. Speciﬁcally, the\nfollowing constraints either replace or augment the apparent\npower ﬂow limits in (2h):\nIlij =\n(\nYl +ibc\nl\n2\n) Vi\n|Tl|2−Yl\nVj\nT∗\nl\n∀(l,i,j )∈E (6a)\nIlji =\n(\nYl +ibc\nl\n2\n)\nVj−Yl\nVi\nTl\n∀(l,i,j )∈E (6b)\n|Ilij|≤ I u\nl ∀(l,i,j )∈E∪ER (6c)\nNote that the per unit value of I u",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "is often assumed to be",
+      "level": 1,
+      "text": "equivalent to the per unit value of su\nl .\nB. Branch Charging Model\nThe Π-circuit branch model of this work (i.e., Figure 1),\nonly considers the susceptance impacts of line changing. After\nthe inception of that M ATPOWER data format, a number of",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "12 TABLE VII",
+      "level": 1,
+      "text": "AC-OPF B OUNDS ON PGL IB-OPF API N ETWORKS .\n$/h Gap (%) Runtime (sec.)\nTest Case |N | |E| AC SOC AC SOC\nCongested Operating Conditions (API)\npglib opf case3 lmbd api 3 3 1.1236e+04 9.27 <1 <1\npglib opf case5 pjm api 5 6 7.6377e+04 4.09 <1 <1\npglib opf case14 ieee api 14 20 5.9994e+03 5.13 <1 <1\npglib opf case24 ieee rts api 24 38 1.3494e+05 17.88 <1 <1\npglib opf case30 as api 30 41 4.9962e+03 44.61 <1 <1\npglib opf case30 ieee api 30 41 1.8044e+04 5.46 <1 <1\npglib opf case39 epri api 39 46 2.4967e+05 1.72 <1 <1\npglib opf case57 ieee api 57 80 4.9290e+04 0.08 <1 <1\npglib opf case73 ieee rts api 73 120 4.2263e+05 12.87 <1 <1\npglib opf case89 pegase api 89 210 1.3017e+05 23.11 <1 <1\npglib opf case118 ieee api 118 186 2.4224e+05 29.97 <1 <1\npglib opf case162 ieee dtc api 162 284 1.2099e+05 4.36 <1 <1\npglib opf case179 goc api 179 263 1.9320e+06 9.88 <1 <1\npglib opf case200 activ api 200 245 3.5701e+04 0.03 <1 <1\npglib opf case240 pserc api 240 448 4.6406e+06 0.67 4 2\npglib opf case300 ieee api 300 411 6.8499e+05 0.85 <1 <1\npglib opf case500 goc api 500 733 6.9241e+05 3.44 2 <1\npglib opf case588 sdet api 588 686 3.9476e+05 1.61 <1 <1\npglib opf case793 goc api 793 913 3.1885e+05 13.43 2 <1\npglib opf case1354 pegase api 1354 1991 1.4983e+06 0.55 4 3\npglib opf case1888 rte api 1888 2531 1.9539e+06 0.23 7 6\npglib opf case1951 rte api 1951 2596 2.4108e+06 0.57 8 5\npglib opf case2000 goc api 2000 3639 1.4686e+06 2.07 8 4\npglib opf case2312 goc api 2312 3013 5.7152e+05 13.09 11 3\npglib opf case2383wp k api 2383 2896 2.7913e+05 0.01 2 <1\npglib opf case2736sp k api 2736 3504 6.5394e+05 10.84 7 3\npglib opf case2737sop k api 2737 3506 3.6715e+05 5.88 6 2\npglib opf case2742 goc api 2742 4673 6.4219e+05 24.45 22 5\npglib opf case2746wop k api 2746 3514 5.1166e+05 0.01 2 2\npglib opf case2746wp k api 2746 3514 5.8183e+05 0.00 4 2\npglib opf case2848 rte api 2848 3776 1.4970e+06 0.25 26 7\npglib opf case2853 sdet api 2853 3921 2.4578e+06 1.96 10 6\npglib opf case2868 rte api 2868 3808 2.2946e+06 0.18 23 6\npglib opf case2869 pegase api 2869 4582 2.9296e+06 1.00 13 8\npglib opf case3012wp k api 3012 3572 7.2887e+05 0.00 4 2\npglib opf case3022 goc api 3022 4135 6.5189e+05 9.82 9 4\npglib opf case3120sp k api 3120 3693 9.3692e+05 23.96 12 4\npglib opf case3375wp k api 3374 4161 5.8478e+06 – 11 352\npglib opf case3970 goc api 3970 6641 1.4557e+06 34.58 37 9\npglib opf case4020 goc api 4020 6988 1.2979e+06 17.58 39 9\npglib opf case4601 goc api 4601 7199 7.9253e+05 20.51 29 10\npglib opf case4619 goc api 4619 8150 1.0299e+06 8.30 28 14\npglib opf case4661 sdet api 4661 5997 2.6953e+06 2.64 16 105\npglib opf case4837 goc api 4837 7765 1.1578e+06 8.15 36 12\npglib opf case4917 goc api 4917 6726 1.5479e+06 8.54 16 8\npglib opf case6468 rte api 6468 9000 2.3135e+06 0.82 81 178\npglib opf case6470 rte api 6470 9005 2.6065e+06 1.20 52 80\npglib opf case6495 rte api 6495 9019 2.9750e+06 2.04 54 22\npglib opf case6515 rte api 6515 9037 3.0617e+06 1.89 59 21\npglib opf case9241 pegase api 9241 16049 7.0112e+06 2.67 64 806\npglib opf case9591 goc api 9591 15915 1.4259e+06 13.84 145 26\npglib opf case10000 goc api 10000 13193 2.3728e+06 7.65 52 27\npglib opf case10480 goc api 10480 18559 2.7627e+06 4.78 77 35\npglib opf case13659 pegase api 13659 20467 9.2842e+06 1.85 55 76\npglib opf case19402 goc api 19402 34704 2.3987e+06 4.75 195 100\npglib opf case24464 goc api 24464 37816 2.4723e+06 4.00 137 151\npglib opf case30000 goc api 30000 35393 1.3530e+06 24.79 439 119",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "13 TABLE VIII",
+      "level": 1,
+      "text": "AC-OPF B OUNDS ON PGL IB-OPF SAD N ETWORKS .\n$/h Gap (%) Runtime (sec.)\nTest Case |N | |E| AC SOC AC SOC\nSmall Angle Difference Conditions (SAD)\npglib opf case3 lmbd sad 3 3 5.9593e+03 3.75 <1 <1\npglib opf case5 pjm sad 5 6 2.6109e+04 3.62 <1 <1\npglib opf case14 ieee sad 14 20 2.7768e+03 21.53 <1 <1\npglib opf case24 ieee rts sad 24 38 7.6918e+04 9.55 <1 <1\npglib opf case30 as sad 30 41 8.9735e+02 7.88 <1 <1\npglib opf case30 ieee sad 30 41 8.2085e+03 9.70 <1 <1\npglib opf case39 epri sad 39 46 1.4834e+05 0.67 <1 <1\npglib opf case57 ieee sad 57 80 3.8663e+04 0.71 <1 <1\npglib opf case73 ieee rts sad 73 120 2.2760e+05 6.73 <1 <1\npglib opf case89 pegase sad 89 210 1.0729e+05 0.73 <1 <1\npglib opf case118 ieee sad 118 186 1.0516e+05 8.17 <1 <1\npglib opf case162 ieee dtc sad 162 284 1.0869e+05 6.48 <1 <1\npglib opf case179 goc sad 179 263 7.6253e+05 1.12 <1 <1\npglib opf case200 activ sad 200 245 2.7558e+04 0.01 <1 <1\npglib opf case240 pserc sad 240 448 3.4054e+06 4.93 4 2\npglib opf case300 ieee sad 300 411 5.6570e+05 2.61 <1 <1\npglib opf case500 goc sad 500 733 4.8740e+05 6.67 <1 <1\npglib opf case588 sdet sad 588 686 3.2936e+05 6.67 <1 <1\npglib opf case793 goc sad 793 913 2.8580e+05 7.97 2 <1\npglib opf case1354 pegase sad 1354 1991 1.2588e+06 1.57 4 3\npglib opf case1888 rte sad 1888 2531 1.4139e+06 2.82 9 19\npglib opf case1951 rte sad 1951 2596 2.0924e+06 0.46 17 5\npglib opf case2000 goc sad 2000 3639 9.9288e+05 1.52 7 4\npglib opf case2312 goc sad 2312 3013 4.6235e+05 3.93 7 4\npglib opf case2383wp k sad 2383 2896 1.9112e+06 2.86 8 5\npglib opf case2736sp k sad 2736 3504 1.3266e+06 1.58 7 5\npglib opf case2737sop k sad 2737 3506 7.9095e+05 1.88 7 4\npglib opf case2742 goc sad 2742 4673 2.7571e+05 1.36 28 5\npglib opf case2746wop k sad 2746 3514 1.2337e+06 2.32 7 4\npglib opf case2746wp k sad 2746 3514 1.6669e+06 2.19 7 5\npglib opf case2848 rte sad 2848 3776 1.2890e+06 0.25 16 6\npglib opf case2853 sdet sad 2853 3921 2.0692e+06 1.70 9 6\npglib opf case2868 rte sad 2868 3808 2.0213e+06 0.59 16 6\npglib opf case2869 pegase sad 2869 4582 2.4687e+06 1.12 11 7\npglib opf case3012wp k sad 3012 3572 2.6195e+06 1.56 10 14\npglib opf case3022 goc sad 3022 4135 6.0143e+05 2.77 9 5\npglib opf case3120sp k sad 3120 3693 2.1749e+06 1.52 11 6\npglib opf case3375wp k sad 3374 4161 7.4382e+06 0.55 11 7\npglib opf case3970 goc sad 3970 6641 9.6555e+05 0.76 20 12\npglib opf case4020 goc sad 4020 6988 8.8969e+05 8.66 28 13\npglib opf case4601 goc sad 4601 7199 8.7818e+05 6.37 29 14\npglib opf case4619 goc sad 4619 8150 4.8435e+05 2.00 22 15\npglib opf case4661 sdet sad 4661 5997 2.2610e+06 1.96 15 12\npglib opf case4837 goc sad 4837 7765 8.7712e+05 0.85 22 11\npglib opf case4917 goc sad 4917 6726 1.3890e+06 2.52 17 9\npglib opf case6468 rte sad 6468 9000 2.0697e+06 1.12 63 30\npglib opf case6470 rte sad 6470 9005 2.2416e+06 1.91 35 22\npglib opf case6495 rte sad 6495 9019 3.0678e+06 15.11 69 23\npglib opf case6515 rte sad 6515 9037 2.8698e+06 7.85 57 21\npglib opf case9241 pegase sad 9241 16049 6.3185e+06 2.47 52 36\npglib opf case9591 goc sad 9591 15915 1.1674e+06 9.56 83 42\npglib opf case10000 goc sad 10000 13193 1.4902e+06 6.77 44 26\npglib opf case10480 goc sad 10480 18559 2.3147e+06 1.23 65 41\npglib opf case13659 pegase sad 13659 20467 9.0422e+06 1.68 62 43\npglib opf case19402 goc sad 19402 34704 1.9838e+06 1.49 162 108\npglib opf case24464 goc sad 24464 37816 2.6540e+06 1.84 145 101\npglib opf case30000 goc sad 30000 35393 1.2866e+06 11.84 336 120\n14\ncommercial power ﬂow tools now support the following, more\ngeneral model, of line charging:\nSlij =\n(\nYl +Y c\nlij\n)∗|Vi|2\n|Tl|2−Y∗\nl\nViV∗\nj\nTl\n∀(l,i,j )∈E (7a)\nSlji =\n(\nYl +Y c\nlji\n)∗\n|Vj|2−Y∗\nl\nV∗\ni Vj\nT∗\nl\n∀(l,i,j )∈E (7b)\nwhere the values Y c\nlij and Y c\nlji represent the line charging\nadmittance on the from and to sides of the branch respectively.\nThis model generalizes the branch model from Figure 1 by in-\ncorporating line charge conductance effects and asymmetrical\ncharging effects.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "Generator Capability Curves",
+      "level": 1,
+      "text": "Model 1 represents generators with box constraints that\nindependently limit active and reactive power outputs. A more\ndetailed model recognizes that the current ﬂows inside of\na generator are jointly dependent on both the active and\nreactive power outputs. The generator must be operated to\nlimit the heating caused by these internal current ﬂows. Thus,\nthe more detailed “capability curve” generator model (also\nknown as a “D-curve” model) forms generator limits that\ncouple the active and reactive power outputs [65]. Estimates of\nthe additional data needed for the generator capability curve\nmodel can be extracted from the box constraints on active\nand reactive power injections provided in typical datasets [66],\n[67]. Additionally, the M ATPOWER data format is capable of\nrepresenting a piecewise-linear approximation of the generator\ncapability curve model [16].\nD. V oltage & Reactive Power Control\nIn practice, reactive power management devices, such as bus\nshunts and transformer taps, play a critical role in managing\nthe voltage proﬁle of an AC power network and improving\npower quality in congested parts of a network [68]. A notable\nlimitation of the OPF formulation presented in Model 1 is\nthe limited amount of reactive power control devices, which\nmay bias the feasible solutions to a speciﬁc voltage proﬁle\nprovided with the network data. At this time, extensions of\nthe Model 1 that consider reactive power controls are an\nactive area of research with promising initial results [45],\n[69]–[71]. However, a variety of subtle challenges arise when\nincorporating such devices into an OPF problem formulation\n[63] and continued research is required to arrive at a broadly\naccepted generalization of Model 1 that incorporates more\nreactive control devices.\nE. Other Problem F ormulations\nThe OPF formulation in Model 1 considers a single pe-\nriod of steady-state power system behavior. Power system\nengineers solve a wide variety of other optimization and\ncontrol problems relevant to the design and operation of\npower systems [72]–[74]. Formulating many of these problems\nrequires augmenting the data available in PGL IB-OPF with\nother information. Table IX summarizes several other classes\nof optimization and control problems, indicates examples of\ninformation that may be required for these problems beyond\nthe data provided in PGL IB-OPF, and provides selected\nreferences for each class of problems. While currently beyond\nthe scope of this effort, extension of PGL IB to incorporate\nthe data necessary for test cases that are applicable to these\nand other classes of problems is an important topic for future\nwork.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "shows the circuit model used to represent each"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

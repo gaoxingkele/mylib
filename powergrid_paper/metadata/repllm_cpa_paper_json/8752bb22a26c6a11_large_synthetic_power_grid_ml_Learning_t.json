@@ -1,0 +1,169 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/large_synthetic_power_grid_ml/large_synthetic_power_grid_ml__Learning_to_Solve_AC_Optimal_Power_Flow__89f4009a1b.pdf",
+  "n_pages": 7,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Generative adversarial networks (GANs) have become\nincreasingly popular in recent years, in particular due to\ntheir ability to solve complex image-based problems, such\nas image generation (Bao et al., 2017), image-to-image\ntranslation (Liu et al., 2017a), and face recognition (Tran\net al., 2017). More speciﬁcally, GANs can be used to gen-\nerate realistic faces in high-resolution (Wang et al., 2022;\nKammoun et al., 2022; Wu et al., 2017). One application of\nthat is kinship face generation.\nProspective parents are typically highly interested in\nwhat their children will look like, and historians dream\nof automatically ﬁguring out family trees from a limited\nnumber of portraits. Kinship face generation can greatly\nhelp with this. In this paper, we speciﬁcally focus on the\ngeneration of faces of children using the images of their\nbiological parents as input.\nSome earlier papers rely on a one-to-one kinship relation\n(Dahan & Keller, 2018), but as better datasets are being pub-\nlished, more recent papers have allowed the use of multiple\nrelatives as input (Zhang et al., 2020; Ghatas & Hemayed,\n2020; Gao et al., 2021; Cui et al., 2021; Lin et al., 2021a).\nA major limitation of current works, however, is the\nlimited dataset size. Obtaining father-mother-child triplets\nis difﬁcult, and only few such datasets are available (TSK;\nRobinson et al., 2016). In addition, some datasets are highly\n*Equal contribution 1Computer Science, ETH Zurich.\nDeep Learning Project @ ETH Zurich, 2022, code is available at\nhttps://github.com/IvanSunjg/ETH_DL_2022\npre-processed and do not allow generalization of existing\nalgorithms to less homogeneous datasets.\nTo combat this, we propose two additional pre-\nprocessing steps. We ﬁrst augment the images with various\nexisting data augmentation techniques, in order to improve\nrobustness of our model. In addition, we segment the im-\nages of the parents to allow the adversarial network to focus\non the main features of the face.\nThe main contributions of this work are as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 We propose a model that improves robustness of child",
+      "level": 1,
+      "text": "face generation by applying simple augmentations to\nthe parent images.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Using segmentation, our model additionally allows",
+      "level": 1,
+      "text": "targeted highlighting of facial features for optimal child\nfeature prediction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 We employ transfer learning in order to facilitate down-",
+      "level": 1,
+      "text": "stream latent vector extraction of both parents and im-\nage reconstruction of the child.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "Child Face Generation. Relatively few papers have been\nwritten on the topic of child face generation. Still, promising\nresults were achieved using CDFS-GAN, GANKin, DNA-\nnet, ChildGAN, and StyleDNA (Zhang et al., 2020; Ghatas\n& Hemayed, 2020; Gao et al., 2021; Cui et al., 2021; Lin\net al., 2021a).\nCDFS-GAN is one of the ﬁrst child face generators that\nuses both parents as input (Zhang et al., 2020). By extract-\ning main facial features, such as nose, mouth, and eyes\nseparately, CDFS-GAN models feature-dependent genetic\ninheritance.\nIn contrast, GANKin directly extracts the features of\nthe parents using FaceNET (Schroff et al., 2015) and uses a\nfour-layer fully connected network to determine the child\nfeature vector (Ghatas & Hemayed, 2020). The child face is\ngenerated from this feature vector using PGGAN (Karras\net al., 2018).\nDNA-net maps features to genes and back to incorporate\ngenetic knowledge in the child face prediction (Gao et al.,\n2021). The parent images are mapped to the feature space\nby training a conditional adversarial auto-encoder (CAAE)\nas proposed in (Zhang et al., 2017). Features are selected at\nrandom, in order to model the real world more accurately.\nThe ﬁnal child face is generated using the decoder from the\narXiv:2301.08849v1  [cs.CV]  21 Jan 2023\nCADA-GAN: Context-Aware GAN with Data Augmentation\nFigure 1. Pipeline of context-aware GAN with data augmentation.\nFigure 2. Generated Child Images (Baseline)\n Figure 3. Generated Child Images (Mixup)\nFigure 4. Generated Child Images (Segmentation)\nCAAE.\nSimilar to DNA-net, ChildGAN (Cui et al., 2021) also\nrelies on genetic knowledge to improve child face genera-\ntion, but combines it with a semantic learning framework.\nFirst, the parent images are projected into the latent space us-\ning Image2StyleGAN (Abdal et al., 2019). After obtaining\nand ﬁnetuning the child vector with a macro- and microfu-\nsion step, the ﬁnal child image is generated using StyleGAN\n(Karras et al., 2019).\n(Lin et al., 2021a) instead use StyleGAN2 for latent\nspace embedding. They compare an improved DNA-net\nbased model, StyleDNA, with both a k-nearest neighbors\nand an eigenvector projection approach.\nMost papers perform feature selection in the latent space\nto account for the imbalance between the limited dataset\nsize and the number of learnable parameters. In this paper,\nwe will therefore use StyleGAN2-Ada (Karras et al., 2020)\nfor image-to-latent and latent-to-image space projection.\nImage Augmentation. Data augmentation encompasses a\nrange of techniques that increase the size of the dataset and\nimprove robustness of training (Shorten & Khoshgoftaar,\n2019). Augmentation can be performed by deep neural\nnetworks or more fundamental image manipulation meth-\nods like CutOut (DeVries & Taylor, 2017) and MixUp\n(Hendrycks et al., 2020). One exciting strategy for augmen-\ntation is generative modelling, such as in (Radford et al.,\n2016), (Karras et al., 2018), and (Mirza & Osindero, 2014).\nGANs are a method for extracting new information from a\ndataset, according to (Bowles et al., 2018). In Deep Learn-\ning research, the idea of meta-learning mainly relates to the\nCADA-GAN: Context-Aware GAN with Data Augmentation\nidea of neural network optimization via neural networks\n(Shorten & Khoshgoftaar, 2019), which has been utilised in\nthe Data Augmentation ﬁeld as well (Perez & Wang, 2017;\nLemley et al., 2017; Cubuk et al., 2019). Though its cre-\native uses are arguably where neural style transfer is best\nrecognized, it is also a fantastic tool for data augmentation\n(Johnson et al., 2016; Gatys et al., 2015). The techniques\nwe are utilising are MixUp (Zhang et al., 2018) and AugMix\n(Hendrycks et al., 2020).\nImage Segmentation. Segmentation of facial features has\nmany applications in the ﬁeld of computer vision, such as\nlandmark detection, head pose estimation, recognition of\nfacial expressions, and face recognition (Khan et al., 2020).\nConditional random ﬁelds (CRFs) are commonly used as\nthe basis for human face segmentation, either implemented\nas is (Warrell & Prince, 2009; Khan et al., 2017) or in the\nform of a convolutional network (Liu et al., 2015; Zhou\net al., 2017). Convolutional networks can also be combined\nwith recurrent networks, such as in (Liu et al., 2017b) and\n(Zhou, 2017). Many other algorithms can be used for facial\nfeature extraction, like random forests (Khan et al., 2015)\nand support vector machines (SVMs) (Khan et al., 2018).\nStill, most of the available segmentation models require ex-\ntensive and error-prone preprocessing steps, in the form of\neither facial landmark detection, image cropping, or image\nalignment. In this paper, we therefore rely on the pretrained\nmodel of (Lin et al., 2021b), who propose a scale, rota-\ntion, and transformation equivariant model with competitive\naccuracy.\n3. Proposed method: CADA-GAN\nOur proposed model consists of three main steps: 1.\ndata augmentation, 2. segmentation, and 3. face generation.\nThe full pipeline can be found in Figure 1.\nImage Augmentation. In the ﬁrst step, we augment the im-\nages of the parents using either MixUp or AugMix. MixUp\n(Zhang et al., 2018) generates a weighted combination of im-\nage pairs from the training data, while AugMix (Hendrycks\net al., 2020) mixes augmented images through linear in-\nterpolation. All images are augmented with a probability\nP.\nFor MixUp, we follow the setup from (Zhang et al.,\n2018):\n{ img′\nf =α∗ imgf + (1−α)∗ imgm\nimg′\nm =β∗ imgm + (1−β)∗ imgf\n(1)\nwith imgf and imgm denoting the original images of the\nfather and mother respectively. α and β are drawn inde-\npendently and at random from the interval [0,1]. Images\nof the children are not altered in any way. The goal of\nMixUp is to approximate the feature space by combining\nas many instances of the input feature vector as possible,\nthus strengthening the generality of the generation. For an\nexample, see Figure 5.\nFigure 5. Comparison of original images of a father and mother\n(left) with images augmented with MixUp (right).\nAugMix chooses an appropriate image manipulation\nmethod at random and applies it to the pictures of the parents.\nThe available techniques are shearing, translation, small-\ndegree rotation, and horizontal ﬂipping.\nImg =F (Img) (2)\nwhere F∈{ shear,translate,rotate,flip }.\nTranslation and shearing can be applied with respect to\neither the x-axis or the y-axis. We omit the more drastic\nmodiﬁcations from the original literature (Hendrycks et al.,\n2020), as we intend to retain most of the facial features.\nLike in MixUp, we only apply transformations to the parent\nimages.\nImage Segmentation. In the second preprocessing step, we\napply segmentation to facilitate the downstream extraction\nof the main facial features of the parents. For this, we use the\npretrained model from (Lin et al., 2021b), which segments\nimages of faces into 11 classes: background, hair, nose, left\neye, right eye, left eyebrow, right eyebrow, upper lip, lower\nlip, inner mouth, and skin. (Figure ?? in Appendix.)\nChild Face Generation After preprocessing, we convert\nthe segmented faces of the parents into latent vectors gmi\nand gfi using (Karras et al., 2020), where g() performs\naugmentation and segmentation, and embeds vectors to la-\ntent space. ( mi, fi) is a pair of parent images sampled\nfrom datasetM⊙F . We ﬁrst ﬁnetune a pretrained model\ntrained on the FFHQ dataset with images from the TSKin-\nFace Dataset. Considering the slow convergence of tuning\npretrained parameters on a new model, we apply transfer\nlearning with a training session of 15 ticks. The overall\ntraining loss for generating a child image in the latent space\nis:\nrloss =\n∑\n(mi ,fi ,ci )\n∈{M,F,C }\nL(G(aggr(gmi, gfi )), ci), (3)\n, where G is the generator from the GAN and L is the\nmean squared error (MSE) loss. Similar to GANkin (Ghatas\n& Hemayed, 2020), we then use a MLP with two fully\nconnected layers (see Table 1) as our aggregation function\naggr to predict the latent features of the child. The MSE\nloss is calculated between the",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4 Evaluation",
+      "level": 1,
+      "text": "Transfer learning 15 ticks are performed according to our\ntransfer learning model. At the very beginning, generated\nparents and child images are unlike to the original individual\ninput since the pretrained model has learned nothing from\nLayer Input Size Output Size\nFully Connected (None, 2x16x512) (None, 512)\nReLU\nDropout (p=0.25)\nFully Connected (None, 512) (None, 1x16x512)\nTable 1. Layers of MLP used for feature extraction.\nthe dataset. After 15 ticks, the models are retrained well so\nwe are convinced to take it as the new pretrained model to\nbe further ﬁne-tuned quickly ??.\nExperiments For evaluation, we compare four different\nscenarios. Our baseline consists of the original GAN imple-\nmentation with a four-layer network used for child feature\nprediction. In the ﬁrst and second experiment, we apply im-\nage augmentation to the parent images in order to overcome\nthe limited dataset size. We use either MixUp or AugMix\nfor this. Both experiments did not show improvement when\ncompared to the baseline, see Table 2. In the third exper-\niment, we test the effects of segmentation and parse the\nparent faces with 11 labels. After feature prediction and im-\nage generation, the resulting child segmentation is converted\nback into a ﬁnal realistic image with the pix2pix GAN. The\nresults were signiﬁcantly better than the baseline, as can be\nseen in Table 2. The ﬁnal experiment on the entire pipeline\nshowed an averaged out result between segmentation and\naugmentation. Still, we believe the added robustness is\nworth the loss in accuracy.\nEvaluation Metric Many papers measure the cosine simi-\nlarity between the predicted latent vector of the child and\nthe latent vectors of the parents, and compare it with the\ncosine similarity between the real child and parental latent\nvectors (Ghatas & Hemayed, 2020; Cui et al., 2021; Gao\net al., 2021). The cosine similarity equation is given by:\ncossim = 1− u· v\n∥u∥∥v∥ (6)\n, as per the ofﬁcial SciPy documentation, withu andv two\nvectors or ﬂattened matrices. If they are similar to each other\nelement-wise, then the subtracted term in equation 6 is equal\nto one, meaning that the lefthand term cossim is equal to\nzero. Recent papers consider it a success if the predicted\nlatent vector is more similar to the parents than the original\none. However, since some feature selection mechanisms\nautomatically predict latent features similar to those of the\nparents, this metric does not account for the true genetic\nvariety in the population. Therefore, we opt to evaluate\nthe cosine similarity between the predicted and real child\nimage. Since the main goal of child face generation isn’t\nto generate as many different potential siblings as possible,\nMethods MSE (lat) MSE (images)\nStyleGAN2 2.45 3372.53\nStyleGAN2 + Mixup 2.46 3485.57\nStyleGAN2 + AugMix 2.47 3481.18\nStyleGAN2 + Segmentation 2.06 3343.21\nCADAGAN (Ours) 2.17 5518.13\nTable 2. Validation MSE loss for both latent vectors and original\nimages\n. During the training, we do consider the similarity between latent\nvectors. Therefore the MSE loss would become smaller.\nCADA-GAN: Context-Aware GAN with Data Augmentation\nwe ﬁnd that our metric is less subjective and less biased\ntowards the feature selection method. The results can be\nseen in Table 3.\nMethods cosine similarity\nStyleGAN2 2\nStyleGAN2 + Mixup 2\nStyleGAN2 + AugMix 2\nCADAGAN (Ours) 0.15\nTable 3. Cosine Similarity between generated images and original\nimages. The lower is better. The maximum value is 2.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "5 Conclusion and Future work",
+      "level": 1,
+      "text": "We proposed CADA-GAN, a novel GAN model to deal\nwith child face synthesis considering face segmentation and\naugmentation from original data. We tried different aug-\nmentation methods to expand our datasets, which brought\ninvariance effects when applied to convolutional networks\nand strengthened the model. Applying segmentations low-\nered the general reconstruction loss in comparison to the\nbaseline model. In addition, latent vector extractions for\nStyleGAN2 with a transfer learning model greatly speeds\nup training.\nThere could be two limitations according to our obser-\nvations on CADA-GAN. We only tested two picture alter-\nation techniques for the augmentation part. We might try\nsome other methods based on equivariant or invariant op-\nerations on images, such as SmartAugment (Lemley et al.,\n2017), which can be integrated into the pipeline. In ad-\ndition, instead of highlighting facial features with a color\nsegmentation, blurring of the non-important features, such\nas background, hair, and skin, could potentially further im-\nprove feature extraction, while simultaneously reducing the\ncolor artifacts produced by the pix2pix GAN.\nAlthough our model did not perform adequately, we still\nbelieve in the potential added robustness and awareness of\nour proposed architecture.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Pipeline of context-aware GAN with data augmentation."
+    },
+    {
+      "id": "f2",
+      "caption": "Generated Child Images (Baseline)"
+    },
+    {
+      "id": "f3",
+      "caption": "Generated Child Images (Mixup)"
+    },
+    {
+      "id": "f4",
+      "caption": "Generated Child Images (Segmentation)"
+    },
+    {
+      "id": "f5",
+      "caption": "Comparison of original images of a father and mother"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Layers of MLP used for feature extraction."
+    },
+    {
+      "id": "t2",
+      "caption": "Validation MSE loss for both latent vectors and original"
+    },
+    {
+      "id": "t3",
+      "caption": "Cosine Similarity between generated images and original"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "equation 6"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

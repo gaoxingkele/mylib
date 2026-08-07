@@ -1,0 +1,415 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__12__economic_dispatch_in_electrical_systems_with_hy__5ceb7551a4.pdf",
+  "n_pages": 25,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Electricity demand continues to increase, while fossil fuel reserves are declining.\nWorsening environmental factors and rising generation costs further complicate concerns\nfor the global energy sector [ 1]. These factors pose serious questions that this sector\nhas to deal with. The integration of wind and solar power into Electric Power Systems\n(EPSs) helps solve some of these problems by using non-conventional sources of energy,\nthus transforming EPSs. EPSs are additionally aided by abundant resources that can\nbe harvested and sustain the economy [ 2]. Unfortunately, this non-dispatchable and\nintermittent characteristic of these resources leads to massive operational uncertainty\ndue to uncontrollable factors like geographical conditions, wind speed, solar irradiance,\nand temperature [3].\nIn this case, ensuring system dependability while considering economic viability be-\ncomes an intricate endeavor demanding high accuracy in prognosticating and optimization\nmethodologies. Renewable generation systems must be allocated in areas of high energy\nEnergies 2025, 18, 3414 https://doi.org/10.3390/en18133414\nEnergies 2025, 18, 3414 2 of 25\npotential and favorable meteorological conditions. Once operational, these systems can\nrealize immense economic advantages through the reduction of fuel utilization, lowering\ngreenhouse gas emissions, and elevating the utilization of clean technologies [4]. However,\noptimal operational system conditions need detailed preliminary planning considering\nvarious parameters and constraints, such as limits of generation, capacity of energy storage\n(when applicable), ramp rates, availability of fuel, balance between power demand and\nsupply, and the stochastic nature of renewable resources [5,6].\nThis work aims to address the economic dispatch (ED) problem corresponding to a\nhybrid generation system (HGS) hydro, thermal, photovoltaic, and wind power plants.\nThe ED problem is defined as a nonlinear optimization problem with constraints that\nnecessitate the total generation cost to be minimized while there is an equality (power\nbalance) and two inequality (fuel consumption and water level in the reservoir system)\nlimitations [7]. To tackle this difficult challenge, heuristic and metaheuristic approaches\nhave been largely used owing to their effectiveness in addressing problems with nonlinear,\nnon-convex, and multimodal functions.\nThe literature [8] discusses a hybrid metaheuristic that incorporates features of Particle\nSwarm Optimization (PSO) and the Gravitational Search Algorithm (GSA). In this frame-\nwork, the PSO component enhances convergence through social and cognitive learning; par-\nticles move towards optimal positions (both individual and global) that are updated. In the\nGSA component, gravity is modeled in terms of interactions among agents. Particles with\nbetter fitness have greater mass and thus have higher gravitational attraction. Both of these\nmechanisms, PSO and GSA, are integrated into one single-hybrid framework, PSOGSA.\nThrough gravitational search, exploration is enhanced, and through velocity–update mech-\nanisms of PSO, exploitation is enhanced. The combination of both systems improves\nconvergence stability and avoids premature convergence to local optima [9]. The particle’s\nvelocities are found by updating their inertia, acceleration, and applying gravitational\nforces with social and cognitive components. This makes the method highly applicable for\nsolving complex, high-dimensional, and constrained optimization problems.\nBesides metaheuristics, mathematical optimization approaches, such as linear pro-\ngramming (LP), mixed-integer linear programming (MILP), and convex optimization,\nhave been widely used for dispatch problems. For example, the two-stage stochastic\ndynamic model in [ 10,11] addresses wind uncertainty using MILP , while [12] proposes\nconvex steady-state bi-directional converter models to enable efficient dispatch in hybrid\nAC/DC microgrids. These methods offer guarantees on solution optimality but may suffer\nfrom scalability limitations under non-convex or large-scale configurations. In contrast,\nmetaheuristics like Differential Evolution provide more flexible alternatives, particularly\nsuitable for nonlinear, multimodal problems as observed in hybrid generation dispatch.\nThis study focuses on such approaches, comparing their performance under uncertainty and\noperational constraints.\nPlanning requires accurately predicting the availability of all resources, including\nrenewable energy resources. Forecasting models must account for the abrupt changes and\nthe unpredictability that comes with wind and solar energy. In a good number of areas,\ntraditional statistical models have a history of being problematic, requiring an extensive\namount of data, which is either non-existent or unreliable. To deal with this problem,\nref. [13] proposes the Grey Prediction Model (GPM), which relies on Grey System Theory\nand is ideal for scenarios where data is sparse or incomplete. The model employs an\nAccumulated Generating Operation (AGO) to smooth the original sequence and forms a\nfirst-order linear differential equation to model the trend of the series. Its computation\nefficiency allows for accurate short-term forecasting during times of uncertainty. Even\nthough the GPM is simple, it still portrays the system’s essential dynamics, ultimately\nEnergies 2025, 18, 3414 3 of 25\nproviding accurate results during cases where more sophisticated models are impossible\nto implement.\nTo capture the uncertainties around the renewable energy sources (RESs), probabilistic\nmethods are required, and the Monte Carlo simulation has been used for that. In [ 14],\nthis approach is utilized to generate thousands of scenarios by simulating wind and solar\ndata using its enumeration statistical attributes. Observed data histograms are fitted to\nappropriate probability density functions (Weibull for wind speed and Gaussian or Beta for\nsolar irradiance), and random sampling is done over N iterations. Each iteration signifies\nan actual realization of conceivable future resource behavior. The result is a probabilistic\nforecast that outlines the diversity and probability of various scenarios within a defined\nrange, thus facilitating robust planning amidst uncertainty.\nUpon completion of forecasting, the economic dispatch problem is solved using\niterative algorithms that steer through the feasible solution space, optimizing a cost function\nsubject to system constraints. Each solution defines a distinct dispatch strategy, but the\noptimization algorithm is heuristic in nature aimed at finding the best compromise among\ncost, system reliability, and environmental impact [15].\nDetermining the best possible dispatch in power operations or planning is crucial\nbecause it supports cost effectiveness, environmental preservation, operational efficiency,\nand system stability. As new renewable energy sources are integrated, the complexity of\nthe dispatch problem increases, necessitating a combination of forecasting, optimization,\nand probabilistic modeling. Such an approach minimizes operational expenses and emis-\nsion levels, supporting modern goals of power systems that prioritize reliability and low\ncarbon output [16].\nThe economic dispatch problem is solved using heuristic and metaheuristic optimiza-\ntion techniques, with a particular focus on the Differential Evolution (DE) algorithm. This\ntechnique can be mixed with other algorithms in order to optimize processes. In [ 17], a\nhybrid DE with a Cuckoo Search algorithm is presented, which is an example of how easily\nDE can be combined with other techniques and improve the quality of process optimization\nfor economic dispatch problems. For this article the performance of DE is compared with\nParticle Swarm Optimization (PSO), Cultural Algorithm (CA), and Grey Wolf Optimizer\n(GWO) under two hydropower availability scenarios. Results show that DE achieved the\nlowest operating cost in both scenarios, with a 12.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Theoretical Framework",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Economic Dispatch",
+      "level": 2,
+      "text": "Economic dispatch establishes the operating conditions for the generation units to\nmeet demand at the lowest possible cost, considering losses and plant-specific constraints.\nDepending on the planning horizon, economic dispatch can be classified into short-term,\nmedium-term, and long-term [18].\n• Short-term: Evaluated over a day or week, with sub-periods of half an hour to\nseveral hours.\n• Medium-term: Monthly dispatch planning, often accounting for maintenance schedules.\n• Long-term: Annual or multi-year planning, considering probabilistic events such as\nload growth and resource limitations [19].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Economic Dispatch in Hybrid Generation Systems (EDHGS)",
+      "level": 2,
+      "text": "The objective of EDHGS is to cover the required demand at the lowest possible cost,\nprioritizing renewable energy generation due to its negligible operational costs [20]. In this\nstudy, scenarios are simulated where hydroelectric production is restricted to observe its\nimpact on economic value, as thermoelectric plants, with their higher operational costs,\nwould compensate for lower hydroelectric production, as is shown in [ 21]. For this case\nstudy, there are photovoltaic solar plants and wind farms that help cover the demand to\nminimize operating costs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2.1 Photovoltaic Solar Plants",
+      "level": 3,
+      "text": "Solar power generation is the production of electrical energy by taking advantage of\nsolar radiation to stimulate the electrons contained within a cell [ 22]. It is influenced by\nsolar radiation, temperature, and panel efficiency so, the photovoltaic power output Ppv is\ncalculated as\nPpv =\n\u0014\nPn · Isolar\n1000 · (1 − Ci · (Tcell − 25))\n\u0015\n· Np · Ns (1)\nwhere\n• Pn is the nominal power of the panel.\n• Isolar is the solar irradiance (W/m2).\n• Ci is the temperature coefficient.\n• Tcell is the cell temperature.\n• Np, Ns are the number of panels in parallel and in series, respectively.\nThe cell temperature Tcell is given by\nTcell = Tat + Isolar\n800 · (Nct − 20) (2)\nwhere:\n• Tat is the ambient temperature.\nEnergies 2025, 18, 3414 5 of 25\n• Nct is the nominal operating cell temperature.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.2 Wind Power Generation",
+      "level": 3,
+      "text": "Wind power generation consists of harnessing the kinetic energy of the wind to move\nblades and, in turn, turbines that convert it into electrical energy [ 21]. It is modeled\nbased on the wind speed at the turbine height, so the power output of a wind turbine is\ncalculated using\nPWind = Nt · 1\n2 (ρ · A · e · W3\ns ) (3)\nwhere\n• Nt Number of turbines\n• A is the swept area of the turbine blades.\n• e is the efficiency coefficient.\n• Ws is the wind speed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.3 Stochastic Variable Management",
+      "level": 2,
+      "text": "The operation of wind farms and photovoltaic power plants is intermittent due to\nthe stochastic nature of temperature, solar radiation, and wind speed; therefore, an esti-\nmate of resource availability must be made prior to planning the economic dispatch. For\nthis purpose, the Monte Carlo method simulates random variables based on probability\ndistribution functions to forecast resource availability over a 24 h horizon [19].\nProbability Distribution Functions (PDF)\nPDFs are functions used to describe the behavior of random variables in terms of\nprobability [2]. The prediction of resource availability can be done through multiple\nprobability-based methods, so their behavior must be modeled. For this purpose, probabil-\nity distribution functions were used. The modeling is applied to a historical database of the\nlocation under study. These data include hourly measurements of wind speed, temperature,\nand solar irradiance.\nSelecting the distribution function that best fits each variable is essential for achieving\nbetter prediction results. Figure 1 presents the histograms corresponding to wind speed,\ntemperature, and solar irradiance, along with their respective fitted functions.\nTo ensure realistic renewable generation modeling, these fitted distributions were used\nas input for Monte Carlo simulations. The stochastic values generated reflect the statistical\nbehavior observed in the historical data. The accuracy of the simulations improves as more\ndata are incorporated. Therefore, for this study, data from the month of August over a\nfive-year period (2018–2022) were used to ensure representativeness and consistency in the\nmodeled scenarios.\nThe best-fitting PDFs for this study are\n• Weibull distribution: Used for wind speed and solar radiation.\n• Gaussian Mixture Model (GMM): Used for temperature due to its bimodal behavior.\nThe green line on each histogram represents the PDF fitted to the behaviour of the\nstochastic variable.\nEnergies 2025, 18, 3414 6 of 25\n(a)\n (b)\n(c)\nFigure 1. Probability distribution functions fitted for stochastic variables: (a) Temperature histogram.\n(b) Solar irradiance histogram. (c) Wind speed histogram.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3 Mathematical Formulation of EDHGS",
+      "level": 1,
+      "text": "The objective function focuses on minimizing the fuel costs of thermoelectric plants,\nexpressed as a second-order polynomial:\nFimx (PTix ) = ai(PTix )2 + biPTix + ci (4)\nTo make it more realistic, the valve point effect is included, which occurs when the\ndevices that control the steam inlet are opened to generate more or less electrical energy [5].\nSo a sinusoidal component is added to the equation, and it becomes as follows [20]:\nFix (PTix ) = ai(PTix )2 + biPTix + ci + |ei sin( fi(PminTi − PTix ))| (5)\nwhere\n• Fix is the cost function for each thermoelectric unit over the planning horizon x.\n• PTix is the electric power produced.\n• ai, bi, ci are cost coefficients.\n• ei, fi are the valve-point effect coefficients.\n• PminTi is the minimum operating power of the thermal unit.\nThe economic dispatch model is subject to equality constraints for the balance of\npower and the operational limits of each generation unit, with additional constraints for\nthe management of the reservoir in hydroelectric plants [23].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1 Constrains",
+      "level": 2,
+      "text": "The economic dispatch model is subject to the following constraints:\nEnergies 2025, 18, 3414 7 of 25",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1.1 Power Balance",
+      "level": 3,
+      "text": "For this document, we work with a model with a single node as shown in Figure 2\nwhere generation is connected to demand so that losses in the transmission system\nare ignored.\n∑ PTix + ∑ PHjx + ∑ PEkx + ∑ PFlx = PDx (6)\nwhere PTix, PHjx , PEkx, and PSlx are the power obtained from the i, j, j, and l thermoelectric,\nhydroelectric, wind farms, and solar plants respectively during the planning horizon x.\nFigure 2. Single node model.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1.2 Generation Limits",
+      "level": 3,
+      "text": "Each generating unit must operate within its established limits.\nPmin ≤ Pgen ≤ Pmax (7)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1.3 Hydroelectric Power Generation Equation",
+      "level": 3,
+      "text": "The output power of each hydroelectric plant is governed by the following equation:\nPHjx = C1j(Vjx )2 + C2j(Qjx )2 + C3j(VjxQjx ) +C4j(Vjx ) +C5j(Qjx ) +C6j (8)\nwhere PHjx is the hydroelectric power generated, modeled as a quadratic function of\nreservoir volume Vjx and water discharge Qjx. C1. . .C6 are coefficients associated with\neach hydroelectric power plant; this also has other constraints.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.1.4 Water Discharge Limits",
+      "level": 3,
+      "text": "Qmin ≤ Qjx ≤ Qmax (9)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1.5 Reservoir Volume",
+      "level": 3,
+      "text": "Vmin ≤ Vjx ≤ Vmax (10)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.1.6 Reservoir Volume Balance Equation",
+      "level": 3,
+      "text": "Vjx = Vj(x−1) + In jx − Qjx − Sjx (11)\nVjx is the reservoir volume at time x, affected by inflow In jx, discharge Qjx and\nspillage Sjx.\nEnergies 2025, 18, 3414 8 of 25",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.1.7 Coupled Hydroelectric Reservoirs Equation",
+      "level": 3,
+      "text": "Vjx = Vj(x−1) + In jx − Qjx − Sjx + ∑(Qlx + Slx ) (12)\nFor coupled reservoirs, the volume depends on upstream discharges and spillages.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.2 Objective Function",
+      "level": 2,
+      "text": "The objective function used in this study is designed to minimize the total cost of\npower generation while satisfying all system constraints. It is formulated as follows:\nFobjetivo x =\nNt\n∑\ni=1\nFix (PTix ) +µ|VioPOB | + φ|VioRVB| (13)\nwhere µ and φ are penalty factors for do not respect the constraints of power balance and\nreservoir volume balance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4 Techniques Applied",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.1 To Solve the Economic Dispatch Problem",
+      "level": 2,
+      "text": "• Differential Evolution (DE): Differential Evolution is a population-based optimiza-\ntion algorithm that iteratively refines candidate solutions through the mechanisms\nof mutation, crossover, and selection [24]. In each generation, a new candidate solu-\ntion is produced by adding the weighted difference between two randomly chosen\nindividuals to a third individual [25]. The pseudocode for this method is presented in\nTable 1.\nVi = Xr1 + F · (Xr2 − Xr3) (14)\nThe crossover step creates a trial vector:\nUi, j =\n\n\n\nVi, j if rand j ≤ CR\nXi, j otherwise\n(15)\nFinally, the selection step retains the best solution:\nXi =\n\n\n\nUi if f (Ui) < f (Xi)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "otherwise",
+      "level": 1,
+      "text": "(16)\n• Particle Swarm Optimization (PSO): Based on social behavior models, this algorithm\nupdates the positions and velocities of particles to find the optimal solutions [ 26],\nusing the following equations:\n⃗vk+1\ni = w · ⃗vk\ni + α1 · ran()(⃗Pbesti − ⃗xk\ni ) +α2 · ran()( ⃗Gbesti − ⃗xk\ni ) (17)\n⃗xk+1\ni = ⃗xk\ni + ⃗vk+1\ni (18)\nwhere i represents the particle that is part of a group of other particles. The alpha\ncoefficients are fixed values of acceleration, ran() is a random value between 0 and\n1, and finally w corresponds to the inertia weight that serves to dynamize the search\nprocess, which is useful for rapid convergence and is calculated as\nw = wmax − wmax − wmin\nkmax\nk (19)\nThe pseudocode for this method is presented in Table 2.\nEnergies 2025, 18, 3414 9 of 25\nTable 1. Pseudocode for hydrothermal economic dispatch using the differential evolution (DE).\nPseudocode 1: DE for hydrothermal economic dispatch\nStep 1: Define DE’s parameters.\nStep 2: Randomly creation of the initial population with the variables P, V and Q.\nStep 3: Mutation of the population through the creation of a mutant vector using (11)\nStep 4: crossover where the vector V and X are combined to generate test vector U.\nStep 5: Evaluate the condition of population in the objective function expressed in (10).\nStep 6: Select and replace the vectors if the conditions in (13) are fulfilled\nStep 7: If VioPOB and VioRVB ≤ Tolerance\nFinish and send result.\nelse\nReturn to Step 3.\nend If\nTable 2. Pseudocode for hydrothermal economic dispatch using particle swarm optimization (PSO).\nPseudocode 2: PSO for hydrothermal economic dispatch\nStep 1: Define PSO’s parameters.\nStep 2: Randomly initialize the swarm with particles representing the variables P, V,\nand Q.\nStep 3: Evaluate the fitness of each particle using the objective function expressed in\n(10).\nStep 4: Update the personal best (Pbest) and global best (Gbest) positions.\nStep 5: Update the velocity and position of each particle using (14) and (15).\nStep 6: Apply boundary constraints to ensure feasibility.\nStep 7: If VioPOB and VioRVB ≤ Tolerance\nFinish and send result.\nelse\nReturn to Step 3.\nend If\n• Cultural Algorithm (CA): Inspired by social evolution, combining belief and pop-\nulation spaces to guide the optimization process. The CA maintains a belief space\nwith situational and normative knowledge, guiding the population’s evolution [27].\nKnowledge sources are updated through\nBelie fnew = Belie fold + ∆Belie f (20)\nThe pseudocode for this method is presented in Table 3.\nTable 3. Pseudocode for hydrothermal economic dispatch using the cultural algorithm (CA).\nPseudocode 2: CA for hydrothermal economic dispatch\nStep 1: Define CA’s parameters.\nStep 2: Randomly create the initial population with the variables P, V, and Q.\nStep 3: Evaluate the initial population using the objective function expressed in (10).\nStep 4: Update the belief space with the best individuals from the population.\nStep 5: Influence the population by modifying individuals based on the updated belief\nspace.\nStep 6: Select and replace individuals according to their fitness and constraints.\nStep 7: If VioPOB and VioRVB ≤ Tolerance\nFinish and send result.\nelse\nReturn to Step 3.\nend If\nEnergies 2025, 18, 3414 10 of 25\n• Grey Wolf Optimizer (GWO): Simulates the hunting behavior of grey wolves, with hi-\nerarchical solution structures to reduce search space and improve optimization [23,28].\nThe best three solutions guide the search, and the distance between the wolves and\nthe prey is calculated as\n⃗Dα = | ⃗C1 · ⃗Xα − ⃗X| (21)\n⃗Dβ = | ⃗C2 · ⃗Xβ − ⃗X| (22)\n⃗Dδ = | ⃗C3 · ⃗Xδ − ⃗X| (23)\nDuring the iterations, these vectors are updated based on\n⃗X1 = ⃗Xα − ⃗A1 · ⃗Dα (24)\n⃗X2 = ⃗Xβ − ⃗A2 · ⃗Dβ (25)\n⃗X3 = ⃗Xδ − ⃗A3 · ⃗Dδ (26)\nThe position of the omega wolves is updated through the following equation:\n⃗Xnew =\n⃗Xα + ⃗Xβ + ⃗Xδ\n3 (27)\nAlso the vectors A and C are calculated with\n⃗A = 2 ·⃗k · ⃗r1 −⃗k (28)\n⃗C = 2 · ⃗r2 (29)\nThe pseudocode for this method is presented in Table 4.\nTable 4. Pseudocode for hydrothermal economic dispatch using the grey wolf optimizer (GWO).\nPseudocode 4: GWO for hydrothermal economic dispatch\nStep 1: Define GWO’s parameters.\nStep 2: Random creation of the initial population of grey wolves associated with the\nvariables P, V, and Q.\nStep 3: Evaluate the condition of grey wolves in the objective function expressed in (10).\nStep 4: Identify the 3 best wolves: ⃗Xα, ⃗Xβ and ⃗Xδ.\nStep 5: Update the positions of ⃗X1, ⃗X2, and ⃗X3 with (24), (25), and (26).\nStep 6: Update the positions of the omega wolves (⃗Xnew) through (27).\nStep 7: Formation of the new wolf pack.\nStep 8: If VioPOB and VioRVB ≤ Tolerance\nFinish and send result.\nelse\nReturn to Step 3.\nend If\nThe parameters for each algorithm were selected based on literature guidelines and pre-\nliminary tuning to balance convergence quality and execution time. For PSO, the function\nwas used with an inertia range of [0.55, 1.1], which allows dynamic control of exploration\nand exploitation throughout iterations. The Grey Wolf Optimizer (GWO) employed 20\nsearch agents and a maximum of 2000 iterations, providing sufficient exploration in the\nsolution space. The Differential Evolution (DE) algorithm used a mutation factor F = 0.8\nand a crossover rate CR = 0.9, with a limit of 1000 iterations per run, which offered a\ngood trade-off between speed and robustness in preliminary tests. For the Cultural Algo-\nrithm (CA), a population size of 50 was used, with cultural parameters α = 0.3, β = 0.5,\nEnergies 2025, 18, 3414 11 of 25\nand a knowledge acceptance rate paccept = 0.35, following standard practices for adapting\nindividual learning to global trends.\nEach algorithm was executed for two independent repetitions to assess consistency,\nand key metrics, such as execution time, cost, and number of function evaluations, were\nrecorded in structured matrices for further analysis. The comparison between these meth-\nods is presented in the Table 5.\nTable 5. Comparison of the optimization techniques used in this study.\nAlgorithm Performance Pros Cons\nDE High exploration,\nmoderate speed\nStrong global\nsearch, simple to\nuse\nSensitive to F and\nCR settings\nPSO\nFast convergence,\nmedium\nexploration\nQuick results, easy\nsetup\nMay get stuck in\nlocal minima\nCA Adaptive search,\nmedium speed\nUses cultural\nlearning, flexible\nMore complex,\nslower execution\nGWO\nBalanced\nexploration and\nexploitation\nIntuitive, works\nwell in diverse\nproblems\nTuning-sensitive,\nslower than PSO",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t2",
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.2 Constraint Management",
+      "level": 2,
+      "text": "The optimization model includes two critical constraints: the power balance between\ntotal generation and demand, and the water balance in the hydroelectric reservoirs. These\nconstraints are enforced using a penalty-based mechanism within the objective function,\nwhich adds a penalty proportional to the magnitude of the violation. The structure is\nas follows:\n• Power balance penalty: applied when the difference between total generated power\n(thermal + hydro) and load exceeds 0.0001 [MW].\n• Water balance penalty: applied when the deviation in the water balance exceeds\n0.001 [hm³].\nThe penalty factors for each technique are presented in Table 6.\nTable 6. Penalty factors used for constraint violations in each optimization algorithm. pen1 corre-\nsponds to the power balance constraint, and pen2 corresponds to the water balance constraint in\nhydroelectric reservoirs.\nAlgorithm pen 1 (Power) pen 2 (Water)\nPSO 20 360\nGWO 30 360\nDE 20 360\nCA 20 360\nThese values were selected to ensure sufficient penalization strength to drive so-\nlutions toward feasibility, without excessively distorting the optimization landscape.\nA solution is accepted when both constraints are satisfied within their respective tol-\nerances. Otherwise, the penalized cost is increased, and the solution is rejected. This soft-\nconstraint method provides flexible yet effective convergence control and is well-suited for\nmetaheuristic algorithms.\nEnergies 2025, 18, 3414 12 of 25",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.3 Technique for Power Estimation Using Probability Density Functions",
+      "level": 2,
+      "text": "The Monte Carlo method is used to model uncertainty in renewable energy generation\nby generating random samples from probability distributions of solar radiation, wind\nspeed, and temperature [2]. The process involves\n• Defining probability distributions based on historical data.\n• Generating large random samples using these distributions.\n• Simulating power generation based on sampled environmental conditions.\n• Computing expected power availability over the planning horizon.\nMonte Carlo simulation improves the accuracy of forecasting renewable energy avail-\nability, which is crucial for effective economic dispatch in hybrid systems. To model the\nstochastic behavior of temperature, wind speed, and solar irradiance, various probability\ndistributions were fitted to the historical data using MATLAB’s statistical toolbox and\nthe command fitdist. The best-fitting distribution for each variable was selected based\non standard goodness-of-fit tests, including the Kolmogorov–Smirnov, as well as visual\ncomparison with empirical histograms. This process ensured that the simulated values\ngenerated through Monte Carlo accurately reflected the statistical characteristics of the\nobserved data.\nTable 7 presents the pseudocode used for the power estimation using the Monte\nCarlo method.\nAll simulations, including the implementation of the optimization algorithms and\nthe Monte Carlo modeling of renewable resources, were carried out in MATLAB R2020b.\nThe computations were performed on a laptop equipped with a 13th Gen Intel ® Core™\ni7-1365U CPU at 1.8 GHz and 16 GB of RAM. The performance metrics, such as execu-\ntion time and number of function evaluations, were recorded under these hardware and\nsoftware conditions.\nTable 7. Pseudocode for stochastic variable processing and power estimation using Monte\nCarlo simulation.\nPseudocode 5: Stochastic variable processing and power estimation\nStep 1: Read input data: wind, temperature and solar radiation .\nStep 2: Define the years and months to be analyzed.\nStep 3: Filter data for the selected months and years, as well as daylight hours with\nsolar radiation (6–17).\nStep 4: Fit the Weibull distribution to wind speed and solar radiation.\nStep 5: Compute Weibull parameters.\nStep 6: Perform Monte Carlo simulations for wind speed and solar radiation over a\n24 planning horizon.\nStep 7: Compute mean and 10–90% percentiles from the simulations.\nStep 8: Compute mean value and standard deviation for the normal components of\ntemperature data.\nStep 9: Perform Monte Carlo simulations for temperature using Gaussian\nmixture models.\nStep 10: Compute photovoltaic power generation using (1) and (2).\nStep 11: Compute wind power generation with (3).\nStep 12: Store results",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t7"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5 Test System",
+      "level": 1,
+      "text": "The hybrid generation system is based on the models presented in [21,29] , and com-\nprises four hydraulically interconnected hydroelectric power plants (Figure 3), five thermo-\nelectric power plants, six photovoltaic solar power plants, and a wind farm. The latter two\ndo not have any storage system, which means that the generated power must be dispatched\nEnergies 2025, 18, 3414 13 of 25\nimmediately. The optimization techniques must solve the hydrothermal economic dispatch\nproblem over a 24 h planning horizon to ensure efficient energy supply.\nFigure 3. Hydraulically coupled hydroelectric plants.\nThis generation system will operate under two scenarios: one with energy limitations\nfor the hydroelectric plants and another where the opposite occurs, allowing these plants\nto operate at a higher capacity. This system operates to cover the following 24 h demand\nscenario presented in Figure 4.\nFigure 4. A 24 h demand scenario.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "5.1 Renewable Energy for Both Scenarios",
+      "level": 2,
+      "text": "The prediction of renewable resources using the Monte Carlo technique is illustrated\nin the following graphs (Figure 5). Each curve was generated based on 1000 simulations per\nvariable, using values drawn from fitted probability distributions. The shaded area repre-\nsents the empirical variability in the data, corresponding to the 10th and 90th percentiles of\nthe simulated values, while the central blue line indicates the average prediction across all\nsimulations. These bounds provide an estimate of the range within which each resource is\nexpected to fluctuate throughout the day. For the purposes of this study, the upper bound\n(maximum limit) has been used as input to the dispatch model to evaluate the system’s\nresponse under maximum renewable generation conditions.\nThese forecasted values will be applied to both energy constraint scenarios in order to\nevaluate the economic impact of operating hydroelectric plants at reduced capacity. Based\non these values, the available electrical power over the 24 h planning horizon is calculated,\nand the results are presented in Figure 6.\nEnergies 2025, 18, 3414 14 of 25\n(a)\n (b)\n(c)\nFigure 5. Prediction of renewable resources. ( a) Temperature prediction. ( b) Solar irradiance\nprediction. (c) Wind speed prediction.\nFigure 6. Energy obtained from renewable resources.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "5.2 Characteristics of the Generation Plants",
+      "level": 2,
+      "text": "Tables 8 and 9 present the fuel cost coefficients for each thermoelectric plant, as well\nas the operational coefficients for each hydroelectric plant.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Probability distribution functions fitted for stochastic variables: (a) Temperature histogram."
+    },
+    {
+      "id": "f2",
+      "caption": "Single node model."
+    },
+    {
+      "id": "f3",
+      "caption": "Hydraulically coupled hydroelectric plants."
+    },
+    {
+      "id": "f4",
+      "caption": "A 24 h demand scenario."
+    },
+    {
+      "id": "f5",
+      "caption": "Prediction of renewable resources. ( a) Temperature prediction. ( b) Solar irradiance"
+    },
+    {
+      "id": "f6",
+      "caption": "Energy obtained from renewable resources."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Vi = Xr1 + F · (Xr2 − Xr3) (14)"
+    },
+    {
+      "id": "t2",
+      "caption": "Pseudocode for hydrothermal economic dispatch using particle swarm optimization (PSO)."
+    },
+    {
+      "id": "t3",
+      "caption": "Pseudocode for hydrothermal economic dispatch using the cultural algorithm (CA)."
+    },
+    {
+      "id": "t4",
+      "caption": "Pseudocode for hydrothermal economic dispatch using the grey wolf optimizer (GWO)."
+    },
+    {
+      "id": "t5",
+      "caption": "Comparison of the optimization techniques used in this study."
+    },
+    {
+      "id": "t6",
+      "caption": "Penalty factors used for constraint violations in each optimization algorithm. pen1 corre-"
+    },
+    {
+      "id": "t7",
+      "caption": "presents the pseudocode used for the power estimation using the Monte"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 7,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

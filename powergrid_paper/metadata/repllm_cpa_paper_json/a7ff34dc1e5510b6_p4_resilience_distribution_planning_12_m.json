@@ -1,0 +1,250 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p4_resilience_distribution_planning/p4_resilience_distribution_planning__12__multi_stage_stochastic_milp_framework_for_renewable_mic__d34dd8332a.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Renewable energy microgrids are often seen as a breakthrough solution to our energy\nproblems [1]. These systems (described in Figure 1), combining solar, wind, and energy\nstorage, can operate independently or in tandem with the larger grid [ 2]. For remote\ncommunities, microgrids offer an appealing solution by enabling localized control over\nenergy supply without relying on the extension of distant central grids. In theory, this\npresents a clear advantage. However, the practical implementation of microgrids is often\nmore complex and challenging than it appears on paper. One of the biggest challenges is\nAppl. Sci. 2025, 15, 10303 https://doi.org/10.3390/app151910303\nAppl. Sci. 2025, 15, 10303 2 of 20\nthe inherent unpredictability of renewable energy sources like solar and wind [3]. Solar\npanels are ineffective during periods without sunlight, and wind turbines cannot generate\npower in the absence of wind. While microgrids theoretically offer energy independence,\ntheir performance remains heavily dependent on weather conditions. Battery storage\nprovides a partial solution by capturing excess energy during optimal conditions for later\nuse. However, this approach has limitations; batteries are costly, and their lifespan is\nfinite, making long-term sustainability a concern. Over time, batteries lose their ability to\nhold a charge, making eventual replacement necessary. While energy storage is essential\nfor enhancing the reliability of renewable power, it remains a significant financial burden.\nBeyond cost, scaling up presents another major challenge. Microgrids are typically designed\nto serve specific communities, which works well when demand is limited. However,\nconnecting multiple microgrids to form a larger, more efficient system involves far more\nthan simply adding additional solar panels or batteries. The supporting infrastructure,\nwiring, control systems, and software must be reconfigured to handle increased complexity.\nScaling is not as straightforward as it may appear, and costs can escalate rapidly. Moreover,\nintegrating microgrids into the national grid introduces a new set of technical, regulatory,\nand operational challenges [4].\nFigure 1. Schematics of a renewable microgrid with high renewable penetration.\nRenewable energy is variable in nature, and matching the energy supply with the\ndemand with renewable energy sources requires complex planning [ 5]. Excess produc-\ntion of electricity without sufficient storage capacity leads to energy wastage, operational\ninefficiencies, and increased generation costs due to underutilized output. Conversely,\ninadequate electricity production can cause supply shortages, resulting in blackouts and\nhigher costs associated with emergency power procurement, equipment strain, and eco-\nnomic disruptions. Resolving this production dilemma necessitates the use of advanced\ncontrol systems to effectively manage supply and demand in real time. While microgrids\ncan save money in the long term, the upfront costs are a massive hurdle. These systems\nare expensive to install, and the financial return on investment does not happen overnight.\nCommunities and businesses that are already financially stretched might hesitate to make\nsuch a big leap, even though it could pay off in the future.\nAs renewable energy sources like wind and solar are increasingly incorporated into\npower grids, microgrids have become a key solution to support these efforts [ 6]. The\npotential for microgrids to utilize clean, renewable energy is enormous, but there is a\nno-win situation: renewable generation is inherently variable. Wind does not always blow\nAppl. Sci. 2025, 15, 10303 3 of 20\nwhen you need it, and solar power is dependent on the sun. In microgrids, where high\nlevels of renewable penetration are aimed for, this unpredictability can cause significant\nchallenges in ensuring a stable energy supply. Multi-stage stochastic MILP optimization\nmethods are frequently used to tackle these challenges [7]. These approaches aim to account\nfor the uncertainty of renewable generation. In theory, the idea is sound. However, after\ndiving into literature and examining current models, there is still a gap that needs to be\nfilled if we are going to make real strides in this area. A lot of the current models, like those\ndiscussed by Haider et al. [8,9] still rely on relatively simple representations of uncertainty.\nThe variability of wind and solar is not independent; they can be affected by the same\nweather system, sometimes in ways that current models fail to capture. Real-time decision-\nmaking is also an issue. Many of these optimization techniques operate on static models\nthat fail to adapt to real-time changes in renewable generation and energy demand [10].\nThe role of energy storage systems (ESS) in microgrids cannot be overstated—after all,\nstorage is what smooths out the peaks and valleys of renewable generation. But many\nmodels treat storage systems in an idealized way, almost as if batteries charge and discharge\nwithout loss or degradation [11]. Batteries degrade over time, and charge/discharge cycles\nare inefficient; these factors must be considered in optimization models to ensure their\nusefulness in real-world scenarios. Demand-side management (DSM) involves shifting\nenergy usage to times when energy is more abundant, and it could significantly improve\nenergy efficiency [12]. Yet, the way these optimization models treat DSM is usually an\nafterthought as a secondary consideration, not fully integrated into the broader framework.\nScalability is also a major issue. Many of the current models work well for small to medium-\nscale microgrids. But as the systems grow, the models face computational challenges [13].\nApplying these methods to large-scale systems with multiple microgrids requires more\nadvanced algorithms, enhanced computational techniques, and potentially the use of\nparallel computing approaches. Otherwise, the practical applicability of these models will\nremain limited. This paper aims to develop a multi-state stochastic MILP for dispatch\nscheduling management in high penetration renewables. The objectives are to model\nrenewable variability using scenarios, formulate a multi-stage dispatch MILP with storage\nand load constraints, and validate the model and compare the results obtained with\ndeterministic dispatch.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "The increasing integration of renewable energy sources (RES) into modern power grids\nhas led to a growing interest in microgrid dispatch optimization. This flexibility makes\nthem especially crucial for improving energy security, particularly in remote or disaster-\nprone areas [14,15]. As the world shifts towards more sustainable and resilient energy\nsystems, microgrids are becoming an important component of the transition. The primary\ngoal of dispatch optimization is to effectively manage energy generation, storage, and\ndemand. Energy generation is not always predictable. These fluctuations can significantly\ndisrupt conventional energy management models and reduce their effectiveness. Advanced\noptimization techniques are crucial as they strive to find a balance between supply and\ndemand, ensuring stability while keeping costs in check [16,17]. Stochastic optimization\nhas been gaining popularity. These models are designed to handle the inherent uncertainty\nthat comes with renewable energy. Unlike traditional deterministic models, which assume\nperfect knowledge of energy availability, stochastic models factor in multiple potential\nscenarios of fluctuating generation and demand [18,19]. But, while that is progress, there\nis still a long way to go, especially when it comes to applying these models in real-time\nenergy management for large-scale microgrids that use multiple types of RES.\nAppl. Sci. 2025, 15, 10303 4 of 20\nDeterministic models are the traditional ones where everything is known ahead of\ntime. They are straightforward: they use fixed inputs to determine the optimal gener-\nation schedule, based on known constraints. The upside of this approach is that it is\ncomputationally efficient, which is why it works well for smaller systems or when energy\ngeneration is relatively stable. For instance, Conejo et al. [20] use deterministic models to\nsolve unit commitment problems in scheduling energy generation. In the works of Zhang\net al. [21], the authors applied deterministic models to smart buildings, optimizing energy\nusage when renewable energy is predictable. However, real-world applications are more\ncomplicated. Solar and wind are not exactly the most predictable sources. The assumption\nin a microgrid that we know exactly how much energy is available fails. So, relying solely\non deterministic models in a dynamic system like a microgrid can lead to less-than-ideal\nresults, especially when something unexpected happens [22]. As the penetration of RES\nincreases, the variability becomes harder to ignore, and those deterministic models just\ncannot keep up.\nStochastic models, unlike deterministic ones, embrace uncertainty [23]. They do not\nassume a perfect knowledge of the systems; instead, they account for multiple possible\nscenarios. They use probability distributions and scenario generation techniques to manage\nthe uncertainty in energy generation from wind and solar [18,19]. Stochastic models are\nmore robust as they can adjust to various potential futures, and they are more applicable\nin the real world. For example, Kiptoo et al. [ 24,25] have demonstrated how scenario-\nbased approaches and MILP can help balance generation, storage, and demand response.\nFurthermore, the complexity of these models can also make them harder to scale. The\nmore scenarios you have, the longer the computation takes. This is a huge challenge,\nespecially when you are dealing with large microgrids [ 26]. So, while they offer better\nsolutions for uncertainty, they come with their own set of hurdles. Researchers have also\nmade an effort to combine robust optimization and stochastic programming. This hybrid\napproach tries to bring together the flexibility of stochastic models and the computational\nefficiency of deterministic ones. It is like finding a middle ground, but again, this is still a\ndeveloping area [27].\nThe research investigates stochastic programming methods, but our study develops\nan operational framework for high-RES microgrids that produces reproducible results. The\npaper makes the following contributions:\n1. A multi-period MILP that minimizes expected operating cost∑s πs∑t{·} with scenario\nprobabilities πs under realistic ramping, state-of-charge dynamics, charge/discharge\nlimits, among others.\n2. A data-driven pipeline consists of three components: Monte Carlo trajectories gen-\nerated from historical/empirical distributions and k-means scenario reduction and\ncluster-proportion probabilities.\n3. The explicit definition for power balance verification through bar plots for representa-\ntive scenarios and cost and reliability KPIs.\n4. The paper discusses how scenario reduction impacts both cost and tractability while\npresenting a basic auditable method for (cluster proportions) that serves as a template\nfor various renewable energy systems across different locations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Multi-Stage MILP Formulation",
+      "level": 1,
+      "text": "At the heart of the optimization lies the multi-stage MILP model. This model mini-\nmizes the total operational cost of the renewable microgrid, aiming to balance renewable\nenergy generation, energy storage, and grid imports while ensuring that demand is always\nmet. It ensures that all variables, including renewable generation, battery storage, and grid\nsupply, are optimized to work together effectively. The overview of the decision variables\nAppl. Sci. 2025, 15, 10303 5 of 20\nused in the multi-stage MILP formulation is summarized in Table 1. The model is solved\nusing Python (Version 3.9.12), leveraging the PuLP library, which interfaces with the CBC\nsolver to handle the optimization.\nTable 1. System overview and decision variables.\nVariables Description\nt ∈ {1, 2, 3, . . . ,T} represent the time periods for the optimization\nhorizon (e.g., hourly)\ns ∈ {1, 2, 3, . . . ,S}\nrepresent the scenarios, capturing renewable\ngeneration uncertainty and variability across\ntime periods.\nPload ,t denotes the load demand at time t.\nP(s)\nrenewable ,t\ndenotes the renewable energy generation at time t for\nscenario s.\nPstorage ,t denotes the energy stored or discharged at time t\nPgrid,t denotes the energy imported from the grid at time t\nSOCt\ndenotes the state of charge of the storage system at\ntime t\nPcharge ,t and Pdischarge ,t\ndenote the charging and discharging power at\ntime t, respectively.\nα(s)\nt\ndenotes the scenario-dependent renewable energy\nuncertainty factor at time t for scenario s, representing\nrenewable energy variability.\nCrenewable ,t, Cstorage ,t and Cgrid,t\nrepresent the operational costs for renewable\ngeneration, storage, and grid energy\nimports, respectively.\nπs scenario propbability\nρ dimensionless renewable-penetration factor that\nscales the available renewable profile\nVariables with superscript (s) are the scenario-dependent control decision; SOC(s)\nt is a scenario-dependent state;\nand Pload ,t is exogenous.\nThe objective function is designed to minimize the operational cost: renewable energy\ngeneration, energy storage, and grid energy import across the optimization period T for S\nscenarios. The cost function is described in (1).\nminZ =\nT\n∑\nt=1\nπs\nS\n∑\ns=1\n(Crenewable ,t · P(s)\nrenewable ,t + Cstorage ,t ·\nh\nP(s)\ncharge ,t + P(s)\ndischarge ,t\ni\n+Cgrid,t · P(s)\ndrid,t), s.t\nS\n∑\ns=1\nπs = 1, πs ≥ 0 ∀s\n(1)\nwhere\nCrenewable ,t, Cstorage ,t, and Cgrid,t, are the cost coefficients for renewable generation,\nstorage, and grid energy at time t, respectively.\nThe energy generated by renewable sources P(s)\nrenewable ,t, energy stored/discharged\nPstorage ,t, and energy imported from the grid Pgrid,t all contribute to the operational cost,\ndepending on the scenario s and time t.\nThese variables ensure the feasibility and reliability of the objective as described in (1).\nAppl. Sci. 2025, 15, 10303 6 of 20",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Constraints Imposed on the Model",
+      "level": 2,
+      "text": "The optimization remains feasible and reliable, representing realistic operational\nconditions through these constraints. These constraints directly influence the objective\nfunction, as they restrict dispatch options, which in turn affect total operational costs. To\nmeet demand at every time stept and scenario s, the energy provided by renewable sources,\nstorage, and the grid must satisfy the load demand:\nP(s)\nrenewable ,t +\n\u0010\nP(s)\ncharge ,t − P(s)\ndischarge ,t\n\u0011\n+ Pgrid,t = Pload ,t ∀t, s (2)\nThe constraint ensures that all energy sources deliver sufficient power to meet demand,\nthereby avoiding both over- and undersupply situations, which would result in avoidable\noperational expenses.\nRenewable energy generation faces restrictions because its maximum potential varies\nbetween different periods and scenarios. The physical boundaries of renewable generation\nremain within limits through this constraint.\n0 ≤ P(s)\nrenewable ,t ≤ P(s)\nrenewable ,max,t ∀t, s (3)\nThe constraint restricts renewable energy from exceeding total costs because it prevents\nthe system from generating more renewable power than is available.\nAlso, the energy storage system must operate within specified limits:\nCharge/Discharge Limits:\n0 ≤ P(s)\ncharge ,t ≤ Pstorage , max 0 ≤ P(s)\ndischarge ,t ≤ Pstorage ,max ∀t, s (4)\nState of Charge Limits:\nSOCmin ≤ SOC(s)\nt ≤ SOCmax ∀t (5)\nState of Charge Update:\nSOCt+1 = SOC(s)\nt + ηch Pcharge ,t∆t − 1\nηdis P(s)\ndischarge ,t∆t, ∀t, s (6)\nThe operational costs in the objective function are influenced by energy storage con-\nstraints, as they determine both the charging and discharging rates and the storage state\nof charge.\nThe grid’s maximum capacity limits the amount of energy imported from or exported\nto the grid:\n−Pgrid max ≤ P(s)\ngrid,t ≤ Pgrid max , ∆t, s (7)\nThe constraint restricts the amount of energy that can be bought from the grid, which\naffects the total operational cost. The optimization system controls grid imports to prevent\nexcessive costs from renewable and storage energy contributions.\nRenewable generation is modeled as stochastic, and uncertainty is incorporated\nby defining a scenario-dependent uncertainty factor α(s)\nt for each renewable energy\ngeneration value:\nP(s)\nrenewable ,t = α(s)\nt · P(s)\nrenewable ,max,t ∀t, s (8)\nThe constraint restricts the amount of energy that can be bought from the grid, which\naffects the total operational cost. The optimization system controls grid imports to prevent\nexcessive costs from renewable and storage energy contributions.\nAppl. Sci. 2025, 15, 10303 7 of 20\nThe system needs to fulfill load requirements with a high degree of certainty to\nmaintain reliable operation under uncertain conditions. The following constraint represents\nthis requirement:\nS\n∑\ns=1\nP(s)\nrenewable ,t + Pstorage ,t + Pgrid,t ≥ Pload ,t · γ ∀t, s (9)\nwhere γ is a reliability factor, typically close to 1, ensuring the load demand is met with\nhigh probability.\nThe system needs reliability to achieve cost minimization while maintaining its robust-\nness. The system’s failure cost will rise if it fails to meet demand requirements because of\ninsufficient reliability. The optimization process gives priority to reliability through this\nconstraint, which determines the selection of renewable energy sources, storage systems,\nand grid infrastructure.\nThe ramp-up (see Equation (10)) and ramp-down (see Equation (11)) constraints\nestablish boundaries that control how quickly generation and storage levels change between\nsuccessive time intervals, thus preventing unreasonably large variations:\nP(s)\nrenewable ,t − P(s)\nrenewable ,t−1 ≤ Rmax,t ∀t, s (10)\nP(s)\nrenewable ,t−1 − P(s)\nrenewable ,t ≤ Rmax,t ∀t, s (11)\nwhere Rmax,t is the maximum allowable ramp-up or ramp-down rate at time t.\nThe power generation remains realistic and within system capabilities because ramp\nconstraints prevent excessive fluctuations, which otherwise would increaseoperational costs.\nTime Resolution and Scheduling Mode\nThe control time interval of∆t = 1 and a scheduling horizon ofT = 12 periods (12 h) is\nused to implement the energy management strategy (see Table 2). It operates in an intraday\nrolling-horizon manner. For example, at each hour k, the MILP is solved over {k, ...,k + 11}.\nAlso, note that only the first-period decisions are applied, forecasts are refreshed, scenarios\nare regenerated, and the horizon rolls forward by one period. This aligns with the intraday\nvariability of renewable energy and the latency of microgrid actuation.\nTable 2. Fundamental operational and economic parameters for the microgrid case study.\nComponent/Setting Symbol Value (Code) Unit Notes\nScheduling horizon T 12 h Intraday study with hourly steps.\nTime step ∆t 1 h Consistent with the cost per MWh.\nScenarios S 5 – Stochastic renewable profiles.\nLoad range Pload (t) 60–90 MW Drawn per hour in the case study.\nRenewable availability (hourly cap) Pmax\nren (t) 30–60 MW Envelope of available renewable power per hour.\nRenewable ramp limit Rmax 10 MW/h Limits\nBattery energy capacity Emax (SOCmax ) 100 MWh SOC bounded in [0, 100] MWh.\nBattery power rating Pmax\nsto 30 MW Rated charge/discharge power (model uses a\nsingle power variable in this baseline script).\nSOC lower bound SOCmin 0 MWh Energy floor.\nGrid import Pgrid,t ≥ 0 MW Import only; no explicit cap in this script.\nCost (renewable) Cren 50 currency/MWh Applied to renewable dispatch.\nCost (storage) Csto 40 currency/MWh Applied to storage power use.\nCost (grid) Cgrid 60 currency/MWh Applied to grid imports.\nSolver/implementation – CBC via PuLP – Mixed-integer linear optimization framework.\nAppl. Sci. 2025, 15, 10303 8 of 20",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Scenario Generation and Stochastic Modeling",
+      "level": 2,
+      "text": "Renewable energy resources, especially wind and solar, are inherently variable. One of\nthe trickiest aspects of managing a renewable microgrid is predicting how much energy will\nbe available when needed most. To capture this uncertainty, stochastic modeling is used.\nThis approach involves using multiple scenarios to represent various possible outcomes\nof renewable energy generation, which helps in accounting for variability over time. For\nthis study, we chose a Monte Carlo simulation for scenario generation. The basic idea is to\ngenerate random samples based on statistical distributions; in this case, using historical\nwind speed data from the National Renewable Energy Laboratory (NREL). From this, five\ndifferent scenarios (S = 5), each representing a different possible wind power generation\nprofile over 12 h (T = 12). This gives the model a certain flexibility, allowing it to account\nfor variability in a way that would be difficult to do with a single deterministic approach.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Scenario Reduction",
+      "level": 2,
+      "text": "One challenge that comes up in stochastic modeling is the sheer number of scenarios\nthat need to be considered. More scenarios mean better accuracy, but they also result in\nexponentially higher computational costs. The aim is to reduce the number of scenarios,\nwhile ensuring that the reduced set still accurately represents the variability in the renew-\nable generation. The k-means clustering algorithm is used for scenario reduction. It is\nperformed on the T-dimentional scenarios, and the number of clusters k is chosen through\nan elbow heuristic (beyond k = 5). The reduction in within-cluster dispersion is marginal,\nwhile the MILP solve time increases notably with the CBC solver. We therefore use five\nrepresentative scenarios that preserve the principal variability and ramp features over\nthe 12-h horizon. After the k means scenario reduction, the probability, πs = 1\nS of each\nrepresentative scenario equals the fraction of original trajectories in its cluster. Therefore,\nin the absence of such counts, we use uniform πs = 1\nS . This algorithm groups similar\nscenarios together and then selects representative scenarios from each cluster. In practice,\nthis meant that instead of working with all five hundred possible scenarios, one could\nchoose a smaller set of five representative ones that captured the main variability of the\nsystem. It may not be the perfect solution, but it is a reasonable compromise between\ncomputational feasibility and model accuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.4 Model Solving and Performance Metrics",
+      "level": 2,
+      "text": "Once the model was formulated and the scenarios reduced, I moved on to solving\nthe problem. Using the CBC solver [28], we ran the optimization to find the best dispatch\nschedule. But solving the problem is just one part of the process. Once the optimization\nresults are ready, it is essential to evaluate them to assess the model’s performance. The\nevaluation utilizes several metrics, including cost metrics and reliability metrics. The\ncost metrics address the query concerning the overall operational expenditure, which\nencompasses the total cost of fulfilling demand through the integration of renewable energy,\nstorage solutions, and grid energy. The reliability metrics measure the renewable energy\nutilization, storage efficiency, and grid energy utilization. These metrics are evaluated over\neach period and scenario.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Results and Discussion",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 Operational Performance Across Stochastic Scenarios",
+      "level": 2,
+      "text": "The scheduling process results in the presentation of load trace and renewable avail-\nability curves through Figure 2. The net supply deficit or surplus becomes visible through\nthe comparison between the load trace and the renewable availability before scheduling\noccurs. The storage system discharges power at times when the load exceeds renewable\nAppl. Sci. 2025, 15, 10303 9 of 20\nenergy availability and charges power when renewable energy production exceeds load\nrequirements after scheduling.\nFigure 2. Total scenario: prior vs. after scheduling.\nAppl. Sci. 2025, 15, 10303 10 of 20\nThe left side of the panels displays the unaltered hourly differences between power de-\nmand and renewable power availability, while the right side demonstrates how optimized\ndispatch operations use storage and grid imports to create a perfect match between supply\nand demand. The scenarios demonstrate high renewable power usage while the power\ngrid remains inactive during most time periods, and storage systems achieve necessary\nflexibility through controlled moderate to deep charge–discharge cycles, with the highest\npeak in Scenario 4.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2 Analysis of Operational Cost Dynamics Across Scenarios",
+      "level": 2,
+      "text": "The operational cost curve for Scenario 1 (Figure 3) reveals significant fluctuations in\nthe total operational cost, ranging from 0 costs to peak values of $5. The peaks indicate\ntimes when energy demand exceeds the renewable generation, leading to increased reliance\non grid energy or storage. The sharp drops in cost indicate the effective use of renewable\nenergy during periods of excess generation.\nFigure 3. Total operation cost for scenario 1.\nIn Scenario 2 (Figure 4), there is a more gradual increase in operational costs from\n0 to about $25 compared to Scenario 1. The cost spikes at specific periods, indicating a\nsteady increase in reliance on the grid or storage, especially when renewable generation\nfalls short of meeting demand. The relatively smooth pattern shows an optimized use of\nenergy storage and grid backup in response to varying renewable output.\nThe operational cost for Scenario 3 (Figure 5) shows a considerable initial cost, peaking\naround the 2 to 3 h time horizon, before sharply decreasing. This could indicate an aggres-\nsive strategy of grid imports or storage usage at the beginning, followed by efficient use of\nrenewable energy and storage over time. The decrease in costs suggests that renewable\ngeneration and storage reach an optimal point, reducing dependency on more expensive\ngrid power.\nScenario 4 (Figure 6) exhibits a rapid increase in operational costs early on, followed\nby a relatively stable phase. This suggests a scenario where grid energy and storage\npower were initially heavily utilized, followed by more balanced integration of renewable\ngeneration. The relatively higher operational cost is about $50. In comparison to other\nAppl. Sci. 2025, 15, 10303 11 of 20\nscenarios, it indicates a less optimized renewable generation strategy or higher reliance on\ncostlier energy sources.\nFigure 4. Total operation cost for scenario 2.\nFigure 5. Total operation cost for scenario 3.\nScenario 5 (Figure 7) shows a decrease from about $40 operational costs over time,\nlike Scenario 3, but with a smoother transition. The declining operational costs suggest\nthat the renewable generation profile was well-aligned with demand, and storage or grid\nuse was minimized after the initial adjustment phase. This scenario seems to represent an\nAppl. Sci. 2025, 15, 10303 12 of 20\nideal balance between renewable generation and load demand, resulting in lower overall\noperational costs.\nFigure 6. Total operation cost for scenario 4.\nFigure 7. Total operation cost for scenario 5.\nThe operational costs reflect the effectiveness of integrating renewable energy into the\nenergy mix, as well as the use of storage and grid energy. The variability across scenarios\nindicates how different strategies, such as varying renewable energy contributions, storage\ncapacities, and grid integration, impact total operational costs. Scenarios 1, 2, and 5 reflect\nsignificant periods of storage or grid reliance, whereas Scenario 3 shows a sharper shift\ntowards efficient renewable usage, thereby reducing costs. Scenario 4, with its high early\nAppl. Sci. 2025, 15, 10303 13 of 20\ncost, suggests potential inefficiencies in the initial stages of the optimization, possibly due\nto slower ramp-up times for renewable energy generation.\n4.3. Analysis of Cost Distribution Across Multiple Scenarios in Renewable Energy Systems\nBased on the cost breakdown data across the five scenarios, the analysis focuses on\nthe costs of renewable energy, storage, and the grid over 10 h. Figure 8 presents trends that\nare insightful for understanding how costs evolve during each scenario.\nFigure 8. Cost distribution across multiple scenarios.\nIn Scenario 1, the renewable cost fluctuates between a peak of 4000 USD and lower\npoints, reflecting potential changes in renewable energy generation. Interestingly, the\nstorage and grid costs remain nearly constant at zero, indicating that the system’s reliance\non storage and grid power is minimal or nonexistent in this scenario. This suggests that\nScenario 1 is predominantly powered by renewable energy, with minimal external input.\nScenario 2 follows a similar pattern to Scenario 1, with the renewable cost fluctuating\nAppl. Sci. 2025, 15, 10303 14 of 20\nbetween $3000 and $4000 USD. However, there is a slight increase in the storage cost,\nindicating that storage solutions play a more significant role in this scenario compared to\nScenario 1. The grid cost again remains close to zero, reinforcing the reliance on renewable\nsources and limited grid dependence. In Scenario 3, the renewable costs again show a\nsimilar trend, but the storage cost increases more noticeably, indicating a higher dependency\non stored energy compared to previous scenarios. The grid cost remains unchanged at\nzero, showing that the system is still operating without reliance on external grid power.\nScenario 4 demonstrates a higher fluctuation in renewable costs, reaching the 4000 USD\npeak in some instances. Storage costs in this scenario appear more volatile compared to\nprevious scenarios, with a noticeable increase in storage usage over time. The grid costs,\nhowever, remain at zero, confirming that the system is still independent of the grid. In\nScenario 5, renewable costs follow the same fluctuations seen in the previous scenarios, with\na peak near 4000 USD. Storage costs show a gradual increase but remain lower compared\nto renewable costs. The grid cost remains absent again, which suggests that the system\nin Scenario 5 is also fully autonomous, relying entirely on renewable energy and storage.\nAcross all five scenarios, renewable energy costs are the most significant factor in the cost\nbreakdown, consistently dominating the cost structure. Storage costs show varying levels\nof importance across the scenarios, particularly in Scenarios 2, 3, and 4. The grid costs,\nhowever, remain minimal or nonexistent, highlighting the effectiveness of the renewable\nenergy systems and their integration with storage solutions in these scenarios.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f8",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.4 Analysis of Negative Renewable Energy Surplus and Operational Implications",
+      "level": 2,
+      "text": "The negative renewable energy surpluses across all periods indicate that the wind\nenergy generation is insufficient to meet the required load demand (See Figure 9). This\nsuggests that the renewable energy system is not operating optimally during these periods,\nand there are power generation shortfalls that need to be addressed. Specifically, the\nnegative surpluses indicate Insufficient renewable generation, and when load demand\nexceeds supply. As a result of the negative surpluses, the system is likely to resort to\nimporting energy from the grid. Grid energy is generally more expensive than renewable\nsources, and its increased usage directly impacts the system’s operational costs. This\ndependency on grid power might also undermine the sustainability goals of the microgrid\nsystem, as grid power is typically less environmentally friendly than renewable generation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.5 Sensitivity Analysis of Energy Utilization and Operational Cost Dynamics",
+      "level": 2,
+      "text": "Figure 10 for grid energy utilization shows a constant value across the observed period.\nThe energy consumption remains fixed, suggesting that the grid energy supply is being\nutilized at a steady rate. Additionally, the utilization of renewable energy exhibits an initial\nsharp increase, followed by a plateau. The value spikes early and then remains steady,\nindicating that the system quickly reached its renewable energy capacity. The State of\nCharge (SOC) variation remains constant, showing no movement throughout the period.\nThis suggests that battery storage or charging mechanisms are static, with no fluctuation in\nstored energy levels.\nThe SOC variation remains at 0% for all ρ values (flat magenta line), indicating that\nthe selected operating boundaries are met. The optimal policy operates with minimal deep\ncycling because storage usage remains minimal throughout the tested penetration levels,\nthus making this KPI unaffected by penetration levels. The grid utilization remains at 0%\nfor all values of ρ. The optimizer prevents grid imports at every penetration level due to\nthe current tariff structure and the availability of storage and renewable energy. Renewable\nenergy utilization exhibits an initial ~5 percentage-point increase (from ~94% at ρ = 0.4 to\nρ = 0.5), followed by a plateau at ∼ 100% for ρ ≥ 0.6.",
+      "refs": {
+        "figures": [
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Schematics of a renewable microgrid with high renewable penetration."
+    },
+    {
+      "id": "f2",
+      "caption": "Total scenario: prior vs. after scheduling."
+    },
+    {
+      "id": "f3",
+      "caption": "Total operation cost for scenario 1."
+    },
+    {
+      "id": "f4",
+      "caption": "Total operation cost for scenario 2."
+    },
+    {
+      "id": "f5",
+      "caption": "Total operation cost for scenario 3."
+    },
+    {
+      "id": "f6",
+      "caption": "Total operation cost for scenario 4."
+    },
+    {
+      "id": "f7",
+      "caption": "Total operation cost for scenario 5."
+    },
+    {
+      "id": "f8",
+      "caption": "Cost distribution across multiple scenarios."
+    },
+    {
+      "id": "f10",
+      "caption": "for grid energy utilization shows a constant value across the observed period."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "System overview and decision variables."
+    },
+    {
+      "id": "t2",
+      "caption": "Fundamental operational and economic parameters for the microgrid case study."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation (11)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

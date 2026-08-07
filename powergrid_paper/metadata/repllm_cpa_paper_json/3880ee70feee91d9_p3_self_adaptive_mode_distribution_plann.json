@@ -1,0 +1,544 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__04__coordinated_source_network_storage_expansion_pl__c62ddfa19e.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 State Grid Tianjin Electric Power Company, Tianjin 300010, China",
+      "level": 1,
+      "text": "2 Key Laboratory of Smart Grid of Ministry of Education, Tianjin University, Tianjin 300072, China \n* Correspondence: luofengzhang@tju.edu.cn (F.L.); wangshengyuan@tju.edu.cn (S.W.);  \nTel.: +86-139-2090-2432 (F.L.) \nAbstract \nTo address the challenges of insuﬃcient uncertainty characterization and inadequate ﬂex-\nible resource coordination in active distribution network (ADN) planning under high-\npenetration distributed renewable energy integration, this paper proposes a WGAN-GP-\nbased coordinated source–network–storage expansion planning method for ADNs. First, \nan improved Wasserstein Generative Adversarial Network (WGAN -GP) model is em-\nployed to learn the statistical patterns of wind and photovoltaic (PV) power outputs, gen-\nerating representative scenarios that accurately capture the uncertainty and correlation of \nrenewable generation. Then, an ADN expansion planning model considering the E -SOP \n(Energy Storage-integrated Soft Open Point) is developed with the objective of minimiz-\ning the annual comprehensive cost, jointly optimizing the siting and sizing of substations, \nlines, distributed generators, and ﬂexible resources. By integrating the energy storage sys-\ntem on the DC side of the SOP, E-SOP achieves coordinated spatial power ﬂow regulation \nand temporal energy balancing, signiﬁcantly enhancing system ﬂexibility and renewable \nenergy accommodation capability. Finally, a Successive Convex Cone Relaxation (SCCR) \nalgorithm is adopted to solve the resulting non- convex optimization problem, enabling \nfast convergence to a high- precision feasible solution with few iterations. Simulation re-\nsults on a 54-bus ADN demonstrate that the proposed method eﬀectively reduces annual \ncomprehensive costs and eliminates renewable curtailment while ensuring high renewa-\nble penetration, verifying the feasibility and superiority of the proposed model and algo-\nrithm. \nKeywords: active distribution network; E -SOP; WGAN- GP; Source –Network–Storage \nCoordinated Planning; uncertainty modeling",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Against the backdrop of the “dual carbon” goals, Active Distribution Networks \n(ADNs) are gradually becoming key enablers for energy system decarbonization and the \nhigh-penetration integration of renewable energy sources [1,2]. With the large-scale inte-\ngration of diverse resources such as wind power, photovoltaics (PVs), energy storage, and \nAcademic Editor: Michael  \nNegnevitsky \nReceived: 20 November 2025 \nRevised: 20 December 2025 \nAccepted: 30 December 2025 \nPublished: 31 December 2025 \nCopyright: © 2025 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and con-\nditions of the Creative Commons At-\ntribution (CC BY) license (https://cre-\nativecommons.org/licenses/by/4.0/). \nEnergies 2026, 19, 228 2 of 18 \n \nhttps://doi.org/10.3390/xxxxx \ncontrollable loads [3], system operation is characterized by strong coupling, high volatil-\nity, and multidimensional uncertainty, rendering traditional static planning models in-\ncreasingly inadequate for coordinating the operation of heterogeneous multi -source de-\nvices [4]. Therefore, it is imperative to conduct expansion planning research for ADNs \nthat accounts for uncertain scenarios and accommodates the large-scale integration of dis-\ntributed resources, aiming to achieve the coordinated and optimized allocation of network \nstructures and spatiotemporal ﬂexible resources. \nThe introduction of ﬂexible interconnection and energy storage technologies has pro-\nvided new control approaches for ADN expansion planning. A Soft Open Point (SOP) \nenables controllable bidirectional power ﬂow to facilitate energy exchange between feed-\ners and regulate node voltage, signiﬁcantly enhancing the spatial power ﬂow regulation \ncapability of the distribution network [5,6]. A Battery Energy Storage System (BESS) per-\nforms temporal energy shifting through charging and discharging processes, contributing \nto peak shaving, valley ﬁlling, and smoothing of renewable energy output [7,8]. When a \nBESS is integrated on the DC side of an SOP to form an integrated electricity –storage \nstructure (E-SOP), the spatial regulation capability of the SOP and the temp oral shifting \nfunction of the BESS can be tightly coupled within a single device platform, potentially \nenhancing the system’s spatiotemporal coordinated control capability. However, existing \nstudies (e.g., [9–11]) generally consider SOPs and BESSs as independent ﬂexible resources, \nwith limited focus on the E -SOP structure based on DC -side storage integration and its \nplanning and operational mechanisms. \nIn ADN expansion planning, the siting and sizing of distributed generation (DG), the \ndeployment of ﬂexible interconnection systems such as E -SOP, and the reinforcement of \nnetwork topology are inherently coupled. DG layout alters power ﬂow distribution an d \nvoltage levels [12], while E -SOP mitigates the resulting local bottlenecks through power \nﬂow reconﬁguration and energy storage regulation, and in turn aﬀects the feasible capac-\nity of DG integration and the extent of network reinforcement required. Mos t existing \nplanning studies, such as [2,4,13], are still based on ﬁxed ADN topologies and predeﬁned \nDG conﬁgurations, lacking an integrated modeling and joint optimization framework for \nthe DG–E-SOP–network structure as a whole. As a result, they fall short of fully exploiting \nthe potential of spatiotemporal ﬂexible resources to enhance the overall operational per-\nformance of ADNs from a system-level perspective. \nTo eﬀectively address the stochastic ﬂuctuations and operational uncertainties of re-\nnewable energy output, it is necessary to explicitly consider multiple possible operating \nscenarios in ADN expansion planning models. Currently, two main approaches are com-\nmonly used. The ﬁrst is the scenario analysis method [14,15], which generates a set of \nrepresentative operating scenarios based on the probabilistic characteristics of uncertain \nvariables, approximating stochastic ﬂuctuations through a limited number of determinis-\ntic operating conditions. The second is the clustering method based on historical data \n[2,16], which clusters actual wind and solar output proﬁles to obtain several representa-\ntive curves for optimization. The former requires assumptions about the output distribu-\ntion and parameter ﬁtting, making the model construction complex and sensitive to dis-\ntribution assumptions. The latter is easier to implement but highly sensitive to the cover-\nage of the sample set and clustering criteria, with a limited number of scenarios that strug-\ngle to fully capture high-volatility periods and extreme output characteristics, leading to \ninsuﬃcient accuracy in uncertainty representation. In addition to scenario-based stochas-\ntic programming, robust optimization has also been widely applied in planning studies \nof renewable-dominated power systems to address the uncertainty of renewable energy \ngeneration. For example, ref. [17] proposed a robust planning approach based on a bi -\nEnergies 2026, 19, 228 3 of 18 \n \nhttps://doi.org/10.3390/xxxxx \ndirectional converter-based interconnection structure to enhance the operational reliabil-\nity of hybrid microgrids with high renewable penetration under uncertain conditions, \ndemonstrating promising performance. \nTo address the aforementioned challenges, this paper proposes an ADN source–net-\nwork–storage coordinated expansion planning approach based on Wasserstein Genera-\ntive Adversarial Network with Gradient Penalty (WGAN -GP) scenario generation and \nspatiotemporal ﬂexibility coordination. First, a scenario generation framework based on \nWGAN-GP is developed to generate large-scale wind and solar time-series scenarios, en-\nsuring high ﬁdelity in terms of distributional consistency, temporal continuity, and cov-\nerage of extreme events. Second, at the ﬂexible resource level, an integrated E-SOP struc-\nture is constructed by incorporating a BESS on the DC side of the intelligent SOP, enabling \ncoordinated spatial power ﬂow regulation and temporal energy balancing. Third, a j oint \nADN planning model is formulated, including DG siting and sizing, E -SOP siting and \nsizing, feeder layout, and substation construction/expansion, to achieve system-level op-\ntimization of source–network–storage conﬁguration and topology reinforcement. Finally, \nto solve the non- convex optimization problem eﬃciently and accurately, a sequentially \ntightened second-order cone programming (SOCP) relaxation algorithm is introduced. \nCase studies conducted on a 54 -bus ADN validate the eﬀectiveness of the prop osed ap-\nproach. \nThe remainder of this paper is organized as follows. Section 2 introduces the WGAN-\nGP-based scenario generation method for wind and solar power output. Section 3 pre-\nsents the expansion planning model for ADNs and describes the structure of the E -SOP \nsystem. Section 4 details the solution method based on a sequentially tightened convex \nrelaxation algorithm. Section 5 provides case studies and result analysis. Finally, Section \n6 concludes the paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Scenario Generation Method for Wind and Solar Power Based on",
+      "level": 1,
+      "text": "WGAN-GP \nTo alleviate common issues in traditional Generative Adversarial Networks (GANs), \nsuch as gradient vanishing and mode collapse during training, this paper adopts a gener-\native adversarial framework based on the WGAN. WGAN consists of a Generator (G) and \na Discriminator (D), which interact through an adversarial game to approximate the dis-\ntribution of real data. Unlike conventional GANs, WGAN employs the Wasserstein dis-\ntance as the optimization objective, providing a more stable measure of the distributional \ndiscrepancy between generated and real samples. \nWithin this framework, the generator G learns the mapping from a latent space to the \ndata space, transforming samples drawn from a prior noise distribution pz(z) into pseudo-\nsamples that approximate the real data distribution pg(x). The discriminator D distin-\nguishes whether the input sample originates from the real data pdata(x) or is generated by \nG. Through continuous adversarial training, both G and D are iteratively optimized until \nthe generated distribution closely approximates the real one. The objecti ve functions of \nthe generator and discriminator are deﬁned as follows: \ndata () ()minmax ( , ) [log ( )] [log(1 ( ( )))]\nzxp x zp zG D\nV DG D x DG z∼∼= +−  (1) \nIn this context, G denotes the generator model, and D represents the discriminator \nmodel. The variable x refers to historical wind and solar data sampled from the real data \ndistribution pdata(x), while z is a noise vector drawn from a prior distribution pz(z), typically \na standard Gaussian distribution. The term G(z) denotes the pseudo-sample generated by \nthe generator. D(x) and D(G(z)) represent the discriminator’s output probabilities for real \nEnergies 2026, 19, 228 4 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nand generated samples, respectively. The symbols data ()xp x∼  and ()zzp z∼  denote the ex-\npectation under the real data and noise distributions, respectively. \nTo mitigate the gradient vanishing and mode collapse problems commonly encoun-\ntered in traditional GAN training, this paper adopts a generative adversarial framework \nbased on the WGAN. The Wasserstein distance, derived from optimal transport theory, is \ndeﬁned as the minimum cost required to transport one probability distribution to another. \nIt provides a more stable and meaningful measure of the discrepancy between distribu-\ntions and is formally deﬁned as: \n( ) datadata ( ) ( )\n1\nsup [ ( )] [ ( ( ))]\nz",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "g xp x zp z",
+      "level": 1,
+      "text": "D\nW p p Dx DGz∼∼\n≤\n= −，\n‖ ‖\n  (2) \nwhere ||D|| ≤ 1 indicates that the discriminator satisﬁes the 1 -Lipschitz continuity con-\ndition. This constraint is essential for ensuring training stability. However, enforcing Lip-\nschitz continuity directly is diﬃcult in practice. To address this, WGAN -GP introduces a \ngradient penalty (GP) mechanism to impose a soft constraint on the discriminator’s gra-\ndient norm. \nInstead of explicitly enforcing the Lipschitz condition, WGAN-GP incorporates a gra-\ndient penalty term into the objective function to indirectly ensure that the discriminator \nremains 1-Lipschitz continuous. The gradient penalty term is deﬁned as: \n( )ˆ\n2\nˆ 2ˆ () 1ˆ\nxxp xGP D x∇∼ = −  (3) \nwhere (1 ) ( )ˆx x Gzεε= +− , [0,1]U∼ . ε is a random variable uniformly distributed over \nthe interval [0,1], used to control the interpolation ratio. ˆ ()ˆx Dx∇  denotes the gradient vec-\ntor of the discriminator D  with respect to the input sample ˆx .where ( ) 2 denotes the L2 \nnorm (Euclidean norm) of the gradient vector. \nFinally, the optimization objective of WGAN-GP, incorporating the gradient penalty \nterm, can be expressed as: \n( )data ˆ\n2\n() ˆ ˆ)( 2minmax ( , ) [ ( ( ))] [ ( )] ( ) 1ˆ\nzxzp z xp x xp xG D\nVD G DGz Dx Dxλ∇∼∼∼ = −+ −   (4) \nwhere λ is the gradient penalty coeﬃcient used to balance the adversarial training objec-\ntive and the regularization term. This method eﬀectively enhances training stability, pre-\nvents mode collapse, and ensures that the generated sample distribution is more continu-\nous and smooth. \nBased on the characteristics of wind and solar power output curves, the neural net-\nwork architectures of the discriminator and generator are designed as shown in Figure 1. \nFigure 1 illustrates the architecture of the generator and discriminator in the proposed \nWGAN-GP model. The generator takes a random noise vector as input and generates data \nwith the same dimensionality as the wind–PV output time series through a series of fully \nconnected layers and multiple transposed convolution layers for feature mapping and \nupsampling. The discriminator consists of multiple convolutional and fully connected lay-\ners, which extract features from the input samples and assess their authenticity. It is \ntrained using the Wasserstein loss function with a gradient penalty term to enhance train-\ning stability. This architecture eﬀectively captures both the statistical characteristics and \ntemporal dependencies of wind and PV power outputs. \nEnergies 2026, 19, 228 5 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nZ, 128\nFC, 256×6×6, BN\n3×3, TCONV, 256, stride=2, \npadding=1, BN\n3×3, TCONV, 128, stride=2, \npadding=1, BN\n3×3, TCONV, 64, stride=1, \npadding=1, BN\n3×3, TCONV, 1, stride=1, \npadding=1, Tanh\nINPUT, 24×24\n3×3, CONV, 64, stride=2, \npadding=1, LeakyReLU(0.2)\n3×3, C0NV, 128, stride=2, \npadding=1, BN\nFC, 512, Dropout(0.3)\nFC, 1\nWasserstein Loss + GP\n(A) Generator (B) Discriminator  \nFigure 1. Neural network architectures of the generator and discriminator.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Expansion Planning Model for ADNs",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Overall Modeling Framework",
+      "level": 2,
+      "text": "Based on the large -scale joint wind –solar time -series scenarios generated using \nWGAN-GP, this paper develops an ADN expansion planning model that jointly optimizes \nthe sizing of E-SOPs and DGs, feeder layout, and substation construction/expansion. The \nmodel aims to minimize the total life-cycle cost of the system while satisfying operational \nsafety and power balance constraints of the distribution network, thereby enhancing the \nhosting capacity and adaptability of ADNs to high-penetration renewable energy sources.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Objective Function",
+      "level": 2,
+      "text": "The objective of the planning model is to minimize the annualized total cost of the \nsystem across multiple scenarios, which includes both the annualized investment cost and \nthe annualized operational cost. The objective function can be expressed as: \nmin ann ann\ninv opFC C= +  (5) \nwhere \nann\ninvC   denotes the annualized investment cost, and \nann\nopC   represents the annual-\nized operation and maintenance (O&M) cost. \n(1) Annualized Investment Cost \nsub line\nann\ninv\nΩ Ω Ω\nΩ Ω Ω\nWind\nBESSV SOP P\nsub sub sub line line line Wind Wind Wind",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "l l j j j",
+      "level": 1,
+      "text": "il\nj\nBESS BESS BESS SOP SOP SOP",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "jjj",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "m m m nnn",
+      "level": 1,
+      "text": "PV P\nn\nV\nm\nP\nj",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "caS c x c S",
+      "level": 1,
+      "text": "cS c E c S\nαα\nαα α\n∈∈ ∈\n∈∈ ∈\n=∑ ⋅ ⋅ +∑ ⋅ ⋅ +∑ ⋅ ⋅\n+∑ ⋅ ⋅ + ∑ ⋅ ⋅ +∑ ⋅ ⋅\n (6) \nwhere \nsub\nic , \nline\nlc , \nDG\njc , \nBESS\nmc , \nSOP\nnc  are the unit investment costs of substations, feed-\ners, DG, BESS, and SOP, respectively; \nsub\niS  , \ne",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "linx  ,",
+      "level": 1,
+      "text": "DG\njS  , \nBESS\nmE  , \nSOP\nnS   represent the \nnewly added capacities of substations, feeders, DGs, BESS, and SOP, respectively. Since \nan E-SOP consists of both a BESS and an SOP, their costs are represented separately in the \nabove equation. \nAdditionally, α is the capital recovery factor used to annualize the investment cost of \neach device, and is calculated as: \n(1 )\n(1 ) 1\nx\nx\nT\nx T\nrr\nr\nα +=\n+−  (7) \nwhere r is the interest rate and Tx is the service life of the equipment. \n  \nEnergies 2026, 19, 228 6 of 18 \n \nhttps://doi.org/10.3390/xxxxx \n(2) Annualized O&M Cost \nThe annualized operational cost represents the total economic expenditure of the dis-\ntribution network across all typical operating scenarios over a year. It mainly includes \nequipment maintenance costs  \n()s\nmainC  , electricity purchase costs  \n()s\npurC  , and penalties for \ncurtailed wind and solar power \n()s\ncurtC . Assuming the entire year is divided into Ns typical \nscenarios, and each scenario s represents Ds days, the annualized operational cost of the \nsystem can be expressed as: \n( )\n() () ()",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "1 sN sann s s",
+      "level": 1,
+      "text": "op s pur curtmains",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "DC C C",
+      "level": 1,
+      "text": "=\n= ∑⋅ + +  (8) \na. Equipment Maintenance Cost \n()\nΩall\ns\nxxmain x\nCK µ\n∈\n= ∑\n \n(9) \nwhere µx is the annual maintenance rate for device x, and K x is the investment cost of \ndevice x, as deﬁned in Equation (6). The set Ωall  includes substations, feeders, wind tur-\nbines, PV units, and E-SOP devices. \nb. Electricity Purchase Cost \n()\n, Δs grid grid\npur t t s\ntT\nC Pt ρ\n∈\n= ∑  (10) \nwhere \ngrid\ntρ  is the time-of-use electricity price from the upstream grid at time t, ,\ngrid\ntsρ  is \nthe power purchased from the upstream grid at time t  in scenario s, and Δt is the time \nstep.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "Wind and Solar Curtailment Cost",
+      "level": 1,
+      "text": "Wind\n,, ,,\nΩ Ω\nΔ Δ\npv\n(s) Wind act act\ncurt curt j t s\nP\ncurt k t s\njt",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "T k tT",
+      "level": 1,
+      "text": "C Pt Ptρρ\n∈ ∈ ∈∈\n= ∑ ∑ +∑ ∑  (11) \nwhere \nWind\ncurtρ  and",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "curt",
+      "level": 1,
+      "text": "Pρ  are the unit penalty prices for wind and solar curtailment, respec-\ntively; ,,\nact\njtsP  and ,,\nact\nktsP  are the curtailed wind and solar power at time t in scenario s.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.3 Constraints",
+      "level": 2,
+      "text": "To ensure the safe, economical, and feasible operation of the ADNs during the plan-\nning horizon, the proposed model incorporates the following constraints, covering equip-\nment investment status, capacity conﬁguration, network topology, and operational secu-\nrity. \n(1) Equipment Capacity Constraints \na. E-SOP Power Balance Constraint \nThe structure of the E-SOP system is illustrated in Figure 2. The system consists of an \nintelligent SOP unit and a shared BESS unit, enabling ﬂexible power ﬂow regulation \namong feeders and coordinated spatiotemporal energy management. The core of the E-\nSOP comprises multiple bidirectional AC/DC converters, each connected to the system \nthrough AC interfaces on the feeder side, while the DC sides are interconnected via a \nshared DC bus, which is also connected to the BESS. \nAs an energy buﬀer on the DC bus, the BESS facilitates energy sharing among diﬀer-\nent feeders. When the output of DGs on one feeder exceeds local demand, the BESS ab-\nsorbs the surplus power; when another feeder experiences high load or insuﬃcient DG, \nEnergies 2026, 19, 228 7 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nthe BESS discharges to provide compensation. This allows for temporal power balancing \nand spatial energy support across multiple nodes. \nFeeder 1\nFeeder 3\nE-SOP\nBESS\nSOP\nFeeder 2\n \nFigure 2. Structure of the E-SOP system. \nThe power exchange within the E-SOP must satisfy the principle of energy conserva-\ntion, requiring the power at its two AC terminals and the DC -side BESS to remain bal-\nanced. This relationship can be expressed as: \n,1 ,2 ,3 ,\n,,, &,, 0SOP AC SOP AC SOP AC BESS E SOP L\ndc tit jt i jtktP P P PP −+ +++=  (12) \nIn this equation, \n,1\n,\nSOP AC\nitP , \n,2\n,\nSOP AC\njtP  and \n,3\n,\nSOP AC\nktP  represent the active power ex-\nchanged at the AC terminals of the E-SOP connected to nodes i, j, and k at time t, respec-\ntively (positive when ﬂowing outwards). ,\nBESS\ndc tP   denotes the charging/discharging \npower of the DC-side BESS (positive when discharging). \n,\n&,\nE SOP L\ni jtP −\n represents the power \nloss associated with the SOP between nodes i and j. \n( ) ( )\n22, ,,\n&, &, &,\nE S\nOP L E SOP E SOP AC E SOP AC\nii jt i jt i jtP AP Q− −− − = +\n \n(13) \nwhere \nE SOP\niA −\n is the SOP power loss coeﬃcient. \nb. Capacity Constraints of AC Terminals in E-SOP \nThe active and reactive power outputs of each AC terminal in the SOP are limited by \nits rated capacity. The constraint can be formulated as: \n( ) ( ) ( )\n22 2, , ,max\n,,\nSOP AC SOP AC SOP\ni\nt it nPQ S +≤\n \n(14) \nwhere ,\nSOP\nntP  and ,\nSOP\nntQ  denote the active and reactive power at the AC terminal of the \nSOP at time t in scenario s, and \n,maxSOP\nnS  is the rated apparent power capacity of the SOP \nterminal.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "Power and Energy Constraints of BESS in E-SOP",
+      "level": 1,
+      "text": "The BESS in the E-SOP participates only in active power regulation. Its charging/dis-\ncharging power and energy state must satisfy the following constraints: \nmax max\n,\nBESS\nBESS dc t BESSPP P−≤ ≤\n \n(15) \n,\n,,\n1 , Δ Δ\nBESS dis\ndc tBESS BESS BESS ch\nt t ch dc t\ndis\nP\nEE P t t η η−= +−\n \n(16) \nEnergies 2026, 19, 228 8 of 18 \n \nhttps://doi.org/10.3390/xxxxx",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "0.2 BESS BESS BESS",
+      "level": 2,
+      "text": "mt mEEE ≤≤  (17) \nwhere \nBESS\ntE  denotes the energy state of the BESS at time t, \n,\n,\nBESS ch\ndc tP  and \n,\n,\nBESS dis\ndc tP  are \nthe charging and discharging power, respectively. chη  and disη  are the charging and \ndischarging eﬃciencies. \nd. DG Capacity Constraints \nThe installed capacities of wind and PV generation at each node must not exceed \ntheir respective upper limits. The constraint can be expressed as: \nmax,\nmax,\n0, Ω ,\n0, Ω\nW\nPV\nWind WTG\njjT\nPVG\nj i PV\nSZ j\nSZ j\n∀\n∀\n\n\n≤≤ ∈\n≤∈ ≤\n \n(18) \nwhere max,\nWTG\niZ  and max,\nPVG\niZ  denote the maximum allowable installed capacities of wind and \nPV generation at node j, respectively. \ne. Network Topology Constraints \nSince the planning model involves feeder routing and network design, it is necessary \nto ensure both the connectivity and radiality of the distribution network. Speciﬁc model-\ning approaches can be found in [18]. \n(2) System Operational Constraints \na. Voltage and Current Constraints \nThe node voltages and branch currents must remain within allowable operating lim-\nits to ensure system safety and reliability. The constraints are given by: \n22\n,min , ,max , Ω ,i it i NU vU i ∀≤≤ ∈\n \n(19) \n22\n, ,max line, (, ) Ωij t ijl I ij ∀≤∈\n \n(20) \nwhere ,itv  is the voltage magnitude at node i , ,ij tl  is the current magnitude on line ij, \nand \n2\n,miniU , \n2\n,maxiU , \n2\n,maxijI  are the respective voltage and current limits. \nb. Power Flow Constraints \nTo ensure the operational feasibility of the ADNs under the integration of E -SOPs \nand distributed resources, power ﬂow balance constraints are established based on the \nbranch power model. The active and reactive power balance equations at each node are \nexpressed as: \n( ),,\n2\n, ,() ()\n,() Ωinj\nij t ni t n i ni t Nitj ki n pi\nP P RI P i ∀\n∈∈\n∑ −∑ − = ∈  \n(21) \n( ),,\n2\n, ,() ()\n,() Ωinj\nij t ni t n i ni t Nitj ki n pi\nQ Q XI Q i ∀\n∈∈\n∑ −∑ − = ∈  \n(22) \nwhere ,ij tP , ,ij tQ  are the active and reactive power ﬂows on branch ij at time t; niR , niX  \nare the resistance and reactance of branch ij; ,\n2() ni tI  is the squared current magnitude on \nbranch ij at time t; ,\ninj\nitP , ,\ninj\nitQ  are the net active and reactive power injections at node i at \ntime t. ,ni tP  and ,ni tQ  denote the active and reactive power ﬂows on branch ni ﬂowing \ninto node i at time t. \nEnergies 2026, 19, 228 9 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nThe nodal power injection ,\ninj\nitP , ,\ninj\nitQ  is composed of contributions from DG, E-SOP, \nloads, and controllable resources. The power balance at node i can be expressed as: \n,\n,,,,,\ninj E SOP AC WT PV L\nit it itit itPP P P P−= ++−\n \n(23) \n,\n,,, ,,,\ninj E SOP AC WT PV SVC L\nit it it itit itQQ Q Q Q Q−= +++ −\n \n(24) \nwhere \n,\n,\nE SOP AC\nitP −\n, \n,\n,\nE SOP AC\nitQ −\n are the active and reactive power outputs of the E- SOP at \nnode i at time t; ,\nWT\nitP , ,\nPV\nitP  represent the active power output from DG (including wind \nand PV) at node i at time t; ,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "itP , ,",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "itQ  are the active and reactive power demands at node",
+      "level": 1,
+      "text": "i at time t. \nThe voltage–power ﬂow relationship on each line is given by: \n( ) ( ) ( ),\n222\n,, , ,2 1 , (, )() Ωline\ni t j t ij ij t ij ij t ij ij ij t ij Lv v RP XQ R X I M x ij ∀−≥ + −+ − − ∈  \n(25) \n( ) ( ) ( ),\n222\n,, , ,2 1 , (, )() Ωline\ni t j t ij ij t ij ij t ij ij ij t ij Lv v RP XQ R X I M x ij ∀−≤ + −+ + − ∈  \n(26) \n22\n,,\n2\n,, 0, (( ,) Ω)ij t i t ij t ij t LI v P Q ij ∀−−= ∈  (27) \nwhere M is a suﬃciently large constant used for relaxation in the linearization of con-\nstraints, and \nline\nijx  is a binary variable indicating the presence of line ij, where \nline\nijx  = 1 if \nthe line is built, and \nline\nijx  = 0 otherwise.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4 Solution Methodology",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.1 Convex Relaxation of the Model",
+      "level": 2,
+      "text": "The proposed ADN expansion planning model includes nonlinear coupling among \nnode voltages, branch power ﬂows, and device power variables, resulting in a non-convex \nformulation that is diﬃcult to solve directly while ensuring global optimality. To improve \ntractability and computational stability, convex relaxation is applied to the power ﬂow \nequations and related operational constraints of the distribution network, reformulating \nthe problem as a SOCP model. Details can be found in [19,20].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4.2 Successive Contraction of Convex Relaxation Algorithm",
+      "level": 2,
+      "text": "Although the SOCP-relaxed model signiﬁcantly improves computational eﬃciency, \nits optimal solution may not strictly satisfy the physical consistency required by the orig-\ninal non-convex model. To reduce the relaxation gap introduced by convexiﬁcation, t his \npaper adopts a Successive Contraction of Convex Relaxation (SCCR) algorithm. By itera-\ntively tightening constraint boundaries, the algorithm progressively approximates the fea-\nsible region of the original problem. \n(1) Deﬁnition of Relaxation Gap \nTo quantitatively characterize the degree of relaxation, relaxation error metrics are \ndeﬁned for branches, SOPs, and BESSs as follows: \n( ) ( )\n22\n,,\n,,\n2)\n1\n(\nij t ij tflow\nt\nij t i t\nPQ\ng\nIv\n+\n= −  (28) \nEnergies 2026, 19, 228 10 of 18 \n \nhttps://doi.org/10.3390/xxxxx \n( ) ( )\n22,,\n&, &,\n,\n&,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "1 E SOP AC E SOP AC",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "jt i jtE S OP E SOP",
+      "level": 1,
+      "text": "ti E SOP L\ni jt\nPQ\ngA\nP\n−−\n−−\n−\n+\n= −\n (29) \nIf \nflow\ntg , \nE SOP\ntg −\n approach zero, it indicates that the relaxation accuracy in the cor-\nresponding components is high. \n(2) Iterative Contraction Mechanism \nThe algorithm gradually tightens the feasible region by introducing penalty terms \nand relaxation-plane constraints into the objective function. The modiﬁed objective func-\ntion is deﬁned as: \n0min FF F χχ= +′  (30) \nwhere F denotes the original objective function, and 0χ  is the contraction coeﬃcient used \nto balance the trade-oﬀ between the original objective and the penalty term. The function \nFχ  represents the penalty function introduced during the iterative contraction process, \nand is deﬁned as: \n( )\nline? SOP?\n2 ,L\n,max ,Ω (, ) Ω ΩT\nSOP\nij ij itt ij i\nF Ir Pχ\n∈∈ ∈\n= ∑ ∑ +∑\n\n (31) \nThe penalty term Fχ  comprehensively reﬂects the additional losses caused by line \nﬂows and ﬂexible devices. By adjusting its weight in each iteration, the algorithm progres-\nsively approximates and contracts the non-convex feasible region. This approach ensures \nthat the solution space moves closer to the global optimum while maintaining feasibility. \n(3) Linear Cutting-Plane Contraction Step \nBased on the solution obtained in the previous iteration, the following linear cutting-\nplane constraints are constructed: \n( )\n222 ,,\n,max\n,\n0ij t ij t\nij\nit\nPQ\nI v\n+\n−≤  (32) \n( ) ( )\n22, ,,\n&, &, &, 0E SOP L E SOP E SOP AC E SOP AC\nii jt i jt i jtP AP Q− −− − − +≤  (33) \nAfter each iteration, the relaxation gap is evaluated using the current solution. If the \nrelaxation gap satisﬁes the predeﬁned convergence criterion, the algorithm is considered \nto have converged. Otherwise, the penalty weight is increased, and the problem is re -\nsolved until the convergence condition is met. \n(4) Overview of the Algorithm Procedure \na. Initialization: Set the residual threshold \ngε , initial penalty weight 0χ , and step-size \nfactor ω. \nb. Initial Solution: Solve the relaxed model using the modiﬁed objective function F′ to \nobtain an initial optimal solution. \nc. Constraint Update: Calculate the relaxation gap based on the current solution and \nadd linear cutting-plane constraints. \nd. Successive Contraction: Gradually increase the penalty coeﬃcient and iteratively \nsolve the modiﬁed model. \ne. Convergence Check: If the relaxation gaps in all scenarios satisfy the convergence \ncriterion, output the optimal solution; otherwise, continue iterating. \nEnergies 2026, 19, 228 11 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nThis method preserves the tractability of the SOCP-relaxed model while approximat-\ning the original non-convex constraints through penalty terms and cutting-plane contrac-\ntions. It eﬀectively reduces the relaxation error and yields physically feasible optimal so-\nlutions. Compared with traditional one-shot relaxation methods, the SCCR algorithm of-\nfers a better balance between solution accuracy and computational stability, making it \nparticularly suitable for ADN planning problems involving multiple types of ﬂex ible re-\nsources and uncertain scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "5 Case Study",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "5.1 Case Setup",
+      "level": 2,
+      "text": "A modiﬁed version of the Portuguese 54 -bus distribution network proposed in [21] \nis adopted as the test system. The original topology, nodal loads, and line parameters are \nall derived from [21]. Source-load data are obtained from real operational measurements \nof a distribution network in northern China. \n(1) Substations \nThe system includes four substations: S1 and S2 are existing substations, while S3 \nand S4 are newly planned. The capacity, investment, and operation parameters are as fol-\nlows: S1 has an initial capacity of 16.7 MVA and can be expanded to 33.4 MVA, with an \ninvestment cost of 8 million CNY and annual maintenance cost of 15,000 CNY. S2 has an \ninitial capacity of 30 MVA with an expandable capacity of 13.3 MVA, an investment cost \nof 7.6 million CNY, and annual maintenance cost of 15,000 CNY. S3 and S4 are newly \nplanned substations with capacities of 22.2 MVA each, investment cost of 12 million CNY, \nand annual maintenance cost of 20,000 CNY. The electricity purchase price from the main \ngrid is assumed to be 0.5 CNY/kWh. \n(2) Feeders \nThe unit-length impedance of the distribution lines is 0.307 Ω/ km + j 0.380 Ω/km, \nwith a rated transmission capacity of 6.12 MVA. The investment cost is approximately \n245,200 CNY/km, and annual maintenance cost is 3000 CNY/km. \n(3) E-SOP System \nCandidate branches for E-SOP installation include: 6–26, 8–34, 9–22, 25–33, 38–32, 13–\n43, and 46 –50. Each SOP unit is rated at 100 kVA, with an investment cost of 1000 \nCNY/kVA, a power loss coeﬃcient of 0.02, and an O&M coeﬃcient of 0.01. The BESS com-\nponent of E-SOP has a unit energy cost of 1000 CNY/kWh  and a unit power cost of 1500 \nCNY/kW. Annual O&M cost for BESS is 0.35 CNY/kWh. The total energy capacity of BESS \nis limited to 6000 kWh, and the total power capacity is limited to 2000 kW. The initial state \nof charge (SOC) for typical operation days is set to 0.5, with allowable variation in the \nrange [0.2, 1.0]. \n(4) DG \nCandidate nodes for PV installation: 10, 25, 38, 39, 46, 47.  Candidate nodes for wind \npower installation: 24, 34, 37, 38, 39. Unit investment cost: 4300 CNY/kW for PV and 5600 \nCNY/kW for wind.  Annual O&M cost: 0.03 CNY/kWh. The rated power per unit is 100 \nkW, and the power factor is adjustable between 0.95 leading and 0.95 lagging.  The maxi-\nmum DG penetration in the system is limited to 60%. \n(5) Other Parameters \nThe planning horizon is set to 15 years, with a discount rate of 5%. The allowable \nvoltage range at each node is [0.95, 1.05] p .u., and the load power factor is set to 0.9.  It \nshould be noted that the candidate installation sites for BESS, SOP, and RES in this study \nEnergies 2026, 19, 228 12 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nare deﬁned based on a uniﬁed case -level assumption. This modeling approach is con-\nsistent with the common practice in existing studies, where candidate nodes are prede-\nﬁned and the ﬁnal deployment scheme is determined by the optimization model. Such a \nsetting does not compromise the generality or optimality of the proposed model. \n5.2. Wind–Solar Output Scenario Generation Based on WGAN-GP \nIn this study, real measured wind and PV output data are used as the baseline sam-\nples. The WGAN-GP model is employed to learn and reproduce the probabilistic distri-\nbution characteristics of the joint wind–solar output, thereby generating a set of stochastic \nscenarios that are statistically consistent with historical data patterns. \nTo verify the validity of the generated data, the cumulative distribution functions \n(CDF) of the generated samples and historical samples are compared, as shown in Figures \n3 and 4. The original wind and PV data are sampled at 5 -min intervals, resulting in 288 \ndata points per day for each source. After generating wind and PV scenarios, the time \nresolution is converted to an hourly scale during the planning stage to align with the load \ndata. \n0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1\nNormalized wind Power (p.u.)\n0\n0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "1 CDF",
+      "level": 1,
+      "text": "Real Sample\nGenerated Sample\n0\n \nFigure 3. CDF of wind power. \n0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "1 CDF",
+      "level": 1,
+      "text": "Real Sample\nGenerated Sample\n0\nNormalized PV Power (p.u.)  \nFigure 4. CDF of PV output. \nAs shown in the ﬁgures, the cumulative distribution curves of the generated samples \nclosely match those of the historical data, indicating that the wind –PV output scenarios \ngenerated by the WGAN-GP model can accurately capture the ﬂuctuation characteristics \nand distributional properties of the actual output. \nTo reduce the computational burden of the subsequent planning model, a K-medoids \nclustering algorithm is applied to extract representative scenarios. The number of clusters \nis evaluated using the Silhouette Coeﬃcient (SC) method, and the best clustering perfor-\nmance is achieved when SC = 4. Finally, the cluster centers are selected as typical repre-\nsentative scenarios, resulting in 4 typical scenarios for both wind and PV generation. \nThese are superimposed with the load curves of the original representative days to form \n4 typical daily net load curves, which serve as inputs for the multi -scenario optimization \nmodel.  \nEnergies 2026, 19, 228 13 of 18 \n \nhttps://doi.org/10.3390/xxxxx",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "5.3 Planning Results Analysis",
+      "level": 2,
+      "text": "(1) Analysis of Planning Results Considering Uncertainty \nBy comparing planning schemes with and without the consideration of wind –solar \noutput uncertainty, the impact of uncertainty modeling on ADN planning outcomes can \nbe more intuitively evaluated. As shown in Table 1, when uncertainty is considered, the \nsystem’s annual total cost increases from 1.4743 million CNY to 1.4916 million CNY, rep-\nresenting an increase of approximately 1.2%. \nThis increase is primarily attributed to the enhanced allocation of ﬂexible devices and \nDG resources, which improves the system’s adaptability to stochastic ﬂuctuations. Specif-\nically, the investments in feeders, substations, and E-SOP devices all increase. Meanwhile, \nthe installed capacities of PV and wind power are expanded, which enhances local energy \nutilization capability. \nOverall, considering uncertainty leads to a slight increase in system investment. \nHowever, the expanded deployment of ﬂexible resources such as E-SOPs signiﬁcantly im-\nproves operational ﬂexibility and robustness, enabling a better balance between economic \neﬃciency and system reliability in the planning scheme.  For scenarios where the impact \nof uncertainty is relatively small or computational resources are limited, deterministic \nplanning can serve as a practical approximation. However, in applications involving high \nuncertainty and high renewable penetration, the proposed uncertainty -aware modeling \napproach remains necessary and of signiﬁcant engineering relevance. \nTable 1. Impact of Uncertainty on Planning Results. \nItem (104 CNY) Planning with WGAN-Based Uncertainty Planning Without Uncertainty \nAnnual Total Cost 148.97 146.74 \nFeeder Investment Cost 3.21 2.82 \nSubstation Investment Cost 2.74 2.49 \nE-SOP Investment Cost 1.77 1.05 \nPV Investment Cost 8.04 6.91 \nWind Investment Cost 3.98 3.03 \nElectricity Purchase Cost 126.27 128.32 \nEquipment O&M Cost 2.96 2.12 \nWind/Solar Curtailment Penalty 0 0 \n(2) Analysis of Planning Results Considering E-SOP \nTo further verify the economic eﬃciency and ﬂexibility of the proposed E-SOP coor-\ndinated planning model, a comparative analysis is conducted among three ﬂexible re-\nsource conﬁguration schemes: \n(a) SOP-only conﬁguration: The system includes conventional resources such as feeders, \nsubstations, PV, and wind power, but does not include any energy storage devices. \n(b) BESS-only conﬁguration: The system also includes feeders, substations, PV, and \nwind power, but no ﬂexible interconnection devices (i.e., no SOP). \n(c) E-SOP conﬁguration (proposed scheme): The system includes feeders, substations, \nPV, and wind power, along with E-SOP devices integrating both SOP and BESS. \nThe cost composition of each conﬁguration scheme is summarized in Table 2. \nTable 2. Impact of Diﬀerent Conﬁguration Schemes on Planning Results. \nCase Investment + O&M Cost \n(104 CNY) \nElectricity Purchase Cost \n(104 CNY) \nCurtailment Penalty \nCost (104 CNY) \nAnnual Total Cost  \n(104 CNY) \na 15.93 141.23 0.73 157.89 \nb 19.50 133.00 0.21 152.71 \nEnergies 2026, 19, 228 14 of 18 \n \nhttps://doi.org/10.3390/xxxxx \nc 22.7 126.27 0 148.97 \nAs shown in the table, the conﬁguration scheme with E-SOP achieves the best overall \neconomic performance, with an annual total system cost of 1.4897 million CNY —repre-\nsenting a reduction of 89,200 CNY and 37,400 CNY compared to the SOP-only and BESS-\nonly conﬁgurations, respectively. Although the investment and maintenance costs of the \nE-SOP scheme are relatively higher, it enables coordinated power ﬂow reconﬁguration \nand temporal energy shifting by integrating the BESS on the DC side. This signiﬁcantly \nenhances the spatiotemporal ﬂexibility and renewable energy hosting capacity of the sys-\ntem. \nAs a result, the planned installed capacities of distributed PV and wind power are \nfurther increased, reducing reliance on power purchases from the upstream grid. With \nhigher levels of local renewable energy utilization, the E-SOP scheme eﬀectively mitigates \npower ﬂow congestion and reverse power ﬂow during peak periods. The system’s de-\npendency on the main grid is signiﬁcantly reduced, with electricity purchase costs drop-\nping to 1.2627 million CNY, and wind and solar curtailment entirely eliminated. \nThese results demonstrate that the integration of E-SOP not only improves the ADN’s \nability to accommodate the stochastic ﬂuctuations of renewable energy but also enables \ncoordinated interaction among source, network, load, and storage components—leading \nto enhanced overall system economic performance. The planning results regarding sub-\nstation expansion and feeder layout under the proposed method are illustrated in Figure \n5. \nS1\n4\n5\n6\n3\n1\n2\n9\n7\n8\n26\n27\n28\nS3\n363534\n3339\n32\n41\n42\n48\n49\n47\n50\n401615\n4614\nS2\n11\n45\n44\n38\n12\n43\n37\n31\n10\n30\n18\n17\n23 24 25\n22\n29\nS4\n19\n20\n21",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "13 Existing",
+      "level": 1,
+      "text": "Feeder New Feeder Existing \nSubstation\nNew Substation\nExpanded \nSubstationAC\nDC\nAC\nDC E-SOP\nPV\nWind \nPower\n \nFigure 5. Planning results of the proposed method. \nIn summary, the coordinated planning of E -SOP achieves a new optimal balance \namong system economy, operational ﬂexibility, and renewable energy integration by \nmoderately increasing the allocation of ﬂexible resources at the investment stage in ex-\nchange for signiﬁcant operational cost savings and improved resource utilization. This \napproach provides a feasible technical pathway and valuable reference for the expansion \nplanning of ADNs under high-penetration DG conditions. \n(3) Algorithm Eﬀectiveness Analysis \nTo verify the eﬀectiveness and computational performance of the proposed iterative \ncontraction convex relaxation algorithm, it is applied to the ADN expansion planning",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the architecture of the generator and discriminator in the proposed"
+    },
+    {
+      "id": "f2",
+      "caption": "Structure of the E-SOP system."
+    },
+    {
+      "id": "f3",
+      "caption": "CDF of wind power."
+    },
+    {
+      "id": "f4",
+      "caption": "CDF of PV output."
+    },
+    {
+      "id": "f5",
+      "caption": "Planning results of the proposed method."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Impact of Uncertainty on Planning Results."
+    },
+    {
+      "id": "t2",
+      "caption": "Impact of Diﬀerent Conﬁguration Schemes on Planning Results."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e1",
+      "latex_or_text": "(1 )"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "(31)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 18
+  }
+}

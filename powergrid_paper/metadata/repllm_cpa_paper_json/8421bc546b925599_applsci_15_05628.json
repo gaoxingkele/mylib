@@ -1,0 +1,464 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-15-05628.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In recent years, enhancing the capability of test and training operations under inte-\ngrated land, sea, air, space, and electromagnetic warfare environments has become a focal\npoint in military competition. To support such complex missions, the concept of the Logical\nRange has emerged. A Logical Range is a mission-oriented, reconfigurable range system\nthat integrates testing, training, and simulation resources through distributed networking\nand high-performance computing technologies [1,2]. Unlike traditional test ranges, Logical\nRanges can dynamically reorganize functional elements across geographically dispersed\nplatforms to meet the demands of new tasks that a single range cannot fulfill alone.\nThis flexible architecture enables cross-domain resource integration and real-time\nmission composition, but it also presents new technical challenges. During joint oper-\nations, such as cross-regional flight testing or collaborative weapon system evaluation,\nLogical Range platforms often suffer from uneven workload distribution, high concurrency,\nand complex system heterogeneity. These factors can cause delays in task scheduling and\nexecution, leading to reduced responsiveness and efficiency. Consequently, accurate load\nforecasting becomes crucial for optimizing task allocation and maintaining system stability\nunder fluctuating conditions.\nAlthough traditional statistical approaches [ 3–6] have been applied for time-series\nload prediction, they typically rely on strict assumptions (e.g., Poisson distribution) and\nfail to handle the stochastic, nonlinear nature of real-world Logical Range workloads [7].\nAppl. Sci. 2025, 15, 5628 https://doi.org/10.3390/app15105628\nAppl. Sci. 2025, 15, 5628 2 of 14\nTo overcome these limitations, more adaptable, learning-based forecasting frameworks are\nneeded to support intelligent resource scheduling in such dynamic environments.\nTo capture temporal patterns in such data, autoregressive models and probabilistic\nstatistical approaches [8–11] have been employed with some success. However, in dynami-\ncally evolving Logical Range environments, their predictive performance often deteriorates\ndue to their limited adaptability to abrupt changes and temporal nonstationarity [12].\nRecently, deep learning-based prediction models—notably those based on recurrent\nneural networks (RNNs)—have demonstrated strong capabilities in learning nonlinear\ntemporal dependencies directly from historical data [13–18]. Nevertheless, many of these\napproaches fail to account for spatial correlations that may exist across subsystems or\ngeographically distributed nodes. Recent studies have highlighted the importance of jointly\nmodeling both spatial and temporal features, which can significantly improve the accuracy\nof forecasting in nonstationary and highly volatile load environments [19].\nTo address the aforementioned challenges, we propose GCSG: a novel hybrid deep\nlearning model that integrates Gramian Angular Field (GAF) encoding, a Convolutional\nNeural Network with Squeeze and Excitation (CNN-SENet), and a Gated Recurrent Unit\n(GRU). This model is specifically designed to handle the complexity of load forecasting in\nLogical Range environments, offering several key innovations:\nFirst, we employ the GAF approach to transform 1D nonstationary load sequences\ninto 2D images, enabling CNNs to effectively capture spatial correlations. Second, we\ndevelop a CNN-SENet module that adaptively recalibrates channel-wise feature responses,\nenhancing the model’s ability to focus on informative features while suppressing noise,\nwhich is crucial for robust feature extraction in complex environments. Finally, we intro-\nduce an attention-based spatiotemporal fusion mechanism that dynamically combines\nspatial features (from CNN-SENet) with temporal dependencies (from GRU), significantly\nimproving the prediction accuracy under highly dynamic workloads by capturing both\ntransient patterns and long-term trends in the data.\nThe main contributions of this study are as follows:\n(1) We propose a domain-specific hybrid forecasting model tailored to the Logical Range\ncontext. Combining spatial and temporal representation learning through a GAF–\nCNN-SENet–GRU architecture, our approach effectively addresses the unique chal-\nlenges of dynamic load behavior and distributed task execution observed in modern\ntest and training infrastructures.\n(2) We design an innovative spatiotemporal attention fusion module that adaptively\nlearns the significance of both spatial and temporal components in the data. This\nfusion mechanism enhances the model’s ability to generalize across diverse scenarios\nand operational conditions typically observed in Logical Range settings.\n(3) We conduct comprehensive experiments on real-world Logical Range datasets. The re-\nsults demonstrate that our model outperforms state-of-the-art baselines in terms of\naccuracy, generalization, and robustness. Specifically, GCSG achieves an R2 of 0.86,\na mean absolute error (MAE) of 4.5, and a mean squared error (MSE) of 34, underscor-\ning its practical utility in supporting more efficient and responsive resource scheduling\nacross complex range systems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Materials and Methods",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Architecture for Logical Range",
+      "level": 2,
+      "text": "As introduced in Section 1, the Logical Range comprises a variety of networked\ntask-processing devices, including theodolites, cameras, radar systems, and Time–Space–\nPosition Information (TSPI) units. These devices are interconnected through a high-speed\nAppl. Sci. 2025, 15, 5628 3 of 14\nnetwork to support real-time data processing, task coordination, and multimedia informa-\ntion flow (e.g., image/video display).\nFigure 1 illustrates the overall structure of the Logical Range, where heterogeneous\ndevices collaborate to execute computationally intensive tasks. These devices are responsi-\nble for data computation, command distribution, real-time acquisition, and visualization,\nresulting in dynamic and unpredictable workloads.\n...\nClient 1 Client n\n...\nLogical Range 1\n...\nTheodolite Camera Radar\n...\nLogical Range 1\n...\nTheodolite Camera Radar\n...\nLogical Range n\nTheodolite\n...\nTSPIGPS\nTask Processing \nDevice 1\nTask Processing \nDevice n\n...\nTask Processing \nDevice 1\nTask Processing \nDevice n\nNetwork Access\nData Interaction\nFigure 1. Architecture of Logical Range Environment.\nThe resource usage of these devices is highly complex and variable, typically involv-\ning metrics such as CPU usage, memory consumption, network I/O (uplink/downlink),\nand disk activity. Among them, CPU usage is particularly critical, as most operations in\nLogical Range scenarios are computationally intensive and latency-sensitive. Therefore,\nthis study focuses on CPU usage as the primary time-series signal for load forecasting and\ntask scheduling optimization.\nAs illustrated in Figure 2, the CPU usage data from all task-processing devices are\nrecorded over time to form a multivariate time series, denoted as\nx = {xi : i = 1, 2, . . . ,T}, (1)\nwhere xi represents the aggregated CPU usage at time step i. The sequence x exhibits\nstrong temporal dependencies, and accurate forecasting of its future values is essential for\nreducing latency, avoiding resource bottlenecks, and improving experimental throughput\nin Logical Range systems.\nTo construct an effective forecasting dataset, we normalize x and apply a sliding time\nwindow strategy. At each time step i, a subsequence of length w,\nxw\ni = [xi−w, xi−w+1, . . . ,xi] (2)\nis extracted as the input sample, and the forecasting target is set as the valuexi+d at a future\ntime step d ahead. The forecasting function is defined as\nxi+d = f (xw\ni : d), (3)\nAppl. Sci. 2025, 15, 5628 4 of 14\nwhere f is the deep learning model proposed in this study and d is the forecasting step,\nwith d ≥ 1. The complete dataset can be constructed as\nS = {. . . ,(xw\ni , xi+d), (xw\ni+1, xi+d+1), (xw\ni+2, xi+d+2), . . .} (4)\nand we denote each sample as sw\ni = (xw\ni , xi+d). This sliding window mechanism enables\ncontinuous load forecasting and dynamic resource allocation. The processing of S is\ndepicted in Figure 2.\n... ... ......\n... ... ......\n... ... ......\ni-w-1 i i+d\ni+1+d\ni+2+d\ni-w i+1\ni+2i-w+1\n2\nw\ni+x\n1\nw\ni+x\nw",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "Data in sliding window Data not in sliding window Predicted data",
+      "level": 1,
+      "text": "Figure 2. Sliding window-based processing of device load data in Logical Range.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Proposed Load Forecasting Methodology",
+      "level": 2,
+      "text": "The proposed forecasting model integrates the GAF, CNN, SENet, and GRU methods\nand is thus abbreviated as GCSG (GAF–CNN-SENet–GRU). The overall architecture of the\nGCSG load forecasting model for the Logical Range is shown in Figure 3.\n...\nw",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "GAF",
+      "level": 1,
+      "text": "1×w×w\n3× 3\nConv2d\n6×w×w\n2× 2\nMax Pooling\n6 22\nww\n10 22\nww\n10 44\nww\nSENet\n...\n…",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "Conv2d",
+      "level": 1,
+      "text": "44\nww\n10 44\nww\n10× 1\n………\nGRU\n………\nGRU\n…\n10× 1\n…\n…\n5× 2\nki\n…\n…\n5× 2\nyi\nDense\nInput Data\nFeature Fusion\ngi pi\nmi\nDense\n3× 3\nConv2d\n2× 2\nMax Pooling\nFigure 3. Processing pipeline of the GCSG model.\nThe processing pipeline of the GCSG model comprises three stages: (1) spatial fea-\nture extraction via GAF and CNN-SENet; (2) temporal feature extraction using GRU;\n(3) attention-based feature fusion.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.1 Spatial Feature Extraction",
+      "level": 3,
+      "text": "Spatial feature extraction involves transforming the dataset from time-series data into\nimage data via GAF encoding.\nSubsequently, a CNN extracts features from the resulting images, with feature opti-\nmization through channel attention mechanisms such as SENet [20].\n1. Image conversion.\nAppl. Sci. 2025, 15, 5628 5 of 14\nGAF encoding is a visualization and feature extraction technique for time-series\nanalysis and signal processing. It converts one-dimensional time-series data into two-\ndimensional images while preserving their temporal characteristics. In this study, the GAF\napproach is used to transform the input data xw",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "within each dataset sw",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "of Logical Range",
+      "level": 1,
+      "text": "load data into two-dimensional images, expanding the data dimensionality. Figure 4\nillustrates the conversion process.\nLoad Data\n GAF Image\n0.50\n0.45\n0.40\n0.35\n0.30\n0 5 10 15 20 25 30 35 270°\n315°\n45°\n90°\n135°\n180°\n225°\n0°\nPolar Coordination\nTransform Transform\nFigure 4. Gramian Angular Field (GAF) -based conversion of Logical Range load data.\nThe main steps of the GAF conversion process for Logical Range load data are as follows:\n(1) Extract the input data xw",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "from the dataset sw",
+      "level": 1,
+      "text": "i , where w is the length of xw",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "and",
+      "level": 1,
+      "text": "xw\ni = [xi−w, xi−w+1, . . . ,xi];\n(2) Convert xw\ni to polar coordinates using Equation (5):\n\n\n\nθi = arccos(xi)\nri = ti\nT\n, (5)\nwhere ri is the polar radius, ti is the timestamp of xi, T is the total timestamp length,\nand θi is the polar angle. Here, ri preserves the temporal characteristics of the time-\nseries data, while θi retains the numerical variations.\n(3) Construct the GAF matrix gi using the cosine function (Equation (6)), with dimensions\nw × w:\ngi =\n\n\ncos(θ1 + θ1) · · ·cos(θ1 + θw)\n... ... ...\ncos(θw + θ1) · · ·cos(θw + θw)\n\n. (6)\nCompared to xw\ni , gi enhances the correlations between load data values across different\ntimestamps in the Logical Range.\n2. Feature extraction.\nThe CNN is a deep learning architecture that is primarily used for tasks involving\nstructured data, such as image recognition, classification, and object detection. A CNN\noperates by applying convolutional operations to extract features from images, followed\nby pooling operations to reduce the dimensionality of the extracted features. CNNs can\nautomatically learn and capture local features within images and exhibit certain invariance\nto translations, scaling, and other transformations, making them highly effective for image\ndata processing [21].\nThe channel attention mechanism enhances the interaction of information between\nchannels in CNN feature maps, helping to learn the importance of different channels [22].\nSENet, as one type of channel attention mechanism, adaptively adjusts the weights of\nindividual channels to improve the network’s focus on essential features, thereby enhancing\nthe CNN’s feature representation capability [23].\nAppl. Sci. 2025, 15, 5628 6 of 14\nThe GCSG model employs a CNN to extract features from gi and integrates SENet\nto adjust feature weights, thus improving the CNN’s perception of important features.\nThe specific process is as follows:\n(1) Conduct successive convolution, activation, and pooling operations on gi to obtain\nfeature maps pi = [pi,1, pi,2, . . ., pi,c], where the size of pi is h × l × c and c is the\nnumber of channels, with each channel containing a two-dimensional feature.\n(2) Compute the global statistics zi,j for each channel feature pi,j in pi, where j = 1, 2,. . ., c,\nusing Equation (7):\nzi,j = 1\nh × l\nh\n∑\na=1\nl\n∑\nb=1\npi,j(a, b). (7)\nThe global pooling operation aggregates the values of pi,j across its spatial dimensions\nto derive zi,j.\n(3) Compute the weight βi,j for each channel feature pi,j in pi to obtain the weight vector\nβi, where zi = [zi,1, zi,2, . . . ,zi,c], using Equation (8):\nβi = σ(ω2δ(ω1zi)), (8)\nwhere σ denotes the sigmoid function, δ represents the ReLU function, and ω1 and ω2\nare full layer matrices.\n(4) Compute the weighted feature map mi using Equation (9):\nmi = pi · βi. (9)\n(5) Apply convolutional and transformation operations on mi to obtain the spatial feature\noutput vector vi for xw\ni .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.2.2 Temporal Feature Extraction",
+      "level": 3,
+      "text": "The GRU is a recurrent neural network architecture that incorporates gating mecha-\nnisms to address the problems of vanishing and exploding gradients faced when using\ntraditional RNNs [24].\nWhen processing time-series load data in the Logical Range, the GRU preserves\ntemporal features through its hidden states. The GCSG model employs a two-layer stacked\nGRU to extract temporal features from xwi:\n(1) Input vector xw",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "from dataset sw",
+      "level": 1,
+      "text": "i (where xw\ni = [xi−w, xi−w+1, . . ., xi]) with initialized\nzero hidden state into the first GRU layer.\n(2) Compute reset gate, update gate, candidate hidden state, and hidden state updates\nusing xw\ni to obtain the hidden state vector ui.\n(3) Process ui and xw\ni through the second GRU layer to generate the hidden state vector oi.\n(4) Transform oi via a fully connected layer to derive the temporal features output vec-\ntor ki.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.3 Feature Fusion",
+      "level": 2,
+      "text": "An attention-based fusion method enhances the model’s focus on critical spatial and\ntemporal features. The method weights the spatial feature vi and temporal feature ki\nof xw\ni according to their contributions to load forecasting accuracy in the Logical Range.\nThe weight computation follows Equation (10):\nqi = softmax( vikT\ni√χki\n)ki, (10)\nwhere √χki is the dimension weight for ki, and qi is the attention-fused feature vector.\nAppl. Sci. 2025, 15, 5628 7 of 14\nA fully connected layer transforms qi’s dimensions as shown in Equation (11):\nyi = W qi, (11)\nwhere W is the weight matrix and yi is the final forecasting result.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3 Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.1 Experimental Setup",
+      "level": 2,
+      "text": "To evaluate the effectiveness of the GCSG model, the experimental data used in this\nstudy were collected from the multi-region joint simulation test system of the Digital\nTwin Logical Range, jointly developed by the Chinese Flight Test Establishment and\nXi’an University of Technology. This system primarily processes aircraft flight status data\nobtained from devices such as GPS, theodolites, cameras, and radars during flight tests. It\nintegrates six high-performance servers to form a central processing node cluster that is\nresponsible for data processing, digital twin model rendering, and command forwarding.\nScripts were developed to collect and store various load metrics from each node in\nthe central processing cluster. The data collection spanned 144 h, with a sampling interval\nof 90 s, resulting in 5760 records per node (Logical Range task processing device). The\ndataset contains timestamps, Logical Range IDs, device IDs, and CPU load measurements\n(0–100%).\nTo ensure consistency in model training and convergence, all input features were\nnormalized using standardization (i.e., zero mean and unit variance) based on the statistics\nof the training set. This preprocessing step improves the numerical stability of the model\nand ensures fair comparison across different methods.\nTo ensure the accuracy and reproducibility of the experimental results, all experiments\nwere conducted under consistent software and hardware conditions. The detailed hardware\nand software configurations are summarized in Table 1.\nTable 1. Experimental setup.\nCategory Specification\nOperating system Windows 10 (64-bit)\nProgramming language Python 3.9\nDeep learning framework PyTorch 2.0.0+ cu118\nProcessor 12th Gen Intel(R) Core(TM) i9-12900K 3.20 GHz\nGPU NVIDIA GeForce RTX 3090\nMemory 64 (GB)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.2 Performance Evaluation Metrics",
+      "level": 2,
+      "text": "To ensure a comprehensive and reliable evaluation of the GCSG model’s performance,\nwe adopt a multi-metric strategy comprising the coefficient of determination ( R2, see\nEquation (12)), mean absolute error (MAE, see Equation (13)), and mean squared error\n(MSE, see Equation (14)). Specifically, R2 measures the proportion of variance explained\nby the model, while the MAE and MSE quantify the prediction errors from absolute and\nsquared perspectives, respectively. This combination of metrics enables a more holistic\nassessment of the model’s accuracy and robustness, avoiding overreliance on any single\nevaluation indicator.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "1 The coefficient of determination ( R2) measures the proportion of variance in the",
+      "level": 1,
+      "text": "predicted Logical Range load data explained by the model. Higher values indicate\nbetter performance:\nAppl. Sci. 2025, 15, 5628 8 of 14\nR2 = 1 −\nn\n∑\ni=1\n(yi − ˆyi)2\nn\n∑\ni=1\n(yi − ¯yi)2\n. (12)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "2 The mean absolute error (MAE) is computed as the average absolute difference be-",
+      "level": 1,
+      "text": "tween predicted and actual load forecasting values:\nMAE = 1\nn\nn\n∑\ni=1\n|yi − ˆyi|. (13)\n3. The mean squared error (MSE) quantifies average squared prediction errors, penalizing\nlarger deviations:\nMSE = 1\nn\nn\n∑\ni=1\n(yi − ˆyi)2. (14)\nIn the above formulas, ˆyi denotes the predicted value, yi denotes the true (actual)\nvalue, and ¯y is the mean of the true values.\nThese metrics were used to assess the model’s accuracy for time-series load forecasting\nin the Logical Range.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.3 Performance Analysis",
+      "level": 2,
+      "text": "To evaluate the performance of the proposed GCSG model in the Logical Range\nscenario, we conducted comparative experiments with several widely used deep learn-\ning models, including CNN, LSTM, GRU, LSTM-ED [25], BiLSTM [26], LSTM-GRU [27],\nand ConvLSTM [28] models. For a fair comparison, each baseline model was individually\nfine-tuned to achieve its best performance through grid search. All models were trained\nand evaluated using the same dataset splits and experimental conditions.\nThe specific hyperparameter settings for each model, including hidden size, learning\nrate, number of training epochs, batch size, dropout rate, number of layers, and optimizer,\nare summarized in Table 2.\nTable 2. Model parameter configurations.\nModel Hidden Size LR Epochs Batch Size Dropout Layers Optimizer\nCNN 100 0.001 100 50 0.3 1 Adam\nLSTM 10 0.1 50 50 0.3 1 Adam\nGRU 64 0.001 50 50 0.3 1 Adam\nLSTM-ED 64 0.0001 50 50 0.2 1 Adam\nBiLSTM 10 0.01 50 50 0.01 1 Adam\nLSTM-GRU 64 0.0001 50 50 0.4 1 Adam\nConvLSTM 64 0.001 50 50 0.01 1 Adam\nGCSG 32 0.0001 100 100 0.01 2 Adam\n(1) Input window size analysis.\nFigure 5 displays the performance metrics of different models under varying input\nwindow sizes w using the prediction step d = 1 in the Logical Range. As shown in\nFigure 5a, the GCSG model achieved the highest R2 values, consistently above 0.85 for w\nvalues between 16 and 40. The BiLSTM, ConvLSTM, LSTM-ED, and LSTM-GRU models\n(all LSTM variants) followed, with R2 scores of 0.83–0.85. The GRU and LSTM models\ndemonstrated comparable performance (R2 ≈ 0.80) due to their single-model architectures.\nThe CNN showed the lowest R2 values (0.75–0.77), potentially due to its parameters and\nstructural configuration.\nAppl. Sci. 2025, 15, 5628 9 of 14\n/uni00000014/uni00000019/uni00000015/uni00000013/uni00000015/uni00000017/uni00000015/uni0000001b/uni00000016/uni00000015/uni00000016/uni00000019/uni00000017/uni00000013\n/uni0000002c/uni00000051/uni00000053/uni00000058/uni00000057/uni00000003/uni0000003a/uni0000004c/uni00000051/uni00000047/uni00000052/uni0000005a/uni00000003/uni00000036/uni0000004c/uni0000005d/uni00000048\n/uni00000013/uni00000011/uni00000019/uni00000018\n/uni00000013/uni00000011/uni0000001a/uni00000013\n/uni00000013/uni00000011/uni0000001a/uni00000018\n/uni00000013/uni00000011/uni0000001b/uni00000013\n/uni00000013/uni00000011/uni0000001b/uni00000018\n/uni00000013/uni00000011/uni0000001c/uni00000013\n/uni00000013/uni00000011/uni0000001c/uni00000018\n/uni00000014/uni00000011/uni00000013/uni00000013R2\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a\n(a) R2.\n/uni00000014/uni00000019/uni00000015/uni00000013/uni00000015/uni00000017/uni00000015/uni0000001b/uni00000016/uni00000015/uni00000016/uni00000019/uni00000017/uni00000013\n/uni0000002c/uni00000051/uni00000053/uni00000058/uni00000057/uni00000003/uni0000003a/uni0000004c/uni00000051/uni00000047/uni00000052/uni0000005a/uni00000003/uni00000036/uni0000004c/uni0000005d/uni00000048\n/uni00000016/uni00000011/uni00000018\n/uni00000017/uni00000011/uni00000013\n/uni00000017/uni00000011/uni00000018\n/uni00000018/uni00000011/uni00000013\n/uni00000018/uni00000011/uni00000018\n/uni00000019/uni00000011/uni00000013\n/uni00000019/uni00000011/uni00000018\n/uni0000001a/uni00000011/uni00000013/uni00000030/uni00000024/uni00000028\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a (b) MAE.\n/uni00000014/uni00000019/uni00000015/uni00000013/uni00000015/uni00000017/uni00000015/uni0000001b/uni00000016/uni00000015/uni00000016/uni00000019/uni00000017/uni00000013\n/uni0000002c/uni00000051/uni00000053/uni00000058/uni00000057/uni00000003/uni0000003a/uni0000004c/uni00000051/uni00000047/uni00000052/uni0000005a/uni00000003/uni00000036/uni0000004c/uni0000005d/uni00000048\n/uni00000015/uni00000013\n/uni00000016/uni00000013\n/uni00000017/uni00000013\n/uni00000018/uni00000013\n/uni00000019/uni00000013\n/uni0000001a/uni00000013\n/uni0000001b/uni00000013\n/uni0000001c/uni00000013/uni00000030/uni00000036/uni00000028\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a (c) MSE.\nFigure 5. Comparison of models under different input window sizes.\nIn particular, Figure 5a demonstrates the fluctuation degree ofR2 scores across different\nw values for each model in the Logical Range, with the GCSG model exhibiting the most\nstable performance. This indicates the GCSG model’s superior robustness when adapting\nto varying w values.\nFigure 5b,c present the MAE and MSE metrics of each model, respectively. The error\ntrends consistently align with the R2 results in Figure 5a. The GCSG model achieves the\nlowest errors, followed by the BiLSTM, ConvLSTM, LSTM-ED, and LSTM-GRU models,\nwith marginally higher error rates. The GRU and LSTM models showed intermediate error\nlevels, while the CNN yielded the highest number of errors.\nIn summary, Figure 5 confirms that the GCSG model delivers optimal load forecasting\naccuracy across different input window sizes w in the Logical Range, outperforming both\ncombined models (BiLSTM, ConvLSTM, LSTM-ED, LSTM-GRU) and traditional single\nmodels (LSTM, GRU, CNN).\n(2) Prediction step analysis.\nAccording to the results presented in Figure 5, an input window size w of 36 was\nchosen based on the average R2, MAE, and MSE values, and the prediction step d was\nvaried from 1 to 29 in order to compare the prediction accuracy of the various models,\nas shown in Figure 6.\n/uni00000013/uni00000015/uni00000017/uni00000019/uni0000001b/uni00000014/uni00000013/uni00000014/uni00000015/uni00000014/uni00000017/uni00000014/uni00000019/uni00000014/uni0000001b/uni00000015/uni00000013/uni00000015/uni00000015/uni00000015/uni00000017/uni00000015/uni00000019/uni00000015/uni0000001b/uni00000016/uni00000013\n/uni00000033/uni00000055/uni00000048/uni00000047/uni0000004c/uni00000046/uni00000057/uni0000004c/uni00000052/uni00000051/uni00000003/uni00000036/uni00000057/uni00000048/uni00000053\n/uni00000013/uni00000011/uni00000019/uni00000013\n/uni00000013/uni00000011/uni00000019/uni00000018\n/uni00000013/uni00000011/uni0000001a/uni00000013\n/uni00000013/uni00000011/uni0000001a/uni00000018\n/uni00000013/uni00000011/uni0000001b/uni00000013\n/uni00000013/uni00000011/uni0000001b/uni00000018\n/uni00000013/uni00000011/uni0000001c/uni00000013\n/uni00000013/uni00000011/uni0000001c/uni00000018\n/uni00000014/uni00000011/uni00000013/uni00000013R2\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/",
+      "refs": {
+        "figures": [
+          "f5",
+          "f5b",
+          "f5a",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.3.1 Ablation Experiment",
+      "level": 3,
+      "text": "To rigorously evaluate the contribution of each component in the GCSG model for Log-\nical Range load forecasting, we conducted systematic ablation studies using the following\nmodel variants:\n• GCSG: Full model (GAF+CNN+SENet+GRU).\n• GCG: Ablated SENet (GAF+CNN+GRU).\n• CSG: Ablated GAF (CNN+SENet+GRU).\n• CG: Baseline (CNN+GRU).\nThe experimental parameters maintained strict consistency across all model variants,\nwith the detailed configuration provided in Table 3.\nTable 3. Experimental configuration for ablation study.\nParameter Category Value/Range\nInput window size (w) 16 ≤ w ≤ 40 (optimal w = 36)\nPrediction steps (d) d ∈ {1, 3, . . . , 29}\nBatch size 100\nTraining epochs 2000\nLearning rate 0.0001\nOptimizer Adam\nTables 4 and 5 present the load forecasting performance metrics (R2, MAE, and MSE)\nfor each model in the Logical Range, evaluated across varying input window sizes w and\nprediction step lengths d.\nTable 4 demonstrates the experimental results for the four models with fixed d = 1\nand different values of w. The four models (GCSG, GCG, CSG, and CG) exhibited stable\nperformance across varying w values, with no significant fluctuations observed. Notably,\nwhen w = 36, the R2, MSE, and MAE values most closely approximated the average metrics\nacross all tested values of w.\nAppl. Sci. 2025, 15, 5628 11 of 14\nTable 4. Comparison of R2, MAE, and MSE for different input window sizes (w).\nw\nR2 MAE MSE\nCG GCG CSG GCSG CG GCG CSG GCSG CG GCG CSG GCSG\n16 0.838 0.848 0.840 0.860 4.538 4.513 4.632 4.448 35.227 34.156 35.591 33.382\n20 0.838 0.851 0.842 0.862 4.570 4.438 4.536 4.399 35.014 33.111 34.705 32.064\n24 0.834 0.846 0.842 0.859 4.590 4.441 4.595 4.461 35.470 33.693 35.332 33.152\n28 0.823 0.842 0.839 0.856 4.835 4.535 4.728 4.489 38.588 35.153 36.797 34.250\n32 0.835 0.839 0.840 0.858 4.580 4.559 4.631 4.412 35.428 35.456 36.314 33.615\n36 0.831 0.843 0.839 0.856 4.625 4.503 4.671 4.468 36.231 34.448 35.815 33.804\n40 0.827 0.833 0.837 0.853 4.657 4.655 4.689 4.499 37.337 37.136 37.423 34.500\nTable 5. Comparison of R2, MAE, and MSE for different prediction steps (d).\nd\nR2 MAE MSE\nCG GCG CSG GCSG CG GCG CSG GCSG CG GCG CSG GCSG\n1 0.831 0.843 0.838 0.855 4.900 4.556 4.722 4.450 38.282 35.631 37.529 33.827\n3 0.784 0.801 0.792 0.803 5.520 5.346 5.435 5.303 51.475 46.546 49.793 45.259\n5 0.768 0.782 0.778 0.791 5.690 5.518 5.655 5.438 53.305 50.533 52.345 49.243\n7 0.755 0.770 0.763 0.773 5.822 5.598 5.744 5.548 55.901 52.717 54.334 51.084\n9 0.746 0.763 0.753 0.770 5.966 5.705 5.910 5.627 58.975 53.928 57.096 52.407\n11 0.743 0.758 0.752 0.764 6.138 5.819 6.034 5.783 60.000 56.050 58.238 55.400\n13 0.738 0.752 0.746 0.759 6.258 6.045 6.171 5.894 63.843 59.929 61.346 58.356\n15 0.731 0.751 0.741 0.754 6.300 6.109 6.222 5.991 64.941 61.575 63.057 59.696\n17 0.721 0.746 0.733 0.751 6.389 6.184 6.281 6.128 65.950 62.054 64.927 60.328\n19 0.709 0.740 0.717 0.746 6.537 6.299 6.450 6.227 68.927 62.948 67.559 60.916\n21 0.704 0.730 0.713 0.740 6.639 6.321 6.562 6.265 70.981 63.918 68.213 62.744\n23 0.692 0.726 0.701 0.730 6.686 6.355 6.599 6.283 72.933 65.966 71.213 64.096\n25 0.689 0.722 0.696 0.728 6.711 6.406 6.637 6.307 73.829 66.748 72.583 65.703\n27 0.687 0.714 0.695 0.723 6.832 6.490 6.749 6.407 74.894 67.993 73.312 66.731\n29 0.668 0.694 0.672 0.703 7.162 6.698 7.017 6.634 79.975 74.379 78.637 73.266\nTable 5 demonstrates that, as the prediction step d increases, the capability of the\nmodels for temporal dependency feature extraction in the Logical Range presents a decreas-\ning trend. While all models exhibited declining R2 values, the GCSG model consistently\nmaintained superior load forecasting accuracy compared to the other models. The model\nperformance ranking was GCSG > GCG > CSG > CG, with MAE and MSE metrics con-\nfirming this trend. These results validate that the combined GAF–CNN-SENet–GRU\narchitecture in GCSG achieves optimal prediction performance.\nThe MAE and MSE values indicate that GCG outperforms CSG while approaching\nGCSG’s accuracy, underscoring the GAF’s greater impact on load forecasting accuracy\ncompared to the SENet channel attention mechanism. GAF encoding effectively preserves\ntemporal correlations while enhancing the relevance of inter-temporal values, enabling\nmore comprehensive feature extraction. The GCSG model synergistically combines the\nGAF’s temporal preservation effect with SENet’s channel importance weighting.\nThese experimental results conclusively demonstrate the GCSG model’s superior\naccuracy across all prediction steps, proving that the simultaneous integration of SENet\nand GAF significantly enhances the resulting model’s load forecasting performance.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "3.3.2 Generalization Performance",
+      "level": 3,
+      "text": "To evaluate the generalization capability of the GCSG model across different Logical\nRange training datasets, we conducted experiments using ten distinct data partitioning\nschemes with varying random seeds. Each scheme maintained an input window size of\nAppl. Sci. 2025, 15, 5628 12 of 14\nw = 36 and prediction steps d ranging from 1 to 29 with an interval of 2. The experimental\nresults are presented in Figure 7.\n/uni00000013/uni00000014/uni00000015/uni00000016/uni00000017/uni00000018/uni00000019/uni0000001a/uni0000001b/uni0000001c/uni00000014/uni00000013/uni00000014/uni00000014\n/uni00000035/uni00000044/uni00000051/uni00000047/uni00000052/uni00000050/uni00000003/uni00000036/uni00000048/uni00000048/uni00000047\n/uni00000013/uni00000011/uni00000019/uni00000018\n/uni00000013/uni00000011/uni0000001a/uni00000013\n/uni00000013/uni00000011/uni0000001a/uni00000018\n/uni00000013/uni00000011/uni0000001b/uni00000013\n/uni00000013/uni00000011/uni0000001b/uni00000018\n/uni00000013/uni00000011/uni0000001c/uni00000013\n/uni00000013/uni00000011/uni0000001c/uni00000018\n/uni00000014/uni00000011/uni00000013/uni00000013R2\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a\n(a) R2\n/uni00000013/uni00000014/uni00000015/uni00000016/uni00000017/uni00000018/uni00000019/uni0000001a/uni0000001b/uni0000001c/uni00000014/uni00000013/uni00000014/uni00000014\n/uni00000035/uni00000044/uni00000051/uni00000047/uni00000052/uni00000050/uni00000003/uni00000036/uni00000048/uni00000048/uni00000047\n/uni00000016/uni00000011/uni00000018\n/uni00000017/uni00000011/uni00000013\n/uni00000017/uni00000011/uni00000018\n/uni00000018/uni00000011/uni00000013\n/uni00000018/uni00000011/uni00000018\n/uni00000019/uni00000011/uni00000013\n/uni00000019/uni00000011/uni00000018\n/uni0000001a/uni00000011/uni00000013/uni00000030/uni00000024/uni00000028\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a (b) MAE\n/uni00000013/uni00000014/uni00000015/uni00000016/uni00000017/uni00000018/uni00000019/uni0000001a/uni0000001b/uni0000001c/uni00000014/uni00000013/uni00000014/uni00000014\n/uni00000035/uni00000044/uni00000051/uni00000047/uni00000052/uni00000050/uni00000003/uni00000036/uni00000048/uni00000048/uni00000047\n/uni00000015/uni00000013\n/uni00000016/uni00000013\n/uni00000017/uni00000013\n/uni00000018/uni00000013\n/uni00000019/uni00000013\n/uni0000001a/uni00000013\n/uni0000001b/uni00000013\n/uni0000001c/uni00000013/uni00000030/uni00000036/uni00000028\n/uni00000025/uni0000004c/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000031/uni00000031\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni00000028/uni00000027\n/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030/uni00000010/uni0000002a/uni00000035/uni00000038\n/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni00000026/uni00000052/uni00000051/uni00000059/uni0000002f/uni00000036/uni00000037/uni00000030\n/uni0000002a/uni00000026/uni00000036/uni0000002a (c) MSE\nFigure 7. Comparison of models under different datasets.\nAnalysis of the datasets partitioned with different random seeds in the Logical Range\nrevealed that the GCSG model can maintain consistent load forecasting performance.\nFigure 7a demonstrates stable R2 values around 0.85, while Figure 7b shows MAE values\nconsistently near 4.4. Similarly, Figure 7c confirms the stabilization of the MSE at around\n35. Compared to other models, GCSG exhibited superior stability across all three metrics\nwithout significant fluctuations, demonstrating its robust generalization capability across\ndifferent data partitions.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f7a"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4 Discussion",
+      "level": 1,
+      "text": "The results demonstrate that the GCSG model consistently outperformed other models\nin predicting time-series load data, achieving higher R-squared values and lower MAE\nand MSE across different window sizes and prediction steps. This suggests that the in-\ntegration of GAF, CNN, SENet, and GRU in the GCSG model contributes significantly\nto its predictive accuracy. These findings align with prior studies emphasizing the im-\nportance of incorporating attention mechanisms and sequential learning in time-series\nforecasting tasks.\nA comparison with the existing literature reveals both similarities and differences.\nWhile our study corroborated previous findings regarding the effectiveness of LSTM-\nbased models in time-series prediction, the novel combination of GAF and SENet in the\nGCSG model provides additional improvements in capturing temporal dependencies and\nfeature extraction.\nWe acknowledge several limitations in our study. The choice of hyperparameters and\nmodel configurations could have influenced the results, and the generalizability of the\nGCSG model to other domains requires further investigation.\nIn future research, exploring the application of the GCSG model in different domains\nand incorporating domain-specific features could enhance its robustness and applicability.\nFurther investigations focused on the optimization of hyperparameters and evaluating\nmodel interpretability will be valuable for advancing the understanding of deep learning\ntechniques in time-series analysis.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "5 Conclusions",
+      "level": 1,
+      "text": "This study presented GCSG, an innovative hybrid deep learning model designed\nfor precise load forecasting in Logical Range environments. The integration of Gramian\nAngular Field transformation with CNN-SENet spatial feature extraction and GRU-based\nAppl. Sci. 2025, 15, 5628 13 of 14\ntemporal modeling was shown to be particularly effective in handling the complex, uneven\nworkload distributions that are characteristic of Logical Range testing scenarios. Experi-\nmental validation demonstrated that GCSG achieves superior performance, with an R2 of\n0.86, MAE of 4.5, and MSE of 34.5, representing significant improvements of 2.2%, 25.7%,\nand 40.4%, respectively, over conventional approaches (including BiLSTM, LSTM-ED,\nand other baselines).\nThe model exhibited remarkable stability across varying operational conditions, main-\ntaining consistent accuracy with input window sizes ranging from 16 to 40 and prediction\nsteps spanning 1 to 29. This robustness was further verified through testing on multi-\nple data partitioning schemes using different random seeds, confirming GCSG’s reliable\ngeneralization capability.\nLooking ahead, two promising research directions emerge: extension to multi-device\ncollaborative forecasting scenarios and optimization for edge computing deployment in\norder to enhance computational efficiency. These developments would further strengthen\nthe model’s applicability in large-scale Logical Range implementations while addressing\npotential latency constraints in time-sensitive applications.\nAuthor Contributions: Conceptualization, H.C.; methodology, H.C.; writing—original draft prepara-\ntion, H.C.; formal analysis, Z.D.; data curation, Z.D.; supervision, H.C. and Z.D. H.C. and Z.D. re-\nviewed the manuscript. All authors have read and agreed to the published version of the manuscript.\nFunding: This research received no external funding.\nData Availability Statement: All materials and data used are available from Xi’an University of\nTechnology, China. The data used to support the findings of this study are available from the\ncorresponding author upon request.\nConflicts of Interest: The authors declare no conflicts of interest.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the overall structure of the Logical Range, where heterogeneous"
+    },
+    {
+      "id": "f2",
+      "caption": "Sliding window-based processing of device load data in Logical Range."
+    },
+    {
+      "id": "f3",
+      "caption": "Processing pipeline of the GCSG model."
+    },
+    {
+      "id": "f4",
+      "caption": "Gramian Angular Field (GAF) -based conversion of Logical Range load data."
+    },
+    {
+      "id": "f5",
+      "caption": "displays the performance metrics of different models under varying input"
+    },
+    {
+      "id": "f5a",
+      "caption": ", the GCSG model achieved the highest R2 values, consistently above 0.85 for w"
+    },
+    {
+      "id": "f5b",
+      "caption": ",c present the MAE and MSE metrics of each model, respectively. The error"
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of models under different prediction steps."
+    },
+    {
+      "id": "f6c",
+      "caption": "reveals that the MSE of the GCSG model follows a nearly linear growth"
+    },
+    {
+      "id": "f7",
+      "caption": "Comparison of models under different datasets."
+    },
+    {
+      "id": "f7a",
+      "caption": "demonstrates stable R2 values around 0.85, while Figure 7b shows MAE values"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Experimental setup."
+    },
+    {
+      "id": "t2",
+      "caption": "Model parameter configurations."
+    },
+    {
+      "id": "t3",
+      "caption": "Experimental configuration for ablation study."
+    },
+    {
+      "id": "t4",
+      "caption": "demonstrates the experimental results for the four models with fixed d = 1"
+    },
+    {
+      "id": "t5",
+      "caption": "Comparison of R2, MAE, and MSE for different prediction steps (d)."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e5",
+      "latex_or_text": "Equation (5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Equation (11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 11,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 10
+  }
+}

@@ -1,0 +1,54 @@
+%%%%Update on 30 November 2023%%%
+\usepackage[normalem]{ulem} % For using the command \uuline{} in the \abstract 
+\usepackage{amsfonts} % Use for some special math mark
+%%\usepackage{pxfonts} % Use for some special math mark 
+%\usepackage{wasysym} % Use for some special mark
+%\usepackage{subfigure} % For some paper the use \subfigure
+\usepackage{mathcomp} % For permille mark
+\usepackage{CJKutf8} % For Chinese font
+\usepackage{pifont} % For some special mark 
+\usepackage{bm} % Forr math enviroment bold format
+\usepackage{bbm} % For some math fancy characters
+\graphicspath{{./Definitions/}} % Use for import path the figures paper used
+
+\makeatletter
+\def\T@n@@nc@d@ngM@cr@M@d{}
+\def\LY@n@@nc@d@ngM@cr@M@d{}
+\makeatother
+
+\let\orignewcommand\newcommand  % Store the original \newcommand
+\let\newcommand\providecommand  % Make \newcommand behave like \providecommand
+\usepackage{verse}
+\let\newcommand\orignewcommand  % Use the original `\newcommand` in future
+\makeatletter
+\renewcommand*{\theHpoemline}{\arabic{verse@envctr}.\arabic{poemline}} % Use the original definition from verse.sty
+\makeatother
+
+% Define a matrix envrioment
+\newsavebox\foobox
+\newcommand{\slantbox}[2][.2]{\mbox{%
+        \sbox{\foobox}{#2}%
+        \hskip\wd\foobox
+        \pdfsave
+        \pdfsetmatrix{1 0 #1 1}%
+        \llap{\usebox{\foobox}}%
+        \pdfrestore
+}}
+
+%\setlength{\fboxsep}{0cm}
+
+% Define triangledown mark
+\let\oldblacktriangledown\blacktriangledown
+
+% Define \dagger using unicode
+\renewcommand{\dagger}{\mathchar"2279}
+\renewcommand{\ddagger}{\mathchar"227A}
+
+% Define italic In, Max
+\newcommand{\mmathit}[1]{
+  \ifthenelse{\equal{#1}{\ln}}{\mathit{ln}}{
+    \ifthenelse{\equal{#1}{\max}}{\mathit{max}}{\mathit{#1}}
+  }
+}
+\makeatother
+\robustify{\footnote}

@@ -1,0 +1,1547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "JATS-journalpublishing1-3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="1.3" xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="publisher-id">applsci</journal-id>
+      <journal-title-group>
+        <journal-title>Applied Sciences</journal-title>
+        <abbrev-journal-title abbrev-type="publisher">Appl. Sci.</abbrev-journal-title>
+        <abbrev-journal-title abbrev-type="pubmed">Applied Sciences</abbrev-journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">2076-3417</issn>
+      <publisher>
+        <publisher-name>MDPI</publisher-name>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="doi">10.3390/app131911074</article-id>
+      <article-id pub-id-type="publisher-id">applsci-13-11074</article-id>
+      <article-categories>
+        <subj-group>
+          <subject>Article</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>A Combined Semantic Dependency and Lexical Embedding RoBERTa Model for Grid Field Relational Extraction</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Meng</surname>
+            <given-names>Qi</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Methodology" vocab-term-identifier="https://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; original draft" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-original-draft/">Writing &#x2013; original draft</role>
+          <xref rid="af1-applsci-13-11074" ref-type="aff">1</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Zhang</surname>
+            <given-names>Xixiang</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Conceptualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Formal analysis" vocab-term-identifier="https://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Resources" vocab-term-identifier="https://credit.niso.org/contributor-roles/resources/">Resources</role>
+          <xref rid="af1-applsci-13-11074" ref-type="aff">1</xref>
+          <xref rid="c1-applsci-13-11074" ref-type="corresp">*</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Dong</surname>
+            <given-names>Yun</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Methodology" vocab-term-identifier="https://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; review &amp; editing" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-review-editing/">Writing &#x2013; review &amp; editing</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Supervision" vocab-term-identifier="https://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+          <xref rid="af1-applsci-13-11074" ref-type="aff">1</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0002-9950-684X</contrib-id>
+          <name>
+            <surname>Chen</surname>
+            <given-names>Yan</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Investigation" vocab-term-identifier="https://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Data curation" vocab-term-identifier="https://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Visualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/visualization/">Visualization</role>
+          <xref rid="af2-applsci-13-11074" ref-type="aff">2</xref>
+          <xref rid="af3-applsci-13-11074" ref-type="aff">3</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Lin</surname>
+            <given-names>Dezhao</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Software" vocab-term-identifier="https://credit.niso.org/contributor-roles/software/">Software</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Data curation" vocab-term-identifier="https://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Project administration" vocab-term-identifier="https://credit.niso.org/contributor-roles/project-administration/">Project administration</role>
+          <xref rid="af2-applsci-13-11074" ref-type="aff">2</xref>
+        </contrib>
+      </contrib-group>
+      <contrib-group>
+        <contrib contrib-type="editor">
+          <name>
+            <surname>Mo</surname>
+            <given-names>Yijun</given-names>
+          </name>
+          <role>Academic Editor</role>
+        </contrib>
+      </contrib-group>
+      <aff id="af1-applsci-13-11074"><label>1</label>Guangxi Power Grid Co., Ltd., Nanning 530022, China</aff>
+      <aff id="af2-applsci-13-11074"><label>2</label>School of Computer and Electronic Information, Guangxi University, Nanning 530004, China</aff>
+      <aff id="af3-applsci-13-11074"><label>3</label>Guangxi Intelligent Digital Services Research Center of Engineering Technology, Nanning 530004, China</aff>
+      <author-notes>
+        <corresp id="c1-applsci-13-11074"><label>*</label>Correspondence: <email>xixixiang@outlook.com</email></corresp>
+      </author-notes>
+      <pub-date pub-type="epub">
+        <day>08</day>
+        <month>10</month>
+        <year>2023</year>
+      </pub-date>
+      <pub-date pub-type="collection">
+        <month>10</month>
+        <year>2023</year>
+      </pub-date>
+      <volume>13</volume>
+      <issue>19</issue>
+      <elocation-id>11074</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>30</day>
+          <month>08</month>
+          <year>2023</year>
+        </date>
+        <date date-type="rev-recd">
+          <day>04</day>
+          <month>10</month>
+          <year>2023</year>
+        </date>
+        <date date-type="accepted">
+          <day>07</day>
+          <month>10</month>
+          <year>2023</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-statement>&#xA9; 2023 by the authors.</copyright-statement>
+        <copyright-year>2023</copyright-year>
+        <license license-type="open-access">
+          <license-p>Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (<ext-link ext-link-type="uri" xlink:href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</ext-link>).</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>Relationship extraction is a crucial step in the construction of a knowledge graph. In this research, the grid field entity relationship extraction was performed via a labeling approach that used span representation. The subject entity and object entity were used as training instances to bolster the linkage between them. The embedding layer of the RoBERTa pre-training model included word embedding, position embedding, and paragraph embedding information. In addition, semantic dependency was introduced to establish an effective linkage between different entities. To facilitate the effective linkage, an additional lexically labeled embedment was introduced to empower the model to acquire more profound semantic insights. After obtaining the embedding layer, the RoBERTa model was used for multi-task learning of entities and relations. The multi-task information was then fused using the parameter hard sharing mechanism. Finally, after the layer was fully connected, the predicted entity relations were obtained. The approach was tested on a grid field dataset created for this study. The obtained results demonstrated that the proposed model has high performance.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>grid field</kwd>
+        <kwd>relational extraction</kwd>
+        <kwd>RoBERTa</kwd>
+        <kwd>semantic dependency</kwd>
+        <kwd>lexical embedding</kwd>
+      </kwd-group>
+      <funding-group>
+        <award-group>
+          <funding-source>Guangxi Scientific Research and Technology Development Plan Project</funding-source>
+          <award-id>AA20302002-3</award-id>
+        </award-group>
+        <award-group>
+          <funding-source>Innovation Project of China Southern Power Grid Co., Ltd.</funding-source>
+          <award-id>202201161</award-id>
+        </award-group>
+        <funding-statement>This research was funded by the Guangxi Scientific Research and Technology Development Plan Project (Grant No. AA20302002-3) and Innovation Project of China Southern Power Grid Co., Ltd. (202201161).</funding-statement>
+      </funding-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="sec1-applsci-13-11074" sec-type="intro">
+      <title>1. Introduction</title>
+      <p>Relational extraction tasks involve the extraction of relational facts from unstructured or semi-structured data to identify interactions and attributes between entities [<xref ref-type="bibr" rid="B1-applsci-13-11074">1</xref>]. The construction of a knowledge graph typically involves the extraction of information from unstructured information, which is also known as entity-relationship extraction. In relationship extraction, the effective characterization of domain knowledge is challenging [<xref ref-type="bibr" rid="B2-applsci-13-11074">2</xref>,<xref ref-type="bibr" rid="B3-applsci-13-11074">3</xref>]. Due to the intricate and complex nature of the expertise involved in recording relevant data within the power system [<xref ref-type="bibr" rid="B4-applsci-13-11074">4</xref>,<xref ref-type="bibr" rid="B5-applsci-13-11074">5</xref>], the effective identification of relationships in this specialized domain is challenging.</p>
+      <p>A fundamental knowledge graph can be established by first conducting named entity recognition on unstructured data within a specialized domain and subsequently extracting relationships from the identified entities. In the deep learning field, named entity recognition and relation extraction are important tasks in natural language processing [<xref ref-type="bibr" rid="B6-applsci-13-11074">6</xref>]. The relationships between different entities were extracted using a rule-based approach. Hou [<xref ref-type="bibr" rid="B7-applsci-13-11074">7</xref>] proposed a bootstrap labeling rule discovery approach for robust relation extraction. However, this rule-based approach had low accuracy and was unable to characterize the semantics of lexical elements through vectors via deep learning approaches. Ke [<xref ref-type="bibr" rid="B8-applsci-13-11074">8</xref>] proposed a RoFormerV-BiLSTM-CRF based fusion model for medical entity recognition, which used a knowledge graph to analyze the relationships between the medical entities identified in single and multiple patient medical records. Guo [<xref ref-type="bibr" rid="B9-applsci-13-11074">9</xref>] proposed a framework for the automatic construction of a process knowledge base in the processing domain based on a knowledge graph. He also developed a knowledge extraction framework that employed BERT-BiLSTM-CRF for the automatic retrieval of knowledge from the process text. Wan [<xref ref-type="bibr" rid="B10-applsci-13-11074">10</xref>] proposed a span-based multimodal attention network (SMAN) for joint entity and relation extraction, and introduced a completion mechanism to simultaneously extract the context and span position information. Liu [<xref ref-type="bibr" rid="B11-applsci-13-11074">11</xref>] proposed a new pipelined relationship extraction framework that utilized an attentional mechanism to fuse contextual semantic representations, which was able to capture entity location information and type information that are challenging to incorporate into joint models.</p>
+      <p>The extraction of entity relationships through deep learning is mainly categorized into two methods. The first method is the joint extraction model, where entity recognition and relationship extraction are treated as a whole [<xref ref-type="bibr" rid="B12-applsci-13-11074">12</xref>,<xref ref-type="bibr" rid="B13-applsci-13-11074">13</xref>]. The second method is the pipeline model, in which entity recognition and relationship extraction are considered as distinct tasks that are handled independently [<xref ref-type="bibr" rid="B14-applsci-13-11074">14</xref>,<xref ref-type="bibr" rid="B15-applsci-13-11074">15</xref>,<xref ref-type="bibr" rid="B16-applsci-13-11074">16</xref>]. The pipeline approach does not require manual feature construction, which makes it more widely used. The entity recognition task focuses on the identification of real words in the text, while the relationship extraction task tends to the modeling of the links between entities; the separate recognition of entities and relationships enables targeted improvement of the two tasks. The joint extraction can consider the two entities and relations, which avoids the negative impact of errors generated through the entity recognition of the pipelined model on the subsequent task of relation extraction. However, recent studies on the pipelined model led to the improvement of the error propagation problem, which resulted in enhanced recognition through the joint extraction model. Zhong [<xref ref-type="bibr" rid="B17-applsci-13-11074">17</xref>] sliced the English vocabulary into its roots and utilized span annotation. The enumerated candidate entities were spliced with the sentences as a training example. This approach effectively enhanced the accuracy of the downstream task of relationship extraction. Ye [<xref ref-type="bibr" rid="B18-applsci-13-11074">18</xref>] proposed a neighborhood-oriented packing strategy to pack spans with the same starting lexical elements into a training example in order to better distinguish the entity boundaries and extract the relationships through strategic packing. Through leveraging the pipelined model of span representation, state-of-the-art performance can be attained through fine-tuning BERT.</p>
+      <p>The relationship extraction task associates different entities and recognizes the type of relationship between them, which can be abstractly represented as edges and nodes in the graph theory for the relationships and entities. Semantic dependency directly links dependent arcs of linguistic units through immediate semantic connections and annotates them with relevant semantic relationships. Semantic dependency focuses on the semantic-factual or logical relations between real words and is able to express deeper semantic information [<xref ref-type="bibr" rid="B19-applsci-13-11074">19</xref>]. Yin [<xref ref-type="bibr" rid="B20-applsci-13-11074">20</xref>] proposed an approach which consisted of incorporating the glyph information of Chinese characters to enhance the model&#x2019;s ability to deeply characterize the text in named entity recognition for power equipment maintenance records. Sun [<xref ref-type="bibr" rid="B21-applsci-13-11074">21</xref>] proposed the semantic enhancement of words with multiple meanings and similar glyphs through incorporating pinyin and glyph information. Jeena [<xref ref-type="bibr" rid="B22-applsci-13-11074">22</xref>] proposed a typed Tree-LSTM model that embedded sentence meanings into dense vectors using sentence dependency parsing structures and dependency types. Relationship extraction and named entity recognition are similar tasks that belong to the same natural language processing field. Based on the idea of feature fusion and the characteristics of relationship extraction, this paper combined the semantic dependency information and the lexical embedding information with BERT. It aimed to improve the entity association and semantic characterization capacities of the BERT model.</p>
+      <p>Compared with the English language, the most obvious feature of the Chinese language is the ambiguity of word boundaries and the absence of separators to represent word boundaries [<xref ref-type="bibr" rid="B23-applsci-13-11074">23</xref>,<xref ref-type="bibr" rid="B24-applsci-13-11074">24</xref>]. In English, there are separators between the words that identify the boundaries with each word having a distinct meaning, which is not the case in Chinese. Therefore, the relational extraction in Chinese text requires its segmentation. However, there is no established lexicon accessible for the segmenter to employ in the power dispatching domain. Employing a general-domain segmenter within the power grid field leads to considerable inaccuracies. Therefore, word-based encoding is used.</p>
+      <p>The cross-entropy loss function is a common loss function used to measure the gap between the model output and the actual label in classification problems. It is widely used in various models, such as classification models in machine learning and neural network models in deep learning. In the classification tasks, the cross-entropy loss function is employed to assess the dissimilarity between the probability distribution generated via the model&#x2019;s output and the actual distribution of labels. During the training process, the model will continuously adjust the parameters using the gradient descent algorithm to make the overall loss function as small as possible. Through minimizing the cross-entropy loss function, the model can more accurately predict the class labels of each sample in the classification problem, which improves its performance.</p>
+      <p>The main contributions of this paper are summarized as follows:<list list-type="order"><list-item><label>(1)</label><p>Lexical and semantic dependency dictionaries were constructed, and the RoBERTa word embedding layer was embedded by effectively fusing lexical and semantic dependency information. This made the model learn more dependencies allowing for the extraction of the relationships between the different entities, measuring the model loss through the cross-entropy loss function, and optimizing its parameters through back-propagation;</p></list-item><list-item><label>(2)</label><p>The cascading effect of downstream tasks, which was caused by the word segmentation error of the Chinese words in the specialized field of electric power, was mitigated via word embedding;</p></list-item><list-item><label>(3)</label><p>Due to the fact that the existing relational extraction dataset in the field of electric power was relatively small, the self-constructed relational extraction dataset in the field of electric power dispatching was used to support the data requirements of deep learning.</p></list-item></list></p>
+      <p>The experimental results demonstrated that the proposed model had higher recognition performance compared with conventional models such as the BERT-Cross Entropy, BERT-CRF, and BERT-BILSTM-CRF.</p>
+      <p>The remainder of this paper is organized as follows. <xref ref-type="sec" rid="sec2-applsci-13-11074">Section 2</xref> presents the dataset construction. <xref ref-type="sec" rid="sec3-applsci-13-11074">Section 3</xref> describes the relationship extraction method for the grid field, combining the semantic dependency and the lexical embedding constructed for this study. <xref ref-type="sec" rid="sec4-applsci-13-11074">Section 4</xref> details the evaluation of the effectiveness of the proposed model through comparative experiments. Finally, <xref ref-type="sec" rid="sec5-applsci-13-11074">Section 5</xref> presents the conclusion.</p>
+    </sec>
+    <sec id="sec2-applsci-13-11074">
+      <title>2. Materials and Methods</title>
+      <p>A significant volume of unstructured behavioral data are recorded in the Guangxi regional smart grid system. From this data, textual information such as accident investigation details, audit risk statistics, on-site inspection information, and device operation data were selected to build a power corpus. At present, the system&#x2019;s utilization of this data is low, only supporting simple text queries without in-depth analysis. Thus, the embedded behavioral knowledge cannot be fully utilized. In addition, the existing manual mining method is inefficient and expensive. In this study, a deep learning approach was introduced for analytical modeling. An electric power corpus was then leveraged to construct an entity-relationship dataset within the grid domain, which will be used to train deep learning models.</p>
+      <p>The corpus employed in this paper consisted of a substantial volume of unstructured data. Screening was performed to eliminate sentences that had unclear meanings, structural flaws, and redundant semantics. Finally, 2316 high-quality data points were extracted and considered as the corpus for the training and testing. Taking into consideration the attributes of the corpus, the entity types were organized into nine categories including: plant and station, voltage level, transmission equipment, equipment and appliances, address, time, person&#x2019;s name, other, and organization. The relationship types were divided into five categories: time, located, subordinate, equivalent, and cause (The relational extraction dataset is shown in <xref ref-type="table" rid="applsci-13-11074-t001">Table 1</xref>). It aimed to extract information from the unstructured data, which facilitated the subsequent construction of a knowledge graph network for applications in specific areas such as fault analysis, maintenance, and equipment life cycle management. The dataset contained 2316 training data, 17,433 entities, 9354 relationships, and more than 140,000 Chinese and English characters. The training set, validation set, and test set were divided into the ratio of 7:2:1.</p>
+      <p>This study employed a span-based annotation method to mark entities within sentences, using a visual interface provided by the Label-Studio annotation platform. The span annotation involved defining the start position, end position, and entity type of an entity within a sentence.</p>
+    </sec>
+    <sec id="sec3-applsci-13-11074">
+      <title>3. A Relational Extraction Approach for Grid Field Combining Semantic Dependency and Lexical Embedding RoBERTa Models</title>
+      <p>This paper proposed a relationship extraction method based on spanning representation, by fusing semantic dependency information and lexical information. This method used the RoBERTa pre-training model to obtain more in-depth semantic representation information allowing it to separately learn entity and relation information. In addition, a multi-task parameter hard-sharing mechanism was used to allow the model to take into account the influence of different tasks by simultaneously training multiple tasks. The effects were reflected in the shared parameters until all the tasks converged. Taking the entity and relationship information into account, the deep semantic representation information of RoBERTa was fully utilized, and the relationship was finally predicted through the fully connected layer. The specific process is shown in <xref ref-type="fig" rid="applsci-13-11074-f001">Figure 1</xref>.</p>
+      <p>The relationships were labeled as quintupled spanning pairs and relations (i.e., s<sub>1</sub>, e<sub>1</sub>, s<sub>2</sub>, e<sub>2</sub> and relation-type). The variables of the set were, in order, the start index position of entity 1 in the sentence, the end index position of entity 1, the start index position of entity 2, the end index position of entity 2, and the type of relationship (the specific labeling is shown in <xref ref-type="table" rid="applsci-13-11074-t002">Table 2</xref>. This example eliminated the modifier part of the sentence for a better demonstration, keeping only the part that contained entities and relationships). A main entity was selected from the dataset. The rest of the entities were considered as guest entities and formed a training instance with the original sentence to generate span-based training instances, which were transformed into model input vectors through the embedding layer. Each entity in the text was selected once as the main entity and the rest as guest entities so that multiple training instances were generated. This generation process was performed through automatic enumeration in the program. The link between entities was strengthened through categorizing different subjects into different groups for parallel training.</p>
+      <sec id="sec3dot1-applsci-13-11074">
+        <title>3.1. Pre-Training Language Models</title>
+        <p>The RoBERTa-wwm-ext pre-training model was used, which was based on the transformer architecture [<xref ref-type="bibr" rid="B25-applsci-13-11074">25</xref>]. It was pre-trained unsupervised on large-scale Chinese textual data to learn rich a priori knowledge and has achieved excellent performance in many natural language processing tasks. RoBERTa is a variant of BERT [<xref ref-type="bibr" rid="B26-applsci-13-11074">26</xref>], and based on BERT, it made the following changes:</p>
+        <p>The dynamic masking strategy can result in distinct mask positions for each training sample during various training iterations. The lexical elements were randomly selected for masking, for the training sample &#x201C;110 kV Kunlun station,&#x201D; the first round of training replaced the training sample with the special lexical element &#x201C;110 kV Kunlun &lt;mask&gt;,&#x201D; and the second round of training replaced the training sample with &#x201C;&lt;mask&gt;10 kV Kunlun Station,&#x201D; and the mask position may change again in the third and fourth rounds. This dynamic strategy enhanced the randomness of the model&#x2019;s input data, consequently boosting the model&#x2019;s learning capacity.</p>
+        <p>RoBERTa employed entire sentences as input across documents and eliminated the need for next-sentence prediction.</p>
+        <p>It leveraged larger training batches and a more extensive pre-training dataset to enhance the generalization capacity of the model.</p>
+      </sec>
+      <sec id="sec3dot2-applsci-13-11074">
+        <title>3.2. Semantic Dependencies and Lexical Embedding</title>
+        <p>The encoding layer transformed the input text sequence into a sequence of high-dimensional vector representations. These vectors incorporated information regarding the word encoding, paragraph context, and positional characteristics of the input text. They were designed to capture dependencies within the input sequence over extended distances and provided a more comprehensive representation of the profound semantic information of the text.</p>
+        <p>The generated training examples were fed into the RoBERTa embedding layer. Word, position, and paragraph embedding were fused to introduce semantic dependency and lexical embedding so that the embedding layer obtained semantic dependency representations through semantic embedding. The lexical embedding also allowed its layer to obtain lexical representations. This allowed the model to learn the connection between different entity representations, which improved its performance. The process of the encoding layer is summarized as follows:<list list-type="order"><list-item><p>Encoding Layer:</p></list-item></list></p>
+        <p>A semantic dependency lexicon was constructed using the language technology platform (LTP) [<xref ref-type="bibr" rid="B27-applsci-13-11074">27</xref>] to perform semantic dependency disambiguation of utterances, mapping it to its index.</p>
+        <p>The generated training examples were fed into the RoBERTa embedding layer. Word, positional, and paragraph embedding were fused to introduce semantic dependency and lexical embedding so that the embedding layer obtained semantic dependency representations through semantic embedding and lexical representations through lexical embedding. This allowed the model to learn the connection between different entity representations, which improved its performance. The process is summarized as follows:</p>
+        <p>A semantic dependency lexicon was first constructed using the language technology platform (LTP) to perform semantic dependency disambiguation of utterances, mapping it to its index.</p>
+        <p>The semantic dependency information was mapped onto a graph. For example, the sentence &#x201C;On June 30, 110 kV Kunlun station Guangkun line,&#x201D; was decomposed into semantic dependency information via LTP: &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;TIME&#x2019;, &#x2018;mPUNC&#x2019;, &#x2018;FEAT&#x2019;. This allowed the model to learn more information about semantic dependency related information to more effectively model the relationship between entities, as shown in <xref ref-type="fig" rid="applsci-13-11074-f002">Figure 2</xref>.</p>
+        <p>A lexically labeled word list was then constructed, and the utterances were lexically labeled using jieba disambiguation, which mapped to the index value of the lexically labeled word list.</p>
+        <p>The semantic dependency analysis operated independently of the syntactic structure. It established direct connections between dependency arcs of linguistic units based on immediate semantic associations, and annotated them with the relevant semantic relations. It focused on the semantic factual or logical relationships between real words. The structure of the syntax tended to vary with literal words, while the semantics were able to transcend changes in the surface of a sentence to reach its essence. Compared with the syntactic dependency analysis, the semantic dependency analysis expressed deeper semantic information, which was especially suitable for the Chinese language.</p>
+        <p>After the text was labeled with semantic dependency annotation and lexical annotation, it was converted to the index values presented in <xref ref-type="table" rid="applsci-13-11074-t003">Table 3</xref> and <xref ref-type="table" rid="applsci-13-11074-t004">Table 4</xref>, and the two vectors were embedded in the RoBERTa coding layer.</p>
+        <p>As the RoBERTa model was pre-trained by a large number of corpora and saved a large amount of corpus information, a direct addition to the original embedding layer can perturb the original corpus information and generate noise. Parameters a and b were set via the neural network to respectively learn the weights of semantic dependency information and lexical embedding information, and to learn the appropriate fusion weights with the optimization of the model.</p>
+        <p>The training data input was passed through the RoBERTa coding layer to obtain the word embedding containing positional information, paragraph information, word encoding information, semantic dependency information, and lexical embedding (as shown in <xref ref-type="fig" rid="applsci-13-11074-f003">Figure 3</xref>), <inline-formula><mml:math id="mm1"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>e</mml:mi><mml:mi>m</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>d</mml:mi><mml:mi>d</mml:mi><mml:mi>i</mml:mi><mml:mi>n</mml:mi><mml:mi>g</mml:mi></mml:mrow></mml:msub><mml:mo>:</mml:mo></mml:mrow></mml:semantics></mml:math></inline-formula><disp-formula id="FD1-applsci-13-11074"><label>(1)</label><mml:math id="mm2" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="normal">X</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>word</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="normal">X</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>segment</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>positional</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:mi mathvariant="normal">a</mml:mi><mml:mi>&#xB7;</mml:mi><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>semantics</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:mi mathvariant="normal">b</mml:mi><mml:mi>&#xB7;</mml:mi><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>phrase</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+      </sec>
+      <sec id="sec3dot3-applsci-13-11074">
+        <title>3.3. Semantic Dependencies and Lexical Embedding</title>
+        <p>The training data were encoded with RoBERTa word embedding to learn certain contextual features.</p>
+        <p>The weights were first learned for the word embedding <inline-formula><mml:math id="mm3"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>e</mml:mi><mml:mi>m</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>d</mml:mi><mml:mi>d</mml:mi><mml:mi>i</mml:mi><mml:mi>n</mml:mi><mml:mi>g</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> after the attention mechanism:<disp-formula id="FD2-applsci-13-11074"><label>(2)</label><mml:math id="mm4" display="block"><mml:semantics><mml:mrow><mml:mi>Attention</mml:mi><mml:mfenced><mml:mrow><mml:mi mathvariant="normal">Q</mml:mi><mml:mo>,</mml:mo><mml:mi mathvariant="normal">K</mml:mi><mml:mo>,</mml:mo><mml:mi mathvariant="normal">V</mml:mi></mml:mrow></mml:mfenced><mml:mo>=</mml:mo><mml:mi>softmax</mml:mi><mml:mfenced><mml:mrow><mml:mfrac><mml:mrow><mml:msup><mml:mrow><mml:mi>QK</mml:mi></mml:mrow><mml:mi mathvariant="normal">T</mml:mi></mml:msup></mml:mrow><mml:mrow><mml:msqrt><mml:mrow><mml:msub><mml:mi mathvariant="normal">d</mml:mi><mml:mi mathvariant="normal">k</mml:mi></mml:msub></mml:mrow></mml:msqrt></mml:mrow></mml:mfrac></mml:mrow></mml:mfenced><mml:mrow><mml:mi mathvariant="normal">V</mml:mi><mml:mo>&#xA0;</mml:mo></mml:mrow><mml:mspace linebreak="newline"/><mml:mi>where</mml:mi><mml:mo>&#xA0;</mml:mo><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="normal">Q</mml:mi></mml:mrow><mml:mo>,</mml:mo><mml:mi mathvariant="normal">K</mml:mi><mml:mo>,</mml:mo><mml:mi mathvariant="normal">V</mml:mi><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>In the RoBERTa architecture, multi-head attentional learning of word embeddings was required for learning multi-channel information:<disp-formula id="FD4-applsci-13-11074"><label>(3)</label><mml:math id="mm6" display="block"><mml:semantics><mml:mrow><mml:mrow><mml:mi>MultiHead</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced><mml:mo>=</mml:mo><mml:mi>Concat</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mrow><mml:mi>head</mml:mi></mml:mrow><mml:mn>1</mml:mn></mml:msub><mml:mo>,</mml:mo><mml:mo>&#x2026;</mml:mo><mml:mo>,</mml:mo><mml:msub><mml:mrow><mml:mi>head</mml:mi></mml:mrow><mml:mi mathvariant="normal">h</mml:mi></mml:msub></mml:mrow></mml:mfenced><mml:msup><mml:mi mathvariant="normal">W</mml:mi><mml:mi mathvariant="normal">O</mml:mi></mml:msup><mml:mspace linebreak="newline"/><mml:mi>where</mml:mi><mml:mo>&#xA0;</mml:mo><mml:mo>&#xA0;</mml:mo><mml:msub><mml:mrow><mml:mi>head</mml:mi></mml:mrow><mml:mi mathvariant="normal">i</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mi>Attention</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>To mitigate the problems of gradient explosion and gradient vanishing within deep models, the <inline-formula><mml:math id="mm7"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>e</mml:mi><mml:mi>m</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>d</mml:mi><mml:mi>d</mml:mi><mml:mi>i</mml:mi><mml:mi>n</mml:mi><mml:mi>g</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> vectors were residually concatenated with the multi-head attention:<disp-formula id="FD6-applsci-13-11074"><label>(4)</label><mml:math id="mm8" display="block"><mml:semantics><mml:mrow><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup><mml:mo>=</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="normal">X</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:mi>MultiHead</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">X</mml:mi><mml:mrow><mml:mi>embedding</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>A layer normalization of <inline-formula><mml:math id="mm9"><mml:semantics><mml:mrow><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup></mml:mrow></mml:semantics></mml:math></inline-formula> was performed to compute the mean and variance on each sample to normalize the hidden layers in the neural network to a standard normal distribution and accelerate the convergence:<disp-formula id="FD7-applsci-13-11074"><label>(5)</label><mml:math id="mm10" display="block"><mml:semantics><mml:mrow><mml:mi>LN</mml:mi><mml:mfenced><mml:mrow><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup></mml:mrow></mml:mfenced><mml:mo>=</mml:mo><mml:mi mathvariant="sans-serif">&#x3B1;</mml:mi><mml:mo>&#xD7;</mml:mo><mml:mfrac><mml:mrow><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="sans-serif">&#x3BC;</mml:mi><mml:mi mathvariant="normal">L</mml:mi></mml:msub></mml:mrow><mml:mrow><mml:msqrt><mml:mrow><mml:msubsup><mml:mi mathvariant="sans-serif">&#x3C3;</mml:mi><mml:mi mathvariant="normal">L</mml:mi><mml:mn>2</mml:mn></mml:msubsup><mml:mo>+</mml:mo><mml:mi>&#x3F5;</mml:mi></mml:mrow></mml:msqrt></mml:mrow></mml:mfrac><mml:mo>+</mml:mo><mml:mi mathvariant="sans-serif">&#x3B2;</mml:mi><mml:mspace linebreak="newline"/><mml:mi>where</mml:mi><mml:mo>&#xA0;</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="sans-serif">&#x3BC;</mml:mi></mml:mrow></mml:mrow><mml:mi mathvariant="normal">L</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mfrac><mml:mn>1</mml:mn><mml:mi mathvariant="normal">m</mml:mi></mml:mfrac><mml:msubsup><mml:mo mathsize="70%">&#x2211;</mml:mo><mml:mrow><mml:mi mathvariant="normal">i</mml:mi><mml:mo>=</mml:mo><mml:mn>1</mml:mn></mml:mrow><mml:mi mathvariant="normal">m</mml:mi></mml:msubsup><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup><mml:mspace linebreak="newline"/><mml:mi>where</mml:mi><mml:mo>&#xA0;</mml:mo><mml:msubsup><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi mathvariant="sans-serif">&#x3C3;</mml:mi></mml:mrow></mml:mrow><mml:mi mathvariant="normal">L</mml:mi><mml:mn>2</mml:mn></mml:msubsup><mml:mo>=</mml:mo><mml:mfrac><mml:mn>1</mml:mn><mml:mi mathvariant="normal">m</mml:mi></mml:mfrac><mml:msubsup><mml:mo mathsize="70%">&#x2211;</mml:mo><mml:mrow><mml:mi mathvariant="normal">i</mml:mi><mml:mo>=</mml:mo><mml:mn>1</mml:mn></mml:mrow><mml:mi mathvariant="normal">m</mml:mi></mml:msubsup><mml:msup><mml:mrow><mml:mo stretchy="false">(</mml:mo><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="sans-serif">&#x3BC;</mml:mi><mml:mi mathvariant="normal">L</mml:mi></mml:msub><mml:mo stretchy="false">)</mml:mo></mml:mrow><mml:mn>2</mml:mn></mml:msup></mml:mrow></mml:semantics></mml:math></disp-formula>
+        where the scaling parameters <inline-formula><mml:math id="mm13"><mml:semantics><mml:mi>&#x3B1;</mml:mi></mml:semantics></mml:math></inline-formula> and <inline-formula><mml:math id="mm14"><mml:semantics><mml:mi>&#x3B2;</mml:mi></mml:semantics></mml:math></inline-formula> were learnable parameters. <inline-formula><mml:math id="mm15"><mml:semantics><mml:mi>&#x3F5;</mml:mi></mml:semantics></mml:math></inline-formula> prevents the equation from dividing by the zero value and m was the number of neurons.</p>
+        <p>Next, the output of layer normalization was passed through a feed-forward neural network:<disp-formula id="FD10-applsci-13-11074"><label>(6)</label><mml:math id="mm16" display="block"><mml:semantics><mml:mrow><mml:mi>FFN</mml:mi><mml:mfenced><mml:mi mathvariant="normal">x</mml:mi></mml:mfenced><mml:mo>=</mml:mo><mml:mi>max</mml:mi><mml:mfenced><mml:mrow><mml:mn>0</mml:mn><mml:mo>,</mml:mo><mml:msub><mml:mrow><mml:mi>xW</mml:mi></mml:mrow><mml:mn>1</mml:mn></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">b</mml:mi><mml:mn>1</mml:mn></mml:msub></mml:mrow></mml:mfenced><mml:msub><mml:mi mathvariant="normal">W</mml:mi><mml:mn>2</mml:mn></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">b</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The above formula consists of two linear transformations, with a ReLU activation in the middle, and x denoting the output <inline-formula><mml:math id="mm17"><mml:semantics><mml:mrow><mml:mi>L</mml:mi><mml:mi>N</mml:mi><mml:mfenced><mml:mrow><mml:msup><mml:mrow><mml:mi>sy</mml:mi></mml:mrow><mml:mo>&#x2032;</mml:mo></mml:msup></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></inline-formula> of the layer normalization.</p>
+        <p>Finally, the residuals were connected and the layer normalized:<disp-formula id="FD11-applsci-13-11074"><label>(7)</label><mml:math id="mm18" display="block"><mml:semantics><mml:mrow><mml:mi mathvariant="normal">H</mml:mi><mml:mo>=</mml:mo><mml:mi>FFN</mml:mi><mml:mfenced><mml:mi mathvariant="normal">x</mml:mi></mml:mfenced><mml:mo>+</mml:mo><mml:mi mathvariant="normal">x</mml:mi></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The output value H after 12 layers of encoder was obtained via the above formula.</p>
+        <p>The span-based data annotation format were different to the traditional sequence annotation. This allowed for the strengthening of the boundary characteristics of the candidate span and to connect more closely with the textual information. In addition, the representations of the span start position and the end position were spliced. The corresponding formulas are given here:<disp-formula id="FD12-applsci-13-11074"><label>(8)</label><mml:math id="mm19" display="block"><mml:semantics><mml:mrow><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">o</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">H</mml:mi><mml:mrow><mml:mn>12</mml:mn></mml:mrow></mml:msub><mml:mfenced close="]" open="["><mml:mrow><mml:mo>:</mml:mo><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">O</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD13-applsci-13-11074"><label>(9)</label><mml:math id="mm20" display="block"><mml:semantics><mml:mrow><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">o</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">H</mml:mi><mml:mrow><mml:mn>12</mml:mn></mml:mrow></mml:msub><mml:mfenced close="]" open="["><mml:mrow><mml:mo>:</mml:mo><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">O</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD14-applsci-13-11074"><label>(10)</label><mml:math id="mm21" display="block"><mml:semantics><mml:mrow><mml:mi>obj</mml:mi><mml:mo>=</mml:mo><mml:mi>Concat</mml:mi><mml:mo stretchy="false">(</mml:mo><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">o</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">o</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub><mml:mo stretchy="false">)</mml:mo></mml:mrow></mml:semantics></mml:math></disp-formula>
+        where <inline-formula><mml:math id="mm22"><mml:semantics><mml:mrow><mml:msub><mml:mi>H</mml:mi><mml:mrow><mml:mn>12</mml:mn></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> denotes the output of the last layer of RoBERTa, O-start denotes the start index of the entity and O-end denotes the end index. Equations (8) and (9) yielded the trained features for the span start position and end position, respectively. Equation (10), concat, spliced these three features so that the model contained the relevant information of the guest entity along with the relationship extraction.</p>
+        <p>A similar approach was used for the master entity:<disp-formula id="FD15-applsci-13-11074"><label>(11)</label><mml:math id="mm23" display="block"><mml:semantics><mml:mrow><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">s</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">H</mml:mi><mml:mrow><mml:mn>12</mml:mn></mml:mrow></mml:msub><mml:mfenced close="]" open="["><mml:mrow><mml:mo>:</mml:mo><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">S</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD16-applsci-13-11074"><label>(12)</label><mml:math id="mm24" display="block"><mml:semantics><mml:mrow><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">s</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">H</mml:mi><mml:mrow><mml:mn>12</mml:mn></mml:mrow></mml:msub><mml:mfenced close="]" open="["><mml:mrow><mml:mo>:</mml:mo><mml:mo>,</mml:mo><mml:msub><mml:mi mathvariant="normal">S</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD17-applsci-13-11074"><label>(13)</label><mml:math id="mm25" display="block"><mml:semantics><mml:mrow><mml:mi>sub</mml:mi><mml:mo>=</mml:mo><mml:mi>Concat</mml:mi><mml:mo stretchy="false">(</mml:mo><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">s</mml:mi><mml:mrow><mml:mi>start</mml:mi></mml:mrow></mml:msub><mml:mo>,</mml:mo><mml:mi mathvariant="normal">h</mml:mi><mml:mo>_</mml:mo><mml:msub><mml:mi mathvariant="normal">s</mml:mi><mml:mrow><mml:mi>end</mml:mi></mml:mrow></mml:msub><mml:mo stretchy="false">)</mml:mo></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The contextual information of the main and guest entities was passed through the fully connected layer to obtain the predicted scores. The two were then added together to obtain the predicted probabilities of the various relationships that were then passed through the softmax layer to obtain the final predicted relationship types:<disp-formula id="FD18-applsci-13-11074"><label>(14)</label><mml:math id="mm26" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mi>sigmoid</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">W</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mrow><mml:mo>&#x2217;</mml:mo><mml:mi>obj</mml:mi></mml:mrow><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">b</mml:mi><mml:mn>1</mml:mn></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD19-applsci-13-11074"><label>(15)</label><mml:math id="mm27" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">r</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mi>sigmoid</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">W</mml:mi><mml:mn>2</mml:mn></mml:msub><mml:mrow><mml:mo>&#x2217;</mml:mo><mml:mi>sub</mml:mi></mml:mrow><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">b</mml:mi><mml:mn>2</mml:mn></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD20-applsci-13-11074"><label>(16)</label><mml:math id="mm28" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">r</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD21-applsci-13-11074"><label>(17)</label><mml:math id="mm29" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:mi>softmax</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The guest entities were passed through a fully connected layer and then a softmax layer to obtain the predicted entity type:<disp-formula id="FD22-applsci-13-11074"><label>(18)</label><mml:math id="mm30" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:mi>softmax</mml:mi><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mi mathvariant="normal">p</mml:mi></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The predicted entity types and predicted relationships performed cross-entropy loss with the true values and the two loss values were added together (i.e., the parameters were hard-shared) to jointly participate in the optimization of the model. This made the model take into account both entities and relationships to reduce its error propagation:<disp-formula id="FD23-applsci-13-11074"><label>(19)</label><mml:math id="mm31" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>loss</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:mo>&#x2212;</mml:mo><mml:mo>&#x2211;</mml:mo><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>real</mml:mi></mml:mrow></mml:msub><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mo>&#x2217;</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>log</mml:mi></mml:mrow><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced><mml:mo>+</mml:mo><mml:mfenced><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>real</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mo>&#x2217;</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>log</mml:mi></mml:mrow><mml:mfenced><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD24-applsci-13-11074"><label>(20)</label><mml:math id="mm32" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>loss</mml:mi></mml:mrow></mml:msub><mml:mo>=</mml:mo><mml:mo>&#x2212;</mml:mo><mml:mo>&#x2211;</mml:mo><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>real</mml:mi></mml:mrow></mml:msub><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mo>&#x2217;</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>log</mml:mi></mml:mrow><mml:mfenced><mml:mrow><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced><mml:mo>+</mml:mo><mml:mfenced><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>real</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mo>&#x2217;</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>log</mml:mi></mml:mrow><mml:mfenced><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>type</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:mfenced></mml:mrow></mml:mfenced></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD25-applsci-13-11074"><label>(21)</label><mml:math id="mm33" display="block"><mml:semantics><mml:mrow><mml:mi>loss</mml:mi><mml:mo>=</mml:mo><mml:msub><mml:mi mathvariant="normal">E</mml:mi><mml:mrow><mml:mi>loss</mml:mi></mml:mrow></mml:msub><mml:mo>+</mml:mo><mml:msub><mml:mi mathvariant="normal">R</mml:mi><mml:mrow><mml:mi>loss</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+      </sec>
+    </sec>
+    <sec id="sec4-applsci-13-11074">
+      <title>4. Experiments and Results Analysis</title>
+      <p>The experimental setup included the PyTorch framework, CUDA version 11.1, Ubuntu operating system, and an NVIDIA RTX 3090 (24 G) graphics card. A learning rate linear warm-up strategy was implemented to ensure a high model stability during the initial stages of training and to accelerate the convergence. A model evaluation was conducted every 2500 training steps to save the models that had high accuracy at this stage. The remaining parameters of the model are shown in <xref ref-type="table" rid="applsci-13-11074-t005">Table 5</xref>.</p>
+      <sec id="sec4dot1-applsci-13-11074">
+        <title>4.1. Criteria for Evaluation</title>
+        <p>In this experiment, the precision, recall and F<sub>1</sub> value were used to evaluate the performance of the model:<disp-formula id="FD26-applsci-13-11074"><label>(22)</label><mml:math id="mm34" display="block"><mml:semantics><mml:mrow><mml:mi>precision</mml:mi><mml:mo>=</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi>correct</mml:mi><mml:mo>&#xA0;</mml:mo></mml:mrow></mml:mrow><mml:mrow><mml:mi>num</mml:mi></mml:mrow></mml:msub><mml:mo>/</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi>predict</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>num</mml:mi></mml:mrow></mml:msub><mml:mo>&#xA0;</mml:mo></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD27-applsci-13-11074"><label>(23)</label><mml:math id="mm35" display="block"><mml:semantics><mml:mrow><mml:mi>recall</mml:mi><mml:mo>=</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi>correct</mml:mi><mml:mo>&#xA0;</mml:mo></mml:mrow></mml:mrow><mml:mrow><mml:mi>num</mml:mi></mml:mrow></mml:msub><mml:mo>/</mml:mo><mml:msub><mml:mrow><mml:mrow><mml:mo>&#xA0;</mml:mo><mml:mi>golden</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>num</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula>
+        <disp-formula id="FD28-applsci-13-11074"><label>(24)</label><mml:math id="mm36" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi mathvariant="normal">F</mml:mi><mml:mn>1</mml:mn></mml:msub><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mn>2</mml:mn><mml:mrow><mml:mo>&#x2217;</mml:mo><mml:mi>precision</mml:mi><mml:mo>&#x2217;</mml:mo><mml:mi>recall</mml:mi></mml:mrow></mml:mrow><mml:mrow><mml:mi>precision</mml:mi><mml:mo>+</mml:mo><mml:mi>recall</mml:mi></mml:mrow></mml:mfrac></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>Here, <inline-formula><mml:math id="mm37"><mml:semantics><mml:mrow><mml:mi>precision</mml:mi></mml:mrow></mml:semantics></mml:math></inline-formula> denoted the precision rate, <inline-formula><mml:math id="mm38"><mml:semantics><mml:mrow><mml:mi>recall</mml:mi></mml:mrow></mml:semantics></mml:math></inline-formula> signified the recall rate, and <inline-formula><mml:math id="mm39"><mml:semantics><mml:mrow><mml:msub><mml:mrow><mml:mrow><mml:mi>correct</mml:mi><mml:mo>&#xA0;</mml:mo></mml:mrow></mml:mrow><mml:mrow><mml:mi>n</mml:mi><mml:mi>u</mml:mi><mml:mi>m</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> indicated the count of accurate predictions whereas <inline-formula><mml:math id="mm40"><mml:semantics><mml:mrow><mml:msub><mml:mrow><mml:mi>predict</mml:mi></mml:mrow><mml:mrow><mml:mi>n</mml:mi><mml:mi>u</mml:mi><mml:mi>m</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> represented the total number of predictions, <inline-formula><mml:math id="mm41"><mml:semantics><mml:mrow><mml:msub><mml:mrow><mml:mi>golden</mml:mi></mml:mrow><mml:mrow><mml:mi>n</mml:mi><mml:mi>u</mml:mi><mml:mi>m</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> represented the number of labeled entities, and the F1 value was the average of the precision rate and recall rate. This was capable of balancing the influence of the precision rate and the recall rate, and reflecting the performance of the model in a more comprehensive way.</p>
+      </sec>
+      <sec id="sec4dot2-applsci-13-11074">
+        <title>4.2. Results and Analysis</title>
+        <p>The performance of the model was evaluated using the F<sub>1</sub> value, F<sub>1</sub>-overlap, accuracy, and recall on the entity relationship dataset in the grid field constructed in Chapter 1 for training and evaluation.</p>
+        <p>A comparison experiment was conducted to verify the effectiveness of the proposed model for the grid data relationship extraction. The grid field data entity relationship extraction model was compared to the BiLSTM-CRF, BERT-CE, BERT-CRF, and BERT-BiLSM-CRF models. The obtained results are shown in <xref ref-type="table" rid="applsci-13-11074-t006">Table 6</xref>. It can be seen that the proposed model had the optimal recognition effect in grid business data relationship extraction, compared with the other models. On the gird dataset, it had precision, recall, and F<sub>1</sub> values of 89.55, 85.91, and 87.92%, respectively.</p>
+        <list list-type="order">
+          <list-item>
+            <label>(1)</label>
+            <p>The BiLSTM-CRF model used word2vec as the embedding layer. However, its word vectors were static and cannot be adjusted according to the input context words. Therefore, it had a low performance on the power grid dataset, with an F<sub>1</sub> value of only 63.30%.</p>
+          </list-item>
+          <list-item>
+            <label>(2)</label>
+            <p>The BERT-CE model used the BERT pre-trained language model as the embedding layer to adequately capture the contextual representation of the characters and thus had better access to the deep semantic information. On the grid dataset, the F<sub>1</sub> value of the model was 85.16%.</p>
+          </list-item>
+          <list-item>
+            <label>(3)</label>
+            <p>The BERT-CRF model added conditional random field (CRF) to the BERT pre-trained language model, which improved its F<sub>1</sub> value by 0.13% compared with the cross entropy loss module via sequentially annotating the output of BERT.</p>
+          </list-item>
+          <list-item>
+            <label>(4)</label>
+            <p>The BERT-BiLSTM-CRF model also used the BERT pre-trained language model to capture the contextual semantics of the grid business data, while utilizing recurrent neural networks to capture richer meanings. It also used the CRF for classification. It had an F<sub>1</sub> value of 86.19%, which presented an improvement of 1.03% compared with Model 2.</p>
+          </list-item>
+          <list-item>
+            <label>(5)</label>
+            <p>For the RoBERTa-CE model with embedded semantic dependencies and lexicality, the RoBERTa pre-trained language model with dynamic MASK was used to capture the contextual semantics of the grid business data, embed semantic dependencies and lexicality, and efficiently combine the information of the subject and object in order to improve their associativity and strengthen the linkage of the relational entities. Therefore, compared with the above model, the recognition performance was significantly improved, and the F<sub>1</sub> value was 87.92% on the grid dataset. Compared with Model 2, the F<sub>1</sub> value improved by 2.76%, which presented optimal recognition results.</p>
+          </list-item>
+        </list>
+        <p><xref ref-type="table" rid="applsci-13-11074-t007">Table 7</xref> presents the ablation experimental results of the model. The removal of the lexical embedding and semantic dependency embedding under the benchmark of the RoBERTa model reduced the performance of the model by 1.08%, which demonstrated that the correlation between related entities can be enhanced through effective embedding of lexical and semantic dependencies. Model 4, using the original RoBERTa, only differed by 0.78% compared to model 5 using the embedded lexical and semantic dependency BERT, while model 8, without any embedding enhancement, reduced the performance by 1.68% compared to model 4. Since RoBERTa used larger training data and was more powerful than BERT for deep characterization of sentences, the addition of lexical and semantic dependency embedding effectively narrowed the gap between the two and enhanced the deep characterization ability of the model.</p>
+        <p>In summary, the proposed model had superior F<sub>1</sub> performance on the entity-relationship dataset within the grid domain, compared with the benchmark models.</p>
+      </sec>
+    </sec>
+    <sec id="sec5-applsci-13-11074" sec-type="conclusions">
+      <title>5. Conclusions</title>
+      <p>In this paper, a relationship extraction model for the grid field was designed through combining semantic dependency and lexical embedding using the RoBERTa model. The text context depth characterization information was obtained through the RoBERTa pre-training model. The lexical and semantic dependency information were embedded in the RoBERTa embedding layer, weights were set for the two types of information, and the fused weights were automatically learned based on the model optimization for effective embedding. The cross-entropy function was used for training. The model effectively enhanced the deep semantic characterization ability, which improved the accuracy of relationship recognition between the different entities. The efficiency and superiority of the proposed approach were then verified on a relational extraction dataset which was curated within the grid domain. The obtained results can be summarized as follows:<list list-type="order"><list-item><label>(1)</label><p>The combination of the semantic dependency and lexical embedding in the RoBERTa model improved the F<sub>1</sub> value by 2.76% compared with the original BERT model. This indicated that the semantic dependency and lexical embedding effectively enhanced the relationship extraction accuracy.</p></list-item><list-item><label>(2)</label><p>Model 4, which used the original RoBERTa, exhibited only a 0.78% discrepancy compared with Model 5, which incorporated embedded lexical and semantic dependency. On the other hand, Model 8, which did not use any embedding enhancement, had a 1.68% decrease in performance compared with Model 4. The inclusion of lexical and semantic dependent embeddings effectively narrowed the gap between RoBERTa and BERT, and enhanced the deep characterization ability of the model.</p></list-item><list-item><label>(3)</label><p>To label the relationship as quintuple spanning pairs and relationships, one entity should be selected as the main entity in the labeled data. The remaining entities should be enumerated as guest entities. The main entity and guest entities should contain entity type information. The generated main entity and guest entity set, along with the text information, can be used as a training set. Different subjects should be classified into different groups for parallel training, which strengthens the connection between the entities.</p></list-item></list></p>
+      <p>In future work, we aim to use the trained model to extract information from the data provided by the power grid. A domain knowledge graph will be constructed to manage the data in an appropriate manner. Through leveraging the graph, the ability to extract valuable insights within the grid domain can be enhanced, and well-informed decisions for grid-related enterprises can be made. Furthermore, the evaluation of the capacity of the model for generalization through extending its application to other domains is of interest.</p>
+    </sec>
+  </body>
+  <back>
+    <notes>
+      <title>Author Contributions</title>
+      <p>Methodology, Q.M.; writing&#x2014;original draft preparation, Q.M.; Conceptualization, X.Z.; Formal analysis, X.Z.; writing&#x2014;review and editing, Y.D.; visualization, Y.C.; software (Re_Project, v.2023.09.18), D.L.; resources, X.Z.; data curation, D.L. and Y.C.; supervision, Y.D. All authors have read and agreed to the published version of the manuscript.</p>
+    </notes>
+    <notes>
+      <title>Institutional Review Board Statement</title>
+      <p>No ethical approval was required for this study. </p>
+    </notes>
+    <notes>
+      <title>Informed Consent Statement</title>
+      <p>Informed consent was obtained from all subjects involved in the study.</p>
+    </notes>
+    <notes notes-type="COI-statement">
+      <title>Conflicts of Interest</title>
+      <p>Author Qi Meng , Xixiang Zhang and Yun Dong was employed by the company Guangxi Power Grid Co., Ltd. The remaining authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest. The authors declare that this study received funding from Guangxi Power Grid Co. The funder had the following involvement with the study: providing data support for the experiments, participating in the development of the technical program of the thesis, its implementation, and the writing of the thesis.</p>
+    </notes>
+    <ref-list>
+      <title>References</title>
+      <ref id="B1-applsci-13-11074">
+        <label>1.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Nayak</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Majumder</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Goyal</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Poria</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Deep Neural Approaches to Relation Triplets Extraction: A Comprehensive Survey</article-title>
+          <source>Cogn. Comput.</source>
+          <year>2021</year>
+          <volume>13</volume>
+          <fpage>1215</fpage>
+          <lpage>1232</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B2-applsci-13-11074">
+        <label>2.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Kumar</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>A survey of deep learning methods for relation extraction</article-title>
+          <source>arXiv</source>
+          <year>2017</year>
+          <pub-id pub-id-type="arxiv">1705.03645</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B3-applsci-13-11074">
+        <label>3.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Cui</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>You</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>A survey on relation extraction</article-title>
+          <source>Proceedings of the China Conference on Knowledge Graph and Semantic Computing</source>
+          <conf-loc>Chengdu, China</conf-loc>
+          <conf-date>26&#x2013;29 August 2017</conf-date>
+          <publisher-name>Springer</publisher-name>
+          <publisher-loc>Berlin/Heidelberg, Germany</publisher-loc>
+          <year>2017</year>
+          <fpage>50</fpage>
+          <lpage>58</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B4-applsci-13-11074">
+        <label>4.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Dileep</surname>
+              <given-names>G.</given-names>
+            </name>
+          </person-group>
+          <article-title>A survey on smart grid technologies and applications</article-title>
+          <source>Renew. Energy</source>
+          <year>2020</year>
+          <volume>146</volume>
+          <fpage>2589</fpage>
+          <lpage>2625</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B5-applsci-13-11074">
+        <label>5.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Wu</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Zhao</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Ji</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Sun</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Chinese Named Entity Recognition for a Power Customer Service Intelligent Q&amp;A System</article-title>
+          <source>Proceedings of the 2021 International Conference on Intelligent Computing, Automation and Applications (ICAA)</source>
+          <conf-loc>Nanjing, China</conf-loc>
+          <conf-date>25&#x2013;27 June 2021</conf-date>
+          <fpage>363</fpage>
+          <lpage>368</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B6-applsci-13-11074">
+        <label>6.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Ji</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Pan</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Cambria</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Marttinen</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Philip</surname>
+              <given-names>S.Y.</given-names>
+            </name>
+          </person-group>
+          <article-title>A survey on knowledge graphs: Representation, acquisition, and applications</article-title>
+          <source>IEEE Trans. Neural Netw. Learn. Syst.</source>
+          <year>2021</year>
+          <volume>33</volume>
+          <fpage>494</fpage>
+          <lpage>514</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B7-applsci-13-11074">
+        <label>7.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Wenjun</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Liang</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Haoshuai</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Wei</surname>
+              <given-names>Y.</given-names>
+            </name>
+          </person-group>
+          <article-title>RoRED: Bootstrapping labeling rule discovery for robust relation extraction</article-title>
+          <source>Inf. Sci.</source>
+          <year>2023</year>
+          <volume>629</volume>
+          <fpage>62</fpage>
+          <lpage>76</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B8-applsci-13-11074">
+        <label>8.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Ke</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Chen</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Gou</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Gao</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Jin</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Medical entity recognition and knowledge map relationship analysis of Chinese EMRs based on improved BiLSTM-CRF</article-title>
+          <source>Comput. Electr. Eng.</source>
+          <year>2023</year>
+          <volume>108</volume>
+          <fpage>108709</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.compeleceng.2023.108709</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B9-applsci-13-11074">
+        <label>9.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Guo</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Yan</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Yang</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Lu</surname>
+              <given-names>Y.</given-names>
+            </name>
+          </person-group>
+          <article-title>An automatic method for constructing machining process knowledge base from knowledge graph</article-title>
+          <source>Robot. Comput. -Integr. Manuf.</source>
+          <year>2022</year>
+          <volume>73</volume>
+          <fpage>102222</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.rcim.2021.102222</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B10-applsci-13-11074">
+        <label>10.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Wan</surname>
+              <given-names>Q.</given-names>
+            </name>
+            <name>
+              <surname>Wei</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Zhao</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>A Span-based Multi-Modal Attention Network for joint entity-relation extraction</article-title>
+          <source>Knowl.-Based Syst.</source>
+          <year>2023</year>
+          <volume>262</volume>
+          <fpage>110228</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.knosys.2022.110228</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B11-applsci-13-11074">
+        <label>11.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Liu</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Liao</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Wu</surname>
+              <given-names>G.</given-names>
+            </name>
+          </person-group>
+          <article-title>A novel pipelined end-to-end relation extraction framework with entity mentions and contextual semantic representation</article-title>
+          <source>Expert Syst. Appl.</source>
+          <year>2023</year>
+          <volume>228</volume>
+          <fpage>120435</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.eswa.2023.120435</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B12-applsci-13-11074">
+        <label>12.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Tang</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Chen</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Qin</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Huang</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Zheng</surname>
+              <given-names>Q.</given-names>
+            </name>
+          </person-group>
+          <article-title>Boundary regression model for joint entity and relation extraction</article-title>
+          <source>Expert Syst. Appl.</source>
+          <year>2023</year>
+          <volume>229</volume>
+          <fpage>120441</fpage>
+        </element-citation>
+      </ref>
+      <ref id="B13-applsci-13-11074">
+        <label>13.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Gao</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Zhang</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Zhu</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Du</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Ma</surname>
+              <given-names>Q.</given-names>
+            </name>
+          </person-group>
+          <article-title>ERGM: A multi-stage joint entity and relation extraction with global entity match</article-title>
+          <source>Knowl.-Based Syst.</source>
+          <year>2023</year>
+          <volume>271</volume>
+          <fpage>110550</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.knosys.2023.110550</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B14-applsci-13-11074">
+        <label>14.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Jaradeh</surname>
+              <given-names>M.Y.</given-names>
+            </name>
+            <name>
+              <surname>Singh</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Stocker</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Both</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Auer</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Information extraction pipelines for knowledge graphs</article-title>
+          <source>Knowl. Inf. Syst.</source>
+          <year>2023</year>
+          <volume>65</volume>
+          <fpage>1989</fpage>
+          <lpage>2016</lpage>
+          <pub-id pub-id-type="doi">10.1007/s10115-022-01826-x</pub-id>
+          <pub-id pub-id-type="pmid">36643405</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B15-applsci-13-11074">
+        <label>15.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Barducci</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Iannaccone</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>La Gatta</surname>
+              <given-names>V.</given-names>
+            </name>
+            <name>
+              <surname>Moscato</surname>
+              <given-names>V.</given-names>
+            </name>
+            <name>
+              <surname>Sperl&#xEC;</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Zavota</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>An end-to-end framework for information extraction from Italian resumes</article-title>
+          <source>Expert Syst. Appl.</source>
+          <year>2022</year>
+          <volume>210</volume>
+          <fpage>118487</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.eswa.2022.118487</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B16-applsci-13-11074">
+        <label>16.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Fabregat</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Araujo</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Martinez-Romo</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>Deep neural models for extracting entities and relationships in the new RDD corpus relating disabilities and rare diseases</article-title>
+          <source>Comput. Methods Programs Biomed.</source>
+          <year>2018</year>
+          <volume>164</volume>
+          <fpage>121</fpage>
+          <lpage>129</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.cmpb.2018.07.007</pub-id>
+          <pub-id pub-id-type="pmid">30195420</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B17-applsci-13-11074">
+        <label>17.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Zhong</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>Chen</surname>
+              <given-names>D.</given-names>
+            </name>
+          </person-group>
+          <article-title>A Frustratingly Easy Approach for Entity and Relation Extraction</article-title>
+          <source>Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies</source>
+          <conf-loc>Online</conf-loc>
+          <conf-date>6&#x2013;11 June 2021</conf-date>
+          <fpage>50</fpage>
+          <lpage>61</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B18-applsci-13-11074">
+        <label>18.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Ye</surname>
+              <given-names>D.</given-names>
+            </name>
+            <name>
+              <surname>Lin</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Sun</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Packed Levitated Marker for Entity and Relation Extraction</article-title>
+          <source>Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)</source>
+          <conf-loc>Dublin, Ireland</conf-loc>
+          <conf-date>22&#x2013;27 May 2022</conf-date>
+          <publisher-name>Association for Computational Linguistics</publisher-name>
+          <fpage>4904</fpage>
+          <lpage>4917</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B19-applsci-13-11074">
+        <label>19.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Yan</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Bracewell</surname>
+              <given-names>D.B.</given-names>
+            </name>
+            <name>
+              <surname>Ren</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Kuroiwa</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Integration of Multiple Classifiers for Chinese Semantic Dependency Analysis</article-title>
+          <source>Electron. Notes Theor. Comput. Sci.</source>
+          <year>2009</year>
+          <volume>225</volume>
+          <fpage>457</fpage>
+          <lpage>468</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.entcs.2008.12.092</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B20-applsci-13-11074">
+        <label>20.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Yin</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Gao</surname>
+              <given-names>Q.</given-names>
+            </name>
+            <name>
+              <surname>Zhao</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Zhang</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>H.</given-names>
+            </name>
+          </person-group>
+          <article-title>A review of machine learning for new generation smart dispatch in power systems</article-title>
+          <source>Eng. Appl. Artif. Intell.</source>
+          <year>2020</year>
+          <volume>88</volume>
+          <fpage>103372</fpage>
+        </element-citation>
+      </ref>
+      <ref id="B21-applsci-13-11074">
+        <label>21.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Sun</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Sun</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Meng</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Ao</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>He</surname>
+              <given-names>Q.</given-names>
+            </name>
+            <name>
+              <surname>Wu</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>J.</given-names>
+            </name>
+          </person-group>
+          <article-title>ChineseBERT: Chinese Pretraining Enhanced by Glyph and Pinyin Information</article-title>
+          <source>Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)</source>
+          <conf-loc>Online</conf-loc>
+          <conf-date>1&#x2013;6 August 2021</conf-date>
+          <publisher-name>Association for Computational Linguistics</publisher-name>
+          <fpage>2065</fpage>
+          <lpage>2075</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B22-applsci-13-11074">
+        <label>22.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Kleenankandy</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Abdul Nazeer</surname>
+              <given-names>K.A.</given-names>
+            </name>
+          </person-group>
+          <article-title>An enhanced Tree-LSTM architecture for sentence semantic modeling using typed dependencies</article-title>
+          <source>Inf. Process. Manag.</source>
+          <year>2020</year>
+          <volume>57</volume>
+          <fpage>102362</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.ipm.2020.102362</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B23-applsci-13-11074">
+        <label>23.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Liu</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Guo</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Li</surname>
+              <given-names>G.</given-names>
+            </name>
+          </person-group>
+          <article-title>Chinese named entity recognition: The state of the art</article-title>
+          <source>Neurocomputing</source>
+          <year>2022</year>
+          <volume>473</volume>
+          <fpage>37</fpage>
+          <lpage>53</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B24-applsci-13-11074">
+        <label>24.</label>
+        <element-citation publication-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Wu</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Wu</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Huang</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Xie</surname>
+              <given-names>X.</given-names>
+            </name>
+          </person-group>
+          <article-title>Neural Chinese Named Entity Recognition via CNN-LSTM-CRF and Joint Training with Word Segmentation</article-title>
+          <source>The World Wide Web Conference (WWW&#x2019;19)</source>
+          <publisher-name>Association for Computing Machinery</publisher-name>
+          <publisher-loc>New York, NY, USA</publisher-loc>
+          <year>2019</year>
+          <fpage>3342</fpage>
+        </element-citation>
+      </ref>
+      <ref id="B25-applsci-13-11074">
+        <label>25.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Vaswani</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Shazeer</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Parmar</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Uszkoreit</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Jones</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Gomez</surname>
+              <given-names>A.N.</given-names>
+            </name>
+            <name>
+              <surname>Kaiser</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Polosukhin</surname>
+              <given-names>I.</given-names>
+            </name>
+          </person-group>
+          <article-title>Attention is all you need</article-title>
+          <source>Proceedings of the 31st International Conference on Neural Information Processing Systems (NIPS&#x2019;17)</source>
+          <conf-loc>Long Beach, CA, USA</conf-loc>
+          <conf-date>4&#x2013;9 December 2017</conf-date>
+          <publisher-name>Curran Associates Inc.</publisher-name>
+          <publisher-loc>Red Hook, NY, USA</publisher-loc>
+          <year>2017</year>
+          <fpage>6000</fpage>
+          <lpage>6010</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B26-applsci-13-11074">
+        <label>26.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Devlin</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Chang</surname>
+              <given-names>M.-W.</given-names>
+            </name>
+            <name>
+              <surname>Lee</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>Toutanova</surname>
+              <given-names>K.</given-names>
+            </name>
+          </person-group>
+          <article-title>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</article-title>
+          <source>Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1</source>
+          <conf-loc>Minneapolis, MN, USA</conf-loc>
+          <conf-date>2&#x2013;7 June 2019</conf-date>
+          <publisher-name>Association for Computational Linguistics</publisher-name>
+          <fpage>4171</fpage>
+          <lpage>4186</lpage>
+        </element-citation>
+      </ref>
+      <ref id="B27-applsci-13-11074">
+        <label>27.</label>
+        <element-citation publication-type="confproc">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Che</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Feng</surname>
+              <given-names>Y.</given-names>
+            </name>
+            <name>
+              <surname>Qin</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Liu</surname>
+              <given-names>T.</given-names>
+            </name>
+          </person-group>
+          <article-title>N-LTP: An Open-source Neural Language Technology Platform for Chinese</article-title>
+          <source>Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing: System Demonstrations</source>
+          <conf-loc>Abu Dhabi, United Arab Emirates</conf-loc>
+          <conf-date>7&#x2013;11 December 2022</conf-date>
+          <fpage>42</fpage>
+          <lpage>49</lpage>
+        </element-citation>
+      </ref>
+    </ref-list>
+    <sec sec-type="display-objects">
+      <title>Figures and Tables</title>
+      <fig id="applsci-13-11074-f001" position="float">
+        <label>Figure 1</label>
+        <caption>
+          <p>Flow chart. Examples of data from the database are shown in <xref ref-type="table" rid="applsci-13-11074-t002">Table 2</xref>. In the figure, Transformer Encorder &#xD7; 12 means 12 layers of Transformer Encorder are stacked.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="applsci-13-11074-g001.tif"/>
+      </fig>
+      <fig id="applsci-13-11074-f002" position="float">
+        <label>Figure 2</label>
+        <caption>
+          <p>Example of a semantic dependency graph showing the semantic dependency analysis of &#x201C;30 June, 110 kV Kunlun station Guangkun line,&#x201D; and the construction of a semantic dependency analysis diagram.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="applsci-13-11074-g002.tif"/>
+      </fig>
+      <fig id="applsci-13-11074-f003" position="float">
+        <label>Figure 3</label>
+        <caption>
+          <p>Embedding layer fusion. The subscripts of semantic dependent embeddings and lexical embeddings were the index values of the processed mapping to the word list.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="applsci-13-11074-g003.tif"/>
+      </fig>
+      <table-wrap id="applsci-13-11074-t001" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t001_Table 1</object-id>
+        <label>Table 1</label>
+        <caption>
+          <p>Relational dataset.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Type Name</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Number of Relations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">time</td>
+              <td align="center" valign="middle">493</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">reason</td>
+              <td align="center" valign="middle">414</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">local</td>
+              <td align="center" valign="middle">3317</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">subordinate</td>
+              <td align="center" valign="middle">2461</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">same</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">2669</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t002" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t002_Table 2</object-id>
+        <label>Table 2</label>
+        <caption>
+          <p>Example of a labeled diagram. Numbers in Entities and Relations indicate the corresponding index position in Text.</p>
+        </caption>
+        <table>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Text</td>
+              <td align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">On 30 June, 110 kv Kunlun station Guangkun line</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Entities</td>
+              <td align="center" valign="middle">[0, 2, time], [4, 4, level], [4, 6, station], [7, 8, line]</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Relations</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">[0, 2, 4, 6, time]</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t003" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t003_Table 3</object-id>
+        <label>Table 3</label>
+        <caption>
+          <p>Construction of a semantic dependency mapping index lexicon (only partially shown).</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Type of Relationship</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Tag</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Example</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">Agent</td>
+              <td align="center" valign="middle">Agt</td>
+              <td align="center" valign="middle">I sent her a bouquet of flowers.</td>
+              <td align="center" valign="middle">1</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Description</td>
+              <td align="center" valign="middle">Feat</td>
+              <td align="center" valign="middle">He is fat (grow --&gt; fat)</td>
+              <td align="center" valign="middle">2</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Time</td>
+              <td align="center" valign="middle">Time</td>
+              <td align="center" valign="middle">There was a Li Bai in the Tang Dynasty (Tang Dynasty &lt;-- there was)</td>
+              <td align="center" valign="middle">3</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Possessor</td>
+              <td align="center" valign="middle">Poss</td>
+              <td align="center" valign="middle">He has a good book (He &lt;-- has)</td>
+              <td align="center" valign="middle">4</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Punctuation Marker</td>
+              <td align="center" valign="middle">mPunc</td>
+              <td align="center" valign="middle">, . !</td>
+              <td align="center" valign="middle">5</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Content</td>
+              <td align="center" valign="middle">Cont</td>
+              <td align="center" valign="middle">He heard firecrackers (hear --&gt; firecrackers)</td>
+              <td align="center" valign="middle">6</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Root</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Root</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Core nodes of the sentence</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">7</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t004" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t004_Table 4</object-id>
+        <label>Table 4</label>
+        <caption>
+          <p>Construction of a lexical mapping index word list (only partially shown).</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Tag</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Part of Speech</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">NN</td>
+              <td align="center" valign="middle">noun</td>
+              <td align="center" valign="middle">1</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">JJ</td>
+              <td align="center" valign="middle">adjective</td>
+              <td align="center" valign="middle">2</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">DT</td>
+              <td align="center" valign="middle">determiner</td>
+              <td align="center" valign="middle">3</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">IN</td>
+              <td align="center" valign="middle">preposition</td>
+              <td align="center" valign="middle">4</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">MD</td>
+              <td align="center" valign="middle">modal</td>
+              <td align="center" valign="middle">5</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">RP</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">particle</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">6</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t005" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t005_Table 5</object-id>
+        <label>Table 5</label>
+        <caption>
+          <p>Parameter setting.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Parameter</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">Learning rate</td>
+              <td align="center" valign="middle">2 &#xD7; 10<sup>&#x2212;5</sup></td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Batch size</td>
+              <td align="center" valign="middle">3</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Epoch</td>
+              <td align="center" valign="middle">20</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">lstm_embedding_size</td>
+              <td align="center" valign="middle">1024</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Hidden size</td>
+              <td align="center" valign="middle">768</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Bert model</td>
+              <td align="center" valign="middle">RoBERTa-wwm-ext</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">Embedding size</td>
+              <td align="center" valign="middle">512</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">Optimizer</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">AdamW</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t006" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t006_Table 6</object-id>
+        <label>Table 6</label>
+        <caption>
+          <p>Comparison between the performance of different relational extraction models. The * symbol denotes the RoBERTa with incorporated semantic dependency and lexical embedding strategies.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Index</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Model</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Precision/%</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Recall/%</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">F<sub>1</sub>-Score/%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">BiLSTM-CRF</td>
+              <td align="center" valign="middle">62.08%</td>
+              <td align="center" valign="middle">64.58%</td>
+              <td align="center" valign="middle">63.30%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">2</td>
+              <td align="center" valign="middle">BERT-CE</td>
+              <td align="center" valign="middle">87.07%</td>
+              <td align="center" valign="middle">83.33%</td>
+              <td align="center" valign="middle">85.16%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">3</td>
+              <td align="center" valign="middle">BERT-CRF</td>
+              <td align="center" valign="middle">87.15%</td>
+              <td align="center" valign="middle">83.51%</td>
+              <td align="center" valign="middle">85.29%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">4</td>
+              <td align="center" valign="middle">BERT-BiLSM-CRF</td>
+              <td align="center" valign="middle">87.95%</td>
+              <td align="center" valign="middle">84.51%</td>
+              <td align="center" valign="middle">86.19%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">5</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">RoBERTa-CE *</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">
+                <bold>89.55%</bold>
+              </td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">
+                <bold>85.91%</bold>
+              </td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">
+                <bold>87.92%</bold>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+      <table-wrap id="applsci-13-11074-t007" position="float">
+        <object-id pub-id-type="pii">applsci-13-11074-t007_Table 7</object-id>
+        <label>Table 7</label>
+        <caption>
+          <p>Ablation experiments, where Pos_id denotes the addition of a lexical embedding vector SemDep_id denotes the addition of a semantic dependency embedding vector, and CE denotes the cross-entropy loss function. A check mark indicates that the module is used.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Index</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">RoBERTa</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">BERT</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Pos_id</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">SemDep_id</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">CE</th>
+              <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">F<sub>1</sub>-Score/%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="center" valign="middle">1</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">87.92%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">2</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">87.16%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">3</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">87.41%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">4</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">86.84%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">5</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">85.96%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">6</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">85.47%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle">7</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle"> </td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">&#x2713;</td>
+              <td align="center" valign="middle">85.66%</td>
+            </tr>
+            <tr>
+              <td align="center" valign="middle" style="border-bottom:solid thin">8</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"> </td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">&#x2713;</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"> </td>
+              <td align="center" valign="middle" style="border-bottom:solid thin"> </td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">&#x2713;</td>
+              <td align="center" valign="middle" style="border-bottom:solid thin">85.16%</td>
+            </tr>
+          </tbody>
+        </table>
+      </table-wrap>
+    </sec>
+    <fn-group>
+      <fn>
+        <p><bold>Disclaimer/Publisher&#x2019;s Note:</bold> The statements, opinions and data contained in all publications are solely those of the individual author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to people or property resulting from any ideas, methods, instructions or products referred to in the content.</p>
+      </fn>
+    </fn-group>
+  </back>
+</article>

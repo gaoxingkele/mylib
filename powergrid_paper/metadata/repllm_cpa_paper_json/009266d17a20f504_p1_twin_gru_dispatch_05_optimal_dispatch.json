@@ -1,0 +1,404 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__05__optimal_dispatch_of_multi_coupling_systems_considering_molten_salt_the__10ff400301.pdf",
+  "n_pages": 29,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the rapid growth of global renewa ble energy generation capacity, wind and \nphotovoltaic (PV) power generation pose signiﬁcant challenges for grid PR and frequency \nregulation due to their inherent stochasticity [1–3]. In recent years, thermal power gener-\nation and renewable energy have been integrated into a CS entity, combining them both \nphysically and in terms of their external outputs. Regions or power sources that have the \nconditions to form a CS are widely available. For example, in China’s Liaoning power \ngrid, the installed capacity of thermal power and renewable energy that can be integrated \ninto a CS at the same grid connection point exceeds 42% [4]. This integrated approach, \nwith the PCC, has become a key method fo r promoting renewable energy consumption \nAcademic Editor: Francesco Liberato \nCappiello \nReceived: 23 February 2025 \nRevised: 1 April 2025 \nAccepted: 3 April 2025 \nPublished: 7 April 2025 \nCitation: Zhou, N.; Xu, Z.; Chi, Y.; \nZou, Y.; Xu, F.; Dai, X. Optimal  \nDispatch of Multi-Coupling Systems \nConsidering Molten Salt Thermal \nEnergy Storage Retroﬁt and Cost  \nAllocation Under Rapid Load  \nVariations. Appl. Sci. 2025, 15, 4062. \nhttps://doi.org/10.3390/app15074062 \nCopyright: © 2025 by the author. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and \nconditions of the Creative Commons \nAttribution (CC BY) license \n(https://creativecommons.org/license\ns/by/4.0/). \nAppl. Sci. 2025, 15, 4062 2 of 29 \n \nand participating in deep peak regulation (D PR) [5]. As a novel application scenario in \npower systems, the CS has become increasingly  prevalent in China. Therefore, focusing \non the regulated market framework and operational dispatch methodology of China’s CSs \nholds pioneering signi ﬁcance. However, high penetratio n of renewable energy increas-\ningly requires ﬂexible modiﬁcations of thermal power units. Thermal power units face \ndiﬃculties in simultaneously achieving rapid load changes, a wide range of PR, and lower \ncoal consumption and emissions [6–8]. On the other hand, the involvement of multiple \nstakeholders in scheduling complicates the modeling of the coordinated operation of the \nMCS in the large grid. At present, the allocation of ancillary service revenues in China is \nregulated and primarily managed by national authorities and the power grid in China. \nThe issues related to the distribution of beneﬁts and costs among the various stakeholders \nwithin the MCS emerge during the PR process. To further explore the coordinated opera-\ntion capabilities of MCSs, studying their optimal operational scheduling within the con-\ntext of ﬂexible modiﬁcations to thermal power units is of practical signiﬁcance. \nIn promoting renewable energy integration, the ﬂexible transformation of thermal \npower units forms the foundation for achieving rapid DPR, as well as frequency regula-\ntion, in CSs as a whole [9–12]. Accurately describing the physical characteristics and math-\nematical models of the transformed thermal power units is crucial for the operation of the \nCS under high renewable energy penetration scenarios. Currently, the ﬂexible transfor-\nmation schemes for thermal power units primarily focus on three aspects: low-load stable \ncombustion, rapid startup/shutdown, and fast ramping. Rapid startup/shutdown and fast \nramping can adjust the coal- ﬁred plant’s output in real time [13]. The study [14] mainly \nrelies on coupling with external devices to achieve improvements in minimum load, start-\nup time, and ramp rate. The study [6] modiﬁed the control scheme for steam temperature \nand fuel demand, and both ﬂexibility and economic performance were improved when \nthe revised control scheme was adopted. Howe ver, they increase the mechanical degra-\ndation of the unit and raise additional coal consumption and emissions [15]. In contrast, \nlow-load stable combustion, the use of thermal energy storage in coal- ﬁred plants, is \nwidely adopted. According to [16,17], transforming retroﬁtting with an MSTS system can \nsigniﬁcantly enhance the depth of load-following capability. The study [18] uses internal \ncomputer algorithms to simulate power boilers under fast thermal loads to achieve low-\nload stable combustion. The studies [17,19] propose achieving internal thermal energy \nstorage by throttling external thermal energy storage of high-/low-pressure heaters, feed \nwater/condensate bypass, and condensate water thro ttling. However, due to the limita-\ntions of storage capacity, it is challenging to achieve RLVs over a wide range of operating \nconditions. Combining the rapid ramping and molten salt thermal energy storage for ther-\nmal power units can address unit wear and tear, as well as economic e ﬃciency, further \nimproving the ﬂexibility transformation performance.  Nonetheless, there is limited re-\nsearch on the operational models of TPUMSTSR under RLVs within a CS. \nConventionally, PR ancillary services fo r thermal power units have been compen-\nsated by the government or the grid side [20]. However, with the increasing coordination \nof MCSs, the existing ancillary service market framework faces challenges in the allocation \nof beneﬁts among di ﬀerent stakeholders [21]. The study [22] proposes a mechanism for \nallocating PR costs among renewable energy sources and allocating compensation among \nPR resources to improve the economic eﬃciency and PR enthusiasm of independent sys-\ntem operators. The study [23] assumes that the peak shaving compensation of traditional \ngenerator sets is linearly correlated with the PR amount to achieve economic scheduling \nof PR compensation. However, this approach does not fully consider the contribution to \nPR; hence, it is di ﬃcult to encourage active participation of PR resources. Applying pre-\nvious rules, CSs may adopt scheduling strategi es that overlook the internal volatility of \nwind and PV power generation to maximize their bene ﬁts. These strategies would \nAppl. Sci. 2025, 15, 4062 3 of 29 \n \ndemand that thermal power units perform continuous PR without considering varying \nscenarios. Such practices disrupt the healthy development of the market and increase coal \nconsumption, contradicting the low-carbon goals of CS construction. Therefore, there is \nan urgent need to establish a beneﬁt-sharing model for scheduling that involves MCS en-\ntities. \nRegarding the algorithm for solving the MCS coordinated optimization problem, the \nday-ahead scheduling of the system is typi cally formulated as a model-based optimiza-\ntion problem [24], with the objective of maxi mizing the total system revenue. Currently, \ntwo main architectures are employed to solve this problem: centralized and distributed. \nReference [25] proposes a hybrid computational framework using a centralized architec-\nture to address the economic and emission issues of wind and thermal power units. Ref-\nerence [26] proposed a stochastic day ahead scheduling method of power system consid-\nering the ﬂexibility resources of thermal power units, which uses Monte Carlo simulation \nto deal with the ﬂuctuation of new energy and reduces the prediction error of load and \nnew energy. Reference [27] analyzed the peak shaving process of thermal power units and \nthe impact mechanism of reasonable wind and PV power curtailment on the operation of \nthe power grid. Taking into account the diﬃculty and overall economy of power grid peak \nshaving, a scheduling model for maximizing the economic bene ﬁts of wind, PV power, \nand thermal power systems based on the optimal energy curtailment rate was con-\nstructed. The centralized architecture utilize s a coordination center for modeling power \ndispatch, data processing, and computation. However, it struggles with privacy issues \nduring information exchange between the MCS and grid dispatch departments in central-\nized cooperative operations. Additionally, it faces challenges in eﬃciently and accurately \nmanaging the short-time-scale, large-scal",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 The TPUMSTSR Under RLV Model",
+      "level": 1,
+      "text": "This chapter proposes a model for TPUMSTSR under RLVs. The model is primarily \ndesigned for thermal power units within the CS, requiring ﬂexibility upgrades to enhance \nthe system’s operational stability and regulation capability.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Description of CS Dispatch Method",
+      "level": 2,
+      "text": "Each individual CS consists of multiple thermal power units and renewable energy \ngeneration facilities of various types. By coupling geographically proximate renewable \nenergy sources and thermal power units through PCC, the system is linked to the main \npower grid, enabling simultaneous power supply to both local loads and the larger grid. \nExternally, the CS is treated as an integrated entity, allowing dispatch authorities to man-\nage it as a whole, thereby improving operational eﬃciency. Internally, the power sources \nwithin the CS can be coordinated locally without considering the network topology. The \ndispatch method is illustrated in Figure 1. \nMain Power \nGrid\nLocal Consumption\nLocal Collaboration\nThermal Power Unit PV Power\nWind Power\nCoupling System\nPCC\nIntegrated \nDispatch\nIntegrated \nOutput\n \nFigure 1. CS dispatch method. \nIn a similar concept on the source side, th e unit combination is mainly determined \nby the grid dispatching department to calculate the grid ﬂow and determine the coordi-\nnation strategy for diﬀerent power sources connected to the grid. Multi-power bundling \nmainly transmits thermal power and renewable energy power between diﬀerent regions \nthrough high-voltage AC and DC transmissi on lines but does not emphasize the geo-\ngraphical relationship between power sources. Virtual power plants emphasize the coor-\ndination of distributed resources such as ener gy storage, controllable loads, and electric \nvehicles on the demand side—rather than the power generation side—to achieve ﬂexible \nregulation. \nAppl. Sci. 2025, 15, 4062 5 of 29 \n \nCompared with the above categories, the CS coordinates the output of internal power \nsources based on the dispatch requirements from the main grid’s scheduling department, \nachieving economic operation and enhancing the integration of renewable energy. The CS \ndoes not need to consider complex power ﬂows or coordination between power operators \nin diﬀerent regions. The large power grid dispatch department does not need to conduct \ndetailed modeling of the power supply within the CS, which simpliﬁes the dispatch diﬃ-\nculty of the dispatch department. At the same time, qualiﬁed power sources do not need \nto make a large amount of additional investment and can directly use existing power grid \nresources to aggregate into a CS. The thermal power units in the CS can more e ﬀectively \nparticipate in DPR. \nHowever, since multiple heterogeneous energy sources collectively function as a uni-\nﬁed entity within the CS, addressing the intermi ttency and uncertainty of high-penetra-\ntion renewable generation necessitates technical modiﬁcations to internal thermal power \nunits. Within the current operational framework of CSs, the primary focus is on enhancing \nthe ﬂexibility and response speed of thermal power output regulation. \n2.2. Operational Characteristics of Thermal Power Units After RLV Retroﬁt \nTo meet the demands of RLVs, thermal power units require equipment, control sys-\ntem, and operational strategy modi ﬁcations. For example, advanced burner designs and \nfuel supply systems can be adopted for boiler system retro ﬁtting to improve combustion \neﬃciency and stability during RLVs. According to [13], the ramp rate can be increased to \n4% Pe/min when the thermal power high-pressure heater adopts throttling extraction. By \noptimizing the structure and materials of the boiler and cooling systems, thermal inertia \ncan be reduced, enhancing the boiler’s responsiveness to load variations. When the ther-\nmal power unit equipment material is upgraded (such as the use of high-temperature al-\nloys), downtime can be reduced by about 15%; however, the initial transformation cost \nincreases by 10–20%. In terms of control sy stem upgrades, advanced control strategies \nbased on artiﬁcial intelligence and model predictive control can be introduced to optimize \nthe operational e ﬃciency of the units under RLVs. Wh en the revised control strategy is \nadopted, the ramp rate can be increased to 7.0% Pe/min, but the maintenance cost can be \nreduced by 10–15%. These measures enable RLVs, allowing for more timely responses to \nthe variability of stochastic renewable energy generation [30]. \nThrough these technical modi ﬁcations, thermal power units have acquired rapid \nramping capabilities, signi ﬁcantly enhancing their output variation rates and enabling \nthem to quickly respond to the CS load de mands. Additionally, these units now possess \na wide load operating range, allowing stable operation from low-load to full-load condi-\ntions, thereby accommodating the stochastic nature of wind and PV power generation. \nThe RLV capability of thermal power units eﬀectively compensates for the intermittency, \nimproving the operational stability and regulation capacity of the CS. \nHowever, under RLVs, mechanical components such as turbine blades and bearings \nare subjected to greater thermal and mechanical stresses, leading to accelerated wear and \nincreased lifetime degradation [31]. According to [32], the variable load rate is the main \nfactor inﬂuencing equipment service life. Compared with the reference value, increasing \nthe variable load rate by 50% reduces the life of the boiler drum and superheater by 31.9% \nand 52.9%, respectively, while decreasing the variable load rate by 50% compared with \nthe reference value increases the life of th e drum and superheater by 16.3% and 35.8%, \nrespectively. Additionally, existing studies [33] indicate that coal consumption under \nRLVs undergoes signiﬁcant changes compared with stable operation due to variations in \nthe boiler’s heat storage process and resource utilization during the production of main \nsteam and reheat steam. During RLVs, adjusting the condensate water requires additional \nwork from the pumps, and the operating e ﬃciency of the boiler and turbine decreases, \nAppl. Sci. 2025, 15, 4062 6 of 29 \n \nresulting in increased coal consumption. Therefore, although the output variation rate im-\nproves after RLV technical modiﬁcations, enabling them to respond quickly to system de-\nmands, coal consumption increases by appr oximately 5% [34], and the thermal stress \nshock of thick-walled components increases signiﬁcantly, resulting in a shortening of the \nservice life by approximately 15–20%.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.3 Consideration of the Operating Principles and Characteristics of TPUMSTSR",
+      "level": 2,
+      "text": "Thermal energy storage retroﬁtting has emerged as a promising solution to address \nthe high coal consumption in thermal power units after RLV modiﬁcations. It stores excess \nheat generated by thermal power units and releases it during peak load periods, enhanc-\ning the units’ PR capabilities. Furthermore, by optimizing unit operations through ther-\nmal energy storage systems, coal consumption and carbon emissions are reduced. \nMolten salt can operate stab ly at high temperatures across various thermal energy \nstorage technologies. This feature makes it suitable for the high-temperature steam sys-\ntems of thermal power units. Additionally, it oﬀers high energy density and large storage \ncapacity. Economically, molten salt materials are cost-e ﬀective, chemically stable, and \nhave a long service life. Therefore, TPUMSTSR provides signiﬁcant advantages, with ther-\nmal eﬃciency exceeding 90%, and also provides the ability to complete charging and dis-\ncharging processes within minutes, meeting the demands of rapid PR [35]. MSTS enables \nthermal power units to have a wider power generation range and has certain functions of \ntypical energy storage systems; however, MSTS diﬀers from energy storage systems. As a \npart of thermal power, MSTS stores high-temperature hot steam, and when it is necessary \nto increase the external power output of th ermal power, the high-temperature hot steam \nis applied to thermal power. Therefore, MSTS only stores the thermal energy of the ther-\nmal power unit itself. The energy storage sy stem, as an independent large-scale energy \nstorage system, directly provides charging and discharging services, which means that its \nconstruction cost is not only relatively mo re expensive than the MSTS transformation \nwithin the thermal power plant, but the system also has lower eﬃciency. At the same time, \nthere are restrictions on application scenarios and resources, which may conﬂict with the \nconstruction environment of the CS. \nThe MSTS system consists of thermal stor age tanks, heat exchangers, pumps, and \npipeline systems. The thermal storage tank is used to store high-temperature molten salt. \nThe heat exchanger transfers heat energy to the working ﬂuid (such as water or steam). \nThe pump and pipeline system ensure the ci rculation and transport of molten salt. In \npractice, the thermal storage tank is divide d into high- and low-temperature dual-cycle \nstorage tanks. The high-temperature storage tank is positioned between the boiler and the \nhigh-pressure cylinder of the steam turbine, while the low-temperature storage tank is \nplaced between the steam turbine’s working cylinder and the boiler. Heat charging occurs \nwhen the thermal power unit operates at lo w load or during surplus power generation \nperiods. The high- and low-temperature storage tanks absorb excess thermal power from \nthe boiler and the working cylinder of the stea m turbine, respectively, and transfer it to \nthe molten salt via heat exchangers, storing it  within the tanks. A portion of the steam is \ndiverted from the high-pressure turbine bypass  or the low-pressure extraction port. The \nlow-temperature thermal storage tank captures  the underutilized waste heat in the low-\ntemperature section (approximately 200–240 °C) of the turbine cylinder by integrating an \nauxiliary heat exchanger within the turbine casing. The bypassed steam reduces the ﬂow \ninto the low-pressure turbine, thereby decreasing power generation. Ultimately, this pro-\ncess maximizes the recovery and utilization of thermal energy throughout the entire sys-\ntem. This process reduces the minimum output  of the thermal power unit. The heat dis-\ncharging process takes place during peak load periods or when renewable energy output \nis insu ﬃcient. The stored thermal energy in th e tanks is released, with the high-\nAppl. Sci. 2025, 15, 4062 7 of 29 \n \ntemperature storage tank increasing the steam turbine’s inlet steam ﬂow, while the low-\ntemperature storage tank heats the water, forming high-temperature feedwater that enters \nthe boiler, thereby enhancing the output of the thermal power unit. Ultimately, this sys-\ntem enables changes in the unit’s external power output P\nTPU \nt  without adjusting the ther-\nmal power unit combustion power P\nBURN \nt . The energy ﬂow diagram of the modiﬁed ther-\nmal power unit is shown in Figure 2. \nBL\ntPBoiler\n Steam Turbine\nHigh-\ntemperature \nStorage Tank\nLow-\nTemperature \nStorage Tank\nGeneratorHigh-pressure \nCylinder\nLigh-pressure \nCylinder\nIntermediate-\npressure Cylinder\nBURN\ntP\nTPU\ntPST\ntP\nHC\ntP\nHD\ntP\nLC\ntP\nLD\ntP\nHeat Loss\nHeat Loss\n \nFigure 2. Schematic diagram of internal energy ﬂow in TPUMSTSR. \nIn Figure 2, P\nHC \nt , P\nHD \nt , P",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "t  and P",
+      "level": 1,
+      "text": "LD \nt  represent the stored an d released thermal power \nof the high-temperature and low-temperature thermal storage systems; P\nBL \nt  represents \nthermal power input to the steam turbine; and P\nST \nt  represents thermal power output from \nthe steam turbine to the generator. \nHowever, constrained by the thermal stor age capacity, charging/discharging time, \nand eﬃciency of the thermal storage system, MSTS has limited potential to enhance real-\ntime renewable energy integration and DPR. Its thermal storage capacity is limited by the \nvolume of the storage tanks and the thermal pr operties of the molten salt. In scenarios \nwith signiﬁcant ﬂuctuations in renewable energy output or high load demands, the sup-\np o r t  c a p a c i t y  o f  t h e r m a l  s t o r a g e  i s  l i m i t e d ,  m a k i n g  i t  d iﬃcult to fully replace thermal \npower units retroﬁtted for RLVs. Additionally, although MSTS systems respond relatively \nquickly, their charging and discharging times are still constrained by heat exchange e ﬃ-\nciency and pipeline transport capacity. Thermal inertia during the charging and discharg-\ning processes may cause delays in energy co nversion. In scenarios requiring rapid re-\nsponses (such as sudden changes in wind or PV power output), the thermal storage sys-\ntem may not be able to meet the CS’s demands in a timely manner.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 Operational Model of TPUMSTSR Under RLVs",
+      "level": 2,
+      "text": "Thermal power units face the dual challenges of reducing carbon emissions and en-\nhancing ﬂexibility. While individual retro ﬁtting technologies (such as MSTS or RLV ret-\nroﬁtting) can partially address these issues, they still have limitations. Integrating MSTS \nretroﬁtting with RLV retroﬁtting can leverage the advantages of both, further improving \nthe PR capability, operational ﬂexibility, and economic eﬃciency of thermal power units. \nHowever, this combined retroﬁtting approach imposes higher requirements on the oper-\national control of thermal power units, nece ssitating the establishment of precise mathe-\nmatical models and consideration of multiple constraints. \nTo further reduce coal consumption and carbon emissions, the MSTS system is ﬁrst \nutilized to regulate the unit’s output when thermal power units need to adjust their output \nto meet dispatch requirements. The operatio nal model of the thermal power unit under \nthis scenario can be described by the following mathematical expression [35,36]: \nAppl. Sci. 2025, 15, 4062 8 of 29 \n \nHD\nHH H H C H C\n1 HD\nLD",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "L L C L C",
+      "level": 1,
+      "text": "1 LD\nBURN HD HC LD LC ST\ncoal coal coal\nBURN\nTPU ST ST\nmin max\n(1 ) ( )\n(1 ) ( )\n()\nt\ntt t\nt\ntt t\ntt t t t t\ntt\nt\ntt\nPSS Pt\nPSS Pt\nP PPPPP\nMQP t\nPP\nSOC SOC t SOC\nηη η\nηη η\nη\nη\n−\n−\n =− + − Δ\n\n\n=− + − Δ\n +−+−=\n\n = Δ\n =\n ≤≤\n (1)\nwhere S\nH \nt  and S",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "t  represent the stored heat in the high-temperature and low-temperature",
+      "level": 1,
+      "text": "thermal storage systems at time t; ηH and ηL denote the heat loss rates of the high-temper-\nature and low-temperature thermal storage systems, respectively; ηHC, ηHD, ηLC, and ηLD \nrepresent the thermal eﬃciencies of the high-temperature and low-temperature systems; \nηcoal is the thermal eﬃciency of coal combustion; Mcoal is the mass of coal consumed at time \n𝑡; Qcoal is the caloriﬁc value of pulverized coal combustion; ηST represents the thermoelec-\ntric conversion e ﬃciency; and SOC (state of charge) represents the remaining power of \nthe energy storage system, described as residual heat in the MSTS system, and is speci ﬁ-\ncally described in the constraint conditions of (30). \nTo enhance the PR capability and operational ﬂexibility of thermal power units, RLV \nadjustment is initiated when the capacity or charging/discharging eﬃciency of the MSTS \nsystem cannot meet the load demand. The primary goal in this scenario is to meet the real-\ntime dispatch requirements of the grid. Duri ng the operation of the thermal power unit, \nthe following ramp rate constraint under RLVs must be satisﬁed [3]: \nBURN min,BURN max,BURN\n1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "1 BURN BURN PR",
+      "level": 1,
+      "text": "1\n1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "1 BURN BURN PR",
+      "level": 1,
+      "text": "1\n1\n1\nPR\n1\n1\nPR\n1\n,,\n()\n()\n() 0 ,\n() 0 ,\nta t b t\na\ncc c\ntc t x\nxcax x\nb\nbb b\ntb t x\nxaax x\na\ncc",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "xc xx",
+      "level": 1,
+      "text": "b\nbb",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "xa xx",
+      "level": 1,
+      "text": "PP P\nrr rPr T P P rr r\nrr rP rT P Prr r\nrr Pa crr\nrr Parr\n−\n−\n−\n= +\n−\n−\n= +\n−\n= +\n−\n= +\n∀∈ ∈ ∈\n≤Δ+ − −\n≥− Δ + + −\n−= ∀ =\n−= ∀ =\n\n\n\n\ncPPP\nb\n\n\n\n\n\n\n\n\n\n\n (2)\nwhere P\nBURN \nt  represents the thermal power unit combustion power; P\nmin,BURN \nt  and P\nmax,BURN \nt  \nrepresent the theoretical minimum and maximum output at time period 𝑡; Pa, Pb, and Pc \nrepresent the PR intervals of the thermal power unit; P\nPR \nx  denotes the lower limit of the 𝑥-\nth output interval; and rx is the upper limit of the ramp rate for the 𝑥-th output interval.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Optimization Dispatch Model for MCSs Considering CA",
+      "level": 1,
+      "text": "According to the TPUMSTSR model under RLVs in the previous chapter, the ﬂexi-\nbility retroﬁtted thermal power units can be tter participate in large-scale and rapid DPR \nancillary services within CSs. After incorporating MCSs, compared to traditional grid op-\neration methods, in addition to independent power producers (IPPs) directly connected \nto the main grid, MCSs will be co nnected to the main grid through di ﬀerent PCCs, as \nshown in Figure 3. \nAppl. Sci. 2025, 15, 4062 9 of 29 \n \nPower Grid \nDispatch \nDepartment\nEnsuring Safe Operation\nOverall Power \nDemand\n···\nCS Control \nCenter\nIPPS1\nIntegrated Dispatch\nMain Power Grid\nPCC\nLoad\nLoad\n···\n···\nLoad\n···\nLoad ···\n···\n···\nLoad\nPCC\nCS2\nCS1\nIPPS2\n \nFigure 3. Scheduling method for main grid with MCSs and multi-IPPs. \nUnder the existing ancillary service market framework, there are no rules for beneﬁt \ndistribution involving MCSs as primary enti ties. If the traditional compensation mecha-\nnism for PR ancillary services, where the state/grid side pays thermal power units, is still \napplied, it will inevitably lead to CSs adopting dispatch strategies that maximize their \nown beneﬁts by ignoring the internal volatility of wind and PV power and requiring their \nthermal power units to continuously provide PR services regardless of the scenario. This \nbehavior not only disrupts the healthy development of the market but also increases coal \nconsumption in thermal power units, undermining the low-carbon goals of CS construc-\ntion. To prevent uneven bene ﬁt distribution among multiple stakeholders, this chapter \nestablishes an economic operation optimization model for MCSs that considers CA.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 CA Model Establishment",
+      "level": 2,
+      "text": "Since the primary purpose of PR is to mitigate power ﬂuctuations from wind and PV \nunits within CSs and to incentivize conventional thermal power units to undergo ﬂexibil-\nity retroﬁtting, this chapter establishes a CA calculation method with CSs as the primary \nstakeholders. The PR revenue obtained by thermal power units is shared by IPPs con-\nnected to the same main grid, renewable en ergy units within the CS, and thermal power \nunits not participating in PR [37]. This approach ensures a fairer and more precisely quan-\ntiﬁable distribution of overall beneﬁts. \nThe CAs are calculated based on three factors: the total PR compensation revenue of \nMCSs, the adjusted output of units not participating in PR, and the total adjusted output \nof all units not participating in PR. These factors are highly nonlinear and involve numer-\nous integer variables, as they are associated with the decision variable “output of individ-\nual units.” This signi ﬁcantly increases the complexity of the solution, making it di ﬃcult \nto solve directly using a distributed architecture. \nOn the other hand, since CS operators and grid dispatch departments belong to dif-\nferent stakeholders, the dispat ch department needs detailed models and data from each \npower source within di ﬀerent operators to schedule each power station in the grid. Tra-\nditional centralized optimization methods involve sensitive information such as installed \ncapacity, technical characteristics, and operational status, which may lead to privacy con-\ncerns. \nTo address these issues, this chapter decouples the large-scale mixed-integer nonlin-\near coordinated operation model of MCSs into two sub-models: the optimal power ﬂow \nAppl. Sci. 2025, 15, 4062 10 of 29 \n \nmodel of the main grid and the internal operation model of MCSs. The solution is divided \ninto three stages, as illustrated in Figure 4. \nStage 1\nLD LD\n,1 ,1 /j tj tPQ++\ndw up\n,1 ,1\ndw up\n,1 ,1\n,\n,\ngt gt\ng tg t\nPP\nQQ\n++\n++\nOptimal Power \nFlow Model for \nthe Main Grid\n,1 ,1 /g tg tPQ++\nA\n,1max itf +\nTPU WT PV\n, , 1, 1, 1//i u ti ti tP PP+++\nStage 3\nInternal \nOperation \nModel of MCSs \nConsidering \nCA\nInternal \nOperation \nModel of MCSs \nwithout CA\nStage 2\nInternal Operation Model of MCSs\nTN,D\n1tC +\nLoad Side\nGeneration Side\n \nFigure 4. Schematic diagram of the three-stage relationship considering CA. \nIn Stage One (Main Grid Optimal Power Flow Model), the inputs include the ac-\ntive/reactive power requirements P\nLD \nj,t+1 and Q\nLD \nj,t+1 on the load side for the next time period, \nas well as the feasible power regions P\nup \ng,t+1, P\ndw \ng,t+1, Q\nup \ng,t+1, and Q\ndw \ng,t+1 of the CSs and IPPs for the \nnext time period. The output of Stage One comprises the active/reactive power that the \nCSs and IPPs must provide at the next time period, which is then used as input for the \ninternal operation model of the MCS in Stages Two and Three. \nBy establishing the mathematical expression for CA, it is observed that the CA for \nthermal power and renewable energy units not participating in PR is a highly nonlinear \nobjective function. Taking the CA for thermal power as an example, the CA for units f\n TP,S \ni,u,t  \nnot participating in PR is calculated as follows [3]: \nTPU,C\n,,US TN,D\n,, C\n,\niut\niut t\ng t\ngG\nPfC P\n∈\n=\n\n (3)\nwhere g represents the index of power sources in the main grid; G represents the set of \nIPPs and MCSs in the main grid;  u represents the index of thermal power units within a \nsingle CS; U represents the set of thermal power units within a single CS; i represents the \nindex of CSs; I represents the set of CSs; C\nTN,D \nt  represents the total revenue for all power \nsources providing PR auxiliary services at time 𝑡; P\nTPU,C \ni,u,,t  denotes the corrected output of a \nsingle thermal power unit; P",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "g,t denotes the corrected power output for IPPs and CSs not",
+      "level": 1,
+      "text": "participating in PR; and P\nTPU,C \ni,u,t , C\nTN,D \nt  and P",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "g,t are determined by the decision variables P",
+      "level": 1,
+      "text": "TPU \ni,u,t\n, P\nPV \ni,t , and P\nWT \ni,t . \nIn traditional optimization meth ods, it is challenging to e ﬀectively handle the non-\nlinear objective function involving cross-calculation of fractional and multiplicative vari-\nables determined by decision variables. Additionally, due to the fact that when solving \nfor the maximum revenue of a single CS within an MCS, both C\nTN,D \nt  and P\nC \ng,t are a ﬀected \nby the output of other units connected to the main grid, traditional optimization methods \nface signi ﬁcant computational challenges in coordinated optimization. Therefore, this \nstudy proposes dividing the overall internal operation model of MCSs into the following \ntwo stages. \nAppl. Sci. 2025, 15, 4062 11 of 29 \n \nIn Stage Two (Internal Operation Model of the MCSs without CA), the initial total \npeak-shaving service revenue C\nTN,D \nt  of the MCS for the next time period is determined. \nThis value is then ﬁxed and passed on to Stage Three. \nIn Stage Three (Internal Operation Model of the MCSs considering CA), the fractional \nvariables are relaxed via second-order cone relaxation. Ultimately, the maximum revenue \nmax f\n A \ni,t  for each coupling system at the next time period is obtained, along with the opti-\nmal day-ahead dispatch plans P\nTPU \ni,u,t+1, P\nWT \ni,t+1, and P\nPV \ni,t+1 for each power source in the CSs. CSs \nmust strictly adhere to the dispatch instructions from the main grid, ensuring no over- or \nunder-generation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.2 Optimal Power Flow Model for the Main Grid",
+      "level": 2,
+      "text": "In the multi-stage optimization operation model of MCSs, Stage One involves decou-\npling the operation of the main grid and the CSs. The main grid is operated by the dispatch \ndepartment, where certain independently connected thermal power units are directly con-\ntrolled by the dispatch department. Meanwhile, MCSs connected to diﬀerent nodes of the \nmain grid are operated by independent operators. \nTo achieve hierarchical operation between the main grid and CSs, in Stage One: Op-\ntimal Power Flow Model for the Main Grid, the dispatch department determines and \nsends active and reactive power scheduling requirements over a short time scale to each \npower source or CS based on the optimal power ﬂow program. Each power source and \nCS must generate power according to the dispatch requirements at each time period and \nprovide feasible output boundaries for the next time period to facilitate future calcula-\ntions. \nAdditionally, the dispatch department, IPPs, and CSs exchange information on DPR \nauxiliary services, including overall revenue and CA; speci ﬁcally, IPPs and CSs provide \ntheir total PR revenue and total adjusted output to the dispatch department. The total PR \nrevenue generated across the entire grid needs to be allocated among power sources that \ndid not participate in PR, following predeﬁned rules. The dispatch department aggregates \nthe PR revenue data uploaded by IPPs and CS s and then redistributes the total auxiliary \nservice revenue and total adjusted generation across the entire grid to IPPs and CSs for \nCA and economic optimization of their dispatch plans. \nAs a result, internal power sources within each CS are coordinated by a central con-\ntroller, which adjusts internal power output  according to the overall dispatch require-\nments from the dispatch department. To enhance the ﬂexibility of thermal power units \nand accommodate more renewable energy, internal power sources only need to share es-\nsential generation information with the central controller. This minimizes information ex-\nchange between the main grid and CSs while achieving the independent and privacy-\npreserving operation of CSs connected to diﬀerent nodes of the main grid.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.2.1 Objective Function",
+      "level": 3,
+      "text": "In Stage One, the Optimal Power Flow Model of the Main Grid, the optimization \nobjective is to minimize the power generation P\ng,t of each IPP and MCS at each time period \nglobally. \nOPF\n,min tg t\ngG\nf P\n∈\n=   (4)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.2.2 Constraints",
+      "level": 3,
+      "text": "In the main grid, the power injected at any node must satisfy the power balance equa-\ntion. Additionally, during normal operation, the node voltage deviations and branch line \nAppl. Sci. 2025, 15, 4062 12 of 29 \n \ncapacities must meet the operational safety requirements; for speciﬁc constraint formula-\ntions, refer to [38]. \nSince the main grid directly dispatches IPPs and CSs, the feasible power region of \nIPPs and CSs must be constrained in the optimal power ﬂow model. The upper and lower \npower limits are calculated by the IPPs and CSs, and the results are provided to the main \ngrid. \ndw up\n,, , ,gt gt gtPP P g G≤≤ ∀ ∈  (5)\ndw up\n,, , ,gt gt gtQQQg G≤≤∀ ∈  (6)\ndw\n,, 1\nup\n,, 1\n,\ngt gt g\ngt gt g\nPP R t\ng I\nPP R t\n−\n−\n =− Δ ∀∉ =+ Δ\n (7)\nWT PVTPUdw\n,,,,,\nTPU WT PVup\n,, , ,,\n,( )\ni",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "it itiutgt",
+      "level": 1,
+      "text": "uU\niut it itgt\nuU\nPa a a\ng iI\nPa a a\n∈\n∈\n =+ + ∀= ∈\n =+ +\n\n\n\n (8)\ndw up 2 up\n,, ,,,gt gt g gtQQ S P g I=± − ∀ ∉  (9)\nTPU TPUdw up TPU\n,,,, , ,\nPV PV PV\n,\nWT WT WT\n,\n,( , )\n(,)\n(,) , ( )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "iutgt gt iu iu",
+      "level": 1,
+      "text": "uU\nitii\nitii\nQQ Q S a\nQS a\nQS a g i I\n±\n∈\n±\n±\n=\n+\n+∀ = ∈\n\n (10)\nwhere Rg represents the ramp rate of power source; Sg represents the capacity of power \nsource; S\nTPU \ni,u  represents the capacity of a single thermal power unit; P\nup \ng,t , P\ndw \ng,t , Q\nup \ng,t , and Q\ndw \ng,t  \nrepresent the upper and lower bo undaries of the feasible active and reactive power re-\ngions at time; ᾱ\nTPU \ni,u,t , ᾱ\nWT \ni,u,t , and ᾱ\nPV \ni,u,t represent the upper bounds of the feasible active power \nregions for thermal power, wind power, and PV power, respectively; and \nTPU\n,,iuta represents \nthe lower bound of the feasible active power region for thermal power.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.3 Internal Operation Model of MCSs",
+      "level": 2,
+      "text": "After obtaining the short-time-scale minimum power dispatch requirements through \nthe optimal power ﬂow (OPF) model of the main grid, each IPP and CS must generate \npower in accordance with the dispatch requirements at each time period. Since these en-\ntities belong to di ﬀerent stakeholders, this section focuses on the internal operation of a \nsingle CS.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "3.3.1 Objective Function",
+      "level": 3,
+      "text": "For a single CS i, the objective function of internal optimized operation is to maximize \nthe total revenue at each time period, denoted as f\n A \ni,t  \nA TPU RE GU UN\n,, , , ,max ( )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "it iut it it",
+      "level": 1,
+      "text": "uU\nfT ff C P\n∈\n=Δ + −  (11)\nAppl. Sci. 2025, 15, 4062 13 of 29 \n \nwhere P\nUN \ni,t  represents the di ﬀerence between the actual total power generation of the CS \nand the dispatch requirement, and CGU is the penalty factor. The comprehensive power \ngeneration revenue of thermal power f\n TPU \ni,u,t  is given by the following equation: \nTPU UB UD UO UE US HS\n,, ,, ,, ,, ,, ,, ,,iut iut iut iut iut iut ietf ffffff=+−−−−  (12)\nwhere f\n UB \ni,u,t  represents the basic electricity sale s revenue of the thermal power unit; f\n UD \ni,u,t  \nrepresents the compensation revenue from participating in DPR auxiliary services; f\n UO \ni,u,t  \nrepresents the operational cost of the thermal power unit; f\n UE \ni,u,t  represents the environmen-\ntal cost due to pollutant emissions; f\n US \ni,u,t  represents the CA for PR auxiliary services; f\n HS \ni,u,t  \nrepresents the comprehensive operating cost of the MSTS system of the thermal power \nunit, where e denotes the index of TPUMSTSR in the single CS and 𝐸 represents the set of \nsuch units. \nThe total power generation revenue from renewable energy f\n RE \ni,u,t  is given as follows: \nRE WT WT PV PV\n,,,\nRE,D WT* WT PV* PV\n,, , ,\nWTS PVS\n,,\nit it it\nit it it it\nit it\nfC P C P\nCP P P P\nff\n=+\n−− +\n−−\n（ - ）\n (13)\nwhere CWT and CPV denote the unit revenue of wind and PV power generation, respec-\ntively; CRE,D denotes the curtailment cost for wind and PV power; P\nWT* \ni,t  and P\nPV* \ni,t  denote the \nmaximum possible generation capacity of wind and PV power at time 𝑡, respectively; P\nWT \ni,t\nand P\nPV \ni,t  represent the actual generation outputs of wind and PV power at time 𝑡, respec-\ntively; and f\n WTS  \ni,t and f\n PVS  \ni,t  denote the CA for PR auxiliary services of wind and PV power, \nrespectively. \n(1) Comprehensive Electricity Sales Revenue of Thermal Power Units f\n UB \ni,u,t +f\n UD \ni,u,t  \nIn addition to the basic electricity sales revenue, thermal power units can receive PR \nauxiliary service compensation when their generation output is below the compensation \nthreshold. Therefore, CSs can leverage their local renewable energy consumption ad-\nvantages to obtain more PR compensation, thereby increasing overall revenue and en-\nhancing competitiveness. \nThe total electricity sales revenue of a thermal power unit is expressed as the sum of \nf\n UB \ni,u,t  + f\n UD \ni,u,t . When the unit’s power generation exceeds the compensation threshold, the rev-\nenue consists only of the basic revenue f\n UB \ni,u,t , which can be expressed as follows: \nUB TPU\n,, 0 ,,iut iutf CP=  (14)\nwhere P\nTPU \ni,u,t  represents the electric power generated by thermal power plants for external \nuse and C0 is the basic unit electricity sale price, which the thermal power unit can receive \nregardless of its generation state. \nWhen the unit’s power generation is below the compensation threshold, in addition \nto the basic revenue f\n UB \ni,u,t , it also includes DPR auxiliary service compensation revenue f\n UD \ni,u,t\n, given by the following equation: \nTPU\n1, ,\nUD TPU TPU,max TPU TPU\n,, 1 1 , ,, 2 ,, 1\nTPU TPU,max TPU TPU\n21 , , , , , 2\n10 ,\n() ,\n,() 0\niut\niut m iu iut iut\nmi u i u t i u t\nfC k P P\nCk P P\nμμ\nμμ μ μ\nμμ μ\n <≤\n=− < ≤\n −< ≤\n (15)\nTPU\n,,TPU\n,, TPU,max\n,\niut\niut\niu\nP\nPμ =  (16)\nAppl. Sci. 2025, 15, 4062 14 of 29 \n \nwhere P\nTPU,max \ni,u,t  is the maximum output of the thermal power unit; C1 and C2 are the unit \nelectricity sales prices corresponding to di ﬀerent compensation thresholds, which can \nonly be obtained if the unit’s output is below the corresponding threshold; µ\nTPU \ni,u,t  is the load \nrate of the thermal power unit within the CS; µ1 and µ2 are the load rates corresponding \nto compensation thresholds; and k\nTPU \nm  is the seasonal revenue adjustment coe ﬃcient. \n(2) Operating Costs of Thermal Power Units f\n UO \ni,u,t  \nThis cost accounts for two operational states: regular peak regulation (RPR) and DPR. \nIn RPR mode, operating costs only consider the fuel consumption of the unit, whereas in \nDPR mode, additional losses due to output reduction are also included. The operating \ncost f\n UO \ni,u,t  is calculated as follows: \ncoal RPR BURN 2 RPR BURN RPR TPU\n, ,, , ,, , 1 ,,\nUO coal RPR BURN 2 RPR BURN RPR\n,, ,, , , , ,, TPU\n,, 1DPR BURN DPR\n,, , ,\n[() ] 1\n[() ]",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "0 iu iut iu iut iu iut",
+      "level": 1,
+      "text": "iut iu iut iu iut iu\niut\niu iut iu\nCa P b P c\nf Ca P b P c\naP b\nμμ\nμμ\n ++ < ≤\n= ++ <≤++\n (17)\nwhere Ccoal is the unit price of coal per ton; a\nRPR \ni,u, , b\nRPR \ni,u, , and c\nRPR \ni,u,  are the ﬁtting coeﬃcients for \nRPR loss; and a\nDPR \ni,u,  and b\nDPR \ni,u,  are the ﬁtting coeﬃcients for DPR loss. The operating costs \nunder RPR mode mainly consider coal co nsumption and purchase costs. Under DPR \nmode, additional losses incurred due to DPR are also considered [39]. \n(3) Pollutant Emission Costs of Thermal Power Units f\n UE \ni,u,t  \nCoal-ﬁred thermal power generation results in  the emission of various pollutants, \nnecessitating an assessment of pollutant emission costs: \nTE\nUE TE TE BURN TE\n,, ,, TE\n1\n()\nH\nh\niut h h iut h\nh h\nf ca P bρ\nτ=\n=+  (18)\nwhere c\nTE \nh , ρ\nTE \nh , and τ\nTE \nh  denote the unit treatment cost, unit generation emission factor \n(kg/MW), and pollutant conversion coeﬃcient, respectively; a\nTE \nh  and b\nTE \nh  are pollutant ﬁt-\nting coeﬃcients; h represents pollutant types; and H is the total number of pollutants. The \nconsidered pollutants include dust, SO2, and NOx. \n(4) CA of Thermal Power Units f\n US \ni,u,t  \nThe compensation revenue for thermal power units participating in DPR must be \nshared among external IPPs, non-participating thermal power units within the CS, and \nrenewable energy units. Given the capacity di ﬀerences among internal power sources in \nthe CS, a fair and reasonable CA method requires determining the corrected output of \neach internal power source involved in the allocation. Ultimately, the PR compensation \nrevenue is distributed based on the proporti on of the corrected output of each power \nsource. Based on the existing ancillary service market rules applicable to generation enti-\nties in northeast China [22], the mathematical expression for computing the CA of thermal \npower units that do not participate in DPR is formulated as follows: \nTPU,C\n,,TN,D TPU\n1, ,CUS ,,,\nTPU\n,, 1\n,1\n0, 0\niut\nti u t\ngtiut gG\niut\nPC Pf\nμμ\nμμ\n∈\n\n<≤= \n\n<≤\n  (19)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "TN,D",
+      "level": 1,
+      "text": "t  is computed as follows: \nTN,D UD\n,,\n11\nIU\nti u t\niu\nCf\n==\n=   (20)\nP\nTPU,C \ni,u,,t  is given by the following equation:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "CS dispatch method."
+    },
+    {
+      "id": "f2",
+      "caption": "Schematic diagram of internal energy ﬂow in TPUMSTSR."
+    },
+    {
+      "id": "f3",
+      "caption": "Scheduling method for main grid with MCSs and multi-IPPs."
+    },
+    {
+      "id": "f4",
+      "caption": "Schematic diagram of the three-stage relationship considering CA."
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

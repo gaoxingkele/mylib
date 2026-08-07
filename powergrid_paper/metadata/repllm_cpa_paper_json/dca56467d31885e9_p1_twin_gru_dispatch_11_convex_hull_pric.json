@@ -1,0 +1,232 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__11__convex_hull_pricing_for_unit_commitment_survey_insights_and_discussion__af00d128c1.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In the US, since the deregulation of electricity systems in the 1990s, the focus has\nbeen on reducing the cost of electricity, improving price signals, increasing competition,\nand encouraging innovation and investment in the power sector [1]. It lead to the establish-\nment of independent system operators (ISOs) and regional transmission operators (RTOs)\nto run the day-ahead and real-time electricity markets by solving the unit commitment\n(UC) and economic dispatch (ED) problems. Under the UC problem, the objective function\nconsists of the generator’s commitment costs (e.g., start-up and no-load costs) as well as\nits generation costs. The decision variables include discrete (e.g., commitment status) and\ncontinuous variables (e.g., power generation). The objective function is piecewise linear\n(modeled in a linear way), and the constraints are linear, resulting in a mixed binary linear\nprogramming problem [2]. Hence, the UC problem is non-convex, resulting in energy\nprices that may not monotonically increase with demand [ 3,4]. Under the ED problem,\nthe commitment decisions from the UC problem are ﬁxed and all the decision variables\nare continuous, resulting in a linear programming problem. Hence, the ED problem is\nconvex and the resulting energy prices are monotonically non-decreasing. Therefore, ISOs\nand RTOs set the energy prices from the ED problem, deﬁned as the slope of the total cost\nEnergies 2024, 17, 4851. https://doi.org/10.3390/en17194851 https://www.mdpi.com/journal/energies\nEnergies 2024, 17, 4851 2 of 20\nfunction with respect to demand [3]. Since the ED problem does not consider commitment\ncosts, signiﬁcant uplift payments (Uplift payments are supplementary payments provided\nto generators to compensate for speciﬁc costs that are not accounted for in the market price,\nsuch as start-up and no-load costs. Uplift payments include lost opportunity costs and\nmake whole payments) are often needed to compensate the generating units [5]. However,\nsuch uplift payments are not uniform for different units even on the same bus, causing\nmarket transparency issues since they are not publicly disclosed. Resulting in signiﬁcant\nresearch efforts directed towards the reduction in uplift payments [4,6].\nTo resolve the issues mentioned above, the convex hull pricing mechanism where\nconvex hull prices are obtained as the slope of the convex envelope of the total cost function\nover the convex hull of a UC problem, was ﬁrst introduced in [4]. The convex envelope is\nthe “tightest” convex function that supports the cost function from below, and the convex\nhull is the smallest convex set that contains all feasible solutions as shown in Figure 1.\nFor illustrative purposes, a general mixed-integer linear programming (MILP) problem\nis considered in Figure 1. Convex hull pricing can possibly resolve the aforementioned\nissues since the slope of the convex envelope is non-decreasing with respect to demand,\nand the convex hull avoids non-convex binary commitment variables. These beneﬁts drew\nattention from ISOs/RTOs in convex hull pricing, prompting the development of various\napproaches [7–18]. However, a relevant survey from the currently limited literature has\nnot been found to provide a better understanding of convex hull pricing for UC from a\nmodeling standpoint.\n(a) Convex envelope.\n (b) Convex hull.\nFigure 1. Illustrations of a convex hull and convex envelope. (a) The blue solid curve is a non-convex\nfunction, and its convex envelope is delineated by the red dashed curve. (b) The blue lines indicate\nfeasible solutions, and the red lines delineate their convex hull.\nThis paper provides a systematic survey of convex hull pricing, focusing on the\nmodeling and computation of convex hull prices for UC. For an economic analysis of\nconvex hull pricing readers are encouraged to read [ 19–21]. Beyond UC, convex hull\npricing has been used for AC optimal power ﬂow [ 22], real-time pricing in smart grids [23]\nand demand response [ 24,25]. As per the Web of Science database, there are 27 papers\npublished on convex hull pricing. Under convex hull pricing for UC, most of the current\napproaches start from the UC problem and its convexiﬁed version for convex hull pricing.\nThey can be categorized into the following two types:\n• The ﬁrst type is to solve the convex hull pricing problem corresponding to convexiﬁed\nUC which requires the convex envelope of the total cost function over the convex hull\nof the problem, such a convexiﬁed problem can be equivalently formulated by using\nthe convex envelope and the convex hull of each unit [7–14].\n• The second type is to solve the Lagrangian dual problem of a UC problem. The re-\nsulting optimal multipliers are equal to the convex hull prices calculated by using\napproaches of the ﬁrst type mentioned above [15–18].\nEnergies 2024, 17, 4851 3 of 20\nThe structure of this paper is as follows: The UC problem and its convexiﬁed version\nfor convex hull pricing are elaborated in Section 2. Then the aforementioned two categories\nof convex hull pricing approaches are discussed in Section 3 and Section 4, respectively.\nThe discussions and insights are presented in Section 5, followed by conclusions in Section 6.\n2. UC Problem and Its Convexiﬁcation for Convex Hull Pricing\nA UC problem is formulated in Section 2.1, followed by its convexiﬁed version for\nconvex hull pricing in Section 2.2.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.1 UC Problem",
+      "level": 2,
+      "text": "Let G and T delineate the sets of units and time slots, respectively. For simplicity,\na two-bin formulation without transmission constraints is adopted [ 2]. For unit g, its\ndecision variables at time slot t consist of binary startup ug,t, commitment decisions on/off\nxg,t, and continuous generation level decision pg,t. The objective of the UC problem is\nto minimize the total cost of operation while meeting the system-level and unit-level\nconstraints, as discussed below:\n(1) Objective function\nThe objective function or the cost function of the UC problem minimizes the total fuel\nand commitment costs (including start-up and no-load costs) of all the units, i.e.,\nmin\n{pg,t,ug,t,xg,t},\n∀g∈G,∀t∈T\nz = ∑\ng∈G\nzg = ∑\ng∈G,\nt∈T\n( fg\n(\npg,t, xg,t\n)\n+cs\ngug,t + cn\ngxg,t\n)\n, (1)\nwhere fg is the piecewise linear fuel cost function of unit g and its slope is monotonically\nnon-decreasing within blocks (i.e., segments) [26]; cs\ng and cn\ng are the start-up and no-load\ncosts of unit g, respectively.\n(2) System-level constraints\nThe system-level constraints capture the operational requirements that couple gen-\nerating units. For simplicity, only the power balance constraints, where the total power\ngeneration at any time slot equals the demand at that time slot are considered in this paper\nas follows:\n∑\ng∈G\npg,t = Dt,∀t∈ T, (2)\nwhere Dt is system demand at time slot t.\n(3) Unit-level constraints of unit g\nUnit-level constraints capture the operational requirements enforced on individual\nunits, as illustrated below:\n(3.1) Requirements on generation capacities: When unit g is online, its generation level pg,t\nmust be between its minimum Pmin\ng and maximum Pmax\ng , i.e.,\nxg,tPmin\ng ≤ pg,t≤ xg,tPmax\ng ,∀g∈ G,∀t∈ T. (3)\n(3.2) Requirements on start-up: The binary start-up variable ug,t is one if unit g is online at\ntime slot t, i.e.,\nxg,t− xg,t−1≤ ug,t, ug,t≤ xg,t,∀g∈ G,∀t∈ T. (4)\nAlso, unit g cannot start up at time slot t if unit g is online at t− 1, i.e.,\nxg,t−1 + ug,t≤ 1,∀g∈ G,∀t∈ T. (5)\nEnergies 2024, 17, 4851 4 of 20\n(3.3) Requirements for minimum up- and down-time: The unit g stays online (resp. ofﬂine)\nfor its minimum-up (resp. minimum -down) time slots, i.e.,\nt\n∑\ni=t−Lg+1\nug,i≤ xg,t,∀g∈ G,∀t∈ T, (6)\nt\n∑\ni=t−lg+1\nug,i≤ 1− xg,t−l,∀g∈ G,∀t∈ T, (7)\nwhere Lg and lg are the minimum up and down time of unit g, respectively.\nIt is important to note that the initial conditions of the unit g affect the commitment\nstatuses. If unit g has been online for sg slots, unit g should be online during the next L− sg\nslots, i.e.,\nug,t = 1,∀g∈ G, t∈\n{\n1, 2, . . . ,L− sg\n}\n, (8)\nIf unit g has been ofﬂine for sg slots, unit g should be ofﬂine during the next l− sg\nslots, i.e.,\nug,t = 0,∀g∈ G, t∈\n{\n1, 2, . . . ,l− sg\n}\n. (9)\n(3.4) Requirements on ramp rates: The change in generation levels between two consecutive\ntime slots must not exceed the unit’s ramp rate, i.e.,\npg,t− pg,t−1≤ Rgxg,t−1 + Vg\n(\n1− xg,t−1\n)\n,∀g∈ G,∀t∈ T, (10)\npg,t−1− pg,t≤ Rgxg,t + Vg\n(\n1− xg,t\n)\n,∀g∈ G,∀t∈ T, (11)\nwhere Rg is the ramp-up/-down rate; Vg is the start-up/shut-down ramp rate.\nFor ease of discussion, the UC problem (1)–(11) is compacted as follows:\nUC-Orig: min\n{p,u,x}\nz(p, u, x), (12)\ns.t. Ap = D, (13)\n(p, u, x)∈ X. (14)\nThe objective function in the UC-Orig problem (12) is the compact representation of\nthe cost function (1), where the vectors p, u and x stack pg,t, ug,t and xg,t of each unit g at\neach time slot t, respectively. The equality constraint (13) in the UC-Orig problem is the\ncompact form of the system-wide constraints (2), where D stacks Dt at each time interval t\nand A is the constant matrix. The feasible space deﬁned by (14) is the compact form of the\nunit-level constraints (3)–(11) for all the units across all the time slots. Here, X =∪g∈GXg\nis the feasible region of all units together and Xg is the feasible region of the speciﬁc unit g.\nNote, that Xg is called the unit formulation of unit g hereafter.\n2.2. Convexiﬁed UC Problem for Convex Hull Pricing\nUnder the convex hull pricing scheme, the convex hull prices are deﬁned as the slope\nof the convex envelope of the optimal objective function (12) over the convex hull of the\nentire unit-level constraint (14), with respect to demand vectorD [4]. In the implementation,\nEnergies 2024, 17, 4851 5 of 20\nconvex hull prices can be interpreted as the optimal dual multipliers corresponding to the\nsystem-wide constraint in the following convexiﬁed UC problem:\nUC-Convex: min\n{p,u,x}\nzc(p, u, x),\ns.t. [λ] : Ap = D,\n(p, u, x)∈ Xc,\n(15)\nwhere zc is the convex envelope of the total cost function z in (12); Xc is the convex hull\nof the unit-level constraint set X in (14); λ is the dual multipliers associated with the\nsystem-wide constraint (13).\nThe equivalence between convex hull prices and the optimal dual multipliers λ∗ in the\nUC-Convex-Dual problem is shown in (16). The optimal value zc∗\n(p∗(D), u∗(D), x∗(D)) in\nthe UC-Convex problem (15) can be treated as a function of demand D, where (p∗, u∗, x∗)\nis the optimal solution of the UC-Convex problem. Thanks to the strong duality of the\nUC-Convex problem, the value of zc∗\n(p∗(D), u∗(D), x∗(D)) equals the optimal dual value\nqc∗\n(λ∗(D)) in the following Lagrangian dual problem of the UC-Convex problem:\nUC-Convex-Dual: max\nλ\nqc(λ), with\nqc(λ)≡ min\n{p,u,x}∈Xc\n{\nzc(p, u, x)− λT(Ap− D)\n}\n.\n(16)\nConsequently, the slope of zc∗\n(p∗(D), u∗(D), x∗(D)) with respect to demand D is\nequal to the slope of qc∗\n(λ∗(D)) with respect to demand D. Moreover, as observed in\nthe UC-Convex-Dual problem (16), the slope of qc∗\n(λ∗(D)) with respect to demand D\nequals the optimal dual multipliers λ∗ associated with the system-wide constraint in the\nUC-Convex problem (15), since λ is the coefﬁcient prior to D. This makes convex hull\nprices exact λ∗. Note, that it was recently reported in [27] that the convex hull prices are\ndependent on the UC formulation. Speciﬁcally, the two types of formulation variations\nconsidered by ISOs for improving the solution time of the UC problem: the formulation\ntightening and contingency constraint screening. It is pointed out that although such\nattempts to reduce computational burden give the same primal optimal UC solutions,\nthe convex hull prices which depend on the dual function of the primal formulation might\nnot be the same. Given such dependence, sufﬁcient conditions under which the convex\nhull prices are preserved were introduced in [27]. For example, conditions were derived\nunder which multiple representations of nodal balance constraints give the same convex\nhull prices. In addition, numerical testing shows that convex hull prices can be affected\nby non-binding security constraints. Hence, it is concluded that any change in the UC\nformulation must be carefully examined before implementation for convex hull pricing.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Convex Hull Pricing Problem",
+      "level": 1,
+      "text": "As stated in Section 2, convex hull prices are derived from the solution to the UC-\nConvex problem, which can be regarded as a “convex hull pricing problem”. The key to\nsolving the UC-Convex problem requires the explicit formulation of the convex envelope\nzc(p, u, x) over the convex hull Xc by considering all the units. This can be tackled by\nreformulating zc(p, u, x) over Xc as the summation of the convex envelope of the cost\nfunction of each unit over the convex hull of its unit formulation, as will be explained in\nSection 3.1. Consequently, the task reduces to determining the convex hull and convex\nenvelope for each unit. Depending on the tightness (i.e., a unit formulation is tight when\ninteger relaxation delineates its convex hull), the following three cases appear in the current\napproaches as will be successively examined from Section 3.2 to Section 3.4:\n(1) Case 1. A unit formulation is tight, and integer relaxation leads to its convex hull,\nas studied in [7–9];\nEnergies 2024, 17, 4851 6 of 20\n(2) Case 2. When a unit formulation is not tight, its convex hull can be formulated by\nvarious approaches, as discussed in [ 10–14], with a primary focus on convex hull\nformulation. However, solving the resulting convex hull pricing problems might\nincrease the computational burden, as the complexity of accurately formulating a\nconvex hull increases exponentially with the number of time slots [28];\n(3) Case 3. As a compromise, the employment of an approximate convex hull is also\ndiscussed in [8] when a unit formulation is not tight.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Convex Hull Pricing Problem from Each Unit",
+      "level": 2,
+      "text": "Let us consider the following problem for each unit:\nUC-CHP: min\n{pg,ug,xg},\n∀g∈G\n∑\ng∈G\nzc\ng\n(\npg, ug, xg\n)\n,\ns.t. [λ] : Ap = D,(\npg, ug, xg\n)\n∈ Xc\ng,∀g∈ G,\n(17)\nwhere zc\ng is the convex envelope of the cost function zg of unit g in the UC-Orig problem;\nXc\ng is the convex hull of the unit formulation Xg of unit g in the UC-Orig problem.\nThe equivalence between the UC-CHP problem (17) and the UC-Convex problem (15)\nis explained starting from the concepts of a conjugate function; the relevant concepts can\nbe found in [29]. Particularly, the following two properties exist for the conjugate function:\n• Property 1: The convex envelope of a function is the double conjugate of the func-\ntion itself.\n• Property 2: Additivity applies to a conjugate function.\nThe ﬁrst property allows us to consider the convex envelope zc(p, u, x) in the UC-\nConvex problem as the double conjugate function of the total cost function z(p, u, x) over\nthe convex hull Xc of the unit-level constraint setX. By the same token, the convex envelope\nzc\ng\n(\npg, ug, xg\n)\nin the UC-CHP problem as the double conjugate function of the cost function\nzg over the convex hullXc\ng of its unit formulationXg. Moreover, Property 2 allowszc(p, u, x)\nto be the summation of zc\ng\n(\npg, ug, xg\n)\n. This fact indicates that the equivalence between the\nUC-CHP problem and the UC-Convex problem in convex hull pricing, i.e., the UC-CHP\nproblem can be utilized for convex hull pricing once the formulations of zc\ng\n(\npg, ug, xg\n)\nand\nXc\ng are known.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Convex Hull and Convex Envelope under a Tight Formulation",
+      "level": 2,
+      "text": "With the basic unit-level constraints (3)–(9) that do not include ramp rates, the unit\nformulation Xg is tight, as proved in [8] through polyhedron and [7,9] through network ﬂow\nmodels. Therefore, integer relaxation of the unit formulation Xg leads to the convex hull Xc\ng.\nAs for the convex envelope, when the cost function zg\n(\npg, ug, xg\n)\nis convex over the convex\nhull Xc\ng, the convex envelope zc\ng over the convex hull Xc\ng can be obtained by its integer\nrelaxation; see [7,9]. When the cost function zg\n(\npg, ug, xg\n)\nis not convex over the convex\nhull Xc\ng, where the slope of the fuel cost function fg(pg,t, xg,t) is non-monotonic, the convex\nenvelope zc\ng\n(\npg, ug, xg\n)\nis derived in [8]. The approaches in [7–9] are investigated in detail\nnext. For each approach, the convex hullXc\ng is ﬁrst studied, followed by its convex envelope\nzc\ng\n(\npg, ug, xg\n)\n.\n(1) Network ﬂow approach\nRef. [7] uses the basic constraints (3)–(9) without ramp rate constraints (10) and (11).\nThe constraints (3)–(9) are regarded as an unimodal network ﬂow model with integral\ncapacities by treating variables as nodes. Such a network ﬂow model can provide integral\nvertices based on the integrality theorem [30]. Therefore, the constraints (3)–(9) lead to a\nEnergies 2024, 17, 4851 7 of 20\ntight unit formulation, and thus integer relaxation yields the convex hull Xc\ng. Consider the\nUC problem without ramp rate constraints in the compact form as shown in (18).\nUC-Constraints (3–9): min\n{p,u,x}\nz(p, u, x)\ns.t. Ap = D,\ng(p, u, x) = H,\npg,t≥ 0,\nxg,t∈ 0, 1,\nug,t∈ 0, 1.\n(18)\nHere, g(p, u, x) = H represents the compact form of the constraints (3)–(9). Note, that\nthe variables xg,t and ug,t are binary. Under the network ﬂow approach used in [ 7], it is\npossible to relax the binary restriction on xg,t and ug,t without affecting the optimal discrete\nvalues of xg,t and ug,t, as shown in (19). Hence, (18) and (19) are equivalent. As a result,\nlinear programming (LP) techniques (e.g., Simplex method) can be employed to solve the\nUC in (19).\nUC-Network Flow: min\n{p,u,x}\nzc(p, u, x)\ns.t. Ap = D,\ng(p, u, x) = H,\npg,t≥ 0,\nxg,t≥ 0,\nug,t≥ 0.\n(19)\nAs for the convex envelope, the key of the convex envelope through integer relaxation\nlies in whether the cost function zg is convex over the convex hull Xc\ng. From the objective\nfunction in the UC-Orig problem, the cost function zg\n(\npg, ug, xg\n)\nis the summation of the\nfollowing three components: the start-up cost cs\ngug,t, the no-load cost cn\ngxg,t and the fuel cost\nfg(pg,t, xg,t). The start-up and no-load costs are convex over the convex hullXc\ng. To this end,\ninteger relaxation leads to the convex envelope zc\ng\n(\npg, ug, xg\n)\nover the convex hull Xc\ng if\nand only if the fuel cost function fg(pg,t, xg,t) is convex over the convex hull Xc\ng. This case is\nillustrated in Figure 2a through a two-block fuel cost function fg(pg,t, xg,t)), where the cost\nfunction is marked in blue and the feasible operating region is marked in green. Note, that\n(1) the fuel cost function fg(pg,t, xg,t) is originally deﬁned in the feasible operating region{\n0∪\n[\nPmin\ng , Pmax\ng\n]}\nfor pg,t as evident from (3), and (2)\n{\n0∪\n[\nPmin\ng , Pmax\ng\n]}\nis convexiﬁed\nas\n[\n0, Pmax\ng\n]\nin the convex hull Xc\ng. As can be observed in Figure 2b, the convexity of the\nconvex envelope fg(pg,t, xg,t) (marked in red) over the convex hull Xc\ng (marked in green)\nrelies on its convexity in the domain of pg,t. For the feasible operating region\n[\nPmin\ng , Pmax\ng\n]\n,\nthe fuel cost function fg(pg,t, xg,t) is inherently convex as required in current markets [26].\nMoreover, if the slope of fg(pg,t, xg,t) with respect to pg,t from the range\n[\n0, Pmin\ng\n]\nis smaller\nthan that in the ﬁrst block of fg(pg,t, xg,t) with respect to pg,t, it is not difﬁcult to ﬁnd the\nconvexity of the fuel cost function fg(pg,t, xg,t) over the convex hull Xc\ng; see Figure 2b.\nIn summary, integer relaxation of the cost function zg\n(\npg, ug, xg\n)\nand the unit formu-\nlation Xg can lead to convex hull prices from the UC-CHP problem when (1) there are\nno ramp rates, and (2) the fuel cost function fg(pg,t, xg,t) over the convex hull Xc\ng is fully\nconvex. However, the absence of ramp-rate constraints may be impractical in real-world\npower systems. Also, the fuel cost function fg(pg,t, xg,t) may not always be convex over the\nconvex hull Xc\ng; see an example in Figure 3.\nEnergies 2024, 17, 4851 8 of 20\n(a)\n (b)\nFigure 2. Convex fuel cost function over the convex hull. A two-block example. (a) Fuel cost function\nover the feasible operating region. (b) Convex envelope over the convex hull.\n(2) Polyhedron approach\nRef. [8] focuses on the basic constraints (3)–(9) without ramp rate constraints (10) and\n(11). Similar to [7], the integer relaxation of the unit formulation Xg delineates the convex\nhull Xc\ng as Xg is tight, as shown in (19). This statement is proved from a polyhedron\nperspective by proving that any point in the convex hull Xc\ng can be expressed as a convex\ncombination of the integral vertices of the basic constraints (3)–(9). If the cost function is\nquadratic, the UC problem is modeled as a second-order cone program and it is solved\nusing interior-point methods. Instead, when the cost function is piecewise linear, the UC\nproblem is solved as an LP problem.\nAdditionally, Ref. [8] provides a general framework for calculating a convex envelope\nwhen the fuel cost function fg(pg,t, xg,t) is not convex over the convex hull Xc\ng. Particularly,\nthe fuel cost function fg(pg,t, xg,t) over the convex hull Xc\ng can be non-convex when its\nslope with respect to pg,t in the feasible operating range\n[\n0, Pmax\ng\n]\nis larger than that in the\nﬁrst block, as shown in Figure 3. In such a case, the key to formulating the convex envelope\nlies in convexifying the fuel cost function fg(pg,t, xg,t) over the convex hull Xc\ng. Ref. [ 8]\nutilizes xg,t to scale the original cost function fg(pg,t, xg,t) for its convexiﬁcation. Since xg,t\nis not larger than one, the values of the scaled cost function underestimate or equal those of\nthe original cost function (marked in blue) to ﬁnally result in a convex envelope, as shown\nin Figure 3b.\n(a)\n (b)\nFigure 3. Non-convex fuel cost function over the convex hull. A two-block example. ( a) Fuel cost\nfunction over the feasible operating region. (b) Convex envelope over the convex hull.\n(3) State transition approach\nEnergies 2024, 17, 4851 9 of 20\nRef. [9] starts from a variation of the unit formulation Xg by enumerating commitment\nstatuses built upon a state transition diagram shown in Figure 4. A binary variable xe is\nintroduced to indicate the activation of the edge e that represents the transition from one\npossible status to another possible status. Also, a continuous variableye is used to represent\nthe generation level over the minimum generation level Pmin\ng (per unit) of the edge e.\nFigure 4. Enumeration of commitment statuses based on a state transition diagram of one unit. Two-\nslot example with minimum-up time of two time slots and minimum-down time of two time slots.\nIn the variation of the unit formulation Xg, the basic constraints (3)–(9) without ramp\nrate constraints (10) and (11) are considered, similar to [7,8]. The basic constraints (3)–(9)\nare reformulated in the domain of (xe, ye) based on the state transition diagram. These con-\nstraints based on xe and ye can be regarded as a network ﬂow model with integral capacities,\nwhere vertices of its integer relaxation are integral, similar to [7]. Equations (18) and (19)\nshown earlier are applicable to this approach as well. Therefore, integer relaxation of the\nunit formulation leads to its convex hull in the domain of (xe, ye). However, the convex\nhull is established based on the enumeration of commitment statuses. This will lead to\na substantial number of constraints required to formulate the convex hull; thus, a heavy\ncomputational burden exists to solve the resulting UC-CHP problem. Therefore, the\nBienstock–Zuckerberg algorithm is used as the decompositio",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Convex Hull and Convex Envelope under a Unit Formulation Which Is Not Tight",
+      "level": 2,
+      "text": "With additional ramp rate constraints (10) and (11) added to the basic constraints (3)–(9),\nthe unit formulation Xg is not tight anymore, as veriﬁed in [ 32]. Consequently, the in-\nteger relaxation of the unit formulation Xg does not lead to its convex hull Xc\ng. Various\napproaches [10–14] have been developed to formulate the convex hull Xc\ng together with\nits convex envelope zc\ng\n(\npg, ug, xg\n)\n. In [ 10,11], the convex hull Xc\ng is formulated by a con-\nvex combination of the constraints under all the commitment statuses based on different\nenumeration methods. As for the convex envelope zc\ng\n(\npg, ug, xg\n)\nin [10,11], integer relax-\nation can work by adding more continuous variables to reﬂect costs. As an alternative,\nRefs. [12,13] formulate the convex hull Xc\ng and the convex envelope zc\ng\n(\npg, ug, xg\n)\nstarting\nfrom a novel single-unit commitment problem by which integer relaxation can lead to\nthe convex hull Xg and the convex envelope zc\ng\n(\npg, ug, xg\n)\n. Finally, Ref. [ 14] uses a col-\numn generation approach to iteratively construct the convex hull using extreme points\ngenerated by the sub-problems. The approaches in [ 10–14] are reviewed in detail next.\nFor each approach, the convex hull Xc\ng is ﬁrst studied, followed by its convex envelope\nzc\ng\n(\npg, ug, xg\n)\n.\n(1) Disjunctive programming approach\nThe convex hull Xc\ng in [10] is expressed as the convex combination of the constraints\nunder all the commitment statuses. Particularly, commitment statuses are enumerated by\ndisjunctive programming to obtain the unit formulation Xg, i.e.,\nXg = ∪\nj∈Jg\nXj\ng = ∪\nj∈Jg\n(\nAj\ng pg + Bj\ngcg≤ Cj\ng\n)\n, (20)\nwhere Jg is the set of commitment statuses of unit g; Xj\ng is the feasible operating region\nunder status j of unit g; Aj\ng, Bj\ng, and Cj\ng are constants to formulate Xj\ng; pg and cg are\ngeneration level variables and cost variables of unit g, respectively.\nFrom [33], the convex hull Xc\ng can be expressed as the convex combination of the\ndisjunctive programming-based unit formulation Xg in (20), i.e.,\nXc\ng =\n\n\n\npg = ∑j∈Jg ξ j\npg, cg = ∑j∈Jg ξ j\ncg,\nAj\ngξ j\npg + Bj\ngξ j\ncg≤ ξ j\n0Cj\ng,∀j∈ Jg,\n∑j∈Jg ξ j\n0 = 1, ξ j\n0≥ 0, ξ j\npg≥ 0, ξ j\ncg≥ 0,∀j∈ Jg.\n\n\n\n, (21)\nwhere ξ j\npg and ξ j\ncg are continuous variables which are introduced for pg and cg under status\nj, respectively; ξ j",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "0 is a continuous variable that represents the selection of commitment",
+      "level": 1,
+      "text": "statuses. Once the convex hull is established using this approach, it can be solved using\nLP methods. Although Ref. [10] provides a general framework to obtain the convex hull\nfrom any linear constraint (which can contain any time-dependent requirements), such a\ngeneral formulation of the convex hull requires a large number of constraints under all the\ncommitment statuses. This highlights the signiﬁcant computational burden associated with\nthis approach.\nThe cost function of each unit in [ 10] is directly represented by the continuous cost\nvariable cg in the constraint based on disjunctive programming (20). It is shown in [10] that\ncg is convex over the convex hull Xc\ng, i.e., an integer relaxation of the cost function of each\nunit leads to its convex envelope. This is veriﬁed by showing that strong duality exists\nbetween cg of this approach and the Lagrangian dual of the UC problem ([10], Equation (7)).\n(2) Interval concept approach\nSimilar to [10], Ref. [11] (1) formulates the convex hull of each unit starting from the\nenumeration of commitment statuses, and (2) formulates the convex envelope of each unit\nfrom requiring a cost variable cg that represents the cost function, as detailed below.\nEnergies 2024, 17, 4851 11 of 20\nIn [11], a variation of the unit formulation Xg is used. It is built on the time interval\nconcept by introducing three types of new variables associated with each time interval[a, b]:\none indicator variable y[a,b]\ng that represents whether unit g is online in [a, b] (i.e., y[a,b]\ng = 1\nwhen unit g is online in [a, b]; otherwise, y[a,b]\ng = 0), a generation level variable p[a,b]\ng that\ncorresponds to the original generation level variablepg in [a, b], and a cost variablec[a,b]\ng that\ncorresponds to the original cost in [a, b]. Using the time interval concept, the constraints\nacross all intervals that deﬁne the unit formulation Xg can be similarly structured in\nthe form presented in (21). Such constraints in [ 11] directly delineate the convex hull of\neach unit because they have been the convex combination of the constraints under all the\nintervals. Although this approach also provides a general method to formulate a convex\nhull of each unit, a signiﬁcant number of constraints are required to formulate the convex\nhull of each unit. This indicates that a heavy computational burden of solving the UC-CHP\nproblem may exist, the same as [10]. Therefore, the authors employ Benders decomposition\napproach to improve the computational performance of their convex hull pricing model.\nAs for the convex envelope of each unit, it can be obtained by integer relaxation of the\ncost function of each unit because the cost function has been represented by the cost variable\ncg, the same as [10]. Since the commitment statuses are enumerated, time-dependent costs\ncan be considered in the cost function by introducing one additional indicator variable that\nrepresents whether a unit is ofﬂine in a certain time interval.\n(3) Single-unit commitment approach\nAs an alternative, the convex hull Xc\ng and the convex envelope zc\ng in [12,13] are for-\nmulated based on a single-unit commitment problem. Convex hull is established using\ndynamic programming (DP) equations and then the DP equations are converted to an LP\nproblem whose dual problem is further derived for the convex hull Xc\ng and the convex\nenvelope zc\ng, as reviewed below.\nThe constraints of this dual problem directly delineate the convex hull Xc\ng in the\ndual-variable domain, due to the mapping from the optimal solution of DP equations to\nthe optimal solution in the dual problem, as shown in Figure 5. The optimal solution of\nthe DP equations is one vertex of the convex hull of the original single-unit commitment\nproblem. The optimal solution to the dual problem is also one vertex of its convex hull. It\nis proved in [12,13] that the variables in this dual problem represent commitment statuses,\ngeneration levels, and costs. Hence, each vertex of the convex hull of the original single-unit\ncommitment problem corresponds to one vertex of the convex hull in this dual problem.\nHowever, DP equations lead to a large number of constraints in formulating a convex\nhull due to the combination properties. Finally, the original MILP problem is solved as an\nLP problem.\nFigure 5. Mapping from the optimal solution of DP equations to the optimal solution of the dual problem.\nThe cost function of this dual problem is equivalent to that in the single-unit com-\nmitment problem based on the physical meanings of dual variables shown in Figure 5.\nSince the cost function of this dual problem is fully convex, the convex envelope over the\nconvex hull can be obtained by integer relaxation. Note, that because of the DP equations,\ntime-dependent costs and constraints can be easily involved in [12,13].\n(4) Dantzig-Wolfe (DW) decomposition approach\nIn [14] a new approach is developed to ﬁnd the convex hull prices, where the convex\nhull of the overall UC problem is constructed iteratively using the DW decomposition. This\nEnergies 2024, 17, 4851 12 of 20\napproach relaxes the integrality requirement in UC and then solves the resulting large-scale\nLP problem using the DW column generation approach. The process also involves solving\nthe Lagrangian dual of the integer relaxed UC problem to calculate the uplift payments\nin every iteration, assuming strong duality. Initially, a subset of feasible unit schedules\nis considered under a restricted problem. New columns (i.e., new feasible schedules) are\nadded to the restricted problem in each iteration provided they have a negative reduced\ncost (which is also the proﬁt maximization problem). Note, that each iteration provides at\nleast one extreme point. Since the restricted problem characterizes any feasible point as\na convex combination of extreme points, the DW approach iteratively ﬁnds the extreme\npoints of the convex hull and converges ﬁnitely. The resulting prices give the exact convex\nhull prices as they are obtained from the dual problem. It is important to note that this\napproach does not necessitate a reformulation of the cost function.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.4 Approaches Using Approximate Convex Hulls",
+      "level": 2,
+      "text": "The above approaches focus on the exact convex hull prices by accurately delineating\nthe convex hull and convex envelope of each unit. However, the number of constraints to de-\nlineate the exact convex hull grows exponentially as the number of time slots increases [28].\nThis can result in a signiﬁcant computational burden when solving the UC-CHP problem\nfor convex hull pricing. As a trade-off, using an approximate convex hull can reduce the\ncomputational load, although it means sacriﬁcing the precision of the exact convex hull\nprices. In [8] where a unit formulation is not tight due to ramp rate constraints (10) and (11),\nthe entire convex hull of each unit is approximated by using the convex hulls for two/three\nconsecutive slots [34]. The idea is to derive explicit convex hulls for T = 2 and T = 3,\nand use the resulting valid inequalities to obtain approximate convex hulls for T > 3.\nMore generally, when a unit formulation is not tight, caused by ramp rate constraints or\nother time-dependent constraints, the convex hull across all time slots can be approximated\nby the systematic approach in [32]. Ref. [32] provides a general way to formulate the convex\nhull for two/three consecutive slots and then facilitates the approximation of the convex\nhull in all the slots. This idea is illustrated in Figure 6, where the constraint is shown in blue\nand the convex hull in red. Consider a problem with the constraint x1 + x2≥ 0.5, where\nx1 and x2 are binary, shown on the left. Since obtaining the convex hull is challenging,\nthe following procedure is adopted: (1) relax the integrality requirement and convert the\nconstraints into vertices, as shown on the right. (2) drop fractional vertices (open blue dots)\nas x1 and x2 are binary (solid blue dots). (3) convert vertices to constraints, the resulting\nconstraints are tight, i.e., the convex hull is obtained. (4) the ﬁnal step is to parameterize\n(express numerical coefﬁcients as combinations of unit parameters) the tight constraints\nfor re-use. Since it is challenging to generate tight constraints for all time slots, the above\nsystematic formulation tightening approach is typically applied for two or three intervals.\nThe resulting tightened constraints can be applied to any number of time slots to obtain\napproximate convex hulls, as shown in [35].\nFigure 6. A systematic formulation approach to obtain approximate convex hulls [32].",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Convex Hull Pricing by the Lagrangian Dual Problem of a UC Problem",
+      "level": 1,
+      "text": "In addition to solving the UC-CHP problem for convex hull prices, convex hull prices\ncan be also taken as the optimal multipliers in the Lagrangian dual problem of the UC-Orig\nproblem, as will be shown in Section 4.1. Although solving the Lagrangian dual problem\ndoes not require the convex hull and convex envelope of each unit, the non-smooth nature\nof the Lagrangian dual problem can pose computational issues. The convergence issues\nhave been studied and parties addressed in [15–18] as discussed Section 4.2. Ultimately,\nEnergies 2024, 17, 4851 13 of 20\nthe Surrogate Lagrangian Relaxation (SLR) method [ 36], which fundamentally resolves\nconvergence issues, will be presented in Section 4.3 for convex hull pricing.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1 Convex Hull Pricing from the Lagrangian Dual Problem of the UC-Orig Problem",
+      "level": 2,
+      "text": "The Lagrangian dual problem of the UC-Orig problem can be expressed as\nUC-Orig-Lagrangian-Dual: max\nλ\nq(λ), with\nq(λ)≡ min\n{p,u,x}∈X\n{\nz(p, u, x)− λT(Ap− D)\n}\n,\n(22)\nwhere λ is the Lagrangian dual multipliers associated with the relaxed system-wide con-\nstraints Ap = D.\nAt optimum, the optimal Lagrangian dual value q∗(λ∗(D)) can be regarded as the\ndouble conjugate of z∗(p∗(D), u∗(D), x∗(D)), as well as the value of the convex enve-\nlope zc∗(p∗(D), u∗(D), x∗(D)); see [ 29] for the relationships among double conjugate\nfunctions, dual functions and convex envelopes. Therefore, by regarding q∗(λ∗(D)) and\nz∗(p∗(D), u∗(D), x∗(D)) as a function of demand D, the slope of zc∗(p∗(D), u∗(D), x∗(D))\nwith respect to demand D is equal to the slope of q∗(λ∗(D)) with respect to D. As ob-\nserved in the UC-Orig-Lagrangian-Dual problem, the slope of q∗(λ∗(D)) with respect to\nD equals λ∗ which is the coefﬁcient prior to D. In other words, the optimal Lagrangian\ndual multipliers λ∗ corresponding to the relaxed system-wide constraints give the convex\nhull prices.\nDue to the non-differentiability of the dual function, subgradient directions are typi-\ncally non-ascending, rendering the usual necessary and sufﬁcient conditions for extrema\ninapplicable. Additionally, when the number of units increases, calculating subgradient\ndirections demands signiﬁcant computational resources. Convergence may also be slow,\nas multipliers tend to zigzag along the ridges of the Lagrangian dual function, further\ncomplicating the process [36], which can lead to many iterations being required for con-\nvergence. In addition, traditional subgradient methods require steps that depend on q∗.\nThe unknown q∗ is traditionally adjusted by the “subgradient-level” methods [37] or incre-\nmental subgradient methods [38], whose heuristic adjustments lead to slow convergence\nas demonstrated in [36].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 Approaches Using the UC-Orig-Lagrangian-Dual Problem",
+      "level": 2,
+      "text": "The current approaches [ 15–18] focus on studying the convergence difﬁculties of\nsolving the UC-Orig-Lagrangian-Dual problem to improve the computational efﬁciency of\nconvex hull pricing, as reviewed below:\n(1) Subgradient simplex cutting plane approach\nA subgradient simplex cutting plane approach is introduced in [15]. In each iteration,\nsubgradients and the current Lagrangian dual variables are used to generate cuts from\nquery points. By iteratively eliminating non-optimal solutions, this approach helps reduce\nthe overall computational effort. Then, the next query points are calculated by using an\nadaptive three-level scheme. However, the subgradient directions lead to slow convergence\nin [15] because of the multiplier zigzagging across the ridges of the Lagrangian dual\nfunction. Note, that this paper computes Extended Locational Marginal Prices (ELMPs),\nwhich are an approximation of the convex hull prices. The subgradient approach used in\nthis paper lays the foundation for the subdifferential approach in [16,17].\n(2) Extreme-point subdifferential approach\nAs an alternative, an extreme-point subdifferential method is described in [ 16,17].\nThe steepest ascent direction is determined by minimizing the squared error between\ndemand and generation levels while maximizing revenues in single-unit commitment\nproblems given the estimated convex hull prices. Figure 7 compares the trajectory of iterates\nof the extreme-point subdifferential method with a standard subgradient method like the\nEnergies 2024, 17, 4851 14 of 20\none presented in [15]. Although the steepest ascent direction can alleviate the multiplier\nzigzagging caused by subgradient directions and does not require q∗, the computational\neffort is high to obtain the direction; computations of ascending directions come at a price\nbecause all possible generation levels that maximize revenues in single-unit commitment\nproblems should be explored in each iteration. In addition, for a large-scale UC problem,\nthe Lagrangian dual function has many facets, and ridges are very short. Therefore,\nmultipliers may not make signiﬁcant progress along the ascending direction.\nFigure 7. Convergence trajectory of (a) extreme-point subdifferential method vs. the convergence\ntrajectory of (b) subgradient method [17], where ρ1 and ρ2 are the price vectors in the Lagragian dual\nfunction space.\n(3) Level method\nRef. [18] develops a level method based on the Kelley algorithm to compute the convex\nhull prices. It iteratively constructs the upper bound of the Lagrangian dual function using\nits supergradients. The lower bound is established by utilizing the maximum value of the\nLagrangian dual function. The relative difference between the upper and lower bound is\nused as the stopping criterion. The level method differs from Kelley’s algorithm in the way\nit stabilizes hyperplanes in each iteration. The level method updates prices more smoothly\nby not choosing the optimal price in each iteration, instead using a projection of the price\niterated on the level set, as shown below in (23) and Figure 8.\nq(λ)≥ αUBk + (1− a)LBk, (23)\nwhere α ∈ [0, 1] is the projection parameter, α = 0 corresponds to the Kelley’s algo-\nrithm and means the iterate does not change. Ref. [ 18] reports that α = 0.2 is chosen\nfor all experiments presented in the paper. Building on this foundational idea, Ref. [ 18]\nproposes a multi-cut level method where a cut is added for each generator subproblem.\nAlthough generating multiple cuts gives a more accurate solution, it adds a considerably\nmore computational burden.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Illustrations of a convex hull and convex envelope. (a) The blue solid curve is a non-convex"
+    },
+    {
+      "id": "f2",
+      "caption": "Convex fuel cost function over the convex hull. A two-block example. (a) Fuel cost function"
+    },
+    {
+      "id": "f3",
+      "caption": "Non-convex fuel cost function over the convex hull. A two-block example. ( a) Fuel cost"
+    },
+    {
+      "id": "f4",
+      "caption": "Enumeration of commitment statuses based on a state transition diagram of one unit. Two-"
+    },
+    {
+      "id": "f5",
+      "caption": "Mapping from the optimal solution of DP equations to the optimal solution of the dual problem."
+    },
+    {
+      "id": "f6",
+      "caption": "A systematic formulation approach to obtain approximate convex hulls [32]."
+    },
+    {
+      "id": "f7",
+      "caption": "Convergence trajectory of (a) extreme-point subdifferential method vs. the convergence"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 7
+  }
+}

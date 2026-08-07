@@ -1,0 +1,389 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/tsp-cmc/cmc_2025_xgboost_grid_fault.pdf",
+  "n_pages": 16,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The rapid economic development has led to an increased demand for electricity from the power\ngrid across society. As a highly important public utility and energy foundation for the whole society,\nthe power system occupies an irreplaceable position in national security, economic development and\npeople’s daily life. In recent years, the rapid expansion of the power grid has led to an increasingly\nintricate power grid structure. The interconnection of power grids in various regions has fostered\ncloser connections between them, leading to an increasing mutual influence [1]. Therefore, it is of\ngreat significance to ensure the safe and stable operation of the power grid. The causes of power grid\naccidents are complex, including internal factors such as equipment aging and operational errors,\nalongside external factors like natural disasters including lightning, floods, ice, and snow. Among\nthem, meteorological disasters have become one of the most important factors threatening the safe\n2894 CMC, 2025, vol.82, no.2\noperation of power grids due to their suddenness, destructive power and wide impact range [2].\nAmidst the backdrop of global warming, there is a heightened frequency of extreme weather and\nclimate events, including typhoons, heavy rainfall, ice storms, and snowfall. These disastrous weather\noccurrences are increasingly exacerbating the vulnerability of power grids [3]. The majority of power\nequipmentisexposedtointricateanddynamicexternalenvironmentsforprolongedperiods,rendering\nit highly susceptible to severe weather conditions such as lightning, windstorms, hailstorms, and ice\naccumulation. These adverse conditions can result in equipment damage, line interruptions, tripping\nincidents, power outages, and other critical faults. Therefore, harnessing meteorological monitoring\ndata to promptly identify power grid failure risks holds paramount importance in enhancing the\ndisaster prevention and mitigation capabilities of the power grid, thereby ensuring its safe and stable\noperation.\nCurrently, with the advancements in modern meteorological detection and numerical forecasting\ntechnology,acquiringabundantandprecisemeteorologicalmonitoringdataisnolongeraformidable\ntask. Particularly in short-term, small-scale refined weather forecasting, remarkable progress has\nbeen achieved [4]. The rise of big data and artificial intelligence has also provided new opportunities\nfor in-depth mining and application of meteorological data. For example, the XGBoost regression\nmodel was used to analyze the effect of container orientation on phase change material (PCM)\nmelting [5], as well as radial-based neural networks to predict thermal and phase change processes\nin complex environments [6]. Various researchers have conducted investigations on meteorological\ndisasters in power grids. Guo et al. [7] employed the distance between lightning and the transmission\nline, along with the electric field strength, as warning factors for calculating the initial level of\nlightning warning. They proposed a multi-information fusion method for lightning warning based\non atmospheric electric field, lightning location, and assessment technology of lightning disaster\nrisk. Hou et al. [8] proposed a hybrid prediction model, integrating extreme value type I probability\ndistribution, Monte Carlo method, and random forest, to quantitatively assess the likelihood of\ntransmission line damage during typhoon disasters. These studies [9,10] all focused on power grid\nfault prediction for a specific type of meteorological disaster, extensively analyzing the underlying\nmechanismscausingsuchfaultsandproposingcorrespondingwarningmethods.However,itshouldbe\nnoted that real-life meteorological impacts on power grids exhibit significant diversity. Subsequently,\na large number of scholars have studied the prediction methods of multiple types of faults by\nintegrating the impact of various meteorological factors on power grid facilities. Li et al. [9]a n a l y z e d\npower grid and meteorological data, utilizing Geographic Information System (GIS) technology and\nvisualization techniques to propose a design plan for such a warning system, facilitating resource\nsharing. Chen et al. [10] proposed an enhanced logistic regression model-based data-driven approach\nfor predicting the reliability of overhead line operation, considering multiple meteorological factors.\nWith the development of artificial intelligence, intelligent technologies such as fuzzy logic, support\nvector machines and deep learning have gradually been used in power grid fault prediction, and the\nlevel of power grid intelligence has been greatly improved. Lin et al. [11] trained multiple support\nvectormachinesasvotingmodels,andthenusedanimprovedrandomforestalgorithmtochangethe\ndecision-makingprocesstoimprovethefaultpredictionaccuracy.Fangetal.[ 12]constructedapower\ngridfaultpredictionmodelusingtheextremegradientboostingalgorithm,andusedtheparticleswarm\noptimization algorithm to find the optimal hyperparameters for the model to improve the model\nprediction accuracy. However, most existing research simply utilizes meteorological information and\nlacks comprehensive and systematic analysis of complex and diverse meteorological characteristics.\nThefocusismainlyonfaultdiagnosisandstatusassessmentduringandaftertheevent[ 13].Moreover,\ntraditional feature engineering methods exhibit significant vulnerabilities in smart grids due to their\nCMC, 2025, vol.82, no.2 2895\ninsufficientadaptabilitytothedynamicsofcomplexsystemsandhighlynonlinearmodels.Thismakes\nit difficult to extract truly useful key information from meteorological big data for fault prediction,\nresulting in poor performance of the prediction models [14].\nTo address the above limitations, we propose a new approach for grid fault warning. First, we\nautomatically extract important features by combining Gradient Boosting Decision Tree (GBDT)\n[15] with Recursive Feature Elimination (RFE) [16]. Then, we utilize PieceWise Linear Chaotic Map\n(PWLCM)[17]tooptimizetheparameterfindingprocessoftheSparrowSearchAlgorithm(SSA)[ 18]\ntoenhancetheXGBoost.Themethodaimstoachieveaccurateearlydetectionofgridfaulttypes.Our\nmain contributions are summarized as follows:\n• We innovatively propose the FE-XGBoost, which combines GBDT and RFE to extract key\nfeatures from meteorological data, overcoming the limitations of manual feature selection;\n• We introduce PWLCM to enhance SSA, improve its optimization accuracy and efficiency, and\nfurther enhance the accuracy of the fault prediction model;\n• Through a large number of simulation experiments, the results show that the proposed FE-\nXGBoost is superior to traditional machine learning methods and other advanced prediction\nmodels in multiple evaluation metrics.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Preliminary",
+      "level": 1,
+      "text": "In this section, we review some of the works that are most related to our approach. We then\nsummarize these approaches and briefly describe our work in this paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 XGBoost",
+      "level": 2,
+      "text": "TheXGBoost[ 19]consistsofmultipleclassificationandregressiontrees[ 20],whichareconsidered\n“weakclassifiers’’.Byintegratingthese“weakclassifiers”,theXGBoostisconstructed.Whenmaking\npredictions, the sample passes through each decision tree of XGBoost in turn, and its output value is\naccumulated on the results in each decision tree to obtain the final prediction result:\nˆy\ni =\nn∑\nk=1\nfk (xi) (1)\nwhere n is the number of decision trees;fk (xi) is the calculation result of thek-th tree model;xi is the\ni-th sample.\nThe objective function of the model is:\nObj(θ) =\nN∑\ni=1\nl\n(\nyi, ˆyi\n)\n+\nn∑\nk=1\n/Omega1(fk) (2)\nwhere N represents the total number of samples;yi and ˆyi denote the true and predicted values of\nthe i-th sample, respectively;l\n(\nyi, ˆyi\n)\nserves as a loss function that quantifies discrepancies between\npredictions and actual values; /Omega1(fk) is the regularization term, which represents the sum of the\ncomplexity ofntree models:\n/Omega1(fk) = γ T + 1\n2λ ∥ω ∥2 (3)\nwhere T represents the number of leaf nodes of the tree;ω is the value of the leaf node;λ and γ\nare adjustable parameters. Obviously, a largerγ will impose a greater penalty on trees with a large\n2896 CMC, 2025, vol.82, no.2\nnumberofleafnodes,therebysimplifyingthetreestructure.Similarly,increasing λcanalsoreducethe\ncomplexity of the model.\nAfter substitutingEqs. (2)into (3), and subsequently applying a second-order Taylor expansion\nofthe lossfunction based on the principleofforwarddistributionaddition,an approximateobjective\nfunction can be derived. The expression is as follows:\nObj ∼=\nN∑\ni=1\n[\ngi fk (xi) + 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 hi f2",
+      "level": 1,
+      "text": "k (xi)\n]\n+ /Omega1(fk) (4)\nwhere gi isthefirst-orderderivativeofthelossfunction l\n(\nyi, ˆyi\n)\nwithrespecttothepredictedvalue ˆyi,\nand hi is the second-order derivative of the loss function with respect toˆyi.\nThedecisiontreemodelis furtherdefined as arelationalexpressioncontainingbranchstructures\nand leaf node weights, and its specific relationship can be expressed as follows:\nfk(x) = ωq(x) (5)\nwhere q(x)istheleafnodeindexcorrespondingtosample x; ω ∈ RT, RT isaleafnodeweightsetwith\nt-dimensional real numbers.\nThe complexity of the decision tree is determined by the number of leaf nodes and the two-norm\nof all weight vectors, thusEq. (3)can be reformulated asEq. (6):\n/Omega1(fk) = γ T + 1\n2λ\nT∑\nj=1\nω2\nj (6)\nDefine Gj and Hj as the sum of the first-order and second-order partial derivatives of the sample\nset on the leaf nodej:\nGj = ∑\ni∈Ij\ngi\nHj = ∑\ni∈Ij\nhi\n(7)\nwhere Ij = {i | q (xi) = j} represents the sample set located on the leaf nodej. Therefore, the objective\nfunction can be further reformulated as:\nObj =− 1\n2\nT∑\nj=1\nG2\nj\nHj + λ + γ T (8)\nThe objective functionObj is a quadratic function, and the optimal solution of its extreme value\nat the axis of symmetry is as follows:\nωj =− Gj\nHj + λ (9)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 SSA",
+      "level": 2,
+      "text": "The Sparrow Search Algorithm is inspired by the sparrow population’s foraging and avoiding\nbeing preyed on. It is a swarm intelligence optimization algorithm [21] proposed by simulating this\nbiological behavior to establish a model. According to the different division of labor, sparrows are\ndivided into discoverers, joiners and guards.\nCMC, 2025, vol.82, no.2 2897\nAssume that the space composed of N sparrows is X = [x(1, i), x(2, i), ··· , x(N, i)]\nT\n,w h e r e\ni ={ 1, 2,··· , d}, d is the dimension, and the discoverer position update is described as follows:\nxt+1\ni, j =\n⎧\n⎨\n⎩\nxt\ni, j · exp\n(\n− i\nα · itermax\n)\nif R < ST\nxt\ni, j + Q · Li f R ≥ ST\n(10)\nwhere t represents thet-th iteration,itermax represents the maximum number of iterations;xt\ni, j denotes\nthe position information of thej-th dimension of thei-th sparrow in thet-th iteration,α is a random\nnumberbetween(0,1],andfollowsauniformdistribution; Qisarandomnumberfollowingastandard\nnormal distribution; matrixL is defined as a row vector with all elements being 1;R is a random\nnumber uniformly distributed in [0, 1], serving as an alarm value;ST is a constant within [0.5, 1] that\nrepresents the alarm triggering condition.\nThe joiner position update is described as follows:\nxt+1\ni, j =\n⎧\n⎪⎪⎨\n⎪⎪\n⎩\nQ · exp\n(x\nt\nw − xt\ni, j\ntt\n)\nif i > N\n2\nxt+1\np +\n⏐⏐xt\ni, j − xt+1\np\n⏐⏐·\n(\nAT\n(\nAAT\n)−1\n)\n· Li f i ≤ N\n2\n(11)\nwhere xt\nw represents the worst position of the current sparrow population in thet-th iteration, xt+1\np\nrepresentstheoptimalpositionofthecurrentsparrowpopulation, Aisa1 ×d matrixandtheelements\nare randomly assigned 1 or−1.\nDuring the foraging process, 20% of the sparrow individuals are selected as guards, and the\nposition update is described as follows:\nxt+1\ni, j =\n⎧\n⎪⎨\n⎪⎩\nxt\nb + β ·\n⏐⏐xt\ni, j − xt\nt\n⏐⏐ if f i > fg\nxt\ni, j + K ·\n⏐⏐⏐\n⏐\nx\nt\nt, j − xb\nw\nfi − fw + ϵ\n⏐⏐⏐\n⏐ if f\ni = fg\n(12)\nwhere xt\nb istheglobaloptimalpositionatthe t-thiteration, β representsthestepsizecontrolparameter,\nwhichisarandomnumberthatobeysthestandardnormaldistribution, K isarandomnumberinthe\ninterval [−1,1], fi represents the current individual fitness value,fg and fw are the fitness values of the\ncurrentbestandworstindividuals,and ϵisasmallconstanttopreventthedenominatorfrombeing0.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Proposed Method",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Framework Overview",
+      "level": 2,
+      "text": "In this section, we introduce the proposed FE-XGBoost. The overall architecture is shown in\nFig. 1, which contains three important components: (1) Feature Enhancement: First, we preprocess\nthe meteorological fault dataset, and then combine GBDT and RFE to calculate the classification\naccuracy and feature importance scores in order to extract the key features from the dataset; (2) P-\nSSA: We propose P-SSA by using PWLCM to improve SSA, which makes the initial distribution of\nsparrow population more uniform and enhances the algorithm’s ability to find optimal parameters;\n(3) Fault Prediction Classification:Based on optimal hyperparametersfound byP-SSA, we construct\nan XGBoost fault prediction model to achieve fault type prediction.\n2898 CMC, 2025, vol.82, no.2\nFigure 1: Framework of the FE-XGBoost",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 Meteorological Key Feature Extraction",
+      "level": 2,
+      "text": "The occurrence of equipment meteorological failures can be attributed to the combined impacts\nofmultiplemeteorologicalfactors.Duetothediversityofmeteorologicalfactorsandtheirdifferences\nin impact on equipment, although they are associated with equipment failures, they are difficult to\nanalyze quantitatively. Therefore, meteorological factors are difficult to directly use for equipment\nfailure prediction. In order to conduct a comprehensive analysis of the correlation between meteo-\nrological factors and equipment failures, we have devised Module 2 as depicted inFig. 1,w i t ht h e\naim of delving into the intrinsic characteristics of meteorological data pertaining to specific types of\nequipment malfunctions.\nWe combine GBDT and RFE for feature selection and model training. We initiate the feature\nextraction process by utilizing a comprehensive set of original features, iteratively eliminating those\nwiththelowestimportancescoresduringeachroundoftraining.Ultimately,weidentifythesubsetof\nfeatures that significantly contribute to power grid failure prediction. To enhance the readability and\ncomprehension of our framework, Algorithm 1 presents the pseudo-code for this feature extraction\nmethod.\nAlgorithm 1: Feature selection process\nRequire: Training setD ={ (xi, yi)}N\ni=1 with xi ∈ RM and yi ∈Y\nEnsure: Optimal feature subsetS∗\n1: Initialize feature set S ={ 1, 2,··· , M}\n2: while |S| > 0 do\n3: Trained GBDT model on S\n4: Compute classification accuracy α and feature importance scoresI ={ I1, I2, ··· , I|S|}\n5: Find the feature j∗ = arg minj∈S Ij\n(Continued)\nCMC, 2025, vol.82, no.2 2899\nAlgorithm 1 (continued)\n6: Remove the least important feature using RFE: S ← S\\{j∗}\n7: end while\n8: Select the feature subset S∗ with the highest classification accuracyα∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.3 P-SSA",
+      "level": 2,
+      "text": "TherandominitializationvaluesoftheSSApopulationexhibitdisorderandunevenness,thereby\nimpeding algorithm convergence and constraining its global exploration capability. In view of the\naboveshortcomingsoftheSSAalgorithm,weusethechaoticsequence[ 22]toinitializetheindividual\npositionsofsparrowsintheSSAalgorithm,soastopromotetheuniformdistributionofthesparrow\npopulation and enhance the algorithm’s optimization ability.\nThevaluesofchaoticsequencesexhibitregularityandergodicity.Incorporatingchaoticsequences\nas sparrow individuals for population initialization enhances the uniform distribution of individuals,\ntherebyimprovingpopulationdiversityand enhancing thealgorithm’s globaloptimization capability.\nTherefore,theP-SSAbasedonPWLCMisproposedtooptimizethepopulationinitializationofSSA.\nIts mathematical model is as follows:\nz\ni+1 =\n⎧\n⎪⎪\n⎪⎪⎪\n⎪⎪⎪\n⎪⎪⎪\n⎨\n⎪⎪⎪\n⎪⎪⎪\n⎪⎪⎪\n⎪⎪⎩\nz\ni\np ,0 < zi < p\nzi − p\n0.5 − p , p ≤ zi < 0.5\n1 − p − zi\n0.5 − p ,0.5 ≤ zi < 1 − p\n1 − zi\np ,1 − p ≤ zi < 1\n(13)\nwhere p ∈ (0, 1)isacontrolparameterformapping,and zi representsachaoticsequence.Fordetailed\ninformation regarding the comparative experiments conducted on chaotic map methods, please refer\ntoSection 4.4.2.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.4 Grid Fault Prediction Model Based on FE-XGBoost",
+      "level": 2,
+      "text": "This section constructs an XGBoost for meteorological fault prediction, but the model has many\nmain hyperparameters, such as the optimal tree depth, optimal learning rate, optimal number of\niterations, subsampling rate, column sampling rate, and minimum child node weight. These hyper-\nparameters are usually randomly defined by users, and the model prediction performance is greatly\naffected by hyperparameters. The P-SSA algorithm is proposed to optimize the hyperparameters\nof the XGBoost, aiming to achieve an optimal meteorological fault prediction model. During the\nutilizationoftheXGBoostforpredictingthemeteorologicalfailurerateinaspecificregion,theweights\nassigned to each node within the tree model are continuously adjusted to progressively approximate\nthe intricate relationship between equipment failure rate and meteorological influencing factors. The\nprocess exhibits similarities to conventional supervised learning, where the XGBoost utilizes the\ntrainingsettogeneratepredictionsforthetargetvariable.Sincethemodelcannotpredictsuccessfully\ninoneattempt,theXGBoostwilladdadecisiontreeaftereachprediction.Itthenadjustsandcorrects\nthe prediction results of the previous tree based on the error function until the final prediction meets\n2900 CMC, 2025, vol.82, no.2\nthe accuracy requirements. To enhance the readability of our framework, we present Algorithm 2,\nwhich illustrates the pseudo code for the FE-XGBoost fault prediction model.\nAlgorithm 2: Grid fault prediction model based on FE-XGBoost\nRequire: Weather dataDtrain and Dtest\nEnsure: Optimized hyperparameters θ∗ and trained XGBoost\n1: Preprocess Dtrain, Dtest to obtainD′\ntrain, D′\ntest\n2: Extract key features F from D′\ntrain and D′\ntest\n3: Define hyperparameter search space H of XGBoost\n4: Initialize sparrow population P ={ s1, s2, ··· , sN} using chaotic map sequence withinH\n5: Sort P by f(θi, D′\ntrain) to identify bestsbest and worstsworst individuals\n6: whilenot reached maximum iterationsTmax do\n7: Construct XGBoost with hyperparameters θi\n8: foreach sparrowsi ∈ P do\n9: Evaluate fitness f(θi, D′\ntrain) using multi-class accuracy\n10: Update positions xt+1\ni of discoverers, joiners, and guards according toEqs. (10)–(12)\n11: Recalculate fitness f(θi, D′\ntrain)\n12: if f(θi, D\n′\ntrain) improves then\n13: Update position x∗\ni ← xt+1\ni\n14: end if\n15: end for\n16: end while\n17: Identify optimal hyperparametersθ∗ = x∗\nbest\n18: Construct XGBoost withθ∗\n19: Validate prediction performancef(θ∗, D\n′\ntest) on testing data\nWhen classifying and predicting power grid faults, it is imperative to ensure a high classification\naccuracy of the model, minimizing any potential classification errors. Therefore, when using P-SSA\nto optimize the XGBoost in Algorithm 2, the multi-classification logarithmic loss of the XGBoost is\nusedasthefitnessvalue.The Eq. (14)demonstratesthecalculationmethodforthemulti-classification\nlogarithmic loss employed by the model. The P-SSA algorithm is employed to identify a set of\nhyperparameters that minimize the model loss, thereby facilitating the construction of a power grid\nfault prediction model.\nf =− 1\nN\nN∑\ni=1\nM∑\nj=1\npij lnˆpij (14)\nwhere Ndenotesthenumberofsamples, Mdenotesthenumberoffaultcategories, pij and ˆpij denotethe\nreal and predicted fault category labels, respectively. If thei-th sample is belong toj-th fault category,\npij i se q u a lt o1 ;o t h e r w i s e ,i ti se q u a lt o0 .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Experiment",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 Data Pre-processing",
+      "level": 2,
+      "text": "The feature enhancement module performs initial cleaning of the acquired meteorological data,\nfollowed by feature extraction using GBDT and RFE. Finally, it is divided into a training set and a\nCMC, 2025, vol.82, no.2 2901\ntest set at a ratio of 7:3. The meteorological data in this paper is obtained from the meteorological\nmonitoring station located closest to the fault site, as indicated inTable 1.\nTable 1: Detailed meteorological data\nMeteorological element Unit Meteorological element Unit\nWind speed m/s Relative humidity %\nWind direction ◦ Minimum relative humidity %\nAverage wind speed m/s Average relative humidity %\nMaximum wind speed m/s Atmospheric pressure mmHg\nPrecipitation mm Total cloud cover %\n24-h precipitation mm Snow depth mm\nNear surface temperature °C 24-h snowfall mm\nMaximum temperature °C Horizontal visibility km\nMinimum temperature °C PM2.5 μ/m\n3\nAverage temperature °C PM10 μ/m 3\nDew point temperature °C\nThe meteorological data comprises 21 dimensions, necessitating key feature extraction. However,\nthese data exhibit inconsistencies in units and encompass a wide range of values. To enhance\ncomputational efficiency and expedite model convergence, normalization techniques are employed:\nx\n∗\ni = xi − min(x)\nmax(x) − min(x) (15)\nwhere x is a certain type of meteorological data,xi is the i-th sample in this data type, andx∗",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "is the",
+      "level": 1,
+      "text": "normalizedvalueof xi.Themaximumandminimumvaluesofthisdatatypearerepresentedas max(x)\nand min(x), respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.2 Experimental Setup",
+      "level": 2,
+      "text": "The experimental environment is configured as follows: operating system Windows 10, the\ncomputer processor is 13th Gen Intel(R) Core(TM) i9-13900HX, memory is 2.20 GHz and 16 GB\nRAM, Python version 3.11. We simulate 3000 records of power grid faults. The samples are indexed\nby date and contain 21 characteristic variables such as wind speed, precipitation, and temperature, as\nshown inTable 1. The type of power grid fault is the dependent variable, which is normal (0), wind\ndisaster fault (1), ice fault (2), pollution fault (3), and rain damage fault (4). The data is sorted and\napplied to the prediction of power grid fault type.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.3 Evaluation Metrics",
+      "level": 2,
+      "text": "The meteorological data exhibits high dimensionality and imbalanced distribution, with a pre-\ndominance of normal samples compared to faulty samples. If accuracy alone is employed as the sole\nmetric for evaluating model quality, it fails to effectively capture the true impact of the model and\nmerely represents the classification accuracy within a large sample population. Simultaneously, in\nthe context of equipment failure prediction, overlooking any form of failure could result in severe\nrepercussions. Hence, it is imperative to select appropriate evaluation metrics. In order to accurately\n2902 CMC, 2025, vol.82, no.2\npredict the probability of equipment failure and enhance prediction accuracy, we employ accuracy,\nprecision, recall, and F1-Score as evaluation metrics. The calculation formula can be expressed as\nfollows:\nAccuracy = TP + TN\nTP + FP + FN + TN (16)\nPrecision = TP\nTP + FP (17)\nRecall = TP\nTP + FN (18)\nF1 = 2 × Precision × Recall\nPrecision+ Recall (19)\nwhere TPrepresentsthecountoffaultsamplescorrectlypredictedasfaultsamples; FN representsthe\ncount of fault samples incorrectly predicted as normal samples;FP represents the count of normal\nsamples incorrectly predicted as fault samples;TN represents the count of normal samples correctly\npredicted as normal samples. The larger the values of the aforementioned metrics, the more effective\nthe fault detection and higher the prediction accuracy in equipment fault prediction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.4 Comparative Analysis",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.4.1 Grid Fault Type Detection",
+      "level": 3,
+      "text": "To validate the efficacy of the proposed approach, we employ the subsequentbaseline model and\nadapt it to address the task of meteorological equipment failure.\n• XGBoost [23]: This model employs XGBoost to process the traffic classification task based on\nnetwork traffic.\n• GA-XGBoost [24]: This model employs XGBoost to analyze the characteristics of urban road\ntraffic accidents and constructs a GA-XGBoost feature recognition model.\n• GA-RF [25]: The author proposed a novel method, which combines a genetic algorithm and\nrandom forest (GA-RF), for predicting inclusions in continuous casting slabs.\nThe fault prediction models used in our study include the baseline model and the FE-XGBoost.\nWe evaluate their performance using metrics such as accuracy, precision, recall, and F1. The corre-\nsponding results are presented inTable 2.\nTable 2: Performance metrics of different models in meteorological fault prediction\nMethod Accuracy (%) Precision (%) Recall (%) F1 (%)\nXGBoost 0.7756 0.7820 0.7756 0.7713\nGA-XGBoost 0.9211 0.9252 0.9211 0.9213\nGA-RF 0.9056 0.9169 0.9055 0.9054\nFE-XGBoost 0.9411 0.9466 0.9411 0.9413\nAs can be seen fromTable 2, the FE-XGBoost achieves the highest performance among the\ncomparison models, with accuracy, precision, recall, and F1 reaching 94.11%, 94.66%, 94.11%, and\nCMC, 2025, vol.82, no.2 2903\n94.13%, respectively. This excellent performance is mainly attributed to the combination of P-SSA\nand XGBoost, which combines the global search ability of P-SSA and the high accuracy advantage\nof XGBoost. P-SSA can adaptively search for the best feature combination, further improving the\nprediction accuracy of the model.\nTheXGBoostalgorithmaloneexhibitssubparperformanceintermsofaccuracy,precision,recall,\nand F1. Additionally, it lacks global search capability which hampers feature selection optimization\nand adversely affects the overall model performance. The GA-XGBoost algorithm enhances feature\nselectionthroughgeneticalgorithms.However,itsglobalsearchabilityfallsshortcomparedtoP-SSA\nresulting in slightly inadequate accuracy and prediction capabilities. Despite improvements in feature\nselectionachievedbytheGA-RF,itstillachievesloweraccuracyandprecisionthantheFE-XGBoost\ncombination due to inherent limitations of random forest.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.4.2 Comparison of Chaos Map Methods",
+      "level": 3,
+      "text": "InordertoverifytheperformanceofthePWLCMselectedinthispaper,weconductcomparative\nexperiments with the Logistic chaotic map [26] and the random generation method.\nThe comparison of the frequency distribution between PWLCM and logistic chaotic map is\npresented inFig. 2. It can be observed that PWLCM exhibits a higher level of stability in its chaotic\nbehavior,therebyofferingenhancedglobalsearchcapabilities. Fig. 3showsthedistributionofthesame\nnumber of samples generated by PWLCM and random generation method. The sequence generated\nby the random generation method exhibits local aggregation and partial sparseness, with no values\nfalling between 0.4 and 0.6. In contrast, the sequence generated by PWLCM demonstrates an even\ndistribution, enabling the generation of a high-quality initial population for optimization.\nFigure 2: Comparison of frequency distribution of PWLCM and logistic chaotic map\n2904 CMC, 2025, vol.82, no.2\nFigure 3:Comparisonofinitialpopulationdistribution;(a)PWLCM;(b)Randomgenerationmethod",
+      "refs": {
+        "figures": [
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.4.3 ROC Curve Comparison",
+      "level": 3,
+      "text": "ThissectionisbasedontheclassificationresultsoftheFE-XGBoostinthetestset.Thepredicted\npowergridfaulttypesare“normal(0)”and“pollutionflashoverfault(3)”,andtheROCcurvesofthe\nFE-XGBoost and the GA-XGBoost are respectively drawn, as shown inFig. 4. The figure illustrates\nthat the FE-XGBoost predicts AUC areas of 0.98 and 0.99 for categories 0 and 3, respectively, while\nthe GA-XGBoost predicts AUC areas of both 0.97 for categories 0 and 3. The AUC areas of the\nFE-XGBoost for predicting category 0 and category 3 surpass those of the GA-XGBoost, exhibiting\nsuperior accuracy and discrimination.\nFigure 4: ROC curve comparison",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.4.4 Generalization Experiments",
+      "level": 3,
+      "text": "To validate the generalization ability of FE-XGBoost, we further conduct generalization exper-\niments on larger-scale datasets.Fig. 5presents the experimental results of FE-XGBoost and GA-\nXGBoost on ROC curves across datasets of varying sizes. We train FE-XGBoost on a dataset with\nCMC, 2025, vol.82, no.2 2905\n3000samplesandevaluateitsperformanceunderthesamesettingsonadatasetwith4000samples.We\nobservethatFE-XGBoostoutperformsGA-XGBoostwhenscaledtolargerdatasets.Thissuperiority\nis mainly attributed to the fact that the FE-XGBoost extracts key meteorological features through\nGBDT and RFE, which enables it to efficiently deal with the complex nonlinear relationships among\nmeteorological features. By accurately identifying and utilizing these meteorological characteristics,\nFE-XGBoost can achieve higher generalization performance on larger-scale datasets.\nFigure 5: Generalization results on larger scale data",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.4.5 Error Analysis",
+      "level": 3,
+      "text": "The root mean square error calculation results of the four models on the test set are presented in\nFig. 6. It is evident from the figure that the FE-XGBoost exhibits the lowest root mean square error\nvalue of 0.5083. The prediction error of the GA-RF is slightly higher compared to that of the FE-\nXGBoost.TheXGBoostservesasthebaseline,exhibitingthehighestrootmeansquareerrorvalueof\n0.7756.TheGA-XGboostdemonstratesanintermediateperformancebetweenFE-XGBoostandGA-\nRF, yielding a moderately effective prediction outcome. Therefore, based on the calculation results of\nroot mean square error, the FE-XGBoost outperforms other models in predicting power grid fault\ntypes with higher prediction accuracy and smaller error.\nFigure 6: Comparison of RMSE for different models\n2906 CMC, 2025, vol.82, no.2",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 Conclusion",
+      "level": 1,
+      "text": "Weproposeafeature-enhancedXGBoost-basedpowergridfaultpredictionmodel,FE-XGBoost,\nto address the nonlinear relationship between complex meteorological factors and power grid faults.\nFirst, we combine GBDT and RFE to calculate the classification accuracy and feature importance\nscoretoextractthekeyfeatures.Then,wedesigntheoptimizationalgorithmP-SSAtofindtheoptimal\nhyperparameters of XGBoost. Finally, we construct the XGBoost fault prediction model to predict\nthe grid fault type. The experimental results show that FE-XGBoost significantly outperforms other\nbaselines on the datasets of different sizes, verifying its effectiveness and superiority.\nIn the future, we intend to integrate real-time meteorological data streams, which will bolster the\npredictive abilities of model in ever-changing environmental conditions. Furthermore, we envision\nexpandingthescopeofmodeltoincorporateabroaderrangeofexternalfactors,suchasinfrastructure\nmaintenanceconditionsandhumaninterventions.Thisexpansionaimstoprovideamoreholisticand\nnuanced approach to power grid fault prediction, considering both environmental and operational\nelements that could influence grid performance.\nAcknowledgement: The authors are grateful to all the editors and anonymous reviewers for their\ncomments and suggestions and thank all the members who have contributed to this work with us.\nFunding Statement: This work is supported by the Science and Technology Project of State Grid\nJiangsu Electric Power Co., Ltd. (Research on Power Meteorology Digitalization Application for\nFuture Climate Scenarios and New Energy Operation Risks, J2023076).\nAuthor Contributions: The authors confirm contribution to the paper as follows: study conception\nand design: Kai Liu; data collection: Meizhao Liu; analysis and interpretation of results: Ming Tang;\ndraft manuscriptpreparation:Chen Zhang, JunwuZhu; project supervision:Junwu Zhu. All authors\nreviewed the results and approved the final version of the manuscript.\nAvailability of Data and Materials:Therawdatasupportingtheconclusionsofthisarticleareavailable\nfrom the corresponding author upon reasonable request.\nEthics Approval:Not applicable.\nConflicts of Interest: Theauthorsdeclarenoconflictsofinteresttoreportregardingthepresentstudy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Framework of the FE-XGBoost"
+    },
+    {
+      "id": "f2",
+      "caption": "Comparison of frequency distribution of PWLCM and logistic chaotic map"
+    },
+    {
+      "id": "f3",
+      "caption": "Comparisonofinitialpopulationdistribution;(a)PWLCM;(b)Randomgenerationmethod"
+    },
+    {
+      "id": "f4",
+      "caption": "ROC curve comparison"
+    },
+    {
+      "id": "f5",
+      "caption": "Generalization results on larger scale data"
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of RMSE for different models"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Detailed meteorological data"
+    },
+    {
+      "id": "t2",
+      "caption": "Performance metrics of different models in meteorological fault prediction"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Feature selection process"
+    },
+    {
+      "id": "a2",
+      "caption": "Grid fault prediction model based on FE-XGBoost"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "Eq. (3)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Eq. (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Eq. (14)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 2,
+    "n_algorithms": 2,
+    "n_equations": 8
+  }
+}

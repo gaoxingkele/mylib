@@ -1,0 +1,331 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__07__a_power_load_forecasting_method_based_on_intelligent_data__f0d322f4c0.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 School of Software, Dalian University of Technology, Dalian 116024, China",
+      "level": 1,
+      "text": "3 Department of Computer Science, Community College, King Saud University, Riyadh 11437, Saudi Arabia\n* Correspondence: xiongxr@cqupt.edu.cn\nAbstract: Abnormal electricity consumption behavior not only affects the safety of power supply\nbut also damages the infrastructure of the power system, posing a threat to the secure and stable\noperation of the grid. Predicting future electricity consumption plays a crucial role in resource\nmanagement in the energy sector. Analyzing historical electricity consumption data is essential for\nimproving the energy service capabilities of end-users. To forecast user energy consumption, this\npaper proposes a method that combines adaptive noise-assisted complete ensemble empirical mode\ndecomposition (CEEMDAN) with long short-term memory (LSTM) networks. Firstly, considering\nthe challenge of directly applying prediction models to non-stationary and nonlinear user electricity\nconsumption data, the adaptive noise-assisted complete ensemble empirical mode decomposition\nalgorithm is used to decompose the signal into trend components, periodic components, and random\ncomponents. Then, based on the CEEMDAN decomposition, an LSTM prediction sub-model is\nconstructed to forecast the overall electricity consumption by using an overlaying approach. Finally,\nthrough multiple comparative experiments, the effectiveness of the CEEMDAN-LSTM method is\ndemonstrated, showing its ability to explore hidden temporal relationships and achieve smaller\nprediction errors.\nKeywords: power forecasting; data analysis; CEEMDAN decomposition; LSTM forecasting",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the rapid development of science, technology, and the economy, the demand\nfor electricity continues to increase, leading to the expansion of the power grid and the\nincreasing complexity of power systems. The issue of data security in power grids has also\nattracted attention, as ensuring the secure and reliable operation of the power system is\ncrucial for the stable functioning of the national economy.\nNumerous research studies and discussions have been conducted internationally on\nsmart grids. As a key technology in smart grids, the advanced metering infrastructure\nintegrates smart meters, communication networks, and data management systems, enabling\nbidirectional communication between utility centers and customers [1]. The application of\ndigital smart meters and the introduction of network layers in metering systems have also\nintroduced new avenues for electricity theft [2]. Electricity theft not only causes ﬁnancial\nlosses for power companies but also poses a signiﬁcant risk to the security of the power grid.\nIt can lead to damage to low-voltage electrical equipment, local power supply interruptions,\nand even power grid accidents. In the event of a cascading effect, it can result in severe\nconsequences such as large-scale power outages. Additionally, electricity theft incidents\nhave resulted in electrical ﬁres and casualties. In recent years, nearly 40% of electrical\nﬁres have been caused by abnormal electricity consumption and illegal acts of damaging\npower facilities, with even higher proportions in densely populated areas such as shared\nElectronics 2023, 12, 3441. https://doi.org/10.3390/electronics12163441 https://www.mdpi.com/journal/electronics\nElectronics 2023, 12, 3441 2 of 17\nrental accommodations. Once electricity thieves succeed, they often excessively use high-\nenergy-consuming appliances, leading to line overloads and serious ﬁre safety hazards.\nNon-technical losses in power systems represent an urgent safety issue. Predicting user\nelectricity consumption has signiﬁcant guidance for power companies in handling related\nmatters. Furthermore, the focus of prediction has shifted from a macroscopic perspective\nto a microscopic perspective, emphasizing the importance of load prediction in improving\nend-user energy service capabilities.\nIn the context of the major domains of “New Infrastructure”, including 5G base\nstations, big data centers, artiﬁcial intelligence, and industrial Internet, the emphasis\nlies in the era of digitization and intelligence. The Internet of Things (IoT) provides\nrobust data support for rational data utilization [ 3]. Proper utilization of electric grid\ndata enables the monitoring and detection of grid conditions, ensuring real-time system\nsecurity [4,5]. By mining historical and real-time data [6], the diagnosis, optimization, and\nprediction of grid states can be achieved, thereby enhancing grid management capabilities,\noptimizing resource allocation, identifying operational patterns, and formulating rational\nplans to ensure grid stability, security, and economic efﬁciency. Statistical data indicates\nthat with every 10% increase in the utilization of power data, the proﬁtability of power\ncompanies can rise by 20–40%. However, the challenge lies in the effective extraction of\nvaluable information from the vast and heterogeneous power data [7], including identifying\nabnormal users and predicting short-term power loads for the future. A comparison\nbetween previous research and this study is shown in Table 1.\nTable 1. The comparison of related works. (“√” if the solution satisﬁes the property, “×” if not).\nRef. Focus Main Contribution Adaptive Data Signal Frequency\nOverlap\nVanishing\nGradient\n[8] Residential electricity\nload forecasting\nThe study tested a framework based\non LSTM-RNN to predict the\nexpected future load.\n× × √\n[9] Predicting activity\nsignal frequencies\nA deep learning model called\nEMD-LSTM-CNN, based on LSTM,\nCNN, and EMD methods, is proposed\nto predict frequency signals.\n√ × √\n[10]\nHigh-speed\nnonlinear circuit\nprediction\nA BN-RNN method is proposed for\npredicting circuit. × × √\nOur work Residential electricity\nload forecasting\nA user electricity consumption\nforecasting method is proposed, using\nCEEMDAN and LSTM network.\n√ √ √\nThis paper proposes a user electricity consumption prediction method that combines\nCEEMDAN with LSTM networks in the context of secure electricity usage. The contribu-\ntions of this study can be summarized as follows:\n• By enhancing the algorithm, the utilization of CEEMDAN effectively characterizes\nthe local transient characteristics of the signal. This greatly assists the load prediction\nmodel in exploring hidden temporal relationships more comprehensively.\n• Based on the CEEMDAN algorithm, a specially designed sliding window is employed\nto avoid the inefﬁciency of model training caused by excessively long input data\nsequences. The sliding window preserves the long-term trend components, periodic\ncomponents, and random components of the load.\n• Leveraging the capabilities of LSTM, a multi-layer neural network is used to indi-\nvidually model and predict the components and residuals. This approach better\ncaptures the dynamic patterns and random ﬂuctuations of electricity consumption\ndata, thereby enhancing the accuracy and interpretability of electricity load prediction.\nThe predicted results of these components are then reconstructed to obtain the ﬁnal\nelectricity consumption prediction.\nElectronics 2023, 12, 3441 3 of 17\nThe rest of this paper is organized as follows: Section 2 reviews the related work,\nSection 3 introduces the CEEMDAN decomposition, Section 4 describes the LSTM network\ndesign, Section 5 presents the experimental design and result analysis, and Section 6\nprovides the conclusion.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "With the advancement of technology , the analysis and prediction of anomalies in various\nindustries such as weather [11], transportation [12–14], and electricity [15] have been con-\nducted to avoid losses. Particularly , the demand for electrical energy continues to grow. The\nsafety issues in the power industry have attracted widespread attention. Currently , methods\nfor electricity consumption forecasting can be mainly classified into two categories: the first\ncategory includes traditional forecasting methods such as linear regression analysis, tradi-\ntional time series modeling, and periodic factor models; the second category includes machine\nlearning prediction methods, such as time series methods [16], deep learning networks [17,18],\ngradient boosting decision trees, and support vector machine regression [19].\nFor the detection and prediction of electricity consumption, transmitting a large\namount of data from different regions to a central node for detection and prediction not\nonly suffers from poor real-time performance but also increases unnecessary energy con-\nsumption [20]. Edge computing has been widely studied in various industries, enabling\ndata processing at the edge [ 21,22], thereby improving data processing efﬁciency and\navoiding security issues associated with data transmission. Ning et al. [ 23] developed a\ncost-effective home health monitoring system based on mobile edge computing and 5G tech-\nnology, reducing the cost of IoT healthcare systems. As the demand for real-time mobile\napplication processing continues to grow, multi-access edge computing has been consid-\nered a promising paradigm to extend computational resources to the network edge [24–26].\nIn the context of edge computing, Wang et al. [27] also proposed wireless charging methods\nto address the insufﬁcient energy consumption of mobile edge computing.\nHigh-precision electricity forecasting plays a crucial role in maintaining a balanced\npower supply, and deep learning has proven beneﬁcial in electricity load prediction, yield-\ning promising results in various practical applications [28]. Signiﬁcant advancements have\nbeen made in deep learning for time series forecasting [ 29]. Recurrent neural networks\n(RNNs) have achieved remarkable success in natural language processing [30], semantic\nrecognition [ 31], and image recognition [ 32], making them a commonly used network\nframework for time series prediction. However, in the ﬁeld of electricity load forecast-\ning, where extensive time series data extraction and analysis are required, the gradient\nvanishing problem of RNNs has emerged as a major obstacle limiting their predictive\nperformance [33,34]. In response to this limitation, LSTM, which is built upon the develop-\nments of RNNs, has effectively addressed the gradient vanishing problem and has become\nthe main direction of current research [35].\nLin et al. [ 36] validated the suitability of LSTM-based models for residential load\nforecasting, indicating further improvements when more data are available. Kong et al. [8]\nproposed an LSTM-based forecasting model for short-term load prediction in industrial\nand commercial enterprises, considering various factors such as dates. Through empir-\nical experiments, they demonstrated its excellent performance across multiple metrics.\nHowever, directly applying prediction models to non-stationary short-term power con-\nsumption data hinders the exploration of deeper temporal features [37]. Moreover, with\nthe majority of vehicles being electric, the temporal feature problem becomes more com-\nplex [38–40]. Saman et al. [41] presented a combined algorithm that integrates empirical\nmode decomposition (EMD) with LSTM neural networks for short-term load forecasting.\nTheir approach effectively improved prediction accuracy while highlighting the advantages\nof signal decomposition in load forecasting. Nevertheless, EMD algorithms are prone to\nmode mixing, which can lead to a loss of speciﬁc physical meanings in the intrinsic mode\nfunctions (IMFs) [42]. Chen et al. [43] proposed a model based on deep residual networks\nto predict short-term load, devising an improved deep residual network to enhance the\nElectronics 2023, 12, 3441 4 of 17\nprediction results. They employed a two-stage ensemble strategy to enhance the gener-\nalization capability of the proposed model. Although the aforementioned studies have\nexplored short-term electricity forecasting techniques from various aspects, there is still\nroom for improving the accuracy of non-stationary short-term user electricity predictions,\nwarranting further research. To overcome the limitations of analysis methods lacking adapt-\nability, Norden proposed a signal time-frequency processing approach using EMD and\nHilbert spectral analysis. Due to its adaptive nature, this decomposition method is suitable\nfor analyzing and processing nonlinear and non-stationary signals. The decomposition is\nperformed based on the inherent time scale characteristics of the data, eliminating the need\nfor pre-deﬁned basis functions. It is precisely due to this adaptive characteristic that, in\ntheory, the EMD method can be applied to any type of signal decomposition. Therefore,\nwhen dealing with non-stationary and nonlinear data, EMD exhibits signiﬁcant advantages.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Sequence Decomposition Based on Sliding Window",
+      "level": 1,
+      "text": "This study aims to compare various sequence decomposition methods to identify the\nmost suitable method for load data decomposition. Additionally, a special sliding window\nis designed to extract the periodic component, trend component, and random component\nof the load sequence.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Empirical Mode Decomposition",
+      "level": 2,
+      "text": "Once introduced, the EMD method quickly found applications in various engineering\nﬁelds, such as wind power, solar energy, atmospheric observations, and brain signals, for\nmode parameter recognition and identiﬁcation. The EMD method iteratively extracts a\nseries of IMFs and applies the Hilbert transform to obtain physically meaningful instanta-\nneous frequencies for each component. Compared to traditional signal analysis methods,\nthe EMD method is not constrained by the uncertainty principle and can achieve higher\nfrequency resolution. Moreover, the EMD decomposition is based on the intrinsic charac-\nteristics of the signal itself, eliminating the need for predeﬁned basis functions, which gives\nit an unparalleled advantage in terms of adaptability. The EMD method enables adaptive\ndecomposition and processing of non-stationary signals.\nDue to its reliance on the intrinsic characteristics of the signal, the EMD approach\npossesses complete adaptability. The EMD decomposition method assumes a hidden\nunderlying condition that for any given sequence, there exist numerous oscillatory modes\nwith different frequencies that superpose to form the entire data. Each oscillatory mode,\ndeﬁned as an IMF, must satisfy the following two conditions:\n1. At any given time point, the average value of the envelope deﬁned by the maximum\nand minimum values is zero.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 Over the entire dataset, the number of extrema is either equal to the number of",
+      "level": 1,
+      "text": "zero-crossings or, at most, differs by one.\nThe steps for EMD decomposition are as follows:\n1. For any signal sequence x(t), ﬁrst identify all the extrema points on x(t). Then, use\ncubic spline interpolation to connect all the local maxima to form the upper envelope.\nSimilarly, connect all the local minima to form the lower envelope, ensuring that all\ndata points lie between these two envelopes. The average value of the upper and\nlower envelopes is denoted as m(t). Calculate the difference between x(t) and m(t),\ndenoted as h(t), using the following equation:\nh(t) = x(t)− m(t) (1)\n2. Replace the original sequence with h(t) and repeat step (1) until h(t) satisﬁes the two\nconditions of an IMF. h(t) that satisﬁes these conditions is considered as the ﬁrst IMF.\nElectronics 2023, 12, 3441 5 of 17\nThe standard deviation (SD) is commonly used to determine whether h(t) qualiﬁes as\nan IMF.\nSD =\nT\n∑\nt=0\n⏐⏐⏐h(k−1)(t)− hk(t)\n⏐⏐⏐\n2\nT\n∑\nt=0\n⏐⏐⏐h(k−1)(t)\n⏐⏐⏐\n2 (2)\nwhere T represents the length of sequencex(t). hk(t) denotes the data afterk iterations\nof sifting. It is generally recommended to set the SD value between 0.1 and 0.3. When\nthe condition 0.1 < SD < 0.3 is met, the decomposition stops, and the ﬁrst IMF\ncomponent c1 = hk(t) is obtained.\n3. Subtracting component c1 from the original sequence x(t) yields the residual compo-\nnent r1(t), i.e.:\nr1(t) = x(t)− c1 (3)\nA ﬂowchart of the EMD algorithm is illustrated in Figure 1:\nFigure 1. Flowchart of the EMD Algorithm.\nThe process continues by considering r1(t) as a new sequence and repeating steps\n(1) and (2) to obtain the second IMF component c2, and this process is iterated until\nthe termination condition for signal decomposition is met, which is when the residual\ncomponent rn(t) becomes a monotonic function. At this stage, rn(t) is referred to as the\nElectronics 2023, 12, 3441 6 of 17\nresidual component of the original sequence. The complete decomposition process and its\nresults are illustrated as follows:\nr1(t) = x(t)− c1, r2(t) = r1(t)− c2,··· , rn(t) = rn−1(t)− cn (4)\nx(t) =\nn\n∑\ni=1\nci + rn(t) (5)",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Ensemble Empirical Mode Decomposition",
+      "level": 2,
+      "text": "EMD decomposition is an empirical algorithm without strict mathematical speci-\nﬁcations. It has several limitations and drawbacks in practical applications, including\nmode mixing, spurious components, and endpoint effects. Mode mixing refers to the\nphenomenon where IMF components from different time scales are mistakenly identiﬁed\nas the same IMF component, or IMF components from the same time scale are decomposed\ninto multiple IMF components. Mathematically, this corresponds to the coupling between\ndifferent IMF components. Mode mixing affects all IMF components and can lead to the\npresence of physically meaningless IMF components as the iteration progresses. To address\nthis issue, a new improved algorithm called EEMD is introduced. The EEMD algorithm\nfollows the following steps:\n1. A Gaussian white noise sequence ωn(t), n = 1, 2,··· , N is added to the original signal\nx(t), creating a mixed signal of signal and noise: Bulleted lists look like this:\nXn(t) = x(t) + ωn(t) (6)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 Perform EMD decomposition on the signal Xn(t) with added noise, resulting in IMF",
+      "level": 1,
+      "text": "components ci,n(t), i = 1, 2,··· , m and a residual component rm,n(t), as follows:\nXn(t) =\nm\n∑\ni=1\nci,n(t) + rm,n(t) (7)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Repeat step (2) to obtain sets of distinct IMF component collections and residual",
+      "level": 1,
+      "text": "collections.\nThe ﬁnal result is obtained by performing ensemble averaging on the N sets of distinct\nIMF component collections and residual collections. The IMF components corresponding\nto the original signal can be represented as follows:\nci(t) = 1\nN\nN\n∑\nn=1\nci,n(t) (8)\nrm(t) = 1\nN\nN\n∑\nn=1\nrm,n(t) (9)\nTo overcome the computational time and residual noise issues associated with EEMD\nand to reduce the number of sifting iterations with fewer averaging runs, an improved\nmethod called CEEMDAN is used. In CEEMDAN, adaptive white noise is added multiple\ntimes at each stage to achieve nearly 0% reconstruction error with fewer averaging runs.\nIn this paper, we will analyze and describe the speciﬁc application steps of CEEMDAN.\nCompared to EMD and EEMD methods, CEEMDAN has the following advantages:\n1. Introducing additional noise coefﬁcients to control the noise level during each decom-\nposition [44];\n2. Complete and noise-free reconstruction process [44];\n3. Requires fewer experimental runs and is more efﬁcient [45].\nElectronics 2023, 12, 3441 7 of 17",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.3 Sliding-Window-Based CEEMDAN Decomposition for Time Series Analysis",
+      "level": 2,
+      "text": "The user’s load proﬁle is a time series that exhibits both periodicity and a certain\ndegree of randomness. The load data are observed at different time scales, such as hours,\ndays, weeks, months, and years, capturing the regularities of residential activities that are\nnested within larger cycles. Additionally, user behavior contains certain random elements.\nThese characteristics pose challenges to load forecasting. Inspired by signal decomposition\ntechniques, this study utilizes the adaptive CEEMDAN method to decompose the electricity\nload sequence into its trend, periodic, and random components. This approach, which\ncharacterizes the features of the load sequence, provides valuable insights into subsequent\nforecasting tasks.\nCEEMDAN obtains the IMF by introducing white noise with speciﬁc frequency bands\nat each decomposition stage. Firstly, let Ek(.) represent the IMF mode generated by\nEMD decomposition, Noi represent the white noise that satisﬁes the standard normal\ndistribution,x(t) represent the original signal, and ˜IMFk represent the IMF mode generated\nby CEEMDAN. The speciﬁc algorithm is as follows:\nStep 1: CEEMDAN conducts I experiments on the original data x(t) + ε0Noi,\n(i = 1, 2,··· , I) by adding white noise following a standard normal distribution. The\nﬁrst IMF mode component obtained through EMD decomposition is:\n˜IMF1 = 1\nI\nI\n∑\ni=1\nIMF1i (10)\nStep 2: In the ﬁrst stage of k = 1, remove the ˜IMF1 mode component from the original\nsignal and calculate the residual signal:\nr1(t) = x(t)− ˜IMF1 (11)\nStep 3: Construct the ensemble residual signal r1(t) + ε1E1(Noi(t)), (i = 1, 2,··· , I)\nand perform EMD decomposition on the ensemble signal to obtain ˜IMF2:\n˜IMF2 = 1\nI\nI\n∑\ni=1\nE1(r1(t) + ε1E1(Noi(t))) (12)\nFor k = 2, 3,··· , K, the calculation process is similar. First, calculate the k residual\nsignal rk(t); then, calculate the k + 1 IMF component ˜IMFk + 1:\nrk(t) = rk−1(t)− ˜IMFk (13)\n˜IMFk+1 = 1\nI\nI\n∑\ni=1\nE1(rk(t) + εkEk(Noi(t))) (14)\nStep 4: When the number of extreme points in the residual signal is less than 3, the\nobtained residual signal cannot be further decomposed, and the algorithm terminates. At\nthis point, a total of K IMF components is obtained, and the ﬁnal decomposition result is:\nx(t) =\nK\n∑\nk=1\n˜IMFk + rK(t) (15)\nIn the CEEMDAN method, the εk coefﬁcient allows for the selection of the signal-to-\nnoise ratio during the noise addition stage. Regarding the amplitude of the added noise in\nthe CEEMDAN method, it follows the EEMD approach, where small-amplitude noise is\nused to handle signals dominated by high-frequency components, while large-amplitude\nnoise is used to handle signals dominated by low-frequency components. If the amplitude\nof the added noise is too small or too large, it may lead to suboptimal decomposition\nresults that fail to reﬂect the periodicity, trend, and other characteristics present in the\nelectricity data.\nElectronics 2023, 12, 3441 8 of 17\nIn order to extract the periodic, trend, and random components from the sequence, a\nspecial sliding window is designed in this study for time series segmentation. If the window\nsize is directly determined based on the length of the input sequence for the neural network,\nit may result in difficulties in separating the trend and periodic components. Therefore, while\nsegmenting the sequence with the sliding window, the purpose of sequence decomposition\nmust be considered: to decompose the trend, periodic, and random components of the\nsequence. Thus, it is necessary to design a sufficiently large window to encompass the\nperiodic and trend components of the load sequence and then perform decomposition on it.\nTo facilitate efficient model training, fixed-length component data are selectively extracted\nfrom the posterior of the window. This process is illustrated in Figure 2.\nFigure 2. Windowed CEEMDAN decomposition and IMF component extraction.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Design of LSTM Network for Time Series Analysis",
+      "level": 1,
+      "text": "To address the issues of gradient vanishing in RNN and overﬁtting in neural network\nmodels during the training process, a power load prediction model based on LSTM and\nCEEMDAN is proposed, taking into account the periodic, trend, and random components\nin the electric load time series. This section primarily focuses on the overall network design\nand some technical details.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 Batch Normalization of Training Samples",
+      "level": 2,
+      "text": "During the training of LSTM, mini-batch gradient descent is commonly used as the\noptimization algorithm. To ensure that each batch input in the hidden layers of the neural\nnetwork remains in the same distribution, batch normalization (BN) is often employed\nto preprocess the data. This technique performs both proportional scaling and shifting\nof the data. Let us assume a batch of samples denoted as P ={x1, x2,··· xn}, and the\nprinciples of BN are described in Equations (16)–(19). The structure of BN is illustrated\nin Figure 3. The inclusion of the BN layer ensures that each mini-batch sample has the\nsame distribution, preventing the network from being biased toward ﬁtting speciﬁc types\nof samples. When combining the same sample with different samples to form a mini-batch\nsample set, their outputs will differ. This operation can be understood as data augmentation,\nand thus, the addition of BN partially addresses the overﬁtting problem. Laurent et al. [ 46]\nintroduced BN into the RNN model, which consisted of a ﬁve-layer LSTM network. The\nexperimental results indicated that vertical BN improved the convergence speed of the\nparameters, but horizontal BN did not achieve the intended purpose. Similarly, for RNN,\nFaraji et al. [47] also found that horizontal BN had poor performance. Additionally, when\nthe network had fewer layers, vertical BN did not produce the expected results and could\nlead to overﬁtting. Recent research results suggest that the poor performance of horizontal\nBN is due to improper scaling parameter settings, resulting in inefﬁcient information\npropagation. However, in this chapter’s context, considering the small scale of the electricity\nconsumption data, adding a BN layer before LSTM and adjusting the scaling parameter\nElectronics 2023, 12, 3441 9 of 17\ndid not yield satisfactory results. Therefore, in the simulation process of this paper, the BN\nlayer was placed after the LSTM layer.\nµP = 1\nn\nn\n∑\ni=1\nxi (16)\nσ2\nP = 1\nn\nn\n∑\ni=1\n(xi− µP)2 (17)\nˆxi = xi− µP√\nσ2\nP + ε\n(18)\nyi = γ ˆxi + β (19)\nIf BN is applied in the K-1 layer, where µP represents the mean of the inputs to the\nK layer unit for a batch of samples, σ2\nP represents the variance of the inputs to the K layer\nunit for the same batch of samples, and ˆxi represents the normalized inputs, the model\nthen performs a proportional scaling and shifting operation to output yi. The scaling factor\nand the offset, which are required for the transformation, are parameters that need to be\nlearned during model training.\nK Layer\nBatch \nNormalization\nK-1 Layer\nFigure 3. Batch Normalization.\n4.2. Overﬁtting Mitigation with Dropout\nThere are many solutions currently applied to address the issue of overﬁtting in neural\nnetwork models, among which Dropout is a typical approach.\nThere are several reasons that can lead to overfitting, such as insufficient training data, an\nexcessive number of parameters, and excessive model complexity . In such cases, overfitting of\nthe model can result in high accuracy on the training set but poor performance on the test\nset. To address this, various measures are commonly taken during neural network training\nto mitigate overfitting. Dropout, as a commonly used technique for preventing overfitting\nin neural networks, can effectively alleviate overfitting, improve the model’s generalization\nability , and significantly enhance its predictive power in practical applications.\nRegularization is a common method used to prevent overﬁtting, typically achieved\nby adding a regularization term to the cost function. On the other hand, Dropout directly\naddresses overﬁtting by randomly deactivating certain neurons’ information ﬂow during\ntraining. As shown in Figure 4, during model training, Dropout randomly cuts off connec-\ntions between neurons at a certain proportion, causing those neurons to not update their\nweight matrices for that particular training iteration. In theory, Dropout not only achieves\nregularization effects but also simpliﬁes the training model. However, in practice, training\nElectronics 2023, 12, 3441 10 of 17\ncomplexity increases because, with the introduction of Dropout, weight matrix updates\nbecome stochastic, leading to a doubling of training time [48].\nFigure 4. Comparison between a Standard Neural Network (left) and a Dropout Neural Network (right).",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.3 Design of LSTM Network Model",
+      "level": 2,
+      "text": "The user load prediction model based on the LSTM network is shown in Figure 5. The\nﬁrst layer of the entire network consists of LSTM units, where the output at the last time\nstep is utilized as a feature. This is because the output at the last time step can capture the\ninformation from the entire time series and integrate it. Subsequently, BN and Dropout are\napplied to alleviate the issue of overﬁtting. Finally, three fully connected layers are used to\nenhance the learning capacity of the network and obtain the prediction results.\nEach LSTM network in the model is responsible for predicting the IMF components\nand residual components obtained from CEEMDAN decomposition. Therefore, these\nnetworks can be executed in parallel.\nFigure 5. Model architecture of the LSTM-based user load prediction.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5 Experimental Design and Result Analysis",
+      "level": 1,
+      "text": "To validate the effectiveness of the proposed model, this section conducts two sets\nof experiments: sequence decomposition experiments in Section 5.1 and model predic-\ntion comparison experiments in Section 5.2. The sequence decomposition experiments,\nbased on the actual measured data from smart meters in Ireland, analyze the reasons for\nusing sequence decomposition from an experimental perspective. The model prediction\ncomparison experiments compare the CEEMDAN-LSTM prediction model (experimental\ngroup) with the RNN, LSTM, and EMD-LSTM prediction models (comparison group). The\nstability of different prediction models is evaluated using Root Mean Square Error (RMSE),\nwhile the accuracy of the models is assessed by Mean Absolute Error (MAE), reﬂecting the\nactual prediction errors of each model.\nElectronics 2023, 12, 3441 11 of 17",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5.1 Experimental Analysis of Sequence Decomposition",
+      "level": 2,
+      "text": "To validate the generalization and diversity of the model, data from 50 randomly\nselected users were used in the experiment. The ﬁrst step of the experiment involved\ndecomposing the electricity consumption time series using CEEMDAN. The white noise\nwas added with an amplitude of 0.1 times the standard deviation of the original data, and\na total of 200 sets of white noise was added in CEEMDAN.\nTo avoid complexity in training due to excessively long input data, a sliding window\nsegmentation approach was adopted in this chapter. In order to decompose low-frequency\ntrend components, the sliding window should be set to a relatively large size. The speciﬁc\nconﬁguration is as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "1 The sliding window encompasses a 60-day data period, and the window is moved by",
+      "level": 1,
+      "text": "a uniform step size of 1;",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2 After applying the decomposition to the data within each sliding window, the IMF",
+      "level": 1,
+      "text": "components are extracted by selectively capturing a ﬁxed-length segment from the\nrear end of the window.\nTo address the issue of endpoint effects in the algorithm, this study employs the\nmethod of linearly extending the extreme points to handle the endpoints. Additionally, in\norder to prevent the generation of an excessive number of IMF components, which could\nlead to increased complexity in later training, the number of IMF components is set to 8.\nFigure 6 illustrates the hourly load proﬁle of a speciﬁc user, while Figure 7 depicts the\ndecomposition of the user’s hourly load proﬁle. The vertical axis is measured in kW·h, and\nthe horizontal axis represents the sampling points with a sampling interval of 1 h. From\nFigure 7 it can be observed that the original user’s load time series can be decomposed into\neight IMF components (IMF1-IMF8) and one residual component (RES). IMF1-IMF3 exhibit\nhigh-frequency components without apparent regular patterns, representing the stochastic\ncomponents of the load sequence. IMF4-IMF7 exhibit signiﬁcant periodicity, indicating\nthe periodic components of the original load. IMF8 and RES exhibit prominent trend\ncharacteristics, representing the trend components of the load. From the perspective of\nload characteristics, the load at any given moment can be composed of stochastic, periodic,\nand trend components. By decomposing a load sequence using CEEMDAN technique,\nwe obtain sub-sequences representing periodicity, trend, and randomness. In a sense, this\ndecomposition precisely corresponds to the characterization of load properties.\n0\n2\n4\n6\n8\n10\n12\n1\n44\n87\n130\n173\n216\n259\n302\n345\n388\n431\n474\n517\n560\n603\n646\n689\n732\n775\n818\n861\n904\n947\n990\n1033\n1076\n1119\n1162\n1205\n1248\n1291\n1334\n1377\n1420\nElectricity consump（kW·h）\nSampling Points(h)\nFigure 6. Hourly raw load proﬁle of a speciﬁc user.\nElectronics 2023, 12, 3441 12 of 17\nFigure 7. Hourly raw load CEEMDAN decomposition of a speciﬁc user.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.2 Experimental Evaluation of Model Prediction",
+      "level": 2,
+      "text": "To cater to different requirements, separate experiments were conducted for hourly\nload and daily load prediction. For predicting the electricity consumption for the next\nhour, the raw data were sampled at hourly intervals. Similarly, for predicting the electricity\nconsumption for the next day, the raw data were sampled at daily intervals. In this\nexperiment, a consistent approach was employed, utilizing 48 historical IMF component\nvalues to forecast the IMF component values for the subsequent time period. The data\nextraction and decomposition were performed using a sliding window technique. To\neffectively extract the low-frequency trend components, the sliding window was set to a\nrelatively large size.\nDue to the increased general applicability of the model, the electricity consumption\ndata from 50 users was utilized. The sliding window included a span of 60 days of data,\nwith a uniform step size of 1. The training dataset, sampled at a daily interval, consisted of\n500 days of data. For the training set, the sliding window encompassed 180 days of data\nwith a step size of 1. After decomposition into IMF components, the data points at the end\nof the window were extracted as a sequence. These data sequences were used for training,\nwhile the data from the last 30 days were reserved as the test set.\nThe input conﬁguration of the LSTM network is shown in Table 2. Longer input\nlengths of historical data lead to more complexity in model training. This can signiﬁcantly\ndecrease the speed of model training and even result in optimization difﬁculties. In\ncomparison to other models, the weight sharing mechanism of LSTM ensures that the\nnumber of weights remains independent of the input length. Additionally, the training\nprocess of backpropagation exhibits a linear growth relationship between training time\nand parameter increase. However, to enhance the efﬁciency of model training and facilitate\ncomparative experiments, this study uniformly adopts 48 historical IMF component values\nto predict the next IMF component value.\nTable 2. LSTM input settings.\nPredicted Time\nPeriod Length Sampling Interval Single Input\nSequence Length Length of Input Data\nOne hour 1 h 48 2 d\nOne day 24 h 48 24 d\nThe model is constructed on the Keras platform and utilizes the CuDNNLSTM method\nfor optimizing LSTM training. The parameter conﬁguration of the prediction model is\nillustrated in Figure 8. Since the experiments uniformly employ the historical values of the\nprevious 48 time intervals to predict the value of the next time interval, the LSTM layer is\nElectronics 2023, 12, 3441 13 of 17\nunfolded for 48 time steps, and the output vector size of the LSTM is set to 81. Both the BN\nlayer and Dropout layer consist of 81 neurons. The Dense layer is composed of 3 layers,\nwith the respective number of neurons being 27, 8, and 1. The ﬁnal output represents the\npredicted IMF value for the next time interval. The batch size is set to 30, the learning rate\nis 0.005, and the dropout probability is 0.5.\nFigure 8. Visualization of model parameters.\nTo meet different requirements, the model predicts both hourly load and daily load. In\naddition, it is compared with the current mainstream methods, including LSTM [8], EMD-\nLSTM [9], and RNN [10]. Furthermore, the RMSE and MAE of the 50 users are statistically\nanalyzed. Figures 9 and 10 depict the hourly load and daily load prediction results for the\nfour models of a speciﬁc user. To provide a more accurate evaluation of the models, this\nchapter adopts the evaluation metrics of RMSE and MAE, which are classical indicators for\nload forecasting. The formulas for calculating these two metrics are as follows:\nRMSE =\n√\n1\nn\nn\n∑\ni=1\n(yi− ˆyi)2 (20)\nMAE =\nn\n∑\ni=1\n|yi− ˆyi|\nn (21)\nwhere, n represents the total number of samples, ˆyi represents the predicted value of the ith\ntest sample, and yi represents the actual value of the ith test sample. The speciﬁc prediction\nerrors are shown in Tables 3 and 4:\nTable 3. Prediction errors of four models for hourly load of ﬁfty users.\nModel\nPerformance Metrics\nRMSE MAE\nLSTM 0.274 0.175\nRNN 0.292 0.18\nEMD-LSTM 0.265 0.167\nCEEMDAN-LSTM 0.246 0.153\nElectronics 2023, 12, 3441 14 of 17\nTable 4. Prediction errors of four models for daily load of ﬁfty users.\nModel\nPerformance Metrics\nRMSE MAE\nLSTM 6.457 4.610\nRNN 6.698 4.965\nEMD-LSTM 6.353 4.330\nCEEMDAN-LSTM 5.973 3.821\nSampling Points(sampling interval 1h)\nFigure 9. Hourly speciﬁc load prediction.\nFigure 10. Daily load prediction for a speciﬁc user.\nFrom Tables 3 and 4, it can be observed that the CEEMDAN-LSTM model outper-\nforms the LSTM, EMD-LSTM, and RNN prediction models in terms of both RMSE and\nMAE metrics. The errors, whether measured by RMSE or MAE, are signiﬁcantly smaller,\nindicating that CEEMDAN decomposition does not lose the essential information of the\noriginal sequence but rather distributes it among several relatively stable components. The\nexperiments demonstrate that the proposed CEEMDAN-LSTM model decomposes the\noriginal data into multiple components with strong periodicity and clear trends. These\ncomponents can reﬂect the trend and periodic variations in user load, resulting in more\nprominent prediction performance compared to a simple LSTM network. Overall, the\nproposed method is effective and exhibits signiﬁcantly lower prediction errors compared\nto other comparative methods.",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9",
+          "f10"
+        ],
+        "tables": [
+          "t3",
+          "t2",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Flowchart of the EMD Algorithm."
+    },
+    {
+      "id": "f2",
+      "caption": "Windowed CEEMDAN decomposition and IMF component extraction."
+    },
+    {
+      "id": "f3",
+      "caption": "Batch Normalization."
+    },
+    {
+      "id": "f4",
+      "caption": "Comparison between a Standard Neural Network (left) and a Dropout Neural Network (right)."
+    },
+    {
+      "id": "f5",
+      "caption": "Model architecture of the LSTM-based user load prediction."
+    },
+    {
+      "id": "f6",
+      "caption": "illustrates the hourly load proﬁle of a speciﬁc user, while Figure 7 depicts the"
+    },
+    {
+      "id": "f7",
+      "caption": "it can be observed that the original user’s load time series can be decomposed into"
+    },
+    {
+      "id": "f8",
+      "caption": "Visualization of model parameters."
+    },
+    {
+      "id": "f9",
+      "caption": "Hourly speciﬁc load prediction."
+    },
+    {
+      "id": "f10",
+      "caption": "Daily load prediction for a speciﬁc user."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "The comparison of related works. (“√” if the solution satisﬁes the property, “×” if not)."
+    },
+    {
+      "id": "t2",
+      "caption": "LSTM input settings."
+    },
+    {
+      "id": "t3",
+      "caption": "Prediction errors of four models for hourly load of ﬁfty users."
+    },
+    {
+      "id": "t4",
+      "caption": "Prediction errors of four models for daily load of ﬁfty users."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 10,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

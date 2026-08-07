@@ -1,0 +1,456 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-16-06059.pdf",
+  "n_pages": 26,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Smart grids (SGs) integrate information and communication technology (ICT) into\npower infrastructures to support efficient and intelligent energy management [1,2]. Com-\npared with traditional power grids, which mainly rely on centralized control and one-way\ncommunication, SGs support bidirectional communication, distributed energy generation,\nand real-time monitoring. These capabilities have enabled decentralized applications such\nas peer-to-peer energy trading, vehicle-to-grid systems, and distributed energy sharing,\nespecially with the growing use of electric vehicles (EVs), renewable energy resources,\nand smart devices [3,4]. In these settings, direct communication among users and devices is\nessential for autonomous energy exchange and coordination. As SG entities communicate\nmore frequently, secure authentication and key agreement (AKA) mechanisms become\nnecessary. Applications such as user-to-user (U2U) energy trading and vehicle-to-vehicle\nenergy exchange require entities to authenticate each other over public channels [ 5–9],\noften without relying on centralized infrastructure during communication. This creates\nAppl. Sci. 2026, 16, 6059 https://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 2 of 26\nseveral security risks, including impersonation, replay, man-in-the-middle (MITM), denial-\nof-service (DoS), and privileged insider attacks [ 2,10]. Privacy is also a major concern,\nsince electricity consumption data can reveal users’ behaviors and lifestyles [ 11]. Thus,\ndecentralized SG environments require lightweight AKA protocols that can provide secure\nand privacy-preserving communication with low overhead.\nTo address these challenges, several AKA schemes have been proposed for SG systems.\nChim et al. [12] introduced a privacy-preserving authentication scheme, while Nicanfar and\nLeung [13] proposed an ECC-based AKA protocol for SG environments. Subsequent stud-\nies, including those by Odelu et al. [14], Wazid et al. [15], Gope and Sikdar [16], Hu et al. [17],\nand Wu et al. [18], further improved the security and efficiency of ECC-based authentication\nfor resource-constrained devices. However, most existing schemes still follow a centralized\nmodel in which a trusted authority or service provider is involved in authentication. As a\nresult, they are not fully suitable for decentralized SG applications, where entities must\nestablish trust and session keys directly over public channels without relying on online\nassistance from a trusted third party. Recently, Khan et al. [ 19] proposed an ECC-based\nAKA protocol for smart grid communication environments (SGAK). Although SGAK aims\nto support mutual authentication and secure session-key establishment, our cryptanalysis\nidentifies several security weaknesses. Specifically, SGAK is vulnerable to impersonation,\nephemeral secret leakage (ESL), and DoS attacks. In addition, it does not sufficiently ensure\nanonymity, untraceability, data confidentiality, or message authentication.\nTo overcome these limitations, this paper proposes a lightweight ECC-based AKA pro-\ntocol for U2U smart grid communications. In the proposed scheme, users can authenticate\neach other directly and establish a secure session key without requiring a trusted authority\nto participate online during authentication. The protocol is designed to resist imperson-\nation, replay, privileged insider, and ESL attacks. It also preserves user anonymity and\nuntraceability, making it suitable for decentralized SG applications. The main contributions\nof this paper are summarized as follows:\n• We analyze Khan et al.’s SGAK protocol and identify several security weaknesses,\nincluding susceptibility to impersonation, ESL, and DoS attacks.\n• We propose a lightweight ECC-based AKA protocol for decentralized communication\nin smart grid environments, where users can authenticate each other without online\nsupport from a trusted authority.\n• The proposed scheme provides mutual authentication and secure session-key estab-\nlishment, and is designed to resist replay, impersonation, privileged insider, and\nESL attacks.\n• We validate the security and efficiency of the proposed protocol through formal and\ninformal security analysis, as well as simulation-based performance comparison with\nexisting schemes.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "Since Fouda et al. [20] proposed a computational Diffie–Hellman-based AKA protocol\nfor smart grid (SG) communication in 2011, numerous authentication and key agreement\nschemes have been developed for SG environments. Although Fouda et al.’s scheme estab-\nlished an early foundation for SG security, its reliance on exponential operations resulted in\nrelatively high computation and communication costs, limiting its applicability to resource-\nconstrained environments. To address privacy concerns in SG systems, Chim et al. [ 12]\nintroduced a privacy-preserving authentication scheme; however, the protocol does not\nfully provide key agreement, mutual authentication, or perfect forward secrecy (PFS),\nand may be vulnerable to impersonation and insider attacks. Subsequently, Nicanfar and\nLeung [13] proposed an ECC-based key agreement protocol for access control between\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 3 of 26\nhome area network devices and external controllers, supporting forward and backward\nconfidentiality. Nevertheless, the scheme does not fully satisfy the increasing security\ndemands of modern SG environments.\nBuilding on these studies, Tsai and Lo [21] proposed an anonymous key distribution\nauthentication scheme for SG systems and highlighted vulnerabilities in prior approaches,\nincluding replay and impersonation attacks as well as the lack of PFS. However, subse-\nquent analysis revealed that their scheme may not guarantee efficient credential privacy\nfor smart meters (SMs) or secure session key establishment. To overcome these limitations,\nOdelu et al. [14] presented a provably secure AKA scheme with reduced computational\noverhead. Despite this improvement, later studies suggested that the protocol may still\nbe vulnerable to impersonation and man-in-the-middle (MITM) attacks and may not fully\nconsider the practical constraints of real SM devices. In subsequent works, Wazid et al. [15]\nproposed a three-factor authentication protocol for renewable energy-based SG commu-\nnication, while Abbasinezhad-Mood and Nikooghadam [ 22] introduced a lightweight\nECC-based authentication scheme suitable for practical SG environments. Gope and Sik-\ndar [16] further incorporated physically unclonable functions (PUFs) [ 23,24] to enhance\nprivacy preservation and resistance against DoS and MITM attacks. Nevertheless, these\nschemes still suffer from limitations such as incomplete anonymity support and practical\nsecurity concerns associated with fuzzy extractors.\nMore recently, Srinivas et al. [25] proposed an anonymous signature-based authenti-\ncated key exchange scheme for IoT-enabled SG systems using Schnorr signatures, aiming\nto provide anonymity and efficient key exchange; however, the scheme may not effectively\nresist ESL attacks. Hu et al. [ 17] later introduced an ECC-based AKA protocol between\nSMs and server virtual nodes with open-channel registration and provable security claims.\nWu et al. [ 18] subsequently demonstrated that Hu et al.’s protocol is vulnerable to key\ncompromise impersonation (KCI) attacks and fails to provide untraceability, and then pro-\nposed a security-enhanced AKA scheme based on the elliptic curve Menezes–Qu–Vanstone\n(ECMQV) mechanism. Similarly, Nkenyereye et al. [26] proposed LAP-SG, a lightweight\nECC-based authentication scheme designed for resource-constrained SM devices in large-\nscale SG networks, reducing computation, communication, and storage overhead compared\nwith existing approaches.\nDespite these advancements, existing protocols still exhibit limitations in terms of\nsecurity robustness and practical deployment efficiency. In particular, Khan et al. [ 19]\nrecently proposed SGAK; however, our cryptanalysis reveals that SGAK suffers from\nseveral critical security weaknesses. Specifically, the scheme is vulnerable to impersonation,\nESL, and DoS attacks while failing to fully guarantee data confidentiality, user anonymity,\nuntraceability, and message authentication. These limitations motivate the design of the\nproposed protocol in this work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Preliminaries",
+      "level": 1,
+      "text": "In this section, we briefly review the fundamental cryptographic notions required\nfor the understanding of the proposed protocol, including elliptic curve cryptography,\nthe elliptic curve Diffie–Hellman problem, and a Schnorr-based signature mechanism.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Elliptic Curve Cryptography",
+      "level": 2,
+      "text": "ECC is a public-key cryptographic technique that relies on the algebraic properties\nof elliptic curves defined over finite fields [27]. In comparison with conventional public-\nkey systems such as RSA, ECC can provide an equivalent level of security while using\nsignificantly smaller key sizes. This characteristic makes ECC particularly appropriate for\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 4 of 26\ndevices with limited computational resources, such as smart meters deployed in smart\ngrid environments.\nAn elliptic curve E defined over a prime finite field Zp can be represented by the\nfollowing Weierstrass equation:\nE : y2 = x3 + ax + b (mod p) (1)\nwhere p denotes a large prime number, and a, b ∈ Zp. The curve must satisfy the non-\nsingularity condition 4a3 + 27b2 (mod p) ̸= 0 to ensure that it forms a valid elliptic curve.\nThe collection of all points satisfying the above equation, together with the point at infinity\nO, constitutes an abelian group G under elliptic curve point addition, where O acts as the\nidentity element. Let G be a publicly known generator point of prime order q, such that\nq · G = O. For an integer k ∈ Z∗\nq, scalar multiplication is defined as repeated addition of\nthe generator point, i.e., k · G = G + G + · · ·+ G performed k times [27].\nIn the proposed protocol, elliptic curve scalar multiplication serves as the core opera-\ntion for generating temporary key pairs and establishing shared secret values during the\nauthentication and key agreement procedure.\n3.2. Elliptic Curve Diffie–Hellman Problem\nThe security of cryptographic constructions based on elliptic curves is primarily\nderived from the computational difficulty of two well-known problems: the Elliptic Curve\nDiscrete Logarithm Problem (ECDLP) and the Elliptic Curve Diffie–Hellman Problem\n(ECDHP) [27]. The ECDLP states that, given a generator point G of prime order q and\nanother point Q = k · G ∈ G, it is computationally infeasible to recover the scalar value\nk ∈ Z∗\nq within polynomial time. Based on this assumption, the ECDHP can be described\nas follows. Given two publicly known points a · G and b · G corresponding to unknown\nintegers a, b ∈ Z∗\nq, it is computationally infeasible to compute the point a · b · G without\nknowledge of either a or b. Formally, for any probabilistic polynomial-time adversary A,\nthe advantage of solving the ECDHP is defined as:\nAdvECDHP\nA = Pr[A(G, a · G, b · G) =a · b · G] ≤ ε (2)\nwhere ε represents a negligible positive value.\nIn the context of this work, the hardness of the ECDLP ensures that temporary secret\nvalues cannot be recovered from publicly exchanged parameters, whereas the hardness\nof the ECDHP guarantees that the session key established through the ECDH-based key\nagreement process remains secure against external adversaries.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.3 Schnorr-Based Signature",
+      "level": 2,
+      "text": "The Schnorr signature [28] is a lightweight digital signature technique whose security\nrelies on the intractability of the discrete logarithm problem. It follows a three-step interac-\ntion pattern consisting of a commitment, a challenge, and a response, collectively enabling\na zero-knowledge proof of knowledge of a secret value.\nLet G be a cyclic group of prime order q with generator point G. Assume that a\nprover possesses a long-term private key σ ∈ Z∗\nq and a corresponding public key X = σ · G.\nTo demonstrate knowledge of the secret value σ without revealing it, the prover executes\nthe following procedure. First, the prover selects a random nonce u ∈ Z∗\nq and computes a\ncomMITMent M = u · G. Next, a challenge value is generated as Auth = h(M∥·), where\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 5 of 26\nh(·) denotes a cryptographic hash function and the input may include session-related\nparameters. Finally, the prover computes a response value:\nz = u + Auth · σ (mod q) (3)\nThe verifier validates the correctness of the signature by checking whether\nz · G ?= M + Auth · X (4)\nThis equality holds because\nz · G = (u + Auth · σ) · G = u · G + Auth · σ · G = M + Auth · X (5)\nThe zero-knowledge property of this mechanism ensures that the response value z\ndoes not reveal any information about the private key σ, since the nonce u is independently\nand randomly generated for each execution.\nIn the proposed protocol, a Schnorr-based signature is incorporated into the authen-\ntication phase to enable each smart meter to prove possession of its long-term credential\nσi without exposing it over public communication channels, thereby providing protection\nagainst credential compromise and impersonation attacks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.4 System Model",
+      "level": 2,
+      "text": "The proposed U2U smart grid communication environment consists of two types of\nentities: users and a trusted authority (TA). Two users communicate directly with each other\nover a public channel after completing the registration process with the trusted authority.\nThe trusted authority is responsible for managing system parameters and assisting in\nthe registration of users. Finally, both users establish a shared session key for secure\ncommunication. The details of each entity are described below and illustrated in Figure 1.\nFigure 1. System model.\n• User (Ui): A user Ui represents a smart grid device participating in U2U communica-\ntion with other registered users in the smart grid environment. The user is equipped\nwith communication and computation capabilities to perform authentication and\nsecure communication. Before initiating communication, the user must complete a\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 6 of 26\none-time registration with the trusted authority through a secure channel. After reg-\nistration, the user stores necessary parameters in its device memory and performs\nmutual authentication and session key establishment with other registered users over\na public channel. We assume that the user’s device may be compromised or controlled\nby an adversary.\n• TA: The TA is responsible for system initialization, parameter generation, and user\nregistration management. Specifically, the TA generates system parameters, verifies\nthe legitimacy of users during the registration phase, and securely distributes necessary\ncredentials. We assume that the trusted authority is a trusted entity and operates in a\nsecure environment.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.5 Adversary Model",
+      "level": 2,
+      "text": "We employ an adversary model based on the Canetti–Krawczyk (CK) model [29] to\ndefine the capabilities of the adversary.\nThe details are as follows:\n• The adversary can eavesdrop on, intercept, modify, inject, delay, or replay messages\ntransmitted over public channels.\n• The adversary can extract stored parameters from a user’s device if the device is\nphysically captured or compromised.\n• The adversary can obtain session-specific ephemeral secrets or intermediate parame-\nters of compromised sessions.\n• The adversary can launch various attacks, including impersonation, replay, and man-\nin-the-middle attacks.\n• The adversary may also operate as an insider within the system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.6 Notations",
+      "level": 2,
+      "text": "This subsection summarizes the main symbols and notations used throughout the\nproposed protocol, as listed in Table 1.\nTable 1. Notations.\nSymbol Description\nUi User\nTA Trusted authority\nIDi Identity of Ui\nPID i Pseudonym identity",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "Secret value",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "Public key",
+      "level": 1,
+      "text": "s Master secret key of TA\nσi Long-term secret credential\nWi Verification parameter\nrA, rB Random numbers\nT1, T2 Timestamp\nKAB, KBA Ephemeral shared secret\nSK Session key\nh(·) Hash function\n⊕ Exclusive-or operation\n∥ Concatenation operation\ng Generator point\nq Order of g\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 7 of 26\n4. Revisiting Khan et al.’s Scheme",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.1 Initialization Phase",
+      "level": 2,
+      "text": "In this phase, the TA initializes the system parameters and publishes the public\nparameters {E, g, q, h(·)} for use in the subsequent registration and authentication phases.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 Registration Phase",
+      "level": 2,
+      "text": "Before taking part in the authentication process, each user must register with the TA\nthrough a secure channel. The registration steps are summarized as follows.\nStep 1: Ui selects IDi and TR1, and transmits (IDi, TR1) to the TA through a secure\nchannel.\nStep 2: Upon receiving (IDi, TR1), the TA checks the freshness condition and generates\nxi ∈ Z∗\nq . It then computes Xi = xi · g, di = h(IDi∥Xi), and Yi = xi + M · di,\nand sends (Yi, Xi) to Ui through a secure channel.\nStep 3: Upon receiving (Yi, Xi), Ui verifies whether Yi · g ?= Xi + h(IDi ∥ Xi) · PK. If\nvalid, Ui sets PKi = Yi · g.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.3 Login and Authentication Phase",
+      "level": 2,
+      "text": "In this phase, two users perform mutual authentication and establish a shared session\nkey for secure communication. The detailed message flow is illustrated in Figure 2.\nUser UA User UB\nInput ID ′\nA\nComputes d′\nA = h(ID ′\nA∥XA)\nVerifies d′\nA\n?\n= dA\nSelects a ∈ Z∗\nq , T1\nMA = a · g\nID A1 = ID A ⊕ h(MA∥PK∥T1)\nK1 = h(PKB∥XA∥T1)\nE1 = EK1 (ID A1, MA)\n{E1,T1 }\n− − − − − − − − − − − − − − →\nChecks freshness of T1\nK∗\n1 = h(PKB∥XA∥T1)\nDecrypts (ID A1, MA) =DK∗\n1\n(E1)\nComputes ID ∗\nA = ID A1 ⊕ h(MA∥PK∥T1)\nSelects b ∈ Z∗\nq\nMB = b · g\nN = h(MA∥MB∥ID ∗\nA∥ID B∥T1)\nSKB = h(ID ∗\nA∥ID B∥N∥MA∥MB∥abg∥T3)\nID B1 = ID B ⊕ h(MA∥MB∥T3)\nK2 = h(MA∥T3∥ID ∗\nA)\nE2 = EK2 (ID B1, N, MB)\n{E2,T3 }\n← − − − − − − − − − − − − − −\nChecks freshness of T3\nK∗\n2 = h(MA∥T3∥ID A)\nDecrypts (ID B1, N, MB) =DK∗\n2\n(E2)\nID ∗\nB = ID B1 ⊕ h(MA∥MB∥T3)\nN∗ = h(MA∥MB∥ID A∥ID ∗\nB∥T1)\nVerifies N∗ ?\n= N\nSKA = h(ID B∥ID ∗\nB∥N∗∥MA∥MB∥abg∥T3)\nHence SK = SKA = SKB\nFigure 2. Login and authentication phase of Khan et al.’s scheme.\nStep 1: UA inputs ID ′\nA, computes d′\nA = h(ID ′\nA ∥ XA) and verifies whether d′\nA = dA.\nIf valid, UA selects a random number a ∈ Z∗\nq and timestamp T1, computes\nMA = a · g, ID A1 = ID A ⊕ h(MA ∥ PK ∥ T1), and E1 = EK1 (ID A1, MA), where\nK1 = h(PKB ∥ XA ∥ T1). Then UA sends (E1, T1) to UB over a public channel.\nStep 2: Upon receiving (E1, T1), UB checks the freshness of the timestamp. UB decrypts\n(ID A1, MA) using K∗\n1 = h(PKB ∥ XA ∥ T1) and computes ID ∗\nA = ID A1 ⊕ h(MA ∥\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 8 of 26\nPK ∥ T1). Then UB selects a random number b ∈ Z∗\nq and computes MB = b · g\nand N = h(MA ∥ MB ∥ ID ∗\nA ∥ ID B ∥ T1). Next, UB derives the session key\nSKB = h(ID ∗\nA ∥ ID B ∥ N ∥ MA ∥ MB ∥ abg ∥ T3), computes ID B1 = ID B ⊕\nh(MA ∥ MB ∥ T3), and E2 = EK2 (ID B1, N, MB), where K2 = h(MA ∥ T3 ∥ ID ∗\nA).\nFinally, UB sends (E2, T3) to UA over a public channel.\nStep 3: Upon receiving (E2, T3), UA checks the freshness of the timestamp and computes\nK∗\n2 = h(MA ∥ T3 ∥ ID A) to decrypt (ID B1, N, MB). Then UA computes ID ∗\nB =\nID B1 ⊕ h(MA ∥ MB ∥ T3) and N∗ = h(MA ∥ MB ∥ ID A ∥ ID ∗\nB ∥ T1), and\nverifies N∗ = N. If valid, UA derives the session key SKA = h(ID B ∥ ID ∗\nB ∥\nN∗ ∥ MA ∥ MB ∥ abg ∥ T3), and both users obtain the same session key, i.e.,\nSK = SKA = SKB.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.4 Key Update Phase",
+      "level": 2,
+      "text": "To maintain long-term security, the protocol provides a key update mechanism that\nallows users to refresh their cryptographic keys when necessary. The key update procedure\nfollows a process similar to the authentication phase and establishes a new session key.\nStep 1: UA selects a new private value anew ∈ Z∗\nq and timestamp Tnew\n1 , computes Mnew\nA =\nanew · g, and generates the encrypted message Enew",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "1 in the same manner as in",
+      "level": 1,
+      "text": "the authentication phase, where Knew\n1 = h(PKB ∥ XA ∥ Tnew\n1 ). Then UA sends\n(Enew\n1 , Tnew\n1 ) to UB over a public channel.\nStep 2: Upon receiving (Enew\n1 , Tnew\n1 ), UB checks the freshness of the timestamp and de-\ncrypts (ID new\nA1 , Mnew\nA ) using K∗new\n1 = h(PKnew\nB ∥ Xnew\nA ∥ Tnew\n1 ). Then UB com-\nputes ID ∗new\nA = ID new\nA1 ⊕ h(Mnew\nA ∥ PKnew ∥ Tnew\n1 ), selects bnew ∈ Z∗\nq , computes\nMnew\nB = bnew · g and Nnew = h(Mnew\nA ∥ Mnew\nB ∥ ID ∗new\nA ∥ ID new\nB ∥ Tnew\n1 ), de-\nrives SKnew\nB = h(ID ∗new\nA ∥ ID new\nB ∥ Nnew ∥ Mnew\nA ∥ Mnew\nB ∥ anewbnew g ∥ Tnew\n3 ),\ncomputes ID new\nB1 = ID B ⊕ h(Mnew\nA ∥ Mnew\nB ∥ Tnew\n3 ), and generates Enew\n2 =\nEKnew\n2\n(ID new\nB1 , Nnew, Mnew\nB ), where Knew\n2 = h(Tnew\n3 ∥ ID ∗new\nA ). Finally, UB sends\n(Enew\n2 , Tnew\n3 ) to UA over a public channel.\nStep 3: Upon receiving (Enew\n2 , Tnew\n3 ), UA checks the freshness of the timestamp and de-\ncrypts the received message. The subsequent verification and session key deriva-\ntion are performed in the same manner as in Step 3 of the authentication phase.\nIf the verification is successful, both users obtain the same updated session key,\ni.e., SKnew = SKnew\nA = SKnew\nB .\n5. Cryptanalysis of Khan et al.’s Scheme\nIn this section, we conduct a thorough cryptanalysis of Khan et al.’s scheme and\ndemonstrate that it is susceptible to several security attacks. Specifically, we show that\nthe scheme fails to prevent impersonation attack, ESL attack, and DoS attack, and cannot\nensure data confidentiality, user anonymity, untraceability, and message authentication.\nThe detailed steps of each attack are described in the following subsections.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5.1 Impersonation Attack",
+      "level": 2,
+      "text": "A malicious adversary A eavesdrops on the public channel and impersonates a legiti-\nmate user UA to establish a session key with UB. The detailed steps are outlined as follows.\nStep 1: A intercepts the message {E1, T1} transmitted from UA to UB over the public\nchannel. Since PKB, XA, and T1 are all public values, A can directly compute\nK1 = h(PKB∥XA∥T1).\nStep 2: A decrypts E1 using K1 to obtain ID A1 and MA. Then, A recovers the real identity\nof UA by computing ID A = ID A1 ⊕ h(MA∥PK∥T1).\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 9 of 26\nStep 3: A selects a fresh random value a′ and computes M′\nA = a′ · g. Using the recovered\nID A, A generates ID ′\nA1 = ID A ⊕ h(M′\nA∥PK∥T′\n1) and transmits a forged message\n{E′\n1, T′\n1} to UB, encrypted with K′\n1 = h(PKB∥XA∥T′\n1), impersonating UA.\nStep 4: UB accepts the forged message as a legitimate request from UA. UB generates\nMB = b · g, computes the session key SKB, and transmits an encrypted response\nmessage E2 to A.\nStep 5: A computes K2 = h(M′\nA∥T3∥ID A) to decrypt E2 and obtains ID B, N, and MB. A\nthen fully recovers SKB by computing b · a′ · g = a′ · MB. Consequently, UB shares\na session key with A while mistakenly believing it is communicating with the\nlegitimate UA, and the real UA remains completely unaware of this fact.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5.2 Ephemeral Secret Leakage Attack",
+      "level": 2,
+      "text": "A malicious adversary A assumes that the ephemeral secret b has been leaked and\ncombines it with information obtained by eavesdropping on the public channel to fully\nrecover the session key SKB. The detailed steps are outlined as follows.\nStep 1: A computes K1 = h(PKB∥XA∥T1) using the public values PKB, XA, and T1,\nand decrypts the intercepted E1 to obtain ID A1 and MA. Then, A recovers the\nreal identity of UA by computing ID A = ID A1 ⊕ h(MA∥PK∥T1).\nStep 2: A computes K2 = h(MA∥T3∥ID ∗\nA) using MA, ID A, and T3, and decrypts the\nintercepted E2 to obtain ID B, N, and MB.\nStep 3: Once b is leaked, A can fully recover the session key by computing b · a · g = b ·\nMA, and thus derives SKB = h(ID ∗\nA∥ID B∥N∥MA∥MB∥b · a · g∥T3). This directly\ncontradicts Khan et al.’s security claim that both the long-term and ephemeral\nsecrets must be known to compute the session key.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.3 Data Confidentiality Violation",
+      "level": 2,
+      "text": "Khan et al.’s scheme claims that data confidentiality is guaranteed by encrypting E1\nwith K1 = h(PKB∥XA∥T1). However, since PKB, XA, and T1 are all public values exposed\nover the public channel, any adversary A can directly compute K1 and decrypt E1 to\nobtain ID A1 and MA. Similarly, K2 = h(MA∥T3∥ID A) can also be computed using the\npreviously obtained MA and the public values T3 and ID A, allowing A to decrypt E2 as\nwell. Consequently, Khan et al.’s claim that “an adversary cannot decrypt the messages”\ndoes not hold.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "5.4 User Anonymity and Untraceability Violation",
+      "level": 2,
+      "text": "Khan et al.’s scheme claims that user anonymity and untraceability are guaranteed\nsince UA transmits its anonymous identity ID A1 in encrypted form. However, since all\nvalues composing K1 = h(PKB∥XA∥T1), namely PKB, XA, and T1, are exposed over the\npublic channel, A can directly compute K1, decrypt E1, and recover the real identity ID A.\nFurthermore, by repeatedly recovering ID A from different sessions using the same method,\nA can determine that those sessions originated from the same user. Therefore, both user\nanonymity and untraceability do not hold in Khan et al.’s scheme.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5.5 Message Unauthentication",
+      "level": 2,
+      "text": "Khan et al.’s scheme claims that message authentication is guaranteed through times-\ntamp and hash value verification. However, when UB receives E1, it only checks the\nvalidity of the timestamp and has no means to verify whether the message actually orig-\ninated from UA. Therefore, even if A transmits a forged message, UB accepts it as a\nlegitimate message from UA. Consequently, Khan et al.’s scheme fails to guarantee message\norigin authentication.\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 10 of 26",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5.6 Denial-of-Service Attack",
+      "level": 2,
+      "text": "Khan et al.’s scheme claims that DoS attacks are prevented through the verification\nd∗\nA\n?= dA. However, since dA is not delivered to UA during the registration phase, this\nverification cannot be performed in practice. Furthermore, UB performs MB generation,\nSKB computation, and E2 construction upon receiving E1 without any prior validation.\nTherefore, if A transmits a large number of forged messages {E′\n1, T′\n1}, UB’s computational\nresources are exhausted. Consequently, Khan et al.’s claim of DoS resistance does not hold.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "6 Proposed Scheme",
+      "level": 1,
+      "text": "In this section, we propose a mutual authentication and key agreement protocol\nfor U2U smart grid communication based on elliptic curve cryptography. The proposed\nscheme consists of four phases: system initialization, registration, authentication and key\nagreement, and re-authentication. The flowcharts of each phase are illustrated in the\ncorresponding figures.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6.1 Initialization Phase",
+      "level": 2,
+      "text": "Before the registration phase, the trusted authority (TA) establishes the system param-\neters as follows. The TA selects an elliptic curve E over a finite field Fp with a base point g\nof prime order q, chooses a master secret key s, and computes the corresponding public\nkey Ps = s · g. The TA also selects a secure one-way hash function h(·) and publishes the\nsystem parameters {E, g, q, h(·), Ps} over a public channel, while keeping s secret.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "6.2 Registration Phase",
+      "level": 2,
+      "text": "Before participating in the authentication process, each user Ui must complete a one-\ntime registration with the TA through a secure channel. The detailed process is outlined\nbelow and illustrated in Figure 3.\nUser Ui Trusted Authority TA\nInput IDi, PWi\nSelects ni, xi\nComputes\nXi = xi · g\nHID i = h(IDi∥ni)\nHPWi = h(PWi∥ni)\nGPWi = HPWi ⊕ ni\n{HID i, Xi, GPWi }\n− − − − − − − − − − − − − − − − − − − − − →\nσi = h(HID i∥s∥Xi)\ndi = σi ⊕ GPWi\nWi = σi · g\nPublishes {Xi, Wi}\n{di }\n← − − − − − − − − − − − − − − − − − − − − − −\nVi = h(IDi∥HPWi∥ni)\nNi = ni ⊕ h(PWi∥IDi)\nAi = xi ⊕ HPWi\nBi = di ⊕ ni = σi ⊕ HPWi\nStores {Vi, Ni, Ai, Bi, Xi}\nFigure 3. Registration Phase.\nStep 1: Ui inputs IDi and PWi, and selects random values ni and xi. Ui then computes\nXi = xi · g, HID i = h(IDi∥ni), HPWi = h(PWi∥ni), and GPWi = HPWi ⊕ ni,\nand sends {HID i, Xi, GPWi} to the TA via a secure channel.\nStep 2: After receiving the registration request, the TA computes σi = h(HID i∥s∥Xi),\ndi = σi ⊕ GPWi, and Wi = σi · g. The TA publishes {Xi, Wi} on a public channel\nand sends {di} back to Ui via a secure channel.\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 11 of 26\nStep 3: After receiving {di} from the TA, Ui computes Vi = h(IDi∥HPWi∥ni), Ni =\nni ⊕ h(PWi∥IDi), Ai = xi ⊕ HPWi, and Bi = di ⊕ ni = σi ⊕ HPWi, and stores\n{Vi, Ni, Ai, Bi, Xi} in its device memory.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6.3 Authentication and Key Agreement Phase",
+      "level": 2,
+      "text": "Once registration is complete, UA and UB can mutually authenticate each other and\nestablish a shared session key. The detailed process is as follows and is illustrated in\nFigure 4.\nUser UA User UB\nInput ID A, PWA\nComputes\nnA = NA ⊕ h(PWA∥ID A)\nHPWA = h(PWA∥nA)\nV′\nA = h(ID A∥HPWA∥nA)\nVerifies VA\n?\n= V′\nA\nSelects rA, uA, T1\nMA = rA · g\nTA = uA · g\nxA = AA ⊕ HPWA\nσA = BA ⊕ HPWA\nKAB = h(rA · XB∥T1)\nAuth A = h(ID A∥ID B∥MA∥KAB ∥rA∥T1)\nzA = uA + Auth A · σA (mod q)\nrAmask = rA ⊕ h(KAB ∥T1)\nPID A = ID A ⊕ h(KAB ∥rA∥T1)\n{PID A,MA,zA,TA,rAmask ,T1 }\n− − − − − − − − − − − − − − − − − − →\nChecks |Tnow − T1| ≤∆T\nInput ID B, PWB\nnB = NB ⊕ h(PWB∥ID B)\nHPWB = h(PWB∥nB)\nV′\nB = h(ID B∥HPWB∥nB)\nVerifies VB\n?\n= V′\nB\nxB = AB ⊕ HPWB\nσB = BB ⊕ HPWB\nKAB = h(xB · MA∥T1)\nrA = rAmask ⊕ h(KAB ∥T1)\nID A = PID A ⊕ h(KAB ∥rA∥T1)\nAuth ∗\nA = h(ID A∥ID B∥MA∥KAB ∥rA∥T1)\nVerifies zA · g\n?\n= TA + Auth ∗\nA · WA\nSelects rB, uB, T2\nMB = rB · g\nTB = uB · g\nKBA = h(rB · XA∥T2)\nPID B = ID B ⊕ h(KBA ∥rB∥T2)\nAuth B = h(ID A∥ID B∥MB∥KBA ∥rB∥T2)\nzB = uB + Auth B · σB (mod q)\nrBmask = rB ⊕ h(KBA ∥T2)\nSKB = h(ID A∥ID B∥rB · MA∥KAB ∥KBA ∥T1∥T2)\n{PID B,MB,TB,zB,rBmask ,T2 }\n← − − − − − − − − − − − − − − − − −\nChecks |Tnow − T2| ≤∆T\nKBA = h(xA · MB∥T2)\nrB = rBmask ⊕ h(KBA ∥T2)\nID B = PID B ⊕ h(KBA ∥rB∥T2)\nAuth ∗\nB = h(ID A∥ID B∥MB∥KBA ∥rB∥T2)\nVerifies zB · g\n?\n= TB + Auth ∗\nB · WB\nSKA = h(ID A∥ID B∥rB · MA∥KAB ∥KBA ∥T1∥T2)\nFigure 4. Authentication and Key Agreement Phase.\nStep 1: UA inputs ID A and PWA, computes nA = NA ⊕ h(PWA∥ID A), HPWA =\nh(PWA∥nA), V′\nA = h(ID A∥HPWA∥nA), and verifies the user via VA\n?= V′\nA.\nUA then selects random values rA, uA, and timestamp T1, and computes\nMA = rA · g, TA = uA · g, xA = AA ⊕ HPWA, σA = BA ⊕ HPWA, KAB =\nh(rA · XB∥T1), Auth A = h(ID A∥ID B∥MA∥KAB ∥rA∥T1), zA = uA + Auth A · σA\n(mod q), rAmask = rA ⊕ h(KAB ∥T1), and PID A = ID A ⊕ h(KAB ∥rA∥T1). Finally,\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 12 of 26\nUA sends the message M1 = {PID A, MA, zA, TA, rAmask , T1} to UB over a public\nchannel.\nStep 2: After receiving M1 from UA, UB checks the timestamp |Tnow − T1| ≤ ∆T.\nIf the timestamp is valid, UB inputs ID B and PWB, computes nB = NB ⊕\nh(PWB∥ID B), HPWB = h(PWB∥nB), V′\nB = h(ID B∥HPWB∥nB), and authenti-\ncates the user via VB\n?= V′\nB. UB then computes xB = AB ⊕ HPWB, σB =\nBB ⊕ HPWB, KAB = h(xB · MA∥T1), rA = rAmask ⊕ h(KAB ∥T1), ID A = PID A ⊕\nh(KAB ∥rA∥T1), and Auth ∗\nA = h(ID A∥ID B∥MA∥KAB ∥rA∥T1), and uses zA · g ?=\nTA + Auth ∗\nA · WA to verify that message M1 came from user UA. UB then se-\nlects random values rB, uB, and timestamp T2, and computes MB = rB · g,\nTB = uB · g, KBA = h(rB · XA∥T2), PID B = ID B ⊕ h(KBA ∥rB∥T2), Auth B =\nh(ID A∥ID B∥MB∥KBA ∥rB∥T2), zB = uB + Auth B · σB (mod q), rBmask = rB ⊕\nh(KBA ∥T2), and SKB = h(ID A∥ID B∥rB · MA∥KAB ∥KBA ∥T1∥T2), and sends the\nmessage M2 = {PID B, MB, TB, zB, rBmask , T2} to UA over a public channel.\nStep 3: After receiving M2 from UB, UA checks the timestamp |Tnow − T2| ≤∆T. If the\ntimestamp is valid, UA computes KBA = h(xA · MB∥T2), rB = rBmask ⊕ h(KBA ∥T2),\nID B = PID B ⊕ h(KBA ∥rB∥T2), and Auth ∗\nB = h(ID A∥ID B∥MB∥KBA ∥rB∥T2),\nand uses zB · g ?= TB + Auth ∗\nB · WB to verify that message M2 came from\nuser UB. Upon successful verification, UA computes the session key SKA =\nh(ID A∥ID B∥rB · MA∥KAB ∥KBA ∥T1∥T2). Both UA and UB share the same session\nkey SKA = SKB.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "6.4 Re-Authentication Phase",
+      "level": 2,
+      "text": "Unlike the existing schemes such as Khan et al., whose key update procedure follows\na process similar to the authentication phase [19], effectively re-running substantial parts\nof the AKA procedure, the proposed protocol employs a lightweight re-authentication\nmechanism that renews the session key using computationally inexpensive operations. As\na result, the proposed scheme significantly reduces computational overhead by avoiding\ncostly elliptic curve scalar multiplication during the re-authentication phase. The detailed\nsteps are illustrated in Figure 5.\nUser UA User UB\nSelects ρA, Tnew",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "1 PID new",
+      "level": 1,
+      "text": "A = ID A ⊕ h(SKold ∥ρA∥Tnew\n1 )\nCA = ρA ⊕ h(SKold ∥Tnew\n1 )\nAuth r\nA = h(ID A∥ID B∥ρA∥PID new\nA ∥SKold ∥Tnew\n1 )\n{CA,PID new\nA ,Authr\nA,Tnew\n1 }\n− − − − − − − − − − − − − − − →\nChecks |Tnow − Tnew\n1 | ≤∆T\nSelects ρB, Tnew\n2\nρA = CA ⊕ h(SKold ∥Tnew\n1 )\nID A = PID new\nA ⊕ h(SKold ∥ρA∥Tnew\n1 )\nh(ID A∥ID B∥ρA∥PID new\nA ∥SKold ∥Tnew\n1 )\n?\n= Auth r\nA\nSKnew = h(ID A∥ID B∥SKold ∥ρA∥ρB∥Tnew\n1 ∥Tnew\n2 )\nCB = ρB ⊕ h(SKold ∥Tnew\n2 )\nPID new\nB = ID B ⊕ h(SKold ∥ρB∥Tnew\n2 )\nAuth r\nB = h(ID A∥ID B∥ρB∥PID new\nB ∥SKold ∥Tnew\n2 )\n{CB,PID new\nB ,Authr\nB,Tnew\n2 }\n← − − − − − − − − − − − − − −\nChecks |Tnow − Tnew\n2 | ≤∆T\nρB = CB ⊕ h(SKold ∥Tnew\n2 )\nID B = PID new\nB ⊕ h(SKold ∥ρB∥Tnew\n2 )\nh(ID A∥ID B∥ρB∥PID new\nB ∥SKold ∥Tnew\n2 )\n?\n= Auth r\nB\nSKnew = h(ID A∥ID B∥SKold ∥ρA∥ρB∥Tnew\n1 ∥Tnew\n2 )\nFigure 5. Re-authentication Phase.\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 13 of 26\nStep 1: UA selects a random nonce ρA and timestamp Tnew\n1 , computes PID new\nA =\nID A ⊕ h(SKold ∥ρA∥Tnew\n1 ), CA = ρA ⊕ h(SKold ∥Tnew\n1 ), and Authr\nA = h(ID A∥ID B\n∥ρA∥PID new\nA ∥SKold ∥Tnew\n1 ), and sends {CA, PID new\nA , Authr\nA, Tnew\n1 } to UB over a\npublic channel.\nStep 2: After receiving the message fromUA, UB checks the timestamp|Tnow − Tnew\n1 | ≤∆T.\nIf the timestamp is valid,UB selects a random nonceρB and timestampTnew\n2 , com-\nputes ρA = CA ⊕ h(SKold ∥Tnew\n1 ) and ID A = PID new\nA ⊕ h(SKold ∥ρA∥Tnew\n1 ), and uses\nh(ID A∥IDB∥ρA∥PID new\nA ∥SKold ∥Tnew\n1 ) ?= Authr\nA to verify that the message came\nfrom UA. UB then computes SKnew = h(ID A∥IDB∥SKold ∥ρA∥ρB∥Tnew\n1 ∥Tnew\n2 ),\nCB = ρB ⊕ h(SKold ∥Tnew\n2 ), PID new\nB = IDB ⊕ h(SKold ∥ρB∥Tnew\n2 ), and Authr\nB =\nh(ID A∥IDB∥ρB∥PID new\nB ∥SKold ∥Tnew\n2 ), and sends {CB, PID new\nB , Authr\nB, Tnew\n2 } to UA\nover a public channel.\nStep 3: After receiving the message from UB, UA checks the timestamp|Tnow − Tnew\n2 | ≤∆T.\nIf the timestamp is valid, UA computes ρB = CB ⊕ h(SKold ∥Tnew\n2 ) and IDB =\nPID new\nB ⊕ h(SKold ∥ρB∥Tnew\n2 ), and uses h(ID A∥IDB∥ρB∥PID new\nB ∥SKold ∥Tnew\n2 ) ?=\nAuthr\nB to verify that the message came fromUB. Upon successful verification,UA\ncomputes the renewed session keySKnew = h(ID A∥IDB∥SKold ∥ρA∥ρB∥Tnew\n1 ∥Tnew\n2 ).\nBoth UA and UB now share the renewed session key SKnew.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "7 Security Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "7.1 Formal Analysis Using AVISP A",
+      "level": 2,
+      "text": "To further validate the robustness of the proposed authentication protocol, formal\nsecurity verification is conducted using the AVISPA (Automated Validation of Internet\nSecurity Protocols and Applications) tool [30]. AVISPA is a well-established framework\nfor the automated analysis of cryptographic protocols and is widely utilized to examine\nwhether security protocols satisfy their intended authentication and confidentiality require-\nments under adversarial environments. The platform supports systematic exploration\nof potential protocol weaknesses against a variety of attack models. The proposed pro-\ntocol is specified using the High-Level Protocol Specification Language (HLPSL), which\nenables formal modeling of protocol entities, communication procedures, and security\nobjectives. Through HLPSL, authentication and secrecy goals can be explicitly represented\nand analyzed in a mathematically rigorous manner. The HLPSL description is subsequently\ntranslated into the Intermediate Format (IF) by the HLPSL2IF translator, allowing the\nprotocol to be evaluated by multiple automated verification backends. To obtain a compre-\nhensive assessment, the protocol is analyzed using several backend verification engines\nsupported by AVISPA, including the On-the-Fly Model Checker (OFMC), the Constraint-\nLogic-based Attack Searcher (CL-AtSE), the SAT-based Model Checker (SATMC), and the\nTree Automata-based Protocol Analyzer (TA4SP). Since each backend adopts different\nsearch strategies and verification methodologies, the combined analysis improves the\nreliability and completeness of the security evaluation.\nFor the experimental verification, simulations are carried out using the OFMC and CL-\nAtSE backends. As illustrated in Figure 6, both analyzers return a SAFE status, indicating\nthat no attack violating the specified authentication and secrecy goals is found under\nthe considered Dolev–Yao adversarial model. For OFMC, the protocol analysis explores",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "216 nodes with a search depth of 9 plies, where the depth represents the number of",
+      "level": 1,
+      "text": "message-exchange steps considered during state-space exploration, and completes in 0.54 s.\nFor CL-AtSe, 68 protocol states are analyzed and no attack state is found. These statistics\nindicate that the protocol is systematically explored within the considered state space\nwithout revealing any feasible attack path. Therefore, the AVISPA results confirm that\nthe proposed protocol satisfies the desired security goals and can successfully withstand\nhttps://doi.org/10.3390/app16126059\nAppl. Sci. 2026, 16, 6059 14 of 26\nseveral well-known network attacks, including replay attacks, impersonation attempts,\nand man-in-the-middle attacks.\n(a) OFMC\n (b) CL-AtSe\nFigure 6. Result of AVISPA simulation.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "7.2 Formal Analysis Using the RoR Model",
+      "level": 2,
+      "text": "To evaluate the session key security of the proposed authentication protocol, this\npaper employs the Real-or-Random (RoR) security model [31]. The RoR model provides\na formal framework for analyzing whether an adversary can successfully distinguish a\nlegitimately established session key from a randomly selected value. By adopting this\nmodel, the resistance of the proposed protocol against session key disclosure attacks can\nbe systematically examined. In the considered framework, each communicating party\nis modeled as an instance denoted by pt, where p identifies the protocol entity and t\nspecifies the corresponding session instance. During the security experiment, the adversary\nA is allowed to interact with protocol participants through a set of oracle queries in\norder to gain knowledge about the generated session key. Moreover, the adversary is\nassumed to possess full control over the public communication channel, enabling both\npassive attacks, including message interception, and active attacks, such as replay, injection,\nand modification of transmitted messages. The detailed query capabilities available to the\nadversary in the RoR model are summarized in Table 2. Furthermore, | Hash | represents\nthe cardinality of the output space of the hash functionH(·), while qh denotes the maximum\nnumber of hash queries that adversary A can perform during the security game.\nTable 2. Queries and description in RoR model.\nQuery Description\nExecute (pt1\nUA\n, pt2\nUB\n) Simulates passive eavesdropping, where A collects all exchanged messages\nduring the protocol run.\nCorruptDevice (pU) Grants A the ability to obtain information stored in the user device through\npower analysis, including parameters such as Vi, Ni, Ai, Bi, Xi.\nSend(pt, M) Models active attacks where A sends forged messages M to any participant\ninstance and observes the output.\nTest(Π∗)\nDefines a one-time challenge to the adversary. If c = 1, the real session key\nSK is returned; otherwise, a random string of equal length is returned.\nThe adversary A must determine the value of c.\nhttps://doi.org/10.3390/app16126059",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "System model."
+    },
+    {
+      "id": "f2",
+      "caption": "Login and authentication phase of Khan et al.’s scheme."
+    },
+    {
+      "id": "f3",
+      "caption": "Registration Phase."
+    },
+    {
+      "id": "f4",
+      "caption": "User UA User UB"
+    },
+    {
+      "id": "f5",
+      "caption": "Re-authentication Phase."
+    },
+    {
+      "id": "f6",
+      "caption": "Result of AVISPA simulation."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Notations."
+    },
+    {
+      "id": "t2",
+      "caption": "Queries and description in RoR model."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

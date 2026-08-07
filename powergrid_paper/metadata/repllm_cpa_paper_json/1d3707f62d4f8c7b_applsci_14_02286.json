@@ -1,0 +1,572 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-14-02286.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The primary purpose of the power system is to meet the demand for electricity. The\nongoing advancement of the power grid has led to increasingly intricate fluctuations in\npower load [ 1], rendering research on power load forecasting a pivotal component of\ngrid management. Load forecasting provides a clear understanding of future demand\nlevels and patterns, forming the basis for the planning and decision-making process. By\nforecasting future electricity demand, power companies can reasonably plan the generation,\ntransmission, and distribution facilities to avoid power shortages and reduce power outages.\nLoad forecasting also helps optimize resource allocation, reduce operating costs, and\nimprove overall system efficiency. It can be said that load forecasting is an indispensable\npart of power system planning and scheduling, as it relates to the stability and sustainability\nof power supply, and has significant impacts on economic and social development [ 2].\nTherefore, load forecasting has always been a critical issue in the field of electricity.\nLoad forecasting is classified into traditional classic forecasting methods and intel-\nligent forecasting methods. Initially, traditional classic forecasting methods based on\nstatistical theory were widely utilized, primarily encompassing time series analysis [ 3]\nand regression analysis [4], among others. These methods heavily depend on historical\ndata and mathematical models for prediction. While they feature simplified models, low\ncomputational complexity, and rapid prediction speed, their lack of robustness makes\nAppl. Sci. 2024, 14, 2286. https://doi.org/10.3390/app14062286 https://www.mdpi.com/journal/applsci\nAppl. Sci. 2024, 14, 2286 2 of 15\nthem susceptible to random disruptions, resulting in reduced reliability when employed\nfor intricate regional load forecasting. With the advancement of intelligent algorithms,\nsome electricity load forecasting methods based on these algorithms have emerged. These\nalgorithms comprise support vector machines (SVMs) [5], long short-term memory (LSTM)\nneural networks [6], gated recurrent units (GRUs) [7], and convolutional neural networks\n(CNNs) [8], which are adept at handling the nonlinear relationships and complex features\nof the load. These methods can effectively handle nonlinearity and multidimensional data,\nbut they are sensitive to outliers, and facing data mutations or breakpoints can lead to\nperformance degradation [9].\nHowever, the high complexity of the load sequence limits the accuracy of load pre-\ndiction using a single algorithm. In recent years, signal decomposition techniques such as\nwavelet transform [10] and Empirical Mode Decomposition (EMD) [11] have been widely\napplied in the field of load forecasting. These techniques decompose the load sequence\ninto multiple components and individually predict each component to enhance feature\nextraction and prediction accuracy of the load sequence. In reference [12], a short-term load\nforecasting model based on EMD is established. EMD is used to decompose load data into a\nseries of local features with different frequencies and time scales. The components are then\npredicted using a GRU and superimposed to obtain the final load forecast. In reference [13],\na load decomposition using Variational Mode Decomposition (VMD) is utilized to obtain\ncomponents with different frequencies, featuring smooth and approximately sinusoidal\nwaveforms. The components are predicted and superimposed using an LSTM model,\nachieving effective load prediction and avoiding the mode-mixing phenomenon caused\nby EMD. Reference [ 14] proposes a prediction method through dual decomposition. It\nemploys Complete Ensemble Empirical Mode Decomposition with Adaptive Noise (CEEM-\nDAN) to decompose load data, generating multiple Intrinsic Mode Functions (IMFs). It\nthen utilizes VMD to perform a secondary decomposition on the IMF with the maximum\nsample entropy. A Support Vector Regression (SVR) model is established to predict each\ndecomposed subsequence separately, and these subsequences are then superimposed to\nobtain the final load forecast.\nAlthough the above methods all achieved effective load prediction, they did not con-\nsider the specific characteristics of the load, and they focused more on the decomposition\nof the signal’s high-frequency and low-frequency components, resulting in poor inter-\npretability. In reference [15], a method is introduced that utilizes the seasonal and trend\ndecomposition using a local regression (STL) algorithm to decompose the load sequence\nbased on seasonality and trend. It then uses the Light Gradient Boosting Machine algo-\nrithm to predict the components. This method fully considers the trend, seasonality, and\nvolatility of the load. However, it uses the same model to predict components with different\ncharacteristics and does not consider the matching between component characteristics and\nprediction methods, resulting in insufficient feature extraction for the load.\nIn response to the above-mentioned problem, this paper introduces a novel short-\nterm load combination forecasting method that utilizes STL. The approach integrates\nLoess decomposition technology with hybrid model forecasting methods. Through the\ndecomposition of the original load data into a trend component, seasonal component,\nand residual component via STL, appropriate models are then applied to predict the\ncharacteristics of each component. Specifically, the trend component is forecasted using\nthe LSTM model, the seasonal component utilizing the CNN model, and the residual\ncomponent using the Gaussian process regression model. The forecast results from these\nmodels are then aggregated to derive the final load forecast. By presenting specific examples\nand conducting a comparative analysis with existing methods such as LSTM, CNN, GPR,\nSTL-LSTM, STL-CNN, and STL-GPR, the efficacy and superiority of the proposed method\nin practical applications are highlighted. This method ensures a more precise capture and\nprediction of the intricate dynamics of power load compared to traditional standalone\nmodels or methods that overlook component characteristics, thereby enhancing prediction\naccuracy. By introducing STL decomposition and hybrid model techniques, this research\nAppl. Sci. 2024, 14, 2286 3 of 15\noffers a fresh perspective and tool for load forecasting studies, particularly in handling\nload data exhibiting complex seasonal and trend patterns.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 The Proposed Combined Method and Principles",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 The Proposed Combined Method",
+      "level": 2,
+      "text": "The load sequence can be extracted using STL to identify a trend component, seasonal\ncomponent, and residual component. Specifically, the trend component signifies the\nevolving pattern of the load, the seasonal component illustrates the cyclic variations in the\nload, and the residual component captures the stochastic and uncertain aspects of load\nfluctuations. Each component manifests distinctive characteristics of change. Employing\na single model for predicting each component might hinder the ability to capture the\nunique attributes of the individual load components, consequently reducing the precision\nof load forecasting.\nThe trend component exhibits gradual changes concealed within the dynamically\nshifting load time series, rendering them challenging to capture. For this reason, the\nnetwork model needs to have long-term memory and the capacity to analyze and extract\nthe inter-relations of information at distinct time junctures. LSTM has flexible memory\nand generalization capabilities, making it suitable for predicting relatively smooth trend\ncomponents. Within the load sequence, there are fixed similar patterns and regularities,\nnamely the periodic patterns of load changes. While LSTM can transmit information from\ndifferent time nodes, capturing global features, it lacks perception of the local features of\nthe load. On the other hand, the key feature of a CNN is local connectivity and weight\nsharing, having the ability to convey information from different time points. Given this\ncharacteristic, this paper applies a CNN to the prediction of the load’s seasonal component.\nGPR is a non-parametric method able to capture the characteristics of sequences with\ncomplex nonlinear patterns and significant uncertainty, and it provides useful uncertainty\nquantification, making it suitable for predicting residual components with high randomness.\nIn conclusion, in the proposed combined method, LSTM, a CNN, and GPR are used to\npredict the trend component, seasonal component, and residual component, respectively.\nThe proposed combined method consists of three steps: load decomposition, compo-\nnent prediction, and component summation. The specific prediction method flowchart is\nshown in Figure 1. First, the load sequence is decomposed into three components using\nSTL: the trend component, the seasonal component, and the residual component. Next,\nLSTM, CNN, and GPR models are constructed to forecast the trend, seasonal, and resid-\nual components, respectively. Finally, the predicted results of the three components are\naggregated to obtain the final load forecast.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Principle of STL",
+      "level": 2,
+      "text": "STL is a time series decomposition algorithm based on local weighted regression. In\nthe proposed combined method, STL is used to decompose load data into three components:\na seasonal component, a trend component, and a residual component. The relationship\nbetween each component and the original load data is shown in formula (1).\nYt = St + Tt + Rt (1)\nwhere Yt represents the value of the original load data at time t; St represents the value of\nthe seasonal component at time t; Tt represents the value of the trend component at time t;\nRt represents the value of the residual component at time t.\nAppl. Sci. 2024, 14, 2286 4 of 15\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 4 of 17 \n \n \nFigure 1. Flowchart of the proposed combined method.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Principle of STL",
+      "level": 2,
+      "text": "STL is a time series decomposition algorithm based on local weighted regression. In \nthe proposed combined method, STL is us ed to decompose load data into three \ncomponents: a seasonal component, a trend component, and a residual component. The \nrelationship between each component and the original load data is shown in formula (1). \ntt ttYS TR=+ +  (1) \nwhere tY  represents the value of the original load data at time t; tS  represents the \nvalue of the seasonal component at time t ; tT  represents the value of the trend \ncomponent at time t; tR  represents the value of the residual component at time t. \nSTL uses locally estimated scatterplot smoothing (Loess) to extract smooth estimates \nfor three components; it consists of two recursive processes, the inner loop and the outer \nloop, and has good robustness. The inner loop, based on Loess, smooths the seasonal and \ntrend components, while the outer loop comput es robust weights based on the residual \ncomponent to reduce the influence of time series outliers on the residuals [16]. The \ncalculation formula for robust weights is shown in formulas (2) and (3). \n6median( )\nt\nt\nt\nRB Rρ = \n\n∣∣\n∣∣\n (2) \n22(1 ) 0 1 for\nfor\n()",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "01 aaBa",
+      "level": 1,
+      "text": "a\n −<=  ≥\n  (3) \nwhere tρ  represents the robust weight at time t; median (·) denotes the median function; \n()B a  denotes the Bisquare function; a  represents the independent variable of the \nBisquare function. \nFigure 1. Flowchart of the proposed combined method.\nSTL uses locally estimated scatterplot smoothing (Loess) to extract smooth estimates\nfor three components; it consists of two recursive processes, the inner loop and the outer\nloop, and has good robustness. The inner loop, based on Loess, smooths the seasonal\nand trend components, while the outer loop computes robust weights based on the resid-\nual component to reduce the influence of time series outliers on the residuals [ 16]. The\ncalculation formula for robust weights is shown in formulas (2) and (3).\nρt = B\n\u0012 | Rt |\n6median(| Rt |)\n\u0013\n(2)\nB(a) =\n(\n(1 − a2)2 for 0 ⩽ a < 1\n0 for a ≥ 1 (3)\nwhere ρt represents the robust weight at time t; median ( ·) denotes the median func-\ntion; B(a) denotes the Bisquare function; a represents the independent variable of the\nBisquare function.\nIn the next inner loop, the neighborhood weights in Loess will be updated based on\nthe robust weights, following the update method shown in formula (4).\nυt,k+1 = υt,kρt (4)\nwhere υt,k represents the neighborhood weight at time t in the k-th inner loop.\nThe flowchart of STL is shown in Figure 2.\nAppl. Sci. 2024, 14, 2286 5 of 15\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 5 of 17 \n \nIn the next inner loop, the neighborhood weights in Loess will be updated based on \nthe robust weights, following the update method shown in formula (4). \n,1 ,tk tk tυυ ρ+ =  (4) \nwhere ,tkυ  represents the neighbor hood weight at time t in the k-th inner loop. \nThe flowchart of STL is shown in Figure 2. \n \nFigure 2. Flowchart of STL. \nFigure 2. Flowchart of STL.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.3 Principle of LSTM",
+      "level": 2,
+      "text": "LSTM is a specific type of recurrent neural network (RNN) that specializes in pro-\ncessing sequences of data with varying lengths, such as time series, speech, or text. Its\ndistinctive architecture enables it to retain long-term dependencies, which effectively miti-\ngates the vanishing gradient issue prevalent in traditional RNNs. An LSTM unit comprises\nthree essential components: the input gate, the forget gate, and the output gate, which\nAppl. Sci. 2024, 14, 2286 6 of 15\nmanage the flow of information into and out of the cell state, a critical element of the LSTM.\nA schematic diagram of the LSTM loop unit structure is shown in Figure 3.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 6 of 17",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Principle of LSTM",
+      "level": 2,
+      "text": "LSTM is a specific type of recurrent neural network (RNN) that specializes in \nprocessing sequences of data with varying lengths, such as time series, speech, or text. Its \ndistinctive architecture enables it to reta in long-term dependencies, which effectively \nmitigates the vanishing gradient issue prevalent in traditional RNNs. An LSTM unit \ncomprises three essential components: the input gate, the forget gate, and the output gate, \nwhich manage the flow of information into and ou t of the cell state, a critical element of \nthe LSTM. A schematic diagram of the LSTM loop unit structure is shown in Figure 3. \n \nFigure 3. Schematic diagram of the LSTM loop unit structure. \nThe input gate determines the extent to which the new input is integrated into the \ncell state by utilizing a sigmoid activation function to filter inputs, as well as a tanh \nfunction to provide a new candidate value, adjusted by the sigmoid’s output. The forget \ngate, on the other hand, assesses the relevance of past information to the present cell state \nby employing a sigmoid function to allocate weights to the information, with values close \nto 1 indicating ‘retain’ and values near 0 indicating ‘discard’. The cell state serves as the \nmemory track of the LSTM, extending throughout the entire unit chain, allowing for the \naddition or removal of information based on the input and forget gates. The output gate \ndetermines the content of the subsequent hidden  state, containing information that is \nforwarded to the next LSTM unit and dictates the final output of the LSTM. The interplay \nof these gates enables the LSTM to captur e and retain long-term dependencies, thus \novercoming the constraints of standard RNNs, making it particularly effective for \nlanguage modeling, machine translation, and speech recognition tasks [17]. In LSTM, the \ndetailed calculations between the modules are shown in formula (5). \n1\n1\n1\n1\n1\n([ , ] )\n([, ] )\ntanh( [ , ] )\n([ , ] )\ntanh( )\ntf t t f\nti t t i\ntc t t c\ntt t t t\nto t t o\ntt t\nfW h x b\niW h x b\nWh x b\ncf c i c\noW h x b\nhc\nc\no\nσ\nσ\nσ\n−\n−\n−\n−\n−\n=⋅ +\n =⋅ +\n =⋅ + =⋅ + ⋅\n =+ =⋅\n\n\n (5) \nFigure 3. Schematic diagram of the LSTM loop unit structure.\nThe input gate determines the extent to which the new input is integrated into the cell\nstate by utilizing a sigmoid activation function to filter inputs, as well as a tanh function to\nprovide a new candidate value, adjusted by the sigmoid’s output. The forget gate, on the\nother hand, assesses the relevance of past information to the present cell state by employing\na sigmoid function to allocate weights to the information, with values close to 1 indicating\n‘retain’ and values near 0 indicating ‘discard’. The cell state serves as the memory track\nof the LSTM, extending throughout the entire unit chain, allowing for the addition or\nremoval of information based on the input and forget gates. The output gate determines\nthe content of the subsequent hidden state, containing information that is forwarded to\nthe next LSTM unit and dictates the final output of the LSTM. The interplay of these gates\nenables the LSTM to capture and retain long-term dependencies, thus overcoming the\nconstraints of standard RNNs, making it particularly effective for language modeling,\nmachine translation, and speech recognition tasks [17]. In LSTM, the detailed calculations\nbetween the modules are shown in formula (5).\n\n\n\nft = σ(Wf · [ht−1, xt] +b f )\nit = σ(Wi · [ht−1, xt] +bi)\nect = tanh(Wc · [ht−1, xt] +bc)\nct = ft · ct−1 + it · ect\not = σ(Wo[ht−1, xt] +bo)\nht = ot · tanh(ct)\n(5)\nwhere xt is the input at time t; ft is the calculation result of the forget gate at time t; it is\nthe calculation result of the input gate at time t; ect is the candidate cell state information at\ntime t; ct is the cell state information at time t; ot is the calculation result of the output gate\nat time t; ht is the hidden state information at time t; σ is the sigmoid activation function;\nWf is the weight matrix of the forget gate; Wi is the weight matrix of the input gate; Wo is\nthe weight matrix of the output gate; Wc is the weight matrix of the memory cell; b f is the\nbias of the forget gate; bi is the bias of the input gate; bc is the bias of the activation function\nof the input gate; bo is the bias of the output gate.\nAppl. Sci. 2024, 14, 2286 7 of 15",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.4 Principle of CNN",
+      "level": 2,
+      "text": "A CNN is a type of feedforward neural network that is structured with five modules:\nthe input layer, the convolutional layers, the activation layers, the pooling layers, and the\nfully connected layer [18,19]. The layered architecture of CNNs excels at extracting spatial\nand temporal features from load data, facilitating precise predictions.\nThe input layer serves as the starting point for data processing in load forecasting,\nhandling historical load figures. These data are formatted to meet the requirements of\nthe CNN, laying the groundwork for subsequent feature extraction. The convolutional\nlayers are responsible for feature extraction from the input data. By applying various filters,\nthese layers identify critical patterns in the data, such as cyclical fluctuations in power\nusage, which are essential for comprehending and predicting load patterns. Following the\nconvolutional layers, the activation layers (typically ReLU) introduce nonlinearity, assisting\nthe network in learning more complex data patterns, which is particularly beneficial in\ncapturing and understanding irregular load variations in forecasting. Pooling layers are\nemployed to reduce the dimensionality of the feature data, decreasing computational load\nwhile avoiding overfitting. In load forecasting, pooling layers refine and compress feature\ninformation, concentrating the model on the most crucial data characteristics. Finally,\nthe fully connected layers represent the ultimate step in a CNN, integrating the features\nextracted by all previous layers to make the final prediction.\nThe core of CNN lies in its convolutional layers, which extract diverse feature maps\nfrom the input data through convolutional computations with different kernels, as repre-\nsented by formula (6).\nXm+1 = σ\n\u0000\n∑ Wm · Xm + Bm\u0001\n(6)\nwhere Xm+1 represents the input to the next layer, σ signifies the activation function, Wm\ndenotes the weight of the current layer, Xm represents the input to the current layer, and\nBm indicates the bias.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.5 Principle of GPR",
+      "level": 2,
+      "text": "GPR is a non-parametric regression method based on Bayesian theory, and its core\nidea is to view data points as a whole Gaussian process. To apply Gaussian processes to\nregression analysis, the regression function { f (x)|x ∈ D} can be regarded as a Gaussian\nprocess [20]. According to the properties of Gaussian processes, a Gaussian process can be\nfully determined by its mean function m(x) and kernel function k(x, x′). Regarding f (x) as\na Gaussian process means that for any selected number of points from D, the probability\ndistribution of f (x) follows a Gaussian distribution, as represented by formula (7).\nf (x) ∼ GP(m(x), k(x, x′)) (7)\nThe mean function and the covariance function can be expressed as represented by\nformula (8). \u001a m(x) =E( f (x))\nk(x, x′) =E[(m(x) − f (x))(m(x′) − f (x′))] (8)\nAlthough Gaussian process regression does not require specifying the form of the\nregression function, it is necessary to determine the forms of the mean function and the\nkernel function. In GPR, selecting an appropriate kernel function is crucial as it determines\nhow the model interprets the relationships between data points. In this article, the mean\nfunction a is set to 0, and the Gaussian kernel is chosen as the kernel function for GPR, as\nshown in formula (9).\nk(x, x′) =σ2 exp\n \n− ∥x − x′∥2\n2l2\n!\n(9)\nwhere σ2 is the variance parameter, determining the overall range of function values; l is\nthe length scale parameter, controlling the rate at which function values change with the\ndistance between input points.\nAppl. Sci. 2024, 14, 2286 8 of 15\nFor practical modeling, the observed values should be the sum of the regression\nfunction f (x) and an independently and identically distributed Gaussian white noise ε, as\nshown in formula (10).\ny = f (x) +ε, ε ∼ N(0, σ2\nn) (10)\nTherefore, the prior distribution of the noisy observed values is\ny ∼ N(0, K(x, x) +σ2\nnIn). (11)\nwhere vector y refers to the observed values [y1, y2, y3, . . ., yn]; vector x refers to the input\nvector [x1, x2, x3, . . ., xn]; and K(x, x) =\n\u0000\nk(xi, xj)\n\u0001\nn×n is a covariance matrix, where each\nmatrix element is computed through the kernel function, which is specifically represented\nby formula (8). In is an n-dimensional identity matrix, while σ2\nnIn represents the covariance\nmatrix of the noise.\nIn this GPR model, σ2\nn is a parameter, and in formula (8), there are also parameters\nσ2 and l. These parameters can all be obtained by maximizing the marginal likelihood\nfunction. Denoting all the parameters in the kernel function as θ = [σ2, l], the logarithm of\nthe marginal likelihood (LML) is given by formula (12).\nLML = log p(y | x, θ, σ2\nn) =1\n2 log(det(K(x, x) +σ2\nnIn)) − 1\n2yT[K(x, x) +σ2\nnIn]\n−1\ny − n\n2 log 2π (12)\nBy applying maximum likelihood estimation to the training dataset x and y, the\nparameters in the GPR model can be determined. Once the GPR model has been established,\npredictions can be made on the test dataset x∗.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Experimental Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1 Evaluation Indicators",
+      "level": 2,
+      "text": "In order to evaluate the forecasting accuracy of the prediction methods, this paper\nadopts three evaluation indicators: mean absolute percentage error (MAPE), mean absolute\nerror (MAE), and root mean square error (RMSE). The smaller the values of these indicators,\nthe smaller the prediction errors and the higher the forecasting accuracy of the prediction\nmethods. Their calculation formulas are shown in formulas (13) to (15).\nMAPE = 1\nN\nN\n∑\ni=1\n\f\f\f\f\nˆyi − yi\nyi\n\f\f\f\f × 100% (13)\nMAE = 1\nN\nN\n∑\ni=1\n| ˆyi − yi| (14)\nRMSE =\nvuut 1\nN\nN\n∑\ni=1\n( ˆyi − yi)2 (15)\nwhere N represents the total number of samples; ˆyi is the predicted load at time i; yi is the\nactual load at time i.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2 Experimental Dataset",
+      "level": 2,
+      "text": "This paper uses the actual electricity load measured in a province in northern China\nfrom 1 January–December 2021 as the experimental dataset, with a sampling interval of\n1 h, totaling 8760 samples. According to a 4:1 ratio, the dataset is divided into a training\nset and a testing set, with the first 7008 load data samples used as the training set and the\nremaining 1752 load samples used as the testing set.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.3 Load Decomposition",
+      "level": 2,
+      "text": "STL is used to decompose the 8760 load data samples. Figure 4 shows the load data\nsamples for the first two weeks (336 h) and their STL results. From Figure 4, it is observed\nAppl. Sci. 2024, 14, 2286 9 of 15\nthat the original load sequence, after STL, is decomposed into a relatively smooth-changing\ntrend component, a seasonal component with a periodicity of approximately 24 h, and a\nresidual component with significant fluctuations.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 9 of 17",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3 Experimental Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.1 Evaluation Indicators",
+      "level": 2,
+      "text": "In order to evaluate the forecasting accuracy of the prediction methods, this paper \nadopts three evaluation indicators: mean absolute percentage error (MAPE), mean \nabsolute error (MAE), and root mean square error (RMSE). The smaller the values of these \nindicators, the smaller the prediction errors and the higher the forecasting accuracy of the \nprediction methods. Their calculation formulas are shown in formulas (13) to (15). \n1\nˆ1 100%\nN",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "i i",
+      "level": 1,
+      "text": "yyMAPE Ny =\n−=×   (13) \n1\n1 |ˆ|\nN\nii",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "ME y y NA",
+      "level": 1,
+      "text": "=\n=−   (14) \n()\n2\n1\n1 ˆ\nN\niii\nRMSE y y N =\n=  −  (15) \nwhere N  represents the total number of samples; ˆiy  is the predicted load at time i ; \niy  is the actual load at time i .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.2 Experimental Dataset",
+      "level": 2,
+      "text": "This paper uses the actual electricity load measured in a province in northern China \nfrom 1 January–December 2021 as the experimental dataset, with a sampling interval of 1 \nh, totaling 8760 samples. According to a 4:1 ratio, the dataset is divided into a training set \nand a testing set, with the first 7008 load data samples used as the training set and the \nremaining 1752 load samples used as the testing set.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.3 Load Decomposition",
+      "level": 2,
+      "text": "STL is used to decompose the 8760 load da ta samples. Figure 4 shows the load data \nsamples for the first two weeks (336 h) and their STL results. From Figure 4, it is observed \nthat the original load sequence, after ST L, is decomposed into a relatively smooth-\nchanging trend component, a seasonal component with a periodicity of approximately 24 \nh, and a residual component with significant fluctuations. \n \nFigure 4. Values of the original load and its components for the previous 336 h. \nFigure 4. Values of the original load and its components for the previous 336 h.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.4 Component Prediction",
+      "level": 2,
+      "text": "After load decomposition, different models are used to train and predict the three\ncomponents. The predictive results of these three components under different models will\nbe individually presented next.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.4.1 Trend Component Prediction Based on LSTM",
+      "level": 3,
+      "text": "In the proposed combined method, the trend component is input into the LSTM model.\nWithin the internal structure of LSTM, the load data at each time step undergo processing\nthrough the input gate, forget gate, and output gate. These gating units determine the cell\nstate and hidden state at the current time step. At the same time, the data at each time step,\ntogether with the hidden state obtained from the previous time step, are used to update the\ncell state and pass it to the next time step. Ultimately, LSTM utilizes this information to\npredict the trend component of future loads. In the trend component prediction based on\nLSTM, the number of LSTM layers is set to three, with 64 units per layer, and the activation\nfunction is set to tanh.\nFigure 5 shows the prediction results of the trend component of the test set load data\nfor the first two weeks (336 h). It can be seen that the LSTM model demonstrates a smooth\nand accurate prediction of the trend component, with a high degree of fit between the\nactual and predicted value curves.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 10 of 16",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "3.4 Component Prediction",
+      "level": 2,
+      "text": "After load decomposition, different models are used to train and predict the three \ncomponents. The predictive results of these three components under different models will \nbe individually presented next.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "3.4.1 Trend Component Prediction Based on LSTM",
+      "level": 3,
+      "text": "In the proposed combined method, the trend component is input into the LSTM \nmodel. Within the internal structure of LSTM, the load data at each time step undergo \nprocessing through the input gate, forget gate, and output gate. These gating units deter-\nmine the cell state and hidden state at the current time step. At the same time, the data at \neach time step, together with the hidden st ate obtained from the previous time step, are \nused to update the cell state an d pass it to the next time step. Ultimately, LSTM utilizes \nthis information to predict the trend componen t of future loads. In the trend component \nprediction based on LSTM, the number of LSTM layers is set to three, with 64 units per \nlayer, and the activation function is set to tanh. \nFigure 5 shows the prediction results of the trend component of the test set load data \nfor the first two weeks (336 h). It can be seen that the LSTM model demonstrates a smooth \nand accurate prediction of the trend componen t, with a high degree of fit between the \nactual and predicted value curves. \n \nFigure 5. Predicted results of trend component for the previous 336 h. \nTo further illustrate the accuracy of LSTM in predicting the trend component, Figure \n6 shows the MAPE values of the trend component of the load data at each moment in the \nfirst two weeks (336 h). It demonstrates MAPE values ranging between 0 and 0.003, indi-\ncating a high level of prediction accuracy. Furthermore, the curve of the MAPE value is \nnotably smooth. \n \nFigure 6. MAPE values of trend component at each timestamp for the previous 336 h. \nFigure 5. Predicted results of trend component for the previous 336 h.\nAppl. Sci. 2024, 14, 2286 10 of 15\nTo further illustrate the accuracy of LSTM in predicting the trend component, Figure 6\nshows the MAPE values of the trend component of the load data at each moment in\nthe first two weeks (336 h). It demonstrates MAPE values ranging between 0 and 0.003,\nindicating a high level of prediction accuracy. Furthermore, the curve of the MAPE value is\nnotably smooth.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 10 of 16",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "3.4 Component Prediction",
+      "level": 2,
+      "text": "After load decomposition, different models are used to train and predict the three \ncomponents. The predictive results of these three components under different models will \nbe individually presented next.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "3.4.1 Trend Component Prediction Based on LSTM",
+      "level": 3,
+      "text": "In the proposed combined method, the trend component is input into the LSTM \nmodel. Within the internal structure of LSTM, the load data at each time step undergo \nprocessing through the input gate, forget gate, and output gate. These gating units deter-\nmine the cell state and hidden state at the current time step. At the same time, the data at \neach time step, together with the hidden st ate obtained from the previous time step, are \nused to update the cell state an d pass it to the next time step. Ultimately, LSTM utilizes \nthis information to predict the trend componen t of future loads. In the trend component \nprediction based on LSTM, the number of LSTM layers is set to three, with 64 units per \nlayer, and the activation function is set to tanh. \nFigure 5 shows the prediction results of the trend component of the test set load data \nfor the first two weeks (336 h). It can be seen that the LSTM model demonstrates a smooth \nand accurate prediction of the trend componen t, with a high degree of fit between the \nactual and predicted value curves. \n \nFigure 5. Predicted results of trend component for the previous 336 h. \nTo further illustrate the accuracy of LSTM in predicting the trend component, Figure \n6 shows the MAPE values of the trend component of the load data at each moment in the \nfirst two weeks (336 h). It demonstrates MAPE values ranging between 0 and 0.003, indi-\ncating a high level of prediction accuracy. Furthermore, the curve of the MAPE value is \nnotably smooth. \n \nFigure 6. MAPE values of trend component at each timestamp for the previous 336 h. \nFigure 6. MAPE values of trend component at each timestamp for the previous 336 h.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3.4.2 Seasonal Component Prediction Based on CNN",
+      "level": 3,
+      "text": "In the proposed combined method, the seasonal component is first reshaped into\na two-dimensional structure and then input into the CNN model for feature extraction\nand downsampling through convolutional and pooling layers. Subsequently, the fully\nconnected layer processes the feature map and outputs the forecasted results of the seasonal\ncomponent. Overall, in the CNN model, the load data undergo processing through modules\nsuch as convolution, pooling, flattening, and fully connected layers, enabling the prediction\nof the future load seasonal component. In the CNN-based seasonal component prediction,\nboth convolutional layers utilize 32 filters with a filter size of 3, a stride of 1, and ‘same’\npadding, with a tanh activation function. A max pooling layer with a pool size of 2 is added\nbetween the two convolutional layers. The fully connected layer has 50 neurons with a\ntanh activation function, and the output layer has 1 neuron.\nFigure 7 shows the prediction results of the seasonal component of the test set load\ndata for the first two weeks (336 h). It can be observed that the CNN model aptly captures\nthe regularity and periodicity of the seasonal component, enabling effective forecasting for\nthis component.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 11 of 16",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.4.2 Seasonal Component Prediction Based on CNN",
+      "level": 3,
+      "text": "In the proposed combined method, the season al component is first reshaped into a \ntwo-dimensional structure and then input into the CNN model for feature extraction and \ndownsampling through convolutional and pooling layers. Subsequently, the fully con-\nnected layer processes the feature map and outputs the forecasted results of the seasonal \ncomponent. Overall, in the CNN model, the load data undergo processing through mod-\nules such as convolution, pooling, flattening, and fully connected layers, enabling the pre-\ndiction of the future load seasonal component. In the CNN-based seasonal component \nprediction, both convolutional layers utilize 32 filters with a filter size of 3, a stride of 1, \nand ‘same’ padding, with a tanh activation function. A max pooling layer with a pool size \nof 2 is added between the two convolutional layers. The fully connected layer has 50 neu-\nrons with a tanh activation function, and the output layer has 1 neuron. \nFigure 7 shows the prediction results of the seasonal component of the test set load \ndata for the first two weeks (336 h). It can be observed that the CNN model aptly captures \nthe regularity and periodicity of the seasonal  component, enabling effective forecasting \nfor this component. \n \nFigure 7. Predicted results of seasonal component for the previous 336 h. \nTo further demonstrate the precision of the CNN in predicting the seasonal compo-\nnent, Figure 8 displays the MAPE values of the seasonal component at each moment dur-\ning the initial two weeks (336 h). It illustrates that the forecast results have MAPE values \nranging from 0 to 0.4, with most values falling within the 0–0.1 range, indicating a high \nlevel of prediction accuracy. Additionally, the MAPE value curve shows a certain degree \nof periodicity. \n \nFigure 8. MAPE values of seasonal component at each timestamp for the previous 336 h. \nFigure 7. Predicted results of seasonal component for the previous 336 h.\nTo further demonstrate the precision of the CNN in predicting the seasonal component,\nFigure 8 displays the MAPE values of the seasonal component at each moment during\nAppl. Sci. 2024, 14, 2286 11 of 15\nthe initial two weeks (336 h). It illustrates that the forecast results have MAPE values\nranging from 0 to 0.4, with most values falling within the 0–0.1 range, indicating a high\nlevel of prediction accuracy. Additionally, the MAPE value curve shows a certain degree\nof periodicity.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 11 of 16",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "3.4.2 Seasonal Component Prediction Based on CNN",
+      "level": 3,
+      "text": "In the proposed combined method, the season al component is first reshaped into a \ntwo-dimensional structure and then input into the CNN model for feature extraction and \ndownsampling through convolutional and pooling layers. Subsequently, the fully con-\nnected layer processes the feature map and outputs the forecasted results of the seasonal \ncomponent. Overall, in the CNN model, the load data undergo processing through mod-\nules such as convolution, pooling, flattening, and fully connected layers, enabling the pre-\ndiction of the future load seasonal component. In the CNN-based seasonal component \nprediction, both convolutional layers utilize 32 filters with a filter size of 3, a stride of 1, \nand ‘same’ padding, with a tanh activation function. A max pooling layer with a pool size \nof 2 is added between the two convolutional layers. The fully connected layer has 50 neu-\nrons with a tanh activation function, and the output layer has 1 neuron. \nFigure 7 shows the prediction results of the seasonal component of the test set load \ndata for the first two weeks (336 h). It can be observed that the CNN model aptly captures \nthe regularity and periodicity of the seasonal  component, enabling effective forecasting \nfor this component. \n \nFigure 7. Predicted results of seasonal component for the previous 336 h. \nTo further demonstrate the precision of the CNN in predicting the seasonal compo-\nnent, Figure 8 displays the MAPE values of the seasonal component at each moment dur-\ning the initial two weeks (336 h). It illustrates that the forecast results have MAPE values \nranging from 0 to 0.4, with most values falling within the 0–0.1 range, indicating a high \nlevel of prediction accuracy. Additionally, the MAPE value curve shows a certain degree \nof periodicity. \n \nFigure 8. MAPE values of seasonal component at each timestamp for the previous 336 h. \nFigure 8. MAPE values of seasonal component at each timestamp for the previous 336 h.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "3.4.3 Residual Component Prediction Based on GPR",
+      "level": 3,
+      "text": "In the proposed combined method, the residual component is input into the GPR\nmodel. The GPR model estimates the potential load distribution based on the residual\ncomponent and provides predictions for future load residual components. In the prediction\nof residual components based on GPR, the noise level is set as 0.3, the mean function is set\nto 0, and the kernel function selected is the Gaussian kernel, as shown in formula (6). The\nhyperparameters in the Gaussian kernel function are automatically optimized through the\nmaximization of the log marginal likelihood function, as shown in formula (12).\nFigure 9 shows the prediction results of the residual component of the test set load\ndata for the first two weeks (336 h). The GPR model demonstrates its effectiveness in\npredicting residual components characterized by substantial variability and randomness.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 12 of 16",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "3.4.3 Residual Component Prediction Based on GPR",
+      "level": 3,
+      "text": "In the proposed combined method, the residual component is input into the GPR \nmodel. The GPR model estimates the potential load distribution based on the residual \ncomponent and provides predictions for future load residual components. In the predic-\ntion of residual components based on GPR, the noise level is set as 0.3, the mean function \nis set to 0, and the kernel function selected is the Gaussian kernel, as shown in formula \n(6). The hyperparameters in the Gaussian kernel function are automatically optimized \nthrough the maximization of the log marginal  likelihood function, as shown in formula \n(12). \nFigure 9 shows the prediction results of the residual component of the test set load \ndata for the first two weeks (336 h). The GPR model demonstrates its effectiveness in pre-\ndicting residual components characterized by substantial variability and randomness. \n \nFigure 9. Predicted results of residual component for the previous 336 h. \nTo further demonstrate the precision of GP R in predicting the residual component, \nFigure 10 depicts the MAPE values for the residual component of the load data at each \nmoment during the initial two weeks (336 h). It indicates that, with a few exceptions, the \nMAPE values of the forecast results generally range from 0 to 0.5, signifying a high level \nof prediction accuracy. \n \nFigure 10. MAPE values of residual component at each timestamp for the previous 336 h. \nFigure 9. Predicted results of residual component for the previous 336 h.\nTo further demonstrate the precision of GPR in predicting the residual component,\nFigure 10 depicts the MAPE values for the residual component of the load data at each\nmoment during the initial two weeks (336 h). It indicates that, with a few exceptions, the\nMAPE values of the forecast results generally range from 0 to 0.5, signifying a high level of\nprediction accuracy.\nAppl. Sci. 2024, 14, 2286 12 of 15\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 12 of 16",
+      "refs": {
+        "figures": [
+          "f9",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "3.4.3 Residual Component Prediction Based on GPR",
+      "level": 3,
+      "text": "In the proposed combined method, the residual component is input into the GPR \nmodel. The GPR model estimates the potential load distribution based on the residual \ncomponent and provides predictions for future load residual components. In the predic-\ntion of residual components based on GPR, the noise level is set as 0.3, the mean function \nis set to 0, and the kernel function selected is the Gaussian kernel, as shown in formula \n(6). The hyperparameters in the Gaussian kernel function are automatically optimized \nthrough the maximization of the log marginal  likelihood function, as shown in formula \n(12). \nFigure 9 shows the prediction results of the residual component of the test set load \ndata for the first two weeks (336 h). The GPR model demonstrates its effectiveness in pre-\ndicting residual components characterized by substantial variability and randomness. \n \nFigure 9. Predicted results of residual component for the previous 336 h. \nTo further demonstrate the precision of GP R in predicting the residual component, \nFigure 10 depicts the MAPE values for the residual component of the load data at each \nmoment during the initial two weeks (336 h). It indicates that, with a few exceptions, the \nMAPE values of the forecast results generally range from 0 to 0.5, signifying a high level \nof prediction accuracy. \n \nFigure 10. MAPE values of residual component at each timestamp for the previous 336 h. \nFigure 10. MAPE values of residual component at each timestamp for the previous 336 h.\nBased on the aforementioned analysis, the LSTM, CNN, and GPR models all demonstrate\nexcellent performance in predicting their respective components, achieving high accuracy .",
+      "refs": {
+        "figures": [
+          "f9",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "3.5 Comparison of Prediction Results and Methods",
+      "level": 2,
+      "text": "The prediction results of each component in Section 3.4 are combined to obtain the\nfinal result of load prediction. Figure 11 presents the prediction results of the test set load\ndata for the first two weeks (336 h).\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 13 of 16 \n \nBased on the aforementioned analysis, the LSTM, CNN, and GPR models all demon-\nstrate excellent performance in predicting their respective components, achieving high \naccuracy.",
+      "refs": {
+        "figures": [
+          "f11"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "3.5 Comparison of Prediction Results and Methods",
+      "level": 2,
+      "text": "The prediction results of each component in  Section 3.4 are combined to obtain the \nfinal result of load prediction. Figure 11 presents the prediction results of the test set load \ndata for the first two weeks (336 h). \n \nFigure 11. Predicted results of the proposed combined method for the previous 336 h. \nTo validate the superiority of the propos ed combined method, it is compared with \nmultiple prediction methods th rough experimental comparisons. Initially, the proposed \ncombined method is compared with naive forecasting methods without decomposition, \nincluding CNN, LSTM, and GPR. The parameter configurations for each prediction \nmethod align with those of the proposed combined method, while the partitioning of the \ndataset into training and testing sets remains consistent. Figure 12 shows the comparison \nof the predicted results with naive forecasting methods for the load data for the first three \ndays (72 h) of the testing set. The proposed combined method is depicted in Figure 12, \ndemonstrating a significantly superior level of proximity between the predicted blue \ncurve and the actual red curve compared to other forecasting methods. \n \nFigure 12. Comparison of predicted results with naive forecasting methods. \nFigure 11. Predicted results of the proposed combined method for the previous 336 h.\nTo validate the superiority of the proposed combined method, it is compared with\nmultiple prediction methods through experimental comparisons. Initially, the proposed\ncombined method is compared with naive forecasting methods without decomposition,\nincluding CNN, LSTM, and GPR. The parameter configurations for each prediction method\nalign with those of the proposed combined method, while the partitioning of the dataset\ninto training and testing sets remains consistent. Figure 12 shows the comparison of\nthe predicted results with naive forecasting methods for the load data for the first three\ndays (72 h) of the testing set. The proposed combined method is depicted in Figure 12,\ndemonstrating a significantly superior level of proximity between the predicted blue curve\nand the actual red curve compared to other forecasting methods.\nAppl. Sci. 2024, 14, 2286 13 of 15\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 14 of 17 \n \ndemonstrating a significantly superior level of proximity between the predicted blue \ncurve and the actual red curve compared to other forecasting methods. \n \nFigure 12. Comparison of predicted results with naive forecasting methods. \nTo verify the superiority of the prop osed combined method in using different \nprediction methods for different components of STL, the proposed combined method is \ncompared with three other methods that use the same model for predicting the \ncomponents obtained from STL, namely  STL-LSTM, STL-CNN, and STL-GPR. The \nparameter settings for each prediction method are consistent with those used in the \ncombined prediction method, and the division of the training and testing sets is also \nconsistent. Figure 13 displays the comparison of the prediction results of the load data for \nthe first three days (72 h) of the testing se t under each prediction method. It can be \nobserved that all methods in the figure can effectively predict the load, but the predicted \nvalues of the proposed combined method are closer to the actual values compared to the \nother methods. \n \nFigure 13. Comparison of predicted results for other methods with STL. \nFigure 12. Comparison of predicted results with naive forecasting methods.\nTo verify the superiority of the proposed combined method in using different predic-\ntion methods for different components of STL, the proposed combined method is compared\nwith three other methods that use the same model for predicting the components obtained\nfrom STL, namely STL-LSTM, STL-CNN, and STL-GPR. The parameter settings for each\nprediction method are consistent with those used in the combined prediction method,\nand the division of the training and testing sets is also consistent. Figure 13 displays the\ncomparison of the prediction results of the load data for the first three days (72 h) of the\ntesting set under each prediction method. It can be observed that all methods in the figure\ncan effectively predict the load, but the predicted values of the proposed combined method\nare closer to the actual values compared to the other methods.\nAppl. Sci. 2024, 14, x FOR PEER REVIEW 14 of 17 \n \ndemonstrating a significantly superior level of proximity between the predicted blue \ncurve and the actual red curve compared to other forecasting methods. \n \nFigure 12. Comparison of predicted results with naive forecasting methods. \nTo verify the superiority of the prop osed combined method in using different \nprediction methods for different components of STL, the proposed combined method is \ncompared with three other methods that use the same model for predicting the \ncomponents obtained from STL, namely  STL-LSTM, STL-CNN, and STL-GPR. The \nparameter settings for each prediction method are consistent with those used in the \ncombined prediction method, and the division of the training and testing sets is also \nconsistent. Figure 13 displays the comparison of the prediction results of the load data for \nthe first three days (72 h) of the testing se t under each prediction method. It can be \nobserved that all methods in the figure can effectively predict the load, but the predicted \nvalues of the proposed combined method are closer to the actual values compared to the \nother methods. \n \nFigure 13. Comparison of predicted results for other methods with STL. \nFigure 13. Comparison of predicted results for other methods with STL.\nTo provide a more intuitive comparison of the results and further validate the superior-\nity of the combined prediction method proposed in this paper, the MAPE, MAE, and RMSE\nevaluation indicators were used to compare and analyze the various methods mentioned\nin Figures 12 and 13. The evaluation indicator values for the prediction results of each\nAppl. Sci. 2024, 14, 2286 14 of 15\nmethod are shown in Table 1. A comparison of the three evaluation indicators in Table 1\nreveals that the proposed combined method exhibits lower values for all three evaluation\nindicators compared to the other methods, indicating higher prediction accuracy.\nTable 1. Values of evaluation indicators for prediction results.\nPrediction Method MAPE MAE (MW) RMSE (MW)\nThe proposed combined method 0.14% 151.3506 265.1293\nLSTM 2.52% 1421.0175 1756.1287\nCNN 1.69% 893.1694 1014.3561\nGPR 1.74% 961.3262 1225.6124\nSTL-LSTM 0.81% 350.3907 432.0894\nSTL-CNN 0.60% 288.1016 397.1486\nSTL-GPR 1.05% 521.2655 660.9917",
+      "refs": {
+        "figures": [
+          "f12",
+          "f11",
+          "f13"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "4 Conclusions",
+      "level": 1,
+      "text": "The paper proposes a combined method for short-term load forecasting that considers\nthe characteristics of components of STL. The proposed combined method utilizes STL\nand applies different prediction methods to different components. Through specific case\nanalysis, the following conclusions are drawn:\n(1) Compared to the LSTM, CNN, GPR, STL-LSTM, STL-CNN, and STL-GPR models, the\nproposed combined method demonstrates higher prediction accuracy, indicating that\napplying different prediction methods to the characteristics of the STL components\ncan effectively improve prediction accuracy.\n(2) The proposed combined method comprehensively considers the trend, periodic, and\nrandom characteristics of the load sequence. It can effectively extract the trend and\nperiodic characteristics of the load sequence while taking into account the uncertainty\nof load variations.\n(3) The proposed combined forecasting method, which integrates STL with deep learning\ntechnologies, has shown considerable improvements in predicting accuracy and stabil-\nity. Although this method offers advantages over traditional forecasting models, there\nis still room for enhancement when dealing with the complexity and dynamics of the\npower system. Therefore, future research will concentrate on integrating a broader\nrange of data sources, including meteorological conditions, economic indicators, and\nelectricity market prices, with the aim of enhancing the model’s predictive capabilities\nfor power load fluctuations by incorporating both macro and micro factors. Addition-\nally, the exploration of novel data decomposition techniques and the adoption of more\nsophisticated machine learning algorithms will be a primary focus of future research\naiming to reveal the intrinsic characteristics of data, thereby boosting the accuracy and\nreliability of predictions. Through thorough research and implementation in these\nkey areas, it is anticipated that not only will the overall performance of short-term\npower load forecasting be significantly enhanced but also more robust and precise\ndecision support will be provided for the effective and reliable operation of the power\nsystem. These efforts will further enhance the adaptability and robustness of forecast-\ning models in response to the intricate dynamics of the power system, establishing a\nsolid foundation for addressing the challenges encountered by future energy systems.\nAuthor Contributions: Conceptualization, S.H. and J.Y.; methodology, C.C.; software, Y.Y. and Y.W.;\nvalidation, Y.Z. and Y.G.; formal analysis, C.C.; data curation, S.H. and W.C.; writing—original draft\npreparation, J.Y.; writing—review and editing, S.H. All authors have read and agreed to the published\nversion of the manuscript.\nFunding: This research was funded by Inner Mongolia Electric Power (Group) Co., Ltd., Science and\nTechnology Project 2023-4-6.\nInstitutional Review Board Statement: Not applicable.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Flowchart of the proposed combined method."
+    },
+    {
+      "id": "f2",
+      "caption": "Flowchart of STL."
+    },
+    {
+      "id": "f3",
+      "caption": "Schematic diagram of the LSTM loop unit structure."
+    },
+    {
+      "id": "f4",
+      "caption": "Values of the original load and its components for the previous 336 h."
+    },
+    {
+      "id": "f5",
+      "caption": "shows the prediction results of the trend component of the test set load data"
+    },
+    {
+      "id": "f6",
+      "caption": "MAPE values of trend component at each timestamp for the previous 336 h."
+    },
+    {
+      "id": "f7",
+      "caption": "shows the prediction results of the seasonal component of the test set load"
+    },
+    {
+      "id": "f8",
+      "caption": "MAPE values of seasonal component at each timestamp for the previous 336 h."
+    },
+    {
+      "id": "f9",
+      "caption": "shows the prediction results of the residual component of the test set load"
+    },
+    {
+      "id": "f10",
+      "caption": "depicts the MAPE values for the residual component of the load data at each"
+    },
+    {
+      "id": "f11",
+      "caption": "Predicted results of the proposed combined method for the previous 336 h."
+    },
+    {
+      "id": "f12",
+      "caption": "Comparison of predicted results with naive forecasting methods."
+    },
+    {
+      "id": "f13",
+      "caption": "Comparison of predicted results for other methods with STL."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Values of evaluation indicators for prediction results."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 13,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 4
+  }
+}

@@ -1,0 +1,359 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/rts_gmlc/rts_gmlc__Probabilistic_Sizing_of_Energy_Storage_Systems_for_Reliability_and_Frequency_Security_in_W__911efeec78.pdf",
+  "n_pages": 13,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Probabilistic Sizing of Energy Storage Systems for",
+      "level": 1,
+      "text": "Reliability and Frequency Security in Wind-Rich\nPower Grids\nDilip Pandit, Student Member , Atri Bera, Member, Ram Khelawan Saket, Senior Member , IEEE, Joydeep Mitra,\nFellow, IEEE, Nga Nguyen, Member , IEEE\nAbstract—The penetration of wind energy has increased sig-\nniﬁcantly in the power grid in recent times. Although wind\nis abundant, environment-friendly, and cheap, it is variable\nin nature and does not contribute to system inertia as much\nas conventional synchronous generators. Coupled with the low\ninertia contribution, the generation intermittency of wind power\nleads to reliability and stability issues in the power system.\nEnergy storage systems (ESSs) are among the most prominent\nalternatives to alleviate these concerns associated with high\nwind penetration. This paper proposes a planning strategy to\nsize ESS for the reliability and frequency security of wind-\nrich power grids. A probabilistic methodology for ESS sizing is\ndeveloped utilizing a composite reliability-based framework with\nsequential Monte Carlo simulation (MCS). The MCS generates\ncomposite reliability indices for the power system, which are\nemployed to obtain the capacity for a reliability energy storage\nsystem (RESS). Simultaneously, the MCS-derived probability of\nsynchronization of conventional generators is integrated into\nan analytical approach for sizing a frequency support energy\nstorage system (FESS). The effect of wind farm dispersion across\ngeographical regions is incorporated in the framework to study\npossible reductions in the ESS size while maintaining the system\nreliability and frequency security. The efﬁcacy of the proposed\nstrategy is demonstrated on the RTS-GMLC test system.\nIndex Terms—energy storage systems, frequency security, re-\nliability, sizing, wind energy",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Wind energy is among the fastest-growing renewable energy\nresources used today for electric power generation. Sustained\npolicy support and economic incentives for wind power gen-\neration worldwide have led to its signiﬁcant growth in recent\ntimes [1]. In 2022, wind power production experienced an\nunprecedented surge, with a remarkable increase of 265 TWh,\nmarking a 14% growth and reaching a total of over 2,100\nTWh [2]. This growth rate was the second highest among all\nrenewable energy sources, trailing behind only solar photo-\nvoltaics. Nevertheless, to align with the net zero emissions\nby 2050, which anticipates a wind electricity generation of\napproximately 7,400 TWh by 2030, it is necessary to boost\nthe annual growth rate of wind generation to around 17%\n[2]. However, this increasing penetration of wind energy leads\nto reduced reliability and stability of the power grid due\nto its variable nature, non-dispatchable characteristics, and\ndisplacement of high-inertia conventional sources [3]. Energy\nstorage systems (ESS) have been extensively researched as a\nsolution to mitigate generation variability associated with wind\nand other renewables while also providing ancillary services\nfor system stability. However, there are still some reservations\nabout deploying ESS for grid-scale applications due to high\ncapital and operation costs. As a result, the sizing of ESS has\nbecome an integral component of planning problems in wind-\nrich power grids.\nThe literature extensively discusses the impacts of wind gen-\neration intermittency on the reliability of power systems [4],\n[5]. These drawbacks associated with the ﬂuctuating nature\nof wind power can be alleviated through various approaches,\nsuch as the deployment of ESS, the aggregation of wind\nenergy from diverse geographical locations, and ﬂexible load\nmanagement. While the management of ﬂexible loads could\nprove to be the most cost-effective approach, their penetration\nin existing grids is still not signiﬁcant enough to contribute\nto system reliability [6]. Among these methods, previous\nresearch has extensively focused on the deployment of ESS\nand resource aggregation to mitigate the variability of wind\ngeneration and improve system reliability. Authors in [7]–\n[9] propose deterministic approaches to size ESS for the\nreliability of networked microgrids. While the authors develop\noptimization frameworks to generate optimal ESS sizes, they\ndo not incorporate the effects of stochasticity presented by\ndistributed generation. To account for the stochasticity of\nrenewables, authors in [10], [11] propose planning frameworks\nfor ESS sizing while considering system reliability. However,\nthe number of renewable scenarios used in these frameworks\nare limited and hence do not capture the full range of uncer-\ntainty displayed by these resources. Joint planning frameworks\nin [12], [13] alleviate this issue by focusing on modeling\nuncertainties introduced by distributed generation while sizing\nESSs. While the joint planning frameworks can simultaneously\nincorporate the uncertainties of wind generation and economic\nsizing of ESSs, they do not consider system reliability as an\nESS sizing criterion. On the other hand, references [14], [15]\nhave presented probabilistic approaches that use a combination\nof wind power aggregation and ESS sizing to ensure reliability\nin wind-rich grids. However, these approaches are limited to\nreliability applications only and do not consider the frequency\nsupport capabilities of the ESS.\nIn addition to the concerns over system reliability, the non-\ndispatchable and intermittent characteristics of wind power\nlead to a drastic reduction in the system frequency response.\nWhile some recent works have incorporated the virtual inertia\nand primary frequency response using virtual synchronous\ngenerators and de-loading techniques [16], [17], they are still\ninsufﬁcient in providing the required frequency support to\nensure grid code compliance [18]. As of date, ESS remain\nthe prime candidates to supplement wind power integration\nusing their virtual inertia capabilities [19]. Since ESS are",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 fast-acting devices with high ramping capabilities, they are",
+      "level": 1,
+      "text": "well-suited for providing virtual inertia to the system. For\nthis purpose, ESS need to be sized accurately, depending on\nthe frequency security requirements. References [20], [21]\ndevelop sizing algorithms for the ESS to enhance inertial\nresponse (IR) and primary frequency response (PFR) in the\npresence of wind power. However, these works do not employ\na probabilistic approach for ESS sizing, so they do not account\nfor the random outages of system components causing loss of\nsystem inertia. While sizing the ESSs, references [18], [22],\n[23] have proposed probabilistic frameworks to incorporate\nthe system inertia loss resulting from the failures of conven-\ntional generators. However, all the probabilistic approaches\nmentioned focus only on IR support of ESS and ignore the\nprimary frequency response (PFR) support in their sizing\nalgorithms, leading to an underestimation of ESS sizes. In\naddition, none of the works mentioned above consider the\nalternate methods to reduce the ESS sizes while retaining the\nsame level of frequency security. Since the ESS are expensive\nin both investment and operation stages, it is important to\nconsider other methods, such as the geographical distribution\nof wind farms for ESS sizing methods.\nIn this paper, an improved framework for ESS sizing is\npresented that is applicable for ESS providing both reliability\nand frequency support in wind-rich systems. A probabilistic\napproach based on the sequential Monte Carlo simulation\n(MCS) is developed, which incorporates the stochasticity and\ngeographical distribution of wind farms, forced outages of\ngenerating units and transmission lines in the sizing problem.\nThe system composite reliability indices obtained from the\nMCS are used to determine the size of reliability ESS (RESS).\nAt the same time, the probability of synchronization of con-\nventional generators obtained from the MCS is deployed in\na sizing algorithm for frequency support ESS (FESS). The\nproposed work also focuses on the potential reduction of ESS\nsize requirements by improving wind power capacity value\nfrom the geographical dispersion of wind farms. The major\ncontributions of the paper are summarized as follows:\n• Developing an improved probabilistic sizing tool that si-\nmultaneously determines storage sizes for reliability and\nfrequency security of systems with high wind penetration.\nThe method is computationally efﬁcient as it does not\nrequire different simulations for the sizing of RESS and\nFESS separately.\n• Proposing a single MCS framework for sizing of both RESS\nand FESS that incorporates uncertainty in wind generation,\nforced outages of system components, and system operation\nconstraints. Analytical approaches for the sizing of RESS\nand FESS in the literature do not consider these factors.\n• Improving the FESS sizing algorithm to incorporate both\nvirtual inertia and droop response of ESS within an analyti-\ncal multi-machine load frequency control (LFC) model. The\nresulting analytical model can easily be incorporated with\nthe proposed optimization-based FESS sizing tool.\n• Proposing and studying the potential beneﬁts of wind farm\nlocational diversiﬁcation in improving system reliability and\nreducing the storage size requirements.\nThe remainder of this paper is organized as follows. Section",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "introduces the models for wind speed and geographical",
+      "level": 1,
+      "text": "dispersion of wind power. In Section III, the base sequential\nMCS framework with the DC optimal power ﬂow (DC-OPF)\nis developed. Section IV and V highlight the methodology\nfor RESS and FESS sizing, respectively. The simulation and\nresults are presented in section VI, demonstrating the ESS siz-\ning and wind aggregation beneﬁts for reliability and frequency\nsecurity. Section VII concludes the paper with some remarks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "M ODELING THE WIND POWER STOCHASTICITY AND",
+      "level": 1,
+      "text": "LOCATIONAL DISTRIBUTION OF WIND FARMS\nIn this work, the ESS sizes for reliability and frequency\nstability depend on the system reliability indices and generator\nsynchronization probabilities obtained using a Monte Carlo\nsimulation. Accurate and computationally feasible models for\nwind speed stochasticity are required to obtain the system re-\nliability indices and the generator synchronization probability\nunder wind integration. This section discusses the wind speed\nmodel based on the discrete Markov process and the concept\nof wind power dispersion and its possible beneﬁts.\nA. Modeling Wind Speed using the Discrete Markov Model\nTo incorporate the impact of wind variability into the MCS,\nthe wind speeds are approximated using a discrete Markov\nprocess. The process involves the formation of Markov chains\nwith a ﬁnite number of clustered wind states. An illustration of\nthe wind speed model, characterized by n states, is depicted\nin Fig. 1. In this paper, the wind speed corresponding to a\nMarkov state is determined using the fuzzy C-means clustering\nalgorithm. The Markov model captures the characteristics of\nclustered wind speeds using state probabilities, occurrence fre-\nquencies, and durations. The main assumption of this model is\nthat it assumes the wind speed remains statistically stationary.\nThe Markov model for wind speed has been used in reliability\nassessment methods due to their computational efﬁciency and\nreasonable accuracy for hourly-sampled wind speeds [24]. The\nstate probabilities and transition rates of the wind speed states\ncan be obtained as follows:\nρi,j = tij\nDi\n, Pi =\n∑n\nj=1tij\n∑n\nk=1\n∑n\nj=1tkj\n(1)\nwhere n is the total number of clustered wind speed states,\ntij are the number of transitions from state i to state j of\nwind speed state, Di is the duration of state i wind speed\nrespectively,ρi,j is the transition rate from state i to state j\nof wind speed, and Pi is the state probability for state i.\n\u0001\u0001ρ\nWind \nstate 1\nWind \nstate n\nWind \nstate n-1\nWind \nstate 2\n\u0001\u0001ρ\n\u0001\u0002ρ\n\u0002\u0001ρ\n\u0001\u0003\u0002\u0001ρ −\n\u0002\u0001ρ\n\u0001\u0003\u0001\u0001ρ −\n\u0002\u0004ρ\n\u0004\u0002ρ\n\u0002\u0003 \u0001\u0001 \u0001ρ − −\n\u0001\u0003 \u0002\u0001 \u0001ρ − − \u0003 \u0001\u0001 \u0001ρ −\n\u0002\u0001ρ\n\u0001\u0003\u0001 \u0001ρ −\n. . .\n.. . .. .\n. . .\n. . . .\n\u0001\u0003 \u0001\u0001ρ −\u0002\u0003 \u0001\u0001ρ −\nFig. 1: Wind speed model with n states.\nIn this work, discrete wind speed states and transition\nmatrices are formulated depending on the location of wind\n3\nfarms and their historical wind data. Using a deterministic\nwind power output model [5], the output power of a wind farm\nis calculated. To model the stochasticity in wind farm output,\na next-event-based method is used within the Monte Carlo\nsimulation framework in section III to model the switching\nbetween the wind speed states for each wind farm.\nB. Geographical Dispersion of Wind Power\nThe major merit of the dispersion of wind power is the\nreduction in the global output variance of wind power, which\ncan effectively help improve the capacity value of wind farms.\nMathematically, the relation between the dispersion of wind\nfarms and the variance in total power output from wind farms\nspread across geographical regions under certain conditions\ncan help validate the theory. Assuming there are a total of\nK wind farms, each experiencing distinct wind speeds and\npatterns. Each of these wind farms is equipped with identical\nwind turbines, and the power output of the kth wind farm is\ndenoted as Pw\nk . The combined power output from all K wind\nfarms can be formulated as follows:\nPTotal\nw =\nK∑\nk=1\nPw\nk (2)\nThe global variance in wind power is then expressed as [25]:\nvar[PTotal\nw ] =\nK∑\nk=1\nvar[Pw\nk ] + 2\n[∑\nk<l\ncov[Pw\nk ,P w\nl ]\n]\n(3)\nwhere var[·] and cov[·] represent the variance and covariance\noperators respectively. The Pearson’s correlation coefﬁcient for\nthe ith and jth wind farms is expressed as:\ncorr[Pw\nk ,P w\nl ] = cov[Pw\nk ,P w\nl ]√\nvar[Pw\nk ]var[Pw\nl ] (4)\nExpressing (3) in terms of the correlation coefﬁcient from (4),\nthe resulting expression for the global wind power variance is\nexpressed as follows:\nvar[PTotal\nw ] =\nK∑\nk=1\nvar[Pw\nk ]\n+ 2\n[∑\nk<l\ncorr[Pw\nk ,P w\nl ]\n√\nvar[Pw\nk ]var[Pw\nl ]\n]\n(5)\nEquation (5) implies that dispersing the wind power among\nlocations with small correlations helps reduce the global output\nvariance of wind power. However, this model of geographical\ndispersion of wind farms assumes that all turbines within\na wind farm are subject to the same wind speeds. This\nassumption is reasonable for this work as it models the wind\nspeed states in an hourly resolution [25].\nAn example is used to illustrate the positive effect of wind\npower dispersion. Supposing two cases, where in case 1, nw\nwind turbines are concentrated in one location with output\nvariance per turbine var[Pw\n1 ] =σ, the global output variance\nis expressed as follows:\nvar[PTotal\nw ] = var\n[ 1∑\nk=1\nnwPw\nk\n]\n=n2\nwσ (6)\nIn the second case, wind power is distributed equally among\ntwo locations with identical individual variance var[Pw\n1 ] =\nvar[Pw\n2 ] =σ and correlation corr(1, 2)< 1. The global output\nvariance in this case is:\nvar[PTotal\nw ] =\n2∑\nk=1\nvar[nw\n2 Pw\nk ] + 2× cov[Pw\n1 ,P w\n2 ]\n= n2\nwσ\n4 + n2\nwσ\n4 + 2× corr(1, 2)× n2\nwσ\n4\n= n2\nwσ\n2 (1 + corr(1, 2)) (7)\nThe above example shows that the geographical separation of\nwind farms reduces the global wind power variance, depending\non their correlations. Several experimental studies have re-\nported an improvement in capacity value when wind farms are\ndispersed over larger distances [26], [27], primarily attributing\nthis improvement to the reduced correlations between wind\nspeeds of diverse locations. Consequently, geographical disper-\nsion of wind farms reduces the size requirement of RESS, as\nimproving the capacity value of wind farms promotes system\nreliability. At the same time, however, the improved wind\npower output by geographical dispersion can cause higher\ndisplacement of conventional generators, increasing the sizing\nrequirement of the FESS. Studying the effects of geographical\ndispersion of wind farms on ESS sizes is one of the major\ncontributions of this work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "S EQUENTIAL MONTE CARLO SIMULATION FOR SIZING",
+      "level": 1,
+      "text": "OF ENERGY STORAGE SYSTEMS\nThe mixed timing sequential MCS proposed in reference\n[28] is modiﬁed in this study to determine the parameters for\nthe sizing of RESS and FESS. The synchronous component\nof the proposed MCS incorporates the variation in system\nload, wind, and photovoltaic (PV) farms. In contrast, the\nasynchronous component changes the states of conventional\ngenerators and transmission lines. The steps of the MCS\nproposed in this work are outlined as follows:\n1) Obtain the failure and repair rates for generators and\ntransmission lines. Set the state of each component to\navailable (up) and initialize the wind states for all locations.\n2) Initialize the index for the sample path as s = 1.\n3) Initialize the hourly index t = 1.\n4) Determine the time for the conventional generators and\ntransmission lines to change their states. The time until\nthe next event, denoted as Ti, for the i-th component\nis calculated as Ti =− 1\nλi\nln(Ui) where Ui represents a\nrandom number generated from the uniform distribution,\nλi represents the failure rate if the ith component is in up\nstate, or the repair rate when if is in down state.\n5) From the vector of transition time for the components,\nselect the shortest time,\ntmin = min(T1,T 2,...,T G+L) (8)\nwhere G and L denote the system’s total number of\nconventional generators and transmission lines. The tmin\nvalue indicates when the component changes states from\nup to down or vice versa.\n4\n6) Decrease tmin by one hour. If tmin = 0, goto step 5.\n7) Using the current state of wind farms and the transition\nrate matrices, determine the next state for all wind farms\nin the system. For example, assuming a wind farm w is\ncurrently at wind speed state i among the n states in Fig.\n1, a vector of transition times is generated as follows:\nTw\ni = [Tw\ni,1,T w\ni,2,...,T w\ni,n] (9)\nwhere,\nTw\ni,j =− 1\nρi,j\nln(Uj) (10)\nwhereUj is a random number generated from the uniform\ndistribution and, ρi,j is the (i,j ) component of the transi-\ntion rate matrix obtained using (1). The smallest element in\nTw\ni gives the next state of the wind farm among n states.\n8) For the current hour, run a DC optimal power ﬂow (DC-\nOPF) to generate an appropriate dispatch where the load\ncurtailment is minimized and units with low fuel costs are\ndispatched. Check if the load is curtailed at any bus. If true,\nrecord the event and update the system reliability indices.\nThe events are used to determine the RESS size.\n9) For the current hour, record the dispatch status of genera-\ntors. The dispatch status for any conventional generator g\nis expressed as follows:\nγg(t) =\n{\n1 if Pg(t)> 0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "0 otherwise (11)",
+      "level": 1,
+      "text": "10) Is t> 8760?\na) If false, goto step 7.\nb) If true, calculate the probability of generator synchro-\nnization for sample path s as follows:\nPg(s) = 1\n8760\n8760∑\nt=1\nγg(t) (12)\nCheck for convergence. If converged, terminate the sim-\nulation. Else, s =s + 1 and go to step 2.\nThe steps are repeated until the simulation converges to some\nprespeciﬁed convergence criterion. At the end of the MCS, the\nreliability indices are used to determine the power and energy\nratings for the RESS while the probabilities of generator\nsynchronization are used to size the FESS.\nAs mentioned in step 8 of the MCS, at every hour t, a\nDC-OPF is solved to generate a dispatch while minimizing\nthe system load curtailment. In addition to minimizing the\nload curtailment, the dispatch should consider dispatching\ngenerators with low fuel costs for conventional generators and\nmaximizing RER integration while respecting the power grid\noperational constraints. The DC-OPF is structured as follows:\n1) Objective function:\nmin\n( B∑\nb=1\nλCb(t) +\nG∑\ng=1\ncgPg(t)\n)\n(13)\nwhereB,G represent the overall number of buses and conven-\ntional generators within the system,Cb(t) denotes the curtailed\nload at bus b for an hour t, and λ is a large value to heavily\npenalize load curtailment in the objective function. G denotes\nthe total number of conventional generators in the system,\ncg is the fuel cost ($/MW), and Pg(t) is the active power\ngeneration of generatorg. In this formulation, generation from\nconventional generators is penalized by fuel costs to encourage\nthe integration of renewables into the system. The constraints\nare expressed as follows:\n2) Power balance: For power balance, the power injected\ninto bus b must equal the real power discharged from b. The\npower balance constraint can be represented as follows:\nGb∑\ng=1\nPg(t)+\nPb∑\np=1\nPp(t) +\nWb∑\nw=1\nPw(t)\n+Cb(t)−PL\nb (t) =\nB∑\ni=1\nBbiδi(t) (14)\nwhere Gb,Pb,Wb denote the total number of conventional\ngenerators, PV farms and wind farms connected to bus b.\nPp(t) and Pw(t) are the power generated by PV and wind\nfarms, respectively. PL\nb (t) is the demand at bus b, Bbi is the\nbus admittance matrix’s imaginary component, andδi(t) is the\nvoltage angle.\n3) Transmission line limits: Active power in the transmis-\nsion lines must be within limits and it is expressed as follows:⏐⏐⏐⏐\nδi(t)−δb(t)\nxib\n⏐⏐⏐⏐≤PT\nib (15)\nwhere xib is the reactance between buses i and b, and PT\nib\nis the maximum transmission capacity of the line connecting\nbuses i and b.\n4) Generation limits: The active power output of conven-\ntional generators and wind farms must adhere to speciﬁc limits,\nwhich can be expressed as follows:\nP min\ng ≤Pg(t)≤P max\ng (16)\nP min\nw ≤Pw(t)≤Pw(t)max (17)\nP min\np ≤Pp(t)≤Pp(t)max (18)\nwhere P min\ng ,P min\nw ,P min\np denotes the lower limits of con-\nventional generators, wind, and PV farms respectively,\nP max\ng ,Pw(t)max,Pp(t)max are the upper generation limits. The\nPV and wind farm generation upper limit vary along with\nthe hourly variation in input solar irradiance and wind speed\nrespectively. Also, the component status during the MCS hour\naffects the conventional generator power limits and transmis-\nsion line limits. For example, if the generator g’s state changes\nto down during hour t, Pg(t) is set to zero.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "S IZING OF ESS FOR SYSTEM RELIABILITY",
+      "level": 1,
+      "text": "All the load curtailment events are initially extracted from\nthe MCS in the last section. The power rating of the RESS\nis determined using the expected value of load curtailment\nduring events. Then, the system loss of load probability (or\nunavailability) and mean down time (MDT) are calculated\nusing these events. The ratio of the unavailability obtained\nfrom the MCS and a desired reliability target are then used\nto determine the unavailability ratio. The time rating of the\nRESS is derived using the unavailability ratio and the MDT.\nIn addition, a RESS deployment strategy is formulated in this\nsection to deploy the sized RESS back into the system.\n5\nA. Sizing of Reliability ESS\nThe power rating for the RESS is the expected unserved\ndemand during events, and it is expressed as follows:\nP RESS = E\n[",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "1 Ncy",
+      "level": 1,
+      "text": "N cy\n∑\ni=1\nCi\n]\n(19)\nwhereNcy is the total ON/OFF cycles simulated in one sample\npath andCi is the total load curtailment for cycle i.\nFor the time rating of the RESS, the following approach\nis proposed. Assume that the system’s current availability\nobtained using the MCS is A0, which needs to be increased\nto A1 using the RESS. Deﬁning the unavailability ratio:\nα = 1−A1\n1−A0\n(20)\nTo increase the system’s availability from A0 to A1, the\nRESS must be capable of supplying P RESS for a certain time\ntRESS. The following integral proposed in [29] can be used to\ndetermine the value of tRESS:∫ ∞\ntRESS\nfR(r)dr =α (21)\nwherer is the MDT of the system andFR(r) is the probability\ndensity function of the MDT. The following relation is used\nto determine the MDT [28]:\nr = LOLP\nLOLF (22)\nwhere,\nLOLP = E{Π}, Π = 1\nT\nN cy\n∑\ni=1\nTdn\ni (23)\nLOLF = E{Φ}, Φ = Ncy\nT (24)\nwhere T denotes the total simulation time in a sample path,\nTup",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "is the service period and Tdn",
+      "level": 1,
+      "text": "i is the interruption period.\nThe solution of (21) can be expressed as follows:\ntRESS =−r ln(α)\naR (25)\nwhere aR is the availability of the RESS. In the real world,\nthe ESS can encounter failures and it needs to be incorporated\nin the time rating to ensure sufﬁcient storage, which is done\nusingaR. Finally, the energy rating for the reliability ESS can\nbe obtained as SRESS =P RESStRESS.\nB. Deployment of the Reliability ESS\nAfter sizing the RESS, they must be deployed in the system\nand the composite reliability should be reevaluated. Depending\non the obtained sizes, the RESS can be deployed on a single\nbus or distributed among multiple buses. In the sequential\nMCS framework, the DC-OPF framework is modiﬁed to\naccommodate the RESS. In the presence of the RESSs, the\nobjective function (13) is modiﬁed as follows:\nmin\n( B∑\nb=1\nλCb(t) +\nG∑\ng=1\ncgPg(t) +\nE∑\ne=1\nc+\neP +\ne (t) +c−\neP−\ne (t)\n)\n(26)\nwhereE denotes the total number of RESSs,P +\ne (t),P−\ne (t) are\nthe charging and discharging power of RESS e. The charging\nand discharging costs c+,c− are introduced to ensure that\nRESS charge during regular hours and discharge if generation\nis insufﬁcient to account for the load. These costs are set\nsuch that they act as complementary constraints to prevent the\nsimultaneous charging and discharging of RESSs, preventing\nthe need for binary variables in the optimization. Similarly,\nthe power balance constraint is updated as follows:\nGb∑\ng=1\nPg(t) +\nPb∑\np=1\nPp(t) +\nWb∑\nw=1\nPw(t) +\nEb∑\ne=1\n(\nP +\ne (t)+\nP−\ne (t)\n)\n+Cb(t)−PL\nb (t) =\nB∑\ni=1\nBbiδi(t) (27)\nThe operation of the RESS is subject to the charging, dis-\ncharging power limits, and state-of-charge (SoC) constraints.\nThe RESS assist the system in maintaining the generation-\nload balance. For the hourly-operating ESSs, the charging and\ndischarging power P +\ne (t),P−\ne (t) are optimization variables,\nand they must be within limits as follows:\nP +e ≤P +\ne (t)≤ 0 (28)\n0≤P−\ne (t)≤P−e (29)\nwhere P +e ,P−e are the maximum charging and discharging\npower. Also, the battery SoC must be within limits:\nSoCe≤SoCe(t− 1)− 1\nEtote\n(\nP−\ne (t)η−\ne + P +\ne (t)\nη+e\n)\n≤SoCe\n(30)\nwhere SoCe,SoCe are the lower and upper SoC limits,\nSoCe(t− 1) is the past hour SoC, η+\ne,η−\ne are the charging\nand discharging efﬁciencies, and Etot\ne is the energy capacity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "S IZING OF ESS FOR SYSTEM FREQUENCY SECURITY",
+      "level": 1,
+      "text": "The ﬁrst step for FESS sizing is also the MCS in section\nIII, except the generator synchronization probabilities are used\ninstead of the reliability indices. Then, using the synchro-\nnization probabilities, the expected values of system inertia\nand other frequency security parameters are obtained. The\nfrequency security constraints are then developed using these\nparameters and the proposed multi-machine load frequency\ncontrol (LFC) model. A procedure is developed to obtain the\nvirtual inertia and droop constants of FESS using the IR and\nPFR control loops. Finally, the frequency security constraints\nand FESS virtual inertia, droop constants are incorporated in\nan optimization framework for FESS sizing. The FESS sizing\nprocedure is described in detail as follows:\nA. Derivation of Frequency Security Constraints\nThe LFC model proposed in [30] is modiﬁed to include\nthe FESS and illustrated in Fig. 2. The notations for the\ngovernor and turbine parameters of the machines and the FESS\nparameters are as follows:\n• Hg,H FESS is the inertia of gth generator and virtual\ninertia of FESS respectively.\n6\n• Dg is the damping coefﬁcient of generator.\n• Kg is the generator droop gain.\n• Rg,R FESS is the droop constant of generator and FESS.\n• Tg,T FESS is the time constant of ith generator and FESS.\n• Fg is the fraction of power from high-pressure turbines\nof the ith generator.\nFig. 2: LFC model for a multi-machine system with FESS.\nUsing the system LFC model in Fig. 2, the system frequency\nunder a step disturbance ∆PL is expressed as follows:\n∆f(s) = ∆PL/s\nD + 2Hs +∑G\ng=1\nKg(1+FiTgs)\nRg(1+Tgs) + 1\nRFESS(1+T FESSs)\n(31)\nwhere,\nD = E{D} =\nG∑\ng=1\nPgDgP max\ng\nPsys\n, (32)\nH = 1\nPsys\n\n\nG∑\ng=1\nPgHgPmax\ng\n  \nE{H}\n+HFESSP FESS\n\n\n(33)\nIn the equations above, Psys denotes the base system MV A. It\nshould be noted that the inertia contribution of a synchronous\ngenerator is dependent on the probability of generator syn-\nchronization Pg obtained using the MCS. Since the FESS\ndoes not have a damping coefﬁcient, the value of equivalent\ndampingD equals the expected damping value from the MCS\nE{D}. However, the equivalent system inertia is the sum of the\nexpected inertia from the MCS E{H} and the virtual inertia\nfrom the FESS. The IR contribution from the FESS depends\non the inertia constant and the active power rating.\nThe frequency deviation after using the inverse Laplace\ntransformation on (31) can then be expressed as follows:\n∆f(t) = ∆PL\n2HTrω2n\n(\n1− 1√\n1−ξ2e−ξωnt cos(ωn\n√\n1−ξ2t\n−φ)\n)\n+ ∆P\n2Hωn\n√\n1−ξ2e−ξωt cos(ωn\n√\n1−ξ2t) (34)\nwhere,\nFR = E{FR} = 1\nPsys\n( G∑\ng=1\nPgKgFgP max\ng\nRg\n)\n, (35)\nRR = 1\nPsys\n\n\nG∑\ng=1\nPgKgP max\ng\nRg\n  \nE{RR}\n+P FESS\nRFESS\n\n\n, (36)\nξ = 0.5× 2H +TR(D +FR)√\n2HTR(D +RR)\n, (37)\nωn =\n√\nD +RR\n2HTR\n, φ = tan−1\n(\nξ√\n1−ξ2\n)\n. (38)\nThe maximum frequency deviation (nadir) can be estimated\nat the ﬁrst zero crossing of the RoCoF. Hence, taking the\nderivative of (34) and equating it to zero, the frequency nadir\ncan then be expressed as:\n∆f max = ∆PL\nD +RR\n(\n1 +e−ξωntmax\n√\nTR(RR−FR)\n2H\n)\n(39)\nwhere\ntmax = 1\nωn\n√\n1−ξ2tan−1\n(\nωn\n√\n1−ξ2\nξωn− 1/TR\n)\n(40)\nIt can be noticed that the frequency nadir depends heavily\non the frequency security parameters ( D, H, FR, RR), all of\nwhich depend on the generator synchronization probabilities\nas seen in equations (32), (33), (35), (36), respectively. Next,\nthe maximum RoCoF is obtained by derivating (34) and setting\nt = 0+. It is expressed as follows:\n⏐⏐⏐⏐\ndf\ndt\n⏐⏐⏐⏐\nmax\n=\n⏐⏐⏐⏐\ndf\ndt\n⏐⏐⏐⏐ (0+) = ∆PL\n2H\n√\n1−ξ2 cos(φ) = ∆PL\n2H (41)\nSimilarly, the quasi-steady-state (QSS) frequency deviation\ncan be estimated using the ﬁnal value theorem as follows:\n∆f ss = lim\ns→0\ns∆f(s) = ∆PL\nD +RR\n(42)\nIt can be observed that the maximum RoCoF and QSS\nfrequency are also dependent on the generator synchronization\nprobabilities via the frequency security parameters H,D,FR,\nandRR. The resulting expressions in equations (39), (41), and\n(42) are used as constraints for the optimization problem that\ndetermines the FESS sizes.\nB. Inertia and Droop Constants for the FESS\nThe control strategy for ESS is formulated in this section.\nThe IR support is achieved using a derivative control on\nthe frequency signal, whereas PFR support is provided using\ndroop control on the frequency deviation, as seen in Fig. 3.\nReformulating the swing equation, the inertia constant for\nthe FESS can be expressed as follows [20]:\nHFESS = max(pIR(t))fR\n2\n(⏐⏐⏐⏐\ndf\ndt\n⏐⏐⏐⏐\nmax)−1\n(43)\n7\nFig. 3: FESS participating in IR and PFR.\nwhere fR is the rated frequency and\n⏐⏐⏐df\ndt\n⏐⏐⏐\nmax\nis the maximum\nRoCoF without FESS support. From Fig. 3, the reference\nsignal for IR is obtained as follows:\npIR(t) =KIR 1\n(1 +sτ1)(1 +sτ2)\ndf\ndt (t) (44)\nHowever, when the value of pIR≥ 1, which can occur due\nto high RoCoF or a high KIR setting, the power capacity\nconstraint limitspIR to 1. In this case, the expression for inertia\nconstant from FESS is expressed as follows:\nHFESS = fR\n2\n(⏐⏐⏐⏐\ndf\ndt\n⏐⏐⏐⏐\nmax)−1\n(45)\nHence, ignoring the ﬁltering time constants, the inertia con-\nstant for FESS can be approximated as follows:\nHFESS =\n\n\n\nKIRfR\n2 if|pIR|≤ 1\nfR\n2\n(⏐⏐⏐df\ndt\n⏐⏐⏐\nmax)−1\nif|pIR|> 1\n(46)\nThe PFR support from the FESS is achieved using the\nPFR control loop illustrated in Fig. 3. The value of RFESS is\ndetermined using the desired QSS frequency and the dead band\nsetting. After the dead band, a constant droop value provides\nPFR until pPFR≤ 1. The effective droop then assumes a linear\nform for larger frequency deviations since pPFR saturates to 1\np.u. The ESS droop constant can be expressed as follows:\nRFESS =\n{\n1\nfR\n(\n∆f ss,des− ∆f db)\nif ∆f ss≤ ∆f ss,des\n∆f ss− 1\nfR\n∆f db if ∆f ss > ∆f ss,des (47)\nwhere ∆f ss,des is the desired QSS frequency setting, ∆f db is\nthe deadband setting, and ∆f ss is the actual QSS frequency.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "Optimization Framework for Sizing of ESSs",
+      "level": 1,
+      "text": "The optimal FESS sizes for IR and PFR are obtained with a\nnon-linear optimization problem. The objective function of the\nformulation is to minimize the total energy rating of the FESS.\nThe formulation is solved considering the frequency security\nand SoC constraints. The problem is structured as follows:\nmin\nP FESS\nSFESS (48a)\nsubject to\n∆PL\n2H ≤\n⏐⏐⏐⏐\ndf\ndt\n⏐⏐⏐⏐\nlim\n(48b)\n∆PL\nRR +D≤ ∆f lim\nss (48c)\n∆PL\nRR +De−ξωntmax\n√\nTR(RR−FR)\n2H ≤ ∆f lim (48d)\n0.5SFESS− P FESStreq\nη− ≥ 0.1SFESS (48e)\n0.5SFESS +P FESStreqη+≤ 0.9SFESS (48f)\nwhere ∆P is the disturbance size,\n⏐⏐⏐df\ndt\n⏐⏐⏐\nlim\n, ∆f ss\nlim, ∆f lim are\nthe maximum RoCoF, QSS frequency, and frequency nadir\nsafe limits respectively, treq is the required time for frequency\nsupport. Constraints (48b)-(48d) represent the frequency se-\ncurity constraints while (48e) and (48f) are the FESS SoC\nconstraints for under and over-frequency events respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "S IMULATION AND RESULTS",
+      "level": 1,
+      "text": "Simulations are performed on the IEEE RTS-GMLC test\nsystem to demonstrate the proposed approach. Figure 4 illus-\ntrates the single line diagram of the IEEE RTS-GMLC system.\nThe GMLC system is a modiﬁcation of the original IEEE-RTS\nsystem, and its details are present in [32]. The RTS-GMLC\nintroduces RERs consisting of PV , concentrated solar power\n(CSP), hydro, wind, and storage units. The RERs resource data\ndatabase consists of day-ahead forecasts recorded at hourly\nintervals for a year, which is used for all PV farms in this\nwork. The wind farm outputs in the system are remodeled\nusing the procedure in section II to account for the effects of\nstochasticity and geographical dispersion on ESS sizes. The\nRTS-GLMC has 73 nodes and 120 transmission lines. The\ngeneration mix includes 74 conventional generation units, 20\nhydro units, 25 PV farms, 31 roof-top PV (RTPV), 1 CSP, 4\nwinds farms, and 1 ESS. The ESS provided by the GMLC is\nnot considered in this work since we are concerned with sizing\nthe ESS for this system. Each region consists of distributed\nloads with a peak load of 2850 MW per region. Since the\ncombined generation of the system is signiﬁcantly larger than\nthe system peak load, the system is overbuilt and very reliable\n[32]. Hence, in this work, the demand is scaled by 1.2 to\nincrease the load curtailment rate and loading of transmission\nlines. In addition, to improve the computational efﬁciency of\nthe proposed approach, a multi-region transportation model\nof the RTS-GMLC system is used for composite reliability\nanalysis and ESS sizing. Readers are referred to [28] for\nthe details about constructing the transportation models for\nreliability analysis. The MCS framework proposed in this work\nis simulated in Python with the DC-OPF solved using the glpk\nsolver in pyomo [33]. The non-linear optimization framework\nin section V-C is solved in MATLAB using thefmincon solver.\nWind speeds are extracted from the National Renewable\nEnergy Laboratory (NREL) resource extraction tool [34] for\nFort Collins, Colorado (CO), Colorado Springs, CO, and\nBoise, Idaho from 2007-2014. The input wind speeds are\nfuzzy C-means clustered to obtain 12 discrete wind speed\nstates per location, which are then used to build the state\ntransition matrices using the procedure in section II. The\nstatistical details for the three locations are present in Table I.\nThe values in the table show that the wind power between Fort\nCollins and Colorado Springs has a larger correlation due to\nthe smaller distance. They also have higher average wind speed\nthan Boise, Idaho’s wind proﬁle. The varying wind speeds and\ncorrelation levels will help to illustrate the impacts of siting\nwind farms in these locations on the sizing of RESS and FESS.\n8\nFig. 4: Single line diagram of the IEEE RTS-GMLC test system with conventional generators and wind farm positions [31].\nTABLE I: Statistical parameters for wind speeds.\nLocation Mean Speed Variance Correlation Distance\n(m/s) (m/s2) (miles)\nFort Collins 4.4994 13.537 −− −−\nCO Springs 5.0300 14.711 0.4463 133.2\nBoise 4.3476 11.420 0.0338 749.6\nSince the proposed approach is studied for systems with\nhigh wind penetration, the simulation scenarios are formulated\nconsidering uncertainty in wind speed based on the location\nof wind farms. The simulation scenarios are as follows:\n• Case I, Case III, and Case III: These cases consider wind\nspeeds of a single location for all wind farms in the test\nsystem. For case I, Fort Collins is chosen as the location\nfor all the wind farms. For cases II and III, CO Springs and\nBoise are the locations for all wind farms respectively.\n• Case IV: In this case, the wind farm in region 1 (WF1 in\nFig. 4) considers the wind speeds of CO Springs, while the\nwind farms in region 3 (WF2, WF3, and WF4) consider\nwind speeds of Fort Collins. This case illustrates the effects\nof the geographical dispersion of wind farms on the RESS\nand FESS sizing.\n• Case V: For case V , the WF1 is subject to wind speeds of\nBoise, while the WF2, WF3, and WF4 are subject to wind\nspeeds of Fort Collins. This case considers the effect of wind\nspeed correlation on the sizing of RESS and FESS.\nFor each simulation scenario, the sequential MCS in section",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "is performed and the reliability indices and generator syn-",
+      "level": 1,
+      "text": "chronization probabilities are obtained. The resulting values\nfrom the MCS are then used to determine ESS sizes. The\nresults of the proposed approach are highlighted as follows:\nA. Composite Reliability Evaluation and Sizing of RESS\nThe system composite reliability assessment results are\nsummarized in Table II. From the table, the following can\nbe observed:\n• Initially, cases I, II, and III show that the location mean\nwind speeds signiﬁcantly affect system reliability for non-\ndistributed wind farms. Case II has the smallest value for\nreliability indices because CO Springs has a higher mean\nwind speed than other locations. It can also be noticed that\ncase III has slightly smaller reliability indices than case I\ndespite Boise having a smaller mean wind speed. This can\nbe attributed to a smaller variance in Boise wind compared\nto Fort Collins.\n• Next, the reliability indices for cases IV and V illustrate\nthe beneﬁt of the geographical dispersion of wind power.\nIt can be observed that both these cases with wind power\ndispersion have smaller reliability indices than all previous\ncases. A major advantage of wind power dispersion can\nbe observed by comparing cases II and V , where despite\ndispersing the wind power between lower speed sites (Boise\nand Fort Collins) in case V , the reliability indices are smaller\nthan in case II. Between cases IV and V , case IV yields a\nsmaller value for indices due to the large difference in mean\nwind speed between Boise and CO Springs.\n9\nTABLE II: Composite reliability analysis of the RTS GMLC\nfor the proposed cases.\nCases LOLP LOLE LOLF EDNS EUE\n(h/yr) (f/yr) (MW/yr) (MWh/yr)\nCase I 0.001887 16.5283 6.4204 0.4396 3850.6\nCase II 0.001771 15.5177 6.1137 0.4137 3624.1\nCase III 0.001885 16.5149 6.2612 0.4379 3836.1\nCase IV 0.001646 14.4147 5.7337 0.3784 3315.1\nCase V 0.001730 15.1525 5.9191 0.3964 3472.7\nIn this paper, the target loss of load probability (LOLP) for\nRESS sizing is set as 0.000274, which is derived from the\n“one day in 10 years” criterion in section A.3 of the NERC\nstandard BAL-502-RF-03 [35]. The composite reliability anal-\nysis in Table II clearly shows that all the cases have LOLP\nsigniﬁcantly greater than the NERC limit. Hence, the RESS\nare sized for all the cases, and their ratings are summarized\nin Table III. The unavailability ratio α is initially calculated\nusing the ratio of NERC unavailability limit and the LOLP\nvalues in Table II. Then, using equation (25), the time rating\nof the RESS tRESS is determined. The power ratings for the\nRESS are obtained using equation (19). The following can be\nobserved from Table III:\n• The power ratings for the RESS in cases I and II are\nproportional to the reliability indices (case II has a smaller\nESS rating since it has a lower value for reliability indices).\nHowever, in case III, the largest values for the RESS ratings\nare observed despite case III having smaller values for\nreliability indices than case I. It should be noted that the\npower rating of the RESS is dependent on the mean value\nof load curtailment, which can have a high value despite\nlow values for LOLP, LOLF, and EDNS. It can also be\nobserved that case III has the largest energy rating due to a\nconsiderably high MDT.\n• The beneﬁts of wind power dispersion are evident for the\nRESS ratings as cases IV and V have smaller RESS sizes\nthan cases I, II, and III. The smallest RESS ratings are\nobserved for case IV since it has the lowest load curtailment\nrate and MDT and is closely followed by case V .\nTABLE III: RESS sizes for the proposed cases.\nCases MDT α tRESS P RESS SRESS\n(h) (h) (MW) (MWh)\nCase I 2.5744 0.1452 5.2290 551.65 2884.5\nCase II 2.5382 0.1547 4.9870 543.85 2712.1\nCase III 2.6377 0.1453 5.3552 562.47 3012.7\nCase IV 2.5140 0.1665 4.7444 527.87 2504.4\nCase V 2.5599 0.1584 4.9653 535.05 2656.7\nFrom the results, it is evident that the wind farm locations\ndirectly impact system reliability and RESS sizes since the\nlocations inﬂuence the capacity value of wind farms. The\nproposed approach for wind stochasticity modeling using\ntransition rate matrices within the MCS captures the aforemen-\ntioned characteristic. The results also show that the dispersion\nof wind power signiﬁcantly beneﬁts system reliability and\nlowers the RESS size requirements. Despite dispersing the\nwind power between locations with lower mean wind speeds,\nconsiderable improvement in system reliability and reduction\nin RESS sizes are observed.\nB. Sizing of the Frequency Security ESS\nThe FESS are sized based on the system frequency security\nrequirements. In this work, we assume the frequency support\nfrom ESS is provided using the standard battery-inverter-grid\ntopology. More details on the construction of ESS providing\nfrequency response can be found in [36]. Initially, we present\na simulation-based procedure for selecting the virtual inertia\ngain and droop constant. Then, the FESS power and energy\nratings are estimated using these values and the probability of\ngenerator synchronization obtained from the MCS.\n1) Selection of IR gain and droop constant for the frequency\nsecurity ESS: Along with the FESS power and energy rating,\nit is important to select appropriate values for the inertia\ngain factor KIR and droop constant RFESS. Including these\nparameters in the sizing algorithm in equation (48) is infeasible\nas these parameters introduce constraints that can only be\nenforced with dynamic simulations. Hence, in this paper, a\nsimulation-based approach is used to determine the values\nof KIR and RFESS. The circuit in Fig. 5 is simulated in\nMATLAB Simulink to obtain the system frequency response\nwith the frequency support of a FESS. The simulation circuit is\nconstructed by combining the IR and PFR control loops of the\nFESS in Fig. 3 with the aggregated system LFC model. The\nvirtual inertia gain and droop constant are determined using\nthe frequency response of Fig. 5 under a step disturbance.\nFig. 5: Aggregated LFC model with FESS integration.\nThe frequency response obtained by simulating Fig. 5 is\ndisplayed in Fig. 6. By selecting a larger IR gain parameter\nKIR, FESS can provide a fast response to the change in system\nRoCoF. Consequently, a larger FESS inertia constant can be\nobserved with a larger gain. This effect is observed in Fig.\n6a where the frequency nadir reduces as IR gain increases.\nHowever, it is important to consider the effect of a larger\ngain after the ﬁrst zero crossing of the RoCoF. After the\nzero crossing, the FESS switch to charging mode (negative IR\npower signal) due to RoCoF reversal as seen in Fig. 6b. A high\nKIR during this stage causes the IR signal to interfere with the\nPFR signal, which increases the settling time for frequency\n10\ndeviation as seen in Fig. 6a. In addition, the improvement in\nsystem RoCoF saturates for larger IR gain values, as seen in\nthe zoomed-in plot in Fig. 6a. On the contrary, selecting a\nsmall value of IR gain can lead to inadequate IR response as\nseen in Fig. 6b for KIR = 1. Hence, in this work, KIR = 5 is\nchosen as it can provide a reasonable response without having\na high charging characteristic during frequency recovery.\n0 5 10 15 20 25 30\nTime (seconds)\n59.2\n59.4\n59.6\n59.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "60 System Frequency (Hz)",
+      "level": 1,
+      "text": "No ESS KIR=2 KIR=5 KIR=10\n0 0.5 1 1.5 2\n59.5\n60\n(a)\n0 5 10 15\nTime (seconds)\n-1\n-0.5\n0\n0.5\n1\nIR Power Signal (p.u.)\nKIR=1 KIR=2 KIR=5 KIR=10\n0 0.1 0.2\n0\n0.5\n1\n(b)\n0 5 10 15 20 25 30\nTime (seconds)\n0\n0.2\n0.4\n0.6\n0.8\n1\nPFR Power Signal (p.u.)\n fss,des=0.2 Hz,RESS=0.0030\n fss,des=0.3 Hz,RESS=0.0047\n fss,des=0.4 Hz,RESS=0.0063\n(c)\nFig. 6: a) System frequency deviation b) FESS IR loop\nresponse and, c) PFR during a disturbance.\nSimilarly, for the selection of the droop constant, it can\nbe seen in Fig. 6c that a smaller droop can provide a better\nresponse. The droop coefﬁcient of 0.003 renders the FESS\nto generate 1 p.u. the fastest during the QSS frequency,\nwhereas for droop of 0.0063, FESS generates around 0.75\np.u. However, selecting a small droop value can lead to\noverestimating the contribution of FESS to RR in the LFC\nmodel. Hence, for better generalization, the droop constant\nis calculated by setting the desired QSS frequency ∆f ss,des\nequal to the QSS frequency safe limit ∆f lim\nss in equation (47).\nThis ensures that the FESS generates 1 p.u. when the QSS\nfrequency is greater than or equal to the safe limit.\n2) Sizing results for the frequency security ESS: The prob-\nability of synchronization obtained using the MCS and the\nmethods in section V are deployed to obtain the sizes for\nthe FESS. The safety limits and disturbance sizes to size\nthe FESS are set according to the prevailing limits in the\nEastern Interconnection (EI), Western Interconnection (WI),\nand ERCOT in the United States, found in Table 1 of the\nNERC standard BAL-003-1 [37]. However, since the EI and\nWI have the same under-frequency load-shedding (UFLS)\nsetting, only the frequency security limits of EI are considered\namong these two interconnections. The values of frequency\nsecurity limits in Table IV and disturbance size considered in\nthis work are obtained as follows:\n• Disturbance size (∆PL): The resource contingency criterion\n(RCC) set forth by the NERC in standard BAL-003-1\nspeciﬁes an N-2 criterion for the disturbance. Hence, in this\npaper, the disturbance size is taken as the failure of two\nlargest generators G74 (400 MW) and G33 (355 MW).\n• Frequency nadir limits ( ∆f lim): They are set according to\nthe prevailing UFLS limits in NERC standard BAL-003-1.\n• RoCof limits (\n⏐⏐⏐df\ndt\n⏐⏐⏐\nlim\n): They are calculated using the lowest\nsystem inertia experienced by the interconnections in 2017\n[38] and 10 % of the system demand during that time [39].\n• QSS frequency limits ( ∆f lim\nss ): They are set as 50% of the\nfrequency nadir limits.\nTABLE IV: Frequency security limits.\nInterconnection Nadir limit RoCoF limit QSS frequency limit\n(Hz) (Hz/s) (Hz)\nEastern 0.5 0.5124 0.25\nERCOT 0.7 0.6608 0.35\nTable V illustrates the FESS sizing results for system\nfrequency security based on the limits described earlier. The\nfollowing can be observed from Table V:\n• Initially, comparing cases I, II, and III, it can be observed\nthat the expected values of system inertia are inversely pro-\nportional to the mean locational wind speeds and variance.\nFor example, case II has the lowest values for inertia since\nCO Springs has the highest mean wind speed. This is due to\nthe displacement of conventional generators by wind farms.\nThis can also be observed in Fig. 7, where the conventional\ngenerators have a lower probability of synchronization in\ncase II compared to cases I and III. As a result, case II\nrequires the largest FESS sizes, while case III has the lowest\nFESS requirement for both EI and ERCOT limits.\n• The reliability simulations in the last section showed that\ncases IV and V have higher capacity values of wind farms.\nDespite the increased capacity values in these cases, the\nFESS sizes do not exceed those in case II. It is because along\nwith the reduction of global wind variance, the dispersion\nof wind farms ensures that the extreme locational wind\nspeeds are ﬂattened. For example, in case II, if there is high\nwind speed in CO Springs, all wind farms experience this\nspeed. This causes maximum displacement of generators\nby wind farms during dispatch. However, high wind speed\nat CO Springs in case IV means only WF1 experiences\nthis speed. This causes the generators to maintain a higher\nsynchronization probability, as seen in Fig. 7 for cases IV\nand V . Consequently, the FESS size requirements reduce\nwith the dispersion of wind farms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "Deployment of RESS and FESS in the RTS-GMLC System",
+      "level": 1,
+      "text": "Initially, the RESS sizes obtained for case IV in Table",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "are deployed in the RTS-GMLC system using the RESS",
+      "level": 1,
+      "text": "deployment strategy in section IV-B. Since case IV has the\nlowest RESS size requirement, this case is chosen for RESS\n11\nTABLE V: Expected system inertia and FESS sizing results.\n(inertia is normalized to a system base of 100 MV A).\nCases E{H}\nEI limits ERCOT limits\nP FESS SFESS P FESS SFESS\ns (MW) (MWh) (MW) (MWh)\nCase I 175.448 1345.5 989.31 819.20 602.35\nCase II 173.618 1361.7 1001.2 835.07 614.02\nCase III 176.650 1334.6 981.32 808.45 594.45\nCase IV 174.713 1351.4 993.59 824.68 606.38\nCase V 175.643 1343.1 987.59 816.72 600.53\nG33 G39 G40 G57 G67 G68 G71 G72 G74\nGenerator Indexes\n0\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 Probability of Synchronization",
+      "level": 1,
+      "text": "Case II\nCase II\nCase III\nCase IV\nCase V\nFig. 7: Synchronization probability of RTS-GMLC generators\nwith the highest inertia.\ndeployment. The improvement in the system reliability with\nthe proposed 527.87 MW, 2504.4 MWh RESS is illustrated\nwith the probability distribution of loss of load hours in Fig.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "8 As expected, when the proposed RESS is deployed, the",
+      "level": 1,
+      "text": "system loss of load hours are lower than the NERC reliability\nlimit in the majority of Monte Carlo samples.\nFig. 8: Probability distribution of system loss of load hours.\nTo illustrate the versatility of the proposed RESS sizing\nmethod, the RESS are sized and deployed for varying levels\nof system demand scaling as illustrated in Table VI. From the\ntable, it is clear that as demand scaling increases, the reliability\nindices worsen signiﬁcantly. As a result, larger RESS sizes\nare required to ensure system reliability. However, when the\nsuggested RESS are deployed in the system, the reliability\nindices for all three demand-scaled cases improve and are\nwithin the NERC unavailability limit (LOLP) of 0.000274. In\naddition, it can be noticed that the proposed RESS maintain the\nsystem LOLP very close to the limit for all three cases. This\nshows that the proposed approach is economically feasible as\nit does not signiﬁcantly overestimate the RESS sizes.\nNext, the sized FESS in case IV is deployed into the RTS-\nGMLC system using the values of inertia gain and droop\nconstant obtained from section VI-B1 and the power and\nenergy rating obtained from Table V. The results of the Monte\nCarlo simulation with the deployment of case IV FESS are\nillustrated with the cumulative distributions of frequency nadir\nin Fig. 9. The ﬁgure shows that without FESSs, the system\nfrequency nadir has very high values. This is due to the N-2\ncriterion system disturbance and lack of system inertia and\nregulation with high wind penetration. The expected value of\nthe frequency nadir for the case without FESS is observed\nto be 1.2644 Hz, which is considerably larger than the EI\nand ERCOT nadir limits. For the cases where EI and ERCOT\nFESS are deployed (red and yellow curves), the expected\nvalues of frequency nadir are 0.5269 and 0.7442, respectively.\nThese values are close to the EI and ERCOT nadir limits\nof 0.5 Hz and 0.7 Hz, respectively. If a higher level of\nfrequency security is desired, the planners can use smaller\nvalues of inertia (H) and other parameters (D,FR,RR) from\ntheir probability distributions instead of the expected value\n(example: ﬁrst quartile values). Similar to the RESS sizes, the\nsuggested FESS sizes successfully keep the system frequency\nnadir close to the limits for which the FESS are sized, which\ndisplays the economical feasibility of the proposed approach.\n0 0.5 1 1.5 2 2.5\nFrequency nadir\n0\n0.2\n0.4\n0.6\n0.8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "1 Probability",
+      "level": 1,
+      "text": "Without FESS\nWith EI FESS\nWith ERCOT FESS\nEI nadir limit\nERCOT nadir limit\nFig. 9: Cumulative distribution of system frequency nadir.\nD. Discussion\nSimulation results show that the proposed approach can\nsimultaneously size the ESS for reliability and frequency secu-\nrity while incorporating wind stochasticity, geographical char-\nacteristics of wind farms, forced outages of components, and\nfrequency support from ESSs. For each simulation scenario, it\ncan be seen that a single MCS is adequate for generating the\ncomposite reliability indices for sizing the RESS and obtaining\n12\nTABLE VI: IEEE RTS-GMLC reliability indices with and without RESS deployment.\nDemand\nscaling\nfactor\nReliability indices without RESS RESS Size Reliability indices with RESS\nLOLP LOLE LOLF EDNS EUE P RESS SRESS\nLOLP LOLE LOLF EDNS EUE\n(h/yr) (f/yr) (MW/yr) (MWh/yr) (MW) (MWh) (h/yr) (f/yr) (MW/yr) (MWh/yr)\n1.15 0.00038 3.3346 1.4904 0.0073 641.91 377.17 292.16 0.00025 2.2082 0.9123 0.0053 464.92\n1.20 0.00164 14.415 5.7337 0.3784 3315.1 532.26 2547.3 0.00025 2.1622 0.8021 0.0064 561.13\n1.25 0.00570 49.919 16.128 1.6614 14554 877.43 8676.1 0.00023 2.0440 0.8243 0.0045 391.39\nthe synchronization probability of conventional generators for\nFESS sizing. The method is versatile as it is easily generaliz-\nable for varying reliability levels and frequency security limits,\nwhich is illustrated with the deployment of ESSs. The results\nalso illustrate the beneﬁts of the geographical dispersion of\nwind farms on ESS sizing as follows:\n• Improvement in system reliability indices and reduction\nof RESS sizes by reducing the global wind variance and\nincreasing wind power capacity value.\n• Reduction in FESS sizes by improving the synchroniza-\ntion probability of conventional generators. This beneﬁt is\nachieved by alleviating the conventional generator displace-\nment due to extreme wind speeds in a single location.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "C ONCLUSION",
+      "level": 1,
+      "text": "This paper proposes a probabilistic approach for sizing\nESS to enhance system reliability and frequency security\nof wind-rich grids. A sequential Monte Carlo simulation\nframework is proposed that generates reliability indices for\nthe sizing of reliability ESS and generator synchronization\nprobabilities for frequency support ESS. Case studies on the\nIEEE RTS-GMLC show that the proposed approach generates\noptimal ESS sizes while incorporating uncertainties in wind\ngeneration, availability of system components, and operation\nconstraints. The results also illustrate the beneﬁts of wind farm\ndispersion in improving the system reliability and reducing\nthe sizing requirements for the ESS. The proposed approach\noffers ﬂexibility for system planners as the sizing algorithms\ncan be incorporated with the existing composite reliability\nassessment frameworks. In addition, the ESS sizes can easily\nbe determined for varying levels of desired reliability and\nfrequency security. Future work involves improving the ESS\nsizing algorithms to incorporate complex control architectures\nand different storage alternatives.\nACKNOWLEDGEMENT\nThis material is based upon work supported by the U.S.\nDepartment of Energy, Ofﬁce of Science, Basic Energy\nSciences, Ofﬁce of Electricity, under Award Number DE-\nSC0023422. This article has been co-authored by an em-\nployee of National Technology & Engineering Solutions of\nSandia, LLC under Contract No. DE-NA0003525 with the\nU.S. Department of Energy (DOE). The employee owns all\nright, title and interest in and to the article and are solely\nresponsible for its contents. The United States Government\nretains and the publisher, by accepting the article for publica-\ntion, acknowledges that the United States Government retains\na non-exclusive, paid-up, irrevocable, world-wide license to\npublish or reproduce the published form of this article or\nallow others to do so, for United States Government purposes.\nThe DOE will provide public access to these results of\nfederally sponsored research in accordance with the DOE\nPublic Access Plan https://www.energy.gov/downloads/doe-\npublic-access-plan. This paper describes objective technical\nresults and analysis. Any subjective views or opinions that\nmight be expressed in the paper do not necessarily represent\nthe views of the U.S. Department of Energy or the United\nStates Government.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "(30)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "(31)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    },
+    {
+      "id": "e39",
+      "latex_or_text": "(39)"
+    },
+    {
+      "id": "e40",
+      "latex_or_text": "(40)"
+    },
+    {
+      "id": "e42",
+      "latex_or_text": "(42)"
+    },
+    {
+      "id": "e43",
+      "latex_or_text": "(43)"
+    },
+    {
+      "id": "e45",
+      "latex_or_text": "(45)"
+    },
+    {
+      "id": "e46",
+      "latex_or_text": "(46)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "equation (25)"
+    },
+    {
+      "id": "e48",
+      "latex_or_text": "equation (48)"
+    },
+    {
+      "id": "e47",
+      "latex_or_text": "equation (47)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 19
+  }
+}

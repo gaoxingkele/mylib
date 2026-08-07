@@ -1,0 +1,325 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/nrel118/nrel118__Synthetic_power_grid_datasets_applications__b2b61f4e79.pdf",
+  "n_pages": 10,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Autonomous vehicles depend on robust scene under-\nstanding and online mapping to navigate the world. To\ndrive safely, these systems not only reason about the se-\nmantics of their surroundings, but also a spatial under-\nstanding due to the geometric nature of navigation. Many\nprior approaches directly model geometry and relationships\nbetween different view and a canonical map representa-\ntion [2, 14, 15, 16, 20, 29, 35]. They require an ex-\nplicit [2, 15, 16, 20, 35] or probabilistic [14, 29] estimate of\ndepth in either image or map-view. However, this explicit\nmodeling can be hard. First, image-based depth estimates\nare error-prone, as monocular depth estimates scale poorly\nwith the distance to the observer. Second, depth-based pro-\njections are a fairly inﬂexible and rigid bottleneck to map\nbetween views. In this work, we take a different approach.\nWe learn to map from camera-view to a canonical map-\nview representation using a cross-view transformer archi-\ntecture. The transformer does not perform any explicit geo-\nmetric reasoning but instead learns to map between views\nCross-View \nTransformer\nMap-view\nembedding\nCamera-aware\nembedding\n…\nFigure 1. We introduce an architecture for perception in a map-\nview frame from multiple views. Our model builds a map-view\nrepresentation by cross-attending to image features. A camera-\naware positional embedding can geometrically link up the camera\nand map-views.\nthrough a geometry-aware positional embedding. Multi-\nhead attention then learns to map features from camera-\nview into a canonical map-view representation using a\nlearned map-view positional embedding. We learn a single\nmap-view positional embedding for all cameras and per-\nform attention across all views. The model thus learns to\nlink up different map locations to both cameras and loca-\ntions within each camera. Our cross-view transformer re-\nﬁnes the map-view embedding through multiple attention\nand MLP blocks. The cross-view transformer allows the\nnetwork to learn any geometric transformation implicitly\nand directly from data. It learns an implicit estimate of\ndepth through the camera-dependent map-view positional\nembedding by performing the downstream task as accu-\nrately as possible.\nThe simplicity of our model is a key strength. The model\nperforms at state-of-the-art on the nuScenes [3] dataset for\nvehicle and road segmentation in the map-view and com-\nfortably runs in real-time (35 FPS) on a single RTX 2080\nTi GPU. The model is easy to implement and trains within\n1\narXiv:2205.02833v1  [cs.CV]  5 May 2022\n32 GPU hours. The learned attention mechanism learns ac-\ncurate correspondences between camera and map-view di-\nrectly from data.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Works",
+      "level": 1,
+      "text": "Map-view semantic segmentation lies at the intersection\nof 3D recognition, depth estimation, and mapping.\nMonocular 3D object detection. Monocular detection\naims to ﬁnd objects in a scene, estimate their real-world\nsize, orientation, and placement in the 3D scene. Most\ncommon approaches reduce the problem to 2D object de-\ntection and infer monocular depth [25, 48]. CenterNet [48]\ndirectly predicts depth for each image coordinate. ROI-\n10D [25] lifts 2D detections into 3D using depth estimates\nthen regresses 3D bounding boxes. Psuedo-lidar based\napproaches [24, 44, 45, 46] project to 3D points using a\ndepth estimate and leverage 3D point based architectures\n(e.g. [18, 30, 43]) with 2D labels. This family of algorithms\ndirectly beneﬁts from advances in monocular depth estima-\ntion and 3D vision.\nMonocular 3D object detection is both easier and harder\nthan mapping from multiple cameras. The overall problem\nsetup deals with just a single camera and does not need\nto merge multiple sources of inputs. However, it strongly\nrelies on a good explicit monocular depth estimate, which\nmay be harder to obtain.\nDepth estimation. Depth is a core ingredient in many\nmulti-view mapping approaches. Classic structure-from-\nmotion approaches [1, 7, 20, 35, 38] leverage epipolar ge-\nometry and triangulation to explicitly compute camera ex-\ntrinsics and depth. Stereo matching ﬁnds corresponding\npixels, from which depth can be explicitly computed [15].\nRecent deep learning approaches directly regress depth\nfrom images [6, 8, 11, 12, 31, 47].\nWhile convenient, explicit depth is challenging to utilize\nfor downstream tasks. It is camera-dependent and requires\nan accurate calibration and fusion of multiple noisy esti-\nmates. Our approach side-steps explicit depth estimation\nand instead allows an attention mechanism with positional\nembedding to take its place. Our cross-view transformer\nlearns to reproject camera views into a common map repre-\nsentation as part of training.\nSemantic mapping in the map-view. Driven by ever\nlarger 3D recognition datasets [3, 5, 10, 13, 39], a number\nof works have focused on perception in the map-view. This\nproblem is particularly challenging as the inputs and out-\nputs lie in different coordinate frames. Inputs are recorded\nin calibrated camera views, outputs are rasterized onto a\nmap. Most prior works differ in the way the transformation\nis modeled. One common technique is to assume the scene\nis mostly planar and represent the image to map-view trans-\nformation as a simple homography [2, 9, 16, 22, 36, 49].\nA second family of methods directly produces map-view\npredictions from input images, with no explicit geometric\nmodeling. VED [23] uses a Variational Auto Encoder [17]\nto produce a semantic occupancy grid from a single monoc-\nular camera-view.\nClosely related in spirit to our method, VPN [28] learns a\ncommon feature representation across multiple views with\ntheir proposed view relation module - an MLP that outputs\nmap-view features from inputs across all views. Both VED\nand VPN show carefully-designed networks trained with\nsufﬁcient training data can jointly learn the map-view trans-\nformation and perform prediction. However, these methods\ndo suffer certain drawbacks as they do not model the ge-\nometric structure of the scene. They forgo the inherit in-\nductive biases contained in a calibrated camera setup and\ninstead need to learn an implicit model of camera calibra-\ntion baked into the network weights. Our cross-view trans-\nformer instead uses positional embeddings derived from\ncalibrated camera intrinsics and extrinsics. The transformer\ncan learn a camera-calibration-dependent mapping akin to\nraw geometric transformations.\nMost recently, top-performing methods returned back to\nexplicit geometric reasoning [14, 27, 29, 32, 33, 34]. Ortho-\ngraphic Feature Transform (OFT) [33] creates a map-view\nintermediate representation from a monocular image by av-\nerage pooling image features from the 2D projection that\ncorresponds with the pillar in map-view. This pooling oper-\nation foregoes an explicit depth estimate and instead aver-\nages all possible image locations a map-view object could\ntake. Lift-Splat-Shoot (LSS) [29] constructs an intermedi-\nate map-view representation in a similar fashion. However,\nthey allow the model to learn a soft depth estimate and av-\nerage across different bins using a learned depth-estimate-\ndependent weight. Their downstream decoder can account\nfor uncertainty in depth. This weighted averaging operation\nclosely mimics the attention used in a transformer. How-\never, their “attention weights” are derived from geometric\nprinciples and not learned from data. The original Lift-\nSplat-Shoot approach considers multiple views within a sin-\ngle timestep. Recent methods have extended this further to\ntake aggregate features from previous timesteps [34], and\nuse multi-view, multi-timestep observations to do motion\nforecasting [14].\nIn this work, we show that implicit geometric reasoning\nperforms as well as explicit geometric models. The added\nbeneﬁt of our implicit handling of geometry is an improve-\nment in inference speed compared to explicit models. We\nsimply learn a set of positional embeddings, and attention\nwill reproject the camera to map-view.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 query Cross",
+      "level": 1,
+      "text": "attention\nMulti-camera Images Image features  \n…\nPositional \nembedding\nConv …\nMap\nembedding\n Decoder\nEncoder\nCross\nattention\nConv\nFigure 2. An overview of our proposed architecture for map-view segmentation. For each image, we extract image features across multiple\nscales. Using known camera pose and intrinsics, we construct a camera-aware positional embedding. We learn a map-view positional\nembedding that aggregates information from all views through a series of cross attention layers. Each cross-attention reﬁnes the map-view\npositional embedding and queries more accurate image locations.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 Cross-view transformers",
+      "level": 1,
+      "text": "In this section, we introduce our proposed architecture\nfor semantic segmentation in the map-view from multiple\ncamera views. In this task, we are given a set of n monoc-\nular views (Ik,K k,R k,t k)n\nk=1 consisting of input image\nIk ∈ RH×W ×3, camera intrinsics Kk ∈ R3×3, and ex-\ntrinsic rotationRk∈ R3×3 and translationtk∈ R3 relative\nto the center of the ego-vehicle. Our goal is to learn an ef-\nﬁcient model to extract information from the multiple cam-\nera views in order to predict a binary semantic segmentation\nmasky∈{ 0, 1}h×w×C in the orthographic map-view co-\nordinate frame.\nWe design a simple, yet effective encoder-decoder archi-\ntecture for map-view semantic segmentation. An image-\nencoder produces a multi-scale feature representation of\neach input image. A cross-view cross-attention mechanism\nthen aggregates multi-scale features into a shared map-view\nrepresentation. The cross-view attention relies on a posi-\ntional embedding that is aware of the geometric structure\nof the scene and learns to match up camera-view and map-\nview locations. All cameras share the same image-encoder,\nbut use a positional embedding dependent on their individ-\nual camera calibration. Finally, a lightweight convolutional\ndecoder upsamples the reﬁned map-view embedding and\nproduces the ﬁnal segmentation output. The entire network\nis end-to-end differentiable and learned jointly. Figure 2\nshows an overview of the full architecture.\nIn Section 3.1, we ﬁrst present the core cross-view at-\ntention mechanism and positional embedding that underlies\nour entire architecture. Section 3.2 then combines multiple\ncross-view attention layers into the ﬁnal map-view segmen-\ntation model.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Cross-view attention",
+      "level": 2,
+      "text": "The goal of cross-view attention is to link up a map-view\nrepresentation with image-view features. For any world co-\nordinate x(W ) ∈ R3, the perspective transformation de-\nscribes its corresponding image coordinatex(I)∈ R3:\nx(I)≃KkRk(x(W )−tk). (1)\nHere,≃ describes equality up to a scale factor, and x(I) =\n(·,·, 1) uses homogeneous coordinates. However, without\nan accurate depth estimate in camera view or height-above-\nground estimate in map-view, the world coordinatex(W ) is\nambiguous. We do not learn an explicit estimate of depth\nbut encode any depth ambiguity in the positional embed-\ndings and let a transformer learn a proxy for depth.\nWe start by rephrasing the geometric relationship be-\ntween world and image coordinates in Equation 1 as a co-\nsine similarity for use in an attention mechanism.\nsimk(x(I),x (W )) =\n(\nR−1\nk K −1\nk x(I))\n·\n(\nx(W )−tk\n)\n∥R−1\nk K −1\nk x(I))∥∥(x(W )−tk∥. (2)\nThis similarity still relies on the exact world coordinate\nw(W ). Next, we replace all geometric components of this\nsimilarity with positional encodings that can learn both ge-\nometric and appearance features.\nCamera-aware positional encoding. The camera-aware\npositional encoding starts from the unprojected image coor-\ndinatedk,i =R−1\nk K −1\nk x(I)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "for each image coordinatex(I)",
+      "level": 1,
+      "text": "i .\nThe unprojected image coordinatedk,i describes a direction\nvector from the origintk of camerak to the image plane at\ndepth 1. The direction vector uses world coordinates.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 We encode this direction vector dk,i using an MLP",
+      "level": 1,
+      "text": "(shared across allk views) into aD-dimensional positional\nembedding δk,i ∈ RD. We use D = 128 in our experi-\nments. We combine this positional embedding with image\nfeaturesφk,i in the keys of our cross-view attention mecha-\nnism. This allows cross-view attention to use both appear-\nance and geometric cues to reason about correspondences\nacross the different views.\nNext, we show how to build an equivalent representation\nfor the map-view queries. This embedding can no longer\nrely on exact geometric inputs and instead needs to learn ge-\nometric reasoning in consecutive layers of the transformer.\nMap-view latent embedding. The map-view component\nof the geometric similarity metric in Equation 2 contains\na world coordinate x(W ) and camera location tk. We en-\ncode both in a separate positional embedding. We use an\nMLP to transform each camera location tk into an embed-\nding τk ∈ RD. We build the map-view representation up\nover multiple iterations in our transformer. We start with a\nlearned positional encoding c(0)∈ Rw×h×D. The goal of\nthe map-view positional encoding is to produce an estimate\nof the 3D location of each element of the road. Initially, this\nestimate is shared across all scenes and likely learns an av-\nerage position and height above the ground plane for each\nelement of the scene. The transformer architecture then re-\nﬁnes this estimate through multiple rounds of computation,\nresulting in new latent embeddings c(1),c (2),... . Each po-\nsitional embedding is better able to project the map-view\ncoordinates into a proxy of the 3D environment. Following\nthe geometric similarity measure in Equation 2, we use the\ndifference between map-view embeddings c and camera-\nlocation embeddingsτk as queries in the transformer.\nCross-view attention. Our cross-view transformer com-\nbines both positional encodings through a cross-view atten-\ntion mechanism. We allow each map-view coordinate to\nattend one or more image locations. Crucially, not every\nmap-view location has a corresponding image patch in each\nview. Front-facing cameras do not see the back, rear-facing\ncameras do not see the front. We allow the attention mecha-\nnism to select both camera and location within each camera\nwhen corresponding map-view and camera-view perspec-\ntives. To this end, we ﬁrst combine all camera-aware po-\nsitional embeddings δ1,δ 2,... from all views into a single\nkey vector δ = [δ1,δ 2,... ]. At the same time, we com-\nbine all image features φ1,φ 2,... into a single value vec-\ntorφ = [φ1,φ 2,... ]. We combine camera-aware positional\nembeddings δ and image features φ to compute attention\nkeys. Finally, we perform softmax-cross-attention [42] be-\ntween keys [δ,φ ], valuesφ, and map-view queriesc−τk.\nThe softmax attention uses a cosine similarity between\nkeys and queries as a basic building block\nsim(δk,i,φ k,i,c (n)\nj ,τ k) =\n(δk,i +φk,i)·\n(\nc(n)\nj −τk\n)\n∥δk,i +φk,i∥∥c(n)\nj −τk∥\n. (3)\nThis cosine similarity follows the geometric interpretation\nin Equation 2. This cross-view attention forms the basic\nbuilding block of our cross-view transformer architecture.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 A cross-view transformer architecture",
+      "level": 2,
+      "text": "The ﬁrst stage of the network builds up a camera-view\nrepresentation for each input image. We feed each imageIi\ninto feature extractor (EfﬁcientNet-B4 [40]) and get a multi-\nresolution patch embedding{φ1\n1,φ 2\n1,...,φ R\nn}, where R is\nthe number of resolutions we consider. We found R = 2\nresolutions to produce sufﬁciently accurate results. We pro-\ncess each resolution separately. We start from the lowest\nresolution and project all image features into map-view us-\ning cross-view attention. We then reﬁne the map-view em-\nbedding and repeat the process for higher resolutions. Fi-\nnally, we use three up-convolutional layers to produce the\nfull resolution output.\nA detailed overview of this architecture is shown in Fig-\nure 2. The ﬁnal network is end-to-end trainable. We train all\nlayers using ground truth semantic map-view annotations\nand a focal loss [19].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Implementation Details",
+      "level": 1,
+      "text": "Architecture. We use (and ﬁne-tune) a pre-trained\nEfﬁcientNet-B4 [40] to compute image features at two dif-\nferent scales - (28, 60) and (14, 30), which correspond to\na 8x and 16x downscaling, respectively. The initial map-\nview positional embedding is a tensor of learned parame-\nters w×h×D, where D = 128 . For computational ef-\nﬁciency, we choose w = h = 25 as the cross-attention\nfunction grows quadratically with grid size. The encoder\nconsists of two cross-attention blocks: one for each scale of\npatch features. We use multi-head attention with 4 heads\nand an embedding size dhead = 64 . The decoder consists\nof three (bilinear upsample + conv) layers to upsample the\nlatent representation to the ﬁnal output size. Each upsam-\npling layer increases the resolution by a factor of 2 up to a\nﬁnal output resolution of 200× 200. This corresponds to a\n100× 100 meter area centered around the ego-vehicle.\nTraining. We train all models using a focal loss [19], with\na batch size of 4 (per GPU) for 30 epochs. We optimize us-\ning the AdamW [21] optimizer with the one-cycle learning\nrate scheduler [37]. Training converges within 8 hours on a\n4 GPU machine.\n4\nSetting 1 Setting 2 #Params (M) FPS\nPON [32] 24.7 - 38 30\nVPN [28] 25.5 - 18 -\nSTA [34] 36.0 - - -\nLift-Splat [29] - 32.1 14 25\nFIERY [14] 37.7 35.8 7 8\nOurs 37.5 36.0 5 35\nTable 1. Vehicle map-view segmentation on nuScenes. Setting\n1 refers to the 100m ×50m at 25cm resolution setting proposed\nby Roddick et al . [32]. Setting 2 refers to the 100m ×100m at\n50cm resolution setting proposed by Philion and Fidler [29]. Both\nsettings evaluate the Intersection over Union (IoU) metric. Higher\nis better. For a fair comparison, we use single-timestep models\nonly. In particular, we compare to FIERY static [14]. In both\nsettings, our cross-view transformer performs at the state-of-the-\nart with a smaller model and runs 4.5× faster during inference.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "5 Results",
+      "level": 1,
+      "text": "We evaluate our cross-view transformer on vehicle and\nroad map-view semantic segmentation on the nuScenes [3]\nand Argoverse [4] datasets.\nDataset. The nuScenes [3] dataset is a collection of 1000\ndiverse scenes collected over a variety of weathers, time-\nof-day, and trafﬁc conditions. Each scene lasts 20 seconds\nand contains 40 frames for a total of 40k total samples in\nthe dataset. The recorded data captures a full 360° view\naround the ego-vehicle and is composed of 6 camera views.\nEach camera view has calibrated intrinsicsK and extrinsics\n(R,t ) at every timestep. We resize every image to 224×\n448 unless speciﬁed otherwise. The Argoverse [4] dataset\ncontains 10k total frames.\nVehicles and other objects in the scene are tracked across\nframes and annotated with 3D bounding boxes using Li-\nDAR data. Using the pose of the ego-vehicle, we generate\nthe ground-truth labelsy, a binary vehicle occupancy mask\nrendered at a resolution of (200, 200) by orthographically\nprojecting 3D box annotations onto the ground plane, fol-\nlowing standard practice [14, 29].\nEvaluation. There are two commonly used evaluation\nsettings for map-view vehicle segmentation. Setting 1 uses\na 100m×50m area around the vehicle and samples a map\nat a 25cm resolution. The setting, popularized by Roddick\net al . [32], serves as the main comparison to prior work.\nSetting 2 [29] uses a 100m×100m area around the vehicle,\nwith a 50cm sampling resolution. This setting was popular-\nized by Philion and Fidler [29] and serves as a comparison\nto Lift-Splat-Shoot [29] and FIERY [14]. We use Setting 2\nfor all ablations. In both settings, we use the Intersection-\nover-Union (IoU) score between the model predictions and\nVehicle Driveable Area\nOFT [33] 30.1 71.7\nLift-Splat [29] 32.1 72.9\nOurs 36.0 74.3\nMonolayout [26] 32.1 58.3\nPON [32] 31.4 65.4\nOurs 35.2 73.6\nTable 2. Additional comparison with models that perform map-\nview segmentation for vehicles and driveable area. The top and\nbottom rows correspond to on nuScenes [3] setting 2 and Argov-\nerse [4] dataset respectively.\nthe ground truth map-view labels as the main performance\nmeasure. We additionally report inference speeds measured\non an RTX 2080 Ti GPU.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5.1 Comparison to prior work",
+      "level": 2,
+      "text": "We compare our model to the ﬁve most competitive prior\napproaches on online mapping. For a fair comparison, we\nuse single-timestep models only and do not consider tempo-\nral models. We compare to Pyramid Occupancy Networks\n(PON) [32], Orthographic Feature Transform (OFT) [33],\nView Parsing Network (VPN) [28], Spatio-temporal Aggre-\ngation (STA) [34], Lift-Splat-Shoot [29], and FIERY [14].\nPON, VPN, STA only report numbers in Setting 1, while\nLift-Splat-Shoot only uses Setting 2.\nIn both settings, our cross-view transformer and FIERY\noutperform all alternative approaches by a signiﬁcant mar-\ngin. Our cross-view transformer and FIERY perform com-\nparably. We have a slight edge in Setting 2, FIERY in\nSetting 1. The main advantage of our model is simplic-\nity and inference speed, along with the accompanying edge\nin model size. Our model trains signiﬁcantly faster (32\nGPU hours vs 96 GPU hours) and performs4× faster infer-\nIoU\nNo camera-aware embeddingδ 31.0\nNo image featuresφ in attention 33.2\nNo map-view embedding reﬁnement 33.6\nFull model 36.0\nTable 3. Ablations of the cross-view attention mechanism. The\nﬁrst row compares to a model that does not use camera-aware po-\nsitional embedding thus only uses image features as attention keys.\nThe second row does not use any image features in the keys of the\nattention mechanism. The third row uses the full attention compu-\ntation in camera-view but does not reﬁne the map-view positional\nembedding. All partial models degrade reasonably and perform\nbelow the full model.\n5\nence. We intentionally use the same image feature extractor\n(EfﬁcientNet-B4) [40] and similar decoder architecture as\nFIERY . This suggests our cross-view transformer is capa-\nble of combining features from multiple views in a more\nefﬁcient manner.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5.2 Ablations of cross-view attention",
+      "level": 2,
+      "text": "The core ingredient of our approach is the cross-view\nattention mechanism. It combines camera-aware embed-\ndings and image features as keys and learned map-view po-\nsitional embeddings as queries. The map-view embeddings\nare allowed to update across multiple iterations, while the\ncamera-aware embeddings contain some geometric infor-\nmation. Table 3 compares the impact of each of the compo-\nnents of the attention mechanism on the resulting map-view\nsegmentation system. For each ablation, we trained a model\nfrom scratch using equivalent experimental settings, chang-\ning a single component at the time.\nThe most important component of our system is the\ncamera-aware positional embedding. It bestows the atten-\ntion mechanism with the ability to reason about the geo-\nmetric layout of the scene. Without it, attention has to rely\non the image feature to reveal its own location. It is possi-\nble for the network to learn this localization due to the size\nof the receptive ﬁeld and zero padding around the boundary\nof the image. However, an image feature alone struggles to\nproperly link up map-view and camera-view perspectives.\nIt also needs to explicitly infer the direction each image is\nfacing to disambiguate different views. On the other hand, a\npurely geometric camera-aware positional embedding alone\nis also insufﬁcient. The network likely uses both semantic\nand geometric cues to align map-view and camera-view, es-\npecially after the reﬁnement of the map-view embedding.\nFinally, using a single ﬁxed map-view embedding also de-\ngrades the performance of the model. The ﬁnal model per-\nforms best with all its attention components.\nMethod IoU\nNone 31.0\nLearned per camera 34.4\nCamera-aware + Random Fourier 35.8\nCamera-aware + Linear Projection 36.0\nTable 4. Ablations of the camera-aware positional embeddings.\nThe ﬁrst row compares to a model that does not use camera-aware\npositional embedding thus only uses image features as attention\nkeys. The second row uses a learned embedding for each camera.\nThe third row uses a camera-aware positional embedding with a\nrandom Fourier projection. The last row uses a camera-aware po-\nsitional embedding with a linear projection (default).\n0 25 50 75\nMinimum distance (m)\n0\n10\n20\n30IoU\nOurs\nFIERY\nFigure 3. A comparison of model performance vs distance to the\ncamera. Each entry shows the average intersection over union ac-\ncuracy for annotations that are at least distance d away.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5.3 Camera-aware positional embeddings",
+      "level": 2,
+      "text": "As we have previously seen, the camera-aware positional\nembedding plays a major role in the success of the cross-\nview transformer. Table 4 compares different choices for\nthis embedding. We ablate just the positional embedding\nand keep all other model and training parameters ﬁxed.\nNot using any positional embedding performs poorly.\nThe attention mechanism has a hard time localizing features\nand identifying cameras. A learned embedding per camera\nperforms surprisingly well. This is likely because the cam-\nera calibration stays mostly static and a learned embedding\nsimply bakes in all geometric information. A camera-aware\nembedding with either a linear or Random Fourier projec-\ntion [41] performs best. This should not come as a surprise\nas both can learn a compact embedding that directly cap-\ntures the geometry of the scene.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5.4 Accuracy vs distance",
+      "level": 2,
+      "text": "Next, we evaluate how well our model performs as the\ndistance to the ego-vehicle increases. For this experiment,\nwe measure the intersection-over-union accuracy, but ig-\n0 1 2 3\n20\n25\n30\n35\n# Cameras Dropped\nIoU\nFigure 4. Degradation of our model as we randomly drop out\nm∈{ 0, 1, 2, 3} cameras. The models performance drops linearly\nas the observed area shrinks roughly linearly with the number of\ncameras removed.\n6\nFigure 5. Qualitative results on scenes with varying degrees of occlusion. Left shows the six camera views surrounding the vehicle. The top\n3 views are front-facing, the bottom 3 views back-facing. On the right is our predicted map-view segmentation for vehicles and driveable\narea. Second from the right is the ground truth segmentation for reference. The ego-vehicle is located at the center of the map.\nnore all predictions that are closer than a certain distance\nto the ego-vehicle. Figure 3 compares to our closest com-\npetitor FIERY .\nBoth models have close to identical error modes. As the\ndistance to the camera increases, the models get less ac-\ncurate. This is easiest explained through actual qualitative\nresults in Figure 5. Farther away vehicles are often (par-\ntially) occluded and thus much harder to detect and seg-\nment. Our approach degrades slower for close-by distances,\nbut slightly under-performs FIERY at longer ranges.\nPartially occluded far-away samples have fewer corre-\nsponding image features, thus learning a mapping from\nmap-view to camera-view directly is harder: There is less\ntraining data and fewer geometric priors to rely upon for\nour model. We anticipate more data to make up for this\ndifference.\n7\nFigure 6. Visualization of cross-view attention. We compute attention from a point in map-view coordinates and visualize the corresponding\nattention values of the front camera view. Note how the network learns geometric correspondences through this attention mechanism.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5.5 Robustness to sensor dropout",
+      "level": 2,
+      "text": "We take a model trained on all six inputs and evaluate\nthe intersection over union (IoU) metric by randomly drop-\npingm cameras for each sample in the validation set. Fig-\nure 4 shows how the performance decreases linearly with\nthe number of cameras dropped. This is quite intuitive as\ndifferent cameras only overlap marginally. Thus each re-\nmoved camera reduces the visible area linearly and drops\nthe performance in the unobserved area. Note that the\ntransformer-based model is generally quite robust to this\ncamera dropout and the overall performance does not de-\ngrade beyond unobserved parts of the scene.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5.6 Qualitative Results",
+      "level": 2,
+      "text": "Figure 5 shows qualitative results on a variety of scenes.\nFor each row, we show the six input camera views and the\npredicted map-view segmentation along with the ground\ntruth segmentation. Our presented method can accurately\nsegments nearby vehicles, but does not sense far away or\noccluded vehicles well.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5.7 Geometric reasoning in cross-view attention",
+      "level": 2,
+      "text": "Our quantitative experiments indicate that cross-view at-\ntention can learn some geometric reasoning. In Figure 6,\nwe visualize the image-view attention for several points in\nthe map-view. Each point corresponds to part of a vehi-\ncle. From qualitative evidence, the attention mechanism can\nhighlight closely corresponding map-view and camera-view\nlocations.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "6 Conclusion",
+      "level": 1,
+      "text": "We present a novel map-view segmentation approach\nbased on a cross-view transformer architecture built on top\nof camera-aware positional embeddings. The proposed ap-\nproach achieves state-of-the-art performance, is simple to\nimplement, and runs in real time.\nAcknowledgements. This material is based upon work\nsupported by the National Science Foundation under Grant\nNo. IIS-1845485 and IIS-2006820.\n8",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "We introduce an architecture for perception in a map-"
+    },
+    {
+      "id": "f2",
+      "caption": "An overview of our proposed architecture for map-view segmentation. For each image, we extract image features across multiple"
+    },
+    {
+      "id": "f3",
+      "caption": "A comparison of model performance vs distance to the"
+    },
+    {
+      "id": "f4",
+      "caption": "Degradation of our model as we randomly drop out"
+    },
+    {
+      "id": "f5",
+      "caption": "Qualitative results on scenes with varying degrees of occlusion. Left shows the six camera views surrounding the vehicle. The top"
+    },
+    {
+      "id": "f6",
+      "caption": "Visualization of cross-view attention. We compute attention from a point in map-view coordinates and visualize the corresponding"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Vehicle map-view segmentation on nuScenes. Setting"
+    },
+    {
+      "id": "t2",
+      "caption": "Additional comparison with models that perform map-"
+    },
+    {
+      "id": "t3",
+      "caption": "Ablations of the cross-view attention mechanism. The"
+    },
+    {
+      "id": "t4",
+      "caption": "Ablations of the camera-aware positional embeddings."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation 1"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation 2"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

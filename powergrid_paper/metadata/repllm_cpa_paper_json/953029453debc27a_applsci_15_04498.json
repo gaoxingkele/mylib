@@ -1,0 +1,315 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_ai_10/pdf/applsci-15-04498.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The Unit Commitment Problem (UCP) has garnered substantial attention from both \nindustrial and academic communities due to its critical role in power system operations. \nFundamentally, the UCP involves determin ing the optimal operation schedule of \nAcademic Editor: Ephraim Suhir \nReceived: 4 March 2025 \nRevised: 14 April 2025 \nAccepted: 17 April 2025 \nPublished: 18 April 2025 \nCitation: Yang, L.; Li, P.; Chen, S.; \nZheng, H. Stable Variable Fixation \nfor Accelerated Unit Commitment \nvia Graph Neural Network and  \nLinear Programming Hybrid  \nLearning. Appl. Sci. 2025, 15, 4498. \nhttps://doi.org/10.3390/app15084498 \nCopyright: © 2025 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and \nconditions of the Creative Commons \nAttribution (CC BY) license \n(https://creativecommons.org/license\ns/by/4.0/). \nAppl. Sci. 2025, 15, 4498 2 of 15 \n \ngenerating units across multiple time periods while accommodating ﬂuctuating load de-\nmands and adhering to various operational constraints [1]. Over the years, diverse meth-\nodologies have been developed to address this complex problem, including Lagrangian \nrelaxation [2,3], priority list methods [4], dynamic programming [5], and Mixed Integer \nProgramming (MIP) approaches. The advancem ent of MIP theory, coupled with the en-\nhanced eﬃciency of modern branch-and-cut solvers [6,7], has signiﬁcantly increased the \npopularity of MIP-based solutions for UCPs. Given the NP-hard (non-deterministic poly-\nnomial-time hard) nature of UCP computations [8], substantial research eﬀorts have been \ndirected toward improving computational e ﬃciency through tighter problem formula-\ntions [9] and Linear Programming (LP) relaxation [10]. In recent years, the emergence of \nlearning approaches has opened new avenues for enhancing UCP solution processes [11–\n13], oﬀering promising directions for future research. Notably, Graph Neural Networks \n(GNNs) possess a unique structural advantage due to their inherent permutation invari-\nance [14]. This characteristic enables GNNs to generalize more e ﬀectively in UCP tasks \ncompared to other neural network architectures [15]. Consequently, this has led to the \ndevelopment of numerous methods that leverage GNNs to assist MIP formulations in re-\ncent years.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Acceleration via LP Relaxation",
+      "level": 2,
+      "text": "The computational intensity associated with UCP solutions has driven the develop-\nment of sophisticated LP relaxation method ologies aimed at balancing solution quality \nand computational e ﬃciency. These techniques have evolved beyond traditional ap-\nproaches, incorporating innovative strategies to enhance both the quality of initial solu-\ntions and the eﬃciency of the optimization process. \nContemporary research has demonstrated signiﬁcant advancements in this domain. \nRecent studies [16] have introduced reﬁned problem formulations combined with intelli-\ngent repair mechanisms for continuous relaxation variables, establishing a foundation for \niterative solution enhancement. A particularly noteworthy approach [10] has emerged, \nfocusing on strategic variable ﬁxation through a heuristic analysis of commitment and \ngeneration variables, e ﬀectively reducing computational complexity while maintaining \nsolution integrity. The ﬁeld has further progressed with the introduction of advanced \nneighborhood search algorithms [17] that incorporate sophisticated relaxation-induce-\nment techniques. Additionally, novel iterative methods [18] have been developed, com-\nbining localized branching strategies with targeted neighborhood exploration to optimize \nsolution quality. \nReference [19] solves multiple UCPs that share the same feasible region as the origi-\nnal problem but have slightly diﬀerent objective functions. The method determines stable \nvariables by averaging the LP relaxation solutions and enhances computational eﬃciency \nthrough an adjoint model without sacriﬁcing optimality.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Acceleration via Machine Learning",
+      "level": 2,
+      "text": "The integration of predictive analytics into power system optimization represents a \nparadigm shift in addressing complex operational challenges. The inherent stability of \nsystem parameters across operational inst ances provides a unique opportunity for \nknowledge transfer through machine learning techniques, enabling accelerated solution \nprocesses for recurrent optimization challeng es. Research indicates that solving large-\nscale power systems by machine learning is a relatively accessible and straightforward \nchallenge that can be readily addressed [20]. \nFor constraint prediction and simpli ﬁcation, the authors of [21] employed support \nvector machines and k-nearest neighbors to identify inactive transmission constraints that \ncan be safely omitted, using partial solutions as warm starts. The authors of [22] introduce \nAppl. Sci. 2025, 15, 4498 3 of 15 \n \nan E-Sequence-to-Sequence data-driven fr amework for multi-sequence mapping, while \nthe authors of [23] devise a machine learning classi ﬁer to predict commitment variables \nand subsequently restore their feasibility.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1.3 Graph Neural Networks for MIP and UCP",
+      "level": 2,
+      "text": "GNNs have a ttracted increasing a ttention in both power system optimization and \nMIP due to their powerful ability to model to pological structures and generalize across \ngraph-based representations. \nThe authors of [24] encoded power grid topologies into graphs, utilizing GNNs to \nsimultaneously predict active transmission constraints and commitment variables. These \npredictions are then reﬁned to ensure feasibility and reduce problem dimensionality. \nThe methods used in [25] exploit GNNs to estimate marginal probabilities of binary \nvariables in MIP formulations, followed by co nstrained local searches near predicted so-\nlutions. However, such conﬁned search spaces often compromise optimization eﬃciency \nand solution quality. The authors of [26] proposed a Graph Neural Network integrated \nwith neural diving and branching strategies, achieving superior scalability and cost-e ﬃ-\nciency in solving large-scale Unit Commitment Problems compared to conventional MIP \nsolvers.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "1.4 Contributions",
+      "level": 2,
+      "text": "In UCP, auxiliary variables (e.g., startup and shutdown variables) often tighten MIP \nformulations. While existing learning-based frameworks rarely incorporate these varia-\nbles into their architectures, this may limit their ability to learn high-quality solutions ef-\nﬁciently. \nTo improve the utilization of these variables, we propose a hybrid oﬄine–online pre-\ndiction framework for three binary variables to solve the UCP. The framework is decom-\nposed into two synergistic components, as shown in Figure 1, as an oﬄine training phase \nand an online solving phase. \n \nFigure 1. Overall framework of proposed acceleration method. \nOﬄine training phase: Historical internal solution information from the B&B process \nof UCP instances, including variable branching patterns and LP relaxation bounds, is used \nto obtain the stability of each binary variable. These data are then used to train the GNN, \nenabling it to predict the stability of each binary variable in UCP instances. \nOnline solving phase: All binary variables in the UCP are ﬁrst categorized into two \ngroups: stable variables and unstable variables. This process uses the stability predicted \n\nAppl. Sci. 2025, 15, 4498 4 of 15 \n \nby the GNN and the values of the LP relaxation solution for classi ﬁcation. The unstable \nvariables are left to the solver for resolution , while the stable variables are further classi-\nﬁed. The ﬁxed approach for commitment variables is determined by auxiliary binary var-\niables. Additionally, a learning-guided branching method is employed to accelerate the \nbranching process.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 Preliminaries",
+      "level": 1,
+      "text": "In this section, we introduce the fundamental formulations of the UCP, its graph-\nbased representations, and the stability charac teristics of binary variables that underpin \nour learning framework.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.1 Three-Binary UCP Formulations",
+      "level": 2,
+      "text": "In this part, we introduce the classical three-binary (3-bin) formulation of the UCP \nfrom [9], i.e., commitment, startup, and shutdown variables. \n1. Objective Function: \nThe objective function represents the total cost of the power system, which is shown \nas \n𝑚𝑖𝑛 ∑∑ ൣ𝛼௚𝑢௚,௧ +𝛽 ௚𝑃௚,௧ +𝑆 ௚,௧൧்\n௧ୀଵ\nே\n௚ୀଵ   (1) \nwhich comprises the production cost 𝛼௚𝑢௚,௧+𝛽௚𝑃௚,௧ and the startup cost 𝑆௚,௧. \n2. Startup cost: \nThe startup cost 𝑆௚,௧ can be expressed as an MIP formulation in a 3-bin formulation, \nwith 𝑠௚,௧ and 𝑑௚,௧. The cost is determined by comparing the time since the unit was \nlast shut down to a threshold representing the cold-start duration. It is formulated as \n൝\n𝑆௚,௧ ≥𝐶 ௛௢௧,௚𝑠௚,௧\n𝑆௚,௧ ≥𝐶 ௖௢௟ௗ,௚ ቂ𝑠௚,௧ − ∑ 𝑑௜,ఛ − 𝑓௜௡௜௧,௚,௧\n௧ିଵ\nఛୀ௠௔௫(௧ି்̱ ೚೑೑,೒ି்೎೚೗೏,೒,ଵ) ቃ  (2) \nSince the UCP must account for the initial status of generating units, the classi ﬁcation of \nhot and cold starts in the early time periods may depend on residual states from the pre-\nvious day. As a result, the standard rules for determining startup types cannot be uni-\nformly applied across all time periods. In particular, when the following two conditions \nare satis ﬁed, 𝑡−𝑇 ̱୭୤୤,௚ −𝑇ୡ୭୪ୢ,௚ ≤0   and 𝑚𝑎𝑥(−𝑇௚,଴,0 ) < ห 𝑡−𝑇̱୭୤୤,௚ −𝑇 ୡ୭୪ୢ,௚ −1 ห+1 , we \nset 𝑓୧୬୧୲,௚,௧ =1 , indicating that the startup at time 𝑡 is considered a hot start due to the \ninﬂuence of the unit’s initial state. Otherwise, 𝑓୧୬୧୲,௚,௧ =0  , and the classi ﬁcation of the \nstartup should instead be determined based on the summation term. \n3. Unit generation limits: \n𝑢௚,௧𝑃̱௚ ≤𝑃 ௚,௧ (3) \n𝑃௚,௧ ≤𝑢 ௚,௧𝑃ሜ௚ (4) \n4. Power balance constraint: \n∑ 𝑃௚,௧\nே\n௚ୀଵ −𝑃 ஽,௧ =0   (5) \n5. System spinning reserve requirement: \n∑ 𝑢௚,௧𝑃ሜ௚ ≥𝑃 ஽,௧ +𝑅 ௧\nே\n௚ୀଵ   (6) \n6. Ramp rate limits: \n𝑃௚,௧ −𝑃௚,௧ିଵ ≤𝑢 ௚,௧൫𝑃௨௣,௚ +𝑃௚൯−𝑢 ௚,௧ିଵ𝑃௚ +𝑠 ௚,௧൫𝑃௦௧௔௥௧,௚ −𝑃௨௣,௚ −𝑃௚൯ (7) \nAppl. Sci. 2025, 15, 4498 5 of 15 \n \n𝑃௚,௧ିଵ −𝑃௚,௧ ≤𝑢 ௚,௧ିଵ൫𝑃ௗ௢௪௡,௚ +𝑃௚൯−𝑢 ௚,௧𝑃௚  + 𝑑௚,௧൫𝑃ୱ୦୳୲,௚ −𝑃 ୢ୭୵୬,௚ −𝑃௚൯ (8) \n7. Minimum up/downtime constraints: \n∑ 𝑠௚,ధ\n௧\nధୀ୫ୟ୶( ௧ ି்̱೚೙,೒,଴)ାଵ ≤𝑢 ௚,௧,𝑡 ∈ [ 𝑈௚ +1 ,…,𝑇 ]  (9) \n∑ 𝑑௚,ధ\n௧\nధୀ௠௔௫( ௧ ି்̱ ౥౜౜,೒,଴)ାଵ ≤1−𝑢 ௚,௧,𝑡 ∈ [ 𝐿௚ +1 ,…,𝑇 ]  (10) \nHere, 𝜛  is an index used to enforce the mi nimum up/downtime constraints. Taking \nEquation (9) as an example, if the unit is in the oﬀ state at time 𝑡 (i.e.,  𝑢௚,௧ =0 ), then any \nstartup operation occurring at time 𝜛 would imply that the unit shuts down before com-\npleting its required minimum uptime, thereby violating the constraint. \n8. Initial status of units: \n𝑢\n௚,௧ =𝑢 ௚,଴,𝑡 ∈ ൣ 1 ,…,𝑈௚ +𝐿 ௚൧  (11) \n9. State constraints: \nState constraints were introduced in the 3-bin formulation to link the startup, shut-\ndown, and state variables: \n𝑠௚,௧ −𝑑 ௚,௧ =𝑢 ௚,௧ −𝑢 ௚,௧ିଵ  (12)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2 Bipartite Graph Representation for UCPs",
+      "level": 2,
+      "text": "This part describes how the UCP is transformed into a bipartite graph, a structured \nrepresentation that enables GNN to learn variable–constraint interactions. Our approach \nadapts the MIP to the bipartite graph conversion framework proposed in [27] as shown in \nFigure 2. \n \nFigure 2. Transforming a UCP formulation to a bipartite graph. \nThe bipartite graph 𝔾 = { 𝒱 ,𝒞 ,ℰ }  represents two disjoint sets of nodes—variables \nand constraints—and the edges connecting th em. The associated features of these nodes \nand edges are summarized in Table 1. \n• Variables: 𝒱={ 𝑣ଵ,...,𝑣 ௡}, where each variable embedding 𝑣௜ ∈ℝ ଻ corresponds to \na decision variable 𝑥௜ , partitioned as binary variables 𝑥ଵ...𝑥 ௡௕  (e.g., commitment, \nstartup, and shutdown variables) and continuous variables 𝑥௡௕ାଵ...𝑥 ௡ (e.g., power \noutput and startup cost). \n• Constraints: 𝒞={ 𝑐ଵ,...,𝑐 ௠}, where each constraint embedding 𝑐௝ ∈ℝ ସ corresponds \nto the 𝑗-th constraint, e.g., operational rules formalized in Equations (2)–(12). \n• Edges: (𝑖, 𝑗) ∈ℰ , which encodes the relationship where variable 𝑥௜ appears in con-\nstraint 𝑏௝ with a nonzero coe ﬃcient and has an edge embedding 𝑒௜,௝ ∈ℝ . \n\nAppl. Sci. 2025, 15, 4498 6 of 15 \n \nTable 1. Selected features for variables, constraints, and edges. \n Feature Description \nVariables \nnormalized coefficient of variables in the objective function \ndegree of a variable node in the bipartite representation \naverage coefficient of the variable in all constraints \nmaximum value among all coefficients of the variable \nminimum value among all coefficients of the variable \nwhether the variable is a binary variable \nLP solution of the variable \nConstraints \naverage of all coefficients in the constraint \ndegree of constraint nodes in the bipartite representation \nright-hand-side value of the constraint \nwhether the constraint is an equation constraint \nEdges coefficient value",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.3 Stable Binary Variables",
+      "level": 2,
+      "text": "A critical subset of binary variables in MIP exhibits persistent stability throughout \nthe B&B process, where their values in solutions remain invariant from the root node to \nthe ﬁnal optimal solution. To systematically identify such variables, we propose a trajec-\ntory-based stability metric derived from the complete solution path of the B&B tree. Spe-\nciﬁcally, for each binary variable 𝑥\n௜, we aggregate its values across the LP relaxation so-\nlution and incumbent solutions encountered during the B&B search. The stability of 𝑥௜ is \nquantiﬁed by its normalized persistence score 𝑠𝑡𝑎𝑏𝑙𝑒௜, which is deﬁned as follows: \n𝑎𝑣𝑔௜ =\nଵ\nேାଵ ∑ 𝑥௜\n௞ே\n௞ୀ଴   (13) \n𝑠𝑡𝑎𝑏𝑙𝑒௜ =2× |𝑎𝑣𝑔௜ −0 . 5| (14) \nwhere 𝑁 is the total number of incumbent solutions during the B&B process, and  𝑥଴ re-\nfers to the LP relaxation solution as  shown in Table 2. The stability score 𝑠𝑡𝑎𝑏𝑙𝑒௜ ranges \nfrom 0 to 1, with higher values indicating a greater consistency of 𝑥௜. \nTable 2. Stable calculation. \nIndex 1 2 3 4 5 6 \n𝑥଴ 0.5 0.3 0 0 0 1 \n𝑥ଵ 1 0 0 1 0 1 \n𝑥ଶ 0 1 0 1 0 1 \n𝑥ଷ 0 0 0 1 0 1 \n𝑥ே 0 0 1 0 0 1 \n𝑠𝑡𝑎𝑏𝑙𝑒 0.4 0.48 0.6 0.2 1 1 \nThis approach rigorously distinguishes truly stable variables from those exhibiting \ntransient stability or noise-induced pseudo-stability. By leveraging the entire solution tra-\njectory rather than relying on heuristic thresholds or single-node relaxations, the method \nensures robustness against branching decisions and algorithmic perturbations.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3 Framework",
+      "level": 1,
+      "text": "This section presents the comprehensive fr amework, detailing the process from of-\nﬂine training of the GNN to variable ﬁxation, initial solution setup, and ultimately obtain-\ning the ﬁnal dispatch plan. The framework is designed to enhance the eﬃciency and scala-\nbility of solving the UCP by leveraging data-driven insights and optimization techniques. \nAppl. Sci. 2025, 15, 4498 7 of 15",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1 Dataset Collection",
+      "level": 2,
+      "text": "Real-world electricity demand data for an entire year are obtained and linearly scaled \nto match the capacity of the target power sy stem. This scaled demand serves as the his-\ntorical load proﬁle. To avoid infeasible solutions caused by randomly initialized generator \nstates (e.g., on/oﬀ statuses and continuous uptime/downtime), we sequentially solve the \nUCP for each day in the historical load pro ﬁle. The ﬁnal generator states (including con-\ntinuous operating hours and power outputs) at the end of each day are preserved and \nused as the initial state for the next day. This ensures feasible and realistic transitions be-\ntween instances. \nFigure 3 shows how the dataset was collected. A subset of the load proﬁles is used as \nthe test set, while the remaining proﬁles form the basis of the training set. For each train-\ning-day load, load\n௜ , we apply slight perturbations to generate multiple variations de-\nnoted as load ଵ\n௜ ,…, load௠\n௜ . Each perturbed load, load ௝\n௜, is paired with the same initial gen-\nerator state, initial ௜, producing a set of UCP instances 𝑀ଵ\n௜ ,…𝑀 ௠\n௜ . Both the training and \nvalidation sets undergo perturbations to expand the dataset. Models trained on the train-\ning set are validated on the validation set, and the model exhibiting the best performance \non the validation set is retained for testing on the test set. For the test set, instances are \ngenerated using the original training-day lo ads to evaluate the performance of the pro-\nposed framework in the numerical experiment section. \n \nFigure 3. Dataset ﬂowchart. \nFor each instance 𝑀௝\n௜, a bipartite graph 𝔾௝\n௜ is constructed following the method de-\nscribed in Section 2.2, and its co rresponding stability vector stable ௝\n௜ is calculated as de-\nscribed in Section 2.3. It is worth noting that it is impossible to collect all feasible solutions \nfrom the B&B search tree, so all feasible solutions explored during the solver’s process are \nused as a substitute. \n3.2. Oﬄine Phase \nWe train a bipartite GNN-based policy stable predictor 𝜋ఏ following previous work \n[27], where 𝜋 denotes the policy as a function and 𝜃 represents the set of trainable pa-\nrameters. The policy is designed to learn patterns from speciﬁc operational scenarios, en-\nabling the prediction of variable stability for the UCP under unseen but similarly distrib-\nuted scenarios. \n\nAppl. Sci. 2025, 15, 4498 8 of 15 \n \n𝒟={ ( 𝔾 , 𝑠 𝑡 𝑎 𝑏 𝑙 𝑒 ) } denotes the training set. The policy is a three-layer structure shown \nin Figure 4 and is described as follows: \n• Input layer: This layer, consisting of a regularization layer, fully connected layers, \nand activation functions, inputs the embedding 𝒱 ଴ ={ 𝑣ଵ\n଴,...,𝑣 ௡\n଴}, 𝒞 ଴ ={ 𝑐ଵ\n଴,...,𝑐 ௠\n଴ }, \nwhere 𝑣௜\n଴ =𝑣 ௜ , 𝑐௝\n଴ =𝑐 ௝  will be embedded into a higher-dimensional latent vector \n𝒱 ଵ,𝒞 ଵ. \n• Convolutional layer: The information of neighboring nodes 𝑐௝\n௟ ∈𝒞  ௟ and 𝑣௜\n௟ ∈𝒱  ௟ is \ntransitioned after a multilayer convolutional layer and takes the following form: \n𝑐௝\n௟ ← 𝑓௖(𝑐௝\n௟ିଵ, 𝑙𝑎𝑦𝑒𝑟𝑛𝑜𝑟𝑚(∑ 𝑓௩௖(𝑣௜\n௟ିଵ,𝑐௝\n௟ିଵ,𝑒 ௜,௝ ))(௜,௝)∈ா\n௜ )   (15) \n𝑣௜\n௟ ← 𝑓௩(𝑣௜\n௟ିଵ, 𝑙𝑎𝑦𝑒𝑟𝑛𝑜𝑟𝑚(∑ 𝑓௖௩(𝑣௜\n௟ିଵ,𝑐௝\n௟ିଵ,𝑒 ௜,௝ ))(௜,௝)∈ா\n௝ )  (16) \nwhere 𝑓௖,𝑓௩,𝑓௩௖,𝑓௖௩  are Multilayer Perceptrons with ReLU activation functions, and \n𝑙𝑎𝑦𝑒𝑟𝑛𝑜𝑟𝑚 represents the layer normalization function. \n• Output layer: This layer consists of fully connected layers and a sigmoid activation \nfunction, which maps the output to a scalar  in the range [0, 1], representing the sta-\nbility con ﬁdence of each variable 𝜋ఏ(𝔾) = {𝑝ଵ,…,𝑝 ௞}  and 𝑝௜ ∈ [ 0 ,1 ] ,i ∈ { 1 ,...,k } . \nDepending on the task se tting, we can selectively retain the stability predictions of \nspeciﬁc types of binary variables—for exampl e, only the commitment variables, or \nall binary variables. The remaining variables are discarded from further considera-\ntion. \n \nFigure 4. Architecture of the bipartite GNN policy 𝜋ఏ. \nSimilar to the selective retention in the output layer, the training labels are also selec-\ntively clipped. Speciﬁcally, we retain only the stability indicators corresponding to certain \nvariables as training labels, represented as 𝑠𝑡𝑎𝑏𝑙𝑒 ∈ [0, 1]௞, while discarding the labels for \nthe remaining variables. Given that the labels are continuous values bounded within [0, \n1], the Binary Cross-Entropy (BCE) loss function is employed, which is ideally suited for \nsuch probabilistic labels. The loss function is deﬁned as follows: \n𝐿(𝜃) = −1\n|𝒟|\n෍෍ [ 𝑠 𝑡 𝑎 𝑏 𝑙 𝑒௜ ⋅l o g(𝑝௜) +( 1−𝑠 𝑡 𝑎 𝑏 𝑙 𝑒௜)⋅𝑙 𝑜 𝑔(1−𝑝 ௜)]\n௞\n௜ୀଵ(𝔾,௦௧௔௕௟௘)∈𝒟\n (17)",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3 Online Phase",
+      "level": 2,
+      "text": "This subsection presents the online phase of our optimization framework, which ex-\necutes two interdependent routines during MILP solving: (1) machine learning-guided \nvariable ﬁxation to prune the search space and (2) machine learning-guided branching \nrules to prioritize critical variables. Together, these components construct a reduced \n\nAppl. Sci. 2025, 15, 4498 9 of 15 \n \nmodel—a modi ﬁed version of the original UCP model in which certain variable values \nare ﬁxed and branching priorities are informed by learned pa tterns. This co-designed \nstrategy signiﬁcantly accelerates the solving process compared to the original UCP, espe-\ncially under time-sensitive operational requirements.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.3.1 Learning-Guided Fixing",
+      "level": 3,
+      "text": "The GNN is designed to output prediction s exclusively for binary variables, where \neach value is constrained to the interval [0, 1] via a sigmoid activation function. These \nvalues represent stability conﬁdence scores, with higher values indicating greater stability \nof the corresponding integer variable. To identify stable variables to be ﬁxed, a dual-\nthreshold criterion is applied. The set of binary variables 𝑥௚,௧  for 𝑥 ∈ { 𝑢 ,𝑠 ,𝑑 }  and g∈\n𝐺ሶ ,  t ∈ 𝑇ሶ  is considered, where \n• 𝑢௚,௧, 𝑠௚,௧, and 𝑑௚,௧ represent commitment variables, startup variables, and shutdown \nvariables of unit 𝑔 in time 𝑡; \n• 𝐺ሶ and  𝑇ሶ  denote the set of units and time periods, respectively. \nWe deﬁne a stable set 𝕊௦௧௔௕௟௘ as follows: \n𝕊௦௧௔௕௟௘ = ൛ ( 𝑥 ,𝑔 ,𝑡 ) ห 𝑥 ∈ { 𝑢 ,𝑠 ,𝑑 } ,g ∈ 𝐺ሶ ,  t ∈ 𝑇ሶ ,𝕏 ௚,௧\n௫ ≥ 𝜏 ௦௧௔௕௟௘ ∧൫ 𝑟௚,௧\n௫ ≤𝜏 ௩ ∨𝑟௚,௧\n௫ ≥1−𝜏 ௩൯ൟ (18) \nwhere \n• 𝕏௚,௧\n௫  represents the stable predictor output (stability con ﬁdence score) for the (𝑔, 𝑡)-\nth index and the variable type 𝑥; \n• 𝑟௚,௧\n௫  represents the LP relaxation value for the (𝑔, 𝑡)-th index and the variable type 𝑥; \n• 𝜏௦௧௔௕௟௘ is the stability threshold, such that variables with 𝕏௚,௧\n௫ ≥𝜏 ௦௧௔௕௟௘ are consid-\nered stable; \n• 𝜏௩ is the integrality tolerance threshold, ensuring that 𝑟௚,௧\n௫  is su ﬃciently close to a \nbinary value. \nOnly variables ful ﬁlling both conditions are provisionally classi ﬁed as stable. This \njoint criterion ensures that stability predictions are both statistically con ﬁdent and theo-\nretically aligned with the problem’s LP relaxation properties, thereby reducing false pos-\nitives caused by spurious correlations in th e GNN’s latent space. The threshold parame-\nters are tunable to balance solution quality and computational e ﬃciency across varying \nUCP instances. \nWhile ﬁxing the generator state-transition variables 𝑠௚,௧  (startup) and 𝑑௚,௧  (shut-\ndown) to 1 at speci ﬁc time steps risks suboptimality du e to the dynamic adjustability of \npower outputs, we propose a temporally ﬂexible ﬁxing strategy to balance solution qual-\nity and computational eﬃciency. Generators often exhibit ﬂexibility in their startup/shut-\ndown timing, and delaying or advancing co mmitments by several time steps may still \nyield feasible and near-optimal solutions. The ﬁxation strategy can be classiﬁed into hard \nﬁx and soft ﬁx, depending on the degree of ﬂexibility allowed. \nRigid ﬁxation to a single time step may exclude such solutions, while allowing a \nsmall temporal window ∆ to preserve optimality while reducing branching. For each unit \n𝑔 and time step 𝑡, the following ﬁxation rules are applied: \n• Hard ﬁx: 𝕊௛௔௥ௗ is denoted as the set of indices that are hard- ﬁxed. These variables \nare forced into a ﬁxed state, ensuring that the solution adheres to the rounded LP \nrelaxation value for each time step. We deﬁne 𝕊௛௔௥ௗ as follows: \n𝕊௛௔௥ௗ =ቄ ∀ 𝑥∈{ 𝑢 , 𝑠 , 𝑑 } , ( 𝑥 , 𝑔 , 𝑡 )∈𝕊௦௧௔௕௟௘ቚ ∑ 𝑟௚,௝\n௦ +𝑟௚,௝\nௗ௠௜௡(்,௧ା∆)\n௝ୀ௠௔௫(଴,௧ି∆) =0 ቅ   (19) \nFor a given time 𝑡 of unit 𝑔, if all three binary variables (commitment, startup, and \nshutdown) are stable, and there are no startup or shutdown actions in the \nAppl. Sci. 2025, 15, 4498 10 of 15 \n \nneighboring time steps, then these variables will be hard- ﬁxed to their rounded LP \nrelaxation value. It is worth noting that a partial binary solution from the rounded \nLP relaxation value does not guarantee feasibility. \n• Soft ﬁx: 𝕊\n௦௢௙௧  is denoted as the set of indices that are soft- ﬁxed, 𝕊௦௢௙௧ =𝕊 ௦௧௔௕௟௘ −\n𝕊௛௔௥ௗ. For variables ( 𝑥 ,𝑔 ,𝑡 ) ∈ 𝕊௦௢௙௧, we initialize the variable to the rounded LP re-\nlaxation value but allow the solver to adju st the value during the optimization pro-\ncess.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.3.2 Learning-Guided Branching",
+      "level": 3,
+      "text": "To fully leverage the GNN’s stability predictions, every integer variable in the model \nis assigned a customized branch priority. The stability scores generated by our GNN not \nonly guide variable ﬁxing but also serve as a critical indicator for divide-and-conquer \nstrategies in B&B. Variables with low stability (close to 0) exhibit inconsistent values \nacross nodes in the B&B tree, implying that their unresolved status contributes signi ﬁ-\ncantly to the solution space fragmentation. Prioritizing these variables for early branching \nhelps accelerate bound tightening, and resolv ing unstable variables reduces feasible re-\ngion ambiguity, enabling faster pruning of suboptimal branches. \nWe map stability scores 𝕏௚,௧\n௫ ∈ [0, 1] to integer priorities ℙ௚,௧\n௫ ∈{ ℙ௠௜௡,...,ℙ ௠௔௫} via \nℙ୥,୲\n୶ =උ   ℙ௠௜௡ + (ℙ௠௔௫ −ℙ ௠௜௡)൫1 − 𝕏௚,௧\n௫ ൯ඏ (20) \nwhere ⌊∙⌋ is the rounding operator to the nearest integer; ℙ௠௔௫ is the maximum priority; \nand ℙ௠௜௡ is the minimum priority. \nIn practice, this mapping can be integrated right before invoking the solver. After \nconstructing the MIP model, we traverse each integer variable 𝑥௚,௧, retrieve its predicted \n𝕏௚,௧\n௫  from the o ﬄine-trained model, compute ℙ୥,୲\n୶  according to the above formula, and \nset the corresponding branch priority in the solver. Once the branch priorities are up-\ndated, the solver will systematically prioriti ze branching on high-p riority (low-stability) \nvariables, the solver can more quickly prune large swathes of the search tree, leading to \nfaster convergence in practice. \n𝜏௦௧௔௕௟௘,𝜏 ௩,∆  are set to 0.5, 0.99, and 1, respectively, in the experiments.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4 Numerical Experiments",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.1 Case Settings",
+      "level": 2,
+      "text": "The case study is performed by Gurobi 11.0 using the Python 3.11 API on a PC with \nan Intel Core i7-8700 CPU running at 3.20 GHz and with 32 GB of memory. All feasible \nsolutions produced by Gurobi in the solution process are recorded. \n1. Power system setting: The three systems are taken from [10], and their sizes are re-\nported in Table 3. Each of these systems comprises solely thermal generating units. \n2. Demand setting: There are 365 loads from the ﬁrst day of the year to the 365th day of \nthe year, which are ﬁndings that come from [28]. In order to match the loads to the \ntarget systems, the loads for the 365 days, 𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠, are mapped to the capacity \nof the corresponding systems, 𝑠𝑐𝑎𝑙𝑒𝑑 𝑙𝑜𝑎𝑑𝑠. Speciﬁcally, for each system, the upper \n(𝑠𝑦𝑠\n௨௣) and lower (𝑠𝑦𝑠௟௢௪) bounds of the target load mapping interval are determined \nbased on the system’s maximum generation capacity scaled by factors 𝑠௨௣ and 𝑠௟௢௪: \n𝑠𝑦𝑠௨௣ = maximum generation capacity ×𝑠 ௨௣ (21) \n𝑠𝑦𝑠௟௢௪ =𝑠 𝑦 𝑠௨௣ ×𝑠 ௟௢௪ (22) \n𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠 is then normalized and scaled to 𝑠𝑐𝑎𝑙𝑒𝑑 𝑙𝑜𝑎𝑑𝑠 to ﬁt the target system: \nAppl. Sci. 2025, 15, 4498 11 of 15 \n \n𝑠𝑐𝑎𝑙𝑒𝑑 𝑙𝑜𝑎𝑑𝑠 = 𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠 − 𝑚𝑖𝑛(𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠)\n𝑚𝑎𝑥(𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠) − 𝑚𝑖𝑛(𝑜𝑟𝑖𝑔𝑖𝑛 𝑙𝑜𝑎𝑑𝑠)×( 𝑠 𝑦 𝑠௨௣ −𝑠 𝑦 𝑠௟௢௪)+𝑠 𝑦 𝑠௟௢௪ (23) \nA simple rule is applied for dataset partitioning: days ending with the digit seven are \nassigned to the validation set, those ending with two are assigned to the testing set, \nand the remaining days are assigned to the training set. And each load will be per-\nturbed to expand the dataset. \n3. Benchmark setting: The latest Gurobi solver 11.0 was used with the following set-\ntings: threads set to 1 and MIPGap set to 1e-6. All other se ttings were kept at their \ndefault values. \nTable 3. Test system summary. \nCase Size Variable Integer Constraint Nonzero \n50 6000 3600 10,848 50,678 \n100 12,000 7200 21,648 101,349 \n1080 129,600 77,760 233,328 1,109,492 \n4.2. Accuracy Comparison for Diﬀerent Binary Variables \nWe compare the Mean Squared Error (MSE) of predictions for three types of binary \nvariables (𝑢 for commitment variables, 𝑠 for startup variables, and 𝑑 for shutdown var-\niables) under three di ﬀerent system sizes (50 units, 10 0 units, and 1080 units), and the \nlower the better. As shown in Table 4, startup and shutdown maintain substantially lower \nMSE values than commitment across all system scales, indicating that GNN predicts the \nstartup and shutdown variables with much higher accuracy than the commitment varia-\nble. \nTable 4. Variable loss comparison. \nVariable Type 50 100 1080 \n𝑢 0.04773 0.02801 0.06902 \n𝑠 0.00951 0.00765 0.02248 \n𝑑 0.00923 0.00646 0.02100 \nTo validate the beneﬁts of including additional variables and eliminate the inﬂuence \nof ﬁxed strategies and branching strategies, we designed experiments where stable varia-\nbles were simply ﬁxed using a soft ﬁx. Based on the selection of binary variables, the meth-\nods can be categorized into three types: only commitment variables (the approach used in \nmost existing papers) as “M1”, only startup and shutdown variables as “M2”, or all three \ntypes of binary variables as “M3”, and we use the state-of-the-art solver Gurobi as the \nbaseline. We use the primal gap [29] to evaluate the performance of di ﬀerent methods, \nwhich deﬁned \n௩ି௩∗\n௩∗ , where 𝑣∗ is the best objective value obtained by any approach in the \nportfolio for comparison and 𝑣 is the primal bound. \nFigure 5 shows the primal gap as a function of runtime. In all methods applied to the \nthree systems, a soft ﬁx for all three variables shows the best performance. Especially in \nthe 100-unit system, the M3 gap exhibits the fastest decline, while the other methods take \nmore than 100 s to reach the gap achieved by M3 in just 50 s. \nAppl. Sci. 2025, 15, 4498 12 of 15 \n \n \nFigure 5. The primal gap as a function of runtime, averaged over 36 instances. From left to right, the \nunits are 50, 100, and 1080.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.3 Ablation Study",
+      "level": 2,
+      "text": "The eﬀectiveness of hard ﬁx and branching priority settings is validated, as shown in \nFigure 6. “M4” represents the complete ﬁxing strategy proposed in Section 3, while “M5” \ndenotes the comprehensive online strategy introduced in the same section, which includes \nboth the ﬁxing strategy and a customized branching rule. By comparing M3 and M4, it \ncan be concluded that our proposed learning-guided ﬁxing strategy leads to a faster initial \ndecline in the objective function compared to using only a soft ﬁx, especially on the 100-\nunit and 1080-unit systems. A comparison between M4 and M5 further demonstrates the \neﬀectiveness of the branching priority strate gy on the 1080-unit system, where M5 con-\nsistently achieves an earlier reduction in the gap. However, for smaller-scale systems, ad-\njusting the branching strategy did not have a signiﬁcant impact. \n \nFigure 6. The primal gap as a function of runtime, averaged over 36 instances. From left to right, the \nunits are 50, 100, and 1080.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5 Conclusions",
+      "level": 1,
+      "text": "This work proposes a GNN-LP hybrid learning framework to accelerate UCP opti-\nmization through stability-driven variable ﬁxation and adaptive search strategies. Key \ncontributions include the following: \n1. Variable Stability Classiﬁcation: We design a variable ﬁxation strategy that integrates \nGNN-predicted stability and LP root relaxation to guide the hard and soft ﬁxation of \nbinary variables. Stable variables are ﬁxed to shrink the search space, while temporal \nﬂexibility is preserved for variables with uncertain stability. This layered ﬁxation \nmechanism signi ﬁcantly reduces suboptimality, as con ﬁrmed by ablation studies \nacross 50-, 100-, and 1080-unit systems. \n2. Utilization of Multi-Type Binary Variables: Instead of focusing solely on commitment \nvariables, we incorporate startup and shutdown variables into both the MIP \n\nAppl. Sci. 2025, 15, 4498 13 of 15 \n \nformulation and learning framework. These auxiliary variables enhance the stability \ninference of commitment variables to enable safer and more accurate hard ﬁxation, \nthereby reducing suboptimality and introducing additional stable candidates for soft \nﬁxation, which accelerates the solution process by further reducing the search space. \nExperiments show that this joint modeling approach consistently improves primal \ngaps and solving times over single-variable baselines, particularly in large-scale set-\ntings. \n3. Stability-Aware Branching Prioritization: We leverage predicted variable stability to \nguide the branching process in branch-and-bound trajectories. By assigning a higher \nbranching priority to unstable variables, the solver is able to explore critical decisions \nearlier, tighten bounds faster, and accele rate convergence. This strategy achieved \nfaster gap reduction and earlier convergence. \nWhile the proposed branching prioritization strategy based on variable stability has \ndemonstrated signiﬁcant eﬃciency gains, it remains relatively simple in its current form. \nAdditionally, the success of incorporating auxiliary binary variables into our learning and \noptimization framework suggests broader appl icability. Future work could investigate \nwhich types or structures of multi-variable models yield the best performance, and how \nsuch strategies can be generalized to other UCP acceleration frameworks, for example, by \nleveraging power system topology via graph-based representations to enhance prediction \naccuracy and generalization. \nAuthor Contributions: Conceptualization, L.Y. and H.Z.; methodology, L.Y.; software, P.L.; valida-\ntion, L.Y., P.L. and S.C.; formal analysis, L.Y.; investigation, L.Y.; resources, H.Z.; data curation, L.Y.; \nwriting—original draft preparation,  L.Y.; writing—review and editing, P.L. and S.C.; visualization, \nP.L.; supervision, H.Z.; project administration, H.Z.; funding acquisition, H.Z. All authors have read \nand agreed to the published version of the manuscript. \nFunding: This work was supported by the National Natural Science Foundation of China (72361003) \nand the Key Research and Development Program of Guangxi (GuiKe-AB23075199). \nInstitutional Review Board Statement: Not applicable. \nInformed Consent Statement: Not applicable. \nData Availability Statement: The original contributions presented in the study are included in the \narticle, further inquiries can be directed to the corresponding author. \nConﬂicts of Interest: The authors declare no conﬂict of interest. \nNomenclature \nIndices: \ng Index of unit \nt Index of time period \nSets: \n𝕊\n௦௧௔௕௟௘ Set of stable binary variables \n𝕊௛௔௥ௗ Set of hard fix binary variables \n𝕊௦௢௙௧ Set of soft fix binary variables \nConstants: \n𝑁 Total number of units \n𝑇 Total number of time periods \n𝛼௚,𝛽௚ Coefficients of the linear production cost function of unit 𝑔 \n𝐶௛௢௧,௚ Hot startup cost of units 𝑔 \n𝐶௖௢௟ௗ,௚ Cold startup cost of units 𝑔 \n𝑇୭୬,௚ Minimum uptime of units 𝑔 \nAppl. Sci. 2025, 15, 4498 14 of 15 \n \n𝑇୭୤୤,௚ Minimum downtime of units 𝑔 \n𝑇ୡ୭୪ୢ,௚ Cold startup time of units 𝑔 \n𝑃௚ Maximum power output of units 𝑔 \n𝑃௚ Minimum power output of units 𝑔 \n𝑃஽,௧ System load demand in period 𝑡 \n𝑅௧ Spinning reserve requirement in period 𝑡 \n𝑃୳୮,௚ Ramp-up limit of unit 𝑔 \n𝑃ୢ୭୵୬,௚ Ramp-down limit of unit 𝑔 \n𝑃ୱ୲ୟ୰୲,௚ Startup ramp limit of unit 𝑔 \n𝑃ୱ୦୳୲,௚ Shutdown ramp limit of unit 𝑔 \n𝑢௚,଴ Initial commitment state of unit 𝑔 \n𝑇௚,଴ Number of periods unit 𝑔 has been online(+) or offline(-) prior \nto the first period of the time span (end of period 0) \n𝑈௚ 𝑚𝑎𝑥(0, 𝑚𝑖𝑛(𝑇, 𝑢௚,଴(𝑇୭୬,௚  − 𝑇 ௚,଴)) \n𝐿௚ 𝑚𝑎𝑥(0, 𝑚𝑖𝑛(𝑇, 𝑢௚,଴(𝑇୭୤୤,௚ +𝑇௚,଴)) \nBinary variables: \n𝑢௚,௧ Commitment status of unit 𝑔 in period 𝑡, equal to 1 if unit 𝑔 is \nonline in period 𝑡 and 0 otherwise \n𝑠௚,௧ Startup status of unit 𝑔 in period 𝑡, equal to 1 if unit 𝑔 starts \nup in period 𝑡 and 0 otherwise  \n𝑑௚,௧ Shutdown status of unit 𝑔 in period 𝑡, equal to 1 if unit 𝑔 \nshuts down in period 𝑡 and 0 otherwise  \nContinuous variables: \n𝑃௚,௧ Power output of unit 𝑔 in period 𝑡 \n𝑆௚,௧ Startup cost of unit 𝑔 in period 𝑡 \nBinary variable states:  \n𝑟 LP relaxation solution of binary variables \n𝑟̅ Rounded LP relaxation solution of binary variables \n𝑠𝑡𝑎𝑏𝑙𝑒 Stable confidence of binary variables \n𝕏 GNN output of binary variables \n𝑥 All binary variables include commitment, startup, and shutdown \nstatus \nThresholds:  \n𝜏\n௦௧௔௕௟௘ Stability threshold \n𝜏௩ Integrality threshold \n∆ Temporal flexibility threshold",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall framework of proposed acceleration method."
+    },
+    {
+      "id": "f2",
+      "caption": "Figure 2. Transforming a UCP formulation to a bipartite graph."
+    },
+    {
+      "id": "f3",
+      "caption": "shows how the dataset was collected. A subset of the load proﬁles is used as"
+    },
+    {
+      "id": "f4",
+      "caption": "Architecture of the bipartite GNN policy 𝜋ఏ."
+    },
+    {
+      "id": "f5",
+      "caption": "shows the primal gap as a function of runtime. In all methods applied to the"
+    },
+    {
+      "id": "f6",
+      "caption": "“M4” represents the complete ﬁxing strategy proposed in Section 3, while “M5”"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Selected features for variables, constraints, and edges."
+    },
+    {
+      "id": "t2",
+      "caption": "Stable calculation."
+    },
+    {
+      "id": "t3",
+      "caption": "Test system summary."
+    },
+    {
+      "id": "t4",
+      "caption": "Variable loss comparison."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e9",
+      "latex_or_text": "Equation (9)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

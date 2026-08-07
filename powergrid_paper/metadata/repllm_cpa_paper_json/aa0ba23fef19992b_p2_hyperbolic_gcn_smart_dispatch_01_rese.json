@@ -1,0 +1,218 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__01__research_on_a_short_term_power_load_forecasting_method_bas__4bf42c2879.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "As the core infrastructure of modern society, the safe and stable operation of the power\nsystem is an important prerequisite for sustained economic growth and the security of\npeople’s livelihood. As the global energy structure transitions towards low-carbonization,\nthe complexity of large-scale grid integration of renewable energy and power demand-side\nmanagement has significantly increased. According to the International Energy Agency,\nChina’s total electricity consumption reached 8.64 trillion kilowatt-hours in 2022, with\nair conditioning and industrial loads accounting for over 60% [1–3]. The fluctuations are\nhighly related to factors such as meteorological conditions and holiday arrangements.\nAgainst this background, short-term load forecasting (STLF) has become a key technology\nfor optimizing power generation plans and reducing the operational risks of power grids.\nStudies show that for every 1% improvement in prediction accuracy, the fuel cost of power\nplants can be reduced by approximately 0.3% to 0.8%, and the probability of power outages\ncaused by imbalances between supply and demand can be significantly lowered [4].\nElectronics 2025, 14, 2262 https://doi.org/10.3390/electronics14112262\nElectronics 2025, 14, 2262 2 of 15\nThe development of short-term power load forecasting technology has undergone\nan evolution from traditional statistical models to modern machine learning. Early stud-\nies mainly relied on time series analysis theories, such as the autoregressive integral\nmoving average model (ARIMA) proposed by Box–Jenkins, which eliminates sequence\nnon-stationarity through difference operations [5]. However, it cannot effectively integrate\nexternal variables such as temperature and humidity and has poor adaptability to sudden\nload changes [6]. Support Vector Regression (SVR) transforms nonlinear problems into\nlinear regression in high-dimensional space through kernel function mapping and per-\nforms well on medium- and small-scale datasets. However, its computational complexity\nincreases exponentially with the amount of data, and the selection of the kernel function\ndepends on empirical parameter tuning [7–10]. With the popularization of smart electricity\nmeters and Internet of Things technology, deep learning models have gradually become\nthe mainstream of research. Long Short-Term Memory (LSTM) networks explicitly model\nlong-term temporal dependencies through gating mechanisms and show significant advan-\ntages in single-step prediction tasks [11]; Convolutional Neural Networks (CNNs) extract\nspatial features by utilizing local perception and weight-sharing characteristics and are\noften combined with LSTM to construct a hybrid architecture to enhance the robustness of\nprediction [12]. However, the existing research still has bottlenecks: the model architecture\ndesign does not fully consider the heterogeneity of meteorological, temporal, and load\nsequences and mostly adopts a single-channel input structure, making it difficult to achieve\nthe deep integration of multi-source information [13].\nRecent advances in deep learning have significantly enhanced STLF’s capabilities.\nTransformer-based architectures [14] leverage self-attention mechanisms to capture global\ntemporal dependencies but suffer from quadratic computational complexity when process-\ning long sequences. Graph neural networks (GNNs) [15] model spatial correlations between\nsubstations through predefined topology graphs, yet their performance heavily relies on ac-\ncurate grid structure definitions, which are often unavailable in practical scenarios. Hybrid\narchitectures combining Convolutional Neural Networks (CNNs) and Long Short-Term\nMemory (LSTM) networks [16] have shown promise in extracting local spatial patterns\nand temporal dynamics. However, these models typically employ single-channel input\nstructures, leading to the suboptimal fusion of heterogeneous modalities like temporal\nmetadata, meteorological sensors, and historical load profiles.\nA critical limitation lies in the inherent heterogeneity of multi-source data: (1) temporal\nfeatures exhibit strict periodicity but lack nonlinear interactions with weather variables;\n(2) meteorological data demonstrate delayed effects on load patterns due to building ther-\nmal inertia; and (3) historical load sequences contain both trend and stochastic components.\nConventional single-channel approaches force these distinct modalities into a homogeneous\nrepresentation space, causing feature entanglement and information loss. Recent studies\non multi-modal learning [17] suggest that independent encoding pathways followed by\nlate fusion can better preserve modality-specific characteristics while enabling cross-modal\ninteraction. This theoretical foundation motivates our three-channel design.\nIn response to the above problems, this paper proposes a three-channel LSTM-CNN\ncombined model. Through independent LSTM modules, the temporal characteristics of\ntime, weather, and historical loads are extracted, respectively, and the convolutional layer\nof CNN is utilized to achieve cross-modal feature fusion, significantly improving the\nmodel’s representation ability for multi-source heterogeneous data [18]. Experiments on\npublic datasets show that the mean absolute percentage error (MAPE) of this model in\nthe 24 h load forecasting task has decreased to 0.974%, which is 23.6% higher than that\nof the single LSTM model [ 19]. Moreover, the optimal performance combination of the\nElectronics 2025, 14, 2262 3 of 15\nReLU activation function and the Adam optimizer in model training is verified through\ncomparative experiments.\nThe research results of this paper provide reliable theoretical tools for the digital\ndispatching of power systems. By applying the multi-channel deep learning architecture,\nnot only have the accuracy and stability of short-term load forecasting been improved, but\nalso a technical foundation has been laid for the optimization of power grid resilience in\nthe context of a high proportion of renewable energy access.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Three-Channel LSTM-CNN Combined Model",
+      "level": 1,
+      "text": "The three-channel LSTM-CNN combined model consists of LSTM and CNN. In short-\nterm power load forecasting, power data is generated in a time series and belongs to time\nseries data. The LSTM neural network has a good ability to process time column data,\nwhile the CNN neural network has a strong feature extraction ability. The construction of\nthree-channel LSTM combined with CNN deepens the feature fusion and gives full play to\nthe role of LSTM and CNN in short-term power load forecasting.\nThis chapter introduces the overall structure of the three-channel LSTM-CNN short-\nterm power load forecasting model, as shown in Figure 1. During the model training stage,\ntime-related features, meteorological and environmental features and historical power\nload features are input into the three-channel LSTM-CNN model for training to obtain the\noutput result of the trained model.\nFigure 1. The structure of the model.\nElectronics 2025, 14, 2262 4 of 15",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Long Short-T erm Memory Neural Network",
+      "level": 2,
+      "text": "Long Short-Term Memory (LSTM), as a special type of Recurrent Neural Network\n(RNN), uses memory cells instead of traditional neurons in its internal storage units [20–23].\nIn addition, LSTM also follows a gate mechanism, which consists of an input gate, a forget\ngate, and an output gate, enabling LSTM to have the ability to update and control the infor-\nmation flow. LSTM overcomes the shortcomings of RNNs by means of the gate mechanism\nand memory cells, effectively alleviates the problems of vanishing and exploding gradients,\nand effectively handles the long-term dependencies in time series data [24]. Figure 2 shows\nthe neural network structure of LSTM.\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 2. LSTM neural network structure.\nThe gate mechanism of LSTM mainly consists of three gates with different functions. In\nthe figure, ft represents the forget gate, it represents the input gate, ot represents the output\ngate, and δ represents the activation function, which is generally the Sigmoid function.\nIn the forget gate, the discard yt−1 and xt retention of information in the cell state\nCt−1 at time t − 1 are determined based on the hidden layer. Under the action of the\nSigmoid activation function of the forget gate, the output of the forget gate f is within\nthe range of [0, 1], where 0 represents discarding all information about the cell state Ct−1\nat the previous moment and 1 represents retaining all information. The existence of the\nforget gate enables LSTM to selectively forget and retain some memory contents, thereby\navoiding the problems of gradient explosion and gradient vanishing. The expression is\nas follows:\nft = Sigmoid (w f · [xt, yt−1] +b f ) (1)\nIn the formula, xt is the input at the current time t, yt−1 is the output of the hidden layer at\ntime t − 1, w f is the weight matrix, b f is the bias vector, and [] indicates that the variables\nare connected.\nIn the input gate, the input gate controls how much input xt information is added to\nthe cell state Ct, and the tanh activation function is also used to update the candidate cell\nstates\n∼\nc t. The expression is as follows:\nit = Sigmiod (wi · [xt, yt−1] +bi) (2)\n∼\nc t = Sigmoid (wc · [xt, yt−1] +bc) (3)\nIn the formula, wi and wc are the weight matrices, bi and bc are the bias vectors.\nElectronics 2025, 14, 2262 5 of 15\nThe cell state Ct−1 at the previous moment combines with the new candidate cell state\n∼\nc t to update into the new cell state Ct, and the expression is as follows:\nct = ft · ct−1 + it ·\n∼",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "t (4)",
+      "level": 1,
+      "text": "In the output gate, the output gate regulates the output of the LSTM unit, selects the\nvalid information in the cell state Ct at the current moment to the cell state at the next\nmoment, and outputs it. The expression is as follows:\not = Sigmoid (w0 · [xt, yt−1] +b0) (5)\nyt = ot · tanh(ct) (6)\nIn the formula, w0 is the weight matrix and b0 is the bias vector.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Convolutional Neural Network",
+      "level": 2,
+      "text": "Convolutional Neural Networks (CNNs) belong to an important branch in the devel-\nopment of artificial neural networks and are a kind of feedforward neural network with\nfeature extraction ability and pattern recognition [25–27]. In the algorithms of deep learning,\ncompared with other algorithms, CNNs have huge advantages in image processing, object\ndetection, etc. [28]. In recent years, with in-depth research, good achievements have also\nbeen made in fields such as natural language processing, signal analysis, and time series.\nCNNs adopt the methods of local connection and weight sharing to conduct higher-level\nand more abstract processing on the original data. They can automatically extract the\ninternal features in the data, thereby improving the operational efficiency and performance\nof the model [29]. As shown in Figure 3, a typical CNN network consists of an input layer,\na convolutional layer, a pooling layer, a fully connected layer, and an output layer.\nFigure 3. CNN network structure.\nThe convolutional layer is an important part of the CNN network. The convolutional\nlayer updates the parameters in the convolutional kernel by using the error backpropagation\nmethod and completes the feature extraction of the input matrix through a convolution\noperation. Convolution kernel size, step size, and filling are three hyperparameters in\nconvolution calculation. The scale of the input matrix should generally be larger than that\nof the convolution kernel. The smaller the size of the convolution kernel, the fewer the\ninput features that can be extracted. The convolution step size determines the distance\nthat the convolution kernel moves each time it scans the feature map. For example, if the\nstep size is 2, it means that the convolution kernel will skip two pixels in the next scan.\nThe convolution process will lead to the continuous reduction in the size of the feature\nElectronics 2025, 14, 2262 6 of 15\nmap, while the filling method can avoid the reduction of the feature map. Suppose the\nfeature map size of the input layer is 4 × 4, the size of the convolution kernel is 2 × 2,\nthe step size is 1, and it is not filled. The convolution calculation process of the neurons\nin this layer is shown in Figure 4. The green area, for example, is the dot product of the\nconvolution kernel and the corresponding part of the input matrix, and the calculation\nprocess is 3 × 1 + 1 × 0 + 5 × 0 + 2 × 1 = 5. In this paper, one-dimensional convolution\n(Conv1D) is used for feature extraction of sample data.\nFigure 4. The principle of convolution operation.\nThe purpose of the pooling layer is to perform dimension compression on the con-\nvolution data, eliminate invalid information, retain valid information, and accelerate the\ncomputing speed. Theoretically, the features after passing through the convolutional layer\ncan be directly used as the input of the fully connected layer. However, the number of\nfeatures after the convolution operation is huge, which will consume a large amount of\ncomputing resources. The further compression of these characteristic quantities by using\nthe pooling layer can effectively reduce the computational load and accelerate the running\nspeed of the model.\nThe structure of the pooling layer is similar to that of the convolutional layer. The\ncommonly used pooling layer processing mainly includes two methods: maximum pooling\nand average pooling. Suppose the pooling window is 2 × 2 and the step size is 2. The\nmaximum pooling and average pooling processes are shown in Figure 5. In this paper,\none-dimensional Max pooling (MaxPooling1D) is used to compress the dimensions of the\nsample data.\nFigure 5. Maximum pooling and average pooling processes.\nThe fully connected layer (FC) serves as the last layer of the CNN network. Each\nneuron in this layer integrates local information from the convolutional layer or the pooling\nlayer by connecting with all the neurons in the previous layer. Equations (4)–(7) show the\ncalculation formula of the fully connected layer, where w is the weight matrix, b is the bias\nElectronics 2025, 14, 2262 7 of 15\nvector, x is the input, y is the output, and f is the activation function. Figure 6 shows the\nfull connection process.\ny(x) = f (w · x + b) (7)\nFigure 6. Full connection process.\n2.3. The Structure of the LSTM + CNN Model with Three Channels of History, Time,\nand Meteorology\nIn deep learning, LSTM is widely used in time series analysis due to its advantage\nof being able to remember historical information for a long time, and CNN has a strong\nfeature extraction ability. The combination of the two has attracted the attention of many\nresearchers, such as CNN-LSTM, because compared with a single model, this kind of\ncombined model is more conducive to improving the prediction accuracy. However, in\nexisting studies, most of them can only predict one load point in the future, which is of\nlittle significance in practical applications. In addition, the established models do not fully\nconsider factors such as time and meteorological environment.\nTherefore, in order to further deeply explore the intrinsic relationship among temporal\ncharacteristics, meteorological and environmental characteristics, historical power load\ncharacteristics, and predicted power load and improve the learning ability of the model\nfor various characteristics, this paper proposes a short-term power load prediction model\nwith three channels of the historical, temporal, and meteorological environment, with\nLSTM + CNN. Firstly, historical data, time data, and meteorological environment data are\ncombined into three LSTM channels to learn the sequence data of history, time and the\nmeteorological environment, respectively. Then, the learning results of these three channels\nare transposed. Through CNN, these three channels are fused for learning, and the results\nare predicted to achieve the prediction of power load for the next day.\nThis model builds three LSTM channels, respectively, for features of different cate-\ngories, uses a CNN to perform feature fusion on the outputs from different LSTM channels,\nfurther explores the intrinsic relationship between various features and power load from\nthe output end, and improves the prediction effect of short-term power load. Figure 7\nshows the network structure diagram of the three-channel LSTM-CNN model.\nThe entire network is mainly composed of three channels of LSTM modules. The\ninputs of each module are historical power load information, meteorological and envi-\nronmental information, and time information, respectively. Among them, the historical\npower load is the power load value at the same time in the days before the prediction\ndate, and the meteorological and environmental information is the characteristics such as\nElectronics 2025, 14, 2262 8 of 15\ntemperature and humidity on the prediction day given by the data set. Time information\nrefers to the time of the predicted date, such as months, hours, whether it is a working day,\nand other characteristics.\nFigure 7. Three-channel LSTM-CNN combined model structure.\nThe predicted power load point is defined as Xt, with t representing the moment of\nthe predicted power load; the input sequence of the historical power load of the LSTM\nmodule at the same time m days ago is {Xt−24, Xt−24∗2, . . . ,Xt−24∗m}, where 24 is the\npower load value corresponding to each hour of one day. The input sequence of the\nmeteorological environment LSTM module is\n\b\nW1\nt , . . . ,Wr\nt\n\t\n, where r represents the total\nnumber of meteorological environment features, and W represents the meteorological\nenvironment type features. The input sequence of the time LSTM module is\n\b\nT1\nt , . . . ,Te\nt\n\t\n,\nwhere T represents the time encoding feature, and e represents the total number of time\nfeatures. After normalizing each sequence, they are, respectively, sent to the corresponding\nLSTM modules for sequence learning. Suppose the output of the historical power load\nLSTM module is (H1,1, H1,2, . . ., H1,n), the out",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Experimental Parameter Settings",
+      "level": 1,
+      "text": "In this paper’s experiment, two power datasets were adopted to verify the perfor-\nmance of the three-channel LSTM-CNN model. One of them was the power dataset of\na distribution network in the city of Tétouan, Morocco, for the entire year of 2017. The\nsecond one is the dataset of the Electrician Cup competition.\nThe experimental hardware platform is a notebook computer based on the Windows 11\nsystem, including an Intel Core i5-8300H CPU and an NVDIA GTX 1050Ti GPU. Among\nthem, the software platform is Pycharm (version Community Edition 2024.3.4) based\non the python language, and the main development library is the Keras deep learning\nlibrary based on Tensorflow (version 2.6.0). Keras, as a commonly used framework in\ndeep learning, encapsulates some common deep learning networks, enabling less code to\nbe used for model building in deep learning model construction and making it easier to\nunderstand the model-building process.\nIn the partitioning dataset, the dataset is divided into the training set and the test set.\nThe model is trained in the training set to update the weights and obtain the optimal model\nand predicted in the test set to obtain the power load prediction results.\nIn the experiments of this section, batch_size is set to 256. One layer of the LSTM\nnetwork is set up in each of the three channels, with 64 neurons set up for learning various\ntypes of information. In the CNN network, there are 2 convolutional layers and 1 pooling\nlayer. Among them, 8 convolutional kernels are set in the first convolutional layer, and\n2 convolutional kernels are set in the second convolutional layer to extract the important\nfeature information in the three-channel LSTM network. The learning rate is set to 0.001,\nthe loss function selects the commonly used MAE loss function in the regression model,\nand the number of iterations is set to 80.\nIn neural networks, activation functions are often used to handle nonlinear data, and\ndifferent activation functions affect the performance of the model. This section sets the\nactivation functions in the proposed network and compares the effects of multiple activation\nfunctions on the performance of the model. The experimental results are shown in Table 1.\nAmong several commonly used activation functions, the Leaky ReLU activation function\nhas the best performance and the highest prediction accuracy in the model, followed by the\nSigmoid activation function. However, the performance of the ReLU activation function is\nthe worst. Compared with Sigmoid, Tanh, and ReLU, the performance of the Leaky ReLU\nactivation function in MAPE decreased by 0.181%, 0.299%, and 1.244%, respectively. This\nis due to the special function construction of the ReLU activation function, which leads\nElectronics 2025, 14, 2262 10 of 15\nto the phenomenon that the weights cannot be updated during the gradient calculation\nprocess, while the Sigmoid and Tanh activation functions are prone to gradient dispersion\nproblems in the saturation region. The Leaky ReLU activation function sets the slope α\nwithin the interval (0, 1) for the input of negative numbers, solving the problems of the\ninability to update the weights in the ReLU activation function and the vanishing gradient\nin backpropagation. Therefore, the best-performing Leaky ReLU function is adopted as the\nactivation function.\nTable 1. Comparison of several commonly used activation functions.\nActivation Function RMSE/MW MAE/MW MAPE/%\nSigmoid 393.250 315.6 1.155\nTanh 449.462 362.8 1.273\nReLU 651.879 543.2 2.218\nLeaky ReLU 321.198 275.3 0.974\nIn the models established in this chapter, the selection of the model optimizer has\na certain impact on the model performance. An appropriate optimizer can improve the\nprediction accuracy of the model. In order to select the appropriate optimizer for the\nthree-channel LSTM-CNN model, this section presents an experimental comparison of\ntwo commonly used optimizers. The results are shown in Table 2. It can be seen that the\nselection of different optimizers has significant differences in the prediction effect of the\nmodel. Among them, the model choosing the Adam optimizer has the best performance.\nCompared with the SGD optimizer, its prediction accuracy in MAPE has improved by\n0.519%. Although Nadam theoretically combines Nesterov momentum with adaptive\nlearning rates, its MAPE increased by 6.2% compared to Adam in our task. This suggests\nthat the standard Adam’s first-moment estimation aligns better with the gradient patterns\nin multi-channel LSTM-CNN architectures. The RMSprop optimizer showed faster initial\nconvergence but ultimately fell short in handling the coupling effects between temporal\nand meteorological features. Therefore, in this chapter, the Adam optimizer is selected as\nthe optimizer for the three-channel LSTM-CNN model.\nTable 2. Comparison of different optimizers.\nOptimizer RMSE/MW MAE/MW MAPE/%\nSGD 523.866 423.7 1.493\nRMSprop 335.207 287.5 1.102\nNadam 327.914 280.1 1.038\nAdam 321.198 266.4 0.974\nIn the three-channel LSTM-CNN short-term power load forecasting model, historical\npower loads of different lengths affect the model performance. This section conducts an\nin-depth study on the input length in the historical power load and takes the historical\nload at the same time from the previous day to the previous four days as the input of the\nhistorical load LSTM module, respectively. Table 3 shows the performance of the model\nin this chapter under different historical power load input lengths. It can be seen from\nthe table that the MAPE of the model compared with other historical load input lengths\nhas decreased by 0.156%, 0.562%, and 3.564%, respectively. Therefore, in the model of this\nchapter, the same time of the previous day is selected as the input of the historical load\nmodule in the model.\nElectronics 2025, 14, 2262 11 of 15\nTable 3. Performance analysis of different historical load input lengths.\nInput Length RMSE/MW MAE/MW MAPE/%\n1 321.198 277.1 0.974\n2 405.693 338.9 1.130\n3 512.023 425.6 1.536\n4 1310.602 1005.8 4.520",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Analysis of Experimental Results",
+      "level": 1,
+      "text": "In the above-mentioned three-channel LSTM-CNN short-term power load forecasting\nmodel experiment, the corresponding parameters of the three-channel LSTM-CNN model\nwere determined. In this section, in order to verify the performance of the short-term power\nload forecasting model based on the three-channel LSTM-CNN, the Temporal Convolu-\ntional Network (TCN), the LSTM model, and the combined model of CNN and LSTM\n(CNN-LSTM) were adopted as comparison models to verify the prediction effect of the\nthree-channel LSTM-CNN short-term power load forecasting model. The hyperparameters\nof the LSTM, CNN-LSTM and S-LSTM comparison models were consistent with those\nof the three-channel LSTM-CNN, and the hyperparameters of the remaining comparison\nmodels were selected as the best results after multiple experiments.\n(1) Table 4 presents the load forecasting results of different models in the Tétouan mu-\nnicipal power supply dataset. It can be known from Table 4 that, compared with the\nLSTM model, the CNN-LSTM combined model that adds a CNN for feature extraction\non the basis of LSTM, and the TCN model, the RMSE of the three-channel LSTM-CNN\nmodel decreased by 239.202 MW, 215.660 MW, and 27.887 MW, respectively. MAE\ndecreased by 202.1 MW, 177.6 MW, and 42.0 MW, respectively; MAPE decreased\nby 0.566%, 0.465% and 0.104%, respectively. It is indicated that the LSTM model\nafter feature extraction using the CNN network can better capture the characteristic\ninformation of power load, thereby improving the accuracy of power load prediction.\nAmong all the comparison models, the three-channel LSTM-CNN model has the\nbest effect in power load forecasting. Experiments prove that this model has good\npredictive performance.\nTable 4. Prediction results obtained of different models in the Tétouan City power dataset.\nMethod RMSE/MW MAE/MW MAPE/%\nLSTM 799.783 652.3 1.942\nCNN-LSTM 776.214 627.8 1.823\nTCN 588.468 492.2 1.471\nThree-channel LSTM-CNN 560.581 450.2 1.367\nThe prediction results of each model in this dataset are shown in Figure 9. Compared\nwith other comparison models, the prediction curve of the three-channel LSTM-CNN model\nis closer to the change in the real power load, while the prediction effect of the LSTM model\nis the worst and cannot follow the change of power load well. When some power loads\nchange suddenly, other comparison models are larger than the actual values compared to\nthe three-channel LSTM-CNN. The three-channel LSTM-CNN can better capture the places\nwhere the power load suddenly changes and can remain consistent with the changing trend\nof the power load.\nThe remaining power load of each model is shown in Figure 10. The majority of the\nresidual power loads of the three-channel LSTM-CNN model proposed in this chapter are\nless than 1000 kW. Even at some time points where it is difficult to predict accurately due\nElectronics 2025, 14, 2262 12 of 15\nto large fluctuations in power load changes, the residual power load of the three-channel\nLSTM-CNN model is the lowest among the comparison models. However, the single LSTM\nmodel fluctuates the most and has the poorest prediction effect in the variation of the\npower load residual. The performance of the TCN model is slightly worse than that of the\nthree-channel LSTM-CNN model. The residual variation fluctuation of power load in the\nthree-channel LSTM-CNN model is the most gentle, and the prediction effect of the power\nload is more accurate.\n \n \n \n \n \n \n \n \n \n \n \n \nFigure 9. Prediction results obtained of the power data set of Tétouan City.\nFigure 10. Analysis of the load residual in the power data set of Tétouan City.\n(2) Table 5 shows the load forecasting results of different models in the Electrician Cup\ncompetition dataset. It can be known from Table 5 that among the various comparison\nmodels, the three-channel LSTM-CNN prediction model has a relatively high accuracy\nin power load prediction. Its RMSE is 321.198 MW, its MAE is 278.6 MW, and its MAPE\nis 0.974%. Compared with the LSTM, the CNN-LSTM model, and the TCN model,\nRMSE decreased by 187.659 MW, 104.998 MW, and 37.096 MW, respectively. The MAE\ndecreased by 128.5 MW, 65.2 MW, and 26.1 MW, respectively. The MAPE decreased by\n0.548%, 0.272%, and 0.109%, respectively. All three evaluation indicators decreased,\nindicating that the model in this section has a good effect on power load forecasting.\nElectronics 2025, 14, 2262 13 of 15\nTable 5. The prediction results of different models in the Electrician Cup competition dataset.\nMethod RMSE/MW MAE/MW MAPE/%\nLSTM 508.857 407.1 1.522\nCNN-LSTM 426.196 343.8 1.246\nTCN 358.294 304.7 1.083\nThree-channel LSTM-CNN 321.198 278.6 0.974\nThe prediction results of each model in the Electrician’s Cup competition dataset are\nshown in Figure 11, and the comparison of power load residuals of each model is shown\nin Figure 12. It can be seen from the two figures that in the Electrician’s Cup dataset, the\nprediction effect of the three-channel LSTM-CNN model is better. It can accurately follow\nthe changes in power load in the morning and evening, and its overall power load residual\ntends to be more stable. This model can effectively predict the short-term power load\nof the next day. When the power load is stable and has large fluctuations, its prediction\nperformance and generalization ability show excellent results.\nFigure 11. The prediction results of different models in the Electrician’s Cup dataset.\nFigure 12. Load residuals of different models in the Electrician’s Cup dataset.",
+      "refs": {
+        "figures": [
+          "f9",
+          "f12",
+          "f11",
+          "f10"
+        ],
+        "tables": [
+          "t5",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 Conclusions",
+      "level": 1,
+      "text": "This paper proposes a three-channel LSTM-CNN short-term power load forecasting\nmodel. The LSTM neural network is utilized to capture the dependency relationships in\nElectronics 2025, 14, 2262 14 of 15\ntime series data. Input sequences in different LSTM modules are constructed, respectively,\nfor the characteristics of time information, meteorological environment and historical load\nto form a three-channel network. Combined with the feature extraction ability of the\nconvolutional network, the output features of each LSTM module in the three-channel\nnetwork are extracted. Finally, the power load forecasting result is obtained after learning\nthrough the fully connected layer.\nThe experimental results in both datasets show that, compared with various main-\nstream deep learning models, the prediction performance of the three-channel LSTM-CNN\nmodel is better. This proves that this model can effectively fuse features and enhance the\ncorrelation between various features and power loads, improving the accuracy of load\nprediction. In the predicted step size, the three-channel LSTM-CNN model belongs to an\nimproved single-step prediction model. The difference from other single-step prediction\nmodels lies in that in the historical load LSTM module of this model, the historical load at\nthe same time of the previous day is adopted as the input, which can correspond to the\noutput of the power load value at the same time in the future. The prediction of all power\nload points for a consecutive day in the future has been achieved.\nAuthor Contributions: Conceptualization, X.Z. and H.P .; methodology, X.Z.; software, X.Z.; valida-\ntion, X.Z. and H.M.; formal analysis, L.Z.; investigation, H.P .; resources, H.P .; data curation, X.Z.;\nwriting—original draft preparation, X.Z.; writing—review and editing, H.P .; visualization, X.Z.;\nsupervision, L.Z.; project administration, L.Z.; funding acquisition, H.P . All authors have read and\nagreed to the published version of the manuscript.\nFunding: This work was supported by the State Key Laboratory of Smart Grid Protection and\nOperation Control (SGNR0000KJJS2302140) and the National Natural Science Foundation of China\n(62206071).\nData Availability Statement: The datasets presented in this article are not readily available because\nthe data are part of an ongoing study or due to technical.\nConflicts of Interest: Author Huimin Peng was employed by the company State Key Laboratory of\nTechnology and Equipment for Defense against Power System Operational Risks, Nari Technology\nCo., Ltd. The remaining authors declare that the research was conducted in the absence of any\ncommercial or financial relationships that could be construed as a potential conflict of interest.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The structure of the model."
+    },
+    {
+      "id": "f2",
+      "caption": "LSTM neural network structure."
+    },
+    {
+      "id": "f3",
+      "caption": "CNN network structure."
+    },
+    {
+      "id": "f4",
+      "caption": "The principle of convolution operation."
+    },
+    {
+      "id": "f5",
+      "caption": "Maximum pooling and average pooling processes."
+    },
+    {
+      "id": "f6",
+      "caption": "Full connection process."
+    },
+    {
+      "id": "f7",
+      "caption": "Three-channel LSTM-CNN combined model structure."
+    },
+    {
+      "id": "f8",
+      "caption": "Convolution operation process."
+    },
+    {
+      "id": "f9",
+      "caption": "Prediction results obtained of the power data set of Tétouan City."
+    },
+    {
+      "id": "f10",
+      "caption": "Analysis of the load residual in the power data set of Tétouan City."
+    },
+    {
+      "id": "f11",
+      "caption": "The prediction results of different models in the Electrician’s Cup dataset."
+    },
+    {
+      "id": "f12",
+      "caption": "Load residuals of different models in the Electrician’s Cup dataset."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison of several commonly used activation functions."
+    },
+    {
+      "id": "t2",
+      "caption": "Comparison of different optimizers."
+    },
+    {
+      "id": "t3",
+      "caption": "Performance analysis of different historical load input lengths."
+    },
+    {
+      "id": "t4",
+      "caption": "Prediction results obtained of different models in the Tétouan City power dataset."
+    },
+    {
+      "id": "t5",
+      "caption": "The prediction results of different models in the Electrician Cup competition dataset."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 12,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

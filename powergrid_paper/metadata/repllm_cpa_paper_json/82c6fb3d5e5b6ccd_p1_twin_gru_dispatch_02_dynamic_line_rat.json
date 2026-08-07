@@ -1,0 +1,428 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__02__dynamic_line_rating_and_transformer_life_loss_related_unit_commitment__2e4f3d4094.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In recent years, the superposition of global warming and other natural factors has\nled to frequent extreme high-temperature events. Elevated ambient temperatures not only\nincrease the uncertainty of power supply and demand but also reduce the security margin\nof grid equipment, thereby aggravating operational risks [1]. In particular, under prolonged\nhigh-temperature conditions in summer, the thermal stability of key equipment such as\ntransmission lines and transformers is reduced. Without effective measures, this may lead\nto power supply shortages and a decline in system reliability [2,3]. Therefore, investigating\nthe key operational constraints of power systems under high-temperature conditions is of\ngreat significance for enhancing system security and dispatch flexibility.\nOn the transmission side, high temperatures directly affect conductor heating, which\nin turn limits the transferable capacity of transmission lines [4]. Conventional static line\nrating (SLR) methods generally determine capacity based on worst-case meteorological\nElectronics 2025, 14, 4027 https://doi.org/10.3390/electronics14204027\nElectronics 2025, 14, 4027 2 of 18\nconditions to ensure secure operation. For instance, ref. [ 5] proposed an adaptive SLR\napproach that adjusts the assumed wind speed in the rating calculation for conductors\nwith higher permissible temperature limits, thereby reducing the risk of exceeding thermal\nlimits. However, such conservative approaches inevitably lead to reduced transmission\ncapability. In contrast, dynamic line rating (DLR) methods can adaptively adjust line\ncapacity according to real-time meteorological conditions, thus capturing the actual transfer\ncapability of lines under extreme high-temperature conditions. DLR has been proven\nto significantly enhance system transmission capacity [6,7]. Consequently, incorporating\ndynamic line rating constraints under hot weather into the unit commitment (UC) model is\nessential for ensuring transmission security and improving system dispatch flexibility.\nIn addition, transformers, as one of the most expensive and critical assets in power\nsystems, are highly sensitive to ambient temperature [8]. Under hot weather conditions,\ntransformer hot-spot temperatures rise significantly, accelerating insulation aging and\nshortening service lifetime. In severe cases, this may even result in equipment failures\nand large-scale outages [9]. Some studies have attempted to mitigate life loss by enhanc-\ning cooling systems to lower hot-spot temperatures [10,11], but the effectiveness of their\ncooling is constrained by ambient conditions and the operational state of the transformer\nitself. Ref. [12] proposes a scheduling model established on dynamic transformer ratings\nand transformer lifetime loss characteristics, aiming to mitigate transformer aging. How-\never, the dynamic rating model may become invalid under abnormal high-temperature\nconditions, where thermal stability parameters change drastically. In addition, an im-\nproved economic model incorporating transformer failure probability has been developed,\nwhich alleviates lifetime loss by jointly evaluating the failure risk and the expected life-\ntime of the transformer [13]. Nevertheless, economic models based on historical failure\nprobabilities are inadequate for assessing unexpected fault risks under extreme weather\nconditions, thereby limiting their reliability. Considering that transformer loading is the\ndominant factor determining hot-spot temperature and lifetime loss [ 14], incorporating\ntransformer life loss into operational optimization models is expected to further improve\nboth the security and economic efficiency of power system operation under extreme high-\ntemperature scenarios.\nTherefore, this paper proposes an optimized dispatch method that incorporates dy-\nnamic thermal stability of transmission lines and transformer life loss based on the thermal\nequilibrium theory of power lines and the transformer hot-spot temperature calculation\nmodel. The method elucidates the intrinsic mechanisms behind reduced line ampacity and\naccelerated transformer insulation aging under high-temperature conditions, thereby estab-\nlishing an optimized dispatch framework that integrates transmission capacity constraints\nwith the composite minimization objectives of generation costs, transformer life loss, and\nwind curtailment penalties.\nThe structure of this paper is organized as follows: First, Section 2 presents the\ntemperature-dependent dynamic line rating calculation model for transmission lines. Then,\nSection 3 derives the ambient-temperature-driven transformer life loss model. Next, Sec-\ntion 4 details the proposed UC optimization model. Section 5 validates the effectiveness of\nthe proposed method through case studies. Finally, Section 6 concludes with a summary of\nthe research.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Dynamic Line Rating Calculation Model Considering Temperature",
+      "level": 1,
+      "text": "Effects",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Thermal Balance Theory of T ransmission Lines",
+      "level": 2,
+      "text": "The safe operation of transmission lines in power systems depends on their thermal\nstability, defined as the maximum current-carrying capability of the conductor without\nElectronics 2025, 14, 4027 3 of 18\nexceeding the permissible temperature rise, commonly referred to as the thermal rating\nof the transmission line [15]. This thermal rating is affected by various factors, including\nthe conductor material and cross-sectional area, ambient temperature, wind speed, solar\nradiation, and geographical conditions. Among these, the conductor’s steady-state temper-\nature is a critical variable in determining its maximum allowable power transfer. Under\nhigh-temperature conditions, the cooling efficiency of conductors is significantly reduced,\nleading to a higher temperature rise per unit current. If power flow is not adjusted in\na timely manner, it may result in conductor overheating, increased sag, or even thermal\ndamage and failure [16].\nIn addition to resistive heating, convective cooling, radiative heat loss, and solar\nradiation absorption also govern the thermal balance of transmission lines, thereby affecting\nboth the transient and steady-state temperature of the conductor. When a temperature\ndifference exists between the conductor and the surrounding air, heat is transferred to the\nenvironment through either natural or forced convection. The convective heat loss power\ncan be expressed as [17]:\nQc = hc As(Tc − Ta) (1)\nwhere Qc is the convective heat loss per unit length, hc is the convective heat transfer\ncoefficient, As is the surface area of the conductor per unit length, Tc is the conductor\ntemperature, and Ta is the ambient temperature.\nThe convective heat transfer coefficienthc represents the heat transferred by convection\nper unit area and per unit temperature difference, it can be expressed as:\nhc = max\nn\n3.07D−1Kϕ(ρrDv)0.471, B1D−1Kϕ(ρrDυ)n1\no\n(2)\nwhere ρr is the relative air density, v is the wind speed, Kϕ is the wind direction factor, B1\nand n1 are empirical coefficients [18], and D is the overall conductor diameter.\nDuring radiative heat transfer, the high-temperature conductor emits thermal energy\nin the form of infrared radiation. The radiative heat loss is characterized by the radiative\nheat transfer coefficient hr.\nhr = 4εσ As(Ta + 273)3 (3)\nwhere ε is the emissivity of the conductor surface, and σ is the Stefan–Boltzmann constant.\nDuring daytime, the conductor absorbs solar radiation, resulting in a heat gain known\nas solar heat absorption. The solar heat gain per unit length is given by:\nQs = αsGA s (4)\nwhere αs is the solar absorptivity of the conductor, and G is the solar irradiance.\nThe temperature variation in transmission lines is primarily influenced by\nthree components: the conductor temperature rise caused by ambient temperature and\nsolar radiation, the temperature increase due to resistive heating, and a higher-order\ncurrent-induced heating correction term under the influence of radiative heat loss [19].\nT0 = β0 = Ta + µ0Qs\nµ0 = [ πD(hr + hc) ]−1 (5)\nwhere µ0 is the thermal resistance of the transmission line under ambient conditions,\nrepresenting the temperature rise caused by unit heat power.\nElectronics 2025, 14, 4027 4 of 18\nThe current flowing through the transmission line generates Joule heat, resulting in a\ntemperature rise due to resistive heating given by:\nT1 = β1 · I2, β1 = µ0rtem (6)\nwhere rtem is the conductor resistance per unit length at ambient temperature.\nDue to the nonlinear effects of resistive heating and radiative heat loss in transmission\nlines, the current-induced heating correction term is expressed as follows:\nT2 = β2 I4, β2 = µ0µ1rmax(ηrre f − κ)\nµ1 =\nh\nπD(hr + hc + κ(Tmax − Tamb ))]−1\ni (7)\nwhere µ1 is the thermal resistance of the transmission line at the maximum conductor\ntemperature, η is the temperature coefficient of resistance, and κ is the radiative cooling\ncoefficient. β0, β1, and β2 are constants that vary depending on the physical and electrical\ncharacteristics of the conductor and the weather conditions along the transmission line.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Dynamic Line Rating Calculation Model",
+      "level": 2,
+      "text": "The steady-state conductor temperature calculation formula is as follows:\nθss = T0 + T1 + T2\n= β0 + β1 · I2 + β2 I4 (8)\nThe transient conductor temperature calculation formula considering time scale is\nas follows:\nθ(t) =θss − (θss − θ0) · exp\n\u0012\n− t\nτ\n\u0013\n(9)\nwhere θss is the steady-state conductor temperature; β0, β1, and β2 are thermal parame-\nters related to ambient temperature, wind speed, and solar radiation, respectively; I is\nthe actual current in the transmission line; θ(t) is the conductor temperature at time t;\nθ0 denotes the initial temperature; and exp(−t/τ) represents the thermal inertia of the\nconductor. It is assumed that wind speed v and solar irradiation G are constant during the\nperiod considered.\nFor sufficiently long time scales, the exponential term in the equation approaches\nzero, and thus, θ(t) ≈ θss. After setting the upper limit of the transmission line’s steady-\nstate temperature, the maximum allowable transmission current Imax can be derived from\nEquation (7). Consequently, combined with the system voltage level, the maximum trans-\nmission capacity limit Pmax can be determined.\nImax =\nvuut −β1 +\nq\nβ2\n1 − 4β2(β0 − θmax)\n2β2\n(10)\nTemperature has a direct impact on the DLR, as high-temperature environments reduce\nthe current-carrying capacity of the conductors. The temperature model for transmission\nlines takes into account the effect of temperature, calculating the maximum allowable\ncurrent in real-time to adjust the line capacity. The limitation of line capacity affects\nthe power system’s UC, as lines with insufficient capacity may not support excessive\npower flow, leading to the need for load redistribution or the activation of backup gen-\nerators during scheduling optimization. This impacts the operating mode of the power\nsystem, especially during high-demand periods, where adjustments to the generation plan\nElectronics 2025, 14, 4027 5 of 18\nmay be required to optimize power flow and prevent overloads, ensuring the system’s\nstable operation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Transformer Life Loss Model Based on Ambient Temperature",
+      "level": 1,
+      "text": "3.1. T ransformer Internal T emperature Rise and Hot-Spot T emperature Calculation Model\nThe temperature at the hottest spot within the transformer winding is referred to as the\nhot-spot temperature. The temperature of the transformer oil near this hot-spot is known\nas the top-oil temperature, which reflects the internal heat distribution within the winding.\nHeat is generated within the winding and core and is transferred to the surrounding air\noutside the transformer through conduction, convection, and radiation. The calculation\nprocess for the internal temperature rise of the transformer is as follows.\nThe essence of the increase in transformer temperature lies in the accumulation effect\ncaused by the inability to dissipate the heat generated during operation in a timely and\ncomplete manner. Its quantitative analysis begins with the accurate calculation of internal\nheat sources, which primarily originate from transformer operating losses, including no-\nload loss and load loss. Among them, the no-load loss is an inherent loss that exists as soon\nas the transformer is energized, resulting from the magnetization process of the iron core.\nIt serves as the fundamental heat source for calculating temperature rise under any loading\ncondition. The formula for calculating the no-load loss is as follows:\nP0 = S0 · wir · ES (11)\nwhere P0 is the no-load loss; S0 is the specific loss per unit weight of the cold-rolled and\nhot-rolled silicon steel sheets in the core;wir is the total weight of the core; andES represents\nthe additional loss process factor, the specific value of which is determined by the selected\nmaterial and manufacturing process, typically ranging from 1.3 to 1.5 [13].\nThe load loss, influenced by the skin effect, proximity effect, and stray magnetic fields,\nis significantly higher than the simple I2R calculation. To accurately evaluate the variation\nin heat generation caused by load fluctuations, it is necessary to comprehensively consider\nconductor loss, additional conductor loss, lead loss, and stray loss. The load loss can\ntherefore be calculated according to Equation (12).\nPL = ∑ Pc + ∑ Ps + ∑ Pw + Pm (12)\nwhere ∑ Pc is the total copper loss of the windings; ∑ Ps denotes the additional loss of the\nwinding conductors—eddy current and stray losses in structural parts for layer windings,\nand eddy current and circulating current losses for disk windings; ∑ Pw is the total lead\nloss; and Pm represents the stray losses.\nIn addition, the operation and lifetime assessment of transformers must take into\naccount the top-oil temperature, which serves as a direct reference for the hottest spot near\nthe windings. The top-oil temperature can be calculated using the following equation:\nTM = 1.2θa + ∆τTM (13)\nwhere θa is the average oil temperature rise, and ∆τTM is the top-oil temperature correction\nvalue. Their calculation formulas are as follows:\nθa = Kaq0.8\nh (14)\n∆τTM = 0.028e3.5Kh θ0.7\na (15)\nElectronics 2025, 14, 4027 6 of 18\nwhere Ka is the average temperature rise coefficient of the transformer insulating oil,\nreflecting the combined influence of the tank structure and the thermophysical properties\nof the insulating oil on the cooling efficiency, typically ranging from 0.05 to 0.15; qh is\nthe thermal load of the tank; and Kh is the ratio of heating height to cooling height,\nwhich characterizes the relative position of the internal heat sources to the tank’s effective\ncooling height and is used to correct the calculation of the top-oil temperature rise. For\ntypical oil-immersed transformers, Kh usually ranges from 0.5 to 0.9. In addition, the\nempirical constants in the formula, 0.8, 3.5, and 0.7, are regression coefficients obtained\nfrom experimental data fitting [11].\nThe average temperature rise of the winding over the oil is given by Equation (16).\nθQC = τqc + θa (16)\nwhere τqc is the temperature difference in the high-voltage or low-voltage winding.\nUnder any load condition, the ultimate hot-spot temperature of a transformer is equal\nto the sum of the ambient temperature, the top-oil temperature rise over ambient, and the\nhot-spot temperature rise over the top-oil temperature. This is typically expressed by the\nfollowing equation [20].\nTH = Ta + ∆TM + ∆Tu (17)\nwhere Ta is the ambient temperature, ∆TM is the top-oil temperature rise over ambient, ∆Tu\nis the hot-spot temperature rise over the top-oil, andTu is the ultimate hot-spot temperature.\nAll temperature parameters are in degrees Celsius (◦C). The top-oil temperature rise over\nambient is given by the following equation:\n∆TM = ∆θTM −R\n \n1 + RH · KL2\n1 + RH\n!n\n(18)\nwhere ∆θTM −R is the top-oil temperature rise over ambient at the rated load, RH is the\nratio of load loss to no-load loss at the rated current, and KL is the load factor (actual load\ndivided by rated load). The hot-spot temperature rise over the top-oil is given by the\nfollowing equation:\n∆Tu = FT · θQC · KL2m (19)\nwhere FT is the hot-spot factor accounting for increased eddy current losses at the winding\nends, and n and m are empirically derived exponents that depend on the cooling method.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 T ransformer Life Loss Cost Model",
+      "level": 2,
+      "text": "The life of a transformer primarily depends on its solid–liquid insulation system,\nwhich consists of insulation paper and insulation oil. While the aging of insulation oil\ncan be mitigated through replacement or filtration, the degradation of insulation paper\nis irreversible, making its lifetime the critical factor determining the overall transformer\nlifespan. It is noteworthy that the aging rate of insulation paper is closely related to the\noperating conditions of the transformer, with hot-spot temperature playing a dominant\nrole in the thermal aging process. According to IEC guidelines, a continuous maximum\nhot-spot temperature of 98 ◦C ensures the rated lifetime of a transformer, whereas each\nadditional 6 ◦C above this threshold doubles the aging rate [ 21]. Assuming a nominal\ntransformer lifetime of 30 years, the transformer life loss cost is calculated in this study\nbased on the IEEE/ANSI C57.91 standard and miner’s rule [ 22] and is expressed by the\nfollowing formula:\nCTF = Cint ×\nn\n∑\ni=1\n\u0012 Di\nDt\n× ti\nTL\n\u0013\n(20)\nElectronics 2025, 14, 4027 7 of 18\nwhere Cint is the initial investment cost of the transformer,Dt is the allowable total loss over\nthe design life, ti is the duration of the i-th operating condition, and TL is the design life of\nthe transformer. The loss of life rate under the i-th operating condition, Di, is calculated\nusing the following model:\nDi = e( KA\n383 − KA\nTH +273 ) × 100% (21)\nwhere KA is the Arrhenius reaction rate constant, and TH is the hot-spot temperature. In\nthe calculation of the hot-spot temperature, following the IEEE Std C57.91 standard and\ntypical transformer design requirements, θQC is assumed to be 22 ◦C. The transformer\nconsidered in this study adopts the OA/ONAN cooling mode, i.e., natural oil convection\ninside the transformer and natural air convection over the radiator. Under this cooling\nmethod, according to empirical values reported in related studies [ 23], the parameters\nare set as FT = 1.4, n = 0.9, and m = 0.8. Based on experimental calculations, when the\nrated top-oil temperature rise ∆θTM −R is 56.3 ◦C, the transformer hot-spot temperature can\nbe ensured to reach the standard value of 98 ◦C under a reference ambient temperature\nof 20 ◦C.\nIt should be noted that transformer life loss is closely related to system scheduling,\nsince the hot-spot temperature is primarily determined by the loading rate, unit commit-\nment, power flow allocation, and reserve levels, and high-temperature conditions directly\ninfluence transformer loading and, consequently, its lifetime loss. Ignoring this factor in\nUC optimization may result in excessive operation or inefficient load allocation, thereby\naccelerating transformer degradation and causing additional economic losses. Therefore,\nin Section 4, the proposed transformer life loss cost model is incorporated into the UC\noptimization objective function to achieve a unified consideration of operational economy\nand long-term asset reliability.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Unit Commitment Involving Transformer Life Loss Minimizer and",
+      "level": 1,
+      "text": "Dynamic Line Rating Constraints",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.1 Objective Function",
+      "level": 2,
+      "text": "When both thermal and wind power units are scheduled simultaneously, the start-up\nand operation costs of the thermal power units and the penalty for wind power curtailment\nneed to be considered. Additionally, transformer loss costs during operation should be\nintroduced to extend the lifespan of the transformers in the power system. The model aims\nto minimize the total cost, including conventional unit generation costs, unit start-up and\nshutdown costs, transformer life loss costs, and wind curtailment penalty costs:\nminF = Ccoal + CTF + CW + CUD\nCcoal =\nT\n∑\nt=1\nN\n∑\ni=1\n\u0010\nai · P2\ni,t + bi · Pi,t + ci\n\u0011\nCTF = Cint ×\nN\n∑\ni=1\n\u0012 Di(TH)\nDt\n× ti\nTL\n\u0013\nCW = γwind\nT\n∑\nt=1\nQwind,t\n(22)\nwhere F is the total operating cost of the system; Ccoal represents the generation cost\nof thermal units; CTF represents the transformer life loss costs; CW represents the wind\ncurtailment penalty cost; CUD is the start-up and shutdown cost of thermal units; a, b, and c\nare consumption coefficients related to unit characteristics; D(TH) is the life loss rate under\nthe operating condition; γwind is the wind curtailment penalty coefficient; and Qwind,t is\nthe wind curtailment amount at time t.\nElectronics 2025, 14, 4027 8 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.2 Constraints",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "1 Wind turbine unit",
+      "level": 1,
+      "text": "To characterize the impact of wind power output uncertainty on system dispatch, a\nwind power decomposition model is introduced, which splits the wind power output into\nthe sum of actual accepted power and curtailed power. The output limit and curtailment\nof the wind turbine must not exceed the wind power output forecast range. The sum of\nthe wind power consumption and the curtailment should equal the total generation of the\nwind turbine.\n0 ≤ Pact\nw,t ≤ ˆPwind\nw,t ∀w, t\n0 ≤ Pabn\nw,t ≤ ˆPwind\nw,t ∀w, t\nPact\nw,t + Pabn\nw,t = ˆPwind\nw,t ∀w, t\n(23)\nwhere Pact\nw,t is the actual output of the w-th wind turbine at hour t, Pabn\nw,t is the curtailed wind\npower of the w-th wind turbine at hour t, and ˆPwind\nw,t is the forecasted wind power output.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2 Electric power balance constraints",
+      "level": 1,
+      "text": "To ensure power system supply–demand balance, the total actual generation from\nthermal units and wind turbines at any given time must exactly match the load demand\nof that period. This constraint guarantees power balance and serves as a fundamental\nphysical requirement for the optimal dispatch model.\nN\n∑\ni=1\nui,t · Pth\ni,t +\n2\n∑\nw=1\nPact\nw,t = Dt ∀t (24)\nwhere ui,t is the start-up/shutdown status of thei-th thermal unit at hour t, Pth\ni,t is the output\npower of the i-th thermal unit at hour t, and Dt is the system load demand at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3 Generation output limits of thermal power units",
+      "level": 1,
+      "text": "When the generator is in operation, its output at each moment must be within\nthe range of the minimum and maximum output power limits of the unit to ensure\nstable operation.\nui,t · Pmin\ni ≤ Pth\ni,t ≤ ui,t · Pmax\ni ∀i, t (25)\nwhere Pmin",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "and Pmax",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "are the minimum and maximum generation outputs of the i-th",
+      "level": 1,
+      "text": "thermal power unit, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4 Ramp rate constraints",
+      "level": 1,
+      "text": "The output change rate of thermal units during start-up, shutdown, and operation\nis limited. Ramp-up and ramp-down constraints are introduced to control the output\nvariation between consecutive periods, preventing system fluctuations caused by rapid\nchanges in generation output. The power variation in a unit when its operating status\nremains unchanged shall not exceed the maximum ramp rate. During start-up or shutdown,\nthe power variation shall not exceed the corresponding ramp rates for start-up or shutdown.\nPth\ni,t+1 − Pth\ni,t ≤ (ui,t+1 − ui,t)Ron\ni + ui,tRi\nPth\ni,t − Pth\ni,t+1 ≤ (ui,t − ui,t+1)Roff\ni + ui,t+1Ri\n(26)\nwhere Ri is the maximum ramp-up rate of the i-th thermal unit, Ron",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "is the maximum ramp",
+      "level": 1,
+      "text": "rate during unit start-up, and Roff\ni is the maximum ramp rate during unit shutdown.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Spinning reserve constraints",
+      "level": 1,
+      "text": "To enhance the system’s ability to handle load fluctuations and unexpected events,\nspinning reserve capacity constraints are introduced. These constraints ensure that the\nElectronics 2025, 14, 4027 9 of 18\nsystem maintains a sufficient adjustable capacity margin at all times to meet the require-\nments of secure dispatch and contingency response, thereby improving system robustness\nand operational security. Positive spinning reserve refers to the additional power that a\ngenerator can provide under planned output conditions to cope with sudden increases\nin load, while negative spinning reserve refers to the power that a generator can reduce\nunder planned output conditions to cope with a decrease in load. The total output that a\ngenerator can flexibly adjust at each moment should be greater than the system’s reserve\ncapacity requirement.\nN\n∑\ni=1\n\u0010\nui,tPth\ni,t − ui,tPmin\ni\n\u0011\n≥ α · Dt ∀t\nN\n∑\ni=1\n\u0010\nui,tPmax\ni − Pth\ni,t\n\u0011\n≥ α · Dt ∀t\n(27)\nwhere α is the spinning reserve margin factor; in accordance with the relevant technical\nguidelines [24], we set the spinning reserve margin factor to 0.02.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "6 Transmission line flow constraints",
+      "level": 1,
+      "text": "To characterize the impact of generation and load power injections on transmission\nline flows, the Generation Shift Distribution Factor (GSDF) based on the DC power flow\nassumption is introduced to linearize the power flow distribution. The GSDF constraint\nexpresses the mapping relationship between line flows and generation outputs, enabling\nthe direct calculation of line flows through variables in the optimization model, thereby\nfacilitating effective control of power distribution.\nLFl,t =\n12\n∑\nj=1\nGl,j · Pgen\nj,t − ∑\nn\nGl,n · Pload\nn,t (28)\nwhere LFl,t is the power flow on the l-th transmission line at hour t; Gl,j is the generation\nshift distribution factor of the l-th line with respect to the j-th generator; Gl,n is the distribu-\ntion factor of the l-th line with respect to the load at node n; Pgen\nj,t is the output power of the\nj-th generator at time t; and Pload\nn,t is the load demand at node n at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "7 Interface constraints",
+      "level": 1,
+      "text": "To characterize power exchanges between different regions of the power system,\ncritical interface constraints are introduced to prevent bottleneck congestion and line\noverloads, thereby effectively supporting transmission security assessment. The power\nflow of a section composed of several lines is the sum of or difference in the transmission\ncapacities of each line based on the direction. The power flow of the transmission channels\non key sections at each moment should be lower than the pre-set transmission threshold\nfor the section. Exceeding this threshold may lead to system failures.\nScrk,t = ∑\nl∈TFk\n±LFl,t (29)\n−Smax\nk ≤ Scrk,t ≤ Smax\nk ∀k, t (30)\nwhere Scrk,t is the total power flow across the k-th interface at hour t, and Smax\nk is the\ncapacity limit of interface k.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "8 Temperature-dependent transmission capacity constraint",
+      "level": 1,
+      "text": "As described in Section 2, a sustained increase in ambient temperature can significantly\nreduce the current-carrying capacity of conductors, thereby limiting the transmission\ncapacity of transmission lines. When the line capacity is insufficient to meet power flow\nrequirements, system dispatch may require load redistribution or the activation of backup\nElectronics 2025, 14, 4027 10 of 18\nunits. Under extreme high-temperature conditions, this study employs the DLR model to\ndynamically adjust transmission capacity constraints, enhancing dispatch flexibility and\nensuring the secure and stable operation of the power grid.\n−Pmax\ni,t\n\u0000\nImax\ni,t (Ta)\n\u0001\n≤ Pline\ni,t ≤ Pmax\ni,t\n\u0000\nImax\ni,t (Ta)\n\u0001\n(31)\nwhere Pmax\ni,t (·) is the transmission capacity limit of the i-th line in the system at hour t,\ninfluenced by the temperature.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5 Case Study",
+      "level": 1,
+      "text": "We ran the test case on a 24-core high-performance computer, configured with an\nIntel 13th Gen Core i9-13900 processor and 16GB of memory. The code was written and\ndebugged using PyCharm 2023.1, with all computational tasks solved using Gurobi 12.0.1,\nand monitoring and optimization were performed using PyCharm’s debugging tools. In\nthe test cases, the temperature data was selected from a typical daily temperature of a\nregion in southwest China, while the load and wind power output forecast values were\ntaken from the day-ahead forecasts for the region. The system network is based on the\nstandard IEEE 39-bus system data.\nThe test case selected is the IEEE 39-bus system, which includes 10 synchronous\ngenerators and 39 buses, with bus #31 serving as the slack bus. Equivalent wind turbines\nare connected at buses #17 and #21, modeled as doubly fed induction generators (DFIGs)\naccording to the PSASP wind turbine model [25]. The system is divided into five regions\nbased on transmission lines. Interface 1 consists of tie lines 1–2, 1–39, and 3–4, representing\nthe power flow corridor in the northwest part of the system. The system configuration is\nshown in Figure 1.\n30\n39\n1\n2\n25\n37\n29\n17\n26\n9\n3\n38\n16\n5\n4\n18\n27\n28\n3624\n35\n22\n21\n20\n34\n23\n19\n33\n10\n11\n13\n14\n15\n8 31\n126\n32\n7\nG\nGGGGG\nG\nG G\nG",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "Area2",
+      "level": 1,
+      "text": "Area1 Area5\nArea4\nArea3\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 1. The 10-generator, 39-bus system and its regional partitioning structure.\nThe parameters of the 10 thermal generating units are listed in Table 1. The wind\ncurtailment penalty coefficient is set to 500 CNY/(MW·h).\nElectronics 2025, 14, 4027 11 of 18\nTable 1. Parameters of generating units.\nUnit\nNumber\nMax Out-\nput/MW\nMin Out-\nput/MW\nPower Generation Consumption Coefficient\na/CNY·MW−2 b/CNY·MW−2 c/CNY·MW−2\n1 1500 500 0.00048 16.19 1000\n2 1200 400 0.00031 17.26 970\n3 750 200 0.002 16.6 700\n4 800 200 0.00211 16.5 680\n5 1000 300 0.00398 19.7 450\n6 750 200 0.00712 22.26 370\n7 900 250 0.00079 27.74 480\n8 950 250 0.00413 25.92 660\n9 800 200 0.00222 27.27 665\n10 500 100 0.00173 27.79 670\nThe forecasted load, wind power, and photovoltaic outputs are shown in the figure.\nThe 24 h temperature variation curves for the five areas are presented in Figure 2, and the\n24 h load variation curve is shown in Figure 3.\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n15\n20\n25\n30\n35\n40Ambient temperature (℃)\nTime (h)\nArea 1\nArea 2\nArea 3\nArea 4\nArea 5\nFigure 2. Twenty-four-hour temperature profiles for each area (under normal conditions, peak\nambient temperatures are typically reached between 2:00 and 4:00 p.m.; however, in regions with\nhigh humidity, this peak may extend until 4:30 or even 5:00 p.m.).\n \n \n \n \n \n \n \n \n \n \n \n \n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n0\n2000\n4000\n6000\n8000\n0\n200\n400\n600\n800",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "1000 Wind power forecast (MW)",
+      "level": 1,
+      "text": "Load demand (MW)\nTime (h)\nLoad demand\nWind power forecast\nFigure 3. Regional total load and wind power forecast results.\nUnder the extreme high-temperature typical day scenario, the operation results of\ndifferent models are shown in the figure. The validation example was conducted over a\nElectronics 2025, 14, 4027 12 of 18\ntime period of one day with a time step of 1 h. Figure 4a shows the unit commitment results\nof the power system under the static thermal stability model, i.e., without considering\nthe transmission line capacity limits and transformer life loss. Figure 4b presents the\nunit commitment results of the power system, considering the impact of temperature on\ncapacity and transformer life loss.\n  \n(a) (b) \n \n \n \nFigure 4. Comparison of unit output results under the extreme high-temperature typical day scenario.\n(a) Output results of conventional unit commitment method; (b) output results of the TL-TF method.\nIn the DC power flow dispatch model considering the impact of temperature on the\ntransmission capacity limits of transmission lines, the regional temperature distribution\nsignificantly influences generation dispatch decisions and the resilience of the power system.\nTaking area 2 and area 3 as examples, area 2 (corresponding to Unit 1) maintains relatively\nlow ambient temperatures during the dispatch period, while area 3 (corresponding to\nUnit 2) experiences sustained high temperatures and even extreme heat events. Under\nthe traditional static thermal rating model, since both Units 1 and 2 have relatively low\ngeneration loss coefficients, the system tends to dispatch these two units at higher loads to\nachieve economic optimality. However, in the model incorporating temperature constraints,\nthe high temperatures in area 3 significantly reduce the transmission capacity limits of its\ntransmission lines, creating bottlenecks that restrict the power export capability of units in\nthis region, thus suppressing the optimal output level of Unit 2. In contrast, units located in\nlower-temperature regions or those with spare capacity increase their output to compensate\nfor the supply limitations in the high-temperature region. Therefore, this model effectively\ncaptures the coupled influence of ambient temperature on power flow paths and unit\noutput allocation, offering higher physical consistency and enhanced operational security.\nThe over-limit conditions of critical interface power flows are shown in Figure 5.\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n−400\n−300\n−200\n−100\n0\n100\n200\n300",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "400 Power flow (MW)",
+      "level": 1,
+      "text": "Time (h)\nTransmission section capacity\nTransfer corridor limit\nFigure 5. Over-limit conditions of critical interface power flows.\nElectronics 2025, 14, 4027 13 of 18\nAs shown in Figure 5, the transmission capacity of the interfaces did not exceed their\nlimits during the operation day, ensuring the security of critical regional transmission lines.\nRegarding transformer life loss, the test case presents a comparative analysis of the\naverage hot-spot temperature of transformers between the proposed TL-TF model and the\nconventional model, as shown in the figure below:\nAs shown in Figure 6, the conventional model, which does not consider transformer\nlife loss due to temperature variations, exhibits a rapid increase in transformer hot-spot\ntemperature as the ambient temperature rises. The hot-spot temperature surpasses the\nmaximum allowable limit of 98 ◦C specified by the IEC guidelines, resulting in accelerated\ntransformer aging. In contrast, the proposed TL-TF model shows only a slight increase\nin the transformer hot-spot temperature under the influence of ambient temperature,\neffectively reducing the aging rate and thereby extending the transformer’s service life.\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n96\n98\n100\n102\n104\n106\n108\n110\n112Hot spot temperature (℃)\nTime (h)\nConventional Model\nTL-TF Model\nFigure 6. Average transformer hot-spot temperature profiles under the extreme high-temperature\ntypical day scenario.\nBased on the above simulation tests, the system costs of the proposed TL-TF model\nand the conventional model are compared, with the results shown in the table below:\nAs shown in Table 2, influenced by the transmission capacity limits of lines, the pro-\nposed model reduces wind power curtailment by 14.21 MW, thereby providing greater\naccommodation capacity for wind power and improving curtailment conditions. Mean-\nwhile, the TL-TF model accounts for the impact of ambient temperature on transformer\nlife loss, enabling effective regulation of transformer hot-spot temperatures and reducing\ntransformer loss costs. Consequently, the proposed model decreases the total operating\ncost by CNY 4000 on the typical day, enhancing the overall economic performance of\nthe system.\nTable 2. Comparison of system costs on an extreme high-temperature typical day.\nModel Generation Cost/\n(104 CNY)\nStart-\nUp/Shutdown\nCost/\n(104 CNY)\nWind\nCurtailment\nCost/(104 CNY)\nTransformer Loss\nCost/\n(104 CNY)\nTotal Cost/\n(104 CNY)\nTL-TF model 7.01 0.5 0.21 0.04 7.76\nCon- Model 7.12 0.67 0.24 0.13 8.16\nThe case study conducted a sensitivity analysis of the system operation results with\nrespect to the wind curtailment penalty coefficient and the assumed transformer investment\ncost. In the sensitivity analysis tests, considering the requirements for renewable energy\nutilization, the wind curtailment penalty coefficient was selected, and different assumptions\nElectronics 2025, 14, 4027 14 of 18\nof transformer investment costs were applied. The corresponding system operation results\nare presented in Table 3.\nTable 3. Impact of wind curtailment penalty and transformer investment cost on system operation.\nWind\nCurtailment\nPenalty\nCoefficient\nCNY/(MW·h)\nTransformer\nInvestment\nCost (104\nCNY)\nGeneration\nCost/\n(104 CNY)\nStart-\nUp/Shutdown\nCost/\n(104 CNY)\nWind\nCurtailment\nCost/\n(104 CNY)\nTransformer\nLoss Cost/\n(104 CNY)\nTotal Cost/\n(104 CNY)\n100 230 7.15 0.30 0.45 0.03 7.93\n300 230 6.99 0.43 0.32 0.04 7.78\n500 230 7.01 0.50 0.21 0.04 7.76\n1000 230 6.97 0.72 0.13 0.05 7.87\n500 190 7.07 0.53 0.21 0.07 7.88\n500 260 7.05 0.52 0.20 0.08 7.85\nWe set the wind curtailment penalty coefficient to 100, 300, 500, and 1000 to observe\nits impact on the operating results. When the wind curtailment penalty coefficient is low,\ncurtailment is treated as an economically preferable option. The optimization model there-\nfore maintains thermal units at efficient and stable operating levels, resulting in substantial\ncurtailment but limited overall cost due to the low penalty. As the penalty coefficient in-\ncreases, the system enters a cost-balancing stage, where enhanced wind utilization becomes\neconomically attractive. The model integrates more wind power by committing flexible\nunits for start–stop operations and scheduling thermal units for peak shaving. In this phase,\ngeneration costs rise owing to greater flexibility requirements, while curtailment costs\ndecline. With a further increase in the penalty coefficient, the system shifts to a high-cost\nutilization stage. Near-complete wind absorption is achieved at the expense of frequent\ncycling of thermal units, leading to sharply higher generation and start-up costs. Overall,\nthe total cost exhibits a U-shaped trend, decreasing initially and then rising as the penalty\ncoefficient increases.\nIn addition, compared with the standard transformer investment cost, an increase in\nthe investment cost leads to a significant rise in the economic value of unit life loss, thereby\nincreasing the overall life loss cost. When the investment cost decreases, the life loss cost\nalso shows an upward trend. This is mainly attributed to the fact that cost reduction is\nusually accompanied by structural simplification or lower material grades, which may\nweaken the thermal stability and aging resistance of the equipment, thereby accelerating\nthe degradation of insulation life.\nTo thoroughly validate the adaptability and robustness of the proposed TL-TF model\nunder different climatic conditions, a sensitivity analysis is conducted in addition to the\noriginal case study. The test settings are as follows: all power system parameters are\nkept unchanged, while the 24 h ambient temperature curves of all regions in Figure 2 are\nmultiplied by a set of scaling factors λ = (0.9, 1.0, 1.1, 1.2) to simulate varying levels of\nhigh-temperature scenarios. For each temperature scenario, both the conventional UC\nmodel and the proposed TL-TF model were executed, and the corresponding transformer\nlifetime loss cost was recorded, as shown in Table 4.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f2",
+          "f6"
+        ],
+        "tables": [
+          "t3",
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The 10-generator, 39-bus system and its regional partitioning structure."
+    },
+    {
+      "id": "f2",
+      "caption": "Twenty-four-hour temperature profiles for each area (under normal conditions, peak"
+    },
+    {
+      "id": "f3",
+      "caption": "Regional total load and wind power forecast results."
+    },
+    {
+      "id": "f4",
+      "caption": "Comparison of unit output results under the extreme high-temperature typical day scenario."
+    },
+    {
+      "id": "f5",
+      "caption": "Over-limit conditions of critical interface power flows."
+    },
+    {
+      "id": "f6",
+      "caption": "Average transformer hot-spot temperature profiles under the extreme high-temperature"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Parameters of generating units."
+    },
+    {
+      "id": "t2",
+      "caption": "Comparison of system costs on an extreme high-temperature typical day."
+    },
+    {
+      "id": "t3",
+      "caption": "Impact of wind curtailment penalty and transformer investment cost on system operation."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "(22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "(31)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 13
+  }
+}

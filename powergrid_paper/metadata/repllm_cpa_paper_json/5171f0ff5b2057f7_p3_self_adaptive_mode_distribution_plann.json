@@ -1,0 +1,452 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__11__enhanced_coati_optimization_algorithm_for_stati__5a94f4597c.pdf",
+  "n_pages": 33,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "The power systems are quite complex structures that include\nsystems such as generators, loads, and transmission lines.\nOver the years, energy demand has increased due to the\nloads added to the system. This energy demand reveals the\nnecessity of including new production units and transmission\nlines in the system. The Transmission Network Expansion\nPlanning (TNEP) problem is concerned with ensuring the\nintegration of new generation units into the system in order\nto meet energy demand and identifying the optimal location\nThe associate editor coordinating the review of this manuscript and\napproving it for publication was Qiang Li\n.\nfor new transmission lines, with the objective of minimizing\ncost [1], [2]. The TNEP problem was initially addressed by\nGarver in 1970 [3]. In his study, Garver incorporated a sixth\nbus, comprising a 545 MW production unit, into the five-\nbus system, which had a consumption of 760 MW and a\nproduction of 215 MW. His objective was to identify the opti-\nmal location for the transmission lines in order to facilitate\nthe most cost-effective distribution of power throughout the\nsystem. In his study, Garver employed a model that considers\nthe active power balance of the bus in question. Subsequently,\nthis methodology was further developed, resulting in the\nemergence of the DC load flow method. In this method,\nthe resistances of the lines and the reactive power flow are\n35068\n\n 2025 The Authors. This work is licensed under a Creative Commons Attribution 4.0 License.\nFor more information, see https://creativecommons.org/licenses/by/4.0/ VOLUME 13, 2025\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nnot considered. Accordingly, only the active power flow is\nconsidered.\nRider et al., introduced the AC power flow method to the\nliterature in 2007 in order to evaluate the neglected param-\neters in the DC load flow and to provide a more realistic\nsolution [4]. As mentioned, although AC power flow evalu-\nates the neglected parameters, it makes the complex TNEP\nproblem even more complicated. For this reason, the DC\npower flow method has remained an option for researchers.\nAlthough solutions are made with the AC power flow method\ntoday [5], [6], the DC power flow method is also used because\nit produces fast solutions and gives results with acceptable\naccuracy [1], [7], [8], [9].\nThe TNEP problem planning can be examined in two parts.\nDetermining the location and number of lines according to a\nsingle planning stage is called Static TNEP (STNEP). The\nrealization of planning for certain time intervals is called\nDynamic TNEP (DTNEP). The DTNEP problem was first\nsolved by Dodu and Merlin in 1981 [10]. In DTNEP studies,\nsolutions can be made by taking into account various features\nsuch as inflation rates, environmental changes, equipment\nwear, and annual load increases. Researchers have tried to\ndevelop an effective method to solve the TNEP , which has\na multidimensional complex engineering problem. In 1970,\nthe TNEP problem was first solved by Garver. Mathematical\noptimization methods have been used to solve the prob-\nlem [3]. Linear Programming (LP) [3], Mixed Integer Linear\nProgramming (MILP) [11], [12], Mixed Integer Nonlin-\near Programming (MINLP) [13], and Mixed Binary Linear\nProgramming (MBLP) [14] can be given as examples of\nmathematical optimization methods used. Because the TNEP\nproblem is a high-dimensional complex problem, solutions\nmade with mathematical methods require high computational\ntimes. This makes the solution of the problem quite difficult.\nTo overcome the limitations caused by mathematical meth-\nods, researchers have turned to heuristic methods. Heuristic\nmethods provide sufficient solution quality at certain times as\nwell as low computational time. Some of the heuristic opti-\nmization methods used in the TNEP problem are the Fuzzy\nFault Tree Method [15], Heuristic Algorithm with Fuzzy\nLogic [16], and Sensitivity Analysis [17]. Later, researchers\nturned to meta-heuristic optimization algorithms because of\nboth their low computational time compared to mathematical\nmethods and their ability to get very close to the solution.\nMeta-heuristic optimization algorithms use heuristic opti-\nmization algorithms iteratively. For this reason, although they\nhave more computational load than heuristic methods, they\nhave a lower computational load than mathematical methods.\nIn addition to the acceptable increase in computational load,\nit provides solutions with high accuracy. Considering those\nnew constraints such as security, environmental issues, and\nmaintenance and repair costs can be added to TNEP studies\nthat include investment costs, the complexity of the prob-\nlem highlights the advantages of meta-heuristic optimization\nmethods even more.\nIn 1996 and 1997, STNEP research, encompassing invest-\nment costs and Loss of Load costs (LOL), were executed\nutilizing the Simulated Annealing (SA) technique, along-\nside the development of a parallel SA algorithm [18], [19].\nA Genetic Algorithm (GA) was introduced in 2000 to address\nthe issue [20]. In 2001, the Tabu Search (TS) methodology\nwas employed to reduce investment costs. The findings indi-\ncated that it is an effective method for addressing the STNEP\nproblem [21]. In 2002, the STNEP problem, which seeks to\nreduce investment costs and line losses, was addressed with a\nhybrid approach utilizing Artificial Neural Networks (ANN),\nGenetic Algorithms (GA), and Tabu Search (TS) algorithms,\ndemonstrating the efficacy of the suggested method [22].\nIn 2004, the Enhanced Genetic Algorithm (EGA) was favored\nfor addressing the Deterministic Time-Dependent Network\nEquilibrium Problem (DTNEP) [23]. In 2010, the Discrete\nParticle Swarm Optimization (DPSO) technique was devel-\noped to optimize transmission line loading [24]. In 2014, the\nSTNEP issue was addressed via an enhanced PSO algorithm\n(LPSO) [25]. In 2017, the Multi Group PSO algorithm\n(MGPSO) was introduced to address the unique STNEP\nproblem [26]. In 2019, a DTNEP study utilized the Ant\nColony Optimization (ACO) algorithm to assess operating\nand investment expenditures. A comparative evaluation of\nMILP and ACO algorithms revealed that the ACO algorithm\ndemonstrated enhanced performance regarding computing\ntime and solution quality [27]. In 2020, a Static and Dynamic\nTNEP analysis was conducted employing an Adaptive Salp\nSwarm Optimization Algorithm (ASSO) [28]. The STNEP\ninvestigation was conducted in 2021 with the Discrete Arti-\nficial Bee Colony Algorithm (DABC) [29]. In that year, the\nDTNEP study was conducted with the LSHADE-SPACMA\nalgorithm, which also considers the N-1 reliability con-\nstraint [30]. In 2022, the STNEP and DTNEP investigation\nwas conducted with the Improved Binary Bat Algorithm\n(IBBA) [31]. The STNEP study was conducted in 2023 uti-\nlizing a novel hybrid GA-PSO algorithm. A related study\ndemonstrated that the GA-PSO algorithm outperformed both\nGA and PSO algorithms in minimizing investment costs [2].\nThese works demonstrate the significance of employing\nmeta-heuristic optimization strategies to address the TNEP\nproblem.\nOn the basis of the literature review, TNEP is pertinent\nto the identification of the expansion policy of the transmis-\nsion grid to serve future electricity demand efficiently and\neconomically while at the same time taking into account the\noperational limitations, legal requirement for the environ-\nment, cost of investment and system reliability. This problem\nhas a large-scale mixed integer and nonlinear form and signif-\nicant technical, economic, and environmental constraints. For\nthis reason alone, traditional mathematical optimization tech-\nniques cannot solve the problem effectively because they rely\non slope information and can be trapped in the local optimum.\nThat is, while linear programming and even mixed-integer\nprogramming can be employed for traditional mathematical\nVOLUME 13, 2025 35069\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "35070 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nis founded on the supposition that the opposite of a candidate\nsolution is closer to the global optimum than the candidate\nsolution itself, providing a better overall review of the search\nspace of the optimal solution. Here, by comparing the current\nsolution with its opposite solution, OBL enhances the chances\nof finding a better area and thereby avoids trapping in the\nlocal optima, which in turn optimizes the solution search\nprocess very efficiently. Moreover, OBL is always effective\nin avoiding solution stagnation by preserving the population\ndifferentiation and making the algorithm additional adaptive\nto solve high- and complex problems. That is a valuable\napplication of the double assessment framework because it\nenforces a switch between exploitation and exploration that\ncan improve the metaheuristic algorithms and the optimiza-\ntion. Thus, over time, various OBL approaches have been\ndocumented in the literature. Examples of these methodolo-\ngies include Classical OBL [43], Quasi OBL [44], Quasi\nReflection OBL [45], Super OBL [46], Elite OBL [47],\nRandom OBL [48], Dynamic OBL [49], and Probabilistic\nOBL [50].\nThis study aims to establish candidate selection strategies\nfor solutions by using the FDB selection method to the\nCoati Optimization Algorithm [32]. The FDB approach was\nemployed to assist the COA algorithm in avoiding local solu-\ntion traps and achieving convergence to the global solution\npoint. Multiple iterations were generated by implementing\nthe FDB method at distinct position update points within\nthe algorithm, and various comparisons were conducted to\nidentify the optimal version among them. The comparison\nresults indicate that the COA algorithm using the optimal\nFDB version is designated as FDBCOA. Following the iden-\ntification of the optimal FDB variation tailored to several\napplication domains for the COA algorithm, OBL techniques\nwere employed in the initial population to enhance solu-\ntion diversity and augment the search capability for the\noptimal solution This study employs eight distinct OBL\napproaches from the literature to identify the most efficient\nmethod and to provide a framework for future research. The\noptimal OBL technique was identified based on the out-\ncomes of the simulated simulations. The FDBCOA algorithm\nusing OBL methodologies is designated FDBCOA-OBL. The\nFDBCOA-OBL algorithm has been implemented to address\nthe TNEP problem, and its efficacy in resolving the engi-\nneering issue is examined. The investment expenditures for\nGarver’s 6-bus test system, the IEEE 25-bus test system,\nand the Colombian 93-bus test system are assessed using the\nFDBCOA-OBL algorithm.\nThe key contributions of the paper are delineated as\nfollows:\n• This study introduces the application of FDB and OBL\napproaches to enhance the efficacy of the COA algorithm,\nas reported in 2023, in identifying optimal solutions for opti-\nmization problems. The efficacy of the suggested approach in\nidentifying the optimal solution was evidenced by a simula-\ntion study utilizing CEC2020 and CEC 2022 benchmark test\nfunctions [51], [52]. The efficacy of the suggested algorithm\nwas evaluated across various problem dimensions and popu-\nlation sizes.\n• Three distinct FDB selection methodologies were\nemployed in the COA algorithm. This paper introduces the\nCOA algorithm, exhibiting the optimal FDB variation, to the\nliterature for the first time as FDBCOA.\n• In the initial population creation phase, eight distinct\nOBL methods were employed to enhance the solution diver-\nsity within the solution space of the FDBCOA algorithm. The\nresults of the simulation studies allowed for the identification\nof the FDBCOA algorithm with the most effective OBL\nvariation. Simulation studies present the success of the COA\nalgorithm, where OBL and FDB selection methods are used\nas a hybrid, in solving benchmark test functions for the first\ntime in the literature and create a different perspective for\nresearchers.\n• The success of the FDBCOA-OBL algorithm in solving\ndifferent types of optimization problems has been substanti-\nated through a statistical evaluation of simulation outcomes\nusing the Wilcoxon and Friedman tests.\n• The suggested method was employed to address the\nTNEP problem, a contemporary challenge in electric power\nsystem planning, and its efficacy in resolving practical\nengineering issues was examined. The algorithm’s efficacy\nin addressing the TNEP problem was examined across\nlow, medium, and high-scale test systems. This work\nexamined the efficacy of an optimization algorithm, con-\nstructed using FDB and OBL approaches, in addressing the\nTNEP problem, introducing it to the literature for the first\ntime.\n• The results obtained demonstrate the effectiveness of the\nFDBCOA-OBL algorithm in achieving the optimal solution.\nThis paper aims to present a novel and robust optimization\ntechnique, termed FDBCOA-OBL, to the literature.\nThis study consists of 4 sections after the introduction. The\nother sections are presented below in order:\n• The mathematical model of the Static and Dynamic\nTNEP problem is presented in Section II.\n• The proposed FDBCOA-OBL algorithm is introduced in\nSection III. The subsections analyze the settings used in the\nexperimental study, benchmark packages, and the results of\nall experimental studies.\n• The solution of TNEP problems with the proposed\nalgorithm is presented in Section IV. Test systems and solu-\ntions are analyzed in the subsections.\n• The results of the study, discussions, and future work are\nsummarized in Section V.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "MATHEMATICAL MODEL OF STATIC AND DYNAMIC",
+      "level": 1,
+      "text": "TNEP PROBLEM\nThe growth in energy consumption over time has created a\npressing need to integrate new generation facilities and trans-\nmission infrastructure into existing power systems [1], [2].\nIn particular, the investment expenses recorded as expenses\nrelated to the criteria for different test systems include the\nfinancial costs of establishing new transmission structures or\nVOLUME 13, 2025 35071\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nstrengthening old ones in the execution of the TNEP . These\ncosts include dollar figures associated with some features\nof transmission lines like the size, the voltage level, type of\nconductor, and cost of construction often including the cost\nof employing people, materials and tools. The computation\nalso takes into account other costs that are not variable in\nnature, which include land procurement costs and permission\ncharges, as well as costs that make up operational costs,\nincluding costs of maintenance of the structures all through\nuntil the lifetime of the infrastructure is depleted. For the test\nsystems, general cost coefficients are employed for the sys-\ntematic assessment of the different optimization techniques\nand they may not be very significantly different from the\nactual cost volatility. In practice, these investment expenses\nare simplified in test systems for further benchmarking of\ndifferent algorithms. For instance, a fixed cost for every kilo-\nmeter of the transmission line might be postulated and other\noperational or geographical features like terrain or develop-\nment are often omitted due to simplicity. However, in reality,\nthe fixed investment costs can be much higher due to factors\nlike zoning and land availability constraints, harsh environ-\nmental conditions and policy change, and other problems\nrelated to project location. This can affect the methodology\nof easily applied methods primarily designed and used in test\nsystems.\nTo compare these costs with actual system expansion costs,\none would need to adjust the results of the test systems\nby externally scaling them by using real numbers, includ-\ning inflation rates, regional differences in cost and other\nconstraints which are not incorporated into test systems.\nA detailed comparison can then best demonstrate the useful-\nness of the proposed method because it can reveal, from the\ntest systems, the practical performance and cost effectiveness\nof the solutions it proposes in real life situations. Such an\nanalysis makes the method more realistic and ensures that\nanyone intends to apply the method when solving large scale\ndispersed power networks has the confidence of not only\nthe theoretical but the actual application of the method [53],\n[54], [55].\nSaid more plainly, the TNEP problem aims to provide\na means for ensuring the introduction of new generation\nunits into the system and, determining the location where\nadditional transmission lines are most effectively sited while\nensuring the most cost-effective solution. Regarding the\nobjective of the fitness function developed for the TNEP\nproblem, it intends to verify if the constraints are also\nbeing violated in the process of obtaining the optimal\nsolution of the problem. The TNEP problem includes a\nnumber of fundamentals; load flow balance between the\nbuses, load flow limit of the transmission line, generation\nlimit and line restriction addition capability. To assess these\nconstraints, it is required to calculate the load flow data\nbetween the buses. To this end, the required DC load flow\ndata of the power systems was obtained with the help of\nMA TPOWER[56].\nA. DESCRIPTION OF STATIC TNEP PROBLEM\nThe fitness function used in the Static TNEP problem\nincludes the penalty function and the objective function that\nchecks whether the constraints are violated. While the load\nbalance on the buses constitutes the equality constraint; the\nload flow limits, the limits of the production units and the\nnumber of lines that can be added between the buses con-\nstitute the inequality constraints. While adding lines to the\nsystem, the constraints must also be checked and the specified\nlimits must not be exceeded. The objective function of the\nproblem includes the investment cost. Each line to be added\nbetween the busess has an investment cost. The investment\ncost will also increase as the number of lines to be added\nincreases. In systems that grow depending on the increase in\ndemand power over the years, it is aimed to add lines between\nthe buses at the lowest cost.\nThe fitness and the objective functions used to solve the\nStatic TNEP problem are given in Equations (1) and (2),\nrespectively [57], [58].\nFFS (x) = OFS (x) + ω1P1 (x) + P2 (x) (1)\nOFS (x) =\n∑\n(i,j)∈\ncijnij (2)\nwhere, FFS (x) is defined as the STNEP fitness function,\nOFS (x) represents the STNEP objective function,  is the\nset containing all candidate lines, cij is demonstrated as the\ninvestment cost of the line added between bus i-th and j-th,\nnij explains the number of lines added between bus i-th and\nj-th, ω1 is shown as the penalty weight coefficient, P1(x) is\npresented as the equality constraint andP2(x) is the inequality\nconstraint, respectively. The equality and inequality limits are\ngiven in Equations (3) and (4), respectively [57], [58].\nP1 (x) =\nnb∑\nk=1\n|dk + Bk θk − gk | (3)\nP2 (x) =\nnc∑\nl=1\nλl (4)\nThe penalty coefficients of the inequality constraints λ1,\nλ2, and λ3 are given in Equations (5)-(7), respectively\n[57], [58].\nλ1 =\n{\n0 if\n⏐⏐fij\n⏐\n⏐≤\n(\nn0\nij + nij\n)\nf max\nij\nλ1 otherwise\n(5)\nλ2 =\n{",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "0 if g min",
+      "level": 1,
+      "text": "i ≤ gi ≤ gmax\ni\nλ2 otherwise (6)\nλ3 =\n{\n0 if 0 ≤ ntij ≤ nmax\nij\nλ3 otherwise (7)\nwhere, nb is defined as the number of buses in the system,\nnc demonstrates the number of inequality limits, dk shows\nthe power demanded on bus k-th, gk is the power produced\non bus k-th, Bk is explained as the susceptance value on bus\nk-th, θk is identified as the voltage angle of bus k-th, fij is",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "35072 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nthe load flow between buses i-th and j-th, f max\nij presents the\nmaximum allowed load flow between buses i-th and j-th, gmin",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "is represented as the minimum allowed power on busi-th, gi is",
+      "level": 1,
+      "text": "the power produced on bus i-th, gmax",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "is expressed as the max-",
+      "level": 1,
+      "text": "imum allowed power on bus i-th, ntij and nmax\nij are defined,\nrespectively, as the total (existing+added) line number and\nthe maximum allowed line number between buses i-th and\nj-th.\nB. DESCRIPTION OF DYNAMIC TNEP PROBLEM\nThe dynamic multistage TNEP methodology used in this\nwork to analyze the 93-bus system enables a systematic\nmeans of incrementally and adaptively planning transmis-\nsion network expansion across stages of time. But first, the\nexisting network has to be evaluated for immediate problems\nand growth opportunities in order to set a starting reference\npoint for further development. Of especial importance is the\nforecasting of load growth and of renewable energy gener-\nating capacities to be added at each stage of the planning\nhorizon. These forecasts incorporate risks, which include\ndemand change, varying level of renewable generation and\nchanges in policies. In each phase, an optimization model is\nformulated and solved to find an economical solution that\nwill satisfy the reliability requirements, other performance\nparameters, and legal provisions. It puts into consideration\nthe overruling effect from one stage to another in planning so\nas to have a health proper planning in the overall planning\nperiod. The method also addresses uncertainties systemat-\nically by using probabilistic and scenarios approaches by\nemulating the variability in load and generation to arrive at\nsolution. This approach helps to select investments that are\ngood in the number of scenarios of the future state and pro-\nvides system dependability and flexibility. Another flexibility\nis an iterative feedback loop by which the plan is updated\nas and when actual outcomes differ from expected values.\nThrough solving the specified problem on the 93-bus system\nthis method shows its ability to phase investments, minimize\ncosts, and integrate new developments of energy systems\nmaking it a practical and viable approach to large-scale power\nsystem planning [59], [60], [61].\nThe fitness and objective functions used to solve the\nDynamic TNEP problem are shown in Equations (8) and (9),\nrespectively [58].\nFFD (x) = OFD (x) + ω1P1 (x) + P2 (x) (8)\nOFD (x) =\n∑T\nt=1\n\nδt\ninv\n∑\n(i,j)∈\nct\nijnt\nij\n\n (9)\nwhere, FFD(x) is explained as the DTNEP suitability func-\ntion, OFD(x) is the DTNEP objective function, T is shown as\na specific planning stage in the planning horizon, ct\nij presents\nthe investment cost of the line added between buses i-th and\nj-th in planning stage t, nt\nij defines the number of lines added\nbetween buses i-th and j-th in planning stage t, P1(x) and\nP2(x) are demonstrated as the equality and the inequality\nconstraints, and δt\ninv is explained as the discount factor in the\nplanning stage t. The discount factor is calculated for each\nplanning stage as given in Equation (10) [58].\nδt\ninv = (1 − I )a (10)\nwhere, I is the annual interest rate and a is the difference\nbetween the years covered by the planning stage. The equality\nand inequality limits are given in Equations (11) and (12),\nrespectively [58].\nPt\n1 (x) =\nnb,T∑\nk=1,t=1\n⏐⏐d t\nk + Bt\nk θ t\nk − gt\nk\n⏐⏐ (11)\nPt\n2 (x) =\nnc∑\nl=1\nλl (12)\nThe penalty coefficients of the inequality constraints λ1,\nλ2, and λ3 are given in Equations (13)-(15), respectively [58].\nλ1 =\n\n\n\n0 if\n⏐⏐⏐f t\nij\n⏐⏐⏐≤\n(\nn0\nij +\nT∑\nt=1\nnt\nij\n)\nf max\nij\nλ1 otherwise\n(13)\nλ2 =\n{",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "0 if g t,min",
+      "level": 1,
+      "text": "i ≤ gt\ni ≤ gt,max\ni\nλ2 otherwise (14)\nλ3 =\n\n\n\n0 if 0 ≤\nT∑\nt=1\nnt t\nij ≤ nmax\nij\nλ3 otherwise\n(15)\nwhere, d t\nk is shown as the power demanded on bus k-th in the\nplanning phase, gt\nk defines the power produced on bus k-th in\nthe planning phase, Bt\nk is explained as the susceptance value\non bus k-th in the planning phase, θ t\nk is the voltage angle on\nbus k-th in the planning phase, f t\nij is demonstrated as the load\nflow between buses i-th and j-th in the planning phase, gt,min",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "presents the minimum power allowed on the bus i-th in the",
+      "level": 1,
+      "text": "planning phase, gt",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "is represented as the power produced on",
+      "level": 1,
+      "text": "the bus i-th in the planning phase, gt,max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "shows the maximum",
+      "level": 1,
+      "text": "power allowed on the bus i-th in the planning phase, ntt\nij is\nidentified as the total (existing + added) line number between\nbuses i-th and j-th in the planning phase.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "COATI OPTIMIZATION ALGORITHM ENHANCED BY",
+      "level": 1,
+      "text": "OPPOSITION BASED LEARNING AND FITNESS DISTANCE\nBALANCE METHODS\nA. COATI OPTIMIZATION ALGORITHM\nCoati Optimization Algorithm was developed by\nDehghani et al., in 2023. It was created by taking inspira-\ntion from the strategies that Coatimundis, mammals native\nto the southwestern United States, South America, Cen-\ntral America, and Mexico, follow when attacking Iguanas\nand their behaviors when escaping from predators [32].\nThis algorithm initially creates a random population using\nEquation (16) [32].\nXi : xi,j = lbj + r\n(\nubj − lbj\n)\n,\ni = 1, 2, . . . ,N , j = 1, 2, . . . ,m (16)\nVOLUME 13, 2025 35073\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nIn this context, Xi represents the position of the i-th coati\nwithin the search space, while xij denotes the value of the\nj-th decision variable. The term N is defined as the number\nof coatis, m signifies the number of decision variables, and\nr is a randomly generated real number between 0 and 1.\nAdditionally, lb is described as the lower limit of the decision\nvariable, while ub is presented as the upper limit of the\ndecision variable. The process of updating the positions of the\ncoatis is determined by employing the strategies they utilize\nwhen attacking the iguanas and the strategies they employ to\nevade predators. Accordingly, the random population initially\ncreated by COA is updated in two distinct stages.\n1) STAGE 1: STRATEGY FOR HUNTING AND ATTACKING\nIGUANAS (EXPLORATING STAGE)\nIn the initial phase of the exploration process, Coatis employ\na specific technique when preying on iguanas. This technique\nproposes that 50% of the current population of coatis ascends\ntrees to access and intimidate iguanas. The remaining coatis\nawait the descent of the iguanas from their perch in the tree,\nwhich is presumed to occur as a result of the initial intimida-\ntion. Subsequently, the iguanas descend to the ground, where\nthey are then attacked by the coatis. This technique allows\nCOA to traverse multiple regions within the search space\nand execute the exploration phase. In the design of COA, the\noptimal member of the population is regarded as the position\nof the iguana. As stated in Equation (17) [32], the positional\nupdate of the coatis ascending the tree is as follows:\nX P1\ni : xP1\nij = xi,j + r\n(\nIguanaj − I .xi,j\n)\n,\ni = 1, 2, . . . ,N\n2 j = 1, 2, . . . ,m (17)\nThe iguana that falls to the ground is positioned at a\nrandomly selected location within the search space. The\nplacements of the Coatis on the ground are updated based on\nthe random location specified in Equation (18) [32], utilizing\nEquation (19) [32].\nIguanaG : IguanaG\nj = lbj + r\n(\nubj − lbj\n)\n, j = 1, 2, . . . ,m\n(18)\nX P1\ni : xP1\ni,j =\n\n\n\nxi,j + r\n(\nIguanaG\nj − I .xi,j\n)\nFIguanaG < Fi,\nxi,j + r\n(\nxi,j − IguanaG\nj\n)\nelse,\ni = N\n2 + 1, N\n2 + 2, . . . ,N j = 1, 2, . . . ,m (19)\nIn each iteration of the optimization process, the objective\nfunction is evaluated to ascertain whether it has exhibited\nan improvement. In the event that the objective function\ndoes not demonstrate an improvement, the Coati solution\nremains in its current position. This scenario is illustrated in\nEquation (20) [32].\nXi =\n{\nX P1\ni , F P1\ni < Fi\nXi, else (20)\nwhere, N denotes the number of coatis, m represents the\nnumber of decision variables, X P1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "indicates the new location",
+      "level": 1,
+      "text": "of the i-th coati, xP1\ni,j signifies the location of the i-th coati in\nthe j-th dimension, Fi refers to the objective function value\ncomputed in the initial population, F P1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "denotes the objective",
+      "level": 1,
+      "text": "function value calculated in stage 1, and r is a randomly\ngenerated real number within the interval of 0 and 1. Iguanaj\nrepresents the optimal position within the search space in the\nj-th dimension, where I is a randomly chosen value from\nthe sets 1 and 2. IguanaG denotes the iguana’s position on\nthe ground (randomly generated), IguanaG\nj represents the\niguana’s position on the ground in the j-th dimension, and\nF G\nIguana signifies the objective function value of the iguana’s\nposition on the ground, respectively.\n2) STAGE 2: THE PROCESS OF ESCAPING FROM\nPREDATORS (EXPLOITATION STAGE)\nIn the second stage, known as the exploitation stage, the\nCoati’s behavior in response to predators is mathemati-\ncally modeled. When a Coati is threatened by a predator,\nit retreats to a secure area nearby. This represents the exploita-\ntion capability of the COA. A random site nearest to the\nCoati’s position is generated to illustrate the escape behavior,\nas described in Equations (21) and (22) [32].\nlblocal\nj = lbj\nt , ublocal\nj = ubj\nt t = 1, 2, . . . ,T (21)\nX P2\ni : xP2\ni,j = xi,j + (1 − 2r)\n(\nlblocal\nj + r.\n(\nublocal\nj − lblocal\nj\n))\ni = 1, 2, . . . ,N j = 1, 2, . . .m (22)\nIf the new location determined in Step 2 enhances the value\nof the goal function, it is accepted as a new solution candidate\nin accordance with Equation (23) [32].\nXi =\n{\nX P1\ni , F P1\ni < Fi\nXi, else (23)\nIn this context, X P2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "denotes the new position of the",
+      "level": 1,
+      "text": "i-th coat at step 2, while xP2\ni,j represents the new position of\nthe coat in the j-th dimension at step 2. F P2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "indicates the",
+      "level": 1,
+      "text": "objective function value of the i-th coat at step 2. The variable\nr is a random real number generated between 0 and 1, and t\nserves as the iteration counter. Furthermore, lblocal\nj refers to\nthe local lower bound of the j-th decision variable, ublocal\nj to\nthe local upper bound of the j-th decision variable, lbj to the\nlower bound of the j-th decision variable, and ubj to the upper\nbound of the j-th decision variable, respectively. COA final-\nizes the initial iteration following the adjustment of all Coatis’\nplacements in the search space in accordance with Stage 1 and\nStage 2. Throughout the search phase, all operations between\nEquation (17) and Equation (23) are reiterated until the last\niteration [32].\nB. COATI OPTIMIZATION ALGORITHM INVOL VING\nFITNESS DISTANCE BALANCE METHOD\nThe FDB approach, developed by Kahraman et al., in 2020,\nserves as a selection mechanism to direct the search process",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "35074 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nof meta-heuristic optimization algorithms [33]. The FDB\nselection method assesses the fitness values and distances\nof solution candidates, subsequently assigning scores to the\ncandidates. The main aim of this scoring approach is to\ndetermine the solution candidate with the highest fitness\nvalue in the population while also selecting the candidate that\nis farthest from the previously identified best solution. The\naim of this selection procedure is to improve the diversity\nof solution options and to avoid local solution traps. The\ncandidate solutions (P) and their corresponding fitness values\n(F) are delineated in Equation (24) [33].\nP ≡\n\n\nx11 . . . x1m\n..\n. . . . .\n.\n.\nxn1 · · ·xnm\n\n\nnxm\n, F =\n\n\nf1\n..\n.\nfn\n\n\nnx1\n(24)\nThe distance between the i-th solution candidate in the P\npopulation and the optimal solution is computed as specified\nin Equation (25) [33].\n∀n\ni=1, Pi ̸= Pbest , DPi\n=\n√\n(\nx1Pi −x1Pbest\n)2 +\n(\nx2Pi −x2Pbest\n)2 +. . .+\n(\nxmPi −xmPbest\n)2\n(25)\nThe DP distance vector representation of the solu-\ntion candidates within the population P is articulated in\nEquation (26) [33].\nDP ≡\n\n\nd1\n..\n.\ndn\n\n\nnx1\n(26)\nThe FDB technique ranks solution candidates based on\ntheir suitability values and scores derived from their proxim-\nity to the optimal solution candidate. During the computation\nof this score, a weighting coefficient is incorporated to pre-\nvent the F and DP vectors from overshadowing one another.\nThe FDB score is described in Equation (27). Equation (28)\nillustrates the vector of FDB scores (SP) [33].\n∀n\ni=1Pi, SPi = ω × normFPi + (1 − ω) × normDPi (27)\nSP ≡\n\n\ns1\n..\n.\nsn\n\n\nnx1\n(28)\nTo facilitate the search process of the COA algorithm,\nvarious iterations were developed, and comparisons were\nconducted to identify the optimal application of the FDB\napproach. Table 1 presents the FDB versions of the COA\nalgorithm along with the places where the FDB method is\nimplemented in these versions. The pseudo-code of FDB-\nCOA algorithms generated by applying the FDB selection\nmethod is shown in Algorithm 1.\n1) IDENTIFYING THE BEST FDBCOA ALGORITHM IN\nCEC 2020 AND CEC 2022 BENCHMARK TEST FUNCTIONS\nAn experimental investigation was undertaken to evaluate the\nefficacy of the created FDBCOA algorithms in the search\nprocess. The goal of the experimental investigation is to\nelucidate the impact of the versions developed with FDB\nand to identify the optimal version. The performances of the\nCOA, FDBCOA1, FDBCOA2, and FDBCOA3 algorithms\nwere assessed using the CEC2020 and CEC2022 benchmark\npackages. The modifications implemented to guarantee the\nreliability and objectivity of the experimental investigation\nare outlined below.\n• The greatest number of fitness function evaluations\n(maxFEs) serves as the termination condition. In both\nthe CEC2020 and CEC2022 benchmark suites, the\nmaxFEs are established at 10000 ∗Dim. ‘‘Dim’’ is\ndefined as the magnitude of the problem.\n• The CEC2020 benchmark suite analyzed dimensions\nof 5, 10, 15, 20, 30, 50, and 100, whereas the CEC2022\nbenchmark suite focused on 10 and 20 dimensions\nto assess the algorithms’ convergence performance\ntowards the ideal solution.\n• The efficacy of the COA and FDBCOA algorithms was\nevaluated over varying population sizes of 30, 50, and\n100.\n• The algorithms for the CEC2020 and CEC2022\nbenchmarking packages were executed 51 times.\nTo enhance the significance of the data, Fried-\nman and Wilcoxon statistical analysis methods were\nemployed. Consequently, the success levels of the\nalgorithms were determined, and comparisons were\nconducted.\n✓ Statistical analysis of FDBCOA algorithm variations:\nThe Wilcoxon and Friedman techniques were employed\nfor the statistical assessment of the COA, FDBCOA1, FDB-\nCOA2, and FDBCOA3 algorithms. The Friedman method\nresults facilitated the identification of the most effective\nalgorithm for addressing the CEC2020 and CEC2022 bench-\nmark packages. The Friedman scores of the algorithms across\nvarious parameters are presented in Table 2 for CEC2020 and\nin Table 3 for CEC2022.\nThe average Friedman scores for the algorithms are dis-\nplayed in Table 4, derived from the data in Tables 2 and 3.\nBased on the average Friedman scores, FDBCOA1 is iden-\ntified as the most effective algorithm among the evaluated\nalgorithms. The fundamental COA algorithm is the least\neffective among the algorithms.\nMoreover, Figure 1 depicts the radar chart of the COA\nand FDB versions of the CEC2020 benchmark test functions\nwith regard to the Friedman Test results of the specified\npopulation number and dimension. Radar charts, also called\nspider or network charts, can be requested as an effec-\ntive approach to representing multivariate data in which\neach axis corresponds to a different performance standard.\nIn the radar chart in Figure 1, the compared algorithms are\nCOA, FDBCOA1, FDBCOA2, and FDBCOA3; all the algo-\nrithms have been plotted using different colors. From this\nchart, it is clear that algorithms that put a significant area\naround the Friedman score for each of the test functions will\nVOLUME 13, 2025 35075\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nTABLE 1. Versions of the COA algorithm created using the FDB method.\nAlgorithm 1 Pseudo-Code of Fitness Distance Balance Based Coati Optimization Algorithm\n.\n.\nWhile (Termination criterion not met do: up to maxFEs)\nPhase 1: Hunting and attacking strategy on the iguana (Exploration Phase)\nFor i = 1: N/2\nCompute distance of each solution candidate using Eq. (25). //FDBCOA1\nCompute FDB score for each solution candidate using Eq. (27). //FDBCOA1\nCalculate new position for the i-th coati using as follow equation //FDBCOA1\nX P1\ni : xP1\nij = xFDB,j + r.\n(\nIguanaj − I .xi,j\n)\n, i = 1, 2, . . . ,N\n2 , j = 1, 2, . . . ,m\nUpdate position of the i-th coati using Eq. (20).\nEnd for\nFor i = 1+ N/2: N\nGenerate position of the iguana random using Eq. (18).\nCompute distance of each solution candidate using Eq. (25). //FDBCOA2 and FDBCOA3\nCompute FDB score for each solution candidate using Eq. (27). // FDBCOA2 and FDBCOA3\nCalculate new position for the i-th coati using as follow equation //FDBCOA2\nX P1\ni : xP1\ni,j =\n\n\n\nxi,j + r.\n(\nIguanaG\nj − I .xi,j\n)\nFIguanaG < Fi,\nxi,j + r\n(\nxFDB,j − IguanaG\nj\n)\nelse,\ni = N\n2 + 1, N\n2 + 2, . . . ,N j = 1, 2, . . . ,m\nCalculate new position for the ith coati using as follow equation //FDBCOA3\nX P1\ni : xP1\ni,j =\n\n\n\nxFDB,j + r.\n(\nIguanaG\nj − I .xi,j\n)\nFIguanaG < Fi,\nxi,j + r\n(\nxi,j − IguanaG\nj\n)\nelse,\ni = N\n2 + 1, N\n2 + 2, . . . ,N j = 1, 2, . . . ,m\nUpdate position of the i-th coati using Eq. (20).\nEnd for\n.\n.\nEnd while\nEnd\nperform less well than algorithms that put less area around\nthe function. Alternatively, these radar charts specifically\nillustrate the relative advantages and disadvantages of each\nalgorithm in a multi-performance dimension space. If this\nplot is analyzed by the Friedman test, algorithms with the\nleast area and a more homogenous dispersion have better\naverage performance in meeting the criteria than larger or\nnon-regular shapes may indicate. This visualization method\nenables easy and efficient identification of the efficiency\nlevels of particular algorithms, comparisons between these\nlevels, and the identification of the best-fitting algorithm\nfor particular applications. Considering all these situations,\nthe FDBCOA1 algorithm shows effective performance with\nless area in the radar chart than its other versions and COA\nregarding Friedman scores in the CEC2020 benchmark test\nfunctions.\nThe Wilcoxon pairwise comparison method was employed\nto assess the success rate of the algorithms in the CEC2020\nand CEC2022 benchmark suites. Table 5 presents the\nWilcoxon test results of the algorithms across various sizes\nfor the CEC2020 benchmark suite, whereas Table 6 displays\nthe Wilcoxon test results of the methods across different\nsizes for the CEC2022 b",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t5",
+          "t2",
+          "t6",
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "35076 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nFIGURE 1. The radar plots of CEC2020 benchmark test functions at different population and size numbers (FDB versions).\nWilcoxon results, the FDBCOA1 algorithm lost 6 out of",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "282 problems across population sizes of 30, 50, and 100,",
+      "level": 1,
+      "text": "drew 110 problems, and won 166 problems. The FDBCOA1\nalgorithm demonstrated excellent performance, achieving a\nwin rate of 58.86%, a draw rate of 39.01%, and a loss rate of\n2.13%.\nMoreover, Wilcoxon pairwise test results proved that\nalgorithm FDBCOA1 consistently outperformed the base-\nline algorithm COA in CEC2020 and CEC2022 benchmarks,\nespecially at higher dimensions and larger population sizes.\nFDBCOA1 showed dominant performance with high win\nrates and minimal or no losses, but occasional poor perfor-\nmance was observed at lower dimensions and more complex\nproblem instances, especially at P = 100. Algorithm FDB-\nCOA2, more specifically, showed moderate and consistently\nimproved results, and it had better result than COA, par-\nticularly at medium and higher order dimensions. However,\nFDBCOA2 did not match the performance of FDBCOA1,\nwith occasional ties and less sure shot wins. On the other\nhand, the performance of the algorithm FDBCOA3 for both\nbenchmarks were significantly lower than that of COA; it\noften reached only ties or occasionally slightly outperformed\nCOA. It faced severe scalability problems, especially on\nmore complex problems. Overall, the Wilcoxon test con-\nfirmed that FDBCOA1 was the most robust algorithm against\nCOA, followed by FDBCOA2, which gradually improved,\nand FDBCOA3 remained the least effective.\nThe No Free Lunch (NFL) [62] Theorem states that there\nis no optimization algorithm that can outperform all others\non an average to all the problems. Cues well adapted to\nalgorithms for specific problems are generally worse than\nthose that have quite different architectures at heart. However,\ndifferences in how the exploration and exploitation processes\noccurred, how sensitive these algorithms were to the param-\neters given, or how the intrinsic bias of the algorithm designs\nmight have led to these algorithms converging early or even\ninefficiently on certain problem types. The stochastic prop-\nerties of these algorithms also produce random performance\nand, in some instances, poor performance as well. Accord-\ning to the NFL theorem, these factors imply that a search\nalgorithm such as FDBCOA1, FDBCOA2, or FDBCOA3 will\nalways be comparatively slower to COA on some problems.\n✓ Convergence analysis of FDBCOA algorithm variations\nThis section presents assessments of the convergence\ncapabilities of the developed FDBCOA versions through\nconvergence and box-plot curves. The CEC 2020 and\nCEC 2022 benchmark packages encompass problem types\nfrom four distinct function categories: ‘‘unimodal,’’ ‘‘basic,’’\n‘‘hybrid,’’ and ‘‘composition.’’ Figure 2 shows the conver-\ngence curves and boxplot graphs illustrating the solutions of\nthe functions chosen from the four categories of the CEC\n2020 benchmark package, with a population size of 50.\nUpon analyzing the convergence curves, it is evident\nthat all three proposed FDB variants of the COA method\nfor the CEC 2020 benchmark suite outperform the stan-\ndard COA algorithm in reducing the function error value.\nAmong the proposed FDB versions, the FDBCOA1 algorithm\ndemonstrates superior efficacy compared to FDBCOA2 and\nFDBCOA3. This validates the assessment conducted by\nFriedman and Wilcoxon analyses. Box-plot illustrations\nVOLUME 13, 2025 35077\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nTABLE 2. CEC 2020 Freidman scores of the COA algorithm and its variations with FDB.\nTABLE 3. CEC 2022 Freidman scores of the COA algorithm and its variations with FDB.\nillustrate the best, worst fitness values, and median values\nachieved by the algorithms throughout 51 independent cycles\non a single graph. The box-plot graphs indicate that the\nFDBCOA1 algorithm outperforms most functions in the CEC\n2020 benchmarking package. Figure 3 demonstrates the con-\nvergence curves and boxplot graphs depicting the solutions of\nfunctions chosen from the ‘‘unimodal,’’ ‘‘basic,’’ ‘‘hybrid,’’\nand ‘‘composition’’ categories of the CEC 2022 benchmark-\ning software, utilizing a population size of 30.\nUpon meticulous examination of the convergence curves,\nit is evident that all variants of the FDBCOA proposed for\nthe CEC2022 benchmark suite surpass the fundamental COA\nmethod. Among the suggested FDBCOA algorithms, the\nFDBCOA1 algorithm demonstrates superior efficacy com-\npared to the other two variants. This further corroborates the\nassessment conducted using Friedman and Wilcoxon anal-\nyses. The fitness values generated by the algorithms across\n51 cycles are illustrated using box-plot images. Upon exam-\nining the provided box-plot graphs, it is evident that the\nFDBCOA1 approach surpasses the basic COA algorithm and\nthe other two FDBCOA variants across all issue types with a\npopulation size of 30.\n\u0005 The scalability analysis of the FDBCOA variants:\nOptimization algorithms are one of researchers most\nwidely used methods due to their adaptability and effi-\nciency to complex and large-scale optimization problems in",
+      "refs": {
+        "figures": [
+          "f2",
+          "f3"
+        ],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "35078 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nTABLE 4. The mean Freidman scores of the COA algorithm and its variations with FDB.\nTABLE 5. CEC2020 Wilcoxon test results of the COA algorithm and its variations with FDB.\nTABLE 6. CEC2022 Wilcoxon test results of the COA algorithm and its variations with FDB.\ndifferent fields. Moreover, when the algorithms are applied\nto large-scale or more complex problem types, their practical\nsuccess depends on their ability to maintain their perfor-\nmance. Scalability analysis is an effective method used to\nevaluate the performance of optimization algorithms to solve\nproblems efficiently when the complexity increases due to\nincreasing problem sizes in optimization problems.\nThis method evaluates the algorithms’ practical and\nrobust behavior to solve complex, large-scale, and evolv-\ning real-world problems and their robustness in maintaining\nsolution quality by providing critical insights into computa-\ntional efficiency, runtime behavior, resource usage, memory\nconsumption, and solution quality. To put it differently, it is\nanticipated that in the course of the optimization process,\nthe algorithms would adequately adapt to the increasing\nsizes of the target problem without performance deteri-\noration, and thereby enable convergence to the desired\noptimum solution. By means of scalability evaluation, the\nalgorithms can be tested for their effectiveness for solving\nreal-world optimization problems that have real-world appeal\nand require dependable solutions.\nAs a result of the optimization performed in the CEC2020\nbenchmark test suite, the evaluation of the results obtained\nfrom the versions of the COA algorithm developed using the\nFDB selection method in terms of scalability is given in detail\nin Table 7. When the mean values of both the classical COA\nand FDB variants for each test function (F1–F10) are taken\ninto account, it is seen in detail in Table 7 that a clear pattern\nemerges as the dimension values increase from D= 20 to D =\n50. Table 7 shows the algorithms’ total performance compar-\nison, which defines their specific advantages and drawbacks\nin terms of scalability, consistency, and overall performance.\nAmong the algorithms, the proposed FDBCOA1 algorithm\nemerges as the most effective balance in terms of performance\nand stability criteria. When the values for each function in\nTable 7 are examined in detail, it is seen that the FDBCOA1\nalgorithm continuously achieves significant improvements\nin average performance values while maintaining relatively\nVOLUME 13, 2025 35079\nM. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nFIGURE 2. The convergence curves and boxplot graphs of COA algorithm and its three variants with FDB for CEC 2020 benchmark problems (P = 50,\nDim = 10).\nFIGURE 3. The convergence curves and boxplot graphs of COA algorithm and its three variants with FDB for CEC 2022 benchmark problems (P = 30,\nDim = 20).\ncontrolled standard deviations as the dimension increases\nfrom D = 20 to D = 50. This indicates that the FDBCOA1\nalgorithm is designed with an ability to increase in scale\nwithout negative impacts on its stability, so it is indeed an\nalgorithm that copes well with optimization problems in\nhigh dimensions, and performs well in terms of intersecting\nexponential growth of computation complexity. The high-\nest average performance values were observed for the COA\nalgorithm, especially in the lower dimensional space, but\nthe price paid for this is the high variance. Its performance\nincreased very sharply with the dimensionality, but the coef-\nficient of variation rose sharply, revealing the randomness\nof the classifier. From this, it is concluded that while COA\nmay provide accurate results, it is less efficient in accurate\nsettings due to instability in performance when it functions\nin high dimensions. The FDBCOA2 algorithm was relatively\nscalable, although the performance gain as dimensionality\nincreased was moderate. However, its growth was not as steep\nas COA ’s and also not as consistent as FDBCOA1’s. FDB-\nCOA2 outperforms COA with consistently higher accuracy\nbut lacks the versatility and performance improvement real-\nized in FDBCOA1 to qualify it as an above-average method\nexcellently suited for scaling and stability. On the other hand,\nthe FDBCOA3 algorithm focused more on getting stable\nresults rather than getting the fastest results. The average\nperformance values of the algorithms only slightly improved\nin more dimensions, thus demonstrating low standard devi-\nations and stable behavior. Thus, FDBCOA3 is appropriate\nfor utilization in contexts where it is more important to run\ncomputations with a guarantee and without fail than it is to",
+      "refs": {
+        "figures": [
+          "f2",
+          "f3"
+        ],
+        "tables": [
+          "t5",
+          "t6",
+          "t7",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "35080 VOLUME 13, 2025",
+      "level": 1,
+      "text": "M. Demirbas et al.: Enhanced Coati Optimization Algorithm for Static and Dynamic TNEP Problems\nTABLE 7. The scalability results Of COA and FDBCOA variations.\nobtain the highest attainable performance. But its scalability\nis not very great, which makes it inefficient at large-scale,\nperformance-critical problems in high dimensions.\nIn summary, the FDBCOA1 algorithm is simply superior\nto other algorithms because, in addition to demonstrating\nexcellent scalability, it provides balanced performance which\nmakes it the best. FDBCOA3 stabilized the system more but\nhad less additional performance improvement as compared to\nCOA which very high performance but unstable. FDBCOA2\nwas average in both aspects and it did not provide much of\nscalability while it was not highly consistent either.\n\u0005 The assessments of the results obtained from the\nalgorithm including FDB variations: A more advanced and\nrobust version of the COA method has been presented to the\nliterature. The FDB guidance mechanism has been imple-\nmented at several location update points within the COA\nalgorithm. Consequently, the COA algorithm has been suc-\ncessfully able to get rid of local solution points and converged\nto global solution points. Section III-B1 assesses the perfor-\nmance of the FDBCOA variants utilizing the CEC2020 and\nCEC2022 benchmark test functions. Table 4 indicates that\nthe average Friedman scores demonstrate that all FDBCOA\nversions outperform the standard COA algorithm. Among\nthe FDBCOA variants, FDBCOA1 has been identified as\nthe most effective algorithm. This outcome has also been\ncorroborated by the Wilcoxon analysis. The Wilcoxon anal-\nysis indicates that the FDBCOA1 algorithm exhibits greater\nperformance, attaining a win percentage of 58.86%, a draw\npercentage of 39.01%, and a loss percentage of 2.13%.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t7",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "FITNESS DISTANCE BALANCE BASED COATI",
+      "level": 1,
+      "text": "OPTIMIZATION ALGORITHM INVOL VING OPPOSITION\nBASED LEARNING METHODS\nThe OBL strategy evaluates the present solution candidates’\npositions identified by the algorithms against the fitness\nvalues of their opponents’ positions. The comparison yields\nthe optimal fitness value, and the solution candidate asso-\nciated with this value is chosen. The preceding section\ndemonstrated that FDBCOA1 is the superior variant of the\nCOA algorithm developed using the FDB selection approach.\nThis section focuses on generating the initial population of\nthe FDBCOA1 algorithm via the OBL technique. The objec-\ntive is to identify the best effective option by employing\neight distinct OBL methodologies. The mathematical formu-\nlations of the OBL strategies employed are presented in this\nsubsection.\n• Classical OBL\nThe classical OBL technique was introduced by Tizhoosh in",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "2005 In this strategy, the opposing position is characterized",
+      "level": 1,
+      "text": "as the reciprocal of the real number x, which represents\nthe position of the current solution candidate. This specified\nvalue is presented in Equation (29) [43].\n¯x = lb + ub − x (29)\nIn the multidimensional search space, ¯x is explained by\ngeneralizing it as shown in Equation (30)\n¯xj = lbj + ubj − xj, x ∈ Rnn, j = 1, 2, . . . ,nn\n(30)\nwhere, j denotes the number of variables in the solution\ncandidate, whereas nn signifies the magnitude of the solution\ncandidate inside the search space.\n• Quasi-Reflection OBL\nThe Quasi-Reflection OBL (QROBL) was proposed by\nErgezer et al., in 2009. According to this method, the\ncurrent solution candidate x is defined by taking a uni-\nformly distributed random solution\n(\n¯xqr\n)\n. The mathematical\nexpression of the Quasi-Reflection OBL method is given in\nVOLUME 13, 2025 35081",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The radar plots of CEC2020 benchmark test functions at different population and size numbers (FDB versions)."
+    },
+    {
+      "id": "f2",
+      "caption": "The convergence curves and boxplot graphs of COA algorithm and its three variants with FDB for CEC 2020 benchmark problems (P = 50,"
+    },
+    {
+      "id": "f3",
+      "caption": "The convergence curves and boxplot graphs of COA algorithm and its three variants with FDB for CEC 2022 benchmark problems (P = 30,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Versions of the COA algorithm created using the FDB method."
+    },
+    {
+      "id": "t2",
+      "caption": "CEC 2020 Freidman scores of the COA algorithm and its variations with FDB."
+    },
+    {
+      "id": "t3",
+      "caption": "CEC 2022 Freidman scores of the COA algorithm and its variations with FDB."
+    },
+    {
+      "id": "t4",
+      "caption": "The mean Freidman scores of the COA algorithm and its variations with FDB."
+    },
+    {
+      "id": "t5",
+      "caption": "CEC2020 Wilcoxon test results of the COA algorithm and its variations with FDB."
+    },
+    {
+      "id": "t6",
+      "caption": "CEC2022 Wilcoxon test results of the COA algorithm and its variations with FDB."
+    },
+    {
+      "id": "t7",
+      "caption": "are examined in detail, it is seen that the FDBCOA1"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Pseudo-Code of Fitness Distance Balance Based Coati Optimization Algorithm"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "Equation (19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "Equation (20)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "Equation (23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "Equation (24)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "Equation (25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "Equation (26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "Equation (27)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "Equation (28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "Equation (29)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "Equation (30)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 7,
+    "n_algorithms": 1,
+    "n_equations": 17
+  }
+}

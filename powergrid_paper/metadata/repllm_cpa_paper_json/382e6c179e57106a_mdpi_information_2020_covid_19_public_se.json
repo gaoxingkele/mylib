@@ -1,0 +1,321 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2020__covid_19_public_sentiment_insights_and_machine_learning__f4f05d6b02.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 University of Charleston, Charleston, WV",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 University of North Carolina at Charlotte, Charlotte, NC",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Khulna University of Engineering & Technology (KUET), Khulna, Bangladesh",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 Northeastern University, Boston, MA",
+      "level": 1,
+      "text": "* Correspondence: jim@aiknowledgecenter.com; ggmdnawazali@ucwv.edu\nVersion May 25, 2020 submitted to Journal Not Speciﬁed\nAbstract: Along with the Coronavirus pandemic, another crisis has manifested itself in the form of mass1\nfear and panic phenomena, fueled by incomplete and often inaccurate information. There is therefore a2\ntremendous need to address and better understand COVID-19’s informational crisis and gauge public3\nsentiment, so that appropriate messaging and policy decisions can be implemented. In this research4\narticle, we identify public sentiment associated with the pandemic using Coronavirus speciﬁc Tweets5\nand R statistical software, along with its sentiment analysis packages. We demonstrate insights into the6\nprogress of fear-sentiment over time as COVID-19 approached peak levels in the United States, using7\ndescriptive textual analytics supported by necessary textual data visualizations. Furthermore, we provide8\na methodological overview of two essential machine learning (ML) classiﬁcation methods, in the context9\nof textual analytics, and compare their effectiveness in classifying Coronavirus Tweets of varying lengths.10\nWe observe a strong classiﬁcation accuracy of 91% for short Tweets, with the Naïve Bayes method. We11\nalso observe that the logistic regression classiﬁcation method provides a reasonable accuracy of 74%12\nwith shorter Tweets, and both methods showed relatively weaker performance for longer Tweets. This13\nresearch provides insights into Coronavirus fear sentiment progression, and outlines associated methods,14\nimplications, limitations and opportunities.15\nKeywords: COVID-19; Coronavirus; machine learning; sentiment analysis; textual analytics; Twitter.16",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In this research article, we cover four critical issues: 1) public sentiment associated with the progress of\nCoronavirus and COVID-19, 2) the use of Twitter data, namely Tweets, for sentiment analysis, 3) descriptive\ntextual analytics and textual data visualization, and 4) comparison of textual classiﬁcation mechanisms\nused in artiﬁcial intelligence (AI). The rapid spread of Coronavirus and COVID-19 infections have created\na strong need for discovering rapid analytics methods for understanding the ﬂow of information and the\ndevelopment of mass sentiment in pandemic scenarios. While there are numerous initiatives analyzing\nhealthcare, preventative, care and recovery, economic and network data, there has been relatively little\nemphasis on the analysis of aggregate personal level and social media communications. McKinsey [ 1]\nrecently identiﬁed critical aspects for COVID-19 management and economic recovery scenarios. In their\nindustry-oriented report, they emphasized data management, tracking and informational dashboards as\ncritical components of managing a wide range of COVID-19 scenarios.\nThere has been an exponential growth in the use of textual analytics, natural language processing\n(NLP) and other artiﬁcial intelligence techniques in research and in the development of applications. In\nSubmitted to Journal Not Speciﬁed, pages 1 – 23 www.mdpi.com/journal/notspeciﬁed\narXiv:2005.10898v1  [cs.IR]  21 May 2020\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 2 of 23\nspite of rapid advances in NLP , issues surrounding the limitations of these methods in deciphering intrinsic\nmeaning in text remain. Researchers at CSAIL, MIT 1, have demonstrated how even the most recent NLP\nmechanisms can fall short and thus remain \"vulnerable to adversarial text\" [2]. It is therefore important to\nunderstand inherent limitations of text classiﬁcation techniques and relevant machine learning algorithms.\nFurthermore, it is important to explore if multiple exploratory, descriptive and classiﬁcation techniques\ncontain complimentary synergies which will allow us to leverage the \"whole is greater than the sum\nof its parts\" principle in our pursuit for artiﬁcial intelligence driven insights generation from human\ncommunications. Studies in electronic markets have demonstrated the effectiveness of machine learning\nin modeling human behavior under complex informational conditions, highlighting the role of the nature\nof information in affecting human behavior [3].\n20−02−20 Fear Sentiment in Public Tweets 29−02−20\nCOVID−19's Sentiment Curve: The Fear Pandemic\nFear Sentiment Tweets Count\n0 100 200 300 400 500 600\nFigure 1. Fear curve.\nThe rise in emphasis on AI methods for textual analytics and NLP have followed the tremendous\nincrease in public reliance on social media (e.g., Twitter, Facebook, Instagram, blogging, and LinkedIn)\nfor information, rather than on the traditional news agencies [4–6]. People express their opinions, moods,\nand activities on social media about diverse social phenomena (e.g., health, natural hazards, cultural\ndynamics, and social trends) due to personal connectivity, network effects, limited costs and easy access.\nMany companies are using social media to promote their product and service to the end-users [ 7].\nCorrespondingly, users share their experiences and reviews, creating a rich reservoir of information\nstored as text. Consequently, social media and open communication platforms are becoming important\nsources of information for conducting research, in the contexts of rapid development of information and\ncommunication technology [8]. Researchers and practitioners mine massive textual and unstructured\ndatasets to generate insights about mass behavior, thoughts and emotions on a wide variety of issues such\nas product reviews, political opinions and trends, motivational principles and stock market sentiment\n[4,9–13]. Textual data visualization is also used to identify the critical trend of change in fear-sentiment,\nusing the \"Fear Curve\" in Fig. 1, with the dotted Lowess line demonstrating the trend, and the bars\nindicating the day to day increase in fear Tweets count. The source data for all Tweets data analysis, tables\n1 Computer Science and Artiﬁcial Intelligence Laboratory, Massachusetts Institute of Technology\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 3 of 23\nand every ﬁgure, including Fig. 1, in this research consists of publicly available Tweets data, speciﬁcally\ndownloaded for the purposes of this research and further described in the Data acquisition and preparation\nsection 3.1.1 of this study. Tweets were ﬁrst classiﬁed using sentiment analysis, and then the progression\nof the fear-sentiment was studied, as it was the most dominant emotion across the entire Tweets data. This\nexploratory analysis revealed the signiﬁcant daily increase in fear-sentiment towards the end of March\n2020, as shown in Fig. 1.\nIn this research article, we present textual analyses of Twitter data to identify public sentiment,\nspeciﬁcally, tracking the progress of fear, which has been associated with the rapid spread of Coronavirus\nand COVID-19 infections. This research outlines a methodological approach to analyzing Twitter data\nspeciﬁcally for identiﬁcation of sentiment, key words associations and trends for crisis scenarios akin to\nthe current COVID-19 phenomena. We initiate the discussion and search for insights with descriptive\ntextual analytics and data visualization, such as exploratory Word Clouds in Figs. 2 and 4.\nthink\ngood\njoke\nresponse\nwall\nelseviruses\ndie\nelection\nusa won\ncare\nhow\nmedia\ngovernment\nnow\namericans\nanything\nmaybe\ntold\nnew\nstay\nwaydrinking\ndied\npotus\nreally\nworse\ncountry\ncontrol\nhome coronavirus\nbelieve\nmany\nkeep\nstarted\nmasks\ntrump\nsomeone\nhands\npence\ncon\ndays\nthought\nwell\npanicgets\nstate\nyet\nsure\ntoday\nalso\nsick nothing\ndue\nback\nthis\nmust\nmay\nserious\noutbreak\neveryone\nname\nsomething\nlet\nthings\nmake\nweek\nkill\ngive\nisn\nfeel\nmarket\nreal\nblamenever\npeople\ncure\nf9a0\nwant\ncorona\n7abuvs12304\nrealdonaldtrump\nworried\nanotherfirst\npandemicque\ndrink\nsaying\namerica\nstop\nvirus\ncdc\naround\nenough\nalready\npublic\nbad\ngetting\ncan\nbest\nhealth\nyear\nbuy\ngod\ndon\ntravel\ngot\nsaid\nwhat\nspread\ntalking\nspreading\nopen\nnext\ncharge\ngoing\neverything\nchinaamerican\nman you\nlol\ncause\nput\ncold\nmask\ndoesn\ntrying ever\ndidn\nworld\nmexico\ncoming\nthe\ncatch\nanyone\nneed\ntell\ndeaths\nmoney\nbetter\nplease\namp\ndamn\nthing\nactually case\ncome\nrate\nlook\nwork\ngreat\nhelp\ncases\nprobably\nlime\neven\nuse\ninfected\nfind\nflu\npresident\nmight\neconomy\nperson\nmikeheard\nsince\nstock\nknow\nbig\nbeer\nlast\nwouldn\nmade\nchinese\nmaking\ntime\nlove\nday\nhope\njob\nf602\ndemocrats\ndisease\nthere\nnews\nvaccine\naway\nsays\nlong\nlittle\nworry\ncnn\nFigure 2. An instance of word cloud in twitter data.\nEarly stage exploratory analytics of Tweets revealed interesting aspects, such as the relatively higher\nnumber of Coronavirus Tweets coming from iPhone users, as compared to Android users, along with a\nproportionally higher use of word-associations with politics (mention of Republican and Democratic party\nleaders), URLs and humour, depicted by the word-association of beer with Coronavirus, as summarized in\nTable 1 below. We observed that such references to humour and beer was overtaken by \"Fear Sentiment\" as\nCOVID-19 progressed and its seriousness became evident (Fig. 1). Tweets insights with textual analytics\nand NLP thus serve as a good reﬂector of shifts in public sentiment.\nTable 1. Tweet features summarized by source category.\nSource Total Hashtags Mentions Urls Pols Corona Flu Beer AbuseW\niPhone 3281 495 2305 77 218 4238 171 336 111\nAndroid 1180 149 1397 37 125 1050 67 140 41\niPad 75 6 96 4 12 85 4 8 2\nCities 30 0 0 0 0 0 0 0 0\nOne of the key contributions of this research is our discussion, demonstration and comparison\nof Naïve Bayes and Logistic methods based textual classiﬁcation mechanisms commonly used in AI\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 4 of 23\napplications for NLP , and speciﬁcally conte",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 Literature Review",
+      "level": 1,
+      "text": "This study was informed by research articles from multiple disciplines and therefore, in this section,\nwe cover literature review on textual analytics, sentiment analysis, Twitter and NLP , and machine learning\nmethods. Machine learning and the need for strategic structuring of information characteristics is necessary\nto address evolving big data challenges [14]. Textual analytics deals with the analysis and evocation of\ncharacters, syntactics, semantics, sentiment and visual representations of text, its characteristics, and\nassociated endogenous and exogenous features. Endogenous features refer to aspects of the text itself,\nsuch as the length of characters in a social media post, use of keywords, use of special characters and the\npresence or absence of URL links and hashtags, as illustrated for this study in Tables 2a and 2b. These\ntables summarize the appearances of \"mentions\" and \"hashtags\" in descending order, indicating the use of\nscreen names and \"#\" symbol within the text of the Tweet, respectively. Exogenous variables, in contrast,\nTable 2. Summary of endogenous features.\n(a) Mentions count.\nTagged Frequency\nrealDonaldTrump 74\nCNN 21\nImtiazMadmood 16\ncorona 13\nAOC 12\ncoronaextrausa 12\nPOTUS 12\nCNN MSNBC 11\n(b) Hashtag count.\nHashtag Frequency\ncoronavirus 23\nDemDebate 16\ncorona 8\nCoronavirusOutbreak 8\nCoronaVirusUpdates 7\ncoronavirususa 7\nCorona 6\nCOVID19 5\nare those aspects which are external but related to the text, such as the source device used for making a\npost on social media, location of Twitter user and source types, as illustrated for this study in Tables 3a\nand 3b (Table 3 summarizes \"source device\" and \"screen names\", indicating variables representing type of\ndevice used post the Tweet, and the screen name of the Twitter user, respectively, both external to the text\nof the Tweet). Such exploratory summaries describe the data succinctly, provide a better understanding\nof the data, and helps generate insights which inform subsequent classiﬁcation analysis. Past studies\nhave explored custom approaches to identifying constructs such as dominance behavior in electronic chat,\nindicating the tremendous potential for extending such analyses by using machine learning techniques to\naccelerate automated sentiment classiﬁcation and the subsections that follow present key insights gained\nfrom literature review to support and inform the Textual Analytics processes used in this study [15–19].",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.1 Textual Analytics",
+      "level": 2,
+      "text": "A diverse array of methods and tools have been used for textual analytics, subject to the nature of\nthe textual data, research objectives, size of dataset and context. Twitter data has been used widely for\ntextual and emotions analysis [20–22]. In another instance, a study analyzing customer feedback for a\nFrench Energy Company using more than 70000 tweets published over a year [23], used a Latent Dirichlet\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 5 of 23\nTable 3. Summary of exogenous features.\n(a) Source device count.\nSource Frequency\nTwitter for iPhone 3281\nTwitter for Android 1180\nTwitter for iPad 75\nCities 30\nTweetbot for i<U+039F>S 29\nCareerArc2.0 14\nTwitter Web Client 16\n511NY-Tweets 3\n(b) Screen name count.\nScreen Name Frequency\n_CoronaCA 30\nMBilalY 25\njoanna_corona 17\neads_john 13\n_jvm2222 11\nAlAboutNothing 11\ndallasreese 9\nCpaCarter 8\nAllocation algorithm to retrieve interesting insights about the energy company, hidden due to data volume,\nby frequency-based ﬁltering techniques. Poisson and negative binomial models have been used to explore\nTweet popularity as well [24]. The same study also evaluated the relationship between topics using seven\ndissimilarity measures and found that Kullback-Leibler and the Euclidean distances performed better in\nidentifying related topics useful for user-based interactive approach. Similarly, extant research applying\nTime Aware Knowledge Extraction (TAKE) methodology [25] demonstrated methods to discover valuable\ninformation from huge amounts of information posted on Facebook and Twitter. The study used topic\nbased summarization of Twitter data to explore content of research interest. Similarly, they applied a\nframework which uses less detailed summary to produce good quality information. Past research has also\ninvestigated the usefulness of twitter data to assess personality of users, using DISC (Dominance, Inﬂuence,\nCompliance and Steadiness) assessment techniques [26]. Similar research has been used in information\nsystems using textual analytics to develop designs for identiﬁcation of human traits, including dominance\nin electronic communication [19]. DISC assessment is useful for information retrieval, content selection,\nproduct positioning and psychological assessment of users. So also, a combination of psychological and\nlinguistic analysis was used in past research to extract emotions from multilingual text posted on social\nmedia [27].",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2 Twitter Analytics",
+      "level": 2,
+      "text": "Extant research has evaluated the usefulness of social media data in revealing situational awareness\nduring crisis scenarios, such as by analyzing wildﬁre-related Twitter activities in San Diego County,\nmodeling with about 41,545 wildﬁre related tweets, from May of 2014, [ 11]. Analysis of such data\nshowed that six of the nine wildﬁres occurred on May 14, associated with a sudden increase of wildﬁre\ntweets on May 14. Kernel density estimation showed the largest hotspots of tweets containing \"ﬁre\" and\n\"wildﬁre\" were in the downtown area of San Diego, despite being far away from the ﬁre locations. This\nshows a geographical disassociation between fact and Tweet. Analysis of Twitter data in the current\nresearch also showed some disassociation between Coronavirus Tweets sentiment and actual Coronavirus\nhotspots, as evidenced in Fig. 3. Such disassociation can be explained to some extent by the fact that\npeople in urban areas have better access to information and communication technologies, resulting in\na higher number of tweets from urban areas. The same study on San Diego wildﬁres also found that\na large number of people tweeted \"evacuation\", which presented a useful cue about the impact of the\nwildﬁre. Tweets also demonstrated emphasis on wildﬁre damage (e.g., containment percentage and burnt\nacres) and appreciation for ﬁreﬁghters. Tweets, in the wildﬁre scenario, enhanced situational awareness\nand accelerated disaster response activities. Social network analysis demonstrated that elite users (e.g.,\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 6 of 23\nlocal authorities, traditional media reporters) play an important role in information dissemination and\ndominated the wildﬁre retweet network.\nTexas\nMontana\nUtah\nCalifornia\nIdaho\nNevada\nOregon\nArizona\nIowa\nMichigan\nColorado\nWyoming\nKansas\nOhio\nMinnesota\nIllinois\nNew Mexico\nFlorida\nNebraska\nMissouri\nWisconsin\nWashington\nGeorgia\nOklahoma\nMaine\nSouth Dakota\nNorth Dakota\nNew York\nVirginia\nAlabama\nArkansas\nIndiana\nLouisiana\nKentucky\nTennessee North Carolina\nPennsylvania\nMississippi\nSouth Carolina\nWest Virginia Maryland\nVermont\nNew Jersey\nMassachusetts\nNew Hampshire\nConnecticut\nDelaware\nRhode Island\n²\n0 350 700 1,050 1,400175\nMiles\nNegative Sentiment in Tweets by State, USA\nProportion\n1.00000000 - 1.24000000\n1.24000001 - 1.52149945\n1.52149946 - 1.74074074\n1.74074075 - 2.11111111\n2.11111112 - 2.75000000\n(a) Negative sentiment.\nTexas\nMontana\nUtah\nCalifornia\nIdaho\nNevada\nOregon\nArizona\nIowa\nMichigan\nColorado\nWyoming\nKansas\nOhio\nMinnesota\nIllinois\nNew Mexico\nFlorida\nNebraska\nMissouri\nWisconsin\nWashington\nGeorgia\nOklahoma\nMaine\nSouth Dakota\nNorth Dakota\nNew York\nVirginia\nAlabama\nArkansas\nIndiana\nLouisiana\nKentucky\nTennessee North Carolina\nPennsylvania\nMississippi\nSouth Carolina\nWest Virginia Maryland\nVermont\nNew Jersey\nMassachusetts\nNew Hampshire\nConnecticut\nDelaware\nRhode Island\n²\n0 350 700 1,050 1,400175\nMiles\nFear Sentiment in Tweets by State, USA\nProportion\n0.250000000 - 0.428571429\n0.428571430 - 0.536934950\n0.536934951 - 0.703703704\n0.703703705 - 0.916666667\n0.916666668 - 1.37500000 (b) Fear sentiment.\nFigure 3. Sentiment map.\nTwitter data has also been extensively used for crisis situations analysis and tracking, including\nthe analysis of pandemics [28–31]. Nagar et al. [ 32] validated the temporal predictive strength of daily\nTwitter data for inﬂuenza-like illness for emergency department (ILI-ED) visits during the New York City\n2012-2013 inﬂuenza season. Widener and Li (2014) [8] performed sentiment analysis to understand how\ngeographically located tweets on healthy and unhealthy food are geographically distributed across the\nUS. The spatial distribution of the tweets analyzed showed that people living in urban and suburban\nareas tweet more than people living in rural areas. Similarly, per capita food tweets were higher in large\nurban areas than in small urban areas. Logistic regression revealed that tweets in low-income areas were\nassociated with unhealthy food related Tweet content. Twitter data has also been used in the context\nof healthcare sentiment analytics. De Choudhury et al. (2013) [10] investigated behavioral changes and\nmoods of new mothers in the postnatal situation. Using Twitter posts this study evaluated postnatal\nchanges (e.g., social engagement, emotion, social network, and linguistic style) to show that Twitter data\ncan be very effective in identifying mothers at risk of postnatal depression. Novel analytical frameworks\nhave also been used to analyze supply chain management (SCM) related twitter data about, providing\nimportant insights to improve SCM practices and research [ 33]. They conducted descriptive analytics,\ncontent analysis integrating text mining and sentiment analysis, and network analytics on 22,399 SCM\ntweets. Carvaho et al. [ 34] presented an efﬁcient platform named MISNIS (intelligent Mining of Public\nSocial Networks’ Inﬂuence in Society) to collect, store, manage, mine and visualize Twitter and Twitter\nuser data. This platform allows non-technical users to mine data easily and has one of the highest success\nrates in capturing ﬂowing Portuguese language tweets.\n2.3. Classiﬁcation Methods\nExtant research has used diverse textual classiﬁcation methods to evaluate social media sentiment.\nThese classiﬁers are grouped into numerous categories based on their similarities. The section that follows\ndiscusses details about four essential classiﬁers we reviewed, including linear regression and K-nearest\nneighbor, and focuses on the two classiﬁers we chose to compare, namely Naïve Bayes and logistic\nregression, their main concepts, strengths and weaknesses. The focus of this research is to present a\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 7 of 23\nmachine learning based perspective on the effectiveness of the commonly used Naïve Bayes and logistic\nregression methods.\nLinear regression model:\nAlthough linear regression is primarily used to predict relationships between continuous variables,\nlinear classiﬁers can also used to classify texts and documents [ 35]. The most common estimation method\nusing linear classiﬁers is the least squares algorithm which minimizes an objective function (i.e. squared\ndifference between the predicted outcomes and true classes). The least squares algorithm is similar to\nmaximum likelihood estimation when outcome variables are inﬂuenced by Gaussian noise [36]. Linear\nridge regression classiﬁer optimizes the objective function by adding a penalizer to it. Ridge classiﬁer\nconverts binary outcomes to -1, 1 and treats the problem as a regression (multi-class regression for a\nmulti-class problem) [37].\nNaïve Bayes classiﬁer:\nNaïve Bayes classiﬁer (NBC) is a proven, simple and effective method for text classiﬁcation [38]. It\nhas been used widely for document classiﬁcation since the 1950s [ 39]. This classiﬁer is theoretically based\non the Bayes theorem [35,37,40]. A discussion on the mathematical formulation of NBC from a textual\nanalytics perspective is provided under the methods section. NBC uses maximum a posteriori estimation\nto ﬁnd out the class (i.e., features are assigned to a class based on the highest conditional probability).\nThere are mainly two models of NBC: Multinomial Naïve Bayes (i.e., binary representation of the features)\nand Bernoulli Naïve Bayes (i.e., features are represented with frequency) [35]. Many studies have used\nNBCs for text, documents and products classiﬁcation. A comparative study showed that NBC has higher\naccuracy to classify documents than other common classiﬁers, such as decision trees, neural networks,\nand support vector machines [ 41]. Collecting 7000 status updates (e.g. positive or negative) from 90\nFacebook users, researchers found that NBC has a higher rate (77%) of accuracy to predict the sentimental\nstatus of users compared to the Rocchio Classiﬁer (75%) [ 40]. Previous studies investigating different\ntechniques of sentiment analysis [42] found that symbolic techniques (i.e., based on the force ",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Methods and Textual Data Analytics",
+      "level": 1,
+      "text": "The Methods section has two broad parts, the ﬁrst deals with exploratory textual analytics, summaries\nby features endogenous and exogenous to the text of the Tweets, data visualizations, and describes key\ncharacteristics of the Coronavirus Tweets data. It goes beyond traditional statistical summaries for\nquantitative and even ordinal and categorical data, because of the unique properties of textual data, and\nexploits the potential to fragment and synthesize textual data (such as by considering parts of the Tweets,\n\"#\" tags, assign sentiment scores, and evaluation of use of characters) into useful features which can provide\nvaluable insights. This part of the analysis also develops textual analytics speciﬁc data visualizations to\ngain and present quick insights into the use of key words associated with Coronavirus and COVID-19.\nThe second part deals with machine learning techniques for classiﬁcation of textual data into positive\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 9 of 23\n(a) Word Cloud 1.\n (b) Word Cloud 2.\n (c) Word Cloud 3.\nFigure 4. A couple of word cloud instances.\nand negative sentiment categories. Implicit therefore, is that the ﬁrst part of the analytics also includes\nsentiment analysis of the textual component of Twitter data. Tweets are assigned sentiment scores using R\nand R packages. The Tweets with their sentiment scores, are then split into train and test data, to apply\nmachine learning classiﬁcation methods using two prominent methods described below, and their results\nare discussed.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Exploratory Textual Analytics",
+      "level": 2,
+      "text": "Exploratory textual analytics deals with the generation of descriptors for textual features in data with\ntextual variables, and the potential associations of such textual features with other non-textual variables\nin the data. For example, a simple feature that is often used in the analysis of Tweets is the number of\ncharacters in the Tweet, and this feature can also be substituted or augmented by measures such as the\nnumber of words per Tweet [9]. A \"Word Cloud\" is a common and visually appealing early stage textual\ndata visualization, consisting of the size and visual emphasis of words being weighted by their frequency\nof occurrence in the textual corpus, and is used to portray prominent words in a textual corpus graphically\n[49]. Early stage World Clouds used plain vanilla black and white graphics, such as in Fig. 2, and current\nrepresentations use diverse word conﬁgurations (such as all word being set to horizontal orientation),\ncolors and outline shapes, such as in Fig. 4, for increased aesthetic impact. This research used R along\nwith Wordcloud and Wordcloud2 packages, while other packages in R and Python are also available with\nunique Wordcloud plotting capabilities.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.1.1 Data acquisition and preparation",
+      "level": 3,
+      "text": "The research was initiated with standard and commonly used Tweets collection, cleaning and data\npreparation process, which we outline brieﬂy below. We downloaded Tweets using a Twitter API, the\nrTweet package in R, which was used to gather over nine hundred thousand tweets from February to\nMarch of 2020, applying the keyword \"Corona\" (case ignored). This ensured a textual corpus focused on\nthe Coronavirus, COVID-19 and associated phenomena, and reﬂects an established process for topical\ndata acquisition [23,50]. The raw data with ninety variables was processed and prepared for analysis\nusing the R programming language and related packages. The data was subset to focus on Tweets tagged\nby country as belonging to the United States. Multiple R packages were used in the cleaning process, to\ncreate a clean dataset for further analysis. Since the intent was to use the data for academic research, we\nreplaced all identiﬁable abusive words with a unique alphanumeric tag word, which contained the text\n\"abuvs\", but was mixed with numbers to avoid using a set of characters that could have preexisted in the\nTweets. Deleting abusive words completely would deprive the data of potential analyses opportunities,\nand hence a speciﬁcally coded algorithm was used to make a customized replacement. This customized\nreplacement was in addition to the standard use of \"Stopwords\" and cleaning processes [51,52]. The dataset\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 10 of 23\nwas further evaluated to identify the most useful variables, and sixty two variables with incomplete, blank\nand irrelevant values were deleted to create a cleaned dataset with twenty eight variables. The dataset was\nalso further processed based on the needs of each analytical segment of analysis, using \"tokenization\" -\nwhich converts text to analysis relevant word tokens, \"part-of-speech\" tagging - which tags textual artifacts\nby grammatical category such as noun or verb, \"parsing\" - which identiﬁes underlying structure between\ntextual elements, \"stemming\" - which discards preﬁxes and sufﬁxes using rules to create simple forms of\nbase words and \"lemmatization\" - which like stemming, aims to transform words to simpler forms and\nuses dictionaries and more complex rules and processes than in stemming.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1.2 Word and phrase associations",
+      "level": 3,
+      "text": "An important and distinct aspect of textual analytics involves the identiﬁcation of not only the\nmost frequently used words, but also of word pairs and word chains. This aspect, known as N-grams\nidentiﬁcation in a text corpus, has been developed and studied in computational linguistics and NLP .\nWe transformed the \"Tweets\" variable, containing the text of the Tweets in the data, into a text corpus\nand identiﬁed the most frequent words, the most frequent Bigrams (two word sequences), the most\nfrequent Trigrams (three word sequences) and the most frequent \"Quadgrams\" (four word sequences,\nalso called Four-grams). Our research also explored longer sequences but the text corpus did not contain\nlonger sequences with sufﬁcient frequency threshold and relevance. While identiﬁcation of N-grams is a\nstraightforward process with the availability of numerous packages in R and Python, and other NLP tools,\nit is more nuanced to identify the most useful n-grams in a text corpus, and interpret the implications.\nIn reference to Fig. 5, it is seen that in some scenarios, such as with the popular use of words \"beer\",\n\"Trump\" and \"abuvs\" (the tag used to replace identiﬁable abusive words), and Bigrams and Trigrams\nsuch as \"corona beer\", \"stock market\", \"drink corona\", \"corona virus outbreak\" and \"conﬁrmed cases (of)\ncorona virus\" (Quadgram) indicate a mixed mass response to the Coronavirus in its early stages. Humor,\npolitics, and concerns about the stock market and health risks words were all mixed in early Tweets\nbased public discussions on Coronavirus. Additional key word and sentiment analysis factoring the\ntimeline, showed an increase in seriousness, and fear in particular as shown in Fig. 1, indicating that public\nsentiment changed as the consequences of the rapid spread of Coronavirus, and the damaging impact\nupon COVID-19 patients became more evident.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.1.3 Geo-tagged analytics",
+      "level": 3,
+      "text": "Data often contain information about geographic locations, such as city, county, state and country\nlevel data or by holding zip code and longitude and latitude coordinates, or geographical metadata. Such\ndata are said to be \"geotagged\", and \"Geo-tagged Analytics\" represents the analysis of data inclusive of\ngeographical location variables or metadata. Twitter data contains two distinct location data types for\neach tweet: one is a location for the tweet, indicating where the Tweet was posted from, and the other is\nthe general location of the user, and may refer to the place of stay for the user when the Twitter account\nwas created, as shown in Table 5. For the Cornonavirus Tweets, we examined both fear-sentiment and\nnegative sentiment and found some counter-intuitive insights, showing relatively lower levels of fear in\nstates which were signiﬁcantly affected by a high number of COVID-19 cases, as demonstrated in Fig. 3.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1.4 Association with non-textual variables",
+      "level": 3,
+      "text": "This research also analyzed Coronavirus Tweets texts for potential association with other variables, in\naddition to endogenous analytics, and the time and dates variable. Using a market segmentation logic,\nwe grouped Tweets by the top three source devices in the data, namely: iPhone, Android and iPad, as\nshown in Fig. 6, which is normalized to each device count. This means that Fig. 6 reﬂects comparison\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 11 of 23\ncorona\nvirus\npeople\ntrump\nabuvs\nbeer\nnow\nTop Unigrams\nWord Frequencies\n0\n1000\n2000\n3000",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4000 corona virus",
+      "level": 1,
+      "text": "corona beer\nstock market\ndrink corona\ngot corona\nvirus outbreak\ndrinking corona\nTop Bigrams\nWord Frequencies\n0\n500\n1000\n1500\n2000",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2500 corona virus outbreak",
+      "level": 1,
+      "text": "corona virus ufa\ncorona virus uf\ndue corona virus\ngot corona virus\ncure corona virus\ncorona virus abuvs\nTop Trigrams\n0\n10\n20\n30\n40\n50\ncorona clear sky âf\ncurrent weather corona clear\ncorona virus task force\ncorona beer corona virus\nfirst case corona virus\ncorona virus people dying\ndying worldwide use tool\nTop Quadgrams\nWord Frequencies\n0\n2\n4\n6\n8\n10\n12\n14\nFigure 5. N-Grams.\nTable 5. Location variables.\n(a) Tagged locations.\nTagged Frequency\nLos Angeles, CA 183\nManhattan, NY 130\nFlorida, USA 84\nChicago, IL 71\nHouston, TX 65\nTexas, USA 57\nBrooklyn, NY 51\nSan Antonio, TX 51\n(b) Stated locations.\nStated Frequency\nLos Angeles, CA 78\nUnited States 75\nWashington, DC 60\nNew York, NY 54\nCalifornia, USA 49\nChicago, IL 40\nHouston, TX 39\nCorona, CA 33\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 12 of 23\nof the relative ratio of device property count to total device count for each source category, and is not a\ndirect device-totals comparison. Our research analyzed direct totals comparison as well, and the reason\nfor presenting the source device comparison by relative ratio is because the comparison by totals simply\nfollows the distribution of source device totals provided in Table 1. We observed that, higher ratio of:\niPhone users made the most use of hashtags and mentions of \"Corona\", iPad users made the most mention\nof URLs and \"Trump\", Android users made the most mention of \"Flu\" and \"Beer\" words. Both iPhone and\nAndroid users has similar ratios for usage of abusive words.\nTwitter for iPhone\nTwitter for Android\nTwitter for iPad\n \n \nTotal HashtagsA\nTwitter for iPad\nTwitter for Android\nTwitter for iPhone\n \n \nTotal TweetsB\nTwitter for iPad\nTwitter for Android\nTwitter for iPhone\n \n \nTotal URLs C\nTwitter for iPad\nTwitter for Android\nTwitter for iPhone\n \n \n`Trump` MentionsD\nTwitter for Android\nTwitter for iPad\nTwitter for iPhone\n \n \n`Flu` MentionsE\nTwitter for iPhone\nTwitter for iPad\nTwitter for Android\n \n \n`Corona` MentionsF\nTwitter for Android\nTwitter for iPad\nTwitter for iPhone\n \n \n`Beer` MentionsG\nTwitter for Android\nTwitter for iPhone\nTwitter for iPad\n \n \nAbusive WordsH\nTwitter for iPad\nTwitter for Android\nTwitter for iPhone\n \n \nText WidthI\nFigure 6. Source device comparison by relative ratio.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t5",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.1.5 Sentiment analytics",
+      "level": 3,
+      "text": "One of the key insights that can be gained from textual analytics is the identiﬁcation of sentiment\nassociated with the text being analyzed. Extant research has used custom methods to identify temporal\nsentiment as well as sentiment expressions of character traits such as dominance [19], and standardized\nmethods to assign positive and negative sentiment scores [7,17,53]. Sentiment analysis is broadly described\nas the assignment of sentiment scores and categories, based on keyword and phrase match with sentiment\nscore dictionaries, and customized lexicons. Prominent analytics software including R, and open-source\noption, have standardized sentiment scoring mechanisms. We used two R packages, Syuzhet and\nsentimentr, to classify and score the Tweets for sentiment classes such as fear, sadness and anger, and\nsentiment scores ranging from negative (around -1) to positive (around 1) with sentiR [54,55]. We used two\nmethods to assign sentiment scores and classiﬁcations: the ﬁrst method assigned a positive to negative\nscore as continuous value between 1 (maximum positive) and -1 (minimum positive).\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 13 of 23\n3.2. Machine Learning with Classiﬁcation Methods\nExtant research has examined linguistic challenges and has demonstrated the effectiveness of ML\nmethods such as SVM (Support Vector Machine) in identifying extreme sentiment [56]. The focus of this\nstudy is on demonstrating how commonly used ML methods can be applied, and used to contribute to\nclassiﬁcation of sentiment by varying Tweets characteristics, and not the development of contributions to\nnew ML theory or algorithms. Unlike linear regression, which is mainly used for estimating the probability\nof quantitative parameters, classiﬁcation can be effectively used for estimating the probability of qualitative\nparameters for binary or multi-class variables - that is when the prediction variable of interest is binary,\ncategorical or ordinal in nature. There are many classiﬁcation methods (classiﬁers) for qualitative data;\namong the most well-known are Naïve Bayes, logistic regression, linear and KNN. The ﬁrst two are\nelaborated upon below in the context of textual analytics. The most general form of classiﬁers is as follows:\nHow can we predict responses Y given a set of predictors{X}? For general linear regression, the\nmathematical model is Y = β0 + β1x1 + β2x2+,··· , +βnxn. The aim is to ﬁnd an estimated ˆY for Y\nby modeling values of ˆβ0, ˆβ1,··· , ˆβn for β0, β1,··· , βn. These estimates are determined from training\ndata sets. If either the predictors and/or responses are not continuous quantitative variables, then the\nstructure of this model is inappropriate and needs modiﬁcations. X and Y become proxy variables and\ntheir meaning depends on the context in which they are used; in the context of the present study, X\nrepresents a document or features of a document and Y is the class to be evaluated, for which the model is\nbeing trained.\nBelow is a brief mathematical-statistical formulation of two of the most important classiﬁers for textual\nanalytics, and sentiment classiﬁcation in particular: Naïve Bayes which is considered as a generative\nclassiﬁer, and Logistic Regression which is considered as a discriminative classiﬁer. Extant research\nhas demonstrated the viability of the using Naïve Bayes and Logistic Regression for generative and\ndiscriminative classiﬁcation respectively [57].\n3.3. Naïve Bayes Classiﬁer\nNaïve Bayes Classiﬁer is based on Bayes conditional probability rule [58]. According to Bayes theorem,\nthe conditional probability of P(x|y) is,\nP(x|y) = P(y|x)P(x)\nP(y) (1)\nThe naive Bayes classiﬁer identiﬁes the estimated class ˆc among all the classes c∈ C for a given document\nd. Hence the estimated class is,\nˆc = argmax c∈CP(c|d) (2)\nAfter applying Bayes conditional probability from (1) in (2) we get:\nˆc = argmax c∈CP(c|d) = argmax c∈C\nP(d|c)P(c)\nP(d) (3)\nSimplifying (3) (as P(d) is the same for all classes, we can drop P(d) from the denominator) and using the\nlikelihood of P(d|c), we get\nˆy = argmax c∈CP(y1, y2,··· , yn|c)P(c) (4)\nwhere y1, y2,··· , yn are the representative features of document d.\nVersion May 25, 2020 submitted to Journal Not Speciﬁed 14 of 23\nHowever, (4) is difﬁcult to evaluate and needs more simpliﬁcation. We assume that word position\ndoes not have any effect on the classiﬁcation and the probabilities P(yi|c) are independent given a class c,\nhence we can write,\nP(y1, y2,··· , yn|c) = P(y1|c).P(y2|c).··· .P(yn) (5)\nHence, from (4) & (5) we get the ﬁnal equation of the naive Bayes classiﬁer as,\nCNB = argmax c∈CP(c) ∏\nyi∈Y\nP(yi|c) (6)\nTo apply the classiﬁer in the textual analytics, we consider the index position of words (wi) in the\ndocuments, namely, replace yi by wi. Now considering features in log space, (6) becomes,\nCNB = argmax c∈ClogP (c) + ∑\ni∈positions\nlogP (wi|c) (7)\n3.3.1. Classiﬁer training\nIn (7), we need to ﬁnd the values of P(c) and P(wi|c). Assume Nc and Ndoc denote the number of\ndocuments in the training data belong in class c and the total number of documents, respectively. Then,\nˆP(c) = Nc\nNdoc\n(8)\nThe probability of word wi in class c is,\nˆP(wi|c) = count (wi, c)\n∑w∈V count (w, c) (9)\nwhere count (wi, c) is the number of occurrences of wi in class c, and V is the entire word vocabulary.\nNow since naive Bayes multiplies all the features likelihood together (refer to (6)), the zero probabilities\nin the likelihood term for any class will turn the whole probability to zero, to avoid such situation, we use\nthe Laplace add-one smoothing method, hence (9) becomes,\nˆP(wi|c) = count (wi, c) + 1\n∑w∈V (count (w, c) + 1)\n= count (wi, c) + 1\n∑w∈V (count (w, c) +|V|)\n(10)\nFrom an applied perspective, the text needs to be cleaned and prepared to contain clear, distinct and\nlegitimate words (wi) for effective classiﬁcation. Custom abbreviations, spelling errors, emoticons,\nextensive use of punctuation, and such other stylistic issues in the text can impact the accuracy of\nclassiﬁcation in both the Naïve Bayes and logistic classiﬁcation methods, as text cleaning processes may\nnot be 100% successful.\n3.4. Application of Naïve Bayes for Coronavirus Tweet Classiﬁcation\nThis research aims to explore the viability of applying exploratory sentiment classiﬁcation in the\ncontext of Coronavirus Tweets. The goal therefore was directional, and set to classifying positive sentiment\nand negative sentiment in Coronavirus Tweets. Tweets with positive sentiment were assigned a value of 1,\nand Tweets with a negative sentiment were assigned a value of 0. We created subsets of data based on\nthe length of Tweets to examine classiﬁcation accuracy based on length of Tweets, where the lengths of",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Fear curve."
+    },
+    {
+      "id": "f2",
+      "caption": "An instance of word cloud in twitter data."
+    },
+    {
+      "id": "f3",
+      "caption": "Sentiment map."
+    },
+    {
+      "id": "f4",
+      "caption": "A couple of word cloud instances."
+    },
+    {
+      "id": "f5",
+      "caption": ". N-Grams."
+    },
+    {
+      "id": "f6",
+      "caption": "Source device comparison by relative ratio."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "below. We observed that such references to humour and beer was overtaken by \"Fear Sentiment\" as"
+    },
+    {
+      "id": "t2",
+      "caption": "Summary of endogenous features."
+    },
+    {
+      "id": "t3",
+      "caption": "Summary of exogenous features."
+    },
+    {
+      "id": "t4",
+      "caption": "Summary of classiﬁers for machine learning."
+    },
+    {
+      "id": "t5",
+      "caption": "Location variables."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

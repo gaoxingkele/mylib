@@ -1,0 +1,198 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/matpower/matpower__Physics-informed_typed_GNN_OPF_related__2ef9764860.pdf",
+  "n_pages": 8,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "A BSTRACT",
+      "level": 1,
+      "text": "Bouldering is a sport where athletes aim to climb up\nan obstacle using a set of defined holds called a route.\nTypically routes are assigned a grade to inform climbers\nof its difficulty and allow them to more easily track their\nprogression. However, the variation in individual climbers\ntechnical and physical attributes and many nuances of\nan individual route make grading a difficult and often\nbiased task. In this work, we apply classical and deep-\nlearning modelling techniques to the 2016, 2017 and 2019\nMoonboard datasets, achieving performance on par with\nstate of the art methods at 0.86 MAE and 1.12 RMSE.\nWe achieve this performance on a feature-set that does\nnot require decomposing routes into individual moves,\nwhich is common in literature requiring manual effort and\nintroducing bias. We also demonstrate the generalization\ncapability of this model between editions and introduce a\nnovel vision-based method of grade prediction. While the\ngeneralization performance of these techniques is below\nhuman level performance currently, we propose these\nmethods as a basis for future work. Such a tool could\nbe implemented in pre-existing mobile applications and\nwould allow climbers to better track their progress and\nassess new routes with reduced bias.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Bouldering is a sport which has exploded in popularity\nover recent years. This can be attributed to the influence\nof social media platforms and the inclusion of bouldering\nas an event in the Olympic games. This sport requires\nclimbing a wall with a set of predefined holds called a\nroute.\nThe Moonboard, shown in Figure 2, is a standardised\ntraining wall for bouldering and is used by climbers inter-\nnationally. Using a smartphone application, climbers can\ncreate their own routes or try other climber’s routes. The\ndisplayed difficulty of each route is based on a majority\nvoting system.\nStandardised difficulty grading systems for bouldering\nroutes exist and are used globally, with the V-scale and\nFont-scale being the most widely accepted. Due to its\nhigher granularity, in this work we focus on the Font-\nscale. Many factors about a route such as the size, shape\nand number of holds may be indicative of its difficulty.\nSubtle changes in a route can have a significant impact on\nthe difficulty. This is complicated further by an individual\nclimber’s technical strengths and physical attributes; while\none climber may comfortably find a hold within reach,\nanother shorter climber may need to jump and catch a\nhold. These variations can lead to large differences in the\nperceived difficulty of a route.\nLittle objective criteria exists to grade a climbing route,\nso climbers must rely on their subjective experience. This\nmakes it difficult to grade routes in a fair and consistent\nmanner. Variation in boulder grades is most apparent when\nanalysing disjoint communities of climbers that tend to\nreach a different internal consensus about what is required\nof a specific grade. We can observe a real example of\nthis effect in Japan, which is notorious for underrating the\ndifficulty of routes.\nTo improve the objectivity of grading, we propose a\nmachine learning algorithm which predicts the difficulty of\na route. We consider better than human level performance\nto be a practical goal of such a model, which could then\nbe developed into a tool to suggest an accurate grade\nfor new boulders to a human user. Such a tool could\nimprove the accessibility of bouldering, as grades could\nbecome more consistent across different communities.\nThis is particularly important for novice climbers track\ntheir progression, as a poorly graded routes can easily\ndiscourage them from continuing to participate.\nTo achieve the goal of this project we explored a variety\nof machine learning approaches for boulder grade predic-\ntion. This exploration included classical and deep learning\napproaches. Our modelling and analysis was performed\non the Moonboard due to its standardisation and use in\nthe relevant literature. Through this, we evaluated each\ntechnique and identified its applicability to this problem.\nThis report discusses how we progressed towards the\nproject goal, the novelty and significance of our work and\nour learning.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "R ELATED WORK",
+      "level": 1,
+      "text": "Dobles [1] performed experimentation on the Moon-\nboard with naive bayes, softmax regression and CNN\nclassification. The CNN showed the greatest performance\nwith an MAE of 1.40. This was performed using a one-hot\nencoding of the Moonboard.\nKempen [2] used human understanding of the routes to\ngenerate a more detailed dataset. Rather than providing\narXiv:2311.12419v1  [cs.LG]  21 Nov 2023\n(a) Moonboard 2016 Edition\n (b) Moonboard 2017 Edition\n (c) Moonboard 2019 Edition\nFig. 2: Moonboard Editions with Year\nwhich holds are available, each route is converted to\na sequence of moves which a climber would need to\nperform. This mimics how humans approach bouldering,\nwhere they think about different sequences and what\nwould be the easiest way to complete the route. Performing\nthis process manually is time consuming, which can limit\nthe size of the data set. Such a method is also reliant on\nthe expertise of the labeller as they must solely decide\nthe difficulty of a range of different moves. To overcome\nthese issues, a simplifying assumption was used, splitting\nthe grades into a binary classification of easy or hard. They\nachieved a classification accuracy of approximately 60%\nusing k-fold cross validation, narrowly outperforming a\nrandomly guessing binary classifier.\nDuh[3] created a grade prediction pipeline which pro-\ngrammatically converted the allowed holds to the most\nprobable sequence of moves. Automatically generating\nthe move sequence is advantageous as it allows for large\ndatasets to be used. Furthermore, the generation process\nwas carefully evaluated to ensure that it produces the\ncorrect sequence of moves. These two factors increase\nthe robustness of the model when compared to Kempen’s\nhuman driven approach. The sequence of moves is by a\nbeam search algorithm, common in sequence prediction\ntasks. The beam search algorithm uses a success score\nwhich is calculated based on the distance between holds\nand the relative difficulty of holds for a given move of the\nroute.\nUsing the move sequence as input, they created an\nrecurrent neural network (RNN) which predicted grade.\nThe RNN achieved 46.7% on exact matches and 84.7%\non matches within 1 grade; compared to human level\nperformance of 45% and 85%. They also found that\nthe move sequence conversion was a significant part of\ntheir success; as a RNN with the holds as input only\nreached 34.7% exact matches. These results demonstrate\nthe advantages of deep learning approaches in this context.\nThey also indicate the power of using a hold to move\nconversion step.\nStapel [4] similarly creates a grade prediction pipeline\nthat decomposes full routes into individual moves. Each\nroute is converted to an ordered sequence of moves, which\nare then individually assessed and then aggregated into an\noverall grade prediction. The move sequence is chosen by\ndetermining the easiest sequence according to a heuristic\ncreated by Stapel that considers the size of the included\nholds, the distance between holds, presence of footholds\nand intuitiveness of the move. Each move in that sequence\nis then evaluated by a suite of binary classifiers, each\npredicting whether a move is more or less difficult than\na chosen V-scale threshold. Each of these probability\npredictions is then used by a final classifier as a feature\nto predict the overall grade.\nUsing the 2016 Moonboard, Stapel achieves 46.5%\nexact matches and 80.1% within one grade on a 25% held\nout test set from a total dataset of 30641 routes. This best\nperformance was achieved with a histogram based gradient\nboosting classifier and is on par with [3]. However, a\nlimitation of this method is the requirement of a dataset of\nmoves for implementing the ordered sequence prediction\nstep. This dataset required the author manually label 250\nroutes with their expected move sequence and would need\nto be performed again to apply the method to a new board.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "N OVELTY AND SIGNIFICANCE",
+      "level": 1,
+      "text": "The established literature focuses on techniques which\ninvolve preprocessing holds into a sequence of moves, and\nwhen done effectively, grade prediction performance is\nshown to be improved. However, these methods introduce\nthe assumptions that there is only one easiest sequence\nfor all climbers and that the manual labeller has correctly\nidentified it. In reality, different climbers often find novel\nsequences that suit their strengths and these sequences\nare not easily determined. To address these concerns, we\nperform grade prediction on routes without preprocessing\nindividual moves and demonstrate its effectiveness.\nThe relevant literature so far demonstrates grade predic-\ntion on a board configuration given a training set on the\nsame configuration. This is a highly limiting assumption\nas a climber must build a corpus of graded routes on their\nboard configuration before expecting accurate predictions.\nThe quality of such grade predictions is also entirely\ndependant on the accuracy of this new corpus. As such, in\nthis work we explore the generalization of a model trained\non a given Moonboard edition to a new edition. This\nevaluation reveals to what extent a machine learning model\ncan learn spatial relationships to predict grades rather than\ninformation about specific holds.\nTo the best of our knowledge, there are also no contribu-\ntions in this area using pure computer vision approaches.\nSuch an approach could generalize to boulder grade pre-\ndiction outside of narrow constraints of a standardized\ntraining board. This could offer a framework to solve\nboulder grade prediction problems with novel holds and\ncomplex 3D wall geometries that the Moonboard dataset\ndoes not explore. In this work, we provide preliminary\nresults from training computer vision backbones to predict\nboulder grades from images.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "E VALUATION",
+      "level": 1,
+      "text": "For this boulder grade prediction task we propose\nevaluation using Mean Absolute Error (MAE) and Root\nMean Squared Error (RMSE). These metrics are extremely\ncommon amongst regression tasks in machine learning\nliterature in general and have been used directly in [1]. Use\nof these common metrics allows comparison of our results\nwith some relevant literature. MAE measures the error\nbetween predicted and true grades uniformly, whereas the\nRMSE increases more quickly with errors larger than 1.\nThe combination of these two metrics is useful as com-\nparison between MAE and RMSE can indicate tendencies\nwithin the model. When RMSE is greater than MAE we\ncan conclude that our model is prone to making a few\nhighly incorrect predictions. Conversely, when RMSE is\nless than MAE, we know the model is rarely perfectly\ncorrect and is likely making predictions with some uniform\nerror less than one grade. The mathematical definition of\nthese two evaluation metrics are:\nM AE=\nDX\ni=1\n|xi − yi| (1)\nRM SE=\nvuut\nDX\ni=1\n(xi − yi)2\nD (2)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "D ATASETS",
+      "level": 1,
+      "text": "We train and evaluate our modelling techniques against",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 datasets all collected from the popular Moonboard train-",
+      "level": 1,
+      "text": "ing board. Each dataset is collected from a different edition\nof the Moonboard, with the number of routes shown\nin Table I. Between each of the 3 Moonboard editions\nevaluated, 142 holds are shared while an additional 56\nholds are added that vary between the most recent 2017\nand 2019 editions, as shown in Figure 2.\nEdition (Year) Holds Routes Benchmarks\n2016 142 28568 545\n2017 198 24083 336\n2019 198 11375 383\nTABLE I: Number of Holds, Routes and Benchmarks per\nEdition\nThese datasets were scraped from the Moonboard API,\nwhere a user of the board can publish and grade their\nown routes publicly for others to try. While a single user\ngrading these routes makes the label unreliable, other users\nwho complete the route can suggest their perceived grade\nto update the difficulty. When building our dataset, we\nselect only routes with 5 or more ascents such that the\ngrade has reached some consensus.\nEach dataset contains a relatively small number of\n’Benchmark’ routes. These are exemplar routes that ex-\nperience considerably more ascents, and consequentially\nratings. The grades for benchmark routes are highly agreed\nupon and verified by experts who maintain the Moonboard\ntool. For this reason, we select these routes as testing sets\nfor our evaluation. The remaining non-benchmark routes\ncomprise the training set.\nEach element of these datasets is a list of hold coor-\ndinates, supervised by the consensus grade of all of its\nascents. From this list of hold coordinates we construct\na 18x11 dimensional one-hot encoded feature vector to\nrepresent the route. An example of this conversion is\nshown in Figure 3, showing an image of the route from\nthe Moonboard website, the associated list of holds, and\nour one-hot feature vector representing some spatial un-\nderstanding of the included holds.\nFig. 3: One-Hot Feature Vector from List of Holds\nAs all three Moonboard editions share the same di-\nmension, we can apply the same modelling algorithms\nacross all three datasets without change. However, holds\nchanging position across the datasets make generalization\nof performance across datasets challenging. For example,\nmodelling one dataset, an algorithm may learn that a hold\nin a specific position is associated with high difficulty\nroutes. Testing on a new board configuration, that same\nposition may be replaced with a relatively easy hold\nleading to incorrect grade predictions.\nEach dataset is highly imbalanced in its representation\nof each target difficulty. There are significantly more low\ngrade routes than higher grade ones. Such an imbalance is\nexpected as there are many more novice and intermediate\nclimbers than experts. This is most apparent in the non-\nbenchmark training sets, however this is still true to a\nlesser extent in the testing sets, as shown if Figure 4. The\n2016 edition also limits routes to a minimum grade of 6B+,\nwhereas 2017 and 2019 editions allow labelling routes to\na more inclusive minimum grade of 6A+.\nFig. 4: Target Distribution between training and testing\nsets per dataset",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "M ETHODS",
+      "level": 1,
+      "text": "In this section we explore the performance of different\nmodelling techniques, hyperparameter tuning and feature\nsets constructed from our dataset. We start with classical\nmachine learning to build baseline performance for our\nmodelling. We then explore deep-learning algorithms to\nimprove our performance on the same feature set. Finally,\nwe explore computer vision models trained on images of\nroutes for grade prediction.\nA. Classical Machine Learning\nWe start by evaluating relatively simple classical models\non our grade prediction task. The fast training and evalu-\nation of such classical models allowed us to quickly gain\ninsight and establish a baseline performance to improve\nupon. We train and evaluate a suite of 6 classical regression\nmodels. First, we evaluate three linear modelling tech-\nniques: the linear regression (LR), linear regression with\nL2 normalization (LR with L2) and support vector regres-\nsion (SVR). Next, we evaluate three non-linear regression\nmodels: radial basis function support vector regression\n(RBF SVR), decision tree regressor (DTR) and extreme\ngradient boosted decision tree regressor (XGBR).\nWe train and evaluate this suite of 6 models against the\nMoonboard 2016 dataset, with performance shown in Fig-\nure 6. The three linear models achieve similar performance\non the training set with 1.03 and 1.40 MAE and RMSE\nrespectively. Such low performance on the training set\nindicates that the assumption of linear contribution of our\nfeatures to the predicted grade is insufficient. While linear\nmodelling achieves poor performance, the LR with L2 is\nparticularly useful for its ease of interpretation. As shown\nin Figure 5, the weights of this model give some intuition\nas to the difficulty of the routes it is included in. Inspection\nof the highest weighted positions and referencing Figure\n2(a), reveals that smaller holds often increase the predicted\ndifficulty.\nFig. 5: Weight per Hold on 2016 Dataset from LR w/ L2\nnormalization. Red indicates a hold associated with higher\ndifficulty, white indicates a hold of average difficulty and\nblue indicating an easier than average hold.\nIndividual holds are rarely used in isolation, instead an\nathlete must move between holds. As such, the predicted\ngrade should not be a linear weighting of which holds are\nincluded, instead it must be made with some understanding\nof the complex interaction of different holds and how they\nmay be used together.\nThese interactions perhaps explain the lower errors\nachieved by non-linear modelling. Without regularization,\nthe DTR overfit to the training set, and failed to generalize\nto the testing set. This overfitting is expected, as an\nunconstrained decision tree can perfectly fit any training\nset. While the XGBR algorithm is also a tree building\nmodel, it utilizes boosting which iteratively adds decision\ntrees, with each addition correcting the errors from the last\ntree. This boosting is a form of regularization that leads\nto worse performance on the training set, but much better\ngeneralization to the testing set. Best performance on the\ntest set is achieved by the RBF SVR. Using the radial\nbasis function kernel is equivalent to transforming your\nfeature space into an infinite dimensional feature space,\nwhere each component of the feature vector is a product\nof powers of the components in the original feature space.\nWith one-hot encoded features, these products represent\ncombinations of all possible subsets of holds. For example,\nthe first degree product considers only the presence of a\nsingle hold. Next, the second degree polynomial considers\nthe squared contribution of features (which for one-hot\nencoded features is trivial, remaining either zero or one)\nand the product of all combinations of two features. Again,\nfor one-hot encoded features, this product is zero when\nonly one or neither of the holds is present, and one when\nboth are present. Such a product is similar to perform-\ning a logical AND between the considered holds. This\ncontinues to infinite degree products, where all possible\ncombinations of included holds have been considered.\nThis could be one explanation for why the RBF SVM\nachieves best performance of 0.98 MAE on the testing\nset with 1.28 RMSE, meeting our target human level\nperformance.\nFig. 6: Classical Modelling Performance\nB. Deep Learning\nIn this section we apply deep learning algorithms to\nimprove performance on the boulder grade prediction\ntask. We evaluate the 2016 Moonboard Dataset and show\nincreased performance with specialized architectures de-\nsigned to incorporate spatial understanding of the distance\nbetween holds, then evaluate their ability to generalize\nbetween Moonboard configurations.\nWe evaluate a suite of 4 deep learning architectures: a\n4-layer fully connected network (DNN), a 4-layer convolu-\ntional neural network (2DCNN), a single layer long-short\nterm memory layer (LSTM) and a significantly deeper 6-\nlayer fully connected network followed by 4-layer con-\nvolutional network(DNN+2DCNN). Exact architectures of\neach network are included as defined in the Keras API in\nAbstract 1. All networks were trained with the popular\nAdam optimizer and used a Mean Squared Error loss\nfunction. Networks were trained for 100 epochs with Early\nStopping once the network had not improved on the test\nset in 20 epochs, with the best weights restored before\nevaluation.\nTraining and evaluating on the 2016 Moonboard\nDataset, we find that the 4 deep-learning architectures\noutperform the RBF SVM. As shown in Figure 7, the\n2DCNN achieves best performance with 0.86 MAE and\n1.12 RMSE. This architecture was designed to learn spatial\nrelationships between holds in local areas through the use\nof convolutional filters. We also evaluate the accuracy\nand within 1 grade accuracy of this model at 42% and\n84% respectively. While each of the 4 convolutional layers\nall used a 3x3 kernel, as the feature vector propogates\nthrough the network each convolutional layer aggregates\ninformation from increasingly large local areas. While the\nfirst layer only has information about a 3x3 region, the\nsecond combines information from a 5x5 region, then 7x7\nand so forth.\nFig. 7: Deep Learning Modelling Performance\nSlightly lower performance was achieved by the LSTM\nnetwork. This network was designed to process rows of\nthe route as timesteps starting from the bottom row and\nmoving upwards. For all architectures, we experimented\nwith the addition of a class balancing weight to address the\ntendency for models to underestimate the grade, as shown\nin the residual plot in Figure 8. This underestimation\nis likely due to the high class imbalance towards lower\ngrades in the 2016 Dataset, as shown in Figure 4. The\nclass balancing weight multiplied loss during training by\nthe inverse of that classes proportion in the training set.\nWhile this improved balance in the predictions, overall\nMAE and RMSE scores were similar.\n\nFig. 8: CNN Architecture Residual Plot on Moonboard",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2016 Benchmarks",
+      "level": 1,
+      "text": "To address the relatively large number of routes with\nonly few ascents, we experimented with the addition of\nindividual sample weights equal to the log number of\nascents of each route. Our assumption was that routes with\nmany ascents would have more accurate grades and should\ntherefore be weighted more heavily during training. Again,\noverall MAE and RMSE measurements were unaffected.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "Generalization of Modelling",
+      "level": 1,
+      "text": "Next, we explore how deep learning modelling gener-\nalized between different editions of the Moonboard. The\nsame suite of 4 models from Section VII-B were trained\non one dataset, and evaluated against each of the three\ntesting sets, as shown in Figure 11.\nFigure 11 shows that the CNN and LSTM architectures\ngeneralized best, perhaps due to their structure being\ndesigned to exploit spatial attributes of our feature set.\nPerformance against unseen configurations was signifi-\ncantly lower than the configuration used during training\nwith best performance achieved by the LSTM architecture.\nWorst generalization was achieved when training on the\n2016 dataset. Possible explanations for this could be the\nrelatively few number of holds on this configurations when\ncompared to the 2017 and 2019 boards and the higher\nminimum grade of 6B+ compared to the 6A+ minimum\non the later editions.\nFig. 11: Generalization Performance of Deep Learning\nArchitectures against different Moonboard Edition Bench-\nmarks\nA concern when evaluating generalization ability of\na model trained on a single Moonboard edition is the\noverfitting of that model to specific hold positions. By\nvarying the holds in each position, a model may be\nforced to learn spatial relationships rather than overfitting\nto individual positions. In Figure 12, we train the same\nsuite of 4 deep learning models with two editions of the\nMoonboard and evaluate generalization performance to\nthe third. We find that generalization performance does\nimprove when compared to the single training set, however\nperformance is significantly lower than the editions where\nthe training set was directly included.\n\n(a) 2016 Moonboard hold images before relocation\nand reorientation.\n(b) Sample image of a route generated from the 2016\nMoonboard dataset. Each hold has been reoriented\nonly the included holds in the route are displayed.\nFig. 10: Image Generation from 2016 Moonboard Dataset\nFig. 12: Generalization Performance of Deep Learning\nArchitectures against different Moonboard Edition Bench-\nmarks\nFigure 12 also shows that testing set performance on\neditions that were included in training was reduced. This\nwas most significant on the 2017 and 2019 training set,\nwhere best MAE and RMSE were approximately 0.3\nhigher than the single training set scores. With the one-\nhot encoded feature set, there is no way for the model\nto distinguish which edition a sample came from which\ncould explain this reduced performance. Future work could\nexplore generalization using the same hold set reorganised\non a constant size board, which could lead to increased\nperformance.",
+      "refs": {
+        "figures": [
+          "f11",
+          "f12"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "G RADE PREDICTION FROM IMAGES",
+      "level": 1,
+      "text": "A significant limitation of our method is the assumption\nof consistent holds equally spaced on a flat plane. Modern\nbouldering routes use a wide range of holds with irregular\nspacing and rotation, and are often set on complex 3D\nsurfaces. Such complex orientation is difficult to capture in\na consistent set of fixed-length features necessary for our\nmodelling. This complexity motivated the use of images of\nroutes to predict the grade. Such a method could generalize\nto images of any route and produce a predicted grade.\nCollecting individual hold images, locations and orien-\ntations from the Moonboard website, a script was devel-\noped to generate images of routes using their included\nholds, as shown in Figure 10.\nUsing the 2016 Moonboard dataset, an image for each\nroute was generated and supervised with the route’s grade.\nThis image feature set was used to train both ResNet50\nand MaxViT backbones. With both randomly initialized\nand default weights these architectures were unable to\nachieve performance on par with the original one-hot\nencoded feature space. Best performance was achieved\nby ResNet50 with no weights with 1.84 MAE and 2.30\nRMSE.\nWe experimented with 224x224, 256x256 and 512x512\nimage sizes with no performance increase, as well as vary-\ning the number of channels in each image. Models were\ntrained with single, three and four channel (monochrome,\nRGB and RGBA) images again to no improvement. This\ntraining was motivated by the hypothesis that black col-\nored holds may be confused with the background black\ncolor signal for single and three channel images.\nThe ResNet50 model was also trained with categori-\ncal crossentropy loss rather than mean squared error to\nexperiment with whether different loss functions lead to\nincreased performance. Again, performance was poor with\n2.25 MAE and 3.04 RMSE. Due to low performance on\nthe same board edition during testing, we did not explore\nthe generalization performance of this method.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "C ONCLUSION",
+      "level": 1,
+      "text": "Boulder grades are decided by climber’s subjective\nopinions of the routes difficulty, and as such can be biased\nand inaccurate. In this work, we show that classical and\ndeep-learning modelling can achieve highly accurate grade\npredictions on a standardised training board using the\nMoonboard dataset. Highest performance was achieved by\nthe 2DCNN architecture’s performance with a 0.86 MAE\nand 1.12 RMSE. By training on two editions of the board\nand evaluating generalization performance on a third, we\ndemonstrate the LSTM achieves best performance with\n2.35 MAE and 2.93 RMSE. While this demonstrates\nsome generalization capability, this is far below estimated\nhuman level performance [3][4]. Finally, we experiment\nwith vision based boulder grade prediction by generating\nimages of routes from the 2016 Moonboard. While such a\nmethod could generalize to any board and hold set, future\nwork is required to achieve human level performance from\nthe current best losses of 1.84 MAE and 2.30 RMSE.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "C ODE AVAILABILITY",
+      "level": 1,
+      "text": "We make our code to generate images from Moonboard\nroutes available for use here: https://github.com/a1773620/\nMoonboard-Grade-Prediction. We also publish our mod-\nelling techniques for classical, deep and computer vision\ntechniques.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f11",
+      "caption": "shows that the CNN and LSTM architectures"
+    },
+    {
+      "id": "f12",
+      "caption": "also shows that testing set performance on"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

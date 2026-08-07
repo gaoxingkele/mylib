@@ -1,0 +1,435 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/elsevier-journal-of-energy-storage/elsevier-journal-of-energy-storage__2019__battery_health_prediction_under_generalized_conditions___24cb5218a7.pdf",
+  "n_pages": 10,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Electrochemical batteries, such as lithium-ion and lead-\nacid cells, experience degradation over time and during\nusage, leading to decreased energy storage capacity and\nincreased internal resistance. Being able to predict the\nrate of degradation and the remaining useful life (RUL)\nof a battery is important for performance and economic\nreasons. For example, in an electric vehicle, the driveable\nrange is directly related to the battery capacity. For en-\nergy storage asset valuation, depreciation, warranty, insur-\nance and preventative maintenance purposes, predicting\nRUL at design stage and during operation is crucial, and\nthe investment case is strongly dependent on the degra-\ndation behaviour [1]. To estimate accurately the second\nhand value of assets such as EVs and grid batteries, cred-\nible predictions of RUL are required.\nUnfortunately, battery degradation is caused by many\ncomplex interacting chemical and mechanical processes [2,\n3], and physical modelling from ﬁrst principles is very chal-\nlenging. To mitigate uncertainty in lifetime, batteries are\noften over-sized and under-used, which results in increased\nsystem costs and sub-optimal performance. Hence, new\napproaches for accurate health prognostics are required,\nand form an important component of a modern battery\nmanagement system or energy management system.\nSince the performance of a battery in an application\nis largely dependent on its nominal capacity and internal\nresistance, the state of health (SoH) is typically deﬁned\nby one or both of these parameters. In the present case\nwe consider just cell capacity as the SoH metric, but the\nmethods outlined in this paper could be applied to any\nother SoH metric, such as internal resistance, or capacity\nat some nominal C-rate. A variety of techniques may be\napplied for SoH measurement and estimation [4], but in\nthis paper we simply assume that SoH metrics are avail-\nable, for example from a battery management system.\nThe conventional approach to battery SoH forecasting is\nto ﬁt a parametric function to a broad set of ageing data\nmeasured under controlled laboratory conditions. Care-\nful judgement is required to decide on the exact form of\nparametric model to use. For example, Schimpe [5] in-\nvestigated both calendar and cycle ageing of lithium iron\nphosphate (LFP) batteries with respect to temperature\nand state of charge (SoC) and found that capacity evolved\n1\narXiv:1807.06350v1  [stat.AP]  17 Jul 2018\nwith time according to\nQloss =k1\n√\nt +k2\n√\nQtot +k3\n√\nQch +k4Qch, (1)\nwhereQloss is the capacity fade at some point in time,k1...4\nare empirically ﬁtted stress factors that are a function of\ntemperature, charging current, time and SoC, Qtot is the\ntotal charge throughput to time t, and Qch is the charge\nthroughput only during charging, to time t. The stress\nfactorsk1...4 typically ﬁt an Arrhenius equation of the form\nk =kref exp [α (u−uref)], (2)\nwhere α is a ﬁtted constant, u is some input such as cur-\nrent or the reciprocal of temperature, and uref is reference\nvalue for that input. Very similar approaches have been\ndeveloped by others for LFP batteries [6], and for a vari-\nety of other chemistries including NMC lithium-ion [7, 8]\nand lead-acid [9]. These empirical degradation models are\nessentially parametric curve ﬁtting using speciﬁed under-\nlying functions such as exponentials, square roots etc. For\nsome kinds of battery degradation data, such as [10], these\napproaches may give a reasonable ﬁt to the measured be-\nhaviour, although there is very little information in the lit-\nerature about their long term predictive accuracy. These\napproaches also require the form of the model to be speci-\nﬁed a priori, for example (1) assumes decoupling of inputs,\nand this may not be the case. Additionally, many degrada-\ntion datasets exhibit an accelerated capacity fade regime\nin later life (see [11]), and this approach is not able to\nmodel such a regime change. Also, accuracy may be lim-\nited when environmental and load conditions diﬀer from\nthe training dataset.\nAs an alternative approach to empirical parametric\nfunctions ﬁtted to laboratory test data, others have de-\nveloped ‘ﬁrst principles’ electrochemical models of battery\nageing. These propose and model a set of underlying phys-\nical ageing mechanisms. For example a popular ageing\nmechanism is growth of the anode solid electrolyte inter-\nphase (SEI) through reduction of the ethylene carbonate\nin the electrolyte, modelled as a diﬀusion-limited single\nstep charge transfer reaction [12, 13]. This can be aug-\nmented to include additional physics related to lithium\nplating [14], particle cracking [15] and other mechanisms.\nAlthough reasonable results are demonstrated for calendar\nageing, huge challenges remain with respect to parametri-\nsation and validation of such models, and what physics to\ninclude to capture all the relevant ageing mechanisms and\ntheir interactions.\nIn contrast to these approaches, so-called data-driven\nbattery ageing models are beginning to be investigated.\nThese have some similarities with the empirically ﬁtted\nfunctions previously discussed, but new techniques from\nmachine learning allow much greater ﬂexibility in these\nmodels than can be obtained using pre-speciﬁed paramet-\nric functions. The simplest formulation of this is direct ﬁt-\nting of capacity data with respect to time, or cycle count,\nwhich allows RUL estimation by extrapolation to future\nvalues. A variety of data-driven techniques have been\nexplored in this context, including non-parametric ap-\nproaches such as support vector machines [16, 17, 18, 19],\nand Bayesian non-parametric approaches such as Gaussian\nprocess (GP) regression [20, 21, 22]. A non-parametric\nmodel is one whose expressivity (as would increase with\nthe degree of a polynomial, for instance) naturally adapts\nto the complexity of data. Rather than having no param-\neters, a non-parametric model is perhaps better thought\nof as one with a number of parameters that can scale with\nthe data and could become arbitrarily large. Bayesian\napproaches naturally incorporate estimates of uncertainty\ninto predictions, allowing a model to acknowledge the\nvarying probabilities of a range of possible future health\nvalues, rather than just giving a single predicted value.\nThese approaches have been demonstrated to work well\nwhen a battery health dataset is available for batteries\nthat have all been cycled in a similar way. For exam-\nple, our previous work [23] on RUL prediction applied\na multiple-output Gaussian process model to incorporate\ndata from multiple batteries, all cycled in the same way,\ndemonstrating a large improvement in accuracy of RUL\nestimation over existing methods. However, for real world\nRUL prediction at design stage, or for preventative main-\ntenance, a much more ﬂexible approach is needed that\nallows health predictions to be made as a function of the\nchanging stress factors such as time, charge throughput\nand temperature etc. The previously discussed paramet-\nric models can incorporate dependence on external inputs,\nbut are limited to pre-speciﬁed functions. In other words,\nthey assume that the shape of the degradation trajectory\nis known a priori , which limits their applicability.\nTo address this, we introduce the idea of a Bayesian non-\nparametric transition model for battery health. Rather\nthan ﬁtting the SoH data directly as a function of time or\ncycle count, the model predicts the changes in SoH from\none point to the next as the battery is used, as a function\nof the usage. This is explained in detail in the next section.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Method",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Transition model",
+      "level": 2,
+      "text": "The approach in this paper formulates a transition model\nto predict the capacity changes between periods of usage\nthat we term ‘load patterns’. We deﬁne this diﬀerently\nto a standard battery charge-discharge cycle, instead it is\nthe time-series of current, voltage and temperature data\nbetween any two capacity measurements or estimates, Qi\nand Qi+1. Load patterns do not need to be uniformly\nspaced, i.e. they could be short or long periods of usage,\nand might include multiple charge-discharge events.\nThe goal of a regression problem is to learn the mapping\nfrom input vectors x to outputsy, given a labelled training\nset of input-output pairs D ={(xi,yi)}ND\ni=1, where ND is\nthe number of training examples. In the present case, the\ninputs xi∈ R+ are vectors of selected features (see section\n2.2) for load pattern ui, and the outputs yi∈ R+ are the\n2\ncorresponding diﬀerences in measured capacity between\nload patternui andui+1. The underlying model takes the\nform y = f(x) +ε, where f(x) represents a latent func-\ntion and ε∼N (0,σ 2) is an independent and identically\ndistributed noise contribution.\nThe learned model can then be used to make predic-\ntions on a set of test inputs x∗ ={x∗\ni}NT\ni=1 (i.e. load pat-\nterns where we wish to estimate the capacity), producing\noutputs y∗ ={y∗\ni}NT\ni=1, where NT is the number of test\nindices. In our case we are interested in predicting the\ncapacity changes in a new – previously unseen – battery\ncell, which has been exposed to a known test regime. This\nis called the validation or test dataset.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Input feature extraction",
+      "level": 2,
+      "text": "Each load pattern, ui, may contain within it an arbitrary\nnumber of time steps , Ni. However, in order to use the\ninputs in our model, since the capacity measurements are\nonly known per load pattern, we must ﬁrst map time-series\ndata to a ﬁxed size input vector. In other words, assuming\nthere are Ni time-steps within a load pattern ui, then the\nmeasurements I∈ RNi, V ∈ RNi, T ∈ RNi are mapped\nto a single n-dimensional input vector, x, where n is the\nnumber of features of interest. Irrespective of the number\nof time steps in a load pattern, the size of the input vector\nx is the same.\nFor each load pattern, ui, the features to be extracted\nare deﬁned by prior assumptions about what causes a bat-\ntery to age. As discussed in the preceding section, there\nare many possible diﬀerent stress factors that aﬀect bat-\ntery ageing, depending on the dataset and model. How-\never, in the dataset used it was found that accurate results\ncould be obtained with only a small number of factors (see\ntable 4), as follows:\nThe ﬁrst component of the input vector, for theith load\npattern, is the total time elapsed during the load pattern,\ngiven by\nxi,1 = ∆t =ti+1−ti,\nwhereti andti+1 are the times at the start and end of the\nload pattern respectively.\nThe second component is the charge throughput,Qthru,\nduring the load pattern, i.e. the total absolute current\nthrough the cell during the load pattern, given by\nxi,2 =Qthru =\n∫ ti+1\nti\n|I| dt.\nThe third component is the absolute time value, in sec-\nonds, since the beginning of the whole dataset,\nxi,3 =t.\nAs discussed later, for the dataset considered here, it\nwas found that the choice of model and number of overlap-\nping load patterns were generally more important for de-\ntermining predictive accuracy than the inclusion of addi-\ntional input features. However, with a larger dataset, ad-\nditional features could improve predictive accuracy. These\nmight include the following:\nFirstly, the present cell capacity,\nxi,4 =Qi.\nSecondly, the time elapsed during which certain condi-\ntions are met . This is achieved by deﬁning a selection of\ncurrent, voltage and temperature ranges, and evaluating\nthe time spent by the battery within these ranges:\nxi,j =tPl<P<P u,\nforj∈{ 5, 6,... }, where P ,Pl andPu are the parameters\nof interest, and their upper and lower bounds respectively.\nFor example, a battery’s aging behaviour is expected to be\naﬀected by high or low temperatures [5]. Hence, one might\ndeﬁne the duration of time the battery spends (1) below\n0 ◦C, (2) between 0 and 40 ◦C, and (3) above 40 ◦C as\nthree distinct inputs:\nxi,5 =tT<0◦C\nxi,6 =t0◦C<T<40◦C\nxi,7 =t40◦C<T\nAn example of an input vector for a single load pattern\nis given in Table 1. In this case, inputs were deﬁned for\nranges of temperature and current. Of course, additional\ninputs could also be deﬁned by voltage ranges, but these\nhave been omitted here for clarity of presentation. Note\nthat the sum of all the times spent in each parameter range\n(e.g. in each temperature or current range) must equal the\ntotal time elapsed within that load pattern.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3 Example data",
+      "level": 2,
+      "text": "Fig. 1 shows an exemplary schematic of the ﬁrst 4 load\npatterns for a single cell. There is one capacity measure-\nment (Q1) at the very start of the cell’s life and then 4\nsubsequent measurements (Q2−Q5) at later times. The\nload patterns consist of everything that occurs between\neach capacity measurement; each load pattern is trans-\nlated into equal sized input vectors, xi.\nFig. 2 gives examples of real measurement data for two\ndiﬀerent cells, including the capacity values Q, some of\nthe extracted inputs for each load pattern, and exemplary\ntime series measurements corresponding to a portion of a\nload pattern. The dataset used for this work is explained\nin section 3.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 Evaluation",
+      "level": 2,
+      "text": "The model predictions are evaluated using three diﬀerent\nmetrics, which reﬂect the quantities of interest in a prac-\ntical application. The ﬁrst is the root-mean-squared error\n(RMSE) in the mean output of the model (i.e. the capacity\ndiﬀerences), deﬁned as\nRMSE∆Q( ˆyi\n∗,y∗\ni ) =\n√ 1\nNT\nNT∑\ni=1\n( ˆyi\n∗−y∗\ni )2, (3)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 X y",
+      "level": 1,
+      "text": "Capacity Inputs Output\nQ[Ah] ∆ t t q thru[Ah] tT< 5◦C t5◦C<T< 40◦C tT> 40◦C tI<2A t2A<I<3A tI>3A ∆Q[Ah]\n2.1 5 .5 10 .6 1 .4 0 5 0 .5 4 1 .25 0 .25 −0.05\nT able 1: Example input format for a single step. Note that the values of the inputs shown here are arbitrary and for explanatory\npurposes only. All units are in hours, except where denoted otherwise.\n3\n4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 V (V)",
+      "level": 1,
+      "text": "-5\n0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 I (A)",
+      "level": 1,
+      "text": "0 1 2 3 4 5 6\nt (hrs)20\n30\n40T (°C)\n0.4\n0.6",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "0.8 Capacity",
+      "level": 2,
+      "text": "0.9\n1.0\nx\nΔ𝑡\n𝑦1=Δ𝑥 1→2\n𝑦2=Δ𝑥 2→3\n𝑦3=Δ𝑥 3→4\n𝑦4=\nx\nx\nx",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "u1 u2 u3 u4",
+      "level": 1,
+      "text": "Q3\nQ1\nQ2\nQ4\nQ5\nΔ𝑥4→5\nFigure 1: Schematic diagram showing raw input data and\noutputs for the ﬁrst four load patterns for a single cell.\nwhereNT is the number of points to be evaluated (i.e. all\npoints in the test dataset), y∗",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "is the measured capacity",
+      "level": 1,
+      "text": "diﬀerence using the test dataset and ˆy∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "is the estimated",
+      "level": 1,
+      "text": "mean capacity diﬀerence predicted by the model, each be-\ntween load pattern ui andui+1. The second is the RMSE\nin actual capacity, deﬁned as\nRMSEQ( ˆQi\n∗\n,Q∗\ni ) =\n√ 1\nNT\nNT∑\ni=1\n(\nˆQi\n∗\n−Q∗\ni\n)2\n, (4)\nwhereQ∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "is the measured capacity (using the test dataset)",
+      "level": 1,
+      "text": "and ˆQ∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "is the estimated mean capacity, each at load pat-",
+      "level": 1,
+      "text": "tern i. This may also be expressed as a normalised value,\nto facilitate comparison with other studies, whereby the\nabsolute capacities may be of diﬀerent magnitudes:\nRMSEQ,norm( ˆQi\n∗\n,Q∗\ni ) =\n√\n\n 1\nNT\nNT∑\ni=1\n(\n(\nˆQi\n∗\n−Q∗\ni\n)\nQi\n\n\n2\n.\n(5)\nNote that it is possible for a model to perform well in one\nof these metrics but poorly in the other. For instance,\nif a model over-predicts ∆ Q every second load pattern\nbut under-predicts on alternate load patterns, the over-\nall capacity evolution may be accurate (implying good\nRMSEQ), but the individual predictions might not be (im-\nplying poor RMSE∆Q). Hence, a good model should have\nlow values of both these metrics.\nThirdly, since the approach used here is probabilistic,\nthe accuracy of the uncertainty estimates can also be\nquantiﬁed using the calibration score (CS). This is deﬁned\nas the frequency of measured results in the test dataset\nthat are within a predicted credible interval. Within a\n±2σ interval, corresponding to a 95.4% probability for a\nGaussian distribution, the CS is given by\nCS2σ = 1\nNT\nNT∑\ni=1\n[| ˆyi\n∗−y∗\ni|< 2σ]. (6)\nTherefore, CS 2σ should be approximately 0.954 if the\nuncertainty predictions are accurate, using the techniques\noutlined in this paper. Higher or lower scores indicate\nunder- or over-conﬁdence, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.5 Gaussian process regression",
+      "level": 2,
+      "text": "This section gives a brief overview of Gaussian process re-\ngression, the main approach chosen in this paper for mod-\nelling the transition in health from one load pattern to the\nnext. A Gaussian process (GP) [24] deﬁnes a probability\ndistribution over functions, and is denoted as:\nf(x)∼GP\n(\nm(x),κ (x, x′)\n)\n, (7)\nwherem(x) andκ(x, x′) are the mean and covariance func-\ntions respectively, denoted by\nm(x) = E[f(x)], (8)\nκ(x, x′) = E[(f(x)−m(x)) (f(x′)−m(x′))T ]. (9)\nFor any ﬁnite collection of input points, say X =\nx1,..., xND, this process deﬁnes a probability distribution\np (f(x1),...,f (xND)) that is jointly Gaussian, with some\nmean m(x) and covariance K(x) given byKij =κ(xi, xj).\nGaussian process regression is a way to undertake non-\nparametric regression with Gaussian processes. Rather\nthan suggesting a parametric form for the functionf(x,φ )\nand estimating the parameters φ (as in parametric regres-\nsion), we instead assume that the functionf(x) is a sample\nfrom a Gaussian process as deﬁned above.\nIn this work, we use the Mat´ ern covariance function:\nκMa(x−x′) =σ2\nf\n21−ν\nΓ(ν)\n(√\n2ν (x−x′)\nρ\n)ν\nRν\n(√\n2ν (x−x′)\nρ\n)\n,\n(10)\n4\n2.9 3.0 3.1 3.2\n3.5\n4.0\nVoltage [V]\n0 50 100 150\n0.50\n0.75\n1.00Q [%]\n2.9 3.0 3.1 3.2\n5.0\n2.5\n0.0\n2.5\n5.0\nCurrent [A]\n0 50 100 150\n0\n100\n200Throughput [Ah]\n2.9 3.0 3.1 3.2\nTime [days]\n25\n30\n35\nTemperature [ C]\n0 50 100 150\nTime [days]\n0\n1\n2\nt (T> 35 C) [days]\nCell 9\n2.9 3.0 3.1 3.2\n3.5\n4.0Voltage [V]\n0 100 200\n0.6\n0.8\n1.0Q [%]\n2.9 3.0 3.1 3.2\n0\n2\n4\nCurrent [A]\n0 100 200\n0\n100Throughput [Ah]\n2.9 3.0 3.1 3.2\nTime [days]\n30\n40Temperature [ C]\n0 100 200\nTime [days]\n0\n2\nt (T> 35 C) [days]\nCell 19 Cell 9 Cell 19\nFigure 2: Examples of raw data (left two columns) and extracted input features (right two columns) for two diﬀerent cells\n.\nwith output scale σf, smoothness hyperparameter, ν =\n5/2 (larger ν implies smoother functions) and Rν is the\nmodiﬁed Bessel function. This kernel was chosen because\nit is suitable for functions with varying degrees of smooth-\nness, although similar performance was observed using\nother common kernels, including the squared exponen-\ntial [24].\nA fuller discussion of various diﬀerent kernels that may\nbe used for GP regression in the context of battery health\nprediction is given in [23]. Finally, we also compare per-\nformance against a linear kernel, since this is equivalent\nto Bayesian linear regression [24]:\nklin(x,x′) =σ2\nf(x−c)(x′−c), (11)\nwherec is a constant deﬁning the oﬀset of the linear func-\ntion. The mean function of the GP is commonly deﬁned\nas m(x) = 0, and we follow this convention here.\nNow, if one observes a labelled training set of input-\noutput pairs D ={(xi,yi)}ND\ni=1, predictions can be made\nat test indices X∗ by computing the conditional distri-\nbution p(y∗|X∗,X, y). This can be obtained analytically\nby the standard rules for conditioning Gaussians [25], and\n(assuming a zero mean for notational simplicity) results\nin a Gaussian distribution given by\np(y∗|X∗,X, y) =N (y∗|m∗,σ∗) (12)\nwhere\nm∗ = K(X,X∗)T K(X,X )−1y (13)\nσ∗ = K(X∗,X∗)− K(X,X∗)T K(X,X )−1K(X,X∗).\n(14)\nThe values of the covariance hyperparametersθ may be\noptimised by minimising the negative log marginal likeli-\nhood deﬁned as NLML =− logp(y|X,θ ). Minimising the\nNLML automatically performs a trade-oﬀ between bias\nand variance, and hence ameliorates over-ﬁtting to the\ndata [26]. Given an expression for the NLML and its\nderivative with respect to θ (both of which can be ob-\ntained in closed form), θ can be estimated using gradient-\nbased optimization. The Python GPy library was used to\nimplement these algorithms.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.6 Gradient boosting",
+      "level": 2,
+      "text": "As a state-of-the-art comparison to Gaussian process re-\ngression, we also investigated predictive performance with\nan alternative technique, gradient boosting. This is a pop-\nular data-driven time series modelling approach based on\ncombining an ensemble of weak prediction models into a\nstronger model [25]. While this approach is not inher-\nently probabilistic, and does not output a full covariance\nmatrix for the predictions, it can be trained using quan-\ntile regression (QR) to approximately predict a probability\ndistribution. Quantile regression deliberately introduces a\nbias in the prediction in order to estimate statistics. The\nloss function is modiﬁed such that instead of identifying\nthe mean of the variable to be predicted, QR seeks the\nmedian and any other desired quantiles. To identify the\nupper and lower bounds of a prediction interval, QR is\nrepeated at several diﬀerent quantiles. One advantage of\nthis method is that asymmetric intervals can be predicted.\nOn the other hand, it is not clear how the conﬁdence in-\ntervals forQ should be calculated from the values for ∆Q,\nsince the full covariance matrix is unavailable. In this\ncase, we simply centred the intervals around the mean,\nand ﬁtted a Gaussian distribution in order to achieve this.\n5\n0 10\ndt [days]\n0.0\n0.2\n0.4\n0.6Density\n0.0 0.2 0.4\n0\n10\n20\n30Density\nCharge throughput [Ahx10   ]3\n5\n 0 5\nCurrent [A]\n0.0\n0.5\n1.0Density\n3 4\nVoltage [V]\n0\n2Density\n0 50\nTemperature [ C]\n0.000\n0.025\n0.050\n0.075Density\nFigure 3: Distribution of input data for each parameter.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3 Dataset",
+      "level": 1,
+      "text": "The battery dataset used here was obtained from the\nNASA Ames Prognostics Center of Excellence Random-\nized Battery Usage Repository [27]. The data in this\nrepository were ﬁrst used in Ref. [28] for an investigation\ninto capacity fade under randomized load proﬁles. The\ndata are randomised in order to better represent practi-\ncal battery usage. This is ideal for training a data-driven\nmodel. Fig. 3 gives smoothed histograms computed from\nthe cell data showing the ranges of times, charge through-\nput, currents, voltages and temperatures that are explored\nby this dataset.\nAn overview of the battery dataset is given in Table 2.\nThe cells used have a relatively high energy density, but\nshort lifetime. The remainder of this subsection describes\nthe cycling and characterisation procedure, based on [27].\nFor this study we used data from 26 of the 28 total bat-\ntery cells available in the repository (cells 16 and 17 were\nomitted, since these were found to contain spurious data\nresulting in certain cycles having negative duration). The\ncells were grouped into 7 groups of 4, with each group\nundergoing a diﬀerent randomized cycling procedure as\ndescribed in Table 3.\nThe ﬁrst 5 groups were cycled at room temperature\nthroughout the duration of the experiments, whilst groups\n6-7 were cycled at 40 ◦C. In all cases a characterisation\ntest was periodically carried out, whereby a 2 A charge-\ndischarge cycle was applied (i.e. approximately 1C) be-\ntween the cell voltage limits – these discharge curves were\nused to evaluate the capacity as an indicator of state of\nhealth. There were a total of 950 discharge curves avail-\nable across all cells (i.e. ∼ 34 curves per cell).\nThe cell capacity was calculated by integrating the cur-\nrent from each of the 2 A charge curves. Calculated ca-\npacities for the cells in each group are plotted against time\nin Fig. 4. The evolution of the capacity is quite diﬀerent\nfor each group of cells.\nManufacturer LG Chem\nForm factor 18650\nChemistry Lithium cobalt oxide vs. graphite\n# cells 26\n# Q samples 950\nQ range (Ah) 2.10 → 0.80\nCycling 7 groups each with diﬀerent regime\nT able 2: Dataset overview. Row ‘# Q samples’ indicates\ntotal number of capacity measurements, i.e. approximate total\nnumber of health transitions. Row ‘ Q range’ indicates values\nof the maximum initial capacity and minimum ﬁnal capacity.\nGroup 1 (Cells 1, 2, 7, 8)\nRepeatedly charged to 4.2 V using a randomly selected dura-\ntion between 0.5 hours and 3 hours, then discharged to 3.2 V\nusing a randomized sequence of discharging currents between\n0.5 A and 4 A. Reference characterisation every 50 cycles.\nGroup 2 (Cells 3-6)\nSame as group 1 except charging cycle not randomized.\nGroup 3 (Cells 9-12)\nOperated using a sequence of charging/discharging currents\nbetween -4.5 A and 4.5 A. Each loading period lasted 5 min-\nutes. Reference characterisation carried out after 1500 periods\n(about 5 days).\nGroup 4 (Cells 13-15)\nRepeatedly charged to 4.2 V and then discharged to 3.2 V\nusing a randomized sequence of discharging currents between\n0.5 A and 5 A. A customized probability distribution skewed\ntowards selecting higher currents was used to select a new load\nsetpoint every 1 minute during discharging.\nGroup 5 (Cells 18-20)\nSame as Group 4 except the probability distribution was de-\nsigned to be skewed towards selecting lower currents.\nGroup 6 (Cells 21-24)\nSame as Group 5 except with ambient temperature of 40 ◦C.\nGroup 7 (Cells 25-28)\nSame as Group 4 except with ambient temperature of 40 ◦C.\nT able 3: NASA data load proﬁles. Each group of cells under-\nwent a diﬀerent loading procedure. Full details in [27].",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4 Results",
+      "level": 1,
+      "text": "We considered 6 diﬀerent conﬁgurations of data-driven\ntransition model, as deﬁned in Table 4, in order to show a\nrange of comparisons in predictive accuracy. In each case,\nthe model was trained on the data from even numbered\ncells (i.e. all the mappings between inputs and capacity\ndrops across all of those cells), and subsequently tested on\nthe odd numbered cells.\nModels 1 and 2 use a GP with a Mat´ ern kernel. The\ndiﬀerence between these two models is the way in which\nlong term trends are captured. For model 1, data from\nthe preceding 6 load patterns were all used as inputs for\nthe mapping, and the total time elapsed was not included\nas an input. For model 2, only data from the current\n6\n0 100\nday\n1.00\n1.25\n1.50\n1.75\n2.00Capacity [Ah]\n1\n2\n7\n8\n0 100\nday\n1.00\n1.25\n1.50\n1.75\n2.00Capacity [Ah]\n3\n4\n5\n6\n0 100\nday\n1.0\n1.5\n2.0Capacity [Ah]\n9\n10\n11\n12\n0 100 200\nday\n1.0\n1.5\n2.0Capacity [Ah]\n13\n14\n15\n0 100 200\nday\n1.00\n1.25\n1.50\n1.75\n2.00Capacity [Ah]\n18\n19\n20\n0 50 100\nday\n1.4\n1.6\n1.8\n2.0Capacity [Ah]\n21\n22\n23\n24\n0 50 100\nday\n1.8\n2.0Capacity [Ah]\n25\n26\n27\n28\nFigure 4: Measured cell capacities for each group of similarly cycled cells.\nNo. Model Kernel Lags Inputs dQ (Ah) Q (Ah)\n∆t (s) Q thru (Ah) t (s) RMSE CS 2σ RMSE RMSE norm CS2σ\n1. GP Ma5 6 \u0013 \u0013 \u0017 0.0201 0.959 0.070 0.043 0.967\n2. GP Ma5 1 \u0013 \u0013 \u0013 0.0236 0.950 0.116 0.086 0.922\n3. GP Lin 6 \u0013 \u0013 \u0017 0.0284 0.939 0.186 0.173 0.839\n4. GP Lin 1 \u0013 \u0013 \u0013 0.0319 0.945 0.642 0.593 0.241\n5. SKGB n/a 6 \u0013 \u0013 \u0013 0.0244 0.850 0.089 0.067 0.846\n6. SKGB n/a 1 \u0013 \u0013 \u0017 0.0246 0.889 0.125 0.106 0.757\nT able 4: Results for the 6 diﬀerent model combinations. The best values of each metric are indicated in bold.\nload pattern was used, but to capture long term trends it\nwas necessary to also include the total time elapsed as an\nadditional input.\nModels 3 and 4 are analogous to models 1 and 2, except\na linear kernel was used in the GP rather than a Mat´ ern\nkernel. This gives a simple base case for comparison. Us-\ning a linear kernel is equivalent to implementing Bayesian\nlinear regression, and the key point to note in this con-\ntext is that it provides far less ﬂexibility for the model\npredictions compared with a Mat´ ern kernel.\nModels 5 and 6 are also analogous to models 1 and 2,\nexcept that, rather than using a GP, they use a diﬀer-\nent regression technique called gradient boosting, as was\nintroduced in section 2.6.\nThe predicted versus actual ∆ Q for each approach is\nshown in Fig. 5. Model 1 was the best performing of the\n6 cases tested, with RMSE ∆Q and RMSEQ of 0.0201 Ah\nand 0.07 Ah respectively. Normalised capacity prediction\nerror RMSEnorm for model 1 was 4.3%.\nFinally we present in more detail in Fig. 6 the evolution\nof the capacity for each of the cells in the test dataset,\nusing the best performing approach (model 1).",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5 Discussion",
+      "level": 1,
+      "text": "The results given in section 4 show that model 1 accurately\npredicts the capacity trajectory, and provides reasonable,\nif slightly over-cautious, estimates of the uncertainty, in-\ndicated by the calibration score being close to 0.954. The\ntrue capacity generally lies within the ±2σ interval de-\nnoted by the blue shaded region in Fig. 6.\nThe model is also seen to be capable of predicting both\npositive and negative capacity diﬀerences. For instance,\nit is apparent in Fig. 6 that, although the capacities expe-\nrience a long-term downward trend, they also experience\noccasional step increases. The model correctly predicts\nthe timing of a number of these instances, e.g. for cell 7\nat day ∼ 140. As an aside, the physical explanation for\nthese increases is not clear; they may in fact be an artefact\nof the measurement process, possibly arising when refer-\nence tests are performed, after the cell is unused for some\ntime. However, regardless of their cause, accounting for\nthese eﬀects is essential since the capacity measurement\nprovided in a real application could also manifest similar\nbehaviour.\nRegarding feature selection, the fact that model 1 per-\nforms better than model 2 in the case of the dataset used\n7\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "GP, Matern52, 6 lags\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "GP, Matern52, 1 lag\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "GP, Linear, 6 lags\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "GP, Linear, 1 lag\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "SKGB, 6 lags\n0.15\n0.10\n0.05\n0.00 0.05 0.10\nActual\n0.15\n0.10\n0.05\n0.00\n0.05",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "0.10 Predicted",
+      "level": 2,
+      "text": "SKGB, 1 lag\nGroup 1\nGroup 2\nGroup 3\nGroup 4\nGroup 5\nGroup 6\nGroup 7\nFigure 5: Predicted versus actual ∆Q values for each dataset. The coloured markers indicate predicted values, and grey error\nbars indicate±2σ credibility intervals.\nhere suggests that valuable information is being extracted\nfrom the inputs over the previous load patterns, which is\nnot available from using just the total time elapsed as an\nadditional input.\nModels 3 and 4, based on a linear kernel as noted ear-\nlier, perform considerably more poorly than the other ap-\nproaches in terms of capacity prediction error, indicating\nthat the simple linear combination of the inputs is insuﬃ-\ncient to predict battery health for the dataset considered\nhere, and the nonlinearities captured by the Mat´ ern kernel\nare signiﬁcant in this case. Their calibration scores also\nindicate over-conﬁdence.\nThe models based on gradient boosting are slightly less\naccurate in terms of mean predictions than models 1 and",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "2 and it is also noteworthy that they are erroneously over-",
+      "level": 1,
+      "text": "conﬁdent, as indicated by their low calibration scores.\nFinally, we note that the train/test split used in this pa-\nper (whereby the even numbered cells are used for training\nand the odd numbered cells for testing) ensures that there\nis at least one training cell in each of the 7 groups of dif-\nferently cycled cells, Table 3. Inferior results may be ob-\ntained if this were not the case, e.g. if the ﬁrst N cells were\nused for training and the remaining 26-N used for testing,\nsince in the latter case the model would be extrapolating\nbeyond the region of the input space used for training. In\npractice, the performance of these methods will rely on\nusing a suﬃciently large training set being available, such\nthat a large range of input conditions are covered.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "6 Conclusions",
+      "level": 1,
+      "text": "This paper has developed a new technique for battery\nhealth prediction based on a Bayesian non-parametric\nmodel that estimates the change in capacity over a par-\nticular period of time as a function of how the battery\nwas used during that period. A simple histogram-based\nfeature selection approach was presented and models were\ntrained using data from NASA [27]. It was found that the\nbest performing approach used Gaussian process regres-\nsion with a Mat´ ern kernel function, and that time elapsed\nand charge throughput were the most important features\nto incorporate within the model, given the dataset used\nin this paper. It was also found that more accurate re-\nsults could be achieved by considering the preceding 6 load\npatterns to capture longer range trends, rather than us-\ning absolute time as an input feature. Automated feature\nselection would be worth future investigation.\nThe best case results presented have a relative accu-\nracy on mean capacity predictions that is within 5% of\nthe actual values. To our knowledge this is one of the ﬁrst\npapers to actually quantify battery health predictive accu-\nracy comprehensively, and this is one of the most accurate\nlong range predictions of future capacity seen to date.\nThe approaches explored in this paper oﬀer an interest-\ning insight into how the stress factors that drive degrada-\ntion actually inﬂuence the capacity trajectory. It is note-\nworthy that, despite having a dataset that includes a wide\nrange of temperatures and currents, in this case it was\n8\n0 100\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 1\n0 100\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 3\n0 100\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 5\n0 100\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 7\n0 100\nday\n0.5\n1.0\n1.5\n2.0Capacity [Ah]\nCell 9\n0 100\nday\n0.5\n1.0\n1.5\n2.0Capacity [Ah]\nCell 11\n0 100 200\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 13\n0 100 200\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 15\n0 100 200\nday\n1.0\n1.5\n2.0Capacity [Ah]\nCell 19\n0 50 100\nday\n1.4\n1.6\n1.8\n2.0Capacity [Ah]\nCell 21\n0 50 100\nday\n1.4\n1.6\n1.8\n2.0Capacity [Ah]\nCell 23\n0 50 100\nday\n1.6\n1.8\n2.0Capacity [Ah]\nCell 25\n0 50\nday\n1.6\n1.8\n2.0Capacity [Ah]\nCell 27\nTrue capacity\nPredictions\nCredibility intervals\nGroup 1 Group 2 Group 2 Group 1 Group 3\nGroup 3 Group 4 Group 4 Group 5 Group 6\nGroup 6 Group 7 Group 7\nFigure 6: Predicted capacity versus time on the test data. Black lines are true values, blue lines with markers are mean\npredictions and blue shaded region indicates ±2σ credibility region.\nfound that time elapsed and charge throughput were the\ndominant inputs. However, a naive modelling approach\nthat uses a simple linear combination of inputs results in\nvery inaccurate predictions, as shown by the GP regres-\nsion results using linear kernels.\nThere are a number of interesting next steps to explore.\nFirst, it would be useful to test these ideas against a much\nlarger dataset to show their general validity and explore in\nmore detail the sensitivity of the approach to additional\ninputs. Second, prior knowledge about expected degra-\ndation behaviour could be included as an extension to\nthis work by including a parametric mean function within\nthe GP framework. Third, in the present work, when the\nmodel is used predictively, it assumes perfect knowledge\nabout the inputs, i.e. that the future current, voltage and\ntemperature time series are known in advance. In practice\nthis will not be the case, since depending on the applica-\ntion these variables depend on driving style or market con-\nditions, ambient weather conditions etc. Predicting these\ninputs is a separate but important issue.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Schematic diagram showing raw input data and"
+    },
+    {
+      "id": "f2",
+      "caption": "Examples of raw data (left two columns) and extracted input features (right two columns) for two diﬀerent cells"
+    },
+    {
+      "id": "f3",
+      "caption": "Distribution of input data for each parameter."
+    },
+    {
+      "id": "f4",
+      "caption": "Measured cell capacities for each group of similarly cycled cells."
+    },
+    {
+      "id": "f5",
+      "caption": "Predicted versus actual ∆Q values for each dataset. The coloured markers indicate predicted values, and grey error"
+    },
+    {
+      "id": "f6",
+      "caption": "Predicted capacity versus time on the test data. Black lines are true values, blue lines with markers are mean"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t4",
+      "caption": "), as follows:"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

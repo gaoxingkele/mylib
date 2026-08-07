@@ -1,0 +1,319 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/grid2op_datasets/grid2op_datasets__Fault_Detection_for_Agents_in_Power_Grid_Topology_Optimization_A_Comprehensive_Analysis__54e35d0c04.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increase of renewables in the energy mix and the resulting variability, the optimization of power grids has\nbecome increasingly complex. One possible approach is topology optimization, i.e., switching buses at a substation\nlevel, which is a more cost-effective alternative to redispatching [ 22] and can improve grid stability [ 4]. However,\nidentifying the correct topology options is computationally expensive [ 22]. One possible solution for the topology\noptimization could be DRL, as it can grasp large states and cope with the complexity [29].\nWithin the Machine Learning (ML) research community, the L2RPN challenges are the preferred research benchmarks\n[17, 24, 23, 22, 28]. The underlying Grid2Op package of the Transmission System Operator (TSO) RTE provides\n∗Both authors contributed equally.\nmalte.lehna@iee.fraunhofer.de, https://orcid.org/0000-0003-0621-1442 -\nmohamed.hassouna@iee.fraunhofer.de, https://orcid.org/0000-0001-9927-1625\n†https://orcid.org/0000-0002-5825-8915\n‡https://orcid.org/0000-0002-8719-8261\narXiv:2406.16426v3  [cs.LG]  17 Sep 2024\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nseveral environments for DRL approaches.4 Within the environments, researchers train their agents on various chronics,\nwhich are scenarios containing one week of power grid data, including generator injections, load consumption, and\nstructural information like planned outages and unexpected hazards, to identify effective policies. To rate agents, a\nscoring function is provided [23], which depends on the agent’s ability to maintain grid stability for a week in the test\nchronics. Several topology-based DRL agents have been applied to the L2RPN challenges of RTE in the last years\n[22]. However, it is not always clear why an agent survives or fails in a specific chronic, as the environments contain\nstochastic components that change the behavior on repeated runs. Therefore, we analyze different grid failures in the\nIEEE118 grid and provide a predictive approach to detect possible failures in advance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Contribution",
+      "level": 1,
+      "text": "We take a closer look at agent failures to address the types of failures that can occur when using a topology-based agent.\nTo do so, we aggregate the data of over 40k failed chronics from three different agents and cluster the failure types to\nidentify specific patterns.\nNext to clustering, we provide a multi-class prediction framework to identify whether an agent is currently in a situation\nwhere survival can be ensured, or if failure is imminent. Based on the observation of the grid state, we can detect\nwhether the grid will survive or if a failure will occur in 5, 3, or 1 time-steps, corresponding to 25, 15, and 5 minutes\nrespectively. We test different prediction models and are able to identify with 87% binary accuracy, whether grid failure\nis imminent. With a detailed feature importance analysis, we are further able to detect critical features and components\nin the electricity grid that are crucial for failure prediction. Overall, the contributions can be summarized as follows:\n• We evaluate three agents from Ref. [19] with ten different seeds on the IEEE118 grid (WCCI L2RPN training\nenvironment). With 1662 chronics, we create a detailed dataset of around 40k grid failures.\n• We perform a clustering analysis that identifies distinct grid failure types and categorize them into five\nmeaningful clusters, enhancing understanding of agents’ shortcomings and their association with specific\nfailure types.\n• We build a multi-class forecasting framework to identify the risk of failure beforehand.\n• We test five different forecasting models and identify the LightGBM as the best performing candidate.\n• With an additional feature importance analysis, we are able to identify critical features and regions within the\nIEEE118 grid.\nThe rest of the paper is structured as follows. We provide an overview of the related work in Section 3 and our\nmethodology in Section 4. We then present the experimental setup in Section 5, followed by the results in Section 6.\nFinally, we discuss our results in Section 7 and conclude in Section 8.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Related Work",
+      "level": 1,
+      "text": "With the L2RPN challenges, several approaches have been proposed to optimize the topology of transmission grids\nwith DRL. In most cases, the DRL algorithms are combined with heuristic components [ 5, 11, 19, 20] to increase\nperformance and reduce the action space. Other researchers prefer to use evolutionary algorithms with planning\ncomponents [31] or Monte Carlo Tree Search (MCTS) [10]. Additionally, some approaches use Graph Neural Networks\n(GNNs) to represent the graph-structured state information [12]. However, most researchers report only the score and in\nsome cases the survival of their agent on the test chronics. Understandably, they often do not show the shortcomings of\ntheir agents, making comparisons or even fault interpretation difficult. The most detailed analysis of the environments\nand agents comes from the L2RPN challenges themselves, e.g., in [ 23, 25]. They analyze the behavior of different\nagents and also show some examples using the Grid2Viz package.5 Alternatively, [3] introduce Grid2Onto for Grid2Op\nenvironments. Their application is a recommender system based on a semantic model to display and select propositions\nfrom an agent for the respective grids.\nWith respect to fault prediction, previous studies have investigated electricity grids, as evidenced by the surveys for\ntransmission grids [6] and distribution grids [8]. However, to the best of our knowledge, there is no specific work on\nfault prediction using DRL agents for topology optimization. The closest work was done by [26], who used an LSTM\nmodel to predict failures on the IEEE 35 bus network. However, they focus more on interlocking and cascading failures\nand not directly on the outcome of DRL agents. Therefore, there is still a need for further research in this area.\n4Grid2Op: https://grid2op.readthedocs.io/en/latest/ (last accessed 09/06/2024).\n5Grid2Viz https://github.com/rte-france/grid2viz (last accessed 09/06/2024).\n2\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 Methodology",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "4.1 Descriptive Analysis with Clustering",
+      "level": 2,
+      "text": "In the descriptive analysis, we want to identify different types of grid failures to better understand the shortcomings\nof the agents. However, the underlying data is high-dimensional and requires reduction. To ensure that we have less\ncorrelation in our clustering, we use the Principal Component Analysis (PCA) [1] with standardized variables. The\ndimensionality is reduced by transforming the data onto the coordinate system of the principal components, which are\northogonal to each other. We then select all major components that added at least 5% of the variance to the data, thus\nreducing the dimensions effectively. In our case, this yields six components with an explained variance of 85%.\nWith a reduced number of components, we combine the PCA with k-means clustering, similar to [9]. Introduced by\n[21], k-means clustering divides the data into k-clusters, where each data point is assigned to the nearest cluster centroid\nbased on its distance. By iteratively assigning precise centroids, the distances within the cluster is minimized. Since the\ncluster size k has to be chosen, we iterate over different sizes and choose the cluster size based on the inertia and the\nsilhouette metric [18].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4.2 Forecasting Models",
+      "level": 2,
+      "text": "In our forecasting framework, we go beyond a binary prediction of failure versus non-failure of the grid. Instead, we\nadopt a multi-class approach, forecasting potential failures at three distinct time steps before they occur, namely five,\nthree and one time-steps ahead. This allows for a more granular understanding of the impending failures and provide\ninsights into the decision-making of the models such as the average probability distribution among all classes. We\nemploy the following five prediction models and compare their performance. In particular, we utilize gradient boosting\ntechniques for their strong performance across various prediction tasks and their ability to easily provide insights into\nfeature importance.\nRandom Forest (RF) [13] is an ensemble learning method that constructs simple decision trees during training and\noutputs the majority vote of their predictions for classification tasks. This approach enhances model accuracy\nand robustness by reducing overfitting and improving generalization compared to individual decision trees.\nExtreme Gradient Boosting (XGBoost) [7] uses gradient boosting to iteratively build decision trees, such that each\nnew tree is trained to correct the residual errors of all previous trees. It employs advanced techniques like\nregularization, weighted quantile sketch, and sparsity awareness to improve model accuracy, prevent overfitting,\nand handle large datasets efficiently.\nLightGBM [16] is an ensemble learning method for classification that builds decision trees using a gradient boosting\nframework, optimizing for speed and memory efficiency. Unlike XGBoost, LightGBM uses a histogram-based\nalgorithm and leaf-wise tree growth, which significantly enhances training speed and reduces memory usage,\nespecially for large datasets.\nCategory Embedding Model (CEM) [14] is a basic yet effective feed-forward neural network. Its architecture\nintegrates categorical features through a learnable embedding layer, making it a suitable starting point and\nbaseline for comparison with other models.\nGANDALF [15] stands for Gated Adaptive Network for Deep Automated Learning of Features and optimizes feature\nselection and engineering using Gated Feature Learning Units (GFLU). GFLU leverages a gating mechanism\nto iteratively refine feature representations and filter out noisy data, as well as utilizes stage-specific feature\nmasks, allowing for hierarchical and adaptive feature selection. This results in a robust feature representation,\nwhich is then used by an Feed-forward Neural Network (FNN) to produce final predictions [15].\nFor the hyperparameter tuning of all models, Optuna [2] is employed to facilitate an efficient hyperparameter search.\nWe utilize Tree-structured Parzen Estimator (TPE) [30] as our optimization method, as it maintains two probability\ndistributions: one for good configurations and another for all sampled configurations. By focusing on promising regions\nof the hyperparameter space, TPE directs the search more efficiently than traditional methods like grid or random\nsearch.\n3\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "5 Experimental Setting",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5.1 Agents",
+      "level": 2,
+      "text": "In order to provide a comprehensive analysis of agent failures, it is essential to look at different agents. While there are\nnumerous agents available for consideration, we decided to use the agents of [19] since their data was already available\nto us. The three agents in question are:\nDo-Nothing Agent (DoN othing) The first agent does not interfere with the grid and only provides DoNothing actions.\nThis agent is considered the baseline and we expect a lot more failures from it.\nSenior Agent (Senior95%) This agent is based on the CurriculumAgent [ 20], which selects topology actions on\nindividual substations, when the threshold of ρmax,t >= 0.95 is breached. The agent further includes rule-\nbased components, such as periodic reversion to the starting topology [ 19, 20] and line reconnection. The\nagent is more advanced, but changes the substations quite often in uncertain events.\nTopology Agent (T opoAgent85−95%) The last agent is an extension of the Senior95% and is described in detail in\n[19]. The main difference is that the agent searches for overall suitable Target Topologies (TTs) when the\nρmax,t is in the interval of 0.85 < ρtopo < 0.95. In [19], the T opoAgent85−95% was able to achieve better\nresults, thus we expect differences to the Senior95%.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5.2 General Data Collection",
+      "level": 2,
+      "text": "To ensure a in-depth analysis, it is useful to look at a wide range of different environment scenarios. For this reason, we\nchose the WCCI 2022 L2RPN environment [27], with a total of 1662 chronics. These chronics are created with an\nexpected electricity mix of 2050, i.e. with only 3% fossil fuels remaining in the electricity mix [27], so more variability\nis expected. Given the stochastic components of the environment, we run each chronic a total of 10 times with different\nmaster seeds for each agent.6 Afterwards, the failed chronics were selected.\nCluster Data: For the clustering approach, we want to compare the observation of the failure with the initial situation\nof the environment. Thus, we collected the observation at the start of each chronic obst=0 and one time step before\nfailure obst=n−1. Since each observation has 4295 variables, we aggregate the variables. First, since line capacity ρ\nis an important indicator of grid stability, we collect the maximum and average line capacityρmax and ρmean of the\nobst=n−1. Additionally, we counted the number of disconnected lines #linesdis and the total tsoverf low, representing\nthe cumulative duration during which the linesl ∈ L have been in an overflown state (ρl ≥ 1.0). Second, we account for\nthe number of substation changes #subchanged, by comparing the switched substations to obst=0. Third, it is necessary\nto account for the different power flow changes in the grid. For the load consumption, the generator injections, and both\nsides of the lines (origin and extremity), we record the maximal active load value(loadp\nmax, genp\nmax, lineex,p\nmax, lineor,p\nmax)\nand the average value (loadp\nmean, genp\nmean, lineex,p\nmean, lineor,p\nmean) as a fraction to the first observation obst=0.7 The\nfraction is calculated for the loads, generators, and lines. As an example, we show the calculation for the loadp\nmax and\nloadp\nmean with γ being one load in the set of all loads γ ∈ Γ:\nloadp\nmax = max\nγ∈Γ\n\u0002\nloadp\nγ,t=n−1/loadp\nγ,t=0\n\u0003\n− 1 (1)\nloadp\nmean = 1\n|Γ|\nΓX\nγ=0\n(loadp\nγ,t=n−1/loadp\nγ,t=0) − 1 (2)\nNext to the cluster variables, we also collected the survival times (tsurvived) as well as other descriptive variables for\nour analysis.\nForecasting Data: For the forecast, we distinguish between failure and survival scenarios. For failures, we focus\non observations at time steps t = n − 1, t = n − 3, and t = n − 5, with n being the failed time step. For survived\nobservations, we sample from the chronics observations with a high ρmax,t. However, to avoid overlapping, the\nobst=survived must be at least n − 6 away from the failed time step. To avoid data leakage, we split the chronics\n6To ensure that there was no cherry picking, we chose the ten seeds completely random using np.seed(8888). For each seed, we\nalso calculated the _statistics_l2rpn_dn and _statistics_l2rpn_no_overflow_reco$ separately.\n7We excluded reactive power flow and voltage angle due to high correlation with active power flow or constant values. Elements\nwith a zero in obst=0 were also excluded to avoid mathematical errors. See appendix table 4 for a summary of all variables.\n4\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nbeforehand into train, validation, and test sets, ensuring that no earlier data point from the test or validation set is found\nin the training set. This approach yielded 189 563 observations, with half of those surviving (obst=survived), and the\nremaining half is split evenly among obst=n−1, obst=n−3, and obst=n−5. Subsequently, through the sampling different\nchronics, the data was divided into a training set of size 152 234, a validation set of size 18 881, and a testing set of size\n18 448. Thanks to the courtesy of RTE, the validation environment of the WCCI 2022 challenge was made available to\nus. Consequently, our findings can also be validated on an out-of-distribution (OOD) sample of size 6036.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "5.3 Metrics",
+      "level": 2,
+      "text": "We evaluate the performance of our prediction models using several key metrics. First, we include the Accuracy,\nwhich is the ratio of correctly predicted instances to the total instances. This is the metric on which all models are\ntrained. Further, with the multi-class classification problem, we also include the Balanced Accuracy to address the\nimbalance in the data sets. It is defined as the average of recall obtained for each class. The F1 score, which can be\ninterpreted as a harmonic mean of precision and recall, reaches its best value at 1 and worst score at 0. For our specific\nuse-case, we also want to measure the Binary Accuracy. This metric is defined by the accuracy of the one-vs-all model\nthat categorizes all failures into a single class and survival into another. It effectively assessing the model’s ability to\ndistinguish between survival and failure observations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "6 Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "6.1 Clustering Results",
+      "level": 2,
+      "text": "Cluster Identification: With the aggregated clustering data, we perform PCA and select six principal components,\ndescribing 85% of the variance. Afterwards, we execute the k-means clustering and identify five clusters as the best\ncluster size for our data.8 Subsequently, the clusters are grouped and the statistical components, including the mean,\nmedian, and quantiles of the variables, are analyzed to identify the distinctive characteristics of the clusters. We provide\nin Table 1 the mean values of all cluster variables. The following clusters were identified:\n1. Changed T opology: This cluster has the highest #subchanged among all clusters.\n2. Decreased Load Consumption : In this cluster the distinct characteristic is the lower load consumption of\nloadp\nmean and loadp\nmax.\n3. Disconnected Power Lines: With the highest tsoverf low, #linesdis and ρmax this cluster is directly linked to\nthe overload of the power lines.\n4. Increased Generator Injections: This cluster has by far the highest generator values of genp\nmean and genp\nmax.\n5. Increased Power Flow on Power Lines : As the last cluster we identify the highest power flow in\nlineex,p\nmax, lineor,p\nmax, lineex,p\nmean and lineor,p\nmean as distinct feature.\nInterestingly, we can see in Figure 1 that the clusters Increased Generator Injections and Disconnected Power Lines\nhave distinct observations that can clearly be separated from the other clusters. In contrast, there seems to be multiple\nclusters with an increased #subchanged. With respect to Table 1, several noteworthy observations can be made. First,\nthere appears to be a significant increase in generator output in the fourth cluster, with a factor of up to 125 times\nthe genp\nmean. Given that the relative change to t = 0 in active power is compared, it can be explained that some\ngenerators only produce a minor amount at t = 0 due to the fact that all scenarios start at nighttime. Secondly, it can\nbe observed that the only instance of a decrease in the mean values can be found in the second cluster with loadp\nmean.\nGiven Kirchhoff’s current law, i.e., the aggregated loads always have correspond to the aggregate generation in the\nwhole grid, the lower loadp\nmean can only show localized imbalances in parts of the grid.\nCluster distribution across Agents: Following the general description of the clusters, we are interested in the\ndistribution across the agents, as seen in Table 2. First, we see that Changed Topology and Disconnected Power Lines\nare quite large containing 39% and 30% of the data, while the Increased Generator Injections only has a total of 405\nsamples. With the χ2 independence test ( α = 0 .05), we tested the H0-hypothesis that the clusters and agents are\nindependent from each other. We could clearly reject the hypothesis with a p − value of 0.0, which is a very strong\nindication that there is an association between clusters and agents. Comparing the clusters with the agents, we can\nsee that a large portion of the DoN othingfailures are due to the disconnection of power lines (56%) as well as the\nreduced load consumption (26%). In contrast, the Senior95% and T opoAgent85−95% have most of their failures in the\n8The plot of both inertia and silhouette can be found in the appendix figure 7.\n5\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nTable 1: Mean values of the clustering variables, grouped by one of the five clusters. Based on multiple statistical characteristics,\nwe name the clusters accordingly. We highlight the highest mean value of each variable.\nCluster Changed\nTopology\nDecreased\nLoad\nConsumption\nDisconnected\nPower Lines\nIncreased\nGenerator\nInjections\nIncreased\nPower Flow\non Power Lines\ntsoverf low 5.32 6.89 12.60 10.32 9.96\n#linesdis 0.79 1.58 3.93 1.37 2.12\n#subchanged 5.54 1.71 0.92 2.94 3.57\nρmax 1.03 1.13 1.43 1.25 1.24\nρmean 0.40 0.38 0.36 0.41 0.38\nloadp\nmax 0.33 0.09 0.35 0.34 0.34\nloadp\nmean 0.12 -0.06 0.13 0.14 0.13\ngenp\nmax 4.78 2.69 3.66 614.55 2.31\ngenp\nmean 0.27 0.10 0.08 125.29 -0.07\nlineex,p\nmax 0.51 0.21 0.60 0.58 1.33\nlineex,p\nmean 19.16 12.24 22.07 19.56 106.85\nlineor,p\nmax 0.51 0.20 0.61 0.58 1.33\nlineor,p\nmean 18.96 12.27 22.44 19.10 108.58\nTable 2: Quantity and Frequency of failures in the clusters for the three agents. We denote the number of occurrences per cluster\nand the percentage within brackets. We highlight for each agent the most frequent cluster. Note that the amount of failure data across\nthe agents differs.\nDoN othing Senior 95% T opoAgent85−95% Total\nChanged\nTopology 1573 (10%) 7191 (61%) 6676 (58%) 15440 (39%)\nDecreased Load\nConsumption 4345 (26%) 2239 (19%) 2508 (22%) 9092 (23%)\nDisconnected\nPower Lines 9225 (56%) 1360 (12%) 1424 (12%) 12009 (30%)\nIncreased Generator\nInjections 178 (1%) 121 (1%) 106 (1%) 405(1%)\nIncreased Power\nFlow on Power Lines 1153 (7%) 784 (7%) 752 (7%) 2689 (7%)\nTotal # Obs 16.474 11.695 11.466 39.635\ntopology cluster. Here, the T opoAgent85−95% has with 58% fewer topology failures, compared to the Senior95%’s\n61%. Instead, the T opoAgent85−95% has 3% more load consumption errors than the Senior95%.\nCluster Survival Time: Besides the distribution across the agents, we are also interested in the survival time. In\nFigure 2 we visualize the number of steps until failure with tsurvived and observe a clear difference between clusters.\nThe Increased Generator Injections cluster fails incredibly fast, with a median survival time of only half a day (one day\nequals 288 steps). The median of the Decreased Load Consumption cluster is a little better. As contrast, we see that the\nChanged Topology cluster has the longest survival time with a median value of 496 steps, which might be related to\nthe capabilities of the T opoAgent85−95% and Senior95%. For the two remaining cluster, we have a relatively similar\ndistribution, which is understandable since both focus on line results.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "6.2 Forecasting Results",
+      "level": 2,
+      "text": "Quantitative forecasting results: In Table 3, we present the performance of all evaluated models with regard to the\ndefined metrics of Section 5.3. LightGBM outperformed the other models across all metrics, achieving an accuracy\nof 82% and a high binary accuracy for predicting survival vs. failure of 87%. Interestingly, the performance remains\nconsistent across both test and OOD data, with binary accuracy also holding steady at 87%, indicating no data leakage\nand robust generalization to novel scenarios. In second place, the other gradient boosting approach XGBoost achieved a\nrelatively good performance, however, it was not able to reach that of LightGBM.\nCompared to the gradient boosting approaches, the neural network-based methods CEM and Gated Adaptive Network\nfor Deep Automated Learning of Features (GANDALF) perform very similarly and achieve an accuracy approximately\n6\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nCluster Types Decreased Load Consumption Increased Power Flow on Power Lines\nDisconnected Power Lines Changed Topology Increased Generator Injections\nFigure 1: 3D visualization of the five clusters, where each point represents a failure of the agents. The axis in the plot are the\ngenp\nmean on the y-axis, #linesdis on the x-axis and #subchanged as z-axis. The points are colored according to their respective\nclusters.\n0 288 576 864 1152 1440 1728 2016\n Median survival time : 146.0\n Median survival time : 496.0\n Median survival time : 399.0\n Median survival time : 407.0\n Median survival time : 253.5\nCluster Types Decreased Load Consumption Increased Power Flow on Power Lines Disconnected Power Lines\nChanged Topology Increased Generator Injections\nSurvival Times\nCluster\nFigure 2: Box plot of the survival time tsurvived of each cluster. We further report the median survival time. The ticks on the\nx-axis correspond to a full day, e.g., 288 steps. Note that an agent must survive a total of 2016 time steps to complete the chronics\nsuccessfully.\n3% lower than LightGBM. Interestingly, both achieve a high accuracy for the binary problem of predicting survival vs.\nfailure, outperforming XGBoost. It is also notable that both neural network-based methods achieve overall similar scores\non both the test dataset and the OOD dataset. However, the scores are still lower than those achieved by LightGBM but\ncomparable to XGBoost. Therefore, the GANDALF architecture did not achieve a higher performance than the CEM\nmodel, though it is more complex. In the last place is RF, which performed the worst across all metrics. With regards to\nthe imbalanced nature of the data, it is important to also look at the balanced accuracy and the f1 scores. As expected,\n7\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nTable 3: Forecasting results of the different models on the hold-out test data. The last two columns show the balanced accuracy and\nbinary accuracy results on the OOD test data.\naccuracy balanced\naccuracy f1 micro binary\naccuracy\nOOD balanced\naccuracy\nOOD binary\naccuracy\nRF 0.73 0.62 0.73 0.82 0.61 0.82\nXGBoost 0.80 0.73 0.80 0.83 0.73 0.83\nLightGBM 0.82 0.76 0.82 0.87 0.76 0.87\nCEM 0.79 0.73 0.79 0.84 0.73 0.84\nGANDALF 0.79 0.72 0.79 0.84 0.72 0.83\nwe observe a decrease in balanced accuracy compared to the regular accuracy score. All models except RF exhibit a\ndeviation of approximately 6%.\nQualitative Forecasting result: We take a closer look at the probability distribution of the best-performing model\nLightGBM. Figure 3 shows the averaged probability output of the model against the ground truth of all four classes. As\nwe can see, the model selects the correct classification on average and is especially sure in the cases of survival, i.e.,\nobssurvived with 90%, and imminent failure, i.e., obst=n−1 with 81%. In the case of obst=n−5 we can see uncertainty\nin the model, since the model selects the surviving obst=survived in 38% of the cases. This shows that it is difficult to\ndistinguish obst=n−5 from a surviving observation, as it takes only a sudden change, such as an adversarial attack, to\ndestabilize the grid very quickly. This can be observed for later timesteps as well, although to a lesser degree.\nFeature Importance : As a last result, we examine the feature importance of the LightGBM model. For this we use\nthe gain metric, which represents the improvement in accuracy brought by a feature to the branch. By evaluating the\ngain, we identify which features contribute the most to the model’s predictions, allowing for a better understanding of\nthe underlying patterns and relationships within the data. With respect to the features of the LightGBM, we look at the\ntop 30 features, visualized in Figure 4. We group the features based on their type and distinguish among descriptive,\n0.9\n0.06 0.03 0.01\nSurvival Failure in 5 steps Failure in 3 steps Failure in 1 steps0\n0.25\n0.5\n0.75\n0.38\n0.53\n0.07 0.03\nSurvival Failure in 5 steps Failure in 3 steps Failure in 1 steps0\n0.25\n0.5\n0.75\n0.18 0.08\n0.71",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "0.03 Survival Failure in 5 steps Failure in 3 steps Failure in 1 steps0",
+      "level": 2,
+      "text": "0.25\n0.5\n0.75\n0.1 0.06 0.03",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "0.81 Survival Failure in 5 steps Failure in 3 steps Failure in 1 steps0",
+      "level": 2,
+      "text": "0.25\n0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "0.75 Average Probability Distribution across classes for respective observations",
+      "level": 2,
+      "text": "ProbabilityProbabilityProbabilityProbability\nFigure 3: Average probability distribution of LightGBM for the ground truth ofobst=survived , obst=n−5, obst=n−3 and obst=n−1.\nThe probability output is averaged for all observations. Black lines visualizes the kernel density estimation across the classes.\n8\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\n65.480\n48.16817k\n38.6568k\n33.5323k\n28.99593k\n27.0754k\n23.08786k\n18.58447k\n17.18603k\n16.29763k\n14.70709k\n14.65568k\n13.11327k\n12.10295k\n11.62446k\n10.59985k\n32.49989k\n18.25009k\n14.8425k\n14.11739k\n27.8965k\n25.62892k\n20.33695k\n20.03266k\n19.33699k\n11.60582k\n25.47297k\n23.51555k\n14.31879k\n11.69538k\n0 10k 20k 30k 40k 50k 60k\ntimestep_overﬂow_127\na_or_41\ntimestep_overﬂow_147\nload_v_17\ntimestep_overﬂow_87\ntimestep_overﬂow_146\nminute_of_hour_0\ntime_before_cooldown_line_156\ntimestep_overﬂow_74\ntimestep_overﬂow_14\nhour_of_day_0\ntimestep_overﬂow_139\ntimestep_overﬂow_175\nagent_collected\ntimestep_overﬂow_156\na_ex_91\na_or_138\na_ex_17\ntimestep_overﬂow_20\ntime_before_cooldown_line_146\ngen_p_37\nq_ex_175\ntimestep_overﬂow_155\ntime_next_maintenance_175\ntimestep_overﬂow_17\ncurrent_step_0\ntimestep_overﬂow_12\ntimestep_overﬂow_144\ntimestep_overﬂow_18\ntimestep_overﬂow_91\nFeature Type: TS Overﬂow Feature Descriptive Feature Maintenance Feature Line Feature\nGenerator Feature Cooldown Feature Load Feature\nImportance\nFeature\nFigure 4: Feature importance of the 30 most important features according to the LightGBM model. The color indicates the type of\nvariable.\ngenerator, load, and line features (power flow, cooldown,tsoverf low, maintenance). Beginning with the interpretation\nof these results, we observe that 16 of the most important features are of type tsoverf lowwhich denotes the number of\ntime steps since the power line has ρl ≥ 1.0. This is not surprising, since overloaded lines are a strong indicator for\nan unstable grid. However, we also have three important descriptive features (current_step, minute_of_hour, and\nhour_of_day). These suggest that the likelihood of power grid failures is influenced by temporal features, reflecting\npatterns that may correlate with daily operational cycles or varying demand. Another important descriptive feature is\nthe agent type in 17th place, since there is a clear difference in behavior between the T opoAgent85−95%, Senior95%\nand the DoN othingin terms of survival. It is plausible that some grid states would lead to a failure without remedial\naction, but an agent applying topological fixes could prevent this. Regarding the loads and generators, we can see that\nthe first generator feature appears at position 10, while the first load feature appears only at position 27. This is quite\ninteresting, considering that the decreased load cluster is relatively frequent. It is possible that the grid’s stability is\nmore dependent on the fluctuating nature of largely weather-dependent renewable generators than on loads. Examining\nthe overall picture, it is unsurprising that the feature importance is dominated by line features. Moreover, many features\ncorrespond to the same lines. For instance, three distinct features corresponding to line 175 appear among the top 30\nimportance values alone. To simplify the interpretation of feature importance and to better understand the broader\nimpacts of different types of grid components, we aggregated the feature importance values by averaging the importance\nvalues of related features. The results of the aggregation are visualized in Figure 5, where we display the ten most\nimportant lines, generators and loads of the grid.\nIn the first region (A) we have two loads and a line of high importance. By looking at the failures we could identify\nthe line between substations 21 and 22 as reason, as it is often targeted by the adversarial agent. This attack is a\ncertain failure because the demand of the loads cannot be changed and the only generator that provides electricity is in\nsubstation 18. This causes an overflow in all the lines between substations 18 and 21, leading to a cascading failure in\nless than 3 steps. Thus, by disconnecting the line, the adversarial agent causes a failure, which to our surprise is very\ncommon with 4057 out of 39635 cases.\nRegion (B) highlights the connection between two sub-grids: the line between substations 68 and 76 connects the\nupper right sub-grid to a major substation in the bottom right sub-grid. The most important generator 37 connects to\nsubstation 68 and frequently injects up to 500% of its starting power. Furthermore, substation 76 is connected to the\ncentral substation 79 with two lines, indicating an increased power flow and overall significance of this connection.\nAccordingly, these lines are deemed as very important by the prediction model. Both substations are very important\nsince all power flow to the majority of this sub-grid have to be routed through them, hence they serve as the entry point\nto this part of the grid. Additionally, two other paths (80-67-64 or 80-67-68) from substation 79 to the upper right\nsub-grid have to traverse substation 80, hence the connection between 79 and 80 is also considered very important by\nthe model. Overall, region (B) can be characterized as a high line power flow region, having 3 important generators (37,\n42 and 43) in the vicinity, connecting two sub-grids, and being the only entry point to the bottom right area of the grid.\n9\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\n(A)\n91\n18\n12\n17\n175\n146\n156\n155\n20\n144\n(B)\n(C)\nFigure 5: Top 10 important lines (red), generators (green), and loads (yellow) for failure prediction. The numbers on the marked\nlines correspond to the line ids of Figure 4. Sub-grids are separated with dotted lines. For better clarity, we grayed out the less\nimportant elements of the grid and highlighted 3 significant regions (A,B,C) of important grid features.\nRegion (C) marks a section of the grid where frequent line attacks by the adversarial agent occur. In fact, 10 out of\n23 possible line attacks happen in this sub-grid with 5 line attacks in region (C) alone. Both the lines connecting\nsubstations 58 to 62 and 62 to 63 are part of the attacked lines, leading to a higher load on the other lines connecting the\ngroup of substations (59, 60, 61, 63, 64, 65, 66) in the lower area of this sub-grid. Namely, these are the lines connecting\nsubstation 58 to 59 and 60, respectively, as correctly identified by the importance of the model. Moreover, three out of\nthe ten most important loads are present in this region, connected at substations 50, 52, and 56, respectively. In order to\nsupply these loads, a high load and importance at the lines connecting these loads to bigger substations is to be expected.\nThis is exacerbated by the fact that the lines connecting substation 48 to 50 and substation 48 to 53 can be attacked,\nleaving less possible paths to these loads available.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "7 Discussion",
+      "level": 1,
+      "text": "Looking at the results, we can see that the clustering was quite successful. We were able to identify at least two of the\nfive clusters that are highly correlated with the agents, confirming our expectations. Moreover, both advanced agents\nwere able to significantly reduce the number of failures due to line disconnection. Since the T opoAgent85−95% has\nslightly less errors due to topology changes, we can also confirm [19]. In terms of the remaining clusters, the results are\nnot as clear. For the line and generator clusters, we have very similar cluster sizes across all agents. For the load cluster,\nwe could at least observe a slight reduction for the advanced agents. Overall, the results indicate that there is still a lot\nof optimization potential, requiring additional redispatching optimization. With the feature importance, we were also\nable to detect the design error in region (A) of Fig. 5, showing a possible requirement to incorporate load shedding in\nfuture action spaces of Grid2Op. Agents should focus on preventing the disconnection of this line due to overflows at\nall cost by performing suitable remedial actions in a timely manner. With respect to our predictive models, we were able\nto achieve an accuracy of 82%, showing that model correctly detect possible failures in the gird in most cases. More\nimportantly, the binary accuracy of 87% showed, that we are able to correctly detect whether the agent is struggling in\nthe grid. This makes the real-world applicability more interesting, as we can alert the operator in time, with obst=n−5\ncorresponding to 25min before failure. As future work, improving the performance of the failure prediction could\nbe achieved by utilizing GNNs to capture the inherent graph structure present in the power grid topology. Further, a\ncontinuous analysis should be conducted that includes redispatching components to target the reduced load cluster by\nactively adjusting redispatch and curtailment. Furthermore, it might be interesting to focus on the specific regions of\nthe grid that received high feature importance, as they seem to be responsible for the performance of the agents. This\ncould be achieved by specifically training the DRL agent on these regions, or even a hierarchical approach. Including\ntopological actions that specifically target these regions into the action space might bring a boost in performance as\n10\nFault Detection for agents on power grid topology optimization: A Comprehensive analysis\nwell. Finally, the prediction of failures has a potential in guiding decisions on when a DRL agent should take remedial\nactions based on them, rather than fixed thresholds of maximum line capacity ρmax,t.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "8 Conclusion",
+      "level": 1,
+      "text": "In this paper, we provide a detailed failure analysis on the WCCI L2RPN environment, which has not been done to\nthis extent yet. We examined the failures in the grid of three different agents across ten seeds, resulting in 40k data\npoints. Our analysis is twofold, with a detailed cluster analysis and a prediction of the failures in advance. For the\ncluster analysis, we were able to identify five specific clusters that showed distinct causes for the failures. The failures\nexhibited varying survival times and could be attributed to some extend to specific agents. As a second part, we propose\na multi-class forecasting approach to detect the failures ahead of time. On the data we tested five different model types\nand found the LightGBM to be the most suitable model for the prediction. The feature importance afterwards revealed\ncritical regions of the grid that could be specifically targeted in future work.\nAcknowledgement\nThis work was supported by (i) the research group Reinforcement Learning for Cognitive Energy Systems (RL4CES)\nfounded by the German Federal Ministry of Education and Research (01|S22063B), (ii) Graph Neural Networks for Grid\nControl (GNN4GC) founded by the Federal Ministry for Economic Affairs and Climate Action Germany(03EI6117A)\nand (iii) AI4REALNET founded by the European Union’s Horizon Europe Research and Innovation program under the\nGrant Agreement No 101119527. Views and opinions expressed are however those of the author(s) only and do not\nnecessarily reflect those of the European Union. Neither the European Union nor the granting authority can be held\nresponsible for them.\nCompeting Interest\nThe authors have no competing interests to declare that are relevant to the content of this article.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f2",
+      "caption": "we visualize the number of steps until failure with tsurvived and observe a clear difference between clusters."
+    },
+    {
+      "id": "f1",
+      "caption": "3D visualization of the five clusters, where each point represents a failure of the agents. The axis in the plot are the"
+    },
+    {
+      "id": "f3",
+      "caption": "Average probability distribution of LightGBM for the ground truth ofobst=survived , obst=n−5, obst=n−3 and obst=n−1."
+    },
+    {
+      "id": "f4",
+      "caption": "Feature importance of the 30 most important features according to the LightGBM model. The color indicates the type of"
+    },
+    {
+      "id": "f5",
+      "caption": "Top 10 important lines (red), generators (green), and loads (yellow) for failure prediction. The numbers on the marked"
+    },
+    {
+      "id": "f6",
+      "caption": "Correlation plot of the different cluster variables. The color range depicts the correlation values that go from"
+    },
+    {
+      "id": "f7",
+      "caption": "Inertia and Silhouette plot of different cluster sizes. As one can see, the inertia has a \"elbow\" at a cluster size of five."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Mean values of the clustering variables, grouped by one of the five clusters. Based on multiple statistical characteristics,"
+    },
+    {
+      "id": "t2",
+      "caption": "Quantity and Frequency of failures in the clusters for the three agents. We denote the number of occurrences per cluster"
+    },
+    {
+      "id": "t3",
+      "caption": "Forecasting results of the different models on the hold-out test data. The last two columns show the balanced accuracy and"
+    },
+    {
+      "id": "t4",
+      "caption": "Variables for clustering. Note that tsurvived is not included in the clustering and is just reported to showcase the"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2010",
+      "latex_or_text": "(2010)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

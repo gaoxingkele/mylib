@@ -1,0 +1,711 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__12__the_study_of_an_improved_particle_swarm_optimization_algorithm_applied__a9403b686a.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Background",
+      "level": 2,
+      "text": "As society continues to progress, there is a consistent rise in global energy demands.\nHowever, the extensive use of traditional fossil fuels inevitably triggers global energy\nand environmental crises [1]. In response to these challenges, the widespread application\nof renewable energy has become an effective approach, as it reduces reliance on fossil\nfuels and mitigates the negative impact of energy consumption on the environment. The\nexploration of clean energy has steadily progressed, with the efficient and safe utilization of\nthese resources emerging as a key area of research today. To further utilize these renewable\nenergy sources more efficiently, microgrids, a new type of small-scale power network, have\nbecome a research hotspot. The emergence of microgrids has made the efficient utilization\nof renewable energy possible.\nAs a new type of power operation model that includes distributed renewable energy,\nmicrogrids offer unique advantages. They are flexible and adaptable in power generation\nand can effectively regulate energy exchanges between the microgrid and the main grid [2].\nHowever, microgrids also face notable challenges, particularly the volatility and uncontrol-\nlability of wind and photovoltaic (PV) power generation, which pose significant challenges\nto their use within microgrids. It is essential to thoroughly analyze the output uncertainties\nof wind and solar power and optimize dispatch strategies to enable the complementarity\nElectronics 2024, 13, 4086. https://doi.org/10.3390/electronics13204086 https://www.mdpi.com/journal/electronics\nElectronics 2024, 13, 4086 2 of 21\nof various energy sources [3]. Reference [3] proposes a distributed optimization algorithm\nfor the dynamic economic dispatch problem, aiming to minimize generation costs, and\nanalyzes it within the context of a microgrid model. The model ensures a stable system oper-\nation by controlling constraints such as supply–demand balance and generation equipment\ncapacity. The reference uses the weighted sum method to transform the multi-objective op-\ntimization problem into a single-objective optimization problem and performs an in-depth\nanalysis of the algorithm’s convergence through a convex analysis and the Lyapunov func-\ntion method. Reference [4] proposes a sophisticated model predictive control strategy for\nhybrid energy storage systems. This strategy comprehensively considers the interactions\nbetween the hydrogen energy storage system (hydrogen-ESS), the battery energy storage\nsystem (battery-ESS), and external loads. The strategy optimizes the system from various\naspects, including the economic efficiency and operating costs of the hybrid energy storage\nsystem. By employing a mixed-logic dynamic framework, the system is modeled to switch\noperating modes based on the real-time operational state of the equipment. Additionally,\nthe strategy’s superiority is validated through case simulations. In addition, since diesel\ngenerators emit pollutants during operation, reducing fossil fuel consumption in microgrid\noperations has become a key focus of current research.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Literature Review",
+      "level": 2,
+      "text": "As renewable energy rapidly advances and fossil fuel resources become increasingly\nscarce, optimizing energy supply systems has become a core topic of current research.\nPresently, international scholars mainly focus on two areas in microgrid dispatch research:\nmodel development and algorithm enhancement.\n1. Regarding model development: Early studies primarily focused on the stability and\neconomic efficiency of grid operations. Reference [ 5] explored how to improve the\neconomic efficiency of microgrid operations by leveraging the dispatch characteris-\ntics of microgrids while also maintaining grid stability. Reference [ 6] investigated\nthe coordinated dispatch strategy of large grids and natural gas systems to reduce\noverall operating costs, with the goal of minimizing fuel costs. Reference [7] proposed\nan analysis model for microgrid operations with the dual objectives of maximizing\neconomic benefits and minimizing emissions. Reference [ 8] constructed a model\nfrom the perspective of coordinated operation across multiple microgrid systems,\naiming to minimize economic costs while ensuring system stability. Additionally,\nsince thermal generators are typically present in microgrids, reducing the use of\nfossil fuels and lowering pollutant emissions have become closely related optimiza-\ntion objectives. To address multi-objective optimization dispatch issues, researchers\noften introduce penalty functions to transform multi-objective problems into single-\nobjective ones [9–11].\n2. In terms of algorithm optimization: Research has mainly focused on improving global\nconvergence speed and solution accuracy. Particle Swarm Optimization (PSO) is\nwidely applied to solve power system issues due to its simplicity, easy parameter\ntuning, and robust global search ability. However, PSO has some limitations, such\nas susceptibility to local optima and a relatively slow convergence speed [12–14]. To\naddress these shortcomings, some scholars have proposed new search strategies to\nimprove the algorithm’s global search performance. Additionally, some researchers\nhave combined PSO with other algorithms, as mentioned in references [15–18], which\nhas also contributed to improving the global search capability of traditional PSO\nalgorithms.\nIn summary, there is still considerable room for improvement in both model construc-\ntion and algorithm optimization. This paper considers additional influencing factors in\nthe model construction, aiming to establish a more comprehensive dispatch model. In\nterms of algorithm optimization, an improved SCMPSO algorithm is used for optimization\nand simulation.\nThe key contributions of this paper are as follows:\nElectronics 2024, 13, 4086 3 of 21\n(1) Constructing a dispatch model that includes distributed photovoltaic generation\n(PV), wind turbines (WT), thermal power generators (DG), and energy storage sys-\ntems (ESS);\n(2) Introducing second-order oscillatory particles and improving the iteration formula of\nswarm particles to optimize the traditional PSO algorithm;\n(3) Conducting a comparative analysis of SCMPSO with traditional PSO, Cooperative\nParticle Swarm Optimization(CPSO), and Quantum-behaved Particle Swarm Opti-\nmization (QPSO) to verify the superiority of SCMPSO in optimization performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Microgrid Model Construction",
+      "level": 1,
+      "text": "The microgrid model developed in this paper primarily consists of the following key\ncomponents: a distributed photovoltaic generation system (PV), wind turbines (WT), small\nthermal power generators (DG), and an energy storage system (ESS). Ensuring a stable\nsystem operation, the paper aims to minimize both operating and environmental costs by\nestablishing an objective function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Photovoltaic Model Construction",
+      "level": 2,
+      "text": "The photovoltaic (PV) component achieves energy output through photovoltaic mod-\nules. Based on the principles of photovoltaic power generation, the energy conversion\nefficiency of PV systems is significantly influenced by natural conditions. In addition to\nsolar irradiance, temperature is a key factor affecting PV conversion efficiency. Gener-\nally, the higher the temperature, the lower the conversion efficiency of the photovoltaic\ncells [19]. Therefore, when constructing the PV model, both of these factors must be taken\ninto account.\nThe expression for the PV output power can be represented as:\nPPV = Po × GINC\nGSTC\n(1 + k(Tc − To)) (1)\nIn Equation (1), the meanings of the symbols are as follows:\nPPV: Actual output power of the photovoltaic module;\nPo: Maximum output power under Standard Test Conditions;\nGINC: Actual irradiance (in kW/m2);\nGSTC: Irradiance under reference test conditions, set as 1 kW/m2;\nk: Temperature coefficient of power;\nTc: Actual operating temperature of the photovoltaic cells;\nTo: Set operating temperature, typically 25 ◦C.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Establishment of Wind-Power Model",
+      "level": 2,
+      "text": "A wind turbine’s energy input comes from wind, and the turbine rotor’s rotational\nspeed is governed by the wind speed. The rotor speed is linearly related to the generator\nspeed [20]. The output power of wind generation depends on wind speed and can be\ndescribed as:\nPWT =\n\n\n\n0 0 ≤ V ≤ Vi\nPrated × V−Vi\nVr−Vi\nVi ≤ V ≤ Vr\nPrated Vr ≤ V ≤ Vc\n0 V c ≤ V\n(2)\nThe symbols in Equation (2) are defined as follows:\nPWT: Wind turbine output power as a function of wind speed;\nPrated: Rated output of the wind turbine;\nV: Actual wind speed;\nVi: The minimum wind speed at which the turbine starts generating power;\nElectronics 2024, 13, 4086 4 of 21\nVr: Rated wind speed, which is the wind speed at which the turbine reaches its rated output\npower;\nVc: To ensure equipment safety, the maximum wind speed at which the turbine ceases\npower generation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.3 Establishment of Small Thermal Generator Model",
+      "level": 2,
+      "text": "The output power of a thermal generator is mainly related to energy consumption,\nwith the actual output power fluctuating between 30% of the rated power and the actual\npower [21]. The relationship between fuel consumption and output power of a thermal\ngenerator is expressed as:\nVF(t) =a1 × PDIE(t) +a2 ×\n\u0012 PDIE(t)\nPDG(t)\n\u00132\n(3)\nThe symbols in Equation (3) are defined as follows:\nVF(t): Fuel consumption of the thermal generator at time t, measured in liters (L);\nPDIE(t): Actual output power of the thermal generator at time t, expressed in kilowatts\n(kW);\nPDG(t): Rated output power of the thermal generator at time t, given in kilowatts (kW);\na1 and a2: Coefficients of the fuel consumption curve, expressed in liters per kilowatt-hour\n(L/kWh).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.4 Establishment of Energy Storage Device Model",
+      "level": 2,
+      "text": "The device for energy storage plays a crucial role in ensuring that the microgrid system\noperates smoothly. When the output power of distributed generation exceeds the load\ndemand, the energy storage device can store the excess electricity. Conversely, when the\noutput power of distributed generation is less than the load demand, the energy storage\ndevice can release the previously stored energy. By facilitating this continual cycle of storing\nand releasing energy, the device contributes to the stable functioning of the grid [22]. The\ncharging and discharging processes of the energy storage device can be expressed as:\nSOC.1(t) = (1 − δ)Soc(t − 1) + Pc∆t × ηc/Ec (4)\nSOC.2(t) = (1 − δ)Soc(t − 1) −Pd∆t/(E c×ηd) (5)\nEquation (4) illustrates how the energy storage device charges, while Equation (5)\ndescribes the process of discharging. The symbols used are defined as follows:\nSOC(t): Remaining energy of the storage system at the end of period t;\nSoc(t − 1): Remaining energy of the storage system at the end of period t−1;\nPc(t) and Pd(t): Charging and discharging power of the storage system at period t, mea-\nsured in kilowatts (kW);\nδ: Self-discharge rate of the energy storage device;\nηc and ηd: Charging and discharging efficiency of the storage system, measured as a\npercentage (%);\nEc: Rated capacity of the storage system, measured in kilowatt-hours (kWh).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Scheduling Model",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Objective Function",
+      "level": 2,
+      "text": "In the study of microgrid economics, minimizing operational costs is the primary\neconomic objective. While guaranteeing that the microgrid system operates reliably, the\ndiverse distributed power sources are efficiently scheduled to lower the overall economic\ncosts. The operational costs of these distributed power sources, along with expenses associ-\nElectronics 2024, 13, 4086 5 of 21\nated with environmental management and protection, primarily constitute the economic\ncosts of microgrid functioning. The specific objective function is shown as follows:\nMinCsun = C1 + C2 (6)\nEquation (6) represents the total cost of system operation, which mainly includes\nsystem maintenance costs, fuel costs, depreciation costs, and electricity purchase costs. C2\nrepresents environmental management costs. In a microgrid, both photovoltaic (PV) and\nwind-power generation are clean energy sources and do not produce pollutants. However,\nthermal generators emit pollutants such as CO2, SO2, and NOX during operation.\nThe specific expression for C1 is as follows:\nC1 =\nT\n∑\nt=1\nN\n∑\ni=1\n\u0010\nCom\ni (t) +CDG\ni (t) +CDS\ni +Cgrid\ni (t)\n\u0011\n(7)\nCom\ni (t) =KPV\ni (t) × PPV\ni (t) +KWT\ni (t) × PWT\ni (t) +KDG\ni (t) × PDG\ni (t) +KESS\ni (t) × PESS\ni (t) (8)\nCDG\ni (t) =Cr × PDG\ni (t)/ηDG\ni (9)\nCDS\ni (t) =DSi × P*\ni (t)/\n\u0010\npi,max × a × fi\n\u0011\n(10)\nCgrid\ni (t) =Pci(t) × (t) (11)\nThe symbols used in Equations (7)–(11) are defined as follows:\nCiOM(t): Operating and maintenance cost of each device at time t;\nCiDG(t): Fuel consumption cost of the thermal generator at time t;\nCigrid(t): Interaction cost between the microgrid and the main grid at time t;\nKiPV(t), KiWT(t), KiDG(t), and KiESS(t): Operating and maintenance cost coefficients of the\nphotovoltaic system, wind turbine, thermal generator, and energy storage device at time t,\nrespectively;\nPiPV(t), P iWT(t), P iDG(t), and P iESS(t): Power outputs of the photovoltaic system, wind\nturbine, thermal generator, and energy storage device at time t, respectively;\nCiDG(t): Fuel cost of the thermal generator, where Cr is the fuel price (in CNY/L) and ηiDG\nis the efficiency of the thermal generator;\nCiDS(t): Depreciation cost of each device, where DSi is the annual depreciation cost of unit\ni, and Pi*(t) is the output power of unit i at time t. Pi,max is the maximum output power of\nunit i, a is a constant, and fi is the capacity factor;\nCigrid(t): Interaction cost between the microgrid and the main grid, where P ci(t) is the\namount of electricity purchased from or sold to the main grid at time t, and Cg(t) represents\nthe electricity cost at time t between the main grid and the microgrid.\nThe specific expression for C2 is as follows:\nC2 =\nN\n∑\ni=1\n3\n∑\nj=1\nli,jλjPDIE(t) (12)\nEquation (12) defines EP(t) as the amount of pollutant I i,j emitted by the thermal\ngenerator per unit output, where λj is the cost of managing the corresponding pollutant.\nPDIE(t) is the output power of the thermal generator at time t.\nThe pertinent parameters for each device operating within the microgrid system are\npresented in Table 1.\nElectronics 2024, 13, 4086 6 of 21\nTable 1. Operating parameters of each device.\nCategory PV WT DG ESS\nLifespan (years) 25 20 10 10\nInstallation Cost (RMB/kW) 5000 8000 1500 /\nMaintenance Cost (RMB/kW) 50 150 100 50\nDepreciation Cost (RMB/year) 36,000 225,000 45,000 /\nMaximum Output Power (kW) 10 10 1000 10\nThe pollutant emission parameters from the thermal generator and the main grid\nduring microgrid operation are shown in Table 2.\nTable 2. Pollutant emission parameters.\nPollutant Type Treatment Cost\n(RMB/kg)\nDG Emission Factor\n(g/kWh)\nMain Grid Emission\nFactor (g/kWh)\nCO2 0.2 650 870\nSO2 14.5 0.02 1.8\nNOX 63.5 6.3 1.6",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2 Establishment of Constraint Conditions",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2.1 Power Balance Constraint",
+      "level": 3,
+      "text": "The constraint on power balance necessitates that, at any given time t, the overall\ngeneration power in the system should match the total load power. The corresponding\nequation is presented below:\n∑\nN\ni=1 PPV\ni (t) +PWT\ni (t)+PDG\ni (t) +PESS\ni (t) − Pgrid(t) =Pload(t) (13)\nIn Equation (13), PiPV(t) represents the photovoltaic power at time t; PiWT(t) represents\nthe wind power at time t; PiDG(t) represents the thermal generator power at time t; PiESS(t)\nrepresents the power of the energy storage device at time t; Pgrid(t) represents the interaction\npower between the main grid and the microgrid at time t; and Pload(t) represents the load\npower of the system at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2.2 Microgrid and Main Grid Interaction Power Constraint",
+      "level": 3,
+      "text": "The interaction power between the microgrid and the main grid is limited to a specific\nrange, expressed by the following equation:\nPgrid,min ≤ Pgrid(t) ≤ Pgrid,max (14)\nIn Equation (14), Pgrid,min and Pgrid,max represent the minimum and maximum limits\nof the power interaction between the microgrid and the main grid, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2.3 Distributed Power Output Constraint",
+      "level": 3,
+      "text": "The output of each distributed power source must be within its rated power range.\nThe specific constraints are as follows:\nPPV.min ≤ Ppv(t) ≤ PPV.max (15)\nPWT.min ≤ PWT (t) ≤ PWT.max (16)\nPDG.min ≤ PDG (t) ≤ PDG.max (17)\nSoc.min ≤ Soc(t) ≤ Soc.max (18)\nPc.max (t) =min{Pmax.C , EC[SOCmax − (1 − δ)SOC(t − 1)]/∆tηc} (19)\nPd.max (t) =min{Pmax.D, [(1 − δ)Soc(t − 1) − SOC.min ] (E cηd)/∆t} (20)\nElectronics 2024, 13, 4086 7 of 21\nIn Equations (15) and (16), PPV.min and PPV.max represent the minimum and maximum\noutput power of the photovoltaic system, respectively. PWT.min and PWT.max represent\nthe minimum and maximum output power of the wind-power system, respectively. In\nEquation (17), PDG.min and PDG.max represent the minimum and maximum output power\nof the thermal generator. In Equation (18), Soc.min and Soc.max represent the minimum and\nmaximum capacity of the energy storage device. In Equations (19) and (20), PC.max(t) and\nPC.max(t) represent the maximum charging and discharging power of the energy storage\nsystem at time t, respectively, and Pc.max (t) and Pd.max (t) represent the maximum charging\nand discharging efficiencies of the energy storage system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2.4 Pollutant Emission Constraint",
+      "level": 3,
+      "text": "To limit the pollutant emissions generated by the thermal generator, an upper limit\nmust be set for its emissions. The specific equation is as follows:\nWpg = ∑\n3\nj=1\nZ T\n0\nIi,jPDIG(t)dt ≤ Wpg.max (21)\nIn Equation (21), Wpg represents the amount of pollutant gases emitted by the thermal\ngenerator during operation, Ii,j represents the amount of the j-type pollutant emitted per\nunit output of the thermal generator, and PDIG(t) represents the output power of the thermal\ngenerator at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.2.5 Ramp Rate Constraint",
+      "level": 3,
+      "text": "To guarantee that the generator operates safely and to avoid adverse effects caused\nby rapid changes in output power, a ramp rate constraint must be set. The equation is as\nfollows:\n|PDG (t) − PDG (t − 1)|≤ Pct.max (22)\nIn Equation (22), Pct.max represents the maximum power difference that the generator\ncan tolerate between consecutive time periods.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3 Scheduling Strategy",
+      "level": 2,
+      "text": "The microgrid consists of numerous distributed power sources, some of which gen-\nerate electricity using clean energy. These new types of distributed power sources have\ndifferent characteristics compared to traditional generators in conventional power grids:\n1. PV and WT: PV generation relies on solar energy, while wind-power generation\ndepends on wind energy. Both are clean energy sources. Although they exhibit\nsignificant fluctuations, fully utilizing these resources helps reduce generation costs\nand avoids environmental pollution.\n2. Thermal Power Generation: Currently, thermal power remains an indispensable part\nof China’s power system. Its advantage lies in providing stable electricity that is\ncapable of meeting large load demands. However, the downside of thermal power\ngeneration is the significant consumption of fossil fuels and its associated environ-\nmental pollution.\n3. Energy Storage Devices: Energy storage systems have the advantage of fast response\ntimes. In microgrid systems, they effectively buffer the impact of PV and wind-power\nintegration on the main grid, ensuring stable system operation.\nBased on these characteristics, the following scheduling strategy is proposed: To\nensure stable operation of the microgrid, priority is given to fully utilizing PV and wind-\npower generation. Due to the variability of PV and wind power, energy storage devices are\nused to adjust and buffer the system. On this foundation, thermal generators are employed\nto supplement the power supply as needed, thereby guaranteeing the system’s stable and\ncontinuous operation.\nFigure 1 represents the flowchart of the optimized scheduling process.\nElectronics 2024, 13, 4086 8 of 21\nElectronics 2024, 13, x FOR PEER REVIEW 8 of 21 \n \n \n3. Energy Storage Devices: Energy storage systems have the advantage of fast response \ntimes. In microgrid systems, they eﬀectively buﬀer the impact of PV and wind-power \nintegration on the main grid, ensuring stable system operation. \nBased on these characteristics, the following scheduling strategy is proposed: To en-\nsure stable operation of the microgrid, priority is given to fully utilizing PV and wind-\npower generation. Due to the variability of PV and wind power, energy storage devices \nare used to adjust and buﬀer the system. On this foundation, thermal generators are em-\nployed to supplement the power supply as ne eded, thereby guaranteeing the system’s \nstable and continuous operation. \nFigure 1 represents the ﬂowchart of the optimized scheduling process. \n \nFigure 1. Optimized scheduling ﬂowchart.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4 Improved Second-Order Oscillation Particle Swarm Optimization Algorithm",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4.1 Traditional Particle Swarm Optimization",
+      "level": 2,
+      "text": "The Particle Swarm Optimization (PSO) technique is inspired by the collective move-\nment of birds and operates as a stochastic optimization strategy based on group behavior. \nWithin this framework, each particle represen ts a possible solution [23]. The strength of \nthe PSO lies in its iterative process, where the group continuously compares ﬁtness values \nand adjusts the best positions, eventually leading to both the individual and global opti-\nmal solutions. The velocity and position update formulas for the particles in the PSO are \nas follows: \n𝑉௜\n௞ାଵ =𝑤 𝑉௜\n௞  \n +𝑟ଵ𝑐ଵ(𝑋𝑝𝑏𝑒𝑠𝑡௜\n௞ −𝑥 ௜\n௞)+𝑟 ଶ𝑐ଶ(𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ −𝑥 ௜\n௞) (23)\n𝑋௜\n௞ାଵ =𝑋 ௜\n௞+𝑉௜\n௞ାଵ (24)\nIn these equations, 𝑤 is the inertia weight, representi ng the particle’s search speed; \n𝑐ଵ is the individual learning factor, which controls the particle’s movement toward its best \nposition; 𝑐ଶ is the group learning factor, controlling the movement of all particles toward \nthe global best position; r1 and r2 are random numbers in the range [0, 1]; 𝑉௜\n௞ is the current \nparticle’s velocity, 𝑋𝑝𝑏𝑒𝑠𝑡௜\n௞ is the current individual’s best position, and 𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ is the \nglobal best position in the k-th iteration. \nFigure 1. Optimized scheduling flowchart.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4 Improved Second-Order Oscillation Particle Swarm Optimization Algorithm",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.1 T raditional Particle Swarm Optimization",
+      "level": 2,
+      "text": "The Particle Swarm Optimization (PSO) technique is inspired by the collective move-\nment of birds and operates as a stochastic optimization strategy based on group behavior.\nWithin this framework, each particle represents a possible solution [ 23]. The strength\nof the PSO lies in its iterative process, where the group continuously compares fitness\nvalues and adjusts the best positions, eventually leading to both the individual and global\noptimal solutions. The velocity and position update formulas for the particles in the PSO\nare as follows:\nVk+1\ni = wVk\ni + r1c1\n\u0010",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "pbestk",
+      "level": 1,
+      "text": "i − xk\ni\n\u0011\n+ r2c2\n\u0010\nXgbest k\ni − xk\ni\n\u0011\n(23)\nXk+1\ni = Xk\ni +Vk+1\ni (24)\nIn these equations, w is the inertia weight, representing the particle’s search speed;\nc1 is the individual learning factor, which controls the particle’s movement toward its\nbest position; c2 is the group learning factor, controlling the movement of all particles\ntoward the global best position; r1 and r2 are random numbers in the range [0, 1]; Vk",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "is the",
+      "level": 1,
+      "text": "current particle’s velocity, X pbestk\ni is the current individual’s best position, and Xgbest k\ni is\nthe global best position in the k-th iteration.\nHowever, traditional PSO frequently encounters local optima, suffers from early\nconvergence, and leads to an uneven distribution of particles within the search space\nthroughout the iterative process. To avoid these shortcomings, we propose improvements\nto the PSO algorithm.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.2 Chaotic Mapping Second-Order Oscillation Particle Swarm Optimization",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4.2.1 Chaotic Mapping Population",
+      "level": 3,
+      "text": "In traditional PSO, the randomly generated initial population positions and particle\nvelocities often lead to an uneven spatial distribution of particles in the early stages of\nthe iterative search. This uneven initial distribution significantly affects the global search\ncapability of the algorithm. To prevent the initial particle population from falling into local\nsearch traps, we introduce chaotic mapping during the population initialization phase\nElectronics 2024, 13, 4086 9 of 21\nto initialize the particle positions [ 24,25]. By adopting chaotic mapping to initialize the\nparticle positions, we can expand the global search range and increase the randomness of\nthe particles. In this study, Henon mapping is used to generate random numbers as the\ninitial positions of the population, thereby enhancing particle diversity and significantly\nspeeding up the algorithm’s global convergence, improving its overall performance.\nThe Henon mapping expression for population initialization is as follows:\nXk\ni+1 = F(x, r) = 1 − a × Xk\niˆ 2+ b × Xk\ni (25)\nIn this equation, a and b are control parameters, also known as chaotic mapping\nparameters. The parameter a primarily influences the population’s nonlinearity; higher\nvalues of a increase the chaotic nature of the population. The parameter b controls the\nsystem’s symmetry and coupling strength, affecting the overall trajectory of the population,\nwith smaller values usually used for b. The value range for a is [1, 2], and for b, it is [0, 1].\nThe steps for initializing the population using Henon mapping are as follows:\n1. Define the chaotic Henon mapping function to produce a D-dimensional vector, where\neach value within the vector is confined to the range of rand(0.1).\n2. Map the population positions using the chaotic Henon function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "4.2.2 Adaptive Weight Iteration Improvement",
+      "level": 3,
+      "text": "In PSO, global search mainly occurs in the early stages of the algorithm. When\nthe inertia weight w is large, it may lead to an excessive global search, slowing down\nconvergence and causing oscillations and instability in the population. On the other hand,\nif w is small, it can result in an excessive local search, making the algorithm prone to falling\ninto local optima and failing to maintain population diversity.\nTo balance the global and local searches, we use an adaptive inertia weight iteration\nmethod. As the population iterates, the inertia weight is dynamically adjusted based on\nthe situation [26]. In the early iterations, a greater inertia weight is assigned to improve\nthe ability for global search; subsequently, this weight is systematically decreased in a\nnon-linear fashion to strengthen local search ability. The inertia weight expression is as\nfollows:\nb =\nfiti − fitgbest\nfit0 − fitgbest\n(26)\nw =\n(\nwmax + (wmax − wmin)\n\u0010\n1 − 1\nb\n\u0011\n, b ≥ 1\nwmin + b(wmax − wmin), b < 1\n(27)\nIn Equation (26), fiti represents the fitness of the current particle, fitgbest represents the\nbest fitness in the population, and fit0 represents the critical fitness of the population. In\nEquation (27), wmax is the maximum weight factor, set to 0.9, and wmin is the minimum\nweight factor, set to 0.4.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "4.2.3 Dynamic Learning Factor Improvement",
+      "level": 3,
+      "text": "In the early iterations of the algorithm, emphasis must be placed on global search\nabilities to guarantee diversity within the population. During the middle and advanced\nphases of the algorithmic process, more attention should be given to local search capabilities\nand algorithm convergence. Therefore, the learning factors c1 and c2 in the algorithm need\nto be dynamically adjusted as the iteration progresses. To enhance the reliability of the\nalgorithm, c1 is set as a monotonically decreasing function, while c2 is set as a monotonically\nincreasing function. The specific expressions are as follows:\nc1 = 2 × sin2\n\u0014 π\n2\n\u0012\n1 − t\nTmax\n\u0013\u0015\n(28)\nElectronics 2024, 13, 4086 10 of 21\nc2 = 2 × sin2\n\u0012 πt\n2Tmax\n\u0013\n(29)\nIn Equations (28) and (29), t represents the current iteration number, and Tmax repre-\nsents the maximum number of iterations. By continuously adjusting the learning factors\nduring the iteration process, this approach can accelerate the speed at which the population\nfinds the optimal solution. Figure 2 is a trend graph of the learning factor iteration for 2000.\nElectronics 2024, 13, x FOR PEER REVIEW 10 of 21",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "4.2.3 Dynamic Learning Factor Improvement",
+      "level": 3,
+      "text": "In the early iterations of the algorithm, emphasis m ust be  pl aced  on  glob al  s e arch \nabilities to guarantee diversity within the population. During the middle and advanced \nphases of the algorithmic process, more attention should be given to local search capabil-\nities and algorithm convergence. Therefore, the learning factors 𝑐\nଵ and 𝑐ଶ in the algo-\nrithm need to be dynamically adjusted as th e iteration progresses. To enhance the relia-\nbility of the algorithm, 𝑐ଵ is set as a monotonically decreasing function, while c2 is set as \na monotonically increasing function. The speciﬁc expressions are as follows: \n𝑐ଵ =2×𝑠 𝑖 𝑛ଶ[𝜋\n2 (1 − 𝑡\n𝑇𝑚𝑎𝑥)] (28)\n𝑐ଶ =2×𝑠 𝑖 𝑛ଶ( 𝜋𝑡\n2𝑇𝑚𝑎𝑥) (29)\nIn Equations (28) and (29), 𝑡  represents the current iteration number, and 𝑇𝑚𝑎𝑥 \nrepresents the maximum number of iterations. By continuously adjusting the learning fac-\ntors during the iteration process, this approach can accelerate the speed at which the pop-\nulation ﬁnds the optimal solution. Figure 2 is a trend graph of the learning factor iteration \nfor 2000. \n \nFigure 2. Learning factor iteration graph.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "4.2.4 Improvement in Algorithm Iteration",
+      "level": 3,
+      "text": "In the PSO, the update of a particle’s velocity is mainly in ﬂuenced by its own best-\nknown position and the best position discovered by the entire swarm. However, the rela-\ntive position of a single particle is not fully considered in the PSO. To improve the accu-\nracy of the global search and reduce the convergence time, this paper introduces an oscil-\nlation variable. During the iteration process, perturbations are introduced near the opti-\nmal solution to bolster the diversity among th e population’s solutions, thus minimizing \nthe risk of the algorithm ge tting trapped in local minima. The iteration formula is as fol-\nlows: \n𝑉௜\n௞ାଵ =𝑤 𝑣௜\n௞ +𝑢 ଵ[𝑋𝑝𝑏𝑒𝑠𝑡௜\n௞ −( 1+𝜆ଵ)𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ +𝜆 ଵ𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ିଵ]+𝑢 ଶ[𝑋𝑝𝑏𝑒𝑠𝑡௜\n௞\n−( 1+𝜆ଶ)𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ +𝜆 ଶ𝑋𝑔𝑏𝑒𝑠𝑡௜\n௞ିଵ] (30)\nIn Equation (30), 𝜆ଵ and 𝜆ଶ are the factors for progressive convergence and oscilla-\ntion convergence of the particle swarm.  \n𝑢ଵ =𝑐 ଵ ∗𝑟ଵ,  𝑐ଵ =2∗𝑠 𝑖 𝑛ଶ[\nగ\nଶ (1 −\n௧\n்௠௔௫)]  , 𝑟ଵ =𝑟 𝑎 𝑛 𝑑 𝑜 𝑚 (31)\n𝑢ଶ =𝑐 ଶ ∗𝑟ଶ, 𝑐ଶ =2∗𝑠 𝑖 𝑛ଶ(\nగ௧\nଶ்௠௔௫) , 𝑟ଶ =𝑟 𝑎 𝑛 𝑑 𝑜 𝑚 (32)\nFigure 2. Learning factor iteration graph.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "4.2.4 Improvement in Algorithm Iteration",
+      "level": 3,
+      "text": "In the PSO, the update of a particle’s velocity is mainly influenced by its own best-\nknown position and the best position discovered by the entire swarm. However, the relative\nposition of a single particle is not fully considered in the PSO. To improve the accuracy\nof the global search and reduce the convergence time, this paper introduces an oscillation\nvariable. During the iteration process, perturbations are introduced near the optimal\nsolution to bolster the diversity among the population’s solutions, thus minimizing the risk\nof the algorithm getting trapped in local minima. The iteration formula is as follows:\nVk+1\ni = wvk\ni + u1\nh",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "pbestk",
+      "level": 1,
+      "text": "i − (1 + λ1)Xgbest k\ni + λ1Xgbest k−1\ni\ni\n+ u2\nh",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "pbestk",
+      "level": 1,
+      "text": "i − (1 + λ2)Xgbest k\ni + λ2Xgbest k−1\ni\ni\n(30)\nIn Equation (30), λ1 and λ2 are the factors for progressive convergence and oscillation\nconvergence of the particle swarm.\nu1 = c1 ∗ r1, c1 = 2 ∗ sin2\n\u0014 π\n2\n\u0012\n1 − t\nTmax\n\u0013\u0015\n, r1 = random (31)\nu2 = c2 ∗ r2, c2 = 2 ∗ sin2\n\u0012 πt\n2Tmax\n\u0013\n, r2 = random (32)\nWhen the iteration count t ≤ Tmax /2, the algorithm exhibits oscillation convergence:\nλ1 ≥ 2√c1r1 − 1\nc1r1\nλ2 ≥ 2√c2r2 − 1\nc2r2\n(33)\nWhen the iteration count t > Tmax /2, the algorithm exhibits progressive convergence:\nλ1 ≤ 2√c1r1 − 1\nc1r1\nλ2 ≤ 2√c2r2 − 1\nc2r2\n(34)\nFigure 3 is a trend graph of the oscillation curve. Figure 4 is a trend graph of the\nprogressive curve, with specific trends as follows.\nElectronics 2024, 13, 4086 11 of 21\nElectronics 2024, 13, x FOR PEER REVIEW 11 of 21 \n \n \nWhen the iteration count t ≤ 𝑇𝑚𝑎𝑥/2, the algorithm exhibits oscillation convergence: \n𝜆ଵ ≥ 2√𝑐ଵ𝑟ଵ −1\n𝑐ଵ𝑟ଵ\n                 𝜆ଶ ≥ 2√𝑐ଶ𝑟ଶ −1\n𝑐ଶ𝑟ଶ\n (33)\nWhen the iteration count t > 𝑇𝑚𝑎𝑥 /2, the algorithm exhibits progressive conver-\ngence: \n𝜆ଵ ≤ 2√𝑐ଵ𝑟ଵ −1\n𝑐ଵ𝑟ଵ\n                𝜆ଶ ≤ 2√𝑐ଶ𝑟ଶ −1\n𝑐ଶ𝑟ଶ\n (34)\nFigure 3 is a trend graph of the oscillation  curve. Figure 4 is a trend graph of the \nprogressive curve, with speciﬁc trends as follows. \n \nFigure 3. Oscillation convergence curve. \n \nFigure 4. Progressive convergence curve.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "4.2.5 Testing of the Improved Particle Swarm Algorithm",
+      "level": 3,
+      "text": "To assess the eﬀectiveness of the enhanced PSO algorithm, a selection of benchmark \nfunctions was utilized for testing. These benchmark functions comprise the following ﬁve \nelements: \n1. Sum of Diﬀerent Powers: This function serves as a tool to evaluate the convergence \nrate of the enhanced algorithm; \n2. Schwefel: Used to test the precision of the search conducted by the improved algo-\nrithm; \n3. Rastrigin: Used to test the algorithm’s ability to avoid getting stuck in local minima; \nFigure 3. Oscillation convergence curve.\nElectronics 2024, 13, x FOR PEER REVIEW 11 of 21 \n \n \nWhen the iteration count t ≤ 𝑇𝑚𝑎𝑥/2, the algorithm exhibits oscillation convergence: \n𝜆ଵ ≥ 2√𝑐ଵ𝑟ଵ −1\n𝑐ଵ𝑟ଵ\n                 𝜆ଶ ≥ 2√𝑐ଶ𝑟ଶ −1\n𝑐ଶ𝑟ଶ\n (33)\nWhen the iteration count t > 𝑇𝑚𝑎𝑥 /2, the algorithm exhibits progressive conver-\ngence: \n𝜆ଵ ≤ 2√𝑐ଵ𝑟ଵ −1\n𝑐ଵ𝑟ଵ\n                𝜆ଶ ≤ 2√𝑐ଶ𝑟ଶ −1\n𝑐ଶ𝑟ଶ\n (34)\nFigure 3 is a trend graph of the oscillation  curve. Figure 4 is a trend graph of the \nprogressive curve, with speciﬁc trends as follows. \n \nFigure 3. Oscillation convergence curve. \n \nFigure 4. Progressive convergence curve.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "4.2.5 Testing of the Improved Particle Swarm Algorithm",
+      "level": 3,
+      "text": "To assess the eﬀectiveness of the enhanced PSO algorithm, a selection of benchmark \nfunctions was utilized for testing. These benchmark functions comprise the following ﬁve \nelements: \n1. Sum of Diﬀerent Powers: This function serves as a tool to evaluate the convergence \nrate of the enhanced algorithm; \n2. Schwefel: Used to test the precision of the search conducted by the improved algo-\nrithm; \n3. Rastrigin: Used to test the algorithm’s ability to avoid getting stuck in local minima; \nFigure 4. Progressive convergence curve.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "4.2.5 Testing of the Improved Particle Swarm Algorithm",
+      "level": 3,
+      "text": "To assess the effectiveness of the enhanced PSO algorithm, a selection of benchmark\nfunctions was utilized for testing. These benchmark functions comprise the following five\nelements:\n1. Sum of Different Powers: This function serves as a tool to evaluate the convergence\nrate of the enhanced algorithm;\n2. Schwefel: Used to test the precision of the search conducted by the improved algorithm;\n3. Rastrigin: Used to test the algorithm’s ability to avoid getting stuck in local minima;\n4. Rosenbrock: Used to evaluate the performance of the improved algorithm in a multi-\ndimensional space;\n5. Levy: Used to test the robustness of the algorithm. The relevant parameters for the\nbenchmark functions are shown in Table 3.\nElectronics 2024, 13, 4086 12 of 21\nTable 3. Relevant parameters of benchmark functions.\nFunction Name Dimension Search Domain Acceptance Optimum\nSum of Different\nPowers 50\n[−10,10]D\n[−100,100]n[−100,100]n\n[−100,100]n[−100,100]n\n0.01 0\nSchwefel 50 [ −100,100]D 0.01 0\nRastrigin 50 [ −5,5]D 0.01 0\nRosenbrock 50 [ −50,5]D 0.01 0\nLevy 50 [ −10,10]D 0.01 0\nTo verify the advantages of the SCMPSO algorithm in terms of convergence and\naccuracy compared to the original PSO and other improved algorithms, we conducted\ncomparative experiments under the same parameter settings between the second-order\noscillating PSO and other algorithms. The basic experimental conditions were as follows:\npopulation size of 100, dimension of 50, and 2000 iterations. The test results of the bench-\nmark functions are shown in Figure 5, and the comparison results between the improved\nsecond-order oscillating PSO and other algorithms are shown in Figure 6.\nFigure 5 shows the test results of the SCMPSO algorithm using five benchmark func-\ntions. The results indicate that the SCMPSO algorithm demonstrates certain advantages\nin convergence speed, global search range, search accuracy, and escaping local optima.\nFigure 6 compares the SCMPSO algorithm with several other PSO algorithms. It can be\nseen that when the population iterates to around 500 times, the results of the four PSO\nalgorithms tend to approach 0. To guarantee the reliability of the algorithm, it is crucial\nthat the number of iterations does not fall below 500. To avoid insufficient validation of\nthe algorithm’s effectiveness due to too few iterations, 2000 iterations were chosen as the\nstandard in this paper.\nElectronics 2024, 13, x FOR PEER REVIEW 12 of 21 \n \n \n4. Rosenbrock: Used to evaluate the performance of the improved algorithm in a multi-\ndimensional space; \n5. Levy: Used to test the robustness of the algorithm. The relevant parameters for the \nbenchmark functions are shown in Table 3. \nTable 3. Relevant parameters of benchmark functions. \nFunction Name Dimension Search Domain Acceptance Optimum \nSum of Diﬀerent Powers 50 \n[−10,10]D \n[−100,100]𝑛[−100,100]n \n[−100,100]𝑛[−100,100]n \n0.01 0 \nSchwefel 50 [ −100,100]D 0.01 0 \nRastrigin 50 [ −5,5]D 0.01 0 \nRosenbrock 50 [ −50,5]D 0.01 0 \nLevy 50 [ −10,10]D 0.01 0 \nTo verify the advantages of the SCMPSO algorithm in terms of convergence and ac-\ncuracy compared to the original PSO and other improved algorithms, we conducted com-\nparative experiments under the same parameter settings between the second-order oscil-\nlating PSO and other algorithms. The basic experimental conditions were as follows: pop-\nulation size of 100, dimension of 50, and 2000 iterations. The test results of the benchmark \nfunctions are shown in Figure 5, and the comparison results between the improved sec-\nond-order oscillating PSO and other algorithms are shown in Figure 6. \n \nFigure 5. Test results of each benchmark function. \nFigure 5 shows the test results of the SCMPSO algorithm using ﬁve benchmark func-\ntions. The results indicate that the SCMPSO  algorithm demonstrates certain advantages \nin convergence speed, global search range, search accuracy, and escaping local optima. \nFigure 6 compares the SCMPSO algorithm with  several other PSO algorithms. It can be \nseen that when the population iterates to ar ound 500 times, the results of the four PSO \nalgorithms tend to approach 0. To guarantee th e reliability of the algorithm, it is crucial \nthat the number of iterations does  not fall below 500. To avoid insu ﬃcient validation of \nthe algorithm’s eﬀectiveness due to too few iterations, 2000 iterations were chosen as the \nstandard in this paper. \nFigure 5. Test results of each benchmark function.\nElectronics 2024, 13, 4086 13 of 21\nElectronics 2024, 13, x FOR PEER REVIEW 13 of 21 \n \n \n \nFigure 6. Iteration comparison of diﬀerent Particle Swarm Optimization algorithms.",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "4.3 Model Solution",
+      "level": 2,
+      "text": "The improved SCMPSO algorithm can be applied to solve the optimization problem \npresented in this paper. The detailed steps of the algorithm are shown in Figure 7: \n \nFigure 7. Algorithm Flowchart. \nFigure 6. Iteration comparison of different Particle Swarm Optimization algorithms.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "4.3 Model Solution",
+      "level": 2,
+      "text": "The improved SCMPSO algorithm can be applied to solve the optimization problem\npresented in this paper. The detailed steps of the algorithm are shown in Figure 7:\nElectronics 2024, 13, x FOR PEER REVIEW 13 of 21 \n \n \n \nFigure 6. Iteration comparison of diﬀerent Particle Swarm Optimization algorithms.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "4.3 Model Solution",
+      "level": 2,
+      "text": "The improved SCMPSO algorithm can be applied to solve the optimization problem \npresented in this paper. The detailed steps of the algorithm are shown in Figure 7: \n \nFigure 7. Algorithm Flowchart. \nFigure 7. Algorithm Flowchart.\nElectronics 2024, 13, 4086 14 of 21\nStep 1: Initialize the basic parameters of the SCMPSO algorithm, which include\n100 particles, 50 dimensions per particle, and 2000 iterations. Set the initial iteration to 0\nand define the scheduling period as 24 h.\nStep 2: Input the load data, electricity price data, and parameters for photovoltaic\nsystems, wind generation systems, thermal generators, and energy storage devices.\nStep 3: Initialize the particle population and assign values to the dimensions.\nStep 4: Based on the scheduling strategy and constraints, adjust the operating states of\nthe photovoltaic systems, wind generators, thermal generators, and energy storage units.\nStep 5: Check whether the maximum iteration limit has been reached. If so, output the\ncurrent scheduling strategy, the optimal particle fitness value, and the system’s minimum\noperating cost.\nStep 6: If the iteration limit has not yet been reached, continue by updating the\npositions and velocities of the particles and the global best position of the population. Then,\ncalculate the current individual and global best fitness values.\nStep 7: Revise the scheduling strategy based on the individual and global best positions\nand their corresponding optimal fitness values, and calculate the system’s current minimum\noperating cost.\nStep 8: Check again whether the maximum iteration count has been reached. If\nreached, output the required results; otherwise, repeat Steps 6 and 7.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "5 Case Study",
+      "level": 1,
+      "text": "This study conducts a case analysis based on typical summer environmental data from\na city in Jiangsu Province, China. Using the improved SCMPSO algorithm combined with\na scheduling strategy, interaction parameters between distributed generation, microgrids,\nand the main grid were obtained. In this paper, the improved SCMPSO algorithm is applied\nto case simulations for optimization, and the relevant parameters after optimization are\nprovided.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "5.1 Case Introduction",
+      "level": 2,
+      "text": "The multi-source microgrid system structure used in this study is shown in Figure 8.\nThe microgrid system includes 10 distributed photovoltaic generation units (each with\na rated power of 10 kW), wind-power generation equipment (rated power of 10 kW), a\nthermal generator (rated power of 1000 kW), and 2 energy storage units (each with a\nrated power of 10 kW). In the case analysis, both residential and industrial electricity\nconsumption were considered. The scheduling period is 24 h, with a time interval of 1 h.\nElectronics 2024, 13, x FOR PEER REVIEW 14 of 21 \n \n \nStep 1: Initialize the basic parameters of  the SCMPSO algorithm, which include 100 \nparticles, 50 dimensions per particle, and 2000 iterations. Set the initial iteration to 0 and \ndeﬁne the scheduling period as 24 h. \nStep 2: Input the load data, electricity pr ice data, and parameters for photovoltaic \nsystems, wind generation systems, thermal generators, and energy storage devices. \nStep 3: Initialize the particle population and assign values to the dimensions. \nStep 4: Based on the scheduling strategy an d constraints, adjust the operating states \nof the photovoltaic systems,  wind generators, thermal generators, and energy storage \nunits. \nStep 5: Check whether the maximum iteratio n limit has been reached. If so, output \nthe current scheduling strategy, the optimal particle ﬁtness value, and the system’s mini-\nmum operating cost. \nStep 6: If the iteration limit has not yet been reached, continue by updating the posi-\ntions and velocities of the particles and the global best position of the population. Then, \ncalculate the current individual and global best ﬁtness values. \nStep 7: Revise the scheduling strategy base d on the individual and global best posi-\ntions and their corresponding optimal ﬁtness values, and calculate the system’s current \nminimum operating cost. \nStep 8: Check again whether the maximum iteration count has been reached. If \nreached, output the required results; otherwise, repeat Steps 6 and 7.",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "5 Case Study",
+      "level": 1,
+      "text": "This study conducts a case analysis based on typical summer environmental data \nfrom a city in Jiangsu Province, China. Using the improved SCMPSO algorithm combined \nwith a scheduling strategy, interaction para meters between distributed generation, mi-\ncrogrids, and the main grid were obtained. In this paper, the improved SCMPSO algo-\nrithm is applied to case simulations for optimization, and the relevant parameters after \noptimization are provided.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "5.1 Case Introduction",
+      "level": 2,
+      "text": "The multi-source microgrid system structure used in this study is shown in Figure 8. \nThe microgrid system includes 10 distributed photovoltaic generation units (each with a \nrated power of 10 kW), wind-power generation equipment (rated power of 10 kW), a ther-\nmal generator (rated power of 1000 kW), an d 2 energy storage units (each with a rated \npower of 10 kW). In the case analysis, both residential and industrial electricity consump-\ntion were considered. The scheduling period is 24 h, with a time interval of 1 h. \n \nFigure 8. Multi-source microgrid structure. \nFigure 8. Multi-source microgrid structure.\nThe data pertinent to the case study are shown in Figures 9–11. Figure 9 presents\ntypical daily load data for the summer season. Jiangsu Province, China, has a subtropical",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "represents the flowchart of the optimized scheduling process."
+    },
+    {
+      "id": "f2",
+      "caption": "Learning factor iteration graph."
+    },
+    {
+      "id": "f3",
+      "caption": "is a trend graph of the oscillation curve. Figure 4 is a trend graph of the"
+    },
+    {
+      "id": "f4",
+      "caption": "Progressive convergence curve."
+    },
+    {
+      "id": "f5",
+      "caption": "shows the test results of the SCMPSO algorithm using five benchmark func-"
+    },
+    {
+      "id": "f6",
+      "caption": "compares the SCMPSO algorithm with several other PSO algorithms. It can be"
+    },
+    {
+      "id": "f7",
+      "caption": "Algorithm Flowchart."
+    },
+    {
+      "id": "f8",
+      "caption": "Multi-source microgrid structure."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Operating parameters of each device."
+    },
+    {
+      "id": "t2",
+      "caption": "Pollutant emission parameters."
+    },
+    {
+      "id": "t3",
+      "caption": "Relevant parameters of benchmark functions."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation (4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Equation (5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Equation (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "Equation (21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "Equation (22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "Equation (30)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    },
+    {
+      "id": "e34",
+      "latex_or_text": "(34)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 23
+  }
+}

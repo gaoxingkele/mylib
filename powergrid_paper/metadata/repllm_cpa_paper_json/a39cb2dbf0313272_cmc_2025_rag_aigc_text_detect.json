@@ -1,0 +1,265 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2025_rag_aigc_text_detect.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2.1 DeepLearningDetectionMethods",
+      "level": 2,
+      "text": "Existing deep learning detection methodologies for AI-generated text have evolved through several\ndistinctparadigms,eachwithcharacteristicstrengthsandlimitations.Superviseddetectionmethodsemploy\na spectrum of approaches from basic binary classifiers to sophisticated deep learning architectures [26],\ntraining end-to-end models to capture discriminative patterns for classification. Notable implementations\nincludethemulti-generator,multi-domainframeworkforblack-boxdetectionproposedbyWangetal.[ 13]\nand the joint prompt and evidence inference network for multilingual fact checking developed by Li\net al. [14]. And Abbas et al. [27] explored detecting AI-generated tweets by analyzing author writing style\n4 ComputMaterContin. 2026;87(1):33\nusing graph convolutional networks. To address the need for high-speed scene text detection on resource-\nconstraineddevices,Liuetal.[ 28]introducedYOLOv5ST,alightweightdetectorthatsignificantlyimproves\ninferencespeedwithonlyamarginalaccuracyloss.However,thesesupervisedapproachestypicallyexhibit\nlimited cross-domain adaptability due to inconsistent parameter fitting across diverse sample distributions.\nAdversarial training methodologies address generalization challenges through generator-discriminator\nframeworks [29], where the adversarial dynamics between text generation and origin discrimination drive\nperformance improvements.Tejaetal.[ 30] proposed a framework that quantifies the discrepancy between\noriginalandnormalizedtexttoimproverobustnessagainstsemanticadversarialattacks.TheRADARframe-\nwork by Hu et al. [15] exemplifies this approach through adversarial learning for robust detection. Despite\nenhanced generalization capabilities, these methods remain susceptible to training instability and mode\ncollapse issues. In contrast, unsupervised techniques have gained prominence by enabling direct judgment\nbased on intrinsic sample characteristics without requiring pre-training. These encompass feature-based\nrecognitionanalyzinglexicalandsyntacticpatterns[ 16],watermarkingtechniquesembeddingimperceptible\nmarkers for subsequent verification [17]. This progression from supervised to unsupervised paradigms\nreflectsthefield’songoingpursuitofadaptable,efficien t,andtheoretically-groundeddetectionmechanisms.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.2 StatisticalDerivativeFeatureMethods",
+      "level": 2,
+      "text": "Statistical derivative feature methods represent a significant advancement in unsupervised detection\nby leveraging deeper textual characteristics such as semantic patterns, stylistic features, and perturbation\nresponses for discrimination, as comprehensively surveyed by Crothers et al. [18]a c r o s sv a r i o u st h r e a t\nmodels and detection approaches. Within this domain, substantial progress has been achieved through\nseveral innovative methodologies: Mitrovic et al. [31] pioneered the use of SHAP metrics for short text\nsourcedistinction,revealingmodels’superiorcapabi lityinidentifyingdirectlygeneratedChatGPTresponses\ncomparedtodetectingmachine-modifiedhumantext.Westetal.[ 32]introducedastatisticalnormalization\nmethod based on the Student’s t-distribution to address the heavy-tailed distributions in adversarial texts.\nMitchell et al. [23] introduced DetectGPT utilizing probability curvature from perturbations for source\nidentification, which was subsequently optimized by Bao et al. [33] through FAST-DetectGPT to maintain\ncomparableaccuracywithenhancedefficiency;theresearchdirectionwasfurtherextendedbySuetal.[ 34]\nwith DetectLLM incorporating optimized log rank information, while Zeng et al. [35] proposed DALD, a\nnovelframeworkthatalignsthedistributionofsur rogatemodelswithunknowntargetLLMstoaddressthe\nchallengeofdetectingblack-boxLLM-generatedtextwithoutaccesstomodellogits.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.3 EvasionTechniquesandCountermeasures",
+      "level": 2,
+      "text": "Concurrently,substantialresearcheffortshavebeendirectedtowardevasionmodelalgorithmsdesigned\nto interfere with detection capabilities [36]. These approaches primarily involve text manipulation through\nexternal model rewriting, paraphrasing, or insertion of special characters to create semantically equivalent\nbutformallydistincttextvariants.Somestudieshavealsoexploredpromptoptimizationstrategiestoguide\nLLMsinevadingdetection[ 21].Thishasestablishedamutuallyreinfor cingadversarialrelationshipbetween\ndetectionandevasionmodels:detectionmodelscontinuouslyrefinetheirfeatureminingcapabilities,while\nevasion models develop increasingly sophisticated disruptive elements, driving iterative advancements in\nboth domains [22]. Krishna et al. [37] proposed the DIPPER paraphrase model to evade AI-text detectors\nandacorrespondingretrieval-baseddefensetosecuredetectionagainstsuchattacks.\nTable 1providesasystematiccomparisonofmajortechnicalapproachesforAI-generatedtextdetection,\nencompassing the evolution from traditional supervised learning to recent statistical derivative feature\nmethods,clearlyillustratingthecharacteristicsandlimitationsofeachcategory.\nComputMaterContin. 2026;87(1):33 5\nTable 1:ComparisonofAI-generatedtext detectiontechniques\nTechnique\ncategory Keycharacteristics Limitations Representative\nworks\nSupervised",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "methods",
+      "level": 1,
+      "text": "Requirelabeledtrainingdata;\nEnd-to-endclassification\nPoorcross-domain\nadaptability;Training\ndatadependency\n[13,14]\nAdversarial\ntraining\nGenerator-discriminator\nframework;Enhanced\ngeneralization\nTraininginstability;\nModecollapseissues [15,29]\nUnsupervised\nstatistical\nTraining-freeoperation;Strong\ngeneralization\nFeature engineering\ncomplexity;\nPerformance variability\n[16,18]\nStatistical\nderivativefeatures\nPerturbation-basedanalysis;\nProbabilitycurvaturefeatures;\nLog-rankoptimization\nSinglefeature\ndependency;\nPerformance\ndegradationunder\ncomplexattacks\n[23,34,35]\nOurD3Mmethod\nZero-shotdetection;Proactive\nevasionutilization;Dual-driven\nmetrics;Interpretableresults\nLimitedtotextualdata;\nComputational\noverhead\nThiswork\n3M a i nM e t h o d s\nThe problem of detecting machine-generated text in zero-shot scenarios can be described as follows:\nGivenatextorcandidateparagraphsX,whichisasampletobedetectedfromdatasetsgeneratedbyhumans\norsourcemodels.Next,thetextparagraphsareparaphrasedusingattackstrategiesbyaperturbationmodel\ntogeneratenewtextpassages.Then,anunsupervised-trainedscoringmodelevaluatesandscoresthetextto\nbe detected, acting as the detector for the detection task, based on dual-driven criteria. Finally, the model\nprovides more intuitive explanations to assist in determining the final class label, indicating whether the\ntarget text is machine-generated or human-authored. The framework diagram of the algorithm around the\ndataflowisshowninthe Fig.1.\nFigure 1: Schematic diagram of the D3M (Dual-Driven Defense Mechanism) framework data flow. This figure\n(Continued)\n6 ComputMaterContin. 2026;87(1):33\nFigure 1: (continued) illustrates the complete text processing pipeline from a data flow perspective: raw text input\nfirstundergoesspaceinfiltrationpreprocessingtogenerateperturbedtext;thenpassesthroughanentropy-basedweak\npointidentificationmoduletoscreenkeytextsegments;subsequentlyutilizesamask-fillingmodeltogeneratemultiple\nroundsofperturbationsonselectedsegments;andfinallycomputesperturbationdiscrepanciesthroughthedual-driven\nmetric calculation module for both Information Transmission Quality (ITQ) and Information Transmission Density\n(ITD),whicharefusedtoproducethefinaldetectionscore.Arrowdirectionsindicatethesequentialdataflowbetween\nmodules",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 SpaceInfiltrationText-Attack",
+      "level": 2,
+      "text": "Toevaluatethemodel’srobustnessagainstinterference,weimplementedamulti-roundattackstrategy\nthat involves infiltrating random space characters to disrupt the text. In this approach, multiple space\ncharacters are randomly inserted before commas in selected text paragraphs, creating complex expression\npatterns that can effectively evade detection. The core principle of this strategy is to disrupt the coherence\nof the original text by introducing space characters, which alters the semantic and formatting patterns\nbetween machine-generated and human-authored texts. This modification reduces discrepancies in logical\ncoherence, semantic consistency, and overall confusion entropy. Space Infiltration is applied as a uniform\npre-processingsteptoalltextsbeforedetection.Itsprimarypurposeistoproactivelyintroduceinterference,\nthereby increasing the inter-class confusion between human-written and machine-generated texts in the\ndataset and enabling a more effective evaluation of model robustness under adversarial conditions. By\nleveragingthisobfuscationmechanism,thealteredtextcanoftenevadedetectionbymodelsreliantonbasic\nstatisticalfeaturesandclassifiers.Inaspecificcase,atextparagraphpendingtodetect T= s\n1,s2,..., sn,which\nis composed of multiple sentences. Then, randomly selecting multiple commas within the paragraph, we\naddspacecharactersbeforethesecommastogenerateanewtextparagraph ̃Tinfi =̃s1,̃s2_,...,̃st_,...,̃sn,the\ninfiltrationstrategyisasin Eq.(1),\ñTinfi = Space infi (T,h),( 1 )\nwhereanewsentenceunit ̃st containsh spacecharacters,and_representsthespacecharacter.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 ProblemIdentification",
+      "level": 2,
+      "text": "Intuition suggests that identifying weak points or sentences in a paragraph is vital for evaluating the\nqualityoftextualparagraphs.Weakpointsfrequentlyexposethecoherence,logicalconsistency,andinforma-\ntionloadbalanceofatextualparagraph,allofwhichserveasindicatorsofitsquality.Therefore,whenfaced\nwith text paragraphs that pose challenges in confusion detection, and with the aim of efficiently and accu-\nratelydistinguishingbetweenhuman-authoredandmachine-generateddocuments,thisapproachproposes\na strategy for identifying weak sentences in text paragraphs based on the aforementioned human cognitive\nthinking.Subsequently,itanalyzesthefeaturesofweaksentencestoachievetexttypediscrimination.\nFrom the perspective of information theory, the entropy value of a sentence represents its information\ncontent, uncertainty, and predictability. It serves as an important metric for assessing sentence complexity\nand comprehension difficulty. Specifically, a lower entropy value indicates that the sentence maybe overly\nsimple,repetitive,orlackingindiversity.Additionally,theentropyvaluesofsentencesinatextparagraphcan\nbe efficiently calculated using pre-trained language models (PTLMs). Thus, we choose to employ sentence\nentropyasametricforidentifyingweakpointsintextparagraphs.\nThe strategy for identifying weak points involves utilizing a PTLM to calculate the entropy values of\nindividual sentences in the text paragraph T. Next, the sentences are sorted in ascending order based on\ntheir entropy values. If the number of sentences is greater than three, the three sentences with the lowest\nComputMaterContin. 2026;87(1):33 7\nentropyvaluesareselectedascandidateweaksentences.Otherwise,allthesentencesarechosenascandidate\nsentences.Theresultsofindentifyingweakpointsisshownasin Eq.(2),\n{̃Tweak\n1 ,̃Tweak\n2 ,..., ̃Tweak\nk }= ArgTop\nN\n∑\ni=1\nHentroy (̃Ti\ninfi ),( 2 )\nwherẽTweak representstheparagraphcomposedofthelatestfilteredweaksentences xj,and̃Tweak",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "1 represents",
+      "level": 1,
+      "text": "theelementwiththelargestentropyvalueinthesequence {̃s1,̃s2_,...,̃st_,...,̃sn}.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Dual-DrivenDefenseMechanism",
+      "level": 2,
+      "text": "Assuming that the weak point samplex∼gθ originates from a generative modelMG, we utilize a\nperturbationmodel MP tointroduceperturbationsintoweakpointssample x,producing ˜x.Theperturbation\nfunction, denoted asq(⋅∣ x), provides a distribution over˜x, which represents slightly modified versions of\nthe original text while preserving its semantic similarity. The evaluation of the sample can be analyzed with\na scoring modelMS, which is not same with the generative modelMG. Next, we provide a mathematical\ndescription of ITQ and ITD. Specifically ITQ is determined by the function calculated asQθ(x),w h i c h\nprimarilyevaluatetheperplexityofagiventextsequence.ITDisobtainedthroughthefunction Dc(x),which\nprimarilycalculatethefrequencyofoccurrenceofkeywordsandmeaningfulentitiesacrosstheentiretokens.\nWhen the perturbations are produced, the perturbation discrepancy scores betweenx and ˜x is generated,\ndenotedas ditq asin Eq.(3),anddenotedas ditd asin Eq.(4),r espectively .\nditq (x,Qθ,q)≜ Qθ(x)− E˜x∼q(⋅∣x)Qθ(˜x).( 3 )\nditd (x,Dc,q)≜ Dc(x)− E˜x∼q(⋅∣x)Dc(˜x).( 4 )\nwher e,themeanval ue˜μitq (˜x), ˜μitd (˜x)iscomputedasin Eq.(5),\nE˜x∼q(⋅∣x)Qθ(˜x)= 1\nk∑\ni\nQθ(˜xi)\nE˜x∼q(⋅∣x)Dc(˜x)= 1\nk∑\ni\nDc(˜xi)\n(5)\nFor the above given samplex={ token1,token2,⋅⋅⋅ ,token n},t h ef u n c t i o nQθ(x) is calculated by\ndirectly invoking the API or library provided by the perplexity of the original text, as specified inEq.(6),\nwhich computes the perplexity of the text based on the conditional token probabilities from the model that\ngenerated the candidate text. This formulation captures the intrinsic characteristics of the text’s generation\nmechanism. And the resulting perplexity value reflects the alignment between the text and its presumed\ngenerative model’s probability distribution, thereby providing a computable basis for subsequent ITQ\nanalysisandsourcediscrimination.\nThe functionD\nc employs the Spacy library to count the number of keywords, entities and stop words,\nsubsequently computes the entity density as a ratio, as illustrated inEq.(7). The keyword counting process\nemploys a comprehensive set of linguistic elements processed through SpaCy (v3.6.1). Specifically, our\nimplementationutilizesthestandardEnglishstopwordlist,allnamedentitiesrecognizedbySpaCy’snamed\nentity recognition module (including persons, organizations, locations, and other standard categories),\nand domain-specific high-frequency terms extracted from each dataset’s training corpus. For each dataset\n(XSum,SQuAD,WritingPrompts),wederivedthetop100mostfrequentnounsandverbsfromtherespective\ntraining corpus, excluding stop words and named entities. This multi-faceted approach ensures that ITD\n8 ComputMaterContin. 2026;87(1):33\ncaptures both general linguistic characteristics anddomain-specific lexical patterns, providing a robust\nmeasureofinformationconcentration.\nQθ(x)= exp(− 1\nN\nN\n∑\ni=0\nlogPθ(token i∣token<i)).( 6 )\nDc(x)=\nN\n∑\ni=0\nIkeyword (token i)+ Ientity (token i)\nL(x) .( 7 )\nwhere, the Ikeyword and Ientity is the indicator function that takes the value 1 if the variablex meets the\nrequirementsand0otherwise. Listhecountingfunction,whichcountsthelengthvalueofthevariable.\nDue to the disparity in the scale and range betweenditq and ditd , we propose normalizing the\nperturbation discrepancy using the standard deviation, as inEqs.(8) and (9) correspondingly, which\nprovidesamarginallybetterfeaturesignalforsubsequentdetection.\n˜σ2\nitq ≜ 1\nk−1∑\ni\n(Qθ(˜xi)− ˜μitq)\n2\n.( 8 )\n˜σ2\nitd ≜ 1\nk−1∑\ni\n(Dc(˜xi)− ˜μitd)2 .( 9 )\nwhere,kdenotesthenumberofperturbations,while ˜μitq and ˜μitd correspondtothemeansofperturbation\ndiscrepancy, respectively.\nSubsequently,thenormalizedresultsaregeneratedasin Eq.(10),\nτitq ,τitd = ditq\n√\n˜σ2\nitq\n, ditd√\n˜σ2\nitd\n.( 1 0 )\nUltimately, the two metrics are combined through weighted summation to derive the final measure-\nment,asin Eq.(11),\nφ= α×τitq +(1−α)× τitd , (11)\nwhereα∈(0,1)istheweighparameter,whichdeterminestheratiooftwomeasurementscores.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.4 Algorithm",
+      "level": 2,
+      "text": "In this section, we present the proposed algorithm in detail, which is designed to address the specific\nchallengesoutlined intheproblem formulation.Thealgorithm isstructured intofourkey phases:(1)Space\nInfiltration, applied uniformly as a pre-processing step to all input texts to increase dataset complexity\nand evaluate robustness; (2) Weak Points Identification, which retrieves vulnerable sentences based on\nentropyranking;(3)PerturbationGeneration,whereselectedweakpointsareperturbedusingamask-filling\nmodel; and (4) Dual-Driven Metric Calculation, where detection scores are derived from discrepancies\nin Information Transmission Quality (ITQ) and Information Transmission Density (ITD). Algorithm 1\nprovidesastructuredoverviewoftheend-to-endworkflow,includingaconcreteexamplethattracesashort\ntextsnippetthrougheachprocessingstage—fromspaceinsertionandweakpointselectiontoperturbation\nand final metric computation. Algorithm 1 serves as a visual guide, allowing readers to quickly grasp the\nsequenceofactionsandthelogicbehindeachdecisionpoint.\nComputMaterContin. 2026;87(1):33 9\nAlgorithm1: Dual-drivendetection\n1:Input:passagetext T= s1,s2,..., sn,numberofspacecharacters h,numberofweakpoints j,generative\nmodelMG,perturbationmodel MP,scoremodel MS,perturbationfunction q,andnumberofperturbations\nk;\n2:TextAttack: ̃Tinfi ← SpaceInfiltration (T,h)Infiltratehspacesinto T\n3:WeakPointIdentification:{̃Tweak\n1 ,̃Tweak\n2 ,..., ̃Tweak\nj }Identificatejweak pointsfrom̃Tinfi .\n4:Dual-drivenmechanism:\n5: ˜xi∼ q(⋅∣ x),i∈[1..k],xi∈̃Tweak\n6: Derive ˜μitq and ˜μitd basedon Eq.(5)\n7: Derive ditq andditd basedon Eqs.(3) and(4)\n8: Derive ˜σ2\nitq and ˜σ2\nitd basedon Eqs.(8) and(9)\n9: Compute τitq andτitd basedon Eq.(10)\n10:Combinemetrics:\n11: φ= α×τitq +(1−α)× τitd Distinguishthetext T Label(human-authoredormachine-generated)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 DatasetsandExperiments",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.1 ExperimentalDataPreparation",
+      "level": 2,
+      "text": "Our research encompasses three datasets: XSum, SQuAD, and Reddit WritingPrompts, which cover\ndiverse everyday domains and provide invaluable insights into the applications of language modeling. The\nXSumdatasetisessentialfordetectingfabricatednewsthroughnewsarticles,theSQuADdatasetrepresents\nmachine-generated academic essays with Wikipedia paragraphs, and the Reddit WritingPrompts dataset\noffersacollectionofpromptedstories,facilitatingexplorationofthedetectionofmachine-generatedcreative\nwritingsubmissions.Toensurethereliabilityofourfindings,wemeticulouslyconducteachexperimentusing\ncarefully selected samples ranging from 150 to 500 examples, as specified in the text. In each experiment,\nw eu s et h efi r s t3 0t o k e n so ft h er e a lt e x t( o ro n l yt h eq u e s t i o nt o k e n sf o rt h eP u b M e d Q Ae x p e r i m e n t s )a s\nprompts to generate the machine-generated text. Performance assessment is based on the area under the\nreceiver operating characteristic curve (AUROC), a metric that indicates the probability of the classifier\ncorrectly ranking a randomly-selected positive (machine-generated) example higher than a randomly-\nselected negative (human-written) example. It is important to note that all experiments include an equal\nnumber of positive and negative examples, ensuring a balanced evaluation framework. By adopting this\ncomprehensive methodology and employing these sophisticated datasets, our research aims to advance the\nfrontiersofknowledgeinthefieldofnaturallanguageprocessing.\nEach experiment evaluates a varying number of examples, ranging from 150 to 500. The machine-\ngenerated content in these experiments is produced using the GPT-2 model without fine-tuning, with\nprompts derived from the first 30 tokens of the real text. The text attack chain is defined by two key\nparameters: the space infiltration number, which is set to 10, and the weak points number, which is set to\n3. The core hyperparameters of the perturbation chain include the mask-filling model, the length of the\nmaskedspans,andtheperturbationrateforthemask-fillingmodel.Formostexperiments,theT5-3Bmodel\nisused,exceptforlarger-scaleGPT-NeoXexperiments,wheretheT5-11Bmodelisemployed.Themaskrate\nis fixed at 15%, and a limited sweep over masked span lengths, particularly 2 tokens, is conducted for the\nperturbationchain.\n10 ComputMaterContin. 2026;87(1):33",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 ComparisonsandBaselines",
+      "level": 2,
+      "text": "Wecompareourmethodwithvariousexistingzero-shotmethodsfordetectingmachine-generatedtext\nthatalsoleveragethepredictedtoken-wiseconditionaldistributionsofthesourcemodelfordetection.These\nmethods correspond to statistical tests based on tokenlog probabilities, token ranks, predictive entropy, or\nprobabilitycurvature.\nThe Log methodutilizes the average token-wise log probability of the source model to determine\nif a candidate passage is machine-generated. Passages with a high average log probability are likely to be\ngeneratedbythemodel[ 22].\nThe Rank and Log-Rank methoduses the average observed rank or log-rank of the tokens in the\ncandidate passage according to the model’s conditional distributions. Passages with a smaller average\n(log-)rankarelikelymachine-generated[ 38].\nTheEntropy-basedmethod isinspiredbythehypothesisthatmodel-generatedtextswillbemore’in-\ndistribution’forthemodel,leadingtomoreover-confident(thuslowerentropy)predictivedistributions.We\nfindempiricallythatpredictiveentropyisoftenp ositively correlated with passage fake-ness [39].\nDetectGPT utilizes the observation that ChatGPT texts tend to lie in areas where the log probability\nfunctionhasnegativecurvaturetoconductzero-shotdetection[ 23].\nAlthoughourmainfocusisonzero-shotdetectors,whichdonotrequireretrainingfornewdomainsor\nsourcemodels.Asaresult,wecarriedouttwosetsofexperimentstoevaluatethezero-shotandsupervised\ndetection performance of DetectGPT on models with different parameters, and compared them with\nexistingmethods.\nConsidering the inherent differences in the internal logic and external characteristics of samples gen-\nerated by different models, the machine-generated samples originate from models with varying parameter\nsizes,rangingfrom1.5Bto20B.ThesemodelsincludeGPT-2,OPT-2.7,Neo-2.7,GPT-J,andNeoX.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.3 ExperimentalInfrastructure",
+      "level": 2,
+      "text": "The algorithm was conducted using NVIDIA GeForce RTX 3090 GPUs (24 GB memory) with CUDA\n11.4, Intel Core i9-11900K processors, and 64 GB system memory. All experiments were implemented in\nPython 3.8.10 using PyTorch 2.0.1 and Transformers 4.30.2. The average runtime per complete experiment\nwasapproximately2.5h.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5 ResultsandDiscussion",
+      "level": 1,
+      "text": "From a statistical perspective, it is essential to first investigate the characteristics of the data samples.\nTo this end, we conduct a statistical analysis of the three-dimensional feature space (including Information\nTransmission Density, information transmission quality, and information likelihood estimation) for the\nsamples before and after perturbation across three distinct datasets. The experiment involves randomly\nselecting three sets of sample features from 200 perturbation instances, and the results are presented\nin Fig.2. Empirical analysis of the statistical results reveals that the distribution of sample feature values\nbefore and after perturbation exhibits significant differences, particularly in the WritingPrompts dataset.\nHowever, empirical statistics indicate that a majority of the samples still exhibit overlapping regions in\nfeature values, meaning that the feature values of machine-generated samples post-perturbation are nearly\nidenticaltothoseofhuman-generatedsamples.Thefeaturedistributionsin Fig.2 revealasubstantialoverlap\nin individualfeature values between human and machine-generated samples. This makes direct distinction\nbasedonanysinglemetricchallenging;however,ourdual-drivenmechanismsuccessfullyovercomesthisby\ndisentanglingthedistributionsthroughacombination ofnormalizedmetrics.Thissynergisticcombination\nComputMaterContin. 2026;87(1):33 11\nof Information Transmission Quality and Information Transmission Density, after proper normalization\nandweighting,effectivelyseparatesthetwoclasses,asconclusivelydemonstratedbythestrongperformance\nresults inTable 2.\nFigure2: Thestatisticaldistributionresultsoftherandomizeddataarepresented,wherethehorizontalaxiscomprises\nthree-dimensional feature metrics (Information Transmission Density, Information Transmission Quality, and infor-\nmation likelihood estimation), and the vertical axis consists of three datasets (SQuad, WritingPrompts, XSum). Each\nlegendwithinthefigureillustratesthedistributionoffeaturevaluesformachine-generatedsamples(sampleddata)and\nhuman-authored samples (original data) following perturbation\nTable 2:AUROC performance comparison under different strategies (Mean± 95% Confidence Interval). The exper-\niment evaluates the performance of six types of algorithms across three datasets, with the evaluation model for each\nalgorithmsequentiallyswitchingtofiveGPTmodelsofvaryingparameterscales\nLLMsmethod gpt-neo(1.3B) gpt2(1.5B) gpt2-xl(1.5B) gpt-opt(2.7B) gpt-j(6B)\nXSum\nEntropy_\nthreshold 0.5893 ±0.012 0.591 ±0.011 0.601 ±0.010 0.534 ±0.015 0.635 ±0.009\nLikelihood_\nthreshold 0.7892 ±0.008 0.855 ±0.006 0.795 ±0.007 0.764 ±0.009 0.688 ±0.010\n(Continued)\n12 ComputMaterContin. 2026;87(1):33\nTable 2 (continued)\nLLMsmethod gpt-neo(1.3B) gpt2(1.5B) gpt2-xl(1.5B) gpt-opt(2.7B) gpt-j(6B)\nRank_\nthreshold 0.7869 ±0.007 0.823 ±0.006 0.767 ±0.008 0.814 ±0.007 0.750 ±0.009\nLog_rank_\nthreshold 0.8515 ±0.006 0.916 ±0.004 0.844 ±0.006 0.807 ±0.008 0.755 ±0.008\nDetectGPT 0.9553 ±0.004 0.9684 ±0.003 0.9546 ±0.004 0.8964 ±0.007 0.926 ±0.005\nD3M(ours) 0.9792 ±0.002 0.9907 ±0.001 0.9835 ±0.002 0.9366 ±0.005 0.9456 ±0.004\nWritingPrompts\nEntropy_\nthreshold 0.413 ±0.016 0.339 ±0.018 0.4129 ±0.015 0.414 ±0.016 0.469 ±0.014\nLikelihood_\nthreshold 0.872 ±0.005 0.892 ±0.004 0.8771 ±0.005 0.859 ±0.006 0.690 ±0.010\nRank_\nthreshold 0.873 ±0.005 0.867 ±0.005 0.8895 ±0.004 0.859 ±0.006 0.824 ±0.007\nLog_rank_\nthreshold 0.820 ±0.006 0.841 ±0.005 0.8281 ±0.006 0.817 ±0.006 0.863 ±0.005\nDetectGPT 0.8989 ±0.004 0.8798 ±0.005 0.8081 ±0.007 0.814 ±0.007 0.869 ±0.005\nD3M(ours) 0.9309 ±0.003 0.8891 ±0.005 0.8362 ±0.006 0.8726 ±0.005 0.8929 ±0.004\nSQuAD\nEntropy_\nthreshold 0.5878 ±0.012 0.536 ±0.014 0.593 ±0.012 0.562 ±0.013 0.704 ±0.010\nLikelihood_\nthreshold 0.8009 ±0.007 0.909 ±0.004 0.841 ±0.006 0.850 ±0.006 0.707 ±0.009\nRank_\nthreshold 0.8456 ±0.006 0.901 ±0.004 0.833 ±0.006 0.843 ±0.006 0.808 ±0.007\nLog_rank_\nthreshold 0.8918 ±0.005 0.960 ±0.003 0.897 ±0.004 0.883 ±0.005 0.810 ±0.007\nDetectGPT 0.9346 ±0.004 0.9703 ±0.002 0.9169 ±0.004 0.9802 ±0.002 0.848 ±0.006\nD3M(ours) 0.9696 ±0.002 0.9916 ±0.001 0.9427 ±0.004 0.9934 ±0.001 0.9277 ±0.004\nWe emphatically compare the performance of typical large language models under different strategies\nonvariousdatasetsunderthesameexperimentalconditions.Theoverallexperimentalresultsarepresented\nin Table 2. The performance of our proposed D3M model slightly surpasses that of the detectGPT model\nand significantly outperforms other benchmark models, highlighting the value of the dual-drive strategy\ndesignedwithintheD3Mmodel.Furthermore,ahorizontalcomparativeanalysisoftheD3Mmodel’sability\nto identify large models with varying parameter scales reveals that the model exhibits higher recognition\naccuracyforlargemodelswithsmallerparameterscales.Thisexperimentaloutcomealignswithfoundational\ntheoretical expectations, which posit that the larger the parameter scale of a model, the more closely its\ngenerated content resembles human-authored text in style. A vertical comparison of the D3M model’s\nperformanceacrossdifferentdatasetsshowsthatitperformsbestontheXSumdataset,followedbytheSQuad\ndataset,withtheWritingPromptsdatasetyieldingtheleastfavorableresults.Byexaminingthecharacteristics\nof the different datasets, it is evident that the XSum dataset features the longest average paragraph length\namongitssampletexts,whiletheWritingPromptsdatasethastheshortest.Thisresultisconsistentwiththe\nphenomenonthatvariationsinITDandITQaremorereadilycapturedinlongertexts,furtherunderscoring\nthevalueofthedual-driveinformationtransmissionstrategyproposedbythemodel.\nComputMaterContin. 2026;87(1):33 13\nTo evaluate the statistical significance of the performance improvements, we conducted paired t-tests.\nTheresultsdemonstratethatourproposedD3Mmethodachievesstatisticallysignificantimprovements( p<\n0.01)overallbaselinemethodsacrossalllargelanguagemodels(LLMs)ontheXSumandSQuADdatasets.\nOn the WritingPrompts dataset, D3M also yielded statistically significant improvements (p< 0.01) in all\ncasesexceptforthegpt2model,wheretheimprovementwasstillsignificantatthe p<0.05level.Themean\nvalues and 95% confidence intervals reported inTable 2, calculated from 30 independent runs, along with\ntheirnarrowranges,furthersubstantiatetherobustnessofourmethod’sperformance.\nTherobustnessofanalgorithmagainstinterferenceisofsignificantimportancetoitsstability.Generally,\nintroducing noise (such as spaces, line breaks, or punctuation) into both machine-generated and human-\ngenerated text content can lead to model misjudgments, where human-authored content is mistakenly\nidentified as machine-generated.Therefore, we also designed anevaluationexperiment for the interference\nstrategy Space_infi, which involves increasing the intensity of interference by adding spaces within text\nsentences. We discretely set four levels of interference intensity (ranging from 5 to 20 spaces) to test\nthe performance variations of different algorithmic models. The experimental results, as shown inFig.3,\nindicate that both our proposed D3M algorithm and the detectGPT algorithm exhibit strong resistance to\ninterference.Theirperformancedoesnotexperienceasharpdeclineastheintensityofinterferenceincreases.\nIncontrast,theperformanceofthelikelihoodandentropyalgorithmsdeclinessignificantly.Additionally,it\nisobservedthatthequalityofthedatasethasaconsiderableimpactonthetestresults.Theperformanceofall\nalgorithmsontheXSumdatasetissuperiortothatontheWritingPromptsandSQuaddatasets,whichaligns\nwith intuitive expectations. However, the D3M model maintains stable identification performance even on\ndatasetsoflowerquality.\nFigure 3:Performance results of models under different interference strategy intensities. The performance results are\ndisplayed using stacked bar charts, which include three groups of bars representing the performance of six types of\nalgorithmsacrossthreedatasets.EachalgorithmisevaluatedusingtheGPT-2modelasthegenerativeevaluationmodel\n14 ComputMaterContin. 2026;87(1):33\nTo ",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Schematic diagram of the D3M (Dual-Driven Defense Mechanism) framework data flow. This figure"
+    },
+    {
+      "id": "f3",
+      "caption": "Performance results of models under different interference strategy intensities. The performance results are"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1p",
+      "caption": "rovidesasystematiccomparisonofmajortechnicalapproachesforAI-generatedtextdetection,"
+    },
+    {
+      "id": "t1",
+      "caption": "ComparisonofAI-generatedtext detectiontechniques"
+    },
+    {
+      "id": "t2",
+      "caption": "AUROC performance comparison under different strategies (Mean± 95% Confidence Interval). The exper-"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq.(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq.(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Eq.(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Eq.(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Eq.(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Eq.(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Eq.(7)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Eq.(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Eq.(11)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

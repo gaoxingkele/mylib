@@ -1,0 +1,167 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2018__learning_heterogeneous_knowledge_base_embeddings_for_explain__6de7e191bf.pdf",
+  "n_pages": 4,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "Most of the existing Collaborative /f_iltering (CF)-based recommenda-\ntion systems work with various unstructured data such as ratings,\nreviews, or images to pro/f_ile the users for personalized recommen-\ndation. /T_hough eﬀective, it is diﬃcult for existing approaches to\nmodel the explicit relationship between diﬀerent information that\nwe know about users and items. In this paper, we would like to ask\na key question, i.e., “can we extend the power of collaborative /f_iltering\nupon large-scale structured user behavior data?”. /T_he main challenge\nPermission to make digital or hard copies of all or part of this work for personal or\nclassroom use is granted without fee provided that copies are not made or distributed\nfor pro/f_it or commercial advantage and that copies bear this notice and the full citation\non the /f_irst page. Copyrights for components of this work owned by others than ACM\nmust be honored. Abstracting with credit is permi/t_ted. To copy otherwise, or republish,\nto post on servers or to redistribute to lists, requires prior speci/f_ic permission and/or a\nfee. Request permissions from permissions@acm.org.\nSIGIR’18, July 8 – 12, 2018, Ann Arbor, Michigan, U.S.A\n© 2018 ACM. 978-x-xxxx-xxxx-x/YY/MM. . . $15.00\nDOI: 10.1145/nnnnnnn.nnnnnnn\nFigure 1: A toy example of user-item knowledge graph. In\nthe le/f_t is a set of triplets of user behaviors and item proper-\nties, and in the right is the corresponding graph structure.\nto answer this question is how to eﬀectively integrate diﬀerent\ntypes of user behaviors and item properties, while preserving the\ninternal relationship betwen them to enhance the /f_inal performance\nof personalized recommendation.\nFortunately, the emerging success on knowledge base embed-\ndings may shed some light on this problem, where heterogeneous\nknowledge entities and relations can be projected into a uni/f_ied\nembedding space. By encoding the rich information from multi-\ntype user behaviors and item properties into the /f_inal user/item\nembeddings, we can enhance the recommendation performance\nwhile preserving the internal structure of the knowledge.\nInspired by the above motivation, in this paper, we design a novel\ncollaborative /f_iltering framework over knowledge graph. /T_he main\nbuilding block is an integration of traditional CF and knowledge-\nbase embedding technology. More speci/f_ically, we /f_irst de/f_ine the\nconcept of user-item knowledge graph, which encodes our knowl-\nedge about the users and items as a relational graph structure. /T_he\nuser-item knowledge graph focuses on how to depict diﬀerent types\nof user behaviors and item properties over heterogenous entities\nand relations in a uni/f_ied framework. /T_hen, we extend the design\nphilosophy of collaborative /f_iltering (CF) to learn over the knowl-\nedge graph for personalized recommendation.\nContributions. /T_he main contributions of this paper can be sum-\nmarized as follows:\n• We propose to directly reason over a structured knowledge-\nbase with embeddings for recommendation.\n• We extend traditional collaborative /f_iltering to learn over the\nheterogenous knowledge-base embeddings, which makes it possible\nto capture the user preferences more comprehensively.\n• Extensive experiments verify that our model can consistently\noutperform many state-of-the-art baselines on real-world e-commerce\ndatasets.\narXiv:1803.06540v2  [cs.IR]  22 Mar 2018\nIn the following part of the paper, we /f_irst illustrate our models\nin section 2, and verify its eﬀectiveness with experimental results\nin section 3. At last, the related work and conclusions are presented\nin section 4 and 5, respectively.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 COLLABORATIVE FILTERING WITH",
+      "level": 1,
+      "text": "KNOWLEDGE-GRAPH\nIn this section, we illustrate our model to make recommendations by\nlearning knowledge-graph embeddings with collaborative /f_iltering.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Model structure",
+      "level": 2,
+      "text": "Incorporating additional information has been a widely used method\nto enhance recommendation performance, however, the objects in a\npractical recommender system are usually very heterogeneous ( e.g.\nproduct brands, categories, and user reviews, etc), and the relations\nbetween them can also be quite diﬀerent ( e.g. belong to, buy, view,\netc). To tackle with such heterogenous data in a uni/f_ied framework,\nwe /f_irst de/f_ine a user-item knowledge-graph structure specialized\nfor recommender systems, then we conduct collaborative /f_iltering\non this graph to provide personalized recommendations.\n2.1.1 User-Item Knowledge Graph in Recommender system. In\nthe context of recommender system, the user-item knowledge graph\nis built from a set of triplets. Each triplet (i, j, r) is composed of\na head entity i, a tail entity j, and the relation r from i to j. /T_he\nsemantic for a triplet(i, j, r) is that i has a (directed) relation r with\nj. For example, (user , item , bu/y.alt) means that the user has bought\nthe item before, and(item , brand , belon/afii10069.ital to) means that the item\nbelongs to a particular brand .\nSpeci/f_ically, we de/f_ine 5 types of entities and 6 types of relations\nin our system, where the entities include user, item, word, brand\nand category, while the relations include:\n• bu/y.alt: the relation from a user to an item, meaning that the user\nhas bought the item.\n• belon/afii10069.ital to cate/afii10069.ital or/y.alt: the relation from an item to a category, mean-\ning that the item belongs to the category.\n• belon/afii10069.ital to brand : the relation from an item to a brand, meaning\nthat the item belongs to the brand.\n• mention word : relation from a user or an item to a word, meaning\nthat the word is mentioned in the reviews of the user or item.\n• also bou/afii10069.ital ht: the relation from an item to another item, meaning\nthat users who bought the /f_irst item also bought the second item.\n• also /v.altiew : the relation from an item to another item, meaning\nthat users who bought the /f_irst item also viewed the second item.\nAn example of the constructed user-item knowledge graph can\nbe seen in Figure 1.\n2.1.2 Collaborative Filtering based on User-Item Knowledge Graph.\n/T_he user-item knowledge graph provides us with the ability to ac-\ncess diﬀerent information sources and multi-type behaviors in a\nuni/f_ied manner. In this section, we conduct collaborative /f_iltering\non this graph for accurate user pro/f_iling and personalized recom-\nmendation. Inspired by [ 2], we project each entity and relation into\na uni/f_ied low-dimensional embedding space. Intuitively, the embed-\nding of a tail entity should be close to its translated head entity em-\nbedding. Formally, for a triplet(i, j, r), suppose the embeddings of\nAlgorithm 1 Collaborative Filtering based on Knowledge Graph\nInput: Entity set E, relation set R, triplet set S, dimension D, num-\nber of negative samples k;\nRandomly initialize the embeddings for r∈ R and e∈ E\nfor(ei , ej , r) in S do\nl← 0, St← , Sh←\nrepeat\ne′\nj← sample(E), e′\ni← sample(E)\nSt← St∪( ei , e′\nj , r), Sh← Sh∪( e′\ni , ej , r)\nl← l + 1\nuntil l = k\nUpdate embeddings according to∇L\nend for\nOutput: Embeddings of the subjects and relations\ni, j, r are ei , ej , er , respectively, then we want that trans er(ei)≈ ej .\nConsidering all the observed triplets S, we minimize a margin-based\nloss to learn the embeddings as follows:\nL =\nÕ\n(i, j,r)∈S\n{ Õ\n(i, j′,r)∈S t\n[\nγ+ d(trans er(ei), ej\n)− d(trans er(ei), ej′\n)]\n+\n+\nÕ\n(i′, j,r)∈S h\n[\nγ+ d(trans er(ei), ej\n)− d(trans er(ei′), ej\n)]\n+\n}\n(1)\nwhere, St is the set of negative triplets that replace the tail by\na random entity, and T h is another set of negative triplets that\nreplace the head by a random entity. d(·) is a metric function to\nmeasure the distance between two embeddings, where we select\nℓ2-norm as its speci/f_ic implementation.trans er(ei) is an arbitrary\ntranslation function, or even a neural network, for here, we adopt\nthe addition function trans er(ei) = er + ei as in the transE model\n[2], because it gives us be/t_ter eﬃciency and eﬀectiveness on our\ndataset. However, it is not necessarily restricted to this function\nand many other choices can be used in practice.\nIn the loss function L, we essentially try to discriminate the\nobserved triplets from the corrupted ones by a hinge loss function,\nand the embeddings will be forced to recover the ground truth. Our\nmodel can be learned by stochastic gradient descent (SGD), and the\nmodel learning algorithm is shown in Algorithm 1.\n2.1.3 Personalized Recommendation. We will obtain the embed-\ndings for all entities and relations in the graph once our model is\noptimized. To generate personalized recommendations for a partic-\nular user, we take advantage of the relation type buy. Speci/f_ically,\nsuppose the embedding of the relation bu/y.alt is ebu /y.alt, and the embed-\nding of a target user is eu , then we can generate recommendations\nfor the user by ranking the candidate items ej in ascending order\nof the distance d(trans ebu /y.alt(ei), ej).",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 EXPERIMENTS",
+      "level": 1,
+      "text": "In this section, we evaluate our proposed models by comparing\nwith many state-of-the-art methods. We begin by introducing the\nexperimental setup, and then analyze the experimental results.\nTable 1: Performance on top-10 recommendation between the baselines and our model (all the values in the table are percent-\nage numbers with ‘%’ omitted), where the bolded numbers indicate the best performance of each column. /T_he /f_irst block shows\nthe results of the baselines, where the stared numbers indicate the best baseline performances; the the second line from the\nbottom presents the results of our model. /T_he last line shows the percentage increment of our results against the best baseline\n(i.e., JRL), which are signi/f_icant atp=0.001.\nDataset CDs Clothing Cell Phones Beauty\nMeasures(%) NDCG Recall HT Prec NDCG Recall HT Prec NDCG Recall HT Prec NDCG Recall HT Prec\nBPR 2.009 2.679 8.554 1.085 0.601 1.046 1.767 0.185 1.998 3.258 5.273 0.595 2.753 4.241 8.241 1.143\nBPR HFT 2.661 3.570 9.926 1.268 1.067 1.819 2.872 0.297 3.151 5.307 8.125 0.860 2.934 4.459 8.268 1.132\nVBPR 0.631 0.845 2.930 0.328 0.560 0.968 1.557 0.166 1.797 3.489 5.002 0.507 1.901 2.786 5.961 0.902\nDeepCoNN 4.218 6.001 13.857 1.681 1.310 2.332 3.286 0.229 3.636 6.353 9.913 0.999 3.359 5.429 9.807 1.200\nCKE 4.620 6.483 14.541 1.779 1.502 2.509 4.275 0.388 3.995 7.005 10.809 1.070 3.717 5.938 11.043 1.371\nJRL 5.378 ∗ 7.545∗ 16.774∗ 2.085∗ 1.735∗ 2.989∗ 4.634∗ 0.442∗ 4.364∗ 7.510∗ 10.940∗ 1.096∗ 4.396∗ 6.949∗ 12.776∗ 1.546∗\nCFKG 5.563 7.949 17.556 2.192 3.091 5.466 7.972 0.763 5.370 9.498 13.455 1.325 6.370 10.341 17.131 1.959\nImprovement 3.44 5.35 4.66 5.13 78.16 82.87 72.03 72.62 23.05 26.47 22.99 20.89 44.90 48.81 34.09 26.71",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 Experimental Setup",
+      "level": 2,
+      "text": "Datasets. Experiments are conducted on the Amazon e-commerce\ndataset [6]. We adopt four representative sub-datasets in terms of\nsize and sparsity, which are CD, Clothing, Cell Phone, and Beauty.\nStatistics of the four datasets are summarized in Table 2.\nEvaluation methods. In our experiments, we leverage the widely\nused Top-N recommendation measurements including Precision,\nRecall, Hit-Ratio and NDCG to evaluate our model as well as the\nbaselines. /T_he former three measures aim to evaluate the recom-\nmendation quality without considering the ranking positions, while\nthe last one evaluates not only the accuracy but also the ranking\npositions of the correct items in the /f_inal list.\nBaselines. We adopt the following representative and state-of-the-\nart methods as baselines for performance comparison:\n− BPR: /T_he bayesian personalized ranking [10] model is a pop-\nular method for top-N recommendation. We adopt matrix factor-\nization as the prediction component for BPR.\n− BPR HFT: /T_he hidden factors and topics model [9] is a rec-\nommendation method leveraging textual reviews, however, the\noriginal model was designed for rating prediction rather than top-\nN recommendation. To improve its performance, we learn HFT\nunder the BPR pair-wise ranking framework for fair comparison.\n− VBPR: /T_he visual bayesian personalized ranking [7] model\nis a state-of-the-art method for recommendation with images.\n− DeepCoNN: A review-based deep recommender [ 15], which\nleverages convolutional neural network (CNN) to jointly model the\nusers and items.\n− CKE: /T_his is a state-of-the-art neural recommender [13] that\nintegrates textual, visual information, and knowledge base for mod-\neling, but it used knowledge base as regularizers and did not con-\nsider the heterogenous connection across diﬀerent types of entities.\n− JRL: /T_he joint representation learning model [14] is a state-\nof-the-art neural recommender, which can leverage multi-model\ninformation for Top-N recommendation.\nTable 2: Statistics of the datasets.\nDatasets #Users #Items #Interactions Density\nCDs 75258 64421 1097592 0.0226%\nClothing 39387 23033 278677 0.0307%\nCell Phones 27879 10429 194493 0.0669%\nBeauty 22363 12101 198502 0.0734%\nParameter settings. All the embedding parameters are randomly\ninitialized in the range of(0, 1), and then we update them by con-\nducting stochastic gradient descent (SGD). /T_he learning rate is\ndetermined in the range of{1, 0.1, 0.01, 0.001}, and model dimen-\nsion is tuned in the range of {10, 50, 100, 200, 300, 400, 500}. /T_his\ngives us the /f_inal learning rate as 0.01 and dimension as 300. For\nthe baselines, we also determine the /f_inal se/t_tings by grid search,\nand for fair comparison, the models designed for rating prediction\n(i.e. HFT and DeepCoNN) are learned by optimizing the ranking\nloss similar to BPR. When conducting experiments, 70% items of\neach user are leveraged for training, while the remaining are used\nfor testing. We generate Top-10 recommendation list for each user\nin the test dataset.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2 Performance Comparison",
+      "level": 2,
+      "text": "Performance of our Collaborative Filtering with Knowledge Graph\n(CFKG) model as well as the baseline methods are shown in Table\n1. Basically, the baseline methods can be classi/f_ied according to the\ninformation source(s) used in the method, which are rating-based\n(BPR), review-based (HFT and DeepCoNN), image-based (VBPR),\nand heterogenous information modeling (CKE and JRL). Gener-\nally, the information sources used by our model include ratings\n(through the buy relation), reviews (through mention relation), and\nour knowledge about the items (through the belong to category,\nbelong to brand, also view and also bought relations).\nFrom the experimental results we can see that, both of the review-\nbased models can enhance the performance of personalized recom-\nmendation from rating-based methods, and by considering multiple\nheterogenous information sources, JRL and CKE outperform the\nother baselines, with JRL achieving the best performance among\nthe baselines. It is encouraging to see that our collaborative /f_ilter-\ning with knowledge graph (CFKG) method outperforms the best\nbaseline (JRL) consistently over the four datasets and on all evalua-\ntion measures, which veri/f_ies the eﬀectiveness of our approach for\npersonalized recommendation.\nHowever, the performance improvement of our approach may\nbene/f_it from two potential reasons – that we used more informa-\ntion sources, and that we used a be/t_ter structure (i.e., structured\nknowledge graph) to model heterogenous information. For be/t_ter\nTable 3: Performance on top-10 recommendation when incorporating diﬀerent types of relation in the structured knowledge\ngraph (all the values in the table are percentage numbers with ‘%’ omitted). /T_he /f_inal result (using all relations) is signi/f_icantly\nbetter than all other models (using part of the relations) at p=0.001 level.\nRelations CDs Clothing Cell Phones Beauty\nMeasures(%) NDCG Recall HT Prec NDCG Recall HT Prec NDCG Recall HT Prec NDCG Recall HT Prec\nbuy 3.822 5.185 12.828 1.628 1.019 1.754 2.780 0.265 3.387 5.806 8.548 0.848 3.658 5.727 10.549 1.305\nbuy+category 4.287 5.990 14.388 1.790 1.705 3.021 4.639 0.442 3.372 5.918 8.842 0.869 3.933 6.253 11.515 1.370\nbuy+brand 3.541 4.821 12.239 1.563 1.101 1.906 2.981 0.284 3.679 6.211 9.118 0.898 4.832 7.695 13.406 1.621\nbuy+mention 4.265 5.858 13.874 1.731 1.347 2.305 3.585 0.344 4.065 7.065 10.316 1.026 4.364 6.942 12.476 1.492\nbuy+also view 3.724 5.070 12.633 1.604 2.276 3.931 5.827 0.561 3.305 5.705 8.458 0.840 5.295 8.723 14.891 1.728\nbuy+also bought 5.055 7.094 16.216 2.032 1.799 3.078 4.634 0.446 5.018 8.707 12.375 1.220 5.058 8.118 13.907 1.643\nall (CFKG) 5.563 7.949 17.556 2.192 3.091 5.466 7.972 0.763 5.370 9.498 13.455 1.325 6.370 10.341 17.131 1.959\nunderstanding, we analyze the contribution of types of relation to\nour model in the following subsection.\n3.3 Further Analysis on Diﬀerent Relations\nWe experiment the performance of our model when using diﬀerent\nrelations. Because we eventually need to provide item recommen-\ndations for users, the CFKG approach would at least need the buy\nrelation to model the user purchase histories. As a result, we test\nour model when using only the buy relation (which simpli/f_ies into\nthe translation-based model [ 5]), as well as the buy relation plus\neach of the other relations, as shown in Table 3.\nWe see that when using only the buy relation, our CFKG buy\nmodel signi/f_icantly outperforms the BPR approach on all measures\nand datasets. On the NDCG measure, the percentage improvement\ncan be 90% (CDs), 70% (Clothing), 69% (Phone), and 33% (Beauty).\nBecause both BPR and CFKG buy only used the user purchase in-\nformation, this observation veri/f_ies the eﬀectiveness of using struc-\ntured knowledge graph embeddings for recommendation. Similarly,\nCFKG buy+mention signi/f_icantly outperforms BPRHFT, and also\noutperforms DeepCoNN except for the recall on the CD dataset.\nConsidering that CFKG buy+mention, BPR HFT and DeepCoNN all\nwork with user purchase history plus textual reviews, this observa-\ntion further veri/f_ies the advantage of using structured knowledge\ngraph for user modeling and recommendation.\nFurthermore, we see that adding any one extra relation to the\nbasic buy relation gives us improved performance from CFKG buy.\nFinally, by modeling all of the heterogenous relation types, the /f_inal\nCFKG model outperforms all baselines and the simpli/f_ied versions\nof our model with one or two types of relation, which implies that\nour knowledge base embedding approach to recommendation is\nscalable to new relation types, and it has the ability to leverage very\nheterogeneous information sources in a uni/f_ied manner.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 RELATED WORK",
+      "level": 1,
+      "text": "Using knowledge base to enhance the performance of recommender\nsystem is an intuitive idea, which has a/t_tracted research a/t_tention\nsince very early stages of the recommendation community [ 4, 11].\nHowever, the diﬃculty of reasoning over the paths on heteroge-\nnous knowledge graphs prevent current approaches from applying\ncollaborative /f_iltering on very diﬀerent entities and relation types\n[3, 13], which further makes it diﬃcult to take advantage of the\nwisdom of crowd.\nFortunately, recent years have witnessed the success of heteroge-\nnous knowledge base embedding techniques [ 2, 8, 12], which can\nhelp to learn the embeddings of very diﬀerent entities to support\nvarious application scenarios such as question answering [1] and re-\nlation extraction from text [ 8]. We believe that learning knowledge\nbase embeddings while preserving the structure of knowledge for\nreasoning is vital for knowledge-enhanced AI in recommendation\nsystems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 CONCLUSIONS AND FUTURE WORK",
+      "level": 1,
+      "text": "In this paper, we propose to learn over heterogenous knowledge\nbase embeddings for personalized recommendation. To do so, we\nconstruct the user-item knowledge graph to incorporate both user\nbehaviors and our knowledge about the items. We further learn\nthe knowledge base embeddings with the heterogenous relations\ncollectively, and leverage the user and item embeddings to generate\npersonalized recommendations. Experimental results on real-world\ndatasets veri/f_ied the superior performance of our approach, as well\nas its /f_lexibility to incorporate multiple relation types.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "A toy example of user-item knowledge graph. In"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Performance on top-10 recommendation between the baselines and our model (all the values in the table are percent-"
+    },
+    {
+      "id": "t2",
+      "caption": "Statistics of the datasets."
+    },
+    {
+      "id": "t3",
+      "caption": "Performance on top-10 recommendation when incorporating diﬀerent types of relation in the structured knowledge"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Collaborative Filtering based on Knowledge Graph"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 3,
+    "n_algorithms": 1,
+    "n_equations": 1
+  }
+}

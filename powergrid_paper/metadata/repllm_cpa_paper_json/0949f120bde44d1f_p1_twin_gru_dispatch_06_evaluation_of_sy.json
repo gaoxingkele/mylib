@@ -1,0 +1,473 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__06__evaluation_of_system_performance_for_load_dispatch_feasibility_under_n__a902907c80.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "Contingency analysis entails the examination of the\nimplementation of outages for transmission lines and gen-\nerators, whether individually or simultaneously. An outage\nThe associate editor coordinating the review of this manuscript and\napproving it for publication was Vitor Monteiro\n.\nexperienced by a single entity at one time is known as\nan n-1 contingency. When two entities experience outages\nconcurrently, it is called an n-2 contingency, also known as\na simultaneous outage. Likewise, the contingency is iden-\ntified as an n-k contingency for ‘k’ outages. Conducting\nn-1 contingency analysis is more feasible in power systems\ncompared to n-k contingency analysis, as n-1 failures are\n181180\n\n 2025 The Authors. This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License.\nFor more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/ VOLUME 13, 2025\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nconsiderably more probable in real-world scenarios, while\nn-k events denote rare, simultaneous outages that are sta-\ntistically less likely. Furthermore, industry standards, such\nas those established by the North American Electric Reli-\nability Corporation (NERC), require compliance with n-1\ncontingency protocols as a foundational criterion for ensur-\ning system reliability, whereas n-k analysis is not typically\nmandated for routine operations. Additionally, designing sys-\ntems to accommodate all potential n-k contingencies would\nnecessitate excessive redundancy and substantial infrastruc-\nture investments, rendering such approaches economically\nimpractical. In instances where n-k analysis is warranted,\nsuch as in resilience assessments, it is generally confined to\nselected credible combinations through heuristic or proba-\nbilistic screening methodologies. Consequently, n-1 analysis\nremains the predominant and standard approach for power\nsystem planning and operation. The focus of this paper is\non the evaluation of system performance parameters by the\nproposed methodology in estimating DA UC in the presence\nof n-1 thermal generator contingencies.\nThe dependable operation of power systems is of utmost\nimportance to ensure an uninterrupted electricity supply, par-\nticularly as modern grids increasingly integrate renewable\nenergy sources and face escalating demands. A significant\nchallenge in maintaining grid stability involves addressing\npotential contingencies that may disrupt power generation.\nThe N-1 contingency criteria, assuming the failure of a single\ngenerator or transmission line, are a widely adopted stan-\ndard in power system planning and operation. It guarantees\nthe system’s functionality even when a critical component\nfails. Understanding the impact of these contingencies on the\nsystem’s operational decisions is crucial for thermal power\ngenerators, which will continue to hold a substantial role in\nglobal power generation for some years till they are replaced\nby green energy [1].\nUC, which determines the optimal scheduling of genera-\ntion units to meet the forecasted demand at the lowest cost,\nis one of the primary decisions affected by N-1 contingen-\ncies. A robust UC schedule must account for the possibility\nof unforeseen outages in thermal generators while ensuring\nthe availability of sufficient reserve capacity to uphold sys-\ntem reliability. However, thermal generator outages can give\nrise to significant operational challenges, including increased\ngeneration costs, grid instability, and the need for rapid\nadjustments in generation from alternative sources. V arious\nstudies on this topic propose different approaches to effec-\ntively carry out UC in the presence of n-1 contingencies.\nNumerous solutions have been proposed in previous research\nto address the issue of n-1 contingencies. One approach\ninvolves activating additional power plants to compensate for\nthe outage of conventional generators. Specifically, gas power\nplants are employed in UC to ensure an uninterrupted power\nsupply in the presence of n-1 generator contingencies [2].\nAnother option is to utilize the individual contributions or\ncoordinated operation of interconnected or integrated system\ncomponents. For instance, a study investigates the coordi-\nnated operation of a combined heat & electricity system with\nrenewable energy sources to enhance the flexibility of the\npower system in conducting energy dispatch under uncertain\ncomponent states [3]. The modelling of uncertain outages\nof individual generators becomes necessary for developing\na comprehensive probability distribution that proportionately\naffects UC scheduling and costs [4]. Thus, it holds signifi-\ncant importance in estimating DA UC costs in the event of\ngenerator contingencies.\nAdditionally, transmission line switching has been\nexplored as a means to enhance system performance in\noptimal power flow problems when faced with n-1 contin-\ngencies [5]. Moreover, integrated renewable energy sources\nserve as alternative power sources to maintain system reli-\nability and flexibility when determining optimal UC under\nn-1 contingencies [6]. While there has been research on n-1\ngenerator contingencies, studies have also been conducted to\ninvestigate the impacts of n-1 transmission line contingencies\non UC [7]. Power system security assessment for multiple\ncontingencies has been empirically demonstrated in prior\nresearch [8]. However, most of these works focus on specific\ncontingency management strategies or integrated systems,\nlacking a unified methodology to assess system-wide per-\nformance metrics—such as criticality, robustness, reliability,\nand operating margin—in the context of DA UC under N-1\ngenerator outages.\nThe occurrence of n-1 generator contingencies has the\npotential to disrupt the supply-demand equilibrium, poten-\ntially leading to an inability to meet load demands. This\nsituation necessitates a comprehensive analysis of system\nreliability, criticality, and the available operating margin to\nfacilitate appropriate preparations for dispatch based on the\nDA UC results. This paper conducts an impact analysis on\nthe reliability and robustness of DA UC decisions under n-\n1 thermal generator contingencies. By examining how the\nfailure of individual thermal generators affects the optimal\nscheduling of generation units, our objective is to evaluate the\ngrid’s capacity to maintain supply-demand balance and meet\nload requirements during such challenging conditions.\nThe reliability of the system under these circumstances\nis assessed using metrics such as LOLP , Loss of Load\nExpectation (LOLE), etc. as established in previous stud-\nies [9]. Before estimating LOLP , probabilistic analyses are\nperformed to evaluate the probabilities of generation unavail-\nability under various n-1 generator contingencies [10], [11].\nIn this paper, we estimate the reliability of the n-1 generator\ncontingency-based DA UC results using LOLP through the\nproposed methodology. Existing works that estimate LOLP\ngenerally do so for planning or risk analysis. However, very\nfew integrate such probabilistic reliability indices within the\ncontext of DA UC execution under generator contingencies,\nwhich is necessary for system preparedness.\nFor the estimation of DA UC scheduling and associated\ncosts, we employ Dynamic Programming (DP) optimization\nVOLUME 13, 2025 181181\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nin this study. In comparison to novel heuristic and metaheuris-\ntic approaches, DP optimization yields the most optimal\nsolution [12]. Given the critical role of thermal generators\nin supplying base load and balancing intermittent renewable\nenergy sources, this research provides valuable insights into\nhow power system operators can formulate more resilient\nscheduling strategies for the following day in response to\ncontingencies. By incorporating n-1 generator contingencies\ninto the unit commitment planning process, power systems\nc",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "181182 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nquantification of DA UC plans under N-1 generator outages\nis yet to be formalized.\nA. RESEARCH GAPS\nDespite several advancements in UC and contingency analy-\nsis, the following significant research gaps persist:\ni) Absence of an Integrated System Performance Frame-\nwork: Current research predominantly concentrates on\ndiscrete elements such as cost optimization, reserve\nscheduling, or generator coordination during contin-\ngencies. However, there is a conspicuous lack of a\ncomprehensive methodology that simultaneously eval-\nuates system criticality, robustness, reliability, and\noperating margin in the context of N-1 generator con-\ntingencies impacting DA UC.\nii) Lack of Established Metrics for Generator-Level Criti-\ncality in DA UC: Criticality indices have been proposed\nfor system components utilizing methodologies such as\nFMEA, SOC, or topological analysis. However, these\nframeworks are not specifically designed to assess\nthe criticality of individual thermal generators in DA\nUC under N-1 contingency scenarios. A formalized\nmechanism to rank and quantify generator criticality\nis necessary to facilitate contingency-aware scheduling\ndecisions.\niii) Inadequate Evaluation of Robustness for\nContingency-Based DA UC Schedules: Robustness\nmetrics are typically applied to cascading failures,\ncontrol systems, or network topologies. Nevertheless,\nthe resilience of DA UC schedules in the context of\ngenerator outage scenarios has not been subjected to\ncomprehensive analysis within the existing literature.\nThis gap restricts the capacity to assess the effective-\nness of these schedules in mitigating disturbances or\nsustaining operational feasibility during contingencies.\niv) Limited Incorporation of Probabilistic Reliability Met-\nrics into DA UC Performance Evaluation: Although\nprobabilistic indices such as Loss of Load Probability\n(LOLP) and Loss of Load Expectation (LOLE) are\nwell-established in power system reliability analyses,\nthere is a scarcity of studies that directly integrate these\nmeasures into the evaluation of DA UC schedules.\nThis integration is crucial for assessing the real-world\nviability of commitments exposed to contingencies.\nv) Absence of a Quantified Operating Margin Metric\nfor Dispatch Feasibility: Most existing research on\nDA UC emphasizes the attainment of cost-minimizing\nschedules under predicted conditions, without provid-\ning a clear quantitative assessment of how closely the\nresultant schedule aligns with the system’s operational\nlimits. This limitation hampers operators’ capacity to\ndetermine whether the schedule will remain feasible in\nthe face of unforeseen contingencies.\nIn light of the aforementioned considerations, this study\ndelineates several significant research gaps in the extant\nliterature that impede the reliability and preparedness of DA\nUC plans in the event of generator outages. These gaps\nencompass the absence of integrated system performance\nevaluations, generator-level criticality metrics, robustness\nanalyses of UC schedules, probabilistic reliability assess-\nments, and explicit operating margin estimations. Collec-\ntively, these deficiencies constitute the basis for the proposed\nmethodology. Addressing these issues is crucial for improv-\ning real-time dispatch feasibility and enhancing long-term\nsystem resilience in the context of N-1 thermal generator\ncontingencies.\nB. CONTRIBUTIONS\nThis study presents a structured framework for evaluating\nsystem performance and preparedness for real-time dispatch\nin the presence of N-1 thermal generator contingencies.\nThe proposed methodology introduces both quantitative\nand qualitative tools for assessing key system performance\nindicators—criticality,robustness,reliability,and operating\nmargin—within a contingency-aware DA UC framework.\nThe main contributions are as follows:\ni) A novel methodology for generator-level criticality\nassessment is developed to identify and quantify the oper-\national impact of individual N-1 generator outages on DA\nUC schedules. This enables the classification and ranking\nof contingencies based on their severity, directly addressing\nthe lack of generator-specific criticality metrics in existing\nliterature.\nii) A CM-based robustness evaluation is proposed to quan-\ntify the system’s ability to sustain outages without violating\noperational limits. The CM metric supports the identifica-\ntion of weak and robust buses, addressing the current gap\nin robustness analysis of DA UC schedules under generator\ncontingencies.\niii) Integration of probabilistic reliability analysis using the\nLOLP index provides a quantitative assessment of system\nreliability across varying levels of Spinning Reserve (SR).\nThis contributes to bridging the gap between reliability esti-\nmation and DA UC performance evaluation.\niv) A new operating margin metric is formulated to\ndetermine the residual capacity available beyond commit-\nted reserves, reflecting the system’s real-time feasibility and\nresilience. This explicitly addresses the need for quantifying\ndispatch margin under stress conditions, which is currently\nabsent in conventional DA UC approaches.\nIn summary, this work addresses multiple gaps in existing\nliterature by developing a comprehensive framework for eval-\nuating system performance in contingency-aware DA UC.\nIt introduces new metrics for assessing generator critical-\nity, system robustness, reliability via LOLP , and operating\nmargin—each of which is essential for reliable and eco-\nnomically feasible real-time dispatch planning under N-1\ngenerator contingencies.\nThe structure of this paper is as follows: The pro-\nposed methodology for assessing the performance of n-1\ncontingency-based DA UC is discussed in Section II. The\nmathematical formulation of DA UC with the constraints,\nVOLUME 13, 2025 181183\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nincluding reliability assessment, is presented in Section III.\nSection IV provides an outline of the Case Studies employed\nto simulate the proposed n-1 contingency-based DA UC. The\noptimization technique employed for DA UC is mentioned\nin Section V. The following section presents the data for the\nIEEE RTS and the underlying assumptions for performing the\nproposed analysis. The results, along with their analysis, are\npresented in Section VII. Lastly, Section VIII offers conclu-\nsions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "PROPOSED METHODOLOGY",
+      "level": 1,
+      "text": "The proposed approach addresses key gaps in current lit-\nerature by incorporating generator-level contingency impact\nassessment, robustness quantification, probabilistic reliabil-\nity estimation, and operational margin evaluation into the DA\nUC framework. The methodology comprises the following\nsteps.\nStep1: Identification of Critical n-1 Generator Contingen-\ncies\nIn the first step, N-1 contingency simulations are con-\nducted for each thermal generator to identify outages that\nsignificantly impact DA UC feasibility or economic perfor-\nmance.\n(i) Contingency Impact Assessment: Generator outages\nare classified as critical if they cause operational infea-\nsibility or substantial cost increases in the DA UC\nsolution.\n(ii) DA UC Modeling: The DA UC problem is for-\nmulated and solved using DP for all contingency\nscenarios. The severity of each contingency is assessed\nbased on the incurred operational cost or failure to\nmeet the load. This directly addresses the lack of\ngenerator-specific criticality assessment methods in\nexisting contingency-aware UC studies.\nStep 2: Identification of Weak Buses Associated with Crit-\nical Contingencies\nUpon identifying critical generator outages, the next step\ninvolves determining the weak buses, those most sensitive to\nassociated failures. Weak buses are identified based on their\nsusceptibility to overloads or operational stress during DA\nUC under critical contingencies. These buses are generally\nconnected to or impacted by the failed generator units.\nThis step extends contingency analysis to the spatial\ndimension of the network, addressing the research gap in\nlinking contingency severity to localized grid vulnerability.\nStep 3: Estimation of System Robustness and Identification\nof Robust Buses\nTo quantify system robustness, this step identifies stable\nN-1 contingencies and the corresponding robust buses.\ni) Stable Contingency Classification: Generator outages\nthat do not disrupt UC feasibility and/or do not increase\ncost significantly are deemed stable.\nii) Robust Bus Identification: Buses connected to genera-\ntors under stable contingencies are classified as robust.\nThese nodes demonstrate the system’s inherent ability\nto absorb disturbances without compromising opera-\ntional integrity.\nThis addresses the research gap regarding the absence of\nsystem-wide and bus-level robustness metrics for DA UC\nschedules.\nStep 4: Reliability Estimation Using LOLP\nThis step integrates LOLP as a probabilistic metric to\nevaluate the reliability of DA UC outcomes under generator\noutages.\nBased on probabilistic modeling of generator unavailabil-\nity, the LOLP index is computed for each scenario. This\nreflects the likelihood that the system fails to meet demand\nunder given contingencies and reserve conditions.\nThis contributes to the limited body of research that con-\nnects probabilistic reliability metrics with UC outcomes in a\ncontingency-aware context.\nStep 5: Evaluation of the Operating Margin\nThe final step involves the evaluation of the Operating\nMargin, a newly proposed metric that measures the system’s\nadditional capacity beyond committed reserves, capable of\nabsorbing future contingencies.\nThe Operating Margin is calculated as the difference\nbetween the maximum allowable LOLP and the estimated\nLOLP value. A positive margin indicates headroom for addi-\ntional load or contingencies; a negative margin implies risk\nof dispatch failure.\nThis metric directly supports system operators in assessing\nreal-time dispatch feasibility, bridging the gap in quantifying\nflexibility and resilience of DA UC schedules under stress.\nThe proposed methodology is illustrated in Fig. 1.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "PROBLEM FORMULATION",
+      "level": 1,
+      "text": "The n-1 generator contingency based hourly DA UC is\nperformed after implementing the particular generator out-\nage, to find out the minimum cost schedule of turning ‘on’\nor ‘off’ of generators for the 24 hours of the next day,\nbased on the constraints mentioned in Section III-B and the\npre-determined load demand which is forecasted via the short\nterm forecasting techniques.\nA. OBJECTIVE FUNCTION\nThe objective function is the minimization of overall DA UC\ncosts i.e. CTot. It comprises of aggregation of the fuel costFi,t ,\nstartup StC i,t and shut down costs SdC i,t of all committed\ngenerators for the 24 hours of the next day, given by eq. (1)\nCTot =\n∑n\ni=1\n∑T\nt=1 Fi,t .ui,t + StC i,t .ui,t + SdC i,t .ui,t\n(1)\nThe commitment status is defined by ui,t which is ‘1’\nfor a committed unit, and ‘0’ for a decommitted unit for\ngenerator ‘i’ at hour ‘t ’. The maintenance cost is neglected\nin the formulation.\nAssuming DC power flow, the supply-demand balance\nis achieved if the overall generation by all the committed\nthermal generators is equal to the forecasted load demand at",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "181184 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nhour ‘t’ Df\nt as depicted in eq. (2)\n∑n\ni=1 ui,t .Pi,t =\n∑T\nt=1 Df\nt (2)\nPi,t is the generated power of unit ‘i’ at hour ‘t ’\nB. CONSTRAINTS\nThe various constraints considered for estimating the DA UC\ncosts are mentioned below from eq. (3) to (8), with others\nreferred from [27] Generator Fuel Cost is the cost of fuel for\nrunning a generator ‘i’ for hour ‘t ’, where αi, βi, γi are the\nfuel cost coefficients\nFi,t = αi.P2\ni,t + βi.Pi,t + γi (3)\nTurbine Start-up Cost StC Tbn\ni,t , Boiler Start-up cost StC Blr\ni,t\nand Maintenance Start-up cost StC M\ni,t form the start-up cost\nStC i,t where hd and Cb are unit down hours and boiler cool\ndown coefficient respectively.\nStC i,t = StC Tbn\ni,t +\n(\n1 − e\nhd\nCb\n)\n.StC Blr\ni,t + StC M\ni,t (4)\nHd,i is the number of hours a unit is down, Bc,i is the Boiler\nCool Down Coefficient.\nThe mathematical formulations of shutdown cost, min-\nimum up time, minimum down time, active power limits\non generating units, ramp up rate, and ramp down rate are\nreferred from [27].\nThe ramp rate is a prevalent parameter in the field of\npower generation, serving as a measure of the rate at which\npower output varies with respect to time. Typically denoted in\nMW/min, it quantifies the speed of these changes specifically\nduring ramping-up or ramping-down process.\nThe ramp-up rate defines the acceptable increase in power\noutput at hour ‘t’ with respect to the previous time interval\n‘t-1’ as per the maximum limit PRU,max\ni\n(\nPi,t − Pi,(t−1)≤PRU,max\ni\n)\n, ∀i, ∀t (5)\nThe ramp down rate defines the acceptable decrease in\npower output at hour ‘t’ with respect to the previous time\ninterval ‘t-1’ as per the minimum limit PRD,min\ni\n(\nPi,t − Pi,(t−1)≥PRD,min\ni\n)\n, ∀i, ∀t (6)\nSpinning Reserve: This is the ‘generation reserve’ which\nrefers to the quantity of unutilized capacity in power gener-\nation that can serve as a back-up during instances of power\nshortages or generator failures. Typically, the generation\nreserve is maintained at a level equivalent to ten percent of\nthe operating reserve.\nRt ≥ (0.1∗Ri) , ∀i, ∀t (7)\nIn this work, with the simulation of n-1 generator con-\ntingencies Rt is utilized to improve system performance,\nby estimating CM as mentioned in eq. (9).\nThe total capacity of the system available for DA UC\nor load dispatch is obtained after subtracting this operating\nFIGURE 1. Proposed methodology for the system performance\nassessment of n-1 contingency based DA UC.\nreserve which is not allocated in normal system operation\nrather utilized during contingency, forced outage etc. This\navailable capacity is specified by eq. (8)\nPavl =\n∑n\ni=1 (Pmax\ni − Ri), ∀t (8)",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "CONTINGENCY MARGIN",
+      "level": 1,
+      "text": "CM defines the reserve capacity that can be activated\npromptly to address unanticipated events [27]. For n-1 con-\ntingency based DA UC, CM in this paper is evaluated for\ncontingency ‘Cy’ after consideration of the contributions\nfrom spinning reserve of all thermal generators, as expressed\nby eq. (9).\nM k\nda =\n∑n\ni=1 Rk\ni (9)\nRCy\ni is the spinning reserve of generator ‘i’ for k th contin-\ngency which is implemented as per the Case study defined in\nSection IV.\nD. RELIABILITY ASSESSMENT via LOLP\nThe reliability of a system can be evaluated through the use\nof reliability indices. V arious electricity regulatory authorities\nacross different countries establish the maximum allowable\nlimits for generator contingency reliability indices, such as\nLOLP and LOLE. A high probability of load loss indicates\nthat generation is insufficient to meet demand, thereby sug-\ngesting a lower reliability of DA UC in the presence of the\nconsidered generator contingencies. Conversely, reliability is\ndeemed higher when the probability of load loss remains\nbelow the established maximum allowable limit.\nVOLUME 13, 2025 181185\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nThe maximum prescribed limit LOLPmax for the k th con-\ntingency LOLPk is defined by eq. (10)\nLOLPk ≤ LOLPmax, k∈ [1,Cy] (10)\nk belongs to the overall assessed contingencies from 1 to\nCy, considering the various outages. Cy is referred to as the\ncontingency index in this paper.\nThe system reliability is evaluated in this paper via LOLP .\nThe reliability of the n-1 generator contingency-based DA\nUC is validated by the index LOLP . LOLP of each hour ‘t’ of\nthe next day, for ‘k th’ contingency simulated in the system,\nis given by eq. (11).\nLOLPk,t = Prob.\n[\nDf ,t >\n∑N\ni=1\n(\nPi,t .ui,t\n)]\n, ∀t (11)\nThe probability of load loss exists (i.e. non-zero) when the\ndemand is greater than the overall available generation for\nthat hour ‘t’. The formulation and calculations for probability\nevaluation are referred to from [10] and [11]. The loss of\nload probability for an individual hour ‘t’, for all possible n-1\ngenerator contingencies as defined by contingency index Cy\nis evaluated by eq. (12).\nLOLPt = Prob.\n[\nDf ,t >\n∑Cy\nk=1\n∑N\ni=1\n(\nPk,i,t .uk,i,t\n)]\n, ∀t\n(12)\nLOLP defines the sum of probabilities of hourly forecasted\ndemand being greater than the total power generation by\nthermal generators. For DA UC, this accounts for the sum\nof probabilities of the generation unavailability of 24 hours\nof the next day, which is represented in Eq. (13).\nLOLP =\n(∑24\nt=1 LOLPk,t\n)\n(13)\nThe hourly LOLP , based on the considered contingencies\nin the system, will be non-zero only if there exist certain\nprobabilities in an hour ‘t’ where generation is not able to\nfulfill the forecasted load demand of that hour. If no such\nprobabilities exist for the forecasted load demand of that hour,\nthen LOLP will be zero. This is indicated by Eq. (14)\nLOLPk,t\n=\n\n\n\nProb.\n[\nDf ,t >\n∑N\ni=1\n(\nPi,t .ui,t\n)]\n, if P cap,avail < Dt\nf ; ∀t\n0, otherwise; ∀t\n(14)\nThe hourly probability of loss of load for the next day are\ncompiled in the Capacity Outage Probability Table (COPT).\nE. OPERATING MARGIN EVALUATION OF THE SYSTEM\nThe operating margin of the system is evaluated by aggre-\ngating the load loss probabilities over the 24 hours of the\nsubsequent day, as delineated in eq. (13). This assessment is\nconducted in the context of single generator contingencies\nto evaluate the performance of DA UC in relation to the\nforecasted load demand in the event of a single generator\noutage. Furthermore, the operating margin of the system,\nwhich remains available in light of simulated n-1 generator\ncontingencies for the day-ahead period, is estimated in this\nstudy using Eq. (15).\nM o\nda = (LOLPmax − LOLP) (15)\nA positive operating margin M o\nda indicates a probability\nthat the system can withstand the contingencies without expe-\nriencing a collapse. Conversely, a negative operating margin\nsuggests a heightened probability of system failure under the\nconducted n-1 contingency analysis, which directly indicates\nthat additional generation capacity is necessary to meet the\ndemand.\nF. ESTIMATING THE CRITICALITY AND ROBUSTNESS OF\nTHE SYSTEM FOR n-1 GENERATOR CONTINGENCY BASED\nDA UC\nThe process of identifying system criticality points and sys-\ntem robustness is illustrated in Fig. 1. Throughout the paper,\nthis process is employed to identify the weak and robust buses\nof the system in response to n-1 generator contingencies.\nIf the DA UC is feasible based on the fulfillment of the\nsupply-demand metric, the outcome may be either an eco-\nnomical or uneconomical DA UC. The stable contingencies,\nwhich result in an economical DA UC, can help identify the\nrobust buses of the network. Conversely, if the DA UC is\nuneconomical, critical contingencies are identified to deter-\nmine the weak buses.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "TECHNIQUE FOR DETERMINING N-1 GENERATOR",
+      "level": 1,
+      "text": "CONTINGENCY BASED DA UC WITH VARYING\nCONTINGENCY MARGINS\nThis paper utilizes DP [28], [29] to determine the optimal\nsolution for DA UC, specifically focusing on analyzing the\ncosts associated with n-1 generator contingencies, referred to\nas n-1 generator contingency-based DA UC. Additionally, the\neffects of decreasing CM from ten percent to zero percent on\nthe costs of n-1 generator contingency-based DA UC are ana-\nlyzed to identify the optimal CM in the event of n-1 generator\noutages. The reliability of n-1 generator contingency-based\nDA UC results is estimated as per the formulation mentioned\nin the previous section. The economic performance of n-1\ngenerator contingency-based DA UC is evaluated by compar-\ning these results with those obtained without any contingency.\nFig. 1 illustrates the process flow of the applied technique.\nA. BASE CASE OR PRE-CONTINGENCY DA UC COST\nANAL YSIS WITHOUT n-1 GENERATOR CONTINGENCIES\nTo assess the economic performance of n-1 generator\ncontingency-based DA UC, it is necessary to evaluate the\nUC costs for the system in the absence of any contingencies,\nreferred to as the ‘‘Base Case’’ in this paper. The costs of\nthe pre-contingency DA UC are then determined, forming the\nbasis for the Base Case.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "181186 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nFIGURE 2. Estimation of criticality and robustness of system for n-1\ngenerator contingency based DA UC.\nB. DA UC COSTS FOR n-1 GENERATOR CONTINGENCIES\nWITH CM OPTIMIZATION-CASE 1 AND CASE 2\nThe n-1 generator contingency-based DA UC analysis\ninvolves the following steps, as explained below:\nCase 1: Perform DA UC analysis for the various n-1 gen-\nerator contingencies in the system\ni) Simulate the outage of 1 generator, one by one. For\neach generator contingency, run the DA UC with the\nmentioned constraints and CM corresponding to a ten\npercent SR. Compile the DA UC costs.\nii) Identify the stable and critical contingencies as per the\nproposed methodology (Fig. 2).\niii) Identify the corresponding robust and weak generator\nbuses as per the proposed methodology (Fig. 2). Rank\nthe weak buses in increasing order with the increasing\nvalue of percentage rise in UC costs. Rank the robust\nbuses in the opposite sequence.\nCase 2: Decrease the CM in steps from ten percent to zero\npercent and perform n-1 generator contingency-based DA UC\nanalysis again to find out the optimal CM.\ni) Simulate the outage of 1 generator, one by one. For\neach generator contingency, run the DA UC with the\nmentioned constraints, decreasing values of SR from\nten percent to zero percent. Compile the DA UC costs\nfor the CM variation of 10%, 8%, 5%, and 0% with\nrespect to the various n-1 generator contingencies.\nii) Perform steps (ii) and (iii) of Case 1.\niii) Identify which value of CM gives most economical DA\nUC when n-1 generator contingencies are simulated.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "COMPILATION OF n-1 GENERATOR",
+      "level": 1,
+      "text": "CONTINGENCY-BASED DA UC REPORT AND ANAL YSIS\nDA UC is performed on modified IEEE RTS [30], [31],\n[32], [33] using the DP technique. The results of the analysis\ndescribed in Steps I and II of the previous section IV -Bare\ncompiled and analyzed. Thus the analysis is performed in the\nfollowing three conditions:\ni) Base Case: The pre-contingency or ‘Base Case’ DA\nUC costs are obtained for the original IEEE RTS\nsystem, whose description and data are compiled in\nSection 5.1, and the underlying assumptions are men-\ntioned in Section 5.2.\nii) Case 1: The n-1 generator contingency-based DA UC\ncosts are evaluated with CM equal to ten percent\niii) Case 2: The n-1 generator contingency-based DA UC\ncosts are evaluated with CM reduction in steps from\n10% to 8%, 5%, and then 0%, respectively.\nThe above description is outlined in Table 1.\nThe DA UC costs of ‘Base Case’ are compared with the\ncosts obtained after n-1 contingency analysis in Case 1 and",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2 The contribution of CM (if available) in improving the DA",
+      "level": 1,
+      "text": "UC costs is observed. The following are determined from the\nanalysis:\ni) Ranking of buses to identify the weak buses for the n-1\ngenerator contingency, based on the percentage rise in\nUC costs\nii) Optimal CM for DA UC: It is found by comparing\nthe results of the DA UC costs for CM decrease from\n10% to 0%. The contribution of CM decreases in the\nimprovement of the weak generator bus ranking is\nobserved.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "METHODOLOGICAL FRAMEWORK FOR",
+      "level": 1,
+      "text": "IMPLEMENTING THREE CASE STUDIES TO EVALUATE\nSYSTEM PERFORMANCE UNDER N-1 GENERATOR\nCONTINGENCY IN DA UC ANALYSIS\nThe framework for the implementation of the three case\nstudies, as delineated in Table 1, seeks to evaluate system\nperformance under simulated n-1 generator contingencies,\nas depicted in Figure 3. The analysis is conducted in two\ndistinct stages. The first stage comprises the assessment of n-",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "1 generator contingency-based DA UC, with its performance",
+      "level": 1,
+      "text": "compared to the Base Case to enhance the understanding\nof the impacts of contingencies. The second stage entails a\nvalidation process wherein the results obtained from the gen-\nerator contingency-based DA UC are corroborated through a\nload loss probability analysis, focusing exclusively on single\ngenerator contingencies. This is accomplished via the Loss of\nLoad Probability evaluation for individual generator outages.\nSubsequently, the results of the LOLP analysis are utilized\nto estimate system reliability and the operating margin. The\noutcomes of the DA UC, in conjunction with the LOLP\nestimation and the evaluation of operating margins, serve\nas critical metrics for assessing system performance. This\ncomprehensive evaluation aids in determining the feasibility\nof load dispatch for the forthcoming day, ensuring that the\nsystem remains within established operational limits while\nupholding the requisite level of reliability.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "SYSTEM DESCRIPTION",
+      "level": 1,
+      "text": "This work examines the use of the 24-bus, 26-generator\nIEEE Reliability Test System (RTS) [30], [31], [32], [33] for\nVOLUME 13, 2025 181187\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nperforming n-1 generator contingency-based UC with opti-\nmal CM allocation. The single line diagram of IEEE RTS is\nshown in Fig. 4.\nA. ASSUMPTIONS FOR CARRYING OUT THE PROPOSED\nANAL YSIS\nThe n-1 generator contingency is performed with the follow-\ning assumptions:\ni) For n-1 contingency, failure of one unit is considered\nin the system with no simultaneous outages of single\nunits of other rating generators. This is done since the\nsimultaneous outage of two or more different rating\ngenerators is practically not possible to avoid shutdown\n& startup costs as well as maintenance. Moreover, the\nperiodical maintenance of all generators in a running\ncondition is ensured to avoid such forced outages.\nii) The conditional probability of ‘one’ generator outage\nwith other generators is not considered.\nThe evaluation of LOLP is based on the following\nassumptions:\ni) LOLP is assessed by considering the forced outage of\nonly one generating unit at a time.\nii) The paper does not take into account simultaneous\noutages of single units with different ratings connected\nto different bus numbers.\niii) Outages of more than one unit are not considered for\nLOLP calculation.\niv) Additionally, the conditional probabilities between\nvarious generators are not modeled to simplify the\nanalysis. Furthermore, their impact on the results is\nconsidered negligible, and therefore, they are disre-\ngarded in the analysis.\nv) LOLPmax, as specified by the Central Electricity\nAuthority (CEA) of India, is 0.05 [34]. This value can\nbe verified from the official website data repository\nof the CEA. Similarly, the US Department of Energy\nspecifies a LOLPmax of 0.002 (equivalent to 0.1/year)\n[35], while the European Union Standards specify a\nLOLPmax of 0.008 [36]. These values can be verified\nfrom the respective official website data repositories.\nFor this study, assuming the system is operating under\nstrict limits, a LOLPmax of 0.05 is considered\nB. SYSTEM DATA\nThe system comprises 26 thermal generators, which are\nassigned indexes ranging from 1 to 26, connected to a 24-bus\nsystem. The data from the IEEE RTS is cited in references[1],\n[2], [14], and [15]. The data utilized in this study are presented\nin Table 2. The bus numbers (‘b’) to which generators of spe-\ncific capacity are connected are listed in column 1 of Table 2.\nThe number of generating units connected to each bus num-\nber, their respective indexes, and the maximum capacity of a\nsingle unit are indicated in columns 2, 3, and 4, respectively.\nThe final column provides the maximum generation capacity\navailable at each bus ‘b’.\nTABLE 1. Cases for the performed analysis.\nThe total available capacity of the system is 3105 MW.\nHowever, the capacity available for UC or load dispatch will\nbe determined using Equations (1) to (9) with other constraint\nformulations referred from [27]. Therefore, considering the\ndefault 10% SR corresponding to CM of 310.5 MW (approx-\nimately 310 MW), the capacity available for estimating DA\nUC is 2795 MW. This value will be used as a reference for\nthe Base Case and Case 1.\nIn Case 2, the capacity available for dispatch can be sum-\nmarized as follows:\nCase 2(a): The 8% SR of each generator corresponds to\nCM of approximately 248 MW. With this CM, the capacity\navailable for DA UC will be increased to 2857 MW.\nCase 2(b): The 5% SR of each generator renders CM\nof 155 MW unavailable to the operator for dispatch. As a\nresult, the capacity available for DA UC becomes 2950 MW.\nCase 2(c): An SR of 0% i.e. zero CM indicates that all\ngenerators in the system are loaded to their full capacity.\nIn this scenario, the capacity available for DA UC is 3105\nMW.\nThe generator data, including the fuel cost coefficients a i,\nbi, c i, active power limits, ramp up rate, ramp down rate,\nhot & cold startup costs, cooling time constant, minimum up\ntime, and minimum down time, are referred from [30], [31],\nand [32]. The mean time to failure (MTTF), with the failure\nrate (FR) of each unit, is mentioned in Table 3, as referred\nfrom [10] and [11]. FR, λ is related to MTTF i.e. tFR as per\neq. (16)\nTo facilitate the simulation of the n-1 thermal generator\ncontingency-based DA UC, it is essential to first identify all\npotential contingencies arising from the various capacity gen-\nerators installed across different bus numbers, as delineated in\nTables 5 and 6. The identification and subsequent simulation\nof these generator contingencies will be conducted in accor-\ndance with the previously stated assumptions. The identified\ncontingencies will be addressed utilizing the Contingency\nIndex ( Cyk ), as indicated by eq. 10. In this study, the Con-\ntingency Index Cyk is assigned values ranging from 1 to 9,\ncorresponding to the ascending order of bus numbers within\nthe system network where generators are installed. A graph-\nical representation of this assignment is illustrated in Fig. 5.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [
+          "t2",
+          "t3",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "181188 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nFIGURE 3. Methodological framework to evaluate system performance.\nFIGURE 4. Single Line Diagram of IEEE RTS.\nThe anticipated load demand for the 24 hours of the fol-\nlowing day is visually depicted in Fig. 6.\nThe expected highest demand on the next day will\nbe 2670 MW at the 11 th hour. Several other peaks can also be\nidentified, which could potentially pose a risk when simulat-\ning all conceivable n-1 generator contingencies, especially if\nthere is a shortage in the supply required to meet the demand\ndue to generator outages.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "RESULTS AND DISCUSSION",
+      "level": 1,
+      "text": "This section presents the DA UC cost results for the Base\nCase, Case 1, and Case 2, followed by an evaluation of\nthe system performance parameters as previously formulated\nand discussed. Subsequently, a feasibility assessment is con-\nducted regarding the load dispatch for the following day,\ninformed by the system performance observed during the\nDA UC simulation under executed n-1 generator contin-\ngencies. The findings of the implemented methodology are\ndetailed in Section VII-A. An analysis of these results is\nprovided in Section VII-B, focusing on the practical appli-\ncation of DA UC for economically dispatching the loads\nfor the following day and preparing the necessary measures\nin advance to ensure reliable system operation within safe\nlimits.\nA. COMPILATION OF DA UC RESUL TS\nAfter compiling the severe n-1 generator contingencies, the\nDA UC program is simulated with the outage of the one\ngenerator corresponding to each severe contingency. To esti-\nmate the increase in costs (if any) for each n-1 generator\ncontingency, the pre-contingency or ‘Base Case’ UC costs are\ncompared with these costs. The DA UC costs are estimated\nfor the following cases:\ni) Base Case\nii) Case 1\niii) Case 2\nThis is followed by reliability analysis of the n-1\ncontingency-based DA UC results via LOLP .\n1) BASE CASE\nIn the ‘Base Case’, the optimization of DA UC is performed\nvia the DP technique with the mentioned constraints, when\nn-1 generator contingencies are not considered in the system,\nwith a CM of 10%. Since the analysis is performed before\nsimulating contingencies, it is termed as ‘pre-contingency’\nanalysis which forms the basis of comparison for the other\n2 cases. The original system of IEEE RTS is utilized for\nconducting the analysis. The cumulative DA UC costs for\neach hour ‘t’ of the next day are estimated for the system via\nDP . DP is executed in MA TLAB via coding, including all the\nmentioned constraints, and compiled in Table 4.\nλ = 1\ntFR\n(16)\n2) CASE 1\nThe impact of n-1 generator contingencies on the real-time\nUC and load dispatch is assessed by performing the forced\noutage of each generator as indicated in Table 5, for the\nspecific contingency index mentioned in Column 1. The bus\nnumber from which the generator is removed for simulating\nn-1 contingency is mentioned in Column 2. The capacity\nof the generator, which is not available in the system for\ngeneration, is mentioned in Column 3. The fourth column\nshows the DA UC cost of the Base Case. The DA UC costs\nwith 10% SR due to the outage of the corresponding generator\nare mentioned in Column 5. The percentage increase in the\nVOLUME 13, 2025 181189\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nTABLE 2. Data of generation units.\nTABLE 3. Mean time to failure and failure rate of different capacity\nthermal generators.\nFIGURE 5. Identified 9 n-1 thermal generator contingencies for IEEE RTS.\nDA UC costs for the various n-1 contingencies is mentioned\nin Column 6.\nThe assignment of bus rank is determined by calculating\nthe increase in DA UC costs during the simulation of the\nspecific n-1 contingency. The higher the decrease in the\npercentage rise of UC costs, the higher the assigned rank.\nThis information can be found in the last column. Upon\nexamination, it is evident that Buses 18 and 21 are the weakest\nbuses under the n-1 generator contingency for DA UC since\nthe costs are 15.67% higher. Generator outage at bus number\n23 results in an 11.67% and 3.67% rise in DA UC costs for\nthe 350 MW and 155 MW generator contingency, respec-\ntively. Bus 23 is the next weak bus, thus assigned the rank",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t5",
+          "t2",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2 A very slight increase in DA UC costs is observed for the",
+      "level": 1,
+      "text": "outage of 76 MW and 100 MW generators at buses 2 and 7,\nrespectively. Therefore, these are ranked 3 and 4 in the same\nsequence.\nThe outage of one 20 MW unit, at bus 1, doesn’t affect the\nDA UC costs. Additionally, the outage of one generator at\nbus 13 (197 MW) and bus 15 (12 MW) results in a slight\ndecrease in costs compared to the Base Case. Hence, the\nbuses 1, 13, and 15 don’t witness any uneconomical effect\nof n-1 generator contingency based on the DA UC.\n3) CASE 2\nIn Case 1, CM was 10%. In this case, SR is reduced to\n8%, 5%, and 0%, consequently, for assessing the impacts\nof CM utilization during the specific contingency with the\nindex mentioned in Column 1. For each of these values of\nCM, the n-1 generator contingency-based DA UC analysis\nis performed again to find out the overall DA UC costs\nas compiled in Table 6. The UC cost for the Base Case is\nmentioned in column 4. Column 5 presents the UC costs of\nCase 1, i.e., with 10% SR. The UC costs of Case 2 for the\nvarious CM levels are shown in the last three columns.\nIt can be observed from the table that the decrease of\nCM from 10% to 8%, and then from 8% to 5%, doesn’t\nhave any significant impact on DA UC costs despite the\ndecrease in costs for n-1 contingency at bus 13 and bus 15.\nHowever, when CM is further reduced from 5% to 0%, the\ndecrease in DA UC costs is notable for most of the simulated\ncontingencies, as highlighted in the last column of Table 6.\nB. RELIABILITY ESTIMATION OF n-1 GENERATOR\nCONTINGENCY BASED DA UC\nThe reliability of the Case 1 and Case 2 results is estimated\nvia the reliability index LOLP . For estimating the reliability of\nthe obtained DA UC results under n-1 generator contingency,\nLOLP is calculated. To calculate the LOLP index, the genera-\ntion unavailability needs to be evaluated from the perspective\nof the various n-1 generator contingencies for different cases\nof ‘one’ generator outages. The table containing this data\nis termed as Capacity Outage Probability Table (COPT),\nas shown in Tables 7 and8 for Cases 1 and 2, respectively. The\nprobability of generation unavailability is calculated in terms\nof FR and repair rate from the mathematical formulation\nreferred to in [10] and [11].\n1) COPT CALCULATIONS FOR CASES 1 AND 2\nTables 7 and 8 represent COPT for Cases 1 and 2. The\nprobability of generation unavailability for the single unit\noutage is obtained from the FR mentioned in Eq. (15) after\nconsidering the assumptions mentioned in Section 5.2.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "181190 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nFIGURE 6. Hourly Forecasted load demand of IEEE RTS [9].\nTABLE 4. DA hourly cumulative UC costs for ‘Base Case’ .\nCase 1: The total capacity available for UC allocation after\nsimulating the outage of a single generating unit is mentioned\nin column 3 of Table 7. The last column of Table 7 com-\npiles the probability of generation unavailability for each n-1\ngenerator contingency. The available capacity for dispatch\nis 2795 MW as calculated in Section VI-B. The highest value\nof forecasted load demand is 2670 MW at hour ‘11’, as can\nbe observed from Table 4. From Table 7, the total capacity\nfor DA UC doesn’t reduce lower than the highest value of\ndemand, i.e., 2670 MW, for the n-1 contingencies on bus\nnumbers 1, 2, 7, and 13. Thus, the probability of genera-\ntion unavailability can occur only for the n-1 contingencies\noccurring at bus numbers 15, 18, 21, and 23.\nCase 2: The available capacity for dispatch is 2857 MW,",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t7",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "2950 MW, and 3105 MW, respectively, for Case 2 (a), (b),",
+      "level": 1,
+      "text": "and (c) as calculated in Section VI-B. The total capacities\navailable after the outage and their probabilities are compiled\nin Table 8 for three considerations of Case 2, which are\ndiscussed as under:\n(a) From Table 8, the total capacity for DA UC doesn’t\nreduce lower than the highest value of demand, i.e.,",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t8"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "2670 MW, for the n-1 contingencies on bus numbers 1,",
+      "level": 1,
+      "text": "2, 7, 15, and 23 (for the outage of a 155 MW genera-\ntor). Thus, the probability of generation unavailability\ncan occur only for the n-1 contingencies occurring at\nbus numbers 13, 18, 21, and 23 (for the outage of\nthe 350 MW generator).\n(b) The total available capacity after generator outage is\nlower than the highest demand at bus numbers 18,\n21, and 23 (for an outage of a 350 MW generator),\nthus having a high probability of loss of load during\ngenerator outage.\n(c) All buses carry sufficient generation capacity even after\nthe loss of one generator. Hence in this case, the proba-\nbility of loss of load during generator outage becomes\nzero.\n2) LOLP CALCULATIONS FOR CASES 1 AND 2\nThe loss of load probability of individual hour, for all identi-\nfied contingencies (referred to asCy in this paper) is evaluated\nfrom Eq. (12) and compiled in Table 9. These are calculated\nby aggregating the individual single generator outage prob-\nabilities as mentioned in Tables 9 and 10 for Cases 1 and 2,\nrespectively.\nThe overall LOLP for the 24 hours of the next day is\ndetermined from Eq. (13).\nCase 1: The probability of loss of load for individual hours\nwith the overall probability of load loss for the next day is\ncompiled in Table 9. For the considered system, the estimated\nvalue of overall LOLP for the next day is 0.050113, as can be\nobserved from Table 9.\nCase 2: The probability of loss of load for individual hours\nis compiled in Table 10 for Case 2(a), (b), and (c). The esti-\nmated value of overall LOLP for the next day is 0.03693587,\n0.0153346, and 0 for Case 2(a), 2(b), and 2(c), respectively,\nas can be observed from Table 10.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t9"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "OPERATING MARGIN",
+      "level": 1,
+      "text": "The operating margin is evaluated from Eq. (15) for Cases\n1 and 2. By referring to the maximum limit of loss of\nload probability considered in this study (i.e., 0.05), and the\nobtained results of LOLP for the simulated Case studies as\ncompiled in Tables 9 and 10, the obtained value of operating\nmargin M o\nda are calculated and compiled in Table 11.\nD. ANAL YSIS OF RESUL TS\nThe results obtained are judged and analyzed utilizing the\naforementioned data. The analyses derived from the simu-\nlated cases are derived and summarized in this section.\n1) COMPARATIVE ANALYSIS OF D.A. U.C. COSTS FOR THE\nN-1 GENERATOR CONTINGENCIES WITH CRITICALITY AND\nROBUSTNESS ANALYSIS OF SYSTEM\na: BASE CASE\nThe DA UC cost for the considered IEEE RTS system when\noptimized via DP is found to be $ 774100. This cost forms\nthe basis of comparison for the n-1 contingency-based DA\nUC with varying SR, which are analyzed in Cases 1 and 2.\nVOLUME 13, 2025 181191\nS. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nTABLE 5. Comparison of Case 1 with Base Case: DA UC costs for n-1\ngenerator contingencies with 10% CM.\nTABLE 6. DA UC costs for n-1 generator contingencies: Comparison of\nBase Case, Case 1 and Case 2.\nTABLE 7. Case 1: Capacity outage probability Table (COPT) for the outage\nof a single generating unit.\nThe Base Case cost of DA UC is quite low, i.e., without any\ngenerator outage, the system runs smoothly.\nb: CASE 1\nEven with a 10% SR, it is still possible to perform DA UC\nbased on n-1 generator outages. These contingencies do not\npose a significant threat to the supply-demand balance, and\nreal-time load dispatch can still be effectively carried out\ndespite the large increase in DA UC costs in the case of\none generator outage on buses 18, 21, and 23. N-1 generator\ncontingency on bus numbers 2 and 7 results in a negligible\nincrease in UC costs. The remaining buses don’t experience\nany increase in costs despite the generator outage.\nThe percentage variation of DA UC costs obtained in\nCase 1 with respect to Base Case results is represented in\nTable 5. The percentage variation in DA UC costs for Cases\n2(a) and 2(b) is also the same. A graphical representation of\nthe percentage variation of these costs with respect to the nine\nsimulated contingencies is shown in Fig. 7.\nAfter determining the percentage variation in UC costs\nfor contingencies indexed from 1 to 9, they are subsequently\nranked from 1 to 4 based on the descending order of their DA\nUC costs. These rankings are graphically presented in Fig. 8.\nFig. 8 illustrates the ranking of nine simulated n-1 gen-\nerator contingencies, specifically for Case 1 and the two\nconditions of Case 2- (a) and (b), when CM is 248 MW\nand 155 MW, respectively, as illustrated in Section VI-B.\nCase 1 and Case 2(a), 2(b) are analyzed together due to\nthe identical DA UC costs observed between Case 1 and the\naforementioned conditions of Case 2, as confirmed by the\ndata presented in Table6. It is evident that the highest capacity\ngenerator outage, specifically 400 MW at buses 18 and 21,\nposes the greatest risk to the system. Thus, buses 18 and\n21 are the weakestin the network. Consequently,contingen-\ncies (Cy)6 and 7 are ranked as the most critical, occupying\nthe top position. Contingency 1, on the other hand, does not\nexhibit any increase in DA UC costs, thereby posing no threat\nto the system. Contingencies 4 and 5 demonstrate a decrease\nin costs below the Base Case UC cost, making them the\nmost stable contingencies. Thus, bus 13 and 15 serve as the\nrobust buses in the network.\nThus, the n-1 generator contingency, even with 10% SR,\ndoesn’t have any significant impact on DA UC implemen-\ntation since the supply-demand balance is maintained. The\nonly change observed is the increase in DA UC costs for\na few contingencies. The above analysis is done for 10%\nSR with a CM of 310.5 MW. However, to utilize CM in\na better manner for further reducing DA UC costs in the\npresence of n-1 generator contingencies, CM is reduced in\nsteps from 248 MW to 0 MW in Case 2.\nc: CASE 2\nThe post-contingency costs are quite high for the\nhigh-capacity generators of 350 MW and 400 MW. For the\ngenerators of 300 MW and 450 MW, their outage leads\nto high UC costs, since the other higher cost generators\nneed to be committed in their place to deliver power to\nthe required load demand. However, with the full operating\nreserve consumption during the n-1 contingency, i.e., when\nCM is 0 MW, the UC costs drop significantly compared to\nthose of Case 1.\nThe percentage variation in DA UC costs for Case 2 needs\nto be analyzed for the following three conditions, as specified\nin Section VI-B:",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t6",
+          "t7"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "181192 VOLUME 13, 2025",
+      "level": 1,
+      "text": "S. Jain, N. Kanwar: Evaluation of System Performance for Load Dispatch Feasibility\nTABLE 8. Case 2: Capacity Outage Probability Table (COPT) for outage of single generating unit.\na) CM of 248 MW corresponding to an aggregated reserve\nof 10%\nb) CM of 155 MW corresponding to an aggregated reserve\nof 8%\nc) CM of zero MW percent for 0% SR\nThe results for the above-mentioned conditions of\nCase 2 are presented in Table 6. The DA UC costs for condi-\ntions (a) and (b) are the same as those of Case 1. Therefore,\nthe determination of percentage variation in DA UC costs and\nranking of contingencies will be the same as discussed in the\nprevious sub-section for Case 1, and represented in Fig. 7\nand 8. The critical contingencies and the weak buses are the\nsame. Similarly, the stable contingencies and the robust buses\nare also the same.\nHowever, the DA UC costs for condition (c) are different\nfrom those of Case 1 as well as Case 2(a) and 2(b), as can\nbe observed from Table 6. Therefore, the assessment will\nbe derived from the percentage variation in DA UC costs as\nplotted in Fig. 9, and the contingency ranking, which is shown\ngraphically in Fig. 10.\nIt is evident from Fig. 9 that the DA UC costs are the\nhighest for contingencies 6,7 in Case 2(c). Contingency 9 also\nshows the next sharp rise in UC costs. The percentage rise\nin UC costs is very low for contingency 8, followed by\ncontingency 2, and is lowest for contingency 3. On the other\nhand, the DA UC costs reduce for contingencies 1, 4, and",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t8",
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 Comparing the percentage variation in DA UC costs for",
+      "level": 1,
+      "text": "Case 1 and Case 2(c) from Fig. 5 and 7, the DA UC costs\nreduce in Case 2(a) for the contingencies 1, 2, 3, 4, 5,\nand 8.\nThe rank of contingency is decided based on the economic\nDA UC results. The ranking of buses for Case 2(c) can be\ninterpreted from the graphical presentation shown in Fig. 10.\nA rank of 1 corresponds to the most expensive/uneconomic\ncontingency, and a rank of 5 shows the comparative least\ncost option. It can be observed that the outage of the largest\ngenerating unit of the system, i.e., 400 MW connected at\nbuses 18 and 21, increases the system risk. Contingencies 6,7\nTABLE 9. Case 1: LOLP (for forced outage of single generating unit).\noccupy rank 1, with contingency 3 ranked last. Buses 18, 21\nare therefore identified as the weakest buses of the network,\nwith the corresponding contingencies 6 and 7 posing as the\nmost critical contingencies of all. Contingencies 1, 4, and",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [
+          "t9"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5 exhibit cost reduction with costs lower than those in the",
+      "level": 1,
+      "text": "Base Case. Contingency 4 observes the lowest DA UC cost\nof all, lower than that of the Base Case, making it the most\nstable contingency, with bus 13 as the robust bus of the\nsystem. The next robust buses in sequence are buses 1 and\n15, corresponding to the contingencies 1 and 5.\nWhile optimizing the CM utilization leads to an econom-\nical DA UC solution, the costs of Case 2(c) are still higher\nthan the Base Case but lower than Case 1.\nThe following can be inferred from Case 2:\na) With 8% aggregated SR corresponding to a CM\nof 248 MW, the system operator can dispatch an addi-\ntional 248 MW compared to the Base Case and Case 1.\nb) The CM of 155 MW means there is an additional capac-\nity of 155 MW compared to Base Case and Case 1,\nwhich can be utilized to serve consumers.\nVOLUME 13, 2025 181193",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Proposed methodology for the system performance"
+    },
+    {
+      "id": "f2",
+      "caption": "Estimation of criticality and robustness of system for n-1"
+    },
+    {
+      "id": "f3",
+      "caption": "Methodological framework to evaluate system performance."
+    },
+    {
+      "id": "f4",
+      "caption": "Single Line Diagram of IEEE RTS."
+    },
+    {
+      "id": "f5",
+      "caption": "Identified 9 n-1 thermal generator contingencies for IEEE RTS."
+    },
+    {
+      "id": "f6",
+      "caption": "Hourly Forecasted load demand of IEEE RTS [9]."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Cases for the performed analysis."
+    },
+    {
+      "id": "t2",
+      "caption": "Data of generation units."
+    },
+    {
+      "id": "t3",
+      "caption": "Mean time to failure and failure rate of different capacity"
+    },
+    {
+      "id": "t4",
+      "caption": "DA hourly cumulative UC costs for ‘Base Case’ ."
+    },
+    {
+      "id": "t5",
+      "caption": "Comparison of Case 1 with Base Case: DA UC costs for n-1"
+    },
+    {
+      "id": "t6",
+      "caption": "DA UC costs for n-1 generator contingencies: Comparison of"
+    },
+    {
+      "id": "t7",
+      "caption": "Case 1: Capacity outage probability Table (COPT) for the outage"
+    },
+    {
+      "id": "t8",
+      "caption": "Case 2: Capacity Outage Probability Table (COPT) for outage of single generating unit."
+    },
+    {
+      "id": "t9",
+      "caption": "Case 1: LOLP (for forced outage of single generating unit)."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "eq. (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "eq. (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "eq. (3)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "eq. (9)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "eq. (8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "eq. (10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "eq. (11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "eq. (12)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Eq. (13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Eq. (14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "Eq. (15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "eq. (16)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 9,
+    "n_algorithms": 0,
+    "n_equations": 12
+  }
+}

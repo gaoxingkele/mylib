@@ -1,0 +1,446 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_ai_10/pdf/applsci-14-10368.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Due to global climate warming, coastal areas within the subtropical monsoon climate\nzone are increasingly facing safety challenges to the grid operation from tropical cyclones\nsuch as typhoons. Unlike sudden natural disasters like earthquakes and fires, tyhoons typi-\ncally have complete spatiotemporal trajectories, causing damage to power grid equipment\nand its abnormal characteristics to change over time. Therefore, the distribution of system\nfailures under typhoons exhibits complex spatiotemporal variations. During the spatiotem-\nporal evolution of grid failures, it is imperative to study emergency dispatch strategies\nthat meet the needs of system safety operations, ensuring the security and reliability of\ngrid operation.\nThe safety risk factors of the modern digital and intelligent power system include new\nflexible resources such as distributed energy resources and electric vehicles [1,2], extreme\nweather disasters [3,4], and cyber attacks [5,6]. Among these, extreme weather disasters can\ncause power grid equipment outages, leading to load shedding and even system splitting\nissues, which have garnered widespread attention from researchers [7]. Current research\nprimarily focuses on equipment failure analysis [8,9], the identification of critical vulnerable\nequipment [10], and system risk assessment under extreme weather conditions such as\ntyphoons, extreme heat, and cold waves [11–13]. By analyzing the abnormal mechanisms of\nextreme weather on equipment, and combining classical equipment aging failure models or\ndata-driven models, the failure probability of the equipment can be determined. The failure\nprobability of a local transmission tower-line system is calculated considering the joint\nprobability distribution of wind speed and direction [14]. A fatigue probability calculation\nmethod for wind-turbine towers is developed using the probability density evolution [15].\nBased on the solar panel structural performance data, fragility functions for rooftop- and\nground-mounted panels are estimated using a Bayesian approach [ 16]. By generating\nmultiple fault scenarios based on the fault probability characteristics of the equipment\nand calculating the system operation risk indicators under different fault scenarios, a risk\nassessment can be achieved. A risk assessment may include a large number of operational\nAppl. Sci. 2024, 14, 10368. https://doi.org/10.3390/app142210368 https://www.mdpi.com/journal/applsci\nAppl. Sci. 2024, 14, 10368 2 of 17\nscenarios and their safety risk indicator information, making it difficult for dispatchers to\nquickly grasp key information. Therefore, by classifying the operational scenarios into risk\nlevels through a severity grading strategy, a risk-level-based early warning method can\nbe obtained [17]. In addition to risk assessment and early warning, researchers are also\nenhancing the resilience of the power grid to extreme natural disasters through preventive\ndispatch [18], emergency dispatch [19], and restorative dispatch strategies [20]. Consid-\nering the uncertainties of wind power variation, a coordinated method for preventive\ngeneration rescheduling and corrective load shedding is proposed to maintain power sys-\ntem transient stability [18]. In [19], a consensus algorithm is developed for energy storage\nand thermal units to achieve the unit rate of communication [ 19]. As for restoring the\nelectricity service, a coordinated switch operation and crew dispatch strategy is developed\nto enhance restorative effectiveness. In addition to treating preventive, emergency, and\nrestorative dispatch separately, some researchers study their coordination [21]. Coordinat-\ning different measures can reduce total losses throughout the duration of these events. A\nnovel hierarchical defender–attacker model is employed to coordinate the above dispatch\nstages, and the robust resilience trapezoid and coordinated strategy is obtained through a\nnested column-and-constraint generation (C&CG) algorithm [21]. Besides conventional\ngeneration, researchers also investigate how to coordinate renewable energy in supporting\ncoordinated multi-stage dispatch [22]. Considering both the short-term emergency and\nlong-term operating limit, a robust preventive–corrective security-constrained optimal\npower flow is presented under N − k outages [23].\nEmergency dispatch during extreme weather events is a crucial element in the three-\nstage dispatch process. Preventive and restorative dispatches mainly serve as preparatory\nand backup plans for emergency dispatch, enhancing its effectiveness and preventing\nthe escalation of incidents. Emergency dispatch directly determines whether the system\ncan operate normally under extreme weather conditions. Although researchers have\nextensively studied emergency dispatch from aspects such as resource types, dispatch\nobjectives, and uncertainties in emergency conditions, few studies have considered the\nspatiotemporal characteristics of system failures caused by typhoons and their impact on\nemergency dispatch.\nTyphoons have distinct spatiotemporal trajectories, causing power grid equipment\nto experience varying extreme weather factors at different times, leading to continuously\nchanging equipment failure characteristics. Consequently, the distribution of system fail-\nures varies across both temporal and spatial dimensions. The spatiotemporal variation in\nsystem failure distribution adds complexity to uncertain emergency conditions, necessi-\ntating an accurate depiction of emergency conditions that account for the spatiotemporal\nchanges in anomaly distribution during the passage of typhoon. This will enhance the\nadaptability and robustness of emergency dispatch plans.\nThis paper first analyzes the mechanisms by which typhoons cause failures or abnor-\nmal states in typical source-grid equipment (wind power plants, poles and conductors) to\nprovide the time-varying abnormal states of wind power and transmission lines, including\nabnormal wind power output and line fault probability. Based on the spatiotemporal char-\nacteristics of grid failures, the fault probability threshold-based emergency scenarios are\nconstructed. A novel robust emergency dispatch strategy is developed using the emergency\nscenarios under a defender–attacker framework (DAF). Eventually, by recasting the DAF\nas a two-stage robust optimization model, the robust emergency dispatch of thermal units\nand energy storage systems is obtained using the C&CG algorithm.\nThe main contributions of the paper include:\n• Considering time-varying abnormal states of typhoon-susceptible grid-source equip-\nment under the spatiotemporal trajectory of typhoons, spatiotemporal characteristics\nof grid failures are studied. Based on the spatiotemoral grid failures, fault probability\nthreshold-based emergency scenarios during typhoons are developed, thus laying\nfoundations for subsequent emergency dispatch.\nAppl. Sci. 2024, 14, 10368 3 of 17\n• A novel robust emergency dispatch strategy is developed, considering spatiotemporal\ngrid failures during typhoons. Based on the defender–attacker framework, a two-stage\nrobust optimization (TSRO) model is developed, considering the fault probability\nthreshold-based emergency scenarios. The C&CG algorithm is employed to solve the\ndeveloped TSRO model to obtain the optimal dispatch of various emergency sources\nsuch as thermal units and energy storage systems.\nThe remainder of the paper is organized as follows: Section 2 addresses the spa-\ntiotemporal grid failures during typhoons and fault probability-based emergency scenarios;\nSection 3 studies the robust emergency strategy for the constructed emergency scenarios;\nSection 4 verfies the developed emergency strategy using the benchmark IEEE 14-bus\nsystem. Finally, the last section details the concluding remarks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Spatiotemporal Grid Failures and Emergency Scenarios During Typhoons",
+      "level": 1,
+      "text": "This section mainly presents the evolution of spatiotemporal grid failures during\ntyphoons. First, considering typical grid-source equipment, including the wind power\nplants and transmission lines that are susceptible to typhoons, time-varying abnormal\nstates of grid-source equipment and spatiotemporal grid failures are analyzed. Second,\nnovel fault probability threshold-based emergency scenarios are developed considering\nthe spatiotemporal grid failure characteristics.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Abnormal States of Typical Grid-Source Equipment During Typhoons",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1.1 Abnormal States of Wind Farm During Typhoons",
+      "level": 3,
+      "text": "Usually, once a typhoon enters the 24 h warning zone, meteorological departments\ncontinuously update the typhoon’s real-time information at 1 h resolutions. For the con-\nvenience of analysis, the prediction period of typhoons is set to 24 h, and the sampling\ntime period is set to 1 h. Suppose that the distance between wind farm i at time period t is\nri,t. The maximal wind speed at time period t is denoted by vmax,t. The radius of maximal\nwind speed is denoted by Rmax,t. The perceived wind speed of wind farm i can be written\nby [24]:\nvi,j =\n( ri,t\nRmax,t vmax,tri,t ∈ [0, Rmax,t)\nRmax,t\nri,t\nvmax,tri,t ∈ [Rmax,t, ∞) (1)\nwhere ri,t is defined by:\nri,t =\nq\n(xi − xo,t)2 + (yi − yo,t)2 (2)\nwhere (xi, yi) represents the fixed coordinate of wind farm i; (xo,t, yo,t) represents the\ncoordinate of the typhoon center at time period t. By substituting the perceived wind speed\nvi,t into the equivalent wind-turbine power curve function, the abnormal wind power can\nbe expressed by [25]:\nPw\ni,t =\n\n\n\n1\n2 ρv3\ni,tscp(λ, β), vin ≤ vi,t < vrate\nPw\nrate, vrate ≤ vi,t < vout\n0, vi,t ≥ vout\n(3)\nwhere ρ represents the air density; s represents the wind-affected area of the rotor blade;\ncp represents the power coefficient; λ and β represent the the tip-speed ratio and pitch\nangle of the equivalent wind turbine. vin, vrate, and vout represent the cut-in, rated, and\ncut-out velocity. Pw\nrate represents the rated wind power. Equations (1)–(3) show that the\nabnormal wind power Pw\ni,t changes with the movement of the typhoon’s position (xo,t, yo,t).\nWhen the perceived wind speed vi,t is beyond the cut-out speed vout, wind farm i will be\ndisconnected from the grid. The wind power Pw\ni,t will fluctuate if the perceived speed vi,t\nchanges drastically with the movement of typhoons. Drastic fluctuations in wind power\noutput can affect the safe operation of the power grid.\nAppl. Sci. 2024, 14, 10368 4 of 17",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.2 Abnormal States of Transmission Line During Typhoons",
+      "level": 3,
+      "text": "The elementary components of a transmission line include the conductor and the\npole. The pole or tower is a tall vertical structure to support the conductor which transmits\nelectrical energy. Suppose that transmission line i is composed of M poles and M − 1\ninterconnected conductors, since the collapse of any pole or conductor will lead to the\ndisconnection of transmission line i, the fault probability Pri,t(B) of line i before time period\nt can be written by [26]:\nPri,t(B) = max\n\n\n\nh\n1 −\n\u0010\n1 − Prp\n1,i,t(B)\n\u0011\n· · ·\n\u0010\n1 − Prp\nM,i,t(B)\n\u0011i\nh\n1 −\n\u0010\n1 − Prc\n1,i,t(B)\n\u0011\n· · ·\n\u0010\n1 − Prc\nM−1,i,t(B)\n\u0011i\n\n\n (4)\nwhere Prc\nk,i,t(B) represents the fault probability of conductor k of line i before time period t;\nPrp\nk,i,t(B) represents the fault probability of pole k of line i before time period t.\nEquation (25) shows that the fault probability of a transmission line is dependent upon\nthe fault probability of the conductors and poles. The fault probability of the pole is related\nto the cumulative fatigue damage during typhoons. According to the Palmgren–Miner\nlinear fatigue damage criterion, the cumulative fatigue damage D of a pole can be obtained\nby summing the fatigue damage over specific time periods. When there is no fatigue\ndamage D = 0, the fault probability is zero; when the fatigue damage reaches the threshold\nvalue D = 1, the fault probability is one and the collapse of the pole is an inevitable event.\nIf the damage value is between zero and one 0 < D < 1, the pole will have a certain\nprobability of experiencing a collapse. The fatigue damage of a pole during time period\nt exhibits an exponential relationship with the wind load during that period, where the\nwind load is proportional to the square of the wind speed. The fatigue damage Dk,i,t of\nconductor k of line i at time period t can be expressed by:\nDk,i,t =\n\n\n\n0, vk,i,t ∈ [0, vcr)\naebv2\nk,i,t vk,t ∈ [vcr, vm)\n1, vk,i,t ∈ [vm, ∞)\n(5)\nwhere vk,i,t represents the perceived wind speed of conductor k of line i at time period t;\na and b represent the fatigue coefficient. vcr represent the threshold wind speed at which\nthe typhoon begins to trigger fatigue in the pole. vm represents the maximum wind speed\ncorresponding to the one-time damage to the pole, without considering cumulative effects\nover time. Equation (26) indicates that the one-time damage to the pole is zero when the\nperceived wind speed is below the threshold wind speed; while the one-time damage to the\npole will definitely cause collapse if the perceived wind speed is beyond the maximum.\nEquation (26) formulates the one-time damage for a specific time period. In fact,\nwhether a pole collapses depends on the cumulative fatigue damage over multiple time\nperiods. As for the first q time periods, if the cumulative fatigue damage generated in time\nperiod t (t ≤ q) from the previous t − 1 time periods does not lead to a collapse, then the\npole will not experience a collapse in the the first q time periods. Therefore, the probability\nPrpc\nk,i,q(N) of pole k of line i not collapsing in the first q time periods can be expressed as the\nproduct of the probabilities of not collapsing from period 1 to q.\nPrpc\nk,i,q(N) = Prp\nk,i,1(N) · Prp\nk,i,2(N) · · ·Prp\nk,i,q(N) (6)\nwhere the probability Prp\nk,i,t(N) of pole k of line i not collapsing in the time period t can be\nexpressed by:\nPrp\nk,i,t(N) = e\n−\nDk,i,t\n1−(∑t−1\ns=1 Dk,i,s)−Dk,i,t , 1 ≤ t ≤ q (7)\nEquation (7) reflects that the probability of not collapsing in the first j time periods is\ndetermined by the combined effect of the cumulative fatigue damage ∑t−1\ns=1 Dk,i,s from the\nAppl. Sci. 2024, 14, 10368 5 of 17\nprevious t − 1 time periods and the one-time fatigue damage Dk,i,t in the time period t. The\ngreater the one-time fatigue damage and cumulative fatigue damage are, the smaller the\nprobability Prp\nk,i,t(N) of the pole not collapsing before time period t.\nBased on Equations (7) and (27), the probability Prpc\nk,i,q(N) of pole k of line i not\ncollapsing in the first q time periods can be rewritten as:\nPrpc\nk,i,q(N) = e\n∑\nq\nt=1 −\nDk,i,t\n1−(∑t−1\ns=1 Dk,i,s)−Dk,i,t (8)\nEquation (8) shows that if the cumulative fatigue damage before period t − 1 is less than\n1 (\n\u0010\n∑t−1\ns=1 Dk,i,s\n\u0011\n< 1) and the one-time fatigue damage Dk,i,t at time period t is zero. The\nprobability of pole k of line i before time period t is only affected by the first t − 1 time\nperiods.\n\u0010\n∑t−1\ns=1 Dk,i,s\n\u0011\n= 1 means the cumulative fatigue damage over the first t periods\nreaches the threshold value 1, the probability of pole k of line i is 1 and the pole will\ndefinitely collapse for the first t periods. Based on (8), the probability Prpc\nk,i,q(B) of pole k of\nline i collapsing before time period q is:\nPrp\nk,i,q(B) = 1 − Prpc\nk,i,q(N) (9)\nThe typhoon increases the wind load, which can exceed the conductor’s endurance limit,\nleading to a breakage. In this section, the failure rate λk,i,q of the conductor k of line i at\nperiod q is used to calculate the probability of a failure occurring [27]:\nλk,i,q =\n\n\n\n0, Wk,i,q ∈ [0, Wnorm\nmax )\n(1−λ1)Wk,i,q+λ1Wmax−Wnormmax\nWmax−Wnormmax\n, Wk,i,q ∈ [Wnorm\nmax , Wmax)\n1, Wk,i,q ∈ [Wmax, ∞)\n(10)\nwhere Wk,i,q represents the wind pressure endured by conductor k of line i at period q;\nWnorm\nmax represents the upper limit of normal wind pressure;Wmax represents the upper limit\nof wind pressure; λ1 represents the failure rate when the wind pressure is equal to Wnorm\nmax .\nThe probability Rq of no failure before time q can be written as:\nRk,i,q = Rk,i,q−1 − λk,i,q−1Rk,i,q−1 (11)\nFinally, the fault probability of Prc\nk,i,q of conductor k of line i before time period q is:\nPrc\nk,i,q(B) =1 − Rk,i,q (12)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Evolution of Spatiotemporal Grid Failures and Emergency Scenarios During Typhoons",
+      "level": 2,
+      "text": "Based on (12)–(25) in Section 2.1, we can calculate the fault probability Pri,j(B) of line i\nbefore time period j. In consideration of the whole prediction period T, the fault probability\nmatrix is expressed by:\nPr(B) =\n\n\nPr1,1(B) Pr1,2(B) · · ·Pr1,T(B)\nPr2,1(B) Pr2,2(B) · · ·Pr2,T(B)\n... ... · · · ...\nPrL,1(B) PrL,2(B) · · ·PrL,T(B)\n\n (13)\nBased on (1)–(3), we can obtain the wind power of wind farm i at time period j. Figure 1\npresents the flowchart of the abnormal spatiotemporal distribution of the power grid\nduring typhoons.\nAppl. Sci. 2024, 14, 10368 6 of 17\nstart\nInitialize: time period idex t=1, wind farm index w=1, \ntransmission line index i=1, the number of wind farms W , \nthe number of transmission lines L,  the number of time \nperiods T；\nCollect the information  of typhoons at time period t: \nmaximum wind speed        , coordinate of typhoon \ncenter                 , the radium of maximum wind speed     \nmax,tv\n( )o, o,,ttxy\nmax,tR\nCollect the information of wind farm w:  the coordinate of \nwind farm   \n( ),wwxy\nCalculate the wind power of wind farm w based on (1) -(3),   \nw=w+1\nw<W\nCollect the information of line i, calculate the fault \nprobability                   of line i before time period  t based \non (4)-(12), i=i+1\n( ),Prit B\nt=t+1\nt<T\ni<L\nN\nY\nY\nY\nN\nN\nend\nFigure 1. Flowchart of the abnormal spatiotemporal distribution of the power grid during typhoons.\nThe spatiotemporal distribution of transmission lines during typhoons is depicted by\na probability matrix. A common method of constructing the emergency scenarios using the\nprobability matrix is to simulate the sufficient numbers of times a line breakage accident\noccurs. Nevertheless, the large sample size leads to the computational burdens on those\nsmall probability events which rarely happen. The probability threshold exists to curb\nthe inclination of the decision maker to overvalue these low-probability threats and to\ndeter the uneconomic over-suppression. In this paper, the probability threshold is used to\nconstruct the emergency scenarios. Let µi,t ∈ {0, 1} represent the on-off status of line i at\nperiod t; the on-off status of all affected lines during typhoons can be written as a matrix\nAppl. Sci. 2024, 14, 10368 7 of 17\nform µ. Suppose the probability threshold is Pr0, t0 represents the period in which the fault\nprobability of line i exceeds Pr0 for the first time:\nt0 = Fij (Pr0) (14)\nwhere Fij represents the mapping from Pr0 to t0. Then, the sequential on-off statuses of line\nij during typhoons are determined as:\nµij,t =\n\n\n\n1, i f t 0 /∈ NT\n0, i f t 0 ∈ NT and t ≥ t0\n1, i f t 0 ∈ NT and t ≤ t0\n(15)\nwhere NT represents the set of time periods during typhoons. Equation (15) shows that\nwhen the fault probability of line i never reaches the threshold Pr0 during typhoons (i.e.,\nt0 /∈ NT), the status of line ij is always regarded as on-status ( µij,t = 1). When the fault\nprobability of line ij reaches Pr0 at period t0, the status of line ij after period t0 is regarded\nas off-status (µij,t = 0). In other words, the fault probability is high enough to trigger the\nbreakage; since timely repair is not considered, the off-status lasts for the remaining periods\nt ≥ t0. The status of line ij before period t0 is regarded as on-status ( µij,t = 1) since the\nfault probability before period t0 is not big enough to trigger the breakage. In practice, the\ndecision maker can set different Pr0 to reflect the flexibility of their choice of the threshold.\nEach Pr0 will generate one emergency scenario based on (15). Suppose there are R choices\nof Pr0, then R emergency scenarios are established.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 Robust Emergency Dispatch Strategy Considering Spatiotemporal Grid Failures",
+      "level": 1,
+      "text": "During Typhoons\nThe emergency dispatch resources contain thermal units, energy storage systems\n(ESSs). By dispatching thermal units and ESSs during typhoons, the negative impact of\nabnormal wind power and unexpected line outage can be mitigated.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1 Objective of Emergency Dispatch",
+      "level": 2,
+      "text": "The objective of emergency dispatch is the minimization of the cost of emergency\ndispatch:\nobj = ∑t ∑j\n\u0012\naj\n\u0010\nPg\nj,t\n\u00112\n+ bjPg\nj,t(t) + cj\n\u0013\n+ ∑t ∑j\n\u0010\nλdis\nj Pdis\nj,t + λcha\nj Pcha\nj,t\n\u0011 (16)\nwhere aj, bj, and cj represent the fuel cost coefficients of thermal unit j; Pg\nj,t represents the\noutput power of thermal unit j at time period t; λcha\nj and λdis\nj represent the charge and\ndischarge cost coefficient of ESS j; Pcha\nj,t and Pdis\nj,t represent the charge and discharge power\nof ESS j at period t, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.2 Operational Constraints of Emergency Dispatch",
+      "level": 2,
+      "text": "The output power Pg\nj,t of thermal unit j at time period t should satisfy the upper and\nlower output limit constraints:\nPg,min\nj ≤ Pg\nj,t ≤ Pg,max\nj (17)\nwhere Pg,min\nj and Pg,max\nj represent the lower and upper power limits of thermal unit j.\nThe ramping limit of thermal units is expressed by:\nPrd\nj ≤ Pg\nj,t − Pg\nj,t ≤ Pru\nj (18)\nwhere Prd\nj and Pru\nj represent the ramp-down and ramp-up limits of unit j.\nAppl. Sci. 2024, 14, 10368 8 of 17\nThe discharge and charge power limits of ESS j satisfy:\n0 ≤ Pdis\nj,t ≤ βdis\nj,t Pdis,max\nj (19)\n0 ≤ Pcha\nj,t ≤ βcha\nj,t Pcha,max\nj (20)\nwhere Pdis\nj,t and Pcha\nj,t represent the discharge and charge power of ESS j at time period\nt; βdis\nj,t and βcha\nj,t (βdis\nj,t , βcha\nj,t ∈ {0, 1}) represent the discharge and charge status of ESS j at\ntime period t; Pdis,max\nj and Pcha,max\nj represent the maximum discharge and charge power\nof ESS j.\nAn ESS cannot be in both discharging and charging states simultaneously:\nβdis\nj,t + βcha\nj,t = 1 (21)\nThe relation between the stored energy and the discharge or charge power of an ESS is:\nEj,t = Ej,t−1 − Pdis\nj,t\n.\nηdis\nj + Pcha\nj,t ηcha\nj (22)\nwhere Ej,t represent the stored energy of ESS j at period t; ηcha\nj and ηdis\nj represent the charge\nand discharge efficiency coefficient of ESS j.\nThe stored energy Ej,t of ESS j at period t should satisfy:\nEj,min ≤ Ej,t ≤ Ej,max (23)\nwhere Ej,min and Ej,max represent the minimum and maximum energy of ESS j.\nThe nodal power balance of node j is written by:\nαg\nj Pg\nj,t + αe\nj\n\u0010\nPdis\nj,t − Pcha\nj,t\n\u0011\n+ αw\nj Pw\nj,t\n−αd\nj Pd\nj,t = ∑\nk∈Ωt\nPjk,t − ∑\ni∈Ω f\nPij,t\n(24)\nwhere αg\nj , αe\nj , αw\nj , αd\nj represent the identifier, indicating whether node j is installed with\na thermal unit, ESS, wind farm, or load. αg,e,w,d\nj = 1 indicate whether node j is installed\nwith a thermal unit, ESS, wind farm, or load; αg,e,w,d\nj = 0 indicates that node j is not\ninstalled with a thermal unit, ESS, wind farm, or load. Ωt represents the set of to-nodes\ninterconnected with node j; Ω f represents the set of from-nodes interconnected with node\nj; Pjk,t represent the power flow from node j to node k at time period t; Pij,t represent the\npower flow from node i to node j at time period t.\nThe power flow equation describing the relationship between the transmitted power\nand the phase angles at both ends of the line can be expressed by:\nPij,t = Bij\n\u0000\nθi,t − θj,t\n\u0001\n(25)\nwhere Pij,t represents the transmitted power from node i to node j at time period t; Bij\ndenotes the susceptance of the line between node i and j; θi,t and θj,t represent the phase\nangle of node i and j at time period t.\nIf the line between node i and j is disconnected due to the fatigue damage caused by\ntyphoons, Equation (25) does not hold and Pij,t can be any value; while Equation (25) holds\nif the line between node i and j is connected. Hence, the power flow can be rewritten as:\nBij\n\u0000\nθi,t − θj,t\n\u0001\n+ Pij,t ≤\n\u0000\n1 − µij,t\n\u0001\nM (26)\nBij\n\u0000\nθi,t − θj,t\n\u0001\n+ Pij,t ≥\n\u0000\nµij,t − 1\n\u0001\nM (27)\nAppl. Sci. 2024, 14, 10368 9 of 17\nwhere µij,t ∈ {0, 1} represents the on–off status of the line between node i and j at time\nperiod t. M is a large positive number. When the line between node i and j at time period t\nis connected (i.e., µij,t = 1), Equations (26) and (27) are transformed into (25). When the\nline between node i and j at time period t is connected (i.e., µij,t = 0), there is no obvious\nrelation between Pij,t and Bij\n\u0000\nθi,t − θj,t\n\u0001\n, and Pij,t can be any value between −M and M.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.3 Robust Emergency Dispatch Strategy During Typhoons",
+      "level": 2,
+      "text": "Based on Section 3.1, the two-stage robust optimization (TSRO) model under the\nattacker-defender framework is recast as:\nmin\ny∈Ωy\nmax\nµ∈Ωµ\nminx obj\ns.t. G1x + G2y + G3µ + G4h ≤ 0\n(28)\nwhere the binary ESS status y =\nh\nβdis\nj,t , βcha\nj,t\ni\nare the first-stage decision variables; while\nx =\nh\nPdis\nj,t , Pdis\nj,t , Pg\nj,t\ni\nare the second-stage decision variables. µ ∈ Ωµ represents the set of\nR emergency scenarios constructed from Section 2.2. The constraint represents (17)–(27).\nG1, G2, G3, and G4 represent the corresponding matrices; h =\n\u0002\nEj,t, Pij,t, θij,t\n\u0003\nare the\nintermediate variables.\nAs can be seen, the max–min operator in (28) makes the second stage a defender–\nattacker model. The attacker (typhoon) attempts to maximize the emergency dispatch cost\nby applying the severest emergency scenario; while the defender (dispatcher) attempts\nto minimize the dispatch cost. The max operator means that the dispatch cost under the\nseverest emergency scenario is larger than that under other emergency scenarios. Therefore,\nEquation (28) can be reformulated as the following:\nmin\ny∈Ωy\nη\ns.t. η ≥ obj r, r = 1, · · ·, R\nG1xr + G2y + G3µr + G4hr ≤ 0, r = 1, · · ·, R\n(29)\nwhere xr represent the optimal solutions of the second-stage decision variables corre-\nsponding to emergency scenario r. µr represent the on–off line statuses under emergency\nscenario r. hr represent the optimal solutions of the second-stage intermediate variables\ncorresponding to emergency scenario r.\nAs a result, solving (28) reduces to solve an equivalent (29). Rather than enumerating\nall the emergency scenarios and solving (29), a column-and-constraint generation (C&CG)\nprocedure is implemented in a master–subproblem framework. The procedure is as follows:\n1. Set the lower boundary to the negative infinity LB = −∞ and the upper boundary to\nthe positive infinity UB = ∞; set the counter to zero k = 0; initialize the set of counter\nO = ∅; initialize the error threshold ϵ.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2 Solve the master problem",
+      "level": 1,
+      "text": "miny,η η\ns.t. η ≥ obj r, ∀r ∈ O\nG1xr + G2y + G3µ∗\nr + G4hr ≤ 0, ∀r ≤ k\ny ∈ Ωy\n(30)\nDerive the optimal solutions (y∗\nk+1, η∗\nk+1, x∗\n1, · · ·, x∗\nr ) and update the lower boundary\nLB = η∗\nk+1\n3. Solve the sub-problem Q(yk+1) =\n(\nmax\nµ∈Ωµ\nminx obj : G1x + G2y + G3µ + G4h ≤ 0\n)\nand update the upper boundary UB = Q(y∗\nk+1).\n4. If UB − LB ≤ ϵ, return y∗\nk+1, x∗\nk, and terminate. Otherwise,\nAppl. Sci. 2024, 14, 10368 10 of 17\n– (a) if Q(y∗\nk+1) < ∞, create variables xk+1 and hk+1 in the k + 1-th iteration and\nadd the optimality cuts\nη ≥ obj k+1 (31)\nG1xk+1 + G2y + G3µ∗\nk+1 + G4hk+1 ≤ 0 (32)\nto the master problem, where µ∗\nk+1 is the optimal emergency scenario by solving\nQ(yk+1). Update k = k + 1, Q = Q ∪ k + 1, go to step 2.\n– (b) if Q(y∗\nk+1) =∞, create variables xk+1 and hk+1 in the k + 1-th iteration and\nadd the feasibility cuts\nG1xk+1 + G2y + G3µ∗\nk+1 + G4hk+1 ≤ 0 (33)\nto the master problem, where µ∗\nk+1 is the optimal emergency scenario by solving\nQ(yk+1). Update k = k + 1, go to step 2.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4 Case Studies",
+      "level": 1,
+      "text": "This section presents the case studies using the benchmark IEEE-14 bus system under\nTyphoon Maria. The trajectory of Typhoon Maria during the 24 h periods is shown in\nFigure 2. Based on the proposed robust emergency dispatch strategy in (1)–(33), the M-\nfile-based program is established using Python 3.9 and solved by Pyomo 6.8.0. All case\nstudies in this paper are conducted on a laptop with an 8-core Intel i7-9750H processor and\n16 GB RAM (Intel Corporation, Santa Clara, CA, USA). The excution time is 18.54 s. The\ntimeliness for the application in real-life systems is also affected by factors such as signal\ntransmission time, and delayed response time.\n3\n1\n5\n2\n6\n7\n8\n9\n1011\n13 14\nB6\nB7\nB19\nB17\nG\nG\nG\nESS\nW\n3\n1\n5\n2\n6\n7\n8\n9\n1011\n13 14\nB6\nB7\nB19\nB17\nG\nG\nG\nESS\nW\nRmax\nRmax\nRmax\n3\n1\n5\n2\n6\n7\n8\n9\n1011\n13 14\nB6\nB7\nB19\nB17\nG\nG\nG\nESS\nW\nRmax\nFigure 2. Schematic diagram of IEEE-14 bus system under Typhoon Maria over 24 h (green area\nrepresents the region swept by the typhoon).\nAppl. Sci. 2024, 14, 10368 11 of 17",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.1 Parameter Setting",
+      "level": 2,
+      "text": "The typical parameters of Typhoon Maria are given in Table 1.\nTable 1. Typical parameters of Typhoon Maria over 24 h periods.\nParameter 1 h 2 h 3 h 4 h\nvmax,i 48 m/s 50 m/s 50 m/s 48 m/s\nRmax,i 25.1 m 24.5 m 30.2 m 27.6 m\n(xo,i, yo,i) (123.9 E, 25.4 N) (123.6 E, 25.5 N) (123.4 E, 25.6 N) (123.1 E, 25.8 N)\nParameter 5 h 6 h 7 h 8 h\nvmax,i 48 m/s 48 m/s 48 m/s 48 m/s\nRmax,i 28.4 m 28.4 m 26.2 m 23.2 m\n(xo,i, yo,i) (122.7 E, 25.9 N) (122.3 E, 26.1 N) (121.9 E, 26.3 N) (121.4 E, 26.3 N)\nParameter 9 h 10 h 11 h 12 h\nvmax,i 45 m/s 45 m/s 45 m/s 43 m/s\nRmax,i 25.8 m 22.4 m 27.3 m 32.8 m\n(xo,i, yo,i) (121.0 E, 26.3 N) (120.8 E, 26.3 N) (120.6 E, 26.4 N) (120.3 E, 26.4 N)\nParameter 13 h 14 h 15 h 16 h\nvmax,i 43 m/s 43 m/s 43 m/s 40 m/s\nRmax,i 32.5 m 32.8 m 39.4 m 39.9 m\n(xo,i, yo,i) (119.9 E, 26.4 N) (119.5 E, 26.3 N) (119.1 E, 26.2 N) (118.9 E, 26.3 N)\nParameter 17 h 18 h 19 h 20 h\nvmax,i 40 m/s 40 m/s 40 m/s 40 m/s\nRmax,i 35.9 m 39.9 m 39.4 m 37.5 m\n(xo,i, yo,i) (118.7 E, 26.4 N) (118.4 E, 26.5 N) (118.1 E, 26.7 N) (117.8 E, 26.9 N)\nParameter 21 h 22 h 23 h 24 h\nvmax,i 40 m/s 40 m/s 40 m/s 38 m/s\nRmax,i 41.1 m 43.7 m 45.7 m 42.8 m\n(xo,i, yo,i) (117.6 E, 27.0 N) (117.4 E, 27.1 N) (117.2 E, 27.1 N) (117.0 E, 27.1 N)\nThe thermal units participating in emergency dispatch are installed as nodes 1, 2, and\n3. Table 2 provides the typical parameters of thermal units.\nTable 2. Typical parameters of thermal units participating in emergency dispatch.\nID Pg,min\nj Pg,max\nj aj, bj, cj Prd\nj , pru\nj\n1 3 p.u. 0.25 p.u. 0.043, 20, 0 $/p.u. −0.35, 0.35 p.u./h\n2 1.5 p.u. 0.15 p.u. 0.25, 20, 0 $/p.u. −0.35, 0.35 p.u./h\n3 1 p.u. 0.1 p.u. 0.01, 40, 0 $/p.u. −0.35, 0.35 p.u./h\nThe ESS participating in emergency dispatch is labeled as node 4. The typical parame-\nters are given in Table 3\nTable 3. Typical parameters of ESS participating in emergency dispatch.\nPdis,max (cha,max )\nj Ej,min Ej,max ηdis(cha)\nj λcha\nj λdis\nj\n0.2 p.u. 0.54 p.u. 0.06 p.u. 0.9 20$/p.u. 22$/p.u.\nThe typical parameters of identifying abnormal states of wind power and transmission\nlines are listed in Table 4.\nAppl. Sci. 2024, 14, 10368 12 of 17\nTable 4. Typical parameters of identifying abnormal states in emergency dispatch.\nvout vcr vm Wnormmax Wmax\n25 m/s 20 m/s 53 m/s 0.7 kN/m2 2.1 kN/m2\nThe system data of IEEE-14 bus system is presented in Table 5.\nTable 5. Line data of IEEE-14 bus system.\nLine ID From Bus To Bus Reactance MV A Rating\n1 1 2 0.06 p.u. 120 MVA\n2 1 5 0.22 p.u. 65 MVA\n3 2 3 0.20 p.u. 36 MVA\n4 2 4 0.18 p.u. 65 MVA\n5 2 5 0.17 p.u. 50 MVA\n6 3 4 0.17 p.u. 65 MVA\n7 4 5 0.04 p.u. 45 MVA\n8 4 7 0.21 p.u. 55 MVA\n9 4 9 0.56 p.u. 32 MVA\n10 5 6 0.25 p.u. 45 MVA\n11 6 11 0.20 p.u. 18 MVA\n12 6 12 0.26 p.u. 32 MVA\n13 6 13 0.13 p.u. 32 MVA\n14 7 8 0.18 p.u. 32 MVA\n15 7 9 0.11 p.u. 32 MVA\n16 9 10 0.08 p.u. 32 MVA\n17 9 14 0.27 p.u. 32 MVA\n18 10 11 0.19 p.u. 12 MVA\n19 12 13 0.20 p.u. 12 MVA\n20 13 14 0.35 p.u. 12 MVA\nIn the planning and management of power systems or other critical infrastructures,\nsince even disaster events with very low probabilities should be taken seriously, large\nvalues should not be set for the thresholdPr0, to contain more “low-probability” emergency\nscenarios for emergency dispatch. In this paper, the range of Pr0 is set (0.1, 0.5).\n4.2. Evolution of Spatiotemporal Grid Failures of IEEE 14-Bus System During Typhoon Maria\nBased on the spatiotemporal parameters of Typhoon Maria in Section 4.2, the evolution\nof spatiotemporal grid failures of IEEE 14-bus system is obtained by calculating the fault\nprobability matrix Pr(B) in (13). Pr(B) is calculated and then visualized as a heatmap in\nFigure 3.\nAs shown in Figure 3, the failure probability of each line increases over time. Lines\n9, 16, and 17 have significant high-failure probabilities, because they are the first lines\nthat suffer from the typhoon during its passage. Among them, Line 17 has the highest\nfault probability (0.78) since it is closest to the typhoon and has the greatest cumulative\nfatigue damage. Additionally, as the wind weakens, the cumulative damage caused by\nTyphoon Maria to subsequent lines decreases, and the fault probability of these lines less\naffected by Typhoon Maria remain at a low level (less than 0.1). The range (0.1, 0.7) of Pr0\nis partitioned into seven equal parts with the interval 0.1, i.e., Pr0 = {0.1, 0.2, 0.3,· · ·, 0.7}.\nThen, based on (15), seven on–off line status matrices are calculated to construct the set Ωµ\nof 10 emergency scenarios.\nFigure 4 shows the on–off statuses of 20 lines over 24 h of Typhoon Maria’s passage\nunder different Pr0. As for each heatmap, the horizontal axis represents the period number;\nand the vertical axis represents the line number. state (i, j) =0 indicates that line j at period\ni is disconnected, while state (i, j) =1 indicates that line j at period i is connected. Figure 4a\nshows that small Pr0 = 0.1 leads to more line failures indicated by 0 in the heatmap\nAppl. Sci. 2024, 14, 10368 13 of 17\ncompared with other Pr0 values. When the decision maker does not hold a conservative\nstance and only pays attention to those high-probability events by setting the threshold\nPr0 = 0.7, only lines 9 and 17, which are heavily affected by Typhoon Maria, experience\nthe outage accidents.\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t5",
+          "t2",
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "24 period number",
+      "level": 1,
+      "text": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "20 line number",
+      "level": 1,
+      "text": "0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\nFigure 3. Fault probability of lines during Typhoon Maria.\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "24 period number",
+      "level": 1,
+      "text": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "20 line number",
+      "level": 1,
+      "text": "0 0 0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1\n(a)\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "24 period number",
+      "level": 1,
+      "text": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "20 line number",
+      "level": 1,
+      "text": "0 0 0 0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1 (b)\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "24 period number",
+      "level": 1,
+      "text": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "20 line number",
+      "level": 1,
+      "text": "0 0 0 0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1\n(c)\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "24 period number",
+      "level": 1,
+      "text": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "20 line number",
+      "level": 1,
+      "text": "0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1 (d)\nFigure 4. Emergency scenarios under (a) scenario 1 Pr0 = 0.1 (b) scenario 2 Pr0 = 0.3 (c) scenario 3\nPr0 = 0.5 (d) scenario 4 Pr0 = 0.7.\nAppl. Sci. 2024, 14, 10368 14 of 17",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.3 Coordinated Emergency Dispatch of Thermal Units and ESSs",
+      "level": 2,
+      "text": "Based on the generated emergency scenarios in Section 4.2, the emergency dispatch\nmodel in (28) is developed and solved by the procedures in Section 3.3. Figure 5 shows\nthe time-series output power of thermal units (i.e., G1, G2, and G3), ESS during Typhoon\nMaria. Since G1 has the lowest cost among thermal units and the ESS, G1 bears the main\nresponsibility of power generation. Due to the ramping limits, the three thermal units\ncannot immediately satisfy the demand from 1–2 h, and the ESS bears the remainder that\ncannot be covered by thermal units. After 2 h, the expensive ESS withdraws, since the\npower of thermal units has increased high enough to cover the load.\n5 10 15 20\n0\n0.5\n1\n1.5\n2\n2.5\n3",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "3.5 G1 G2 G3",
+      "level": 2,
+      "text": "ESS WF load\nFigure 5. Sequential output power of emergency dispatch resources.\nTo evaluate the robustness of the proposed strategy, the non-robust strategy is gen-\nerated singly for the emergency scenario 1 in Figure 4a. Then the non-robust strategy is\ntested on the emergency scenario 2–4 in Figure 4b–d. The unexpected load and wind power\ncurtailment cost is defined to evaluate the robustness. The calculation of the unexpected\nload and wind power curtailment cost is defined as an optimization problem. The objective\nis to minimize the unexpected load and wind power curtailment cost.\nmin ∑t ∑j λd\nj ∆Pd\nj,t + ∑t ∑j λw\nj ∆Pw\nj,t (34)\nSince the component-level regulation characteristic constraints (17)–(23) of respective\nemergency dispatch resources always hold for the given optimal {Pg∗\nj,t , Pdis∗\nj,t , Pcha∗\nj,t , E∗\nj,t}\nusing either the non-robust or the robust strategy, only the system-level power flow-related\nconstraints are considered. The revised nodal power balance of node j is written by:\nαg\nj Pg∗\nj,t + αe\nj\n\u0010\nPdis∗\nj,t − Pcha∗\nj,t\n\u0011\n+ αw\nj (Pw\nj,t − ∆Pw\nj,t)\n−αd\nj (Pd\nj,t − ∆Pd\nj,t) = ∑\nk∈Ωt\nPjk,t − ∑\ni∈Ω f\nPij,t\n(35)\nThe revised power flow equations are:\nBij\n\u0000\nθi,t − θj,t\n\u0001\n+ Pij,t ≤\n\u0010\n1 − µϵ\nij,t\n\u0011\nM (36)",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Flowchart of the abnormal spatiotemporal distribution of the power grid during typhoons."
+    },
+    {
+      "id": "f2",
+      "caption": "Based on the proposed robust emergency dispatch strategy in (1)–(33), the M-"
+    },
+    {
+      "id": "f3",
+      "caption": "As shown in Figure 3, the failure probability of each line increases over time. Lines"
+    },
+    {
+      "id": "f4",
+      "caption": "shows the on–off statuses of 20 lines over 24 h of Typhoon Maria’s passage"
+    },
+    {
+      "id": "f5",
+      "caption": "Sequential output power of emergency dispatch resources."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Typical parameters of Typhoon Maria over 24 h periods."
+    },
+    {
+      "id": "t2",
+      "caption": "Typical parameters of thermal units participating in emergency dispatch."
+    },
+    {
+      "id": "t3",
+      "caption": "Typical parameters of ESS participating in emergency dispatch."
+    },
+    {
+      "id": "t4",
+      "caption": "Typical parameters of identifying abnormal states in emergency dispatch."
+    },
+    {
+      "id": "t5",
+      "caption": "Line data of IEEE-14 bus system."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "Equation (25)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "Equation (26)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "(30)"
+    },
+    {
+      "id": "e35",
+      "latex_or_text": "(35)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 13
+  }
+}

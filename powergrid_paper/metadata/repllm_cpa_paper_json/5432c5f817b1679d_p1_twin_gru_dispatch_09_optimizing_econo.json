@@ -1,0 +1,717 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__09__optimizing_economic_dispatch_for_microgrid_clusters_using_improved_gre__31a69df1d7.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "To address the current fossil energy crisis and increasingly severe climate issues, there\nis a global consensus on vigorously developing renewable energy sources. Over the past\nfew years, the application of microgrid technology has become increasingly widespread,\naiming to promote the integration of renewable energy, enhance the flexibility and stability\nof power system structures, and ensure power supply reliability [1–5].\nDistributed renewable energy generation often exhibits characteristics of decentralized\nconcentration, a proximity to users, and small-scale deployment [6–8]. This is especially true\nfor urban coastal areas with lower latitudes, where wind and solar resources are abundant,\nallowing for the dense placement of small-scale microgrids. Coordinated scheduling among\nmultiple adjacent microgrids, often referred to as a microgrid cluster (MGC), can facilitate\nthe local integration of renewable energy sources. This coordination within a microgrid\ncluster is crucial for environmental protection and alleviating pressure on remote grid\nsupplies [9–12].\nGiven the rapid development of renewable energy and ongoing advancements in smart\ngrid technologies, the coordinated operation and scheduling of MGCs have emerged as pivotal\nElectronics 2024, 13, 3139. https://doi.org/10.3390/electronics13163139 https://www.mdpi.com/journal/electronics\nElectronics 2024, 13, 3139 2 of 21\nresearch avenues [1,12]. This issue spans multiple layers and dimensions, thereby presenting\nconsiderable complexity . While various methods have been proposed and applied to address\npractical challenges in this domain, significant hurdles remain to be overcome.\nIdentifying the key constraints in the power scheduling problem of the MGC system is\nessential for maintaining the reliability and efficiency of the entire power system. Common\nconstraints include power balance constraints and equipment constraints. Power balance\nconstraints in the MGC system ensure that the total power generation matches the total\npower demand at all times. By adhering to power balance constraints, the system can avoid\nthe extremes of power supply shortages and an oversupply of power [13–15]. Equipment\nconstraints ensure the safe and stable operation of the system while extending the lifespan\nof various components. Common equipment constraints include the output power and\nramping constraints for conventional thermal power generation [ 13,16], as well as the\ncharging/discharging power, capacity, and State-of-Charge (SOC) constraints for energy\nstorage systems (ESSs) [16–18]. Understanding and managing these constraints is crucial\nfor optimizing MGC performance.\nConstructing a reasonable objective function is central to the economic dispatch prob-\nlem. The recent literature on MGC systems often constructs objective functions focusing on\noperational and environmental costs [19–21]. The calculation of operational costs in MGC\nsystems resembles that in conventional microgrids and typically includes net costs after\ntransactions between each MG and the main grid, net costs after transactions between MGs,\nmaintenance costs for WT and PV generation, and generation costs for non-renewable en-\nergy sources. Environmental costs focus on treatment expenses for pollutants such as CO2,\nSO2, and NOX from thermal power generation. This paper attempts to enhance the com-\nmonly used objective functions by introducing more factors, providing a comprehensive\nrepresentation of the MGC system’s economic costs and power quality.\nFinding the optimal solution method for the economic dispatch model of MGCs is a\nkey focus of many research papers in the related field, and numerous optimization algo-\nrithms have been applied to this area. Although classical Linear Programming (LP) [22] and\nNonlinear Programming (NLP) [23] are simple and convenient, they are no longer suitable\nfor the increasingly complex structure of modern power systems [24–26]. In recent years,\nMachine Learning has become increasingly prevalent in addressing scheduling challenges\nwithin microgrids (MGs) and MGCs [27]. Deep learning algorithms like Recurrent Neural\nNetworks (RNNs), Long Short-Term Memory (LSTM) networks, and Deep Reinforcement\nLearning (DRL) autonomously acquire operational strategies for MGs to adapt to environ-\nmental shifts and market dynamics [27–29]. However, they demand substantial volumes of\ntraining data, extensive training periods, and computational resources [30].\nAlongside classical and Machine Learning algorithms, metaheuristic algorithms have\nfound expanded utility in MGC systems. For instance, the Genetic Algorithm (GA) proves\nadept at tackling multi-objective optimization problems, commonly utilized for navigating\nthe trade-offs between minimizing costs and emissions in distribution network operations.\nAlthough offering high flexibility, this algorithm demands precise parameter initializa-\ntion and risks getting trapped in local optima. Particle Swarm Optimization (PSO), as\na prevalent classical intelligent algorithm, stands out for its straightforward implemen-\ntation and rapid convergence. However, its pursuit of the optimal solution tends to be\nsingular, resulting in unstable performance in high-dimensional and complex problem\nspaces [31–34]. The Firefly Algorithm (FA) is known for its robust global search capability,\nmaking it suitable for various optimization problems. However, it can struggle with high-\ndimensional problems and has longer iteration times. Similarly, the Whale Optimization\nAlgorithm (WOA) excels in global search and fast convergence with fewer parameters to\nadjust, making it user-friendly. Nevertheless, it still has the risk of getting trapped in local\noptima, and its performance can be highly influenced by the initial population quality and\nspecific parameters.\nThe Grey Wolf Optimization (GWO) algorithm is renowned for its simplicity, ease of\nimplementation, and strong global search capabilities. By effectively balancing exploration\nElectronics 2024, 13, 3139 3 of 21\nand exploitation phases, GWO is particularly suitable for complex optimization problems.\nThese qualities make GWO an excellent candidate for optimizing the economic dispatch\nin MGCs. Consequently, this study enhances the GWO algorithm and applies it to solve\noptimization problems in this context.\nThis study constructs the structure of an MGC system and comprehensively investi-\ngates the constraints on the equipment, energy storage, and power balance within each\nMG. To achieve an optimal economic dispatch while maintaining power quality and ex-\ntending the lifespan of the MGC system’s equipment, penalty terms are introduced into the\nobjective function alongside various costs. This approach aims to balance the economic\nefficiency and stability of the power system. Finally, the traditional GWO algorithm is\nenhanced to improve its convergence speed and global search capabilities, making it more\nsuitable for optimizing the economic dispatch of MGCs.\nThe major contributions of this study can be summarized as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 This research develops the innovative integration of chaos mapping and a dynamic",
+      "level": 1,
+      "text": "opposition-based learning strategy with GWO (CDGWO), significantly improving\nthe performance of the optimization algorithm. Comparative experiments confirm\nthe notable advantages of the improved algorithm in solving the economic dispatch\nproblem of MGCs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 This study includes penalty terms in the objective function to account for power",
+      "level": 1,
+      "text": "exchange limits between the main grid and the MGC and for discrepancies in energy\nlevels between the start and end of the ESS operating cycle. This integration enhances\nthe reliability of the power supply in the MGC system and the longevity of the\nmicrogrid components.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Structure and Economic Dispatch Model of the Microgrid Cluster System",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Microgrid Cluster System Structure",
+      "level": 2,
+      "text": "The MGC analyzed in this study consists of three independent microgrids (MGs), each\nequipped with key components such as wind turbines (WTs), Photovoltaic (PV) arrays,\nmicroturbines (MTs) or Diesel Generators (DGs), battery energy storage systems (ESSs),\nand Alternating Current (AC) loads for end-users [35,36].\nThe Energy Management Center (EMC) plays a crucial role in orchestrating the energy\nexchange among these MGs, as well as handling the transactions for buying and selling elec-\ntricity with the main grid. This centralized coordination ensures optimal energy distribution\nand enhances the overall efficiency and reliability of the microgrid network [3,37–40].\nFigure 1 illustrates the structure of the MGC system. The specific configuration of its\nsub-microgrid MG2 is detailed in this figure. The structures of MG1 and MG3 are essentially\nidentical to MG2, except that the non-renewable energy generation equipment in these two\nsub-microgrids is not microturbines (MTs) but diesel generators (DGs). This variation in\nnon-renewable energy generation equipment allows for a comparison of performance and\noperational strategies across different energy source types within the MGC.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Constraints of Microgrid Cluster System",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.1 Power Balance Constraints",
+      "level": 3,
+      "text": "Mathematically, the power balance constraint can be expressed as (1).\nN\n∑\ni=1\nPgen,i(t) +Pimport (t) =Pload (t) (1)\nPgen,i(t) represents the power output of the i-th generation unit at time t. Pimport (t)\ndenotes the power imported from the main grid at time t.\nThe MGi is as shown in (2).\nPloadi (t) =PWTi (t) +PPVi(t) +PMTi(t) +PESSi (t) +Pbuyi (t) − Pselli (t) +Pexi−j(t) +Pexi−j(t) (2)\nThe meanings of the symbols used in (2) are detailed in Table 1.\nElectronics 2024, 13, 3139 4 of 21\nElectronics 2024, 13, x FOR PEER REVIEW 4 of 22 \n \n \n \nFigure 1. The structure of the microgrid cluster (MGC) system.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2 Constraints of Microgrid Cluster System",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.1 Power Balance Constraints",
+      "level": 3,
+      "text": "Mathematically, the power balance constraint can be expressed as (1). \n,\n1\n( ) ( ) ( )\n=\n+=\nN\ngen i import load",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "P t P t P t",
+      "level": 1,
+      "text": "(1) \n, ()gen iPt\n represents the power output of the i−th generation unit at time t. \n()importPt  \ndenotes the power imported from the main grid at time t. \nThe MGi is as shown in (2). \n( ) ( ) ( ) ( ) ( ) ( ) ( ) ( ) ( ) −−= + + + + − + +loadi WTi PVi MTi ESSi buyi selli exi j exi jP t P t P t P t P t P t P t P t P t\n  (2) \nThe meanings of the symbols used in (2) are detailed in Table 1. \nTable 1. Definition of symbols in the power balance constraint equation for each MG. \nSymbol Definition \n()loadiPt\n Total load demand of the MG−i at time t. \n()WTiPt\n Wind turbine power output of the MG−i at time t. \n()PViPt\n Photovoltaic power output of the MG−i at time t. \n()MTiPt\n Power output of the microturbine in the MG−i at time t. \n()DGiPt\n Power output of the diesel generator in the MG−i at time t. \n()ESSiPt\n Power output of the ESS in the MG−i at time t. \n()buyiPt\n Power purchased from the main grid by MG−i at time t. \n()selliPt\n Power sold to the main grid by MG−i at time t. \n()−exi jPt\n The power exchange between MG−i and MG−j at time t. \n  \nFigure 1. The structure of the microgrid cluster (MGC) system.\nTable 1. Definition of symbols in the power balance constraint equation for each MG.\nSymbol Definition\nPloadi (t) Total load demand of the MG-i at time t.\nPWTi (t) Wind turbine power output of the MG-i at time t.\nPPVi(t) Photovoltaic power output of the MG-i at time t.\nPMTi (t) Power output of the microturbine in the MG-i at time t.\nPDGi (t) Power output of the diesel generator in the MG-i at time t.\nPESSi (t) Power output of the ESS in the MG-i at time t.\nPbuyi (t) Power purchased from the main grid by MG-i at time t.\nPselli (t) Power sold to the main grid by MG-i at time t.\nPexi−j(t) The power exchange between MG-i and MG-j at time t.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.2.2 Equipment Self-Constrains",
+      "level": 3,
+      "text": "• Constraints on MT and DG\nThe Constraints on the output power for MTs and DGs are illustrated in (3).\n\u001a Pmin\nMT (t) ≤ PMT (t) ≤ Pmax\nMT (t)\nPmin\nDG (t) ≤ PDG (t) ≤ Pmax\nDG (t) (3)\nThe ramping constraints for MTs and DGs are illustrated in (4).\n\u001a PMT (t) − PMT (t − 1) ≤ rMT\nPDG (t) − PDG (t − 1) ≤ rDG\n(4)\n• Constraints on ESS\nThe Charging/Discharging Power Constraints of the ESS are as illustrated in (5).\n\u001a 0 ≤ Pch(t) ≤ Pmax\nch (t)\n0 ≤ Pdis (t) ≤ Pmax\ndis (t) (5)\nElectronics 2024, 13, 3139 5 of 21\nwhere Pch(t) and Pdis(t) represent the charging and discharging power at time t, Pmax\nch (t)\nand Pmax\ndis (t) is the maximum charging and discharging power limit.\nThe Capacity Constraint of the ESS are as illustrated in (6).\nEmin ≤ E(t) ≤ Emax (6)\nwhere Emin and Emax set the upper and lower limits of the ESS capacity.\nEffective SOC management strategies are employed to maintain the ESS within optimal\noperating ranges and to extend the battery life, as illustrated in (7).\nSOCmin ≤ SOC(t) ≤ SOCmax (7)\nThe minimum state of charge (SOCmin) is often set at around 20–30% to ensure there\nis always some reserve capacity in the battery, which helps in emergencies and prevents\ndeep discharging, while the maximum state of charge (SOCmax) is typically set at 90–95%\nto avoid overcharging, which can lead to overheating and battery degradation. The SOC of\nthe ESS in this study is required to be maintained between 30% and 90%.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.3 Construction of the Objective Function",
+      "level": 2,
+      "text": "Most studies on microgrid economic planning focus on constructing objective func-\ntions based on operational and environmental costs. To improve the accuracy and com-\nprehensiveness of the analysis, this paper adds ESS Loss Costs to these considerations.\nBesides these three costs, this study also incorporates two penalty terms into the objective\nfunction to enhance the power quality of the MGC and extend the lifespan of the ESS. These\npenalties are essential for maintaining system stability and efficiency.\nBased on the above discussion, the objective function is constructed as shown in (8).\nFMGC = COperation + CPollution + CESS + FMain −MGC + FESS (8)\nwhere COperation, CPollution , and CESS denote the functions corresponding to Operational\nCosts, Pollution Control Costs, and ESS Loss Costs. FMain −MGC and FESS are penalty\nfunctions, representing the penalty for power-exchange-exceeding limits between the main\ngrid and the MGC and the penalty for discrepancies in energy levels between the start and\nend of the ESS operating cycle.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.3.1 Operational Costs",
+      "level": 3,
+      "text": "The operational costs of the MGC system mainly include the net expenditure for\npurchasing and selling electricity between each sub-microgrid and the main grid, the net\nexpenditure for purchasing and selling electricity between sub-microgrids, the maintenance\ncosts for WT and PV generation, and the generation costs for non-renewable energy sources.\nThe specific mathematical expression is shown in (9) and (10).\nFOperation = Cgrid1 + Cgrid2 + Cgrid3 + Cex1−2 + Cex2−3 + Cex3−1\n+\n3\n∑\ni=1\nCWTi +\n3\n∑\ni=1\nCPVi +\n3\n∑\ni=1\nCnon−renew −i\n(9)\nCgridi = Cbuyi − Cselli i = 1, 2, 3 (10)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.3.2 Pollution Control Costs",
+      "level": 3,
+      "text": "The MGC system explored in this study has not achieved complete renewable energy\nintegration yet. Wind turbines and photovoltaics, crucial components of the energy gen-\neration process, are notable for their absence of emissions harmful to the environment.\nAdditionally, the environmental impact of ESSs remains minimal. This study consciously\noverlooks any potential pollutants that the ESS may generate, focusing instead on micro\ngas turbines and diesel generators, as depicted in (11).\nElectronics 2024, 13, 3139 6 of 21\nFPollution =\nZ 24\n0\nM\n∑\ni=1\n(cDG · λi · PDG (t) +cMT · λi · PMT (t))dt (11)\nwhere cDG and cMT represent the unit costs of pollution control for MTs and DGs, respec-\ntively, while λi denotes the emission coefficient of pollutants.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.3.3 Energy Storage System Loss Costs",
+      "level": 3,
+      "text": "Accounting for ESS losses in cost calculations is essential for several reasons. The\ndepth and frequency of charge and discharge cycles directly affect the lifespan of the ESS.\nIn applications such as peak shaving and load leveling, frequent cycling can result in\nsubstantial degradation. Therefore, considering the losses of supercapacitors is crucial for\nthe economic operation of MGCs. This consideration ensures a comprehensive evaluation\nof the system’s long-term performance and cost-effectiveness, leading to more informed de-\ncision making and optimized resource utilization [41–43]. The corresponding mathematical\nmodel for ESS loss costs can be simplified to (12).\n\n\n\nFESS = mESS\n3\n∑\ni=1\nR 24\n0 |PSCi (t)| · f (SOCSCi (t))dt\nmESS = CInvestment\nQESS\n(12)\nwhere PSC1(t), PSC2(t), and PSC3(t) represent the power of the first and second supercapac-\nitors, respectively. SOCSC1(t), SOCSC2(t), and SOCSC3(t) denote the state of charge of the\nfirst and second supercapacitors, respectively. f (SOCSCi (t)) represents the loss function\nassociated with the state of charge of the supercapacitor.\nmESS is the unit loss cost coefficient of the energy storage system. Mathematically, it is\ndefined as the ratio of the investment cost of the energy storage system to the total charge\nand discharge energy over the entire lifecycle of the supercapacitor.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.3.4 Penalty Function for Power-Exchange-Exceeding Limits",
+      "level": 3,
+      "text": "Introducing the penalty function for a power exchange between the main grid and the\nMGC exceeding predefined limits serves a critical role in optimizing the objective function.\nIt ensures an equilibrium of the power exchange between these entities, which is vital\nfor sustaining the stability and efficiency of the overall system operation. By penalizing\ndeviations from the desired balance, the optimization process is steered toward solutions\nthat prioritize a smooth power transmission between the main grid and the microgrid\ncluster. This approach enhances the system reliability and performance by promoting a\nbalanced and stable power exchange mechanism. The corresponding penalty function\nexpressions for the MG and MGC are given in (13) and (14), respectively.\nFMain −MGi = δ\n24\n∑\nt=1\n(PMG,i(t) − PMI ,i(t)) i = 1, 2, 3 (13)\nFMain −MGC =\n3\n∑\ni=1\nFMain −MGi (14)\nwhere δ represents the penalty coefficient, while PMG,i(t) and PMI ,i(t) denote the equiva-\nlent generation power and equivalent load power transmitted between the MGi and the\ndistribution network at time t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.3.5 Penalty Function for Discrepancies in Energy Levels between Start and End of ESS",
+      "level": 3,
+      "text": "Operating Cycle\nThe penalty term, FESS, serves as a crucial mechanism to mitigate irregularities in the\ncharging and discharging patterns of the ESS. Penalizing deviations in ESS energy levels\nencourages the optimization algorithm to prioritize balanced energy usage throughout\nthe operational cycle, enhancing the storage and distribution efficiency. This optimization\nElectronics 2024, 13, 3139 7 of 21\nboosts the microgrid cluster system’s overall performance while also extending the ESS’s\noperational lifespan, ensuring sustained reliability within the microgrid ecosystem.\nFESS = γ\n\f\f\f\f\f\f\n24\n∑\nt,Pdis (t)>0\nPdis (t)ηdis +\n24\n∑\nt,Pch (t)>0\nPch(t)/ηch\n\f\f\f\f\f\f\n(15)\nIn (15), γ represents the constraint penalty factor for the battery, while ηdis and ηch,\nrespectively, denote the discharging and charging efficiencies of the ESS.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3 Model Solving Method",
+      "level": 1,
+      "text": "This study improves the traditional GWO algorithm to enhance its efficiency and\naccuracy and applies it to solve the economic dispatch model for the MGC system described.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.1 T raditional GWO",
+      "level": 2,
+      "text": "For the economic dispatch problem of microgrid systems, a comprehensive analysis\nof existing metaheuristic algorithms shows that the GWO algorithm performs well in\nterms of convergence speed and computational cost, demonstrating strong global search\ncapabilities [44–46]. Building upon these advantages, this paper chooses to refine and\nenhance the GWO algorithm to facilitate the achievement of economic dispatch objectives\nin the MGC system.\nProposed by Mirjalili et al., the GWO algorithm emulates the leadership hierarchy and\nhunting mechanism of grey wolves in nature [44].\nThe GWO algorithm is founded on a fundamental mathematical framework that\nmirrors the social hierarchy observed in grey wolf populations. By emulating the hunting\nbehaviors and population dynamics of grey wolves, it aims to achieve optimization objec-\ntives. The hierarchical structure is illustrated in Figure 2, with the roles and responsibilities\nof wolves at each level outlined in Table 2.\nElectronics 2024, 13, x FOR PEER REVIEW 8 of 22 \n \n \n \nFigure 2. Hierarchy structure of wolf pack in GWO algorithm. \nTable 2. The hierarchy and corresponding roles of wolf pack in GWO algorithm. \nLevel Rank Roles and Responsibilities \nThe first level Alpha (α) wolf Leader—dominates the pack. \nThe second level Beta (β) wolf Assists alpha and helps manage the pack. \nThe third level Delta (δ) wolf Follows alpha and beta and ensures tasks are carried \nout. \nThe fourth level Omega (ω) \nwolf Lowest rank—follows alpha, beta, and delta. \nIn the hunting sequence of grey wolves, three distinct phases are discernible: search-\ning for prey, encircling prey, and attacking prey. \nWithin the framework of the GWO algorithm, the act of grey wolves surrounding \nprey can be conceptualized through the following position update (16). \n( ) ( )\n( 1) ( )\n =  − + = −\nprey\nprey\nD C X t X t",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "t X t AD",
+      "level": 1,
+      "text": "(16) \nwhere \nD  represents the distance between individual grey wolves and the prey,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "de-",
+      "level": 1,
+      "text": "notes the position of each individual in the population, \npreyX  stands for the position of \nthe prey, and t signifies the iteration count. Additionally, \nA  and",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "represent the vector",
+      "level": 1,
+      "text": "coefficients determined by (17). \n1\n2\n2\n2\n =  − =\nA a r a\nCr\n  (17) \nwhere",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "1 r  and",
+      "level": 1,
+      "text": "2\nr  are random vector values within the range of [0, 1], and \na  represents \nthe convergence factor, which governs the equilibrium between the “surrounding prey” \nand “attacking prey” actions in the GWO algorithm. Typically, for this parameter, it is \ncommonly handled by linearly decreasing its value from 2 to 0 as the iteration count in-\ncreases. \nFollowing the natural hierarchy, the pursuit of prey in GWO is guided by the α wolf, \nwith other rank wolves cooperating to encircle, pursue, and attack the prey. Accordingly, \nduring the algorithm’s iteration, the α wolf is considered the optimal individual, followed \nby β and then δ individuals. Following the outlined logic and rules, the position update \n(18) and (19) for the grey wolf individual ω, distinct from α, β, and δ, is established. \nFigure 2. Hierarchy structure of wolf pack in GWO algorithm.\nTable 2. The hierarchy and corresponding roles of wolf pack in GWO algorithm.\nLevel Rank Roles and Responsibilities\nThe first level Alpha ( α) wolf Leader—dominates the pack.\nThe second level Beta (β) wolf Assists alpha and helps manage the pack.\nThe third level Delta ( δ) wolf Follows alpha and beta and ensures tasks are carried out.\nThe fourth level Omega ( ω) wolf Lowest rank—follows alpha, beta, and delta.\nIn the hunting sequence of grey wolves, three distinct phases are discernible: searching\nfor prey, encircling prey, and attacking prey.\nElectronics 2024, 13, 3139 8 of 21\nWithin the framework of the GWO algorithm, the act of grey wolves surrounding prey\ncan be conceptualized through the following position update (16).\n\n\n\n→\nD =\n\f\f\f\f\n→\nC ∗\n→\nX prey (t) −\n→\nX(t)\n\f\f\f\f\n→\nX(t + 1) =\n→\nX prey (t) −\n→\nA\n→\nD\n(16)\nwhere\n→\nD represents the distance between individual grey wolves and the prey,\n→",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "denotes",
+      "level": 1,
+      "text": "the position of each individual in the population,\n→",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "prey stands for the position of the prey,",
+      "level": 1,
+      "text": "and t signifies the iteration count. Additionally,\n→\nA and\n→",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "represent the vector coefficients",
+      "level": 1,
+      "text": "determined by (17). \n\n\n→\nA = 2\n→\na ·\n→\nr 1 −\n→\na\n→\nC = 2 ·\n→\nr 2\n(17)\nwhere\n→\nr 1 and\n→\nr 2 are random vector values within the range of [0, 1], and\n→\na represents the\nconvergence factor, which governs the equilibrium between the “surrounding prey” and\n“attacking prey” actions in the GWO algorithm. Typically, for this parameter, it is commonly\nhandled by linearly decreasing its value from 2 to 0 as the iteration count increases.\nFollowing the natural hierarchy, the pursuit of prey in GWO is guided by the α wolf,\nwith other rank wolves cooperating to encircle, pursue, and attack the prey. Accordingly,\nduring the algorithm’s iteration, the α wolf is considered the optimal individual, followed\nby β and then δ individuals. Following the outlined logic and rules, the position update\n(18) and (19) for the grey wolf individual ω, distinct from α, β, and δ, is established.\n\n\n\n→\nX1(t) =\n\f\f\f\f\n→\nXα(t) −\n→\nA1 ·\n\f\f\f\f\n→\nC1 ·\n→\nXα(t) −\n→\nX(t)\n\f\f\f\f\n\f\f\f\f\n→\nX2(t) =\n\f\f\f\f\n→\nX β(t) −\n→\nA2 ·\n\f\f\f\f\n→\nC2 ·\n→\nX β(t) −\n→\nX(t)\n\f\f\f\f\n\f\f\f\f\n→\nX3(t) =\n\f\f\f\f\n→\nXδ(t) −\n→\nA3 ·\n\f\f\f\f\n→\nC3 ·\n→\nXδ(t) −\n→\nX(t)\n\f\f\f\f\n\f\f\f\f\n(18)\n→\nXω(t + 1) =1\n3 ·\n3\n∑\ni=1\n→\nXi(t) (19)\nwhere\n→\nXα(t),\n→\nX β(t), and\n→\nXδ(t) represent the positions of theα, β, and δ wolves, respectively,\nat time t. Additionally,\n→\nA1,\n→\nA2, and\n→\nA3 are similar to\n→\nA,\n→\nC1, and\n→\nC2, and\n→\nC3 is similar to\n→\nC,\nwhich is described as (17).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3.2 The Imroved GWO Algorithm (CDGWO)",
+      "level": 2,
+      "text": "Traditional GWO is a nature-inspired algorithm celebrated for its simplicity and\neffectiveness in solving optimization problems. A key advantage of GWO is its ability to\nbalance exploration and exploitation, making it robust across various types of optimization\ntasks. However, traditional GWO has its limitations, including a propensity to get trapped\nin local optima and slow convergence speeds, especially in complex, high-dimensional\nproblem spaces.\nTo address these shortcomings, this study introduces chaos optimization and a dy-\nnamic opposition-based learning strategy. Chaos optimization helps enhance the global\nsearch ability and prevent premature convergence by introducing randomness and nonlin-\nearity into the search process. The dynamic opposition-based learning strategy improves\nthe convergence speed and solution accuracy by considering opposite solutions and dy-\nnamically updating them throughout the optimization process. These enhancements aim\nElectronics 2024, 13, 3139 9 of 21\nto improve the overall performance of GWO, thereby enabling more efficient solutions for\nthe economic dispatch challenges in the MGC system.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.2.1 Chaos Optimization",
+      "level": 3,
+      "text": "Chaos mappings can generate sequences characterized by high randomness and\nnonlinearity, suitable for replacing conventional uniformly distributed random numbers\nin intelligent optimization algorithms [47–49]. These mappings enhance the global search\nefficiency and robustness of algorithms [47], reduce dependence on the selection of initial\nsolutions and parameter settings, and offer more flexible optimization strategies for MGC\nscheduling problems. This paper discusses several common chaos mappings and selects\nthe most appropriate one to enhance the GWO algorithm, tailored to the context described.\nAlthough Tent mapping exhibits piecewise linear properties, it may lack sufficient\nflexibility in large-scale optimization scenarios. Sine mapping, when applied to high-\ndimensional optimization problems, is prone to converging to local optima, with its perfor-\nmance being highly dependent on the choice of parameters. In contrast, Logistic mapping\nis straightforward to implement and possesses robust chaotic characteristics. Chebyshev\nmapping maintains better uniformity and distribution within a certain range. Both map-\npings can significantly improve the search capabilities of the GWO algorithm, expand the\ndiversity of the search space, and elevate the efficiency of optimization. The expressions for\nthese mappings are presented in Table 3.\nTable 3. Expressions of several commonly used chaotic maps.\nExample Expression\nTent xi+1 =\n(\nxi/a x i < a\n(1 − xi)/(1 − a) xi ≥ a\na ∈ (0, 1)\nSine xi+1 = a\n4 sin(πxi)\na = 4\nChebyshev xi+1 = cos(a · cos−1(xi))\na = 4\nLogistic xi+1 = axi(1 − xi)\na ∈ (0, 4]\nBy qualitatively analyzing the characteristics of several common mappings, it can be\ninferred that Logistic mapping and Chebyshev mapping are better suited for the problem\ncontext outlined in this paper. To precisely select the chaotic mapping that enhances the\nperformance of GWO, this study will empirically compare and identify the most effective\nchaotic mapping in Section 4.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "3.2.2 Dynamic Opposition-Based Learning Strategy",
+      "level": 3,
+      "text": "The GWO algorithm employs a hierarchical strategy, with α, β, and δ wolves leading\nthe search process. This hierarchy helps direct subordinate agents to explore the most\npromising areas for optimal solutions, effectively reducing the risk of premature conver-\ngence to local optima. However, the strong exploitation capability inherent in this method\ncan limit the search diversity and can hinder the exploratory potential [48].\nTo overcome this limitation, this paper introduces the dynamic opposition-based\nlearning (DOBL) strategy to enhance the GWO algorithm. Traditional opposition-based\nlearning (OBL) [50,51] explores both current and opposite positions to improve the solution\nquality, but DOBL advances this concept by incorporating a dynamic factor r that changes\nnonlinearly with each iteration. This innovation allows for the generation of reverse\nElectronics 2024, 13, 3139 10 of 21\nsolutions to be more responsive to the search space’s evolving landscape, thereby boosting\nthe algorithm’s capacity to explore diverse regions and escape local optima.\n\u001a r = sin(t/T)\neXi(t) =pop max + pop min − rXi(t), i = 1, 2,· · ·, n (20)\nEquation (20) illustrates the modified position update formula, which accounts for the\ndynamic factor r. Here, popmax and popmin define the upper and lower boundaries of the\nsearch space, respectively. Xi(t) indicates the position of the i-th individual grey wolf at\nthe t-th iteration. eXi(t) represents the corresponding dynamic reverse solution. t denotes\nthe iteration time, and T represents the total number of iterations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "3.2.3 The Specific Steps of the Improved GWO (CDGWO)",
+      "level": 3,
+      "text": "This paper presents an enhanced GWO algorithm for the economic dispatch of the\nMGC system, incorporating chaotic mapping and the dynamic opposition-based learning\nstrategy. The detailed algorithmic procedure is illustrated in Figure 3. The specific steps of\nexecution are outlined below.\nElectronics 2024, 13, x FOR PEER REVIEW 11 of 22 \n \n \nStep 3: Establish the fitness function, which is identical to the objective function con-\nstructed for the microgrid cluster optimization scheduling strategy, as shown in (8). Eval-\nuate the fitness value of the entire population. \nStep 4: Identify the three grey wolves with the lowest fitness values as the α wolf, β \nwolf, and δ wolf. These wolves will guide the rest of the population. \nStep 5: perform dynamic opposition−based learning by executing searches at both \nthe current positions and their direct opposites to increase the likelihood of finding supe-\nrior solutions. \nStep 6: Update individual positions based on the guidance of the α wolf, β wolf, and \nδ wolf. Then, update the global optimum. \nStep 7: Assess whether the termination criteria have been met. If fulfilled, output the \noptimal fitness value. If not, recalculate the fitness value based on the updated individual \npositions and iterate again. \n \nFigure 3. The procedure for the improved GWO algorithm.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "3.3 The Solution Process for the Constructed MGC Economic Dispatch Model",
+      "level": 2,
+      "text": "This paper begins by constructing the topology of the microgrid cluster and defining \nthe system constraints necessary for safe operation. An optimal dispatch objective func-\ntion is then developed to balance economic efficiency and power quality, resulting in a \ncomprehensive multi−objective economic dispatch model. Subsequently, this study en-\nhances the traditional GWO algorithm, resulting in the CDGWO algorithm, which fea-\ntures improved global search capabilities and higher optimization efficiency and \nFigure 3. The procedure for the improved GWO algorithm.\nStep 1: initialize the parameters of the grey wolf population.\nStep 2: Use chaotic maps to generate sequences as initial positions for the wolf popu-\nlation. The chaotic map formulas are presented in Table 3, which includes expressions of\nseveral commonly used chaotic maps.\nElectronics 2024, 13, 3139 11 of 21\nStep 3: Establish the fitness function, which is identical to the objective function\nconstructed for the microgrid cluster optimization scheduling strategy, as shown in (8).\nEvaluate the fitness value of the entire population.\nStep 4: Identify the three grey wolves with the lowest fitness values as the α wolf, β\nwolf, and δ wolf. These wolves will guide the rest of the population.\nStep 5: perform dynamic opposition-based learning by executing searches at both the cur-\nrent positions and their direct opposites to increase the likelihood of finding superior solutions.\nStep 6: Update individual positions based on the guidance of the α wolf, β wolf, and δ\nwolf. Then, update the global optimum.\nStep 7: Assess whether the termination criteria have been met. If fulfilled, output the\noptimal fitness value. If not, recalculate the fitness value based on the updated individual\npositions and iterate again.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "3.3 The Solution Process for the Constructed MGC Economic Dispatch Model",
+      "level": 2,
+      "text": "This paper begins by constructing the topology of the microgrid cluster and defining\nthe system constraints necessary for safe operation. An optimal dispatch objective function\nis then developed to balance economic efficiency and power quality, resulting in a compre-\nhensive multi-objective economic dispatch model. Subsequently, this study enhances the\ntraditional GWO algorithm, resulting in the CDGWO algorithm, which features improved\nglobal search capabilities and higher optimization efficiency and accuracy. This enhanced\nalgorithm is applied to solve the model. The specific methodological approach is illustrated\nin the block diagram shown in Figure 4.\nElectronics 2024, 13, x FOR PEER REVIEW 12 of 22 \n \n \naccuracy. This enhanced algorithm is applied to solve the model. The specific methodo-\nlogical approach is illustrated in the block diagram shown in Figure 4. \n \nFigure 4. Construction and solution of the MGC economic dispatch model.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "4 Simulations and Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "4.1 Parameters of the Numerical Example",
+      "level": 2,
+      "text": "This study addresses the optimization scheduling of the MGC system on a daily cy-\ncle, with each hour as a scheduling interval, resulting in 24 intervals per day. The meteor-\nological data for the region were sourced from the European Centre for Medium −Range \nWeather Forecasts (ECMWFs). Using real data from a low−latitude coastal region, includ-\ning meteorological parameters and historical wind and solar power output data, the out-\nput for a typical day is forecasted. The load forecasting data are based on historical data \nfrom the local grid. \nTo calculate the operational revenues of the MGC system, this paper employs \ntime−of−use (TOU) pricing. TOU pricing is a dynamic strategy where electricity rates vary \nthroughout the day, with higher rates during peak demand periods and lower rates dur-\ning off−peak hours. By incorporating TOU pricing, utilities can encourage consumers to \nshift their electricity usage to off −peak times, reducing grid strain during peak periods \nand optimizing resource utilization. Figure 5 clearly illustrates the electricity pur chase \nand sale prices for each time period throughout the day in the region. \n \nFigure 5. Time−of−use (TOU) electricity pricing for microgrid purchase and sale. \nFigure 4. Construction and solution of the MGC economic dispatch model.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "4 Simulations and Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "4.1 Parameters of the Numerical Example",
+      "level": 2,
+      "text": "This study addresses the optimization scheduling of the MGC system on a daily\ncycle, with each hour as a scheduling interval, resulting in 24 intervals per day. The\nmeteorological data for the region were sourced from the European Centre for Medium-\nRange Weather Forecasts (ECMWFs). Using real data from a low-latitude coastal region,\nincluding meteorological parameters and historical wind and solar power output data, the\noutput for a typical day is forecasted. The load forecasting data are based on historical data\nfrom the local grid.\nTo calculate the operational revenues of the MGC system, this paper employs time-\nof-use (TOU) pricing. TOU pricing is a dynamic strategy where electricity rates vary\nthroughout the day, with higher rates during peak demand periods and lower rates during\noff-peak hours. By incorporating TOU pricing, utilities can encourage consumers to shift\nElectronics 2024, 13, 3139 12 of 21\ntheir electricity usage to off-peak times, reducing grid strain during peak periods and\noptimizing resource utilization. Figure 5 clearly illustrates the electricity purchase and sale\nprices for each time period throughout the day in the region.\nElectronics 2024, 13, x FOR PEER REVIEW 12 of 22 \n \n \naccuracy. This enhanced algorithm is applied to solve the model. The specific methodo-\nlogical approach is illustrated in the block diagram shown in Figure 4. \n \nFigure 4. Construction and solution of the MGC economic dispatch model.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "4 Simulations and Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "4.1 Parameters of the Numerical Example",
+      "level": 2,
+      "text": "This study addresses the optimization scheduling of the MGC system on a daily cy-\ncle, with each hour as a scheduling interval, resulting in 24 intervals per day. The meteor-\nological data for the region were sourced from the European Centre for Medium −Range \nWeather Forecasts (ECMWFs). Using real data from a low−latitude coastal region, includ-\ning meteorological parameters and historical wind and solar power output data, the out-\nput for a typical day is forecasted. The load forecasting data are based on historical data \nfrom the local grid. \nTo calculate the operational revenues of the MGC system, this paper employs \ntime−of−use (TOU) pricing. TOU pricing is a dynamic strategy where electricity rates vary \nthroughout the day, with higher rates during peak demand periods and lower rates dur-\ning off−peak hours. By incorporating TOU pricing, utilities can encourage consumers to \nshift their electricity usage to off −peak times, reducing grid strain during peak periods \nand optimizing resource utilization. Figure 5 clearly illustrates the electricity pur chase \nand sale prices for each time period throughout the day in the region. \n \nFigure 5. Time−of−use (TOU) electricity pricing for microgrid purchase and sale. \nFigure 5. Time-of-use (TOU) electricity pricing for microgrid purchase and sale.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "4.2 A Quantitative Analysis of the Effects of Different Chaotic Mappings",
+      "level": 2,
+      "text": "In Section 3.2.1, a qualitative analysis was conducted on the compatibility of various\nchaotic maps with the research context described in this paper. It was concluded that\nChebyshev mapping and Logistic mapping are relatively more suitable for optimizing the\nGWO algorithm. To determine the most effective type of chaotic mapping for the economic\ndispatch optimization of the MGC, this study integrates the four commonly used chaotic\nmaps with GWO. The resulting four improved chaotic GWO (CGWO) algorithms, along\nwith the unmodified traditional GWO, are applied to the economic dispatch optimiza-\ntion of the MGC system. Their optimization effects are compared, and the comparative\nconvergence characteristic curves are illustrated in Figure 6.\nElectronics 2024, 13, x FOR PEER REVIEW 13 of 22",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "4.2 A Quantitative Analysis of the Effects of Different Chaotic Mappings",
+      "level": 2,
+      "text": "In Section 3.2.1, a qualitative analysis was conducted on the compatibility of various \nchaotic maps with the research context described in this paper. It was concluded that Che-\nbyshev mapping and Logistic mapping are relatively more suitable for optimizing the \nGWO algorithm. To determine the most effective type of chaotic mapping for the eco-\nnomic dispatch optimization of the MGC, this study integrates the four commonly used \nchaotic maps with GWO. The resulting four improved chaotic GWO (CGWO) algorithms, \nalong with the unmodified traditional GWO, are applied to the economic dispatch opti-\nmization of the MGC system. Their optimization effects are compared, and the compara-\ntive convergence characteristic curves are illustrated in Figure 6. \n \nFigure 6. Comparison of convergence characteristic curves for four CGWO variants and traditional \nGWO. \nIt can be observed that different chaotic mappings significantly influence the conver-\ngence speed of the optimization algorithm in its early iterations. Among the four com-\nmonly used chaotic mappings discussed in this paper, CGWO improved with Sine map-\nping demonstrated the poorest performance, initially exhibiting the slowest convergence \nspeed. Tent mapping also showed suboptimal optimization results, with both the conver-\ngence speed and precision falling short. In contrast, the GWO algorithm optimized with \nChebyshev mapping produced solutions closest to the actual optimum. However, Logistic \nmapping achieved the fastest convergence, with its acceleration effect being particularly \nnotable within the first 20 iterations. To further compare the optimization effects of these \ntwo chaotic mappings, a detailed analysis is provided in Table 4. \nTable 4. Comparison of the effects of various chaotic mappings. \nType of Chaotic Mapping Optimal Fitness Value Runtime/s \nTent 2.0920 × 103 9.1720009 \nSine 2.0597 × 103 10.496083 \nChebyshev 1.6895 × 103 11.616561 \nLogistic 1.7150 × 103 7.9097413 \nTraditional GWO 1.9030 × 103 10.534876 \nUpon analyzing Table 4, it is evident that while the GWO algorithm optimized with \nChebyshev mapping achieves results closer to the actual optimum, the difference com-\npared to the GWO algorithm optimized with Logistic mapping is negligible. Considering \nthat Chebyshev mapping requ ires significantly more computational time than Logistic \nFigure 6. Comparison of convergence characteristic curves for four CGWO variants and traditional GWO.\nIt can be observed that different chaotic mappings significantly influence the con-\nvergence speed of the optimization algorithm in its early iterations. Among the four\ncommonly used chaotic mappings discussed in this paper, CGWO improved with Sine\nmapping demonstrated the poorest performance, initially exhibiting the slowest conver-\ngence speed. Tent mapping also showed suboptimal optimization results, with both the\nconvergence speed and precision falling short. In contrast, the GWO algorithm optimized\nwith Chebyshev mapping produced solutions closest to the actual optimum. However,\nElectronics 2024, 13, 3139 13 of 21\nLogistic mapping achieved the fastest convergence, with its acceleration effect being partic-\nularly notable within the first 20 iterations. To further compare the optimization effects of\nthese two chaotic mappings, a detailed analysis is provided in Table 4.\nTable 4. Comparison of the effects of various chaotic mappings.\nType of Chaotic Mapping Optimal Fitness Value Runtime/s\nTent 2.0920 × 103 9.1720009\nSine 2.0597 × 103 10.496083\nChebyshev 1.6895 × 103 11.616561\nLogistic 1.7150 × 103 7.9097413\nTraditional GWO 1.9030 × 103 10.534876\nUpon analyzing Table 4, it is evident that while the GWO algorithm optimized with\nChebyshev mapping achieves results closer to the actual optimum, the difference compared\nto the GWO algorithm optimized with Logistic mapping is negligible. Considering that\nChebyshev mapping requires significantly more computational time than Logistic mapping,\nand with the aim to strike a balance between algorithm efficiency and precision, the superior\noptimization effect of Logistic mapping is asserted.\nBuilding on the comprehensive analysis that includes both qualitative and quantitative\nevaluations, it is established that Logistic mapping exhibits superiority over other mappings\nin enhancing the performance of the GWO algorithm. Consequently, this study adopts\nLogistic mapping to optimize the GWO algorithm.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "4.3 Analysis of Simulation Results",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "4.3.1 An Analysis the Optimization Effect of the Proposed CDGWO",
+      "level": 3,
+      "text": "In Section 4.2, experiments were conducted to compare the optimization effects of\nvarious chaotic mappings on the GWO algorithm, ultimately selecting Logistic mapping\nas the most effective overall. However, the convergence characteristic curves of CGWO\nindicate that while chaotic mapping significantly accelerates convergence in the early\nstages, its impact diminishes in the later stages. Therefore, this study also incorporates the\ndynamic opposition-based learning strategy to further enhance the convergence speed and\nglobal search capability of the GWO algorithm.\nTo verify the optimization performance of the improved CDGWO algorithm, CDGWO,\ntraditional GWO, and three other commonly used intelligent optimization algorithms—the\nFirefly Algorithm (FA), Particle Swarm Optimization (PSO), and Whale Optimization\nAlgorithm (WOA)—were applied to the economic dispatch of the MGC system. The\noptimization results were then compared and analyzed through charts and graphs. Figure 7\nillustrates the convergence characteristic curves of five intelligent optimization algorithms.\nElectronics 2024, 13, x FOR PEER REVIEW 14 of 22 \n \n \nmapping, and with the aim to strike a balance between algorithm efficiency and precision, \nthe superior optimization effect of Logistic mapping is asserted. \nBuilding on the comprehensive analysis that includes both qualitative and quantita-\ntive evaluations, it is established that Logistic mapping exhibits superiority over other \nmappings in enhancing the performance of the GWO algorithm. Consequently, this study \nadopts Logistic mapping to optimize the GWO algorithm.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s43",
+      "title": "4.3 Analysis of Simulation Results",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s44",
+      "title": "4.3.1 An Analysis the Optimization Effect of the Proposed CDGWO",
+      "level": 3,
+      "text": "In Section 4.2, experiments were conducted to compare the optimization effects of \nvarious chaotic mappings on the GWO algorithm, ultimately selecting Logistic mapping \nas the most effective overall. However, the convergence characteristic curves of CGWO \nindicate that while chaotic mapping significantly accelerates convergence in the early \nstages, its impact diminishes in the later stages. Therefore, this study also incorporates the \ndynamic opposition−based learning strategy to further enhance the convergence  speed \nand global search capability of the GWO algorithm. \nTo verify the optimization performance of the improved CDGWO algorithm, \nCDGWO, traditional GWO, and three other commonly used intelligent optimization al-\ngorithms—the Firefly Algorithm (FA), Particle Swarm Optimization (PSO), and Whale \nOptimization Algorithm (WOA)—were applied to the economic dispatch of the MGC sys-\ntem. The optimization results were then compared and analyzed through charts and \ngraphs. Figure 7 illustrates the convergence characteristic curves of five intelligent opti-\nmization algorithms \n \nFigure 7. Comparison of improved GWO (CDGWO) with common intelligent optimization algorithms. \nFor a more comprehensive comparison of algorithm performance, Table 5 provides \nprecise numerical indicators, including the Optimal Fitness Value, Runtime, Number of \nIterations at Convergence, and convergence variance. \nConvergence variance reflects the average squared differences among optimization \nresults from multiple runs. A lower convergence variance indicates more consistent re-\nsults across runs, suggesting algorithm stability. Conversely, a higher convergence vari-\nance suggests greater variability, possibly due to algorithm randomness or instability. An-\nalyzing the convergence variance enables an assessment of the optimization algorithm’s \nstability and consistency. \n( )\n22\n1\n1\n=\n=− \nN\nCon i",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s45",
+      "title": "S F F N",
+      "level": 1,
+      "text": "(21) \nFigure 7. Comparison of improved GWO (CDGWO) with common intelligent optimization algorithms.\nElectronics 2024, 13, 3139 14 of 21\nFor a more comprehensive comparison of algorithm performance, Table 5 provides\nprecise numerical indicators, including the Optimal Fitness Value, Runtime, Number of\nIterations at Convergence, and convergence variance.\nTable 5. Comparison of improved GWO (CDGWO) with common intelligent optimization algorithms.\nIntelligent Optimization\nAlgorithm Optimal Fitness Value Runtime/s Number of Iterations\nat Convergence\nConvergence\nVariance\nFA 1.425 × 103 1100.305307 70 132.656897\nPSO 2.147 × 103 27.753490 90 213.926534\nWOA 3.045 × 103 26.265349 350 587.452367\nGWO 1.903 × 103 10.534876 93 196.567398\nGA 1.576 × 103 103.635457 56 206.875623\nSA 2.803 × 103 52.786543 130 670.246676\nCDGWO 1.044 × 103 6.906439 65 48.678354\nConvergence variance reflects the average squared differences among optimization\nresults from multiple runs. A lower convergence variance indicates more consistent results\nacross runs, suggesting algorithm stability. Conversely, a higher convergence variance\nsuggests greater variability, possibly due to algorithm randomness or instability. Analyzing\nthe convergence variance enables an assessment of the optimization algorithm’s stability\nand consistency.\nS2\nCon = 1\nN\nN\n∑\ni=1\n\u0000\nFi − F\n\u00012 (21)\nwhere N denotes the number of runs, Fi represents optimal fitness value of the i-th run, and\nF denotes the mean of all optimization results.\nFigure 7 should be analyzed in conjunction with Table 5. The Whale Optimization\nAlgorithm (WOA) exhibits the slowest convergence speed, needing about 350 iterations to\nreach the global optimum. This slow convergence is due to its simulation of whale foraging\nbehaviors, which introduces uncertainty in the search direction [ 52]. Additionally, the\nWOA has a high convergence variance of 587.45, indicating instability.\nIn contrast, the Firefly Algorithm (FA) converges more quickly , reaching the global\noptimum in about 70 iterations, with a lower convergence variance below 150, indicating\nbetter stability . However, its computational complexity (O(n2)), due to interactions between\nfireflies, results in significantly longer computation times compared to other algorithms [53,54].\nThe Genetic Algorithm (GA) achieves a similar solution accuracy to the FA but is less\ncomputationally efficient, with a runtime of 103 s. This is due to the resource-intensive\nnature of genetic operations, which require significant computational resources.\nSimulated Annealing (SA) has a lower solution accuracy and a runtime of 53 s. Its high\nconvergence variance of 670.25 reflects significant instability and a tendency to converge to\nlocal optima due to its probabilistic approach.\nBoth Particle Swarm Optimization (PSO) and traditional Grey Wolf Optimization (GWO)\nshow good stability with a convergence variance of around 200. However, PSO often gets\ntrapped in local optima due to rapid early convergence and limited disturbance mechanisms.\nAmong the mentioned algorithms, GWO performs reasonably well. However, com-\npared to traditional GWO, CDGWO stands out with improved efficiency and enhanced\nsearch capabilities. By the 65th iteration, CDGWO converges to the optimal fitness value,\nachieving results closest to the actual global optimum among the five algorithms, with\nthe highest precision. Additionally, CDGWO’s computation time is 3.6 s shorter than\ntraditional GWO, marking a significant efficiency boost. Moreover, CDGWO demonstrates\na notably increased stability, with a convergence variance of only 48.678354, surpassing\nother algorithms.\nIn conclusion, the improved GWO algorithm achieves optimization in iteration ef-\nficiency, precision, and stability. Among the commonly used intelligent optimization",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the structure of the MGC system. The specific configuration of its"
+    },
+    {
+      "id": "f2",
+      "caption": "Hierarchy structure of wolf pack in GWO algorithm."
+    },
+    {
+      "id": "f3",
+      "caption": "The procedure for the improved GWO algorithm."
+    },
+    {
+      "id": "f4",
+      "caption": "Construction and solution of the MGC economic dispatch model."
+    },
+    {
+      "id": "f5",
+      "caption": "Time−of−use (TOU) electricity pricing for microgrid purchase and sale."
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of convergence characteristic curves for four CGWO variants and traditional"
+    },
+    {
+      "id": "f7",
+      "caption": "Comparison of improved GWO (CDGWO) with common intelligent optimization algorithms."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Definition of symbols in the power balance constraint equation for each MG."
+    },
+    {
+      "id": "t2",
+      "caption": "The hierarchy and corresponding roles of wolf pack in GWO algorithm."
+    },
+    {
+      "id": "t3",
+      "caption": "Expressions of several commonly used chaotic maps."
+    },
+    {
+      "id": "t4",
+      "caption": "Comparison of the effects of various chaotic mappings."
+    },
+    {
+      "id": "t5",
+      "caption": "Comparison of improved GWO (CDGWO) with common intelligent optimization algorithms."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "(18)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "Equation (20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 11
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/tsp-cmc/cmc_2025_securebert_ner.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "WemakeuseoftheClaude3.5Sonnet,LLaMA3-7b,andMixtral-7 ×8bmodelsthroughboththeofficial\nAnthropicAPIandtheHuggingFacewebinterface.Furthermore,wedecidedtousetheClaude3.5Sonnet,\nMistral-7B, and Llama3-8B smaller-parameter versions of these models. Where appropriate, these open-\nsource models were chosen for local deployment in order to facilitate inference. Llama and Mixtral were\nlocallydeployedandhadadecoder-onlydesign,whereasClaude3.5SonnetwasaccessiblethroughanAPI.\nTo provide consistent evaluation across both locally deployed and cloud-based instances, we used APIs to\ntriggerthesemodelsandperformtests.\nComputMaterContin. 2026;87(1):32 9\nInput Text Data\nLLM Ensemble\n(Mixtral, Claude, LLaMA)\nAdversarial Paraphrasing\nIdentification Module\n(Decoding & Filtering)\nExtraction Module\n(Feature & Token Prep)\nSecureBERT Fine-tuning\nAdversarial, Dropout, Gradient Masking\nTagging Module\n(Entity Classification)\nFigure 2:The LLM ensemble (Mixtral, Claude, and LLaMA) is included in the SecureBERT fine-tuning pipeline. By\nintroducingparaphrased,symbol-inserted,andobfuscatedtextvariations,theLLMsfunctionassemanticperturbation\ngenerators. Before moving on to the SecureBERT fine-tuning stage, where adversarial training, dropout optimization,\nand gradient masking maintain cross-model consistency and robust entity tagging, these variations go through the\nIdentificationandExtractionModules\nThree important metrics—precision, recall, and the F1 score—are commonly used to evaluate efficacy\nofmodelinnamedentityrecognitiontrials.Precisioninmathematicsisdefinedas\nPrecision= TP\nTP+FP (1)\nThe proportion of accurately named entities to all actual entities in the text is known as recall. By\nshowing the proportion of real things that were successfully identified, it gauges the capacity of model to\npreventfalsenegatives.Recallisdefinedmathematicallyas\nRecall= TP\nTP+FN (2)\nTheF1scoreiscalculatedbytakingtheharmonicmeanofrecallandprecision.Itoffersasinglestatistic\nthatstrikesabalancebetweenrecallandprecision.Be ttermodelperformance,withhighprecisionandhigh\nrecall,isindicatedbyanF1scorenear1,whereaslowerperformanceisindicatedbyanF1scorenear0.This\n10 ComputMaterContin. 2026;87(1):32\nishowtheF1scoreisdetermined:\nF1=2× Precision×Recall\nPrecision+Recall (3)\nTheperformanceevaluationofeachapproachacrossfourdifferentcybersecuritydatasourcesisshown\nin Table 1. According to the experimental results, our named entity recognition method shows notable\nperformance advantages while processing open-source cybersecurity data when it is implemented using\nan identification module, extraction module, and tagging module architecture. Our approach efficiently\nconvertsunstructuredandstructureddataintocomprehensiblenaturallanguagerepresentationsandmakes\nuseofsophisticatedcontextualunderstandingtoolstopreciselydetectandcategorizecybersecurityentities.\nWith F1-score enhancements ranging from 6.38% to 17.3%, the combined performance metrics across all\nassessed datasets show that our system outperforms the optimized SecureBERT baseline by a significant\nmargin. These outcomes demonstrate how well our multi-module architecture works and how it can use\nlargelanguagemodelstoimprovecybersecurityentityrecognition.\nTable 1:Performance comparison of cybersecurity NER methods across multiple OSINT data sources. The table\npresentsthetotalnumberofcorrectlyrecognizedentitiesforeachmethod,withdeltavaluesΔindicatingperformance\nimprovement over the fine-tuned SecureBERT baseline. All variants of our proposed method demonstrate significant\nimprovementsacrossalldatasources,withtheMixtral8x7BvariantshowingparticularlystrongperformanceinShodan\nand Nmap data parsing. The consistent positive deltas validate the effectiveness of our identification and extraction\nmodulesinprocessingheterogeneouscybersecuritytextdata\nMethods Shodan Delta Whois Delta Dig Delta Nmap Delta\nFine-tunedSecureBERT(Baseline) 159 0 64 0 77 0 73 0\nOurMethod+Claude3.5Sonnet 352 193 ↑ 190 126 ↑ 98 21 ↑ 163 90 ↑\nOurMethod+Llama38B 338 179 ↑ 175 111 ↑ 89 12 ↑ 182 109 ↑\nOurMethod+Mixtral8x7B 375 216 ↑ 228 164 ↑ 112 35 ↑ 225 152 ↑\nTodeterminethefourmodels’performanceacrossalldatasets,wecombinedthedata. Table 2displays\nthedata.The efficacy of theframework is confirmed by the discovery that ourapproach produces better F1\nscoresthanSecureBERT,thestate-of-the-artopen-sourceNERmodel,bymorethan24.5%.Thissuggeststhat\nlargelanguagemodelstypicallyprovidestandardizedinformationthatfaithfullycapturestheoriginalcontent\nwhen input text is processed through the identification module. This method greatly lowers the likelihood\nof hallucinations when combined with an information extraction step that makes use of the original\ntext. Additionally, by clarifying implicit information in open-source cybersecurity data, this methodology\nimprovestheaccuracyofentityrecognitionanditssubsequentuseinsecurityapplications.\nTable 2:Comprehensive performance evaluation of our method against the fine-tuned SecureBERT baseline across\nmultiple cybersecurity data sources. The results demonstrate significant improvements across all metrics, with our\nmethod achieving 9.4%–25.2% higher recall and 6.38–17.3% better F1-score compared to the baseline implementa-\ntion. Furthermore, our approach outperforms state-of-the-art models, including Claude 3.5 Sonnet, Llama3-8B, and\nMixtral-8B,by2.6%–4.9%inoveralleffectiveness\nMethods Precision Recall F1-Score\nFine-tunedSecureBERT(Baseline) 0.932 0.527 0.669\nOurMethod+Claude3.5Sonnet 0.928 0.577 0.712\n(Continued)\nComputMaterContin. 2026;87(1):32 11\nTable 2 (continued)\nMethods Precision Recall F1-Score\nOurMethod+Llama3-8B 0.954 0.659 0.780\nOurMethod+Mixtral-8B 0.961 0.660 0.785\nTo further support the Character-level perturbation and Token obfuscation and symbol insertion we\nconductsomeexperiments.Theseexperimentsareasfollow\nCharacter-level perturbation in Experiment 1:By inserting controlled substitutions and deletions\nwithinentitytokenssuchIPaddresses,domains,andserviceidentifiers,acharacter-leveladversarialevalua-\ntionwascarriedoutonthecombinedDIG,Shodan,Nmap,andWHOISdataset.About12%oftheentity-level\ncharacters were perturbed in order to simulate the text degradation seen in network scans. For example,\n“Shodan detected service at 192.168.10.45” was changed to “Shodan detected service at 192.168.1O.45.” The\nadversarially fine-tuned Mixtral outperformed both LLaMA and Claude under the same perturbation\nintensity, achieving the highest stable performanceo fa l la s s e s s e dm o d e l sw i t hap r e c i s i o no f0 . 9 6 ,r e c a l l\nof 0.66, and F1-score of 0.78. The test confirmed that Mixtral pipeline for decoding and tagging efficiently\nmaintainedentityboundariesinthefaceofcharacter-levelnoise.\nExperiment 2—Insertion of symbols and token obfuscation:This experiment replicated adversarial\ntextobfuscationbyapplyingtoken-leveldistortionstothesamecombineddatasetusingleetspeak,abbrevia-\ntion,andembeddedzero-widthormarkupsymbols.Examplesofalterationsincluded“Server:Apache/2.4.54\n(Ubuntu)”being changed to “Server: Apache/2.4.54 (Ubüntu)”and “nmap scan forgoogle.com”bec o m i n g\n“nmap scan forgo0ogle.com.” Analysis showed that the adversarially fine-tuned Mixtral maintained its\nstrong trend, maintaining accuracy 0.96 and F1 0.78 with no loss of confidence, but LLaMA and Claude\nshoweddeterioratedborderrecognitionunderthesedistortions.TheoutcomesvalidatethatMixtraldesign\nsuccessfullyreduceshostiletokenfragmentationandsymbolinterferencethatarecommonincybersecurity\ntextstreams.\nThe experimental findings, which are shown inFigs.3 and 4,c l e a r l ys h o wh o wm u c hb e t t e ro u r\nsuggestedmulti-modulestructureisthantheoptimizedSecureBERTbaseline.Thecomparisonbetweenthe\nthreecommonevaluationmetrics—precision,recall,andF1-score—foreachmodelversionisshownin Fig.3.\nWhile both models maintain excellent precision, the grouped bars clearly demonstrate that our technique,\nwhencombinedwiththeMixtral8x7Bmodel,achievesalargeleadinbothrecall(0.660)andF1-score(0.785),\nwith the latter improv",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Our three-layer LLM framework for cybersecurity entity recognition is designed in its entirety. The system"
+    },
+    {
+      "id": "f2",
+      "caption": "The LLM ensemble (Mixtral, Claude, and LLaMA) is included in the SecureBERT fine-tuning pipeline. By"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Performance comparison of cybersecurity NER methods across multiple OSINT data sources. The table"
+    },
+    {
+      "id": "t2",
+      "caption": "Comprehensive performance evaluation of our method against the fine-tuned SecureBERT baseline across"
+    },
+    {
+      "id": "t3",
+      "caption": "ComparisonofentityrecognitionresultsqualitativelyusingasampleofNmapdata.Ourapproachoutperforms"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

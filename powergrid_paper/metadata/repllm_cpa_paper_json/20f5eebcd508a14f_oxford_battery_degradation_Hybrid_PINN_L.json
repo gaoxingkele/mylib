@@ -1,0 +1,483 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/oxford_battery_degradation/oxford_battery_degradation__Hybrid_PINN_Li-ion_battery_prognosis__614dec5a9c.pdf",
+  "n_pages": 8,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Deep Learning (DL) achieved human-level performance\nin several computer vision tasks [1]. Developing such high-\nperformance models is a costly process for companies [2].\nThey often provide their models as a service through an\nApplication Programming Interface (API). This enables users\nto have predictions for their queries. Besides, state-of-the-art\nDeep Neural Networks (DNNs) are more and more compu-\ntationally expensive and require intensive memory, which in\nsome cases hinder their deployment in embedded devices.\nTherefore, during the past years, researchers proposed to\nquantize DNNs without significantly affecting their perfor-\nmance [3]. This enables a DL model to run efficiently on\nedge devices to enable a service for a user (e.g. smartphones)\nor other applications in the system (e.g. autonomous vehicle).\nSharing models as a black box to users or between compa-\nnies creates a dilemma for the model owner since there might\nThis research was funded by Synopsys Inc. and the Natural Sciences and\nEngineering Research Council of Canada (NSERC).\nbe a financial risk of Intellectual Property (IP) theft. Some\nresearch work focuses on obfuscating the model architecture\nto hinder attackers from retrieving the original model archi-\ntecture. Nevertheless, the model obfuscation is useless when\nthe attacker can retrieve a surrogate model using only the\nprediction API [4]. An attacker can act as a normal user and\nsend input queries to the DL model. Leveraging the output\npredictions, a malicious user can train a high-accuracy and\nhigh-fidelity copy of the original model. In addition, model\nstealing attacks can be used to facilitate other attacks such\nas adversarial attacks where the attacker creates malicious\nexamples to evade the model classification [5].\nPrevious work proposed different defenses against API-\nbased model stealing attacks. Some work proposes to withhold\ninformation about probabilities, but this reduces the model’s\ntransparency and utility [4]. The prediction confidence is\nimportant information, especially for critical systems, e.g.\nin an autonomous vehicle the system might take an action\nonly when a confidence threshold is reached. Other work\nproposes to add perturbations to the prediction probabilities in\na way that reduces the attacker performance [6]–[8]. However,\nthese techniques often inject high perturbation which hurts the\nmodel transparency or even reduces its performance. Addition-\nally, state-of-the-art defense techniques are computationally\nexpensive. Despite the focus of previous work on maintain-\ning the defender model’s performance by adding a minimal\nperturbation, none of them measure their defenses’ impact\non the model inference latency [6]–[8]. In critical systems,\ninference latency is very important which makes state-of-the-\nart defenses infeasible. When developing DL models targeting\nedge devices, it is crucial to have efficient algorithms that\nneither overload the system nor reduce its utility [3].\nTo overcome these issues, we propose a novel effi-\ncient perturbation-based defense alternative called Deception\n(DCP). Our heuristic approach aims to deceive the attacker\nand decrease the accuracy of his stolen model by adding an\nadaptive noise that deviates the probability scores without\nincreasing the inference time. In order to keep the model’s\ntransparency, we aim to decrease the attack performance with\na low amount of perturbation. To the best of our knowledge,\nour approach is the first to propose a defense that takes into\naccount the attack performance, the defender’s accuracy, the\nperturbation level, the inference time, the energy consumptionTo appear in Proceedings of ICMLA, Florida, USA ©2023 IEEE\narXiv:2309.01838v2  [cs.LG]  11 Sep 2023\nTABLE I: Our approach considers multiple aspects while\ndefending against model stealing attacks\nApproach Fast inference No auxiliary model Low perturbation\nRS [8] ✓ ✓ ✗\nAM [16] ✓ ✗ ✓\nMAD [6] ✗ ✗ ✓\nGRAD2 [7] ✗ ✗ ✓\nOurs ✓ ✓ ✓\nand the number of required models to perform the defense\n(Table I). We test our approach on several vision datasets:\nCIFAR-10, CIFAR-100 [9], SVHN [10], GTSRB [11] and\nCUB200 [12]. Our evaluation proves that our technique is ef-\nfective in defending against three state-of-the-art model steal-\ning attacks KnockoffNets [13], MAZE [14] and DFME [15]. We\nfind better or comparable results with state-of-the-art defenses\nin the matter of the perturbation budget and the attack per-\nformance. Furthermore, our technique outperforms the state-\nof-the-art defenses GRAD2 [7] and MAD [6] with a faster in-\nference latency by consuming less energy and without relying\non other surrogate models. We validate our approach on large\n(i.e., original architecture) and quantized Convolutional Neural\nNetworks (CNNs). We show that the latter is as vulnerable to\nmodel stealing attacks as their corresponding original models.\nOur technique succeeds in defending against these attacks in\nthe quantization setting which ensures that our defense extends\nto real-world applications in edge devices. Our code is avail-\nable at: https://github.com/KacemKhaled/defending-extraction\nThe remainder of the paper is organized as follows: Sec-\ntion II reviews the state-of-the-art that relates to model stealing\nattacks and defenses, and CNNs quantization; Section III\ndetails our methodology; we include our experiments and\nobtained results in Section IV; and Section V concludes the\npaper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "R ELATED WORK",
+      "level": 1,
+      "text": "A. Model stealing attacks\nModel stealing attacks also referred to as model extraction\nattacks, can be categorized into two groups: attacks that exploit\nhardware access and attacks that leverage API query access.\nWe refer to the latter category with API-based attacks. In API-\nbased attacks, the adversary observes the prediction outputs\nof his queries, then uses them to steal the functionality of\na model [4]. Prior works [5], [17] propose extraction attacks\nusing a jacobian-based data augmentation approach to produce\nsynthetic data. However, their success is limited to small\ndatasets. Reference [13] proposes KnockoffNets attack where\nthe adversary aims to obtain a functionally equivalent clone\nof the victim model using random and publicly available data.\nThe attack is easy and simple to execute, yet very effective\nin outperforming other state-of-the-art stealing attacks. Re-\ncently, other works in extraction attacks namely MAZE [14]\nand DFME [15] focus on modern techniques to generate\nthe adversary’s dataset instead of relying on public datasets.\nThey leverage generative models to generate data with an\nobjective that enables a successful extraction. However, they\nrequire millions of queries instead of thousands compared\nto KnockoffNets [13]. Other stealing attacks in the literature\nassume that a target model can only output hard labels instead\nof probabilities [18], [19].\nB. Model stealing defenses\nTo enable model owners to claim their models if stolen,\nprevious work proposes watermarking the model [20], [21].\nWatermarking can be done by changing the output probabil-\nities for a small subset of queries. However, this technique\ndoes not prevent model stealing. Other defense approaches\nprotect against attacks by perturbing the posterior prediction.\nThese perturbation-based defenses can be categorized into two\ncategories: proactive and reactive techniques.\nReactive techniques are triggered with the detection of\nan ongoing extraction attack. They continuously monitor the\ninteractions with the user and the defended model to be able\nto assess the knowledge stolen by the attacker [22] or to\ndetect an ongoing attack through detecting a deviation from\nthe normal distribution [17] or a large number of Out-of-\nDistribution (OOD) queries [16]. To detect OOD queries, [16]\nproposes a technique called Adaptive Misinformation (AM)\nwhere they flag as malicious queries the ones with low predic-\ntion scores. Then they use another model for “misinformation”\nthat generates noise vectors which will be combined with the\nprediction posteriors. However, this technique is sensitive to\nfalse positives which deteriorates the model’s performance.\nReactive defenses help reduce the efficiency of attacks, but\nthey cause inference delays and increase computational costs.\nProactive defenses are always perturbing the posterior pre-\ndictions, regardless an attack is detected or not. Some tech-\nniques propose to truncate the probability scores or to add ran-\ndom noise [13]. But, these techniques are not efficient against\nstate-of-the-art attacks. The Reverse Sigmoid (RS) defense [8]\nleverages the last layer in a neural network, i.e., the one that\noutputs the prediction probabilities of each class, and changes\nits activation function to a reverse sigmoid. This technique uses\na high perturbation level which hurts the model’s transparency.\nTo find the suitable perturbation per query, MAD [6] tries to\nsolve an optimization problem where it simulates the attacker\nby another network and tries to add the perturbation that\nmaximizes the error of the simulated surrogate model. It\nadds targeted noise to the posterior probabilities to poison the\nadversary’s gradient signal. GRAD2 [7] is a similar approach\nto MAD that relies on redirecting the gradient signal. Besides,\nit proposes to train a surrogate model on the attacker’s queries\nto simulate the attacker’s knowledge. GRAD 2 always assumes\nthat the attacker will send a large batch of queries that it\ncan use for training the simulated attacker. This hinders its\npracticality since it assumes that the system, where the model\nis implemented to perform predictions, has sufficient hardware\nto perform the training.\nIn general, existing perturbation-based defenses are compu-\ntationally expensive or they use high perturbations that hurt\nthe model’s transparency. However, in real-world systems that\nmake decisions based on predictions (e.g., a computer vision\nsystem in an autonomous vehicle), the model has to provide\na level of confidence in its predictions. The techniques that\nprovide high perturbations make the model useless for these\napplications. In addition, optimization-based techniques re-\nquire a lot of gradient calculations, which results in enormous\ninference delays and an increase in computational costs. Our\nproposed defense overcomes these issues through a heuristic\napproach that aims to add perturbations without requiring more\nhardware resources, as shown in Table I. We offer better trade-\noffs in satisfying the perturbation budget vs. the defender’s\nerror constraint.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "CNNs Quantization",
+      "level": 1,
+      "text": "Quantization is a technique used to reduce the memory\nfootprint and computation cost of CNNs by representing their\nweights and activations using lower precision data types. In\nother words, quantizing the weights involves reducing the\nnumber of bits used to represent the parameters, typically\nfrom the standard 32-bit floating-point representation to 8-\nbit or even lower precision [23], [24]. In this paper, we\nconsider two of the most used quantization techniques for\nCNNs: Post Training Quantization (PTQ) and Quantization\nAware Training (QAT) [3]. PTQ finds the quantization param-\neters without retraining the model. It computes the resulting\ndistributions of the different activation functions after feeding\nsome batches of data to the trained model, to determine the\nspecific quantization of each activation at inference time. Then\nthe model is quantized based on the calibration results. This\ntechnique is fast and simple, however, the quantized model\nmay have lower accuracy than the original one [3]. During\nQAT, float parameter values are rounded to mimic int8 values,\nso the weight adjustments are made while being aware that the\nmodel will be quantized. The calibration is performed while\nre-training the model. This technique often results in quantized\nmodels with higher accuracy than with PTQ [3].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "M ETHODOLOGY",
+      "level": 1,
+      "text": "In this section, we present the threat model, the attack\nstrategy, and our proposed defense approach.\nA. Threat Model\nWe assume that the model owner provides the DL model\nas a black box. The attacker has an API access to the victim\nmodel without internal knowledge about the model parameters\nnor the training data. The attacker is able to act as a normal\nuser by sending queries to the model and receiving prediction\nprobabilities. Fig. 1 shows an API-based model stealing attack.\nIn these attacks, the attacker attempts to steal the functionality\nof the victim model by labeling a dataset with the prediction\noutputs obtained from the attacked model. The goal of the\nattacker is to obtain a clone with high fidelity to the attacked\nmodel and high accuracy on the victim’s prediction task.\nFig. 1: In an API-based model stealing attack, the attacker\nsends queries to the victim model through its prediction API,\nthen he uses the predictions received to create a labeled\ndataset. The attacker then trains a new model, called the\nAdversary Model, on that dataset. This model represents the\nstolen model from the victim.\nB. Attack strategy\nOur aim is to comprehensively evaluate our perturbation-\nbased defense approach against diverse strategies for model\nstealing. We consider attacks that differ in the query distribu-\ntions and strategies (random vs. adaptive querying). Our de-\nfense aims to perturb the prediction probabilities, thus, we use\nthe state-of-the-art model stealing attacks that leverage the out-\nput probabilities of target victim models: KnockoffNets [13],\nMAZE [14] and DFME [15].\nLet FV (x; θ) be the victim model provided by the prediction\nAPI, with x representing the input query and θ the model\nparameters. The stealing attack approach has three steps:\n(i) selecting a query set Q, (ii) constructing a transfer set,\nand (iii) training a stolen model (the adversary’s model) FA.\nMAZE [14] and DFME [15] attacks rely on generative\nmodels to create the query set Q. They leverage the victim’s\noutputs and estimate their gradients to adaptively construct\nsuitable image queries. In these attacks steps (i) and (ii) hap-\npen simultaneously. KnockoffNets [13] attack selects publicly\navailable datasets to construct the query set Q. The attacker\nselects an image distribution and randomly samples images\nfrom it. We work with different datasets to simulate two\nscenarios: a knowledgeable adversary and a limited-knowledge\nadversary. The former is an attacker with knowledge about the\ndistribution of the training data. In this case, we select Q that\ncomes from the same distribution as the victim’s dataset D,\nso there might be overlapping data between both datasets. We\ncall this a distribution-aware attack. For knowledge-limited\nadversary, we select a different dataset from the victimQ ̸= D.\nThe adversary uses the obtained output predictions to label the\ndata Q. Finally, using the obtained transfer set, the adversary\ntrains the stolen model FA using a reasonably complex archi-\ntecture (e.g., ResNets [25]). The adversary’s model FA can be\ntrained to substitute FV by minimizing the cross-entropy loss,\ndefined with yi = FV (x; θ)i as:\nL(y, FA(x; θ′)) = −\nX\ni\nyi log FA(x; θ′)i (1)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "Defense strategy",
+      "level": 1,
+      "text": "The defender’s goal is to mitigate the extraction attack\nthreat. Since the attacker relies on the prediction probabilities\nfor a successful attack, in order to defend against it, the\ndefender can carefully modify the posteriors (i.e., the pre-\ndiction probabilities) to maximize the attacker’s loss Eq. (1).\nHowever, the prediction probabilities y have to keep a certain\nlevel of confidence score to maintain the model’s utility and\ntransparency. Hence, we constrain the perturbation magnitude\non the posteriors y by budget ϵ defined as the maximum ℓ1\ndistance between the clean posteriors y and the perturbed ones\ny′, defined as:\nℓ1 = ||y′ − y||1 ≤ ϵ (2)\nD. Approach\nWe propose a new heuristic approach to defend against\nmodel stealing attacks that could be applied in both large\nCNNs and Quantized CNNs for edge device implementations.\nOur defense is characterized by a low computational over-\nhead that does not slow down the model’s inference while\nmaintaining a low perturbation of the prediction probabilities.\nIn contrast to the state-of-the-art defenses GRAD 2 [7] and\nMAD [6], our technique is not computationally expensive\nsince it does not rely on auxiliary models to simulate attackers.\nOur technique is motivated by the small inference times of\nboth RS [8] and AM [16] (Table I). We revisit these defenses\nand we propose a better alternative called Deception (DCP)\nto overcome their limitations such as high perturbation levels\nfor RS or requiring an auxiliary model and deteriorating the\nmodel’s performance with false positives for AM.\nThrough comparing previous defenses, we describe a gen-\neral defense mechanism that perturbs the prediction probabil-\nities FV (x; θ) in a classification problem by:\ny′ = N (a · FV (x; θ) + b · r) (3)\nwhere a, b ≤ 1 are linear combination parameters to control\nthe proportions of the noise function r and the prediction\nprobabilities FV (x; θ); N (.) is a sum-to-one normalizer so that\ny′ represents the probability values for the different classes in\nthe prediction problem.\nOur strategy in injecting the noise is to decrease the un-\ncertain probabilities. Our rationale is that probabilities with\nlow values are of less importance. We assume that if a well-\ntrained model is uncertain about the prediction of an input,\nit is highly probable that the model made a wrong prediction\n(false positive). Hence, modifying these probabilities will not\naffect the defender’s accuracy Acc(FV ). However, if the model\npredicts an output with a high probability, it is more likely that\nit is a correct prediction (true positive). Thus, the injected noise\nis minimal without affecting the defender’s performance.\nIn order to heuristically find which posteriors to perturb, i.e.,\nlow probability values, and switch between clean posteriors\nFV (x; θ) and perturbed ones r(y), we leverage a detector\nfunction α inspired from AM [16] and defined as:\nα = S(ν · (ymax − τ )) (4)\nwhere S is the sigmoid function S(z) = 1 /(1 + e−z); τ is\na threshold that pushes α towards 1 when ymax > τ and\ntowards 0 otherwise (Fig. 2). Similar to [16], we set ν to 1000\n0 1\ny\n0.0\n0.5\n1.0\n=1\n0 1\ny\n=10\n0 1\ny\n=100\n0 1\ny\n=1000\n=0.0\n=0.2\n=0.4\n=0.6\n=0.8\n=1.0\nFig. 2: The detector function α that switches between the clean\nand perturbed posteriors using a threshold τ, which pushes α\ntowards 1 when ymax > τ and towards 0 otherwise, where\nymax represents the highest value in a probability vector y.\nin order to have a non-smooth switch between clean and\nperturbed predictions.\nIn contrast to AM that multiplies FV by (1 − α) in\nEq. (7) to create a combination between the clean posteriors\nand the noise, which results in deteriorating the defender’s\nperformance in case of false positives, we set in Eq. (3) the\nparameter a ← 1 and b ← −β · α to obtain:\ny′ = N (FV (x; θ) − β · S(ν · (ymax − τ )) · r(y)) (5)\nTo compute the perturbation, AM leverages another previ-\nously trained model, called misinformation model FM (x; θ).\nThe latter is trained on the same data as the victim but in\na way that maximizes the loss L(y, FV (x; θ)). However, this\ndeteriorates the performance of the original model because of\nfalse positives.\nInstead of using an extra model to inject the noise, our\ndefense leverages a noise function r(y) inspired from RS [8].\nThe latter maintains the defender’s accuracy in most cases,\nwithout being computationally expensive. However, its lim-\nitation is that it uses a high perturbation, increasing the ℓ1\ndistance between the clean and perturbed predictions.\nFor simplicity, to avoid estimating the adversary’s loss\nthrough auxiliary models, similar to RS [8], we assume that\nthe attacker has perfectly duplicated the victim model. Thus,\nwe use the victim’s predictions y = FV (x; θ) as starting point\nto compute the perturbations r(y). RS uses a reverse sigmoid\nfunction S−1(y) = log(y/(1−y)) on the predictions y in order\nto retrieve the initial logits (i.e., the obtained vectors from the\nlast layer). Then it selects a perturbation z = γS −1(y), where\nγ is a dataset-specific constant that gives more control over\nthe defense’s convergence [8]. After that, a sigmoid function\nis applied on z: S(z) = 1/(1 +e−z). Finally, the heuristically\nobtained perturbation r is:\nr(y) = S(z) − 1/2 = S(γS −1(y)) − 1/2 (6)\nOur defense’s final prediction output is obtained through\nsubstituting r(y) in Eq. (5), to finally obtain:\ny′ = N (FV (x; θ)−β ·S(ν ·(ymax −τ ))·(S(γS −1(y))−1/2))\n(7)\nwhere S and S−1 are respectively the sigmoid and reverse\nsigmoid functions. We set τ ← β to control the perturbation\nmagnitude. With this setting we have y′ → FV (x; θ) when\nα → 0 and y′ → RS when α → 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "E XPERIMENTS",
+      "level": 1,
+      "text": "In this section, we detail our setup: we explain the datasets,\nthe training process, the quantization techniques, the evalua-\ntion metrics as well as the baselines defenses. Then, we report\nand discuss our results.\nA. Setup\n1) Datasets: We tackle CNNs trained on 5 benchmark\nvision datasets with diverse resolutions and different numbers\nof classes. We leverage CIFAR-10 [9], a dataset of images\nof animals and vehicles with 10 classes; CIFAR-100 [9], a\ndiverse real-world images dataset with 100 classes; SVHN [10]\na street view house numbers image dataset with 10 classes; and\nGTSRB [11], a German traffic signs dataset with 43 classes.\nAll images are sized to 32 ×32 pixels. Furthermore, we work\nwith CUB-200 [12] dataset which contains images of 200\nclasses of bird species with 224 ×224 image size.\nSince the KnockoffNets [13] attack requires access to an\nadversary dataset, we simulate two attack scenarios: a) knowl-\nedgeable adversaries and b) knowledge-limited adversaries .\nTherefore, to perform the first one, since CIFAR-10 and\nCIFAR-100 come from the same distribution TinyImages [9],\nwe select queries Q from CIFAR-10 to attack models trained\non CIFAR-100 and vice-versa. Second, for knowledge-limited\nadversaries we choose unrelated datasets, we select queries\nfrom CIFAR-10 as an adversary dataset for victims trained on\nGTSRB and SVHN. To attack the CUB200 victim, we select\nimages from Pascal-VOC [26] which contains a diverse set of\nobjects, such as animals, vehicles, and household items.\n2) Training: In order to have a fair comparison with the\nstate-of-the-art techniques and the other baseline defenses, we\nfollow the same training process using the same hyperparam-\neters by the latest technique: GRAD 2 [7]. For the CUB-200\ndataset, we leverage a ResNet-34 [25] pretrained CNN on\nImageNet [27] and we fine-tune it for 50 epochs to obtain\nour victim model. For the other datasets, we train our victim\nmodels from scratch for 50 epochs using the ResNet-18 [25]\narchitecture. In KnockoffNets attack [13], the adversary archi-\ntecture is a pretrained WideResNet [28] for an attack against\na CUB-200 dataset victim and ResNet-34 against the small\nsize datasets. In this attack, we limit the query budget to 50k\nqueries. Similar to [7] in training, we use an SGD optimizer\nwith an initial learning rate of 0.01 that is annealed with a\ncosine schedule. We use a Nesterov Momentum of 0.9 and\na weight decay of 5 · 10−4. In DFME [15] and MAZE [14]\nattacks we train adversaries with ResNet-34-8x for small size\ndatasets and WideResNet for CUB-200 dataset. We train each\nmodel using 20M queries for 200 epochs. Similar to [15], we\nuse SGD with an initial learning rate of 0.1 and a weight-\ndecay of 5 · 10−4. Additionally, a learning rate scheduler was\napplied that multiplies the learning rate by a factor of 0.3 at\n0.1×, 0.3×, and 0.5× the total training epochs.\n3) Quantization: We train CNNs for computer vision tasks\nin our work. Hence, we use two quantization techniques\nfrom the literature that are most suited to quantizing our\nmodels [3]: PTQ and QAT. We leverage our previously trained\n52.5 55.0 57.5\nDef's C.Err\n60\n80\n100Adv's C.Err\nCIFAR-100\n20 25\nDef's C.Err\n25\n50",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "75 CIFAR-10",
+      "level": 1,
+      "text": "25 50 75\nDef's C.Err\n20",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "40 SVHN",
+      "level": 1,
+      "text": "9 10\nDef's C.Err\n50\n75",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "100 GTSRB",
+      "level": 1,
+      "text": "25 30\nDef's C.Err\n60\n80",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "100 CUB200",
+      "level": 1,
+      "text": "No Defense\nKnockoffNets\nDFME\nMAZE\nFig. 3: State-of-the-art attacks vs. our defense. Curves are\nobtained by varying the perturbation magnitude parameter β\n(Eq. 7) between 0 and 1.5. The attack performance is rep-\nresented on the y-axis by the Adversary’s Error. The x-axis\nconsiders the Defender’s Error . Our defense is effective in\ndefending against state-of-the-art stealing attacks.\nvictim models to quantize them with PTQ. We use the same\npreviously described architectures to retrain quantized models\nwith QAT.\n4) Evaluation metrics:\na) Classification Error and ℓ1 distance: In order to as-\nsess the performance of a defense against stealing attacks, we\ncompute the adversary’s classification error (Adv. Clf.Error)\non the victim’s test set. This metric measures the stolen\nfunctionality from the victim, i.e., the performance of the\nextracted model on the same task. Similar to [7], [13], we\nuse two utility metrics: the defender’s classification error (Def.\nClf.Error) and the ℓ1 distance between the clean predictions\nand the perturbed predictions by each defense technique. The\nℓ1 distance metric measures the magnitude of the perturbation\nthat impacts the prediction probabilities (Eq. 2). A high ℓ1\ndistance (e.g. ℓ1 > 1.2) entails a high perturbation that might\nharm the model’s transparency and reduces its utility when\nusers require confident probabilities. This helps in identifying\nthe trade-off between the defender’s performance and the\nperturbation budget for each defense. Both accuracies are\ncalculated using a held-out labeled test set that was not seen\nbefore by the victim (during the training) nor the stolen model.\nb) Hardware-related metrics: We compute the average\ninference latency per query and the average GPU energy\nconsumption for all queries using Weights and Biases [29]\nplatform. This helps perceive the impact of the computation\ncost of each defense technique in real-world applications.\nTo have a fair evaluation, we run all experiments on a\nLinux CentOS 7 computer with 1 GPU NVIDIA Tesla P100-\nPCIE-12GB and 24 CPU cores Intel E5-2650 v4 Broadwell\n@ 2.2GHz.\n5) Defenses: We use several baselines to compare our\nproposed defenses and validate our approach. No Defense\nmeans that we attack an undefended model. To the best of our\nknowledge, the best defenses in the literature are: GRAD2 [7],\nMAD [6], AM [16], and RS [8]. First, we compare our defense\nusing large (i.e., normally trained) models with all the other\ndefenses. After that, for the quantized models, we compare our\ndefenses only to the techniques that are more suitable for edge\ndevice implementations. In other words, we select the defense\nthat maintains the inference time without requiring additional\nmodels: RS.\n54 56 58 60\nDefender's Clf.Error\n60\n65\n70\n75\n80Adversary's Clf.Error\nCIFAR-10  CIFAR-100\nNo Defense\nRS\nAM\nMAD (pre-sota)\nGRAD2 (sota)\nDCP (ours)\n17 18 19 20\nDefender's Clf.Error\n18\n20\n22\n24\n26",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "28 CIFAR-100  CIFAR-10",
+      "level": 1,
+      "text": "(a) Knowledgeable adversary\n6 7 8 9 10\nDefender's Clf.Error\n7.5\n10.0\n12.5\n15.0\n17.5\n20.0\n22.5\n25.0Adversary's Clf.Error\nCIFAR-10  SVHN\n9 10 11 12\nDefender's Clf.Error\n30\n35\n40\n45\n50\n55\n60",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "65 CIFAR-10  GTSRB",
+      "level": 1,
+      "text": "23 24 25 26 27\nDefender's Clf.Error\n60\n65\n70\n75\n80\n85\n90",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "95 Pascal-VOC  CUB200",
+      "level": 1,
+      "text": "No Defense\nRS\nAM\nMAD (pre-sota)\nGRAD2 (sota)\nDCP (ours) (b) Knowledge-limited adversary\nFig. 4: Impact of the KnockoffNets stealing attack [13] on our defense vs. other baselines. Curves are obtained by varying\nthe perturbation magnitude parameter β (Eq. 7) between 0 and 1.5. The attack performance is represented on the y-axis by\nthe Adversary’s Classification Error . The x-axis considers the Defender’s Classification Error . Our defense outperforms the\nstate-of-the-art defenses on knowledgeable adversaries (a) and knowledge-limited attackers (b).\nTABLE II: Impact of the stealing attack on the defenses with constraints on both the variation of the Defender’s Classification\nError “∆Def.Clf.Error” and the ℓ1 distance between clean and perturbed predictions. We report the maximum attainable value\nunder both constraints. ∆Def.Clf.Error ranges from 1% to 5% and the ℓ1 distance is maintained at a budget of 0.9. Bold\ndenotes the best value and underlined denotes the second-best.\nCIFAR-10→CIFAR-100 CIFAR-100 →CIFAR-10 CIFAR-10 →SVHN CIFAR-10 →GTSRB Pascal-VOC →CUB200\n∆ Def.Clf.Error ∆ Def.Clf.Error ∆ Def.Clf.Error ∆ Def.Clf.Error ∆ Def.Clf.Error\nMethod 1% 2% 5% 1% 2% 5% 1% 2% 5% 1% 2% 5% 1% 2% 5%\nNo defense 56.89 56.89 56.89 18.03 18.03 18.03 30.92 30.92 30.92 7.18 7.18 7.18 61.14 61.14 61.14\nRS 64.20 64.20 64.20 19.22 19.22 19.22 51.07 51.07 51.07 14.23 14.23 14.23 83.80 83.80 83.80\nAM 59.81 61.27 65.87 19.88 21.34 25.65 58.29 58.29 58.29 12.04 15.46 15.46 88.92 88.92 88.92\nMAD (pre-sota) 60.27 61.51 64.94 21.54 23.08 27.24 40.42 43.55 51.98 14.84 17.65 23.52 77.11 78.45 80.61\nGRAD2 (sota) 60.77 62.06 65.20 21.56 23.37 27.25 43.73 47.27 52.51 11.15 12.86 15.02 82.04 83.49 85.36\nDCP (ours) 70.31 70.31 70.31 21.87 23.78 23.78 59.73 59.73 59.73 21.69 21.69 21.69 85.62 85.62 85.62\nB. Results\nWe present the results of our experiments in Fig. 3, Fig. 4,\nFig. 5, Fig. 6, Fig. 7, Table II, and Table III. In the figures,\nwe visualize two utility metrics: the defender’s error and\nthe ℓ1 distance between the original predictions y and the\nperturbed ones y′. The attack performance is measured by\nthe adversary’s classification error. The higher this error, the\nstronger the defense.\n1) DCP defense vs. state-of-the-art attacks: Fig. 3 presents\nan evaluation of our defense DCP (Eq. 7) against the three\nattacks KnockoffNets [13], DFME [15], and MAZE [14]. We\nobserve the performance of these attacks on undefended and\ndefended models. A good adversary produces a model with a\nlow classification error. As shown in Fig. 3, using our defense\napproach for all datasets and attack models can significantly\nreduce the effectiveness of the attacker by increasing its\nerror. Our defense produces reasonable operating points across\nall models, with a minimal impact on the defender’s error\nand a high impact on the adversary’s error. For instance, a\ndefended victim trained on the SVHN dataset can multiply\nthe adversary’s error by up to ×3.3. From Fig. 3 we notice\nthat the strongest model stealing attack is KnockoffNets as it\nproduces the lowest adversary’s error for most datasets.\n2) DCP defense vs. baselines: We evaluate our defense\nand the baselines against the strongest stealing attack in the\nattack models evaluation: KnockoffNets. Fig. 4 shows that for\nknowledgeable and knowledge-limited attackers, our defense\ntechnique outperforms the state-of-the-art defenses in most\ncases. It increases the adversary’s classification error signif-\nicantly before it starts impacting the defender’s classification\nerror. For instance, for CIFAR-10 (Fig. 4a, right column), our\ndefense DCP outperforms other techniques in increasing the\nadversary’s classification error by 22% with a small impact on\nthe defender’s performance ( 1%). Most baseline defenses fail\nto decrease the adversary’s performance without deteriorating\nthe defender’s performance. For a victim trained on GTSRB,\nwhen we constrain only the defender’s error to be lower than\n1%, our defense DCP increases the adversary’s classification\nerror by more than 109%. The second-best is RS which\nincreases the adversary’s classification error up to 79%.\nIn order to balance both metrics measuring the impact on the\ndefender’s performance and the ℓ1 distance between clean and\nperturbed predictions, we constrain both the ℓ1 distance with\na maximum budget of 0.9 and the defender’s error variation to\nbe lower than 1%, 2% or 5%. Table II shows the results of this\nexperiment. In most cases, our defense DCP yields comparable\nto or better results than the state-of-the-art defenses while\noffering reasonable trade-offs that prioritize the defender’s\nperformance.\nThrough these extensive experiments, we prove that our\nresults are significantly better than the state-of-the-art for\nknowledgeable and knowledge-limited adversaries. We pro-\n0 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n70Adv's C.Err\nCIFAR-100\n0 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "1 budget",
+      "level": 1,
+      "text": "18\n20\n22\n24CIFAR-10\n0 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "1 budget",
+      "level": 1,
+      "text": "10",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "20 SVHN",
+      "level": 1,
+      "text": "No Defense RS DCP (ours)\n0 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 budget",
+      "level": 1,
+      "text": "40",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "60 GTSRB",
+      "level": 1,
+      "text": "0 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n70",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "80 CUB200",
+      "level": 1,
+      "text": "Fig. 5: Our defense vs. Reverse Sigmoid. The Adversary’s\nclassification error with relation to the ℓ1 distance between the\nperturbed predictions and the clean predictions. Our defense\nachieves higher performance using lower perturbation budget.\n10k20k30k40k50k0\n5\n10\n15\n10k20k30k40k50k0\n10\n20\n30\n10k20k30k40k50k0\n50\n100\nDefense: No Defense RS AM MAD GRAD DCP (ours)\nNb. of queries Nb. of queries Nb. of queries\nAdv's Clf.Error ↑\nℓ1 budget=0.5 ℓ1 budget=0.8 ℓ1 budget=1.2\nFig. 6: Performance of the defenses against extraction attacks\nrelying on different numbers of queries. Each column con-\nsiders ℓ1 budget constraint. The attacks are performed on a\nvictim trained on the SVHN dataset. In most cases of a low\nnumber of queries, our defense outperforms other techniques\nin increasing the adversary’s classification error.\nvide better robustness against stealing attacks while maintain-\ning a reasonable perturbation.\n3) Ablation study:\na) Comparing ℓ1 distance of DCP and RS: In the previ-\nous experiments, we observe that RS [8] and our defense DCP\nsometimes achieve the same attack performance, i.e., they both\nincrease the adversary’s error to comparable values with a fast\ninference latency. This could be explained by the fact that our\ndefense uses a noise function that draws some inspiration from\nRS. We evaluate both defenses from a perturbation magnitude\nstandpoint. Fig. 5 shows that our defense outperforms RS\nin the matter of ℓ1 budget. In fact, our defense uses less\nperturbation to increase the adversary’s classification error.\nHence, DCP overcomes the limitation of RS that requires a\nhigh perturbation to perform well.\nb) The impact of the number of queries used in the\nstealing attack: We explore the resilience of our defense in\nprotecting models from multiple stealing attacks with different\nbudgets of queries. For each attack, we select a budget for the\nnumber of queries ranging from 10k to 50k images. Each\nvictim model is protected with a perturbation-based defense\nconstrained by an ℓ1 budget for the distance between the clean\nand perturbed predictions. Fig. 6 shows the results of this\nexperiment on the SVHN dataset. Our defense increases the\nadversary’s classification error significantly higher than other\ndefenses, especially for a lower number of queries. This entails\nthat our defense slows down the adversary which makes him\nuse a larger number of queries to perform the attack.\nTABLE III: The average inference latency per query and the\naverage energy consumption required to generate all perturbed\nqueries, bold means best.\nCIFAR10 CIFAR100 SVHN GTSRB CUB200\nDefense Inference latency ( ms)\nNo defense 0.10 0.09 0.09 0.07 0.09\nRS [8] 0.10 0.10 0.09 0.13 0.10\nAM [16] 0.14 0.14 0.13 0.16 0.17\nMAD [6] 58.02 499.09 59.12 225.50 121.4\nGRAD2 [7] 4.09 21.83 4.39 14.47 44.17\nDCP (ours) 0.11 0.09 0.09 0.13 0.09\nDefense Energy consumption ( W h)\nNo defense 0.13 0.15 0.20 0.12 0.43\nRS [8] 0.18 0.15 0.20 0.12 0.90\nAM [16] 0.21 0.18 0.23 0.17 0.93\nMAD [6] 2.79 22.18 6.96 12.66 80.06\nGRAD2 [7] 0.42 1.20 0.94 1.19 12.15\nDCP (ours) 0.17 0.17 0.20 0.12 0.59\n4) Inference latency and energy consumption: To validate\nthe efficiency of our proposed defense, we report in Table III\nthe hardware-related evaluation metrics for our defense and\nthe baselines. For example, for the CIFAR-10 dataset, we\nobtain ×37 faster inference than the state-of-the-art technique\nGRAD2 and more than ×527 faster inference than MAD.\nIn addition, we show that our defenses have comparable\nminimal energy consumption for each dataset compared to\nother defenses. Finally, we only require half the memory used\nby most of the baselines, since our technique does not require\nan extra model to compute the perturbations. To conclude,\nour defense is practical for edge device implementations:\nin general, we report comparable-to-best results in inference\nlatency and energy consumption.\n5) Model stealing defenses on quantized models: We val-\nidate the extension of our techniques on quantized CNNs.\nFig. 7 shows that in most cases our defense outperforms\nor matches the results of RS. For example, in PTQ results\n(Fig. 7a), for a selected perturbation budget (e.g. ℓ1 = 0 .5),\nour technique DCP provides better protection against model\nstealing attacks through increasing the adversary’s classifica-\ntion error to between 5% and 20% while maintaining the\ndefender’s performance. Our technique sometimes achieves\nthe same performance while having lower perturbations. This\nshows that our defense can be used in DL models targeting\nembedded systems applications.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "C ONCLUSION",
+      "level": 1,
+      "text": "The motivation for our work is the non-efficiency of pre-\nvious defense techniques against model stealing attacks. This\nhinders their deployment in edge devices. We overcame the\nheavy computation problem with a novel heuristic defense. We\nempirically proved that it works efficiently on large CNNs and\ntheir corresponding quantized versions targeting edge devices.\nWe found that our approach achieves comparable-to-better\nperformance with the state-of-the-art while maintaining low\nperturbations and fast inference time. Our defense proved to\n47.5 50.0\nDef's C.Err\n60\n70\n80Adv's C.Err\nCIFAR-100\nNo Defense\nRS\nDCP (ours)\n19.0 19.5\nDef's C.Err\n22.5\n25.0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "27.5 CIFAR-10",
+      "level": 2,
+      "text": "7.0 7.5\nDef's C.Err\n10\n15",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "20 SVHN",
+      "level": 1,
+      "text": "25.0 27.5\nDef's C.Err\n60\n70",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "80 GTSRB",
+      "level": 1,
+      "text": "0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n70Adv's C.Err\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "1 budget",
+      "level": 1,
+      "text": "20\n22\n24\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "1 budget",
+      "level": 1,
+      "text": "10\n20\n30\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n65\n70\n(a) PTQ\n47.5 50.0\nDef's C.Err\n60\n70\n80Adv's C.Err\nCIFAR-100\nNo Defense\nRS\nDCP (ours)\n19.0 19.5\nDef's C.Err\n22.5\n25.0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "27.5 CIFAR-10",
+      "level": 2,
+      "text": "7.0 7.5\nDef's C.Err\n10\n15",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "20 SVHN",
+      "level": 1,
+      "text": "25.0 27.5\nDef's C.Err\n60\n70",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "80 GTSRB",
+      "level": 1,
+      "text": "0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n70Adv's C.Err\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "1 budget",
+      "level": 1,
+      "text": "20\n22\n24\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "1 budget",
+      "level": 1,
+      "text": "10\n20\n30\n0.0 0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "1 budget",
+      "level": 1,
+      "text": "60\n65\n70\n(b) QAT\nFig. 7: Performance of the defense against stealing attack on\nQuantized CNNs with two quantization techniques PTQ (a)\nand QAT (b). Our defense outperforms the baseline defense\nthat does not require an auxiliary model, nor increases infer-\nence delays.\nbe effective in amplifying the adversary’s classification error\nunder various attack models.\nWith this paper, we shed light on the need for considering\nthe hardware limitations during the development of security\nand privacy algorithms for DL applications. We strongly\nencourage the community to prioritize the practicality of their\nproposed defenses, not as an undesired side-effect, but as\na crucial requirement for real-world applications. For future\nwork, we intend to work on developing efficient defenses\nspecifically tailored for edge devices and real-time systems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. (1)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Eq. (7)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Eq. (3)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Eq. (5)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Eq. 2)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

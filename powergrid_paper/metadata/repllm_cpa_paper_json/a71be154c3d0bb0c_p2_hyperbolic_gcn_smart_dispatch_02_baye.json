@@ -1,0 +1,354 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__02__bayesian_optimized_gcn_bilstm_adaboost_model_for_power_loa__9b2dc47b52.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the construction of smart grids [1] and the large-scale integration of renewable\nenergy [2], the evolving power system is facing multiple challenges, including the continu-\nous rise in electricity demand, the integration and utilization of renewable energy, and the\nurgent need to optimize system operation efficiency. Safe, reliable, and cost-effective power\nsystem operations are critical in global energy strategies. Accurate electricity demand fore-\ncasting plays a vital role in achieving these goals. The accuracy of power-load forecasting\ndirectly affects the economic efficiency and safety of power system dispatch decisions [3].\nHigh-precision load forecasting is essential for guaranteeing the safe operation of the grid,\nmaintaining system stability, and enhancing operational benefits [4]. Furthermore, accurate\nload forecasting can provide reliable data support for grid scheduling, effectively prevent-\ning potential risks of power shortages or surpluses, thereby ensuring voltage and frequency\nstability and improving power supply quality.\nElectronics 2025, 14, 3332 https://doi.org/10.3390/electronics14163332\nElectronics 2025, 14, 3332 2 of 19\nPower-load forecasting accuracy depends on various factors, including socioeconomic\nvariables like population distribution and industrial energy efficiency, as well as envi-\nronmental factors such as climate conditions [ 3,4]. Among these, complex and variable\nmeteorological factors are key elements in load forecasting and have the greatest impact\non prediction results [5]. Considering meteorological factors in forecasting can improve\nprediction accuracy.\nIn recent years, the frequent occurrence of extreme weather events has induced non-\nstationary abrupt changes in load curves. Consequently, numerous researchers have been\nconducting in-depth studies on the impacts of meteorological factors on power load and\nthe characterization of spatiotemporal relationships among factors influencing power load.\nScientifically analyzing and capturing these spatiotemporal relationships is crucial for\nenhancing the accuracy and stability of load forecasting, as well as for providing rational\nscheduling strategies.\nThe complex working conditions faced by modern power dispatch pose higher re-\nquirements for load forecasting. To address this, academia and industry have continuously\nimproved the accuracy and robustness of forecasting models through diverse methodolog-\nical innovations. The accuracy of load forecasting is determined by data quality, model\nperformance, and load characteristics, and these interrelated factors have a synergistic\neffect on the prediction results. Traditional artificial intelligence methods have limitations\nin handling massive time-series data and high-dimensional multi-scale features. Their\ninherent gradient issues and overfitting phenomena can reduce the reliability of power\nforecasting [6]. Deep neural networks (such as CNN, LSTM, GRU, Transformer, etc.) have\ngradually become a new research hotspot in the field of improving power-load forecasting\naccuracy [7]. Li et al. [ 8] proposed a novel deep learning-based forecasting (DLSF) method,\nutilizing a CNN network model to accurately cluster input data and demonstrating its\nexcellent performance in both accuracy and efficiency. Muzaffar et al. [9] applied LSTM\nnetworks to power-load forecasting and compared them with traditional methods, demon-\nstrating the significant potential of LSTM in improving forecasting accuracy. L’Heureux\net al. [10] optimized the model workflow, designed an N-dimensional space transforma-\ntion layer, and innovated context feature extraction methods, ultimately developing an\nimproved Transformer architecture specifically for load forecasting. However, it should\nbe noted that a single intelligent forecasting model has inherent limitations. Traditional\ntime-series analysis methods can lead to information loss when the input sequence is too\nlong [11], Based on this, Graves [ 12] proposed the bidirectional LSTM network, which\ncan not only capture the temporal patterns of historical load data (such as daily periodic\nfluctuations) but also reversely learn the potential impact of future moments on the current\nstate (such as pre-load adjustments before holidays), thus extracting temporal dependency\nfeatures more comprehensively. Additionally, Graph Convolutional Networks (GCN) show\nmarked superiority over conventional spatial feature extraction techniques, owing to their\ndistinctive topological modeling proficiency. Chen et al. [13] used a combination of GCN\nand LSTM to extract spatiotemporal features from large-scale data for power-load fore-\ncasting and validated the effectiveness of the model. Model specificity leads to boundary\nconstraints on the engineering applicability of single models, making it urgent to develop\nadaptive hybrid modeling methods [14].\nModel ensemble-based forecasting methods provide an effective way to overcome\nthe limitations of single models. This theoretical framework was first established by Bates\nand Granger in 1969, and their pioneering work laid the theoretical foundation for the\nsubsequent development of combined forecasting techniques, continuously advancing\nresearch in this field [15]. In power-load forecasting research, accurately capturing spa-\ntiotemporal features is key to improving prediction accuracy. Ma et al. [ 16] proposed a\nElectronics 2025, 14, 3332 3 of 19\nnovel combined model that integrates Convolutional Neural Networks (CNN) with Long\nShort-Term Memory (LSTM) networks, effectively extracting spatiotemporal features from\nthe data and incorporating an attention mechanism to improve the accuracy of power-load\nforecasting. Bouktif et al. [17] proposed combining RNN networks with LSTM networks\nand incorporating genetic algorithms (GA) and particle swarm optimization to improve\nthe prediction accuracy of the model.\nOn the other hand, existing power-load forecasting models still suffer from the fol-\nlowing limitations: (1) Inadequate capture of the spatiotemporal characteristics of data,\nwhich may degrade the model’s prediction accuracy. (2) A lack of adaptive mechanisms\nfor dynamically allocating weights to base learners, resulting in a significant decline in\nprediction robustness during periods of load fluctuation (e.g., extreme weather events).\n(3) Challenges in quantifying the impact of model uncertainty on prediction outcomes.\nAlthough researchers have applied various algorithms to mitigate these drawbacks, gaps\npersist in the existing literature.\nTo solve this, this paper introduces a GCN-BiLSTM hybrid model within the AdaBoost\nframework, further enhanced through Bayesian optimization:\n(1) Construct a graph structure with meteorological factors as nodes, where each node\nrepresents different meteorological elements such as temperature and humidity, and use\nthe GCN layer to extract nonlinear spatial correlation features among these factors.\n(2) The BiLSTM network is responsible for learning the temporal dynamic characteris-\ntics of load and meteorological factors.\n(3) A Bayesian optimization method based on Markov Chain Monte Carlo (MCMC)\nsampling is used to achieve probabilistic hyperparameter tuning and uncertainty quantifi-\ncation of prediction results.\n(4) An Adaboost ensemble mechanism is introduced to dynamically adjust the weights\nof multiple GCN-BiLSTM weak learners based on uncertainty obtained from Monte Carlo\nsampling, with a focus on enhancing prediction robustness under extreme weather events.\nFinally, by comparing the GCN-BiLSTM-AB model with single BiLSTM, GCN-BiLSTM,\nand GCN-BiLSTM-Adaboost models, the proposed method is validated in terms of predic-\ntion accuracy, computational efficiency, and reliability of probabilistic outputs, providing a\nmore reliable basis for power system scheduling decisions.\nThe structure of this paper is organized as follows: Section 2 introduces the GCN-\nBiLSTM-AB hybrid model, which integrates Graph Convolutional Networks (GCN) for\nspatial",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Method",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Model Framework",
+      "level": 2,
+      "text": "The power-load forecasting research framework proposed in this paper involves a\nspecific process, as shown in Figure 1. The model uses GCN to capture spatial dependencies\nand BiLSTM to extract long-term temporal dependencies in power system features. The\nGCN-BiLSTM model serves as the base learner, where AdaBoost integrates 10 such weak\nElectronics 2025, 14, 3332 4 of 19\nlearners by dynamically adjusting their weights based on prediction errors. A Bayesian\napproach is introduced to quantify prediction uncertainty through Monte Carlo sampling,\nwhich simultaneously prevents overfitting. The weights of weak learners are further\nrefined according to their uncertainty estimates. Ultimately, the weighted aggregation of all\n10 learners’ predictions yields the final output, significantly enhancing both predictive\nstability and accuracy.\nThe research framework for short-term power-load forecasting involves a specific\nprocess, including data preprocessing and GCN-BiLSTM-Adaboost (with the introduction\nof Bayesian methods), as shown in Figure 1:\nFigure 1. Model flow chart.\n(1) Data preprocessing:\nThe input dataset comprises 9 feature columns, including load value, humidity, tem-\nperature, wind speed, atmospheric pressure, precipitation, visibility, water vapor pressure,\nand perceived temperature.\nFor handling missing values, the mean value of the respective column containing the\nmissing data is employed for imputation.\nSubsequently, the data are normalized, and a sliding window (with a 24-h window\nsize) is constructed to predict the load value for the subsequent hour.\n(2) Feature correlation analysis and adjacency matrix construction:\nThe Spearman correlation coefficient is employed to analyze the correlation between\ninput features in the dataset. Within the adjacency matrix of the GCN, a correlation\ncoefficient exceeding 0.8 is defined as an edge (i.e., a connection weight of 1) between\ntwo features, while all other correlations are assigned a weight of 0. This approach is used\nto construct the adjacency matrix.\n(3) Prediction and model evaluation:\nGCN-BiLSTM is used to capture the spatial and temporal dependency relationships in\nthe dataset.\nDropout is used to randomly discard some neurons during the training phase to\nprevent model overfitting.\nElectronics 2025, 14, 3332 5 of 19\nAdaboost is utilized to integrate the results of multiple GCN-BiLSTM weak predic-\ntors, with the weight of each weak predictor adjusted based on its prediction error and\nuncertainty.\nBayesian methods are realized via Monte Carlo Dropout to estimate the uncertainty of\nprediction outcomes.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 GCN Method",
+      "level": 2,
+      "text": "The core idea of Graph Convolutional Networks (GCN) is to aggregate information\nfrom nodes and their neighboring nodes through graph convolution operations [18]. In\nthis study, the nodes within the GCN layer represent the 8-dimensional feature vectors\ncorresponding to meteorological factors at each time step, while the edges between nodes\ndenote the connectivity relationships among these features. The primary objective of the\nGCN is to extract the interdependencies between features in the dataset.\nGraph data can be represented as G = {X, E, A}. In this case, X represents the set of\nnodes, E represents the set of edges, and A is the adjacency matrix. This paper determines\nthe connection relationships between nodes in GCN by calculating the correlation relation-\nships between input features [19], the detailed analysis process is presented in Section 4.1.\nSince there is no obvious normal distribution relationship or linear correlation between\nthe features, the Spearman correlation coefficient is chosen to analyze the relationships\nbetween the features [20].\nAssuming all negative correlation coefficients are taken as absolute values, a Spearman\ncorrelation coefficient absolute value less than 0.8 is typically interpreted as indicating\nweak or no correlation between two variables. Conversely, when the absolute value of the\nSpearman correlation coefficient is greater than or equal to 0.8, a connection relationship\nexists between the two nodes.The value of Spearman’s correlation coefficient is shown in\nFigure 2.\nFigure 2. Spearman correlation coefficient between features.\nThe GCN layer can be represented by the following equation:\nH(1) = σ\n\u0010\neD− 1\n2 eA eD− 1",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 H(0)W(0)",
+      "level": 1,
+      "text": "\u0011\n(1)\nElectronics 2025, 14, 3332 6 of 19\nwhere H(1) is the input feature matrix, W(0) is the weight matrix, eA is the adjacency matrix\nwith self-loops added, eD is the degree matrix, σ(·) is the nonlinear activation function.\nGCN enhances spatial feature representation and can better capture the complex\nrelationships between meteorological factors. The output of the GCN is passed to BiLSTM\n(Bidirectional Long Short-Term Memory) to capture the long-term dependencies in the\ntime series.The structure of GCN is shown in Figure 3.\nFigure 3. GCN structure.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.3 BiLSTM Method",
+      "level": 2,
+      "text": "The cited paper [21] mentions that Long Short-Term Memory (LSTM) was proposed\nby Hochreiter S and Schmidhuber J. By introducing gating mechanisms (input gate, forget\ngate, and output gate), LSTM addresses the vanishing gradient problem of traditional\nRNNs [22]. The core formula is as follows:\n(1) The forget gate determines what information needs to be forgotten from the cell\nstate Ct−1 at time t − 1, as shown in Equation (2) The forget gate reads the hidden layer\nstate ht−1 and input sequence xt at time t, and outputs a value between 0 and 1, where 1\nmeans retaining all information, and 0 means discarding all information.\nft = σ\n\u0010\nWf · [ht−1, xt] + b f\n\u0011\n(2)\nwhere ft is the forgetting gate state at timet; Wf and b f are the remaining relics, respectively,\nforget the weight and bias of the gate; σ is the bipolar sigmoid activation function.\n(2) The input gate reads the input xt at time t and decides the information to be saved\nin the neurons. Then, the tanh layer generates a temporary state for the memory unit\nat time t. Finally, the cell state is updated to obtain the new cell state Ct, as shown in\nEquations (3)–(5).\nit = σ(Wi · [ht−1, xt] + bi) (3)\neCt = tanh(Wc · [ht−1, xt] + bc) (4)\nCt =\n\u0010\nft ⊗ Ct−1 + it ⊗ eCt\n\u0011\n(5)\nwhere it is the input gate state at time t, and the control xt is passed to Ct amount of\ninformation; Wi and bi are the weight and bias of the input gate, respectively. Wc and bc\nare the weight matrix and bias term of the cell state, respectively. tanh is a double curved\ntangent activation function, ⊗ is the Hadamard product.\n(3) The output gate can choose important information to be output from the current\nstate. The sigmoid layer first decides which part of the neuron state needs to be output.\nThe neuron state to be output passes through the tanh layer and is multiplied by the output\nElectronics 2025, 14, 3332 7 of 19\nof the sigmoid layer to obtain the output value ht, which is also the input value for the next\nhidden layer, as shown in Equations (6) and (7).\not = σ(Wo · [ht−1, xt] + bo) (6)\nht = ot ⊗ tanh(Ct) (7)\nwhere ot is the output gate state at time t, Wo and bo are the weight matrix and bias term\nfor the output gate, respectively.\nIts structure is shown in Figure 4:\nFigure 4. LSTM structure.\nWhile unidirectional LSTM effectively leverages historical load data, it is important to\nnote that it does not consider future information in its predictions.\nBidirectional Long Short-Term Memory (BiLSTM) network differs from traditional\nLSTM in that it simultaneously takes into account both the forward and backward informa-\ntion of the sequence, enabling a more comprehensive capture of long-term dependencies in\nthe time series. The BiLSTM structure is shown in Figure 5.\nIn this paper, BiLSTM can effectively capture long-distance dependencies between\ntime steps, improving prediction accuracy. The final output is the concatenation of the\nforward and backward LSTM outputs:\nht =\nh− →h t, ← −h t\ni\n(8)\nwhere − →h t is the output of the forward LSTM, and ← −h t is the output of the backward LSTM.\n− →h t = LSTM (xt, − →h t−1) (9)\n← −h t = LSTM (xt, ← −h t−1) (10)\nThe LSTM unit represents the computation process of the unidirectional LSTM net-\nwork. − →h t is the forward LSTM hidden state at time step t. ← −h t is the backward LSTM\nhidden state at time step t. Wy and by are the weight matrix and bias term, respectively.\nx1, x2, x3, . . .xt represent t1 ∼ ti the input data at each time step(i ∈ [1 ∼ t]). y1, y2, y3, . . .yt\nrepresent t1 ∼ ti the output data at each time step (i ∈ [1 ∼ t]).\nElectronics 2025, 14, 3332 8 of 19\nFigure 5. BiLSTM structure.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.4 AdaBoost Algorithm",
+      "level": 2,
+      "text": "Adaboost (Adaptive Boosting) is an ensemble learning method that builds a strong\npredictor by combining multiple weak predictors. The fundamental principle of Adaboost\nlies in iteratively training weak learners and modifying sample weights according to\neach learner’s performance, enabling subsequent learners to concentrate on previously\nmisclassified instances. Ultimately, Adaboost integrates the results of all weak predictors\nthrough weighted voting to produce the final prediction results [23,24].\nIn this study, the GCN-BiLSTM hybrid model acts as a weak learner. The AdaBoost\nframework is introduced to integrate 10 such weak learners. Based on prediction results,\nit dynamically adjusts the sample weights within the weak learners and the weights of\nthe weak learners themselves. This enhances the accuracy and robustness of the final\npredictions. The specific steps are as follows:\nStep 1: Initialize sample weights, with each sample assigned an equal initial weight,\nD1(i) = 1\nm , where m is the number of training samples (1200), and i refers to the i-th\nsample.\nStep 2: Train the k-th weak learner using the current sample weights Dk(i), and for\neach sample i, calculate the current prediction error ei.\nei = | ˆyi − yi| (11)\nwhere yi is the true value, ˆyi is the predicted value.\nStep 3: Calculate the weight adjustment factor weight_sum and accumulate the\nweights of samples with large errors:\nweight_sum = ∑\ni|ei>0.3\nDk(i) (12)\nCalculate the weight of the weak learner αk using an exponential decay formula: The\nweight of the current weak learner is calculated, which is related to its performance in\ntraining, and weak learners with good performance will be assigned higher weights.\nαk = 0.5\nexp(weight_sum) (13)\nStep 4: Update sample weights. Samples with large prediction errors ( ei > 0.3) will be\nassigned higher weights to receive more attention in the next iteration.\nDk+1(i) =Dk(i) × 1.1 (14)\nElectronics 2025, 14, 3332 9 of 19\nFor other samples, keep the weights unchanged:\nDk+1(i) =Dk(i) (15)\nNormalize the sample weights so that the sum of the sample weights is 1:\nDk+1(i) ← Dk+1(i)\n∑i Dk+1(i) (16)\nThe weights of weak learners do not need to be normalized here, because a Bayesian\nmethod will be introduced in the subsequent testing phase to further adjust the weights of\nweak learners, and then the normalization of weak learner weights will be performed.\nThe structure of the algorithm is shown in Figure 6.\nFigure 6. Adaboost structure.\nIt is worth emphasizing that the AdaBoost algorithm employed in this study has\nbeen modified from the traditional AdaBoost framework, with the specific improvements\noutlined as follows:\n(1) The proposed framework directly models spatiotemporal features using GCN-\nBiLSTM, which enables more effective capture of complex patterns compared to the decision\ntrees or shallow models utilized in traditional AdaBoost.\n(2) Unlike the traditional AdaBoost algorithm, which adjusts the weights of all misclas-\nsified samples uniformly, this study only increases the weights of samples with prediction\nerrors exceeding 0.3. This modification allows subsequent weak learners to focus on\nlearning critical hard-to-predict samples (e.g., peak electricity consumption periods, load\nmutations induced by extreme weather) while omitting weight adjustments for samples\nwith minor errors. This avoids excessive model sensitivity to noise or non-significant\nfluctuations. It should be noted that the threshold value of 0.3 should be adjusted based on\nerror tolerance criteria and data characteristics in practical applications.\n(3) The introduction of an “uncertainty” mechanism for further refinement of weak\nlearner weights will be elaborated in Section 2.5.\nIn summary, these modifications to the traditional Adaboost algorithm enhance the\nmodel’s sensitivity to sudden changes and periodic variations in load, while mitigating\noverfitting during stable load periods.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.5 Bayesian Method",
+      "level": 2,
+      "text": "Owing to data uncertainty (i.e., errors induced by inherent noise in the dataset) and\nmodel uncertainty (i.e., uncertainty stemming from insufficient training data or inadequate\nmodel interpretability of data patterns), this study incorporates Bayesian methods to quan-\ntify prediction uncertainty. It should be noted that the “prediction uncertainty” in this study\nspecifically refers to the variance of predictions from each GCN-BiLSTM weak learner.\nElectronics 2025, 14, 3332 10 of 19\nThe Bayesian method is a probability-based statistical inference technique that calcu-\nlates the posterior distribution for prediction and uncertainty estimation by incorporating\nprior distributions and observational data [25]. In this study, the Bayesian method is real-\nized using Monte Carlo Dropout. Monte Carlo Dropout is an approximation to Bayesian\ninference that estimates the uncertainty of predictions by repeatedly applying Dropout\nduring the testing phase to simulate the posterior distribution of the modelparameters [26].\nSpecifically, the Bayesian approach is implemented in two distinct phases. During\nthe training phase, Dropout is employed to randomly deactivate neurons in each forward\npass, thereby mitigating overfitting. In the testing phase, each GCN-BiLSTM weak learner\ngenerates 100 stochastic predictions yn through Monte Carlo Dropout sampling, from\nwhich we compute both the mean prediction ¯y and variance—the latter serving as the\nquantitative uncertainty measure for the weak learner.\nUncertainty = 1\n100\n100\n∑\nn=1\n(yn − ¯y)2 (17)\nEach weak learner adjusts its training-derived weight Wm (computed during the AdaBoost\ntraining phase) based on its prediction uncertainty, as specified in Equation (18). Concretely,\nweak learners demonstrating higher predictive uncertainty undergo weight attenuation,\nwhereas those with more certain predictions obtain magnified weighting. (High uncertainty\nmeans high variance. This shows the weak learner’s predictions are unstable, so we reduce\nits weight in the ensemble).\nW\n′\nm = Wm\n1 + uncertainty (18)\nTo ensure the weights sum to unity, a normalization step is applied to the weightsW\n′\nm as\nshown in Equation (19), yielding the final weak learner weights W\n′′\nm.\nW\n′′\nm = W\n′\nm\n∑10\nm=1 W\n′\nm\n(19)\nThe final prediction is obtained by computing the weighted sum of the weak learners’\npredictions.\nThe advantages of introducing the Bayesian method are as follows:\n(1) Quantifying uncertainty, improving model reliability.\n(2) Introducing uncertainty weighting in AdaBoost, enhancing the stability of final\npredictions.\n(3) Obtaining a more reasonable predictive distribution by calculating the mean and\nvariance through multiple samplings.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Data Processing",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Data Description",
+      "level": 2,
+      "text": "The dataset utilized in this experiment is derived from hourly electricity load data\ncollected over one year in a specific region (spanning from 00:00 on 1 January 2018, to 23:00\non 28 December 2018), with detailed information presented in Table 1.\nThe input dataset comprises ten columns, where the labels for columns 1 to 10 are as\nfollows: date (formatted as year-month-day hour), load value, humidity, temperature, wind\nspeed, atmospheric pressure, precipitation, visibility, water vapor pressure, and perceived\ntemperature.\nElectronics 2025, 14, 3332 11 of 19\nTable 1. Data example.\nDate Load\n(MW)\nHumidity\n(%)\nTemperature\n(◦C)\nPressure\n(Pa)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "1 January 2018",
+      "level": 1,
+      "text": "0:00 174 53 −3.6 1024.4\nWind Speed\n(m/s)\nPrecipitation\n(mm)\nVisibility\n(km)\nVapor\nPressure\n(hPa)\nSensible\nTemperature\n(◦C)\n0.4 0 5.25 2.48 −6.32",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Data Standardization",
+      "level": 2,
+      "text": "Data normalization constitutes a critical preprocessing step for optimizing the model\ntraining process, with its core value manifested in three aspects: accelerating the conver-\ngence of the objective function optimization trajectory, suppressing gradient anomalies\nduring parameter updates, and enhancing the stability of numerical computations. In\npractical applications of power-load forecasting, model input features frequently exhibit\nheterogeneous dimensional characteristics (e.g., unit differences between temperature,\nhumidity, and load values). To eliminate the interference of inter-feature dimensional\ndiscrepancies on the prediction model, while improving the algorithm’s generalization\ncapability and computational efficiency, the original data must undergo scale normalization.\nThis study employs the min-max normalization method, whereby each feature is linearly\nmapped to the unit interval [0, 1]. Its mathematical expression is as follows:\nX∗\ni = Xi − Xmin\nXmax − Xmin\n(20)\nwhere Xi represents the original measurement value of the sampling point, X∗",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "represents",
+      "level": 1,
+      "text": "the normalized value, and Xmax, Xmin are the maximum and minimum values in the actual\ndata. After inputting the normalized data into the model and obtaining the normalized\nprediction result, the result is re-normalized using Equation (16).\nx∗ = y∗(xmax − xmin) +xmin (21)\nwhere y∗ is the normalized power-load prediction value, x∗ is the de-normalized power-\nload prediction value, and xmax and xmin are the maximum and minimum values in the\nactual data.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.3 Evaluation Index",
+      "level": 2,
+      "text": "To verify the effectiveness of the model and evaluate the prediction performance, this\npaper selects Mean Absolute Error (MAE ), Mean Absolute Percentage Error (MAPE ), and\nRoot Mean Square Error (RMSE ) as evaluation metrics. The formulas for these metrics are\nprovided in Equations (17)–(19):\nMAE = 1\nn\nn\n∑\ni=1\n|yi − ˆyi| (22)\nMAPE = 100%\nn\nn\n∑\ni=1\n\f\f\f\f\nyi − ˆyi\nyi\n\f\f\f\f (23)\nRMSE =\ns\n1\nn\nn\n∑\ni=1\n(yi − ˆyi)2 (24)\nElectronics 2025, 14, 3332 12 of 19\nwhere yi represents the actual value, ˆyi represents the predicted value, and n represents the\nnumber of samples. The smaller the values of MAE , MAPE , and RMSE , the more accurate\nthe load prediction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4 Case Study",
+      "level": 1,
+      "text": "In this section, the advantages of the Spearman correlation coefficient-based graph\nconstruction method are verified by comparing it with several alternative graph construc-\ntion methods, including k-nearest neighbors, learned graphs, and mutual information.\nAdditionally, the effectiveness of the proposed model is validated from the following\ntwo perspectives:\n(1) The prediction accuracy of the proposed model is compared with that of base-\nline models (LSTM, GRU, CNN-LSTM, GCN-LSTM, and CNN-BiLSTM) over one-day\nand one-week forecasting horizons. The results demonstrate its distinct advantage in\nprediction accuracy.\n(2) By comparing the load forecasting performance of BiLSTM, GCN-BiLSTM, GCN-\nBiLSTM-Adaboost, and the proposed model over one-day and one-week horizons, the\ncontributions of AdaBoost integration and Bayesian methods to enhancing the model’s\nprediction stability are validated.\nThe aforementioned forecasting performance is evaluated using three metrics: Mean\nAbsolute Error (MAE ), Mean Absolute Percentage Error (MAPE ), and Root Mean Square\nError (RMSE ).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.1 Comparison of Methods for Constructing Graph Structures",
+      "level": 2,
+      "text": "There are many methods for constructing graphic structures [27], like k-nearest neigh-\nbors(KNN) [28], learned graphs [ 29], mutual information [ 30] and so on. This paper\ncompares the one-week prediction results of the Spearman correlation coefficient with\nseveral graph construction methods, including k-nearest neighbors, learned graphs, and\nmutual information, as shown in Table 2, verifying the superiority of using the Spearman\ncorrelation coefficient for graph construction.\nTable 2. Performance comparison.\nModel\nA Week\nM AE M APE RMSE\nSpearman 0.34 0.68% 0.43\nKNN 0.42 0.82% 0.55\nLearned Graphs 0.49 0.97% 0.65\nMutual Information 0.42 0.81% 0.54\nAs can be seen from Table 2, compared with KNN, the graph construction method\nusing Spearman correlation coefficient has improved MAE , MAPE , and RMSE by 0.08,\n0.14%, and 0.12, respectively. Compared with Learned Graphs, MAE , MAPE , and RMSE\nhave increased by 0.15, 0.29%, and 0.22, respectively. Compared with Mutual Information,\nMAE , MAPE , and RMSE have increased by 0.08, 0.13%, and 0.11, respectively.\nThe k-nearest neighbors (KNN) method connects features solely based on the numer-\nical similarity of meteorological data, which may easily introduce spurious correlations.\nIn contrast, the Spearman correlation coefficient identifies genuine correlations among\nmeteorological features through statistical relevance, and the resulting graph structure is\nmore consistent with actual physical laws. This enables it to more accurately reflect the\ncombined impact of meteorological factors on load.\nElectronics 2025, 14, 3332 13 of 19\nLearned graphs require large volumes of data and complex training processes, making\nthem prone to overfitting. By comparison, the Spearman-based approach directly constructs\ngraph structures based on the inherent correlations of meteorological factors, eliminating\nthe need for training. It features simple computation and yields stable, reliable results.\nMutual information is sensitive to data distribution and sample size, often leading\nto estimation biases in small datasets. In contrast, the Spearman correlation coefficient\nis computed via simple rank statistics and can reliably capture monotonic relationships,\nregardless of data distribution characteristics.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.2 Hyperparameter Settings",
+      "level": 2,
+      "text": "The proposed GCN-BiLSTM-AB-based power-load forecasting model was imple-\nmented and optimized using the PyTorch framework in Python. All experiments in this\nstudy were conducted on a workstation equipped with an NVIDIA GeForce RTX 4060Ti\nGPU (Nvidia Corporation, Santa Clara, CA, USA),a 13th Generation Intel® Core™ i7 CPU,\nand 32 GB of RAM (Intel Corporation, Santa Clara, CA, USA). The Adam optimization\nalgorithm was employed for network parameter updates, with an initial learning rate set\nto 0.001. The deep learning model was trained over 1800 epochs.\nThe detailed structural parameters of the model are presented in Table 3. The input\nlayer of the model accepts raw time-series data consisting of 24 time steps and 8 feature\ndimensions (24 × 8) for target prediction. Graph convolutional networks (GCN) are utilized\nfor spatial feature extraction, while bidirectional long short-term memory (BiLSTM) net-\nworks are employed for temporal feature extraction. During model training, a Dropout rate\nof 0.2 was applied to mitigate overfitting. Finally, the feature sequence is transformed into a\n1 × 512 vector, and AdaBoost integration is used to dynamically adjust weights, ultimately\noutputting the power-load forecast for the subsequent hour. The hyperparameter design of\nthe aforementioned model is configured to fit the provided dataset and ensure the model’s\nprediction accuracy.\nTable 3. Model structure parameters.\nTypes of Layer Structures Input Dimension Output Dimension\nInput layer 24 × 8 –\nGCN layer 24 × 8 24 × 128\nDropout 24 × 128 24 × 128\nBiLSTM layer 24 × 128 1 × 512\nOutput layer 1 × 512 1 × 1",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.3 A Comparative Analysis with the T raditional Model",
+      "level": 2,
+      "text": "Figures 7 and 8 show the comparison of forecasting results between the proposed\nmodel and traditional power-load forecasting models, while Figures 9 and 10 present\nthe comparison of forecasting errors. The forecasting results are presented with hourly\nintervals.\nFrom Figures 7 and 8, it can be seen that the GCN-BiLSTM-AB model outperforms tra-\nditional power-load forecasting models in terms of prediction accuracy, whether forecasting\ndaily load or the load for the upcoming week.\nThe results in Figures 9 and 10 allow for a quantitative description of the forecasting\nperformance. Based on MAE measurements, compared with LSTM, GRU, CNN-LSTM,\nGCN-LSTM, and CNN-BiLSTM, the prediction accuracy improved by 2.41 and 1.27 for\none day, 0.92 and 0.87 for one week, 1.39 and 0.44, and 1.40 and 1.65, respectively. Based on\nMAPE measurements, compared with LSTM, GRU, CNN-LSTM, GCN-LSTM, and CNN-\nBiLSTM, the prediction accuracy improved by 3.63% and 2.80%, 1.42% and 1.73%, 2.35%\nElectronics 2025, 14, 3332 14 of 19\nand 0.95%, and 2.35% and 3.55%, respectively. Based on RMSE measurements, compared\nwith LSTM, GRU, CNN-LSTM, GCN-LSTM, and CNN-BiLSTM, the prediction accuracy\nimproved by 2.8370 and 1.73, 1.16 and 1.27, 1.62 and 0.59, and 1.83 and 2.18, respectively.\nFigure 7. One day power-load prediction results comparison.\nFigure 8. One week power-load prediction results comparison.\nFigure 9. Prediction error comparison of one day.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Model flow chart."
+    },
+    {
+      "id": "f2",
+      "caption": "Figure 2. Spearman correlation coefficient between features."
+    },
+    {
+      "id": "f3",
+      "caption": "GCN structure."
+    },
+    {
+      "id": "f4",
+      "caption": "LSTM structure."
+    },
+    {
+      "id": "f5",
+      "caption": "BiLSTM structure."
+    },
+    {
+      "id": "f6",
+      "caption": "Adaboost structure."
+    },
+    {
+      "id": "f7",
+      "caption": "One day power-load prediction results comparison."
+    },
+    {
+      "id": "f8",
+      "caption": "One week power-load prediction results comparison."
+    },
+    {
+      "id": "f9",
+      "caption": "Prediction error comparison of one day."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Data example."
+    },
+    {
+      "id": "t2",
+      "caption": "Performance comparison."
+    },
+    {
+      "id": "t3",
+      "caption": "Model structure parameters."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "Equation (19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

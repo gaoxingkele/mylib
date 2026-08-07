@@ -1,0 +1,436 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-remote-sensing/mdpi-remote-sensing__2020__a_satellite_based_spatio_temporal_machine_learning_mode__6349434cfa.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "8 University of Basel, Petersplatz 1, 4051 Basel, Switzerland",
+      "level": 1,
+      "text": "9 Department of Geography and Environmental Development, Ben-Gurion University of the Negev,\nBeer Sheva P .O.B. 653, Israel; ikloog@bgu.ac.il\n10 UK Centre for Ecology & Hydrology, Bush Estate, Penicuik, Edinburgh, Midlothian EH26 0QB, UK;\nsrei@ceh.ac.uk (S.R.); mvi@ceh.ac.uk (M.V .)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "11 Medical School, University of Exeter, Knowledge Spa, Truro TR1 3HD, UK",
+      "level": 1,
+      "text": "12 Centre for Statistical Methodology, London School of Hygiene & Tropical Medicine, London WC1E 7HT, UK\n* Correspondence: rochelle.schneider@lshtm.ac.uk\nReceived: 18 September 2020; Accepted: 2 November 2020; Published: 20 November 2020\n/gid00030/gid00035/gid00032/gid00030/gid00038/gid00001/gid00033/gid00042/gid00045/gid00001\n/gid00048/gid00043/gid00031/gid00028/gid00047/gid00032/gid00046\nAbstract: Epidemiological studies on the health eﬀects of air pollution usually rely on measurements\nfrom ﬁxed ground monitors, which provide limited spatio-temporal coverage. Data from satellites,\nreanalysis, and chemical transport models oﬀer additional information used to reconstruct pollution\nconcentrations at high spatio-temporal resolutions. This study aims to develop a multi-stage\nsatellite-based machine learning model to estimate daily ﬁne particulate matter (PM 2.5) levels across\nGreat Britain between 2008–2018. This high-resolution model consists of random forest (RF) algorithms\napplied in four stages. Stage-1 augments monitor-PM 2.5 series using co-located PM 10 measures.\nStage-2 imputes missing satellite aerosol optical depth observations using atmospheric reanalysis\nmodels. Stage-3 integrates the output from previous stages with spatial and spatio-temporal variables\nto build a prediction model for PM 2.5. Stage-4 applies Stage-3 models to estimate daily PM 2.5\nconcentrations over a 1 km grid. The RF architecture performed well in all stages, with results from\nStage-3 showing an average cross-validated R 2 of 0.767 and minimal bias. The model performed\nbetter over the temporal scale when compared to the spatial component, but both presented good\naccuracy with an R 2 of 0.795 and 0.658, respectively. These ﬁndings indicate that direct satellite\nobservations must be integrated with other satellite-based products and geospatial variables to derive\nreliable estimates of air pollution exposure. The high spatio-temporal resolution and the relatively\nhigh precision allow these estimates (approximately 950 million points) to be used in epidemiological\nanalyses to assess health risks associated with both short- and long-term exposure to PM2.5.\nRemote Sens. 2020, 12, 3803; doi:10.3390/rs12223803 www.mdpi.com /journal/remotesensing\nRemote Sens. 2020, 12, 3803 2 of 19\nKeywords: ﬁne particulate matter; aerosol optical depth; satellite; reanalysis; machine learning;\nrandom forest",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The World Health Organization estimates in seven million global deaths associated with air\npollution (both outdoor and household) every year, emphasising that exposure to particulate matter\n(PM) is among the greatest causes of concern [1]. Fine particles with an aerodynamic diameter smaller\nthan 2.5 µm (PM2.5) can penetrate the human circulatory system through the lungs and provoke\nmultiple adverse health outcomes, including mortality [2], hospital admissions [3], lung dysfunction [4],\ncardiovascular diseases [ 5], and allergic reactions [ 6]. Usually, epidemiological studies collect air\nquality (AQ) data from ground monitors to quantify both short-term and long-term PM2.5 exposure\nassociated with acute and chronic health eﬀects, respectively. The limitation in this health assessment\napproach is the lack of continuous temporal records of PM2.5 and the limited spatial distribution of\nthe monitors. Great Britain is an example of countries with very limited spatio-temporal coverage\nof PM2.5, whereby the monitoring network is densely located only in major cities and widespread\nmeasurements of PM2.5 only started from 2010.\nRemote sensing observations of aerosol optical depth (AOD) obtained from satellites, which\nmeasures how much direct sunlight has been scattered and absorbed by aerosol particles suspended\nin the atmosphere, has recently been proposed as an alternative to measuring PM variability for\nepidemiological purposes [7]. However, while oﬀering the advantage of global coverage and relatively\nhigh spatio-temporal resolution, the use of AOD for PM2.5 exposure assessments presents limitations,\nfor instance the fact that it represents the total atmospheric column concentration of the aerosol rather\nthan surface values [8]. Unsurprisingly, early studies based only on satellite-AOD achieved very low\nperformances in predicting PM2.5 [9]. Recent studies have proposed more sophisticated approaches,\ncombining AOD measures with information from other satellite products, reanalysis data, chemical\ntransport models, and geospatial features to improve the prediction of PM 2.5. Such studies used\nvarious analytical methods, including multiple linear regression [ 10], land-use regression [ 11,12],\nand mixed eﬀect models [13–17]. The last development in this research area is represented by the\napplication of machine learning (ML) algorithms, including various architectures such as random\nforests [18–22], neural networks [19,21], and gradient boosting [19,23,24]. These have demonstrated\nhigher performances, linked with an ability to model any kind of predictor(s)-response association and\nto deal better with the potentially complex relationship between PM2.5, spatial, and spatio-temporal\npredictors [19,25].\nThe aim of this study is to develop and apply a multi-stage satellite-based ML model to estimate\ndaily concentrations of PM2.5 over a 1 km grid across Great Britain in the period 2008–2018. The analysis\nis based on a dataset with synchronised information from various data sources, such as several remote\nsensing satellite products, multiple climate and atmospheric reanalysis databases, chemical transport\nmodels, and spatial and spatio-temporal variables. The model is assessed through measures of\npredictive performance, error, and bias, obtained through cross-validation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Materials and Methods",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 Study Area and Period",
+      "level": 2,
+      "text": "Great Britain is an island with an extension of 229,462 km 2 surrounded by the Atlantic Ocean,\nIrish Sea, North Sea, and the English Channel. It comprises the countries of England, Scotland,\nand Wales with a total population in 2018 of almost 65 million [26]. According to the Köppen climate\nclassiﬁcation, the United Kingdom (Great Britain and Northern Ireland) is deﬁned as having a warm\ntemperate climate, fully humid with a mostly warm summer (cold summer for some parts of Scotland\nRemote Sens. 2020, 12, 3803 3 of 19\nand England) [27]. The study area included 234.429 1 km grid cells (containing a unique identiﬁcation\ncode, cell-ID) from the original 1 km Great Britain National Grid Squares [28] for a period between\n1 January 2008 and 31 December 2018.\n2.2. PM 2.5 and PM10 Observed Data\nDaily PM 10 and PM 2.5 (µg/m3) measurements in the study period were obtained from ﬁve\nmonitoring network sources through the R package openair [29]: Automatic Urban and Rural Network\n(AURN), Air Quality England (AQE), King College London (KCL), Scotland Air Quality Network\n(SAQN), and Wales Air Quality Network (WAQN). When monitors from diﬀerent sources showed the\nsame temporal distributions (i.e., a correlation equal to 1) and were located at approximately the same\ncoordinates, only the AURN monitor was kept. Monitors with less than 18 hours of PM 2.5 records per\nday as well as less than 30 days by year were removed. The ﬁnal set includes 581 and 183 monitors\nmeasuring PM10 and PM2.5 along the study period, respectively. Figure 1 shows the locations of these\nmonitors across Great Britain, illustrating how the network coverage is densely located in major cities,\nleaving several small cities and rural areas with only a few or no AQ records. Each monitor was\nindexed using the cell-ID of the 1 km grid cell that contained it.\nRemote Sens. 2020, 12, x FOR PEER REVIEW 3 of 18 \n \ncode, cell-ID) from the original 1 km Great Britain National Grid Squares [28] for a period between 1 \nJanuary 2008 and 31 December 2018.  \n2.2. PM2.5 and PM10 observed data \nDaily PM 10 and PM 2.5 (µg/m 3) measurements in the study period were obtained from five \nmonitoring network sources through the R pack age openair [29]: Automatic Urban and Rural \nNetwork (AURN), Air Quality England (AQE), King College London (KCL), Scotland Air Quality \nNetwork (SAQN), and Wales Air Quality Network (WAQN). When monitors from different sources \nshowed the same temporal distributions (i.e., a correlation equal to 1) and were located at \napproximately the same coordinates, only the AURN  monitor was kept. Monitors with less than 18 \nhours of PM\n2.5 records per day as well as less than 30 days by year were removed. The final set \nincludes 581 and 183 monitors measuring PM10 and PM2.5 along the study period, respectively. Figure \n1 shows the locations of these monitors across Grea t Britain, illustrating how the network coverage \nis densely located in major cities, leaving several small cities and rural areas with only a few or no \nAQ records. Each monitor was indexed using the cell-ID of the 1 km grid cell that contained it.  \n \nFigure 1. Spatial distribution of 581 PM10 (black star) and 183 PM 2.5 (turquoise dots) monitors across \nGreat Britain during the study period. \n2.3. Spatially-Lagged and Nearest Monitor PM2.5 Variables  \nFigure 1. Spatial distribution of 581 PM10 (black star) and 183 PM2.5 (turquoise dots) monitors across\nGreat Britain during the study period.\nRemote Sens. 2020, 12, 3803 4 of 19\n2.3. Spatially-Lagged and Nearest Monitor PM 2.5 Variables\nFour spatio-temporal variables were generated from the monitor series of PM 2.5 to represent\nspatially-lagged annual average concentrations. Monitor types were grouped into two classes\n(background (urban, suburban, and rural) and hotspots (tra ﬃc and industrial)) to compute the\nannual average values of nearby monitors by class using an inverse-distance weighted leave-one-out\ncross-validated (IDW-LOOCV) approach. Two diﬀerent weights were applied, namely the inverse\ndistance and the inverse squared distance (in km). The former assigns relatively more weight to distant\nmonitors and therefore can represent a regional background, while the latter captures local diﬀerences.\nTherefore, these four IDW-LOOCV variables were named as follows: (i) Spatially-lagged hotspot-PM2.5\nregional, (ii) Spatially-lagged background-PM2.5 regional, (iii) Spatially-lagged hotspot-PM2.5 local,\nand (iv) Spatially-lagged background-PM2.5 local. To improve the model performance in the spatial\ndomain, two additional spatial variables were generated based on the closest Euclidean distance\nfor each monitor class, named as: (i) Nearest hotspot monitor distance and (ii) Nearest background\nmonitor distance. These six variables were used as additional predictors to capture the heterogeneity\nacross monitors and exploit their spatial autocorrelation, and thus help the model to better categorise\nthe diﬀerences in the spatial patterns of measured-PM2.5 series.\n2.4. AOD Data: Satellite and Atmospheric Reanalysis Models\nDaily satellite-AOD was obtained from the Collection 6 Level-2 gridded product (MCD19A2).\nThese data are generated at a 1 km grid through the Multi-angle Implementation of Atmospheric\nCorrection (MAIAC) algorithm using data from a Moderate Resolution Imaging Spectroradiometer\n(MODIS) sensor on board both Terra and Aqua Earth Observation satellites [ 30]. Four layers from\nthe MCD19A2 product were extracted: (i) AOD Blue band (0.47 µm), (ii) AOD Green band (0.55 µm),\n(iii) AOD uncertainty (i.e., the level of uncertainty based on blue-band surface brightness (reﬂectance)),\n(iv) AOD_QA (quality assurance ﬂags to retrieve only the best quality AOD). These layers are generated\nfor each passing time of Terra and Aqua satellites over the area of study and combined by day.\nThe layers AOD-0.47 µm and AOD-0.55 µm were used as the outcome variables after their values were\nﬁltered using AOD uncertainty and AOD_QA layers to guarantee high product quality.\nThis calibration process, together with pixels covered by clouds, removed a large sample of\nAOD grid cells over Great Britain. To ﬁll the satellite-AOD gaps, the modelled-AOD total column\nwas used from Copernicus Atmosphere Monitoring Service (CAMS) reanalysis provided by the\nEuropean Centre for Medium-Range Weather Forecasts (ECMWF) [31]. CAMS reanalysis provides\nevery 3-hourly modelled-AOD at ﬁve di ﬀerent wavelengths (0.47 µm, 0.55 µm, 0.67 µm, 0.87 µm,\nand 1.24 µm) with a spatial resolution of approximately 80 km, but the data were downloaded at\n10 km, based on an interpolation performed through the ECMWF’s API request. The satellite-AOD\nand CAMS modelled-AOD were indexed to the closest 1 km grid cell from their pixel centroid.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.5 Other Spatio-T emporal Predictors",
+      "level": 2,
+      "text": "2.5.1. Modelled PM 2.5 from Chemical Transport Models\nAtmospheric chemistry transport models (ACTMs) incorporate anthropogenic and natural sources\nof emission, land use, and meteorological conditions to simulate the atmospheric compositions and\ndeposition of various air pollutants (trace gases and particles). Based on the European Modelling and\nEvaluation Programme (EMEP) ACTM, EMEP4UK, has been developed to represent the UK hourly\natmospheric composition at a spatial resolution of approximately 5 km [32]. The description of the\nEMEP4UK model framework and setup can be found elsewhere [33,34]. Daily EMEP4UK simulations of\nPM2.5 (µg/m3) concentrations at the surface-level were included to represent ground-level contributions,\nin contrast to AOD products that refer to the total column of aerosol concentration. Each EMEP4UK\n5 km pixel was linked to the closest 1 km grid cell centroid.\nRemote Sens. 2020, 12, 3803 5 of 19",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.5.2 Meteorological Variables from Climate Reanalysis Models",
+      "level": 3,
+      "text": "Meteorological variables were retrieved from the ECMWF’s climate reanalysis models with the\nhighest spatial resolution available during 2008–2018 and at two sub-day times (0:00 and 12:00).\nSea-level pressure and the boundary layer height (BLH) were downloaded from the ERA 5 global\nreanalysis with a spatial resolution of approximately 30 km [35]. Air temperature at 2 m height and\ntotal precipitation were obtained from the ERA 5 Land global reanalysis with a spatial resolution of\napproximately 9 km [36]. Relative humidity, wind direction, and wind speed were downloaded from\nthe UERRA regional reanalysis at 5.5 km for the MESCAN-SURFEX system [37]. All meteorological\nvariables were indexed to the closest 1 km grid cell to their centroid.\n2.5.3. Normalized Diﬀerence Vegetation Index\nMonthly Normalized diﬀerence vegetation index (NDVI) is used to quantify vegetation presence\nand it ranges from −1 to 1. The NDVI 1 km grid was obtained from MOD13A3 Version 6 Level 3,\nTerra-MODIS product [38]. Each NDVI pixel was indexed to the closest 1 km grid cell to its pixel\ncentroid and the NDVI values repeated for the days inside the corresponded month.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.6 Spatial Predictors",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.6.1 Land Variables and Night-Time Light Data from Earth Observation Satellites",
+      "level": 3,
+      "text": "Three land predictors were collected from the Copernicus Land Monitoring Service (CLMS) [39]\ndatabase: elevation, land cover, and impervious surfaces. Elevation data were obtained from the\n2011 European Digital Elevation Model (EU-DEM) version 1.1 with a spatial resolution of 25 m.\nThe elevation values were obtained from the mean of all 25 m-pixel values located inside each 1 km\ngrid cell. Land cover data were obtained from the 2012 CORINE Land Cover (CLC) inventory. It was\nderived from high-resolution ortho-rectiﬁed satellites images that mapped all land elements at a spatial\nresolution ranging from 5 m to 60 m and aggregated into 100 m. Nine predictors were deﬁned by\ngrouping the original 44 CLC classes and each predictor represents its group proportion inside each\n1 km Great Britain Grid cell. The imperviousness degree is a binary raster product at a spatial resolution\nof 100 m, where the value 0 represents natural land cover or water surface and value 1 represents\nentirely artiﬁcial surfaces (i.e., built-up areas). The amount of impervious surfaces was estimated by\nthe proportion of artiﬁcial surfaces inside each 1 km Great Britain Grid cell.\nNight-time lights data were provided by the visible Infrared Imaging Radiometer Suite (VIIRS)\nsensor aboard the Suomi-National Polar-orbiting Partnership (Suomi-NPP) satellite. The VIIRS\nDay/Night band collects cloud-free average radiance values at annual and monthly composites in a\nspatial resolution of 750 m [40]. The 2015 night-time lights annual mean was computed based on the\nweighted average of VIIRS pixels inside each 1 km Great Britain Grid cell.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.6.2 Population Density",
+      "level": 3,
+      "text": "The resident population counts data from 2011 that were collected from the Oﬃce for National\nStatistics (England and Wales) and the National Records of Scotland. The smallest geographic unit of the\nUK census is output areas (OA), with a total of 227.769 OAs polygons for Great Britain. The proportion\nof each OA’s area inside each 1 km Great Britain Grid cell was extracted to estimate the weighted\naverage population by 1 km grid cell.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.6.3 Road Density and Distance",
+      "level": 3,
+      "text": "Road density and length predictors were derived from the Ordnance Survey (OS) [ 41] Open\nRoads product, which oﬀers a geospatial representation of Great Britain’s Road network. Three density\npredictors were deﬁned by grouping the original eight OS road types, where each predictor was\ncomputed as the sum of all roads length inside each 1 km Great Britain Grid cell by group (highway,\nRemote Sens. 2020, 12, 3803 6 of 19\nsecondary, and local). Three distance predictors were deﬁned by computing the inverse distance of\neach 1 km grid centroid from the closest road group (highway, secondary, and local).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.6.4 Inverse Distance from Airports and Seashore",
+      "level": 3,
+      "text": "Information on location and size of airports was derived from the Civil Aviation Authority\n(CAA) [42], which collects monthly statistics about air traﬃc movements for more than 60 UK Airports,\nincluding aviation activities for terminal passengers, commercial ﬂights, and cargo tonnage. A total of\n19 airports across Great Britain were selected based on a minimum of 1% for the annual percentage\nof passengers at the airport from 2015–2018. For each cell of the 1 km Great Britain grid, the inverse\ndistance from the closest airport was calculated.\nThe inverse distance from the seashore was computed for each 1 km grid cell using the geographical\ninformation about the boundaries of England, Wales, and Scotland provided by the UK Data Service [43].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.7 Statistical Methods",
+      "level": 2,
+      "text": "A four-stage model was developed to obtain daily PM2.5 concentrations for all 234.429 grid cells\ncovering Great Britain. Each stage is described in detail below. Brieﬂy, Stage-1 applies a random forest\n(RF) algorithm to predict PM2.5 concentrations in monitors with only PM10 records. Stage-2 uses RF\nmodels to impute missing satellite-AOD from Terra and Aqua satellites, using modelled-AOD from\nCAMS. Stage-3 combines the output from Stage-1 and Stage-2 with a list of spatial and spatio-temporal\nsynchronised predictors to estimate PM2.5 concentrations at the locations of the monitors. Stage-4 uses\nthe Stage-3 model to predict daily PM2.5 across the whole of Great Britain.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.7.1 Random Forest Algorithm",
+      "level": 3,
+      "text": "RF is a supervised tree-based design ML algorithm that trains an ensemble of independent decision\ntrees (or forests) in parallel. The ﬁnal model accuracy is estimated by the performance average of all\ndecision trees. There are two main advantages of the RF architecture (known as the bagging ensemble\nmethod): ﬁrst, it controls the bias-variance trade-o ﬀ by feeding each tree model with two-thirds of the\ntraining set while one-third is left out for validation (i.e., out-of-bag (OOB)) [44]. When all decision\ntrees receive the same amount and list of predictors, they become highly correlated, not solving the\nvariance problem. Therefore, the second positive aspect of RF is that the number of predictors on\neach tree is less than the full list available and they are randomly selected. This approach changes the\npredictor placed on the top of the tree, generating diﬀerent splits and internal nodes. The algorithm is\nthen able to estimate an importance ranking by quantifying the amount of error decreased due to a\nsplit of a speciﬁc predictor [45].\nThe performance of the models in each stage was assessed using statistics based on OOB samples\nand then from a 10-fold cross-validation (CV) procedure based on monitors. In the latter, ten random\ngroups of monitors were deﬁned, and the complete outcome series in each group were predicted using\na model ﬁtted in the other nine. This procedure oﬀers a measure of the true predictive ability of the\nRF model in locations where no monitor is available. Measures of performance were generated by\nregressing the OOB or cross-validated predicted values on the observed series, and computing the R2,\nthe root mean square error (RMSE), and the intercept and slope of the prediction. These statistics were\ncomputed overall using the whole series and then separated into spatial and temporal contributions.\nThe former was computed using the averages of predicted and observed values across the series, and it\noﬀers a measure of performance in capturing long-term average PM2.5 concentrations. The latter was\ncomputed as daily deviations from the averages, and it quantiﬁes the temporal variability explained\nby the model.\n2.7.2. Stage-1: Increasing PM 2.5 Measurements Using Co-located PM10 Monitors\nThe number of PM 2.5 monitors across Great Britain at the beginning of the study period was\nrelatively low, and even if the quantity has increased substantially after 2010, most of the monitors were\nRemote Sens. 2020, 12, 3803 7 of 19\nmostly installed in major cities. Stage-1 aims to increase the number of spatio-temporal ground-level\nPM2.5 references using observations from co-located monitors measuring PM10, which are available in\na higher number of locations and are better distributed across Great Britain. Speciﬁcally, in this stage,\nwe ﬁtted an RF model in locations with both PM 2.5 and PM10 measurements, using only data from the\nspeciﬁc year-model (2008–2018). The RF model for each year y is deﬁned as:\nPMy\n2.5i,t\n= f\n(\nPM10i,t , mon.typei, montht, dowt, lati , loni) (1)\nwhere: PMy\n2.5i,t\nand PM10i,t are the target variable and main predictor, respectively, measured in yeary\nat monitor i on day t; mon.typei is a categorical variable classifying monitor i (traﬃc, industrial, urban,\nsuburban, and rural); montht and dowt are categorical variables representing the months and day of the\nweek of day t; and lati and loni deﬁne the coordinates of monitor i. The RF model was deﬁned based\non the best parameter setting. The optimised parameters were 500 decision trees as the RF ensemble\n(Ntree = 500) and 4 variables randomly selected to be used on each tree (mtry = 4). This model was\neventually used to predict PM2.5 measurements in locations/days in which only PM10 was measured.\n2.7.3. Stage-2: Imputing Missing Satellite-AOD from CAMS Modelled-AOD\nThe percentage of missing satellite-AOD measurements in Great Britain ranged between 87% and\n94% during 2008–2018 with the greatest portion during autumn and winter, near to the coast, and in\nthe North of Scotland. Stage-2 imputes satellite-AOD missing for every day and 1 km grid based on an\noptimised RF model (Ntree = 50 and mtry = 20) and satellite-AOD wavelength (0.47 µm and 0.55 µm),\nseparately in each year within the study period. These RF models were built for each year y as follows:\nSatellite − AOD(z,y)\ni,t = f\n(\nCAMS.AOD1,1i,t , . . . , CAMS.AOD5,1i,t, CAMS.AOD1,2i,t, . . .,\nCAMS.AOD5,7i,t, ydayt, lati , loni)\n(2)\nwhere: Satellite- AODz, y\ni,t is the target variable representing satellite-AOD (wavelength z, year y)\nestimates at grid cell i on day t; CAMS.AOD is the main predictor, representing CAMS modelled-AOD\nestimates at grid cell i, on day t, at ﬁve wavelengths (0.47 µm, 0.55 µm, 0.67 µm, 0.865 µm, and 1.24 µm),\nand at seven sub-day times (3 h, 6 h, 9 h, 12 h, 15 h, 18 h, and 21 h); ydayt deﬁnes the sequence of days\nin a year from 1 to 365 (366, for leap years); lati and loni represent the coordinates of grid cell centroid i.\nThis model was eventually used to predict missing satellite-AOD measurements.\n2.7.4. Stage-3: Estimating PM 2.5 Concentrations Using Spatial and Spatio-Temporal Variables\nStage-3 aims to build a predictive model for daily PM2.5 concentrations, using as target variable the\ncombined set of PM2.5 directly measured from monitors or predicted from Stage-1, AOD measured from\nsatellite instruments or predicted from Stage-2, together with all the spatially and spatio-temporally\nsynchronized predictors described in the previous section. The RF models were ﬁt separately by\nyear y. The optimization process for this stage selected Ntree = 500 and mtry = 20 as the best set of\nparameter values. In this stage, PM 2.5 concentrations were log-transformed to ensure the prediction of\nnon-negative values. The Stage-3 model for each year y is deﬁned as:\nlog\n(\nPM2.5\ny\ni,t\n)\n= f (SPT1i,t, . . .SPT15i,t, SP1i, . . ., SP27i\n)\n(3)\nwhere: log\n(\nPM2.5\ny\ni,t\n)\nis the target variable representing the log-PM2.5 concentrations in year y at the\nmonitor located in grid cell i on day t, while SPTi,t and SPi represent the spatio-temporal and spatial\npredictors, respectively.\nRemote Sens. 2020, 12, 3803 8 of 19\nSpeciﬁcally, SPTi,t included: surface-level log-PM2.5 values from the EMEP4UK model; Stage-2\nAOD (at 0.47 µm, 0.55 µm); meteorological variables (air temperature, sea pressure, relative humidity,\ntotal precipitation, wind speed, and direction); BLH (at 12:00 and 24:00 hours); monthly-averaged\nNDVI; and day of the year, month, and week. SP i included: spatially–lagged regional and local\nlog-PM2.5 average concentrations from background and hotspot groups; nearest background and\nhotspot monitor distance; land variables (elevation, land cover in 9 groups, and % of impervious\nsurface); night-time light; road density and inverse distance (each for highway, secondary, and local);\npopulation density; and inverse distance from closest airport and seashore.\n2.7.5. Stage-4: Reconstructing PM 2.5 Time-Series at 1 km Grid\nUsing the RF models developed by year in Stage-3, daily PM2.5 concentrations for each 1 km grid\ncell were reconstructed across Great Britain for the whole study period (2008–2018).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3 Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.1 Stage-1 Results",
+      "level": 2,
+      "text": "Not all monitors in each network provided the full series of daily PM concentrations betwen\n2008–2018. However, PM10 was more often available, especially in the years 2008–2009, when there\nwere less than 80 PM 2.5 monitors across Great Britain. The imputation process in Stage-1 enabled\nthe expansion from 46 to 269 in 2008 and from 65 to 278 in 2009. Table 1 shows the Stage-1 model\nperformance (i.e., a separate RF model for each year) reported by two CV methods: (i) OOB, the original\nRF CV algorithm, which presented better accuracy (R2 average of 0.932), and (ii) 10-Fold CV , a targeted\nsampling, which leaves out monitors with the full set of observations (R2 average of 0.855). As expected,\nthe 10-Fold CV approach resulted in a slightly lower predictive accuracy although it still showed a\ngood performance. There is some indication of bias in the 10-Fold CV , with a slope lower than the\nexpected value of 1 and a slightly negative intercept. The results for 10-Fold CV spatial and temporal\ndomains are in Table S1 in Supplementary Materials.\nTable 1. Predicted-PM2.5 concentrations obtained from Stage-1 RF models were regressed against\nmeasured-PM2.5 concentrations in a linear regression model. The performance was evaluated using\ntwo CV methods (OOB and 10-Fold) together with RMSE (a measure of the model error, µg/m3),\nintercept (µg/m3), and slope (µg/m3).\nStage-1\nOOB-CV 10-Fold CV\nR2 RMSE Inter. Slope R2 RMSE Inter. Slope\n2008 0.918 1.196 −0.417 1.033 0.707 4.954 0.803 0.886\n2009 0.921 1.110 −0.390 1.030 0.791 3.996 0.410 0.937\n2010 0.919 1.122 −0.401 1.029 0.843 3.496 0.043 0.983\n2011 0.949 1.124 −0.266 1.019 0.902 3.439 −0.087 0.997\n2012 0.942 1.058 −0.274 1.021 0.889 3.218 −0.035 0.986\n2013 0.929 1.087 −0.368 1.028 0.847 3.584 0.218 0.972\n2014 0.944 0.963 −0.267 1.022 0.891 3.003 −0.007 0.995\n2015 0.933 0.865 −0.265 1.026 0.871 2.662 −0.003 0.983\n2016 0.935 0.896 −0.251 1.025 0.885 2.654 −0.050 0.996\n2017 0.939 0.828 −0.196 1.022 0.895 2.430 0.010 0.985\n2018 0.928 0.791 −0.248 1.028 0.886 2.235 −0.019 0.993\nMean 0.932 1.003 −0.304 1.026 0.855 3.243 0.117 0.974\nRemote Sens. 2020, 12, 3803 9 of 19",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.2 Stage-2 Results",
+      "level": 2,
+      "text": "The Stage-2 procedure is illustrated in Figure 2, showing missing satellite-AOD, imputed through\na combination of multiple modelled-AOD wavelengths and sub-day times. Table 2 shows the\nperformance of Stage-2 models validated using the OOB CV method. The results presented consistently\nhigh R2 (ranging from 0.963 to 0.988), low RMSE (varying between 0.007 to 0.010), and almost no bias\n(intercept zero and slope close to 1 in almost all years and wavelengths).\nRemote Sens. 2020, 12, x FOR PEER REVIEW 9 of 18 \n \n \nFigure 2. Satellite-AOD 0.47 µm values are represented in Figure 2a (mean of all Terra- and Aqua-\nMODIS passing times). The missing values in grey were imputed through a combination of multiple \nmodelled-AOD wavelengths and sub-day times, represented in Figure 2b by modelled-AOD 0.47 µm \nat 12:00. The Stage-2 output is shown in Figure 2c, illustrating the full coverage of AOD 0.47 µm based \non the combination of measurements and estimation s across Great Britain. The maps correspond to \nvalues measured or reconstructed on 6 July 2018. \nTable 2. Predicted-AOD 0.47 µm and 0.55 µm obtained  f r o m  S t a g e - 2  R F  m o d e l s  w e r e  r e g r e s s e d  \nagainst measured Satellite-AOD 0.47 µm and 0.55 µm in a linear regression model. The performance \nwas evaluated using OOB CV together with RMSE (µg/m3), intercept (µg/m3), and slope (µg/m3). \nStage-2 OOB CV \n Predicted-AOD 0.47 µm Predicted-AOD 0.55 µm \n R2 RMSE Inter. Slope R2 RMSE Inter. Slope \n2008 0.977 0.010 −0.001 1.009 0.977 0.007 −0.001 1.009 \n2009 0.976 0.010 −0.001 1.010 0.976 0.007 −0.001 1.010 \n2010 0.968 0.009 −0.001 1.013 0.968 0.007 −0.001 1.013 \n2011 0.988 0.010 −0.001 1.005 0.988 0.007 0.000 1.005 \n2012 0.980 0.010 −0.001 1.008 0.981 0.007 −0.001 1.008 \n2013 0.984 0.010 −0.001 1.007 0.984 0.007 −0.001 1.006 \n2014 0.970 0.009 −0.001 1.012 0.970 0.007 −0.001 1.012 \n2015 0.972 0.009 −0.001 1.011 0.973 0.007 −0.001 1.011 \n2016 0.975 0.009 −0.001 1.010 0.975 0.007 −0.001 1.010 \n2017 0.963 0.009 −0.001 1.015 0.963 0.007 −0.001 1.014 \n2018 0.969 0.010 −0.001 1.013 0.969 0.007 −0.001 1.013 \nMean 0.978 0.010 −0.001 1.009 0.978 0.007 −0.001 1.009",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.3 Stage-3 Results",
+      "level": 2,
+      "text": "Stage-3, the main step of the satellite-based ma chine learning framework, combines the output \nof Stage-1 and Stage-2 with a list of spatial and spatio-temporal predictors to estimate PM 2.5 at the \nlocations of the monitors. The relative importance of the predictors for the Stage-3 RF models is \nranked in Table 3. The list with the top-15 predictors demonstrates the larger contribution of the more \ninformative spatio-temporal variables (EMEP4UK PM 2.5, meteorological parameters, BLH, and sea-\nFigure 2. Satellite-AOD 0.47 µm values are represented in Figure 2a (mean of all Terra- and\nAqua-MODIS passing times). The missing values in grey were imputed through a combination\nof multiple modelled-AOD wavelengths and sub-day times, represented in Figure 2b by modelled-AOD\n0.47 µm at 12:00. The Stage-2 output is shown in Figure 2c, illustrating the full coverage of AOD\n0.47 µm based on the combination of measurements and estimations across Great Britain. The maps\ncorrespond to values measured or reconstructed on 6 July 2018.\nTable 2. Predicted-AOD 0.47 µm and 0.55 µm obtained from Stage-2 RF models were regressed against\nmeasured Satellite-AOD 0.47 µm and 0.55 µm in a linear regression model. The performance was\nevaluated using OOB CV together with RMSE (µg/m3), intercept (µg/m3), and slope (µg/m3).\nStage-2 OOB CV\nPredicted-AOD 0.47µm Predicted-AOD 0.55 µm\nR2 RMSE Inter. Slope R2 RMSE Inter. Slope\n2008 0.977 0.010 −0.001 1.009 0.977 0.007 −0.001 1.009\n2009 0.976 0.010 −0.001 1.010 0.976 0.007 −0.001 1.010\n2010 0.968 0.009 −0.001 1.013 0.968 0.007 −0.001 1.013\n2011 0.988 0.010 −0.001 1.005 0.988 0.007 0.000 1.005\n2012 0.980 0.010 −0.001 1.008 0.981 0.007 −0.001 1.008\n2013 0.984 0.010 −0.001 1.007 0.984 0.007 −0.001 1.006\n2014 0.970 0.009 −0.001 1.012 0.970 0.007 −0.001 1.012\n2015 0.972 0.009 −0.001 1.011 0.973 0.007 −0.001 1.011\n2016 0.975 0.009 −0.001 1.010 0.975 0.007 −0.001 1.010\n2017 0.963 0.009 −0.001 1.015 0.963 0.007 −0.001 1.014\n2018 0.969 0.010 −0.001 1.013 0.969 0.007 −0.001 1.013\nMean 0.978 0.010 −0.001 1.009 0.978 0.007 −0.001 1.009\nRemote Sens. 2020, 12, 3803 10 of 19",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t3",
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.3 Stage-3 Results",
+      "level": 2,
+      "text": "Stage-3, the main step of the satellite-based machine learning framework, combines the output of\nStage-1 and Stage-2 with a list of spatial and spatio-temporal predictors to estimate PM2.5 at the locations\nof the monitors. The relative importance of the predictors for the Stage-3 RF models is ranked in\nTable 3. The list with the top-15 predictors demonstrates the larger contribution of the more informative\nspatio-temporal variables (EMEP4UK PM2.5, meteorological parameters, BLH, and sea-level pressure).\nAll the proposed spatially-lagged PM2.5 variables were classiﬁed as highly important and their ranking\npositions varied slightly across the displayed years. This suggests the presence of spatial correlations\nin PM2.5 values that are not entirely captured by the other variables.\nTable 3. Relative importance (%) of the predictors in Stage-3 for the ﬁrst, middle, and last years.\nStage-3 Predictors 2008 2013 2018\nEMEP4UK PM2.5 32.41 32.83 36.74\nSpatially-lagged hotspot-PM2.5 regional 2.55 2.49 6.77\nWind direction 6.35 7.33 5.34\nSpatially-lagged background-PM2.5 regional 1.14 6.06 4.93\nDay of the year 3.22 4.33 3.73\nSpatially-lagged hotspot-PM2.5 local 3.97 1.65 3.66\nPrecipitation 6.63 2.42 3.25\nBLH 0h 2.28 2.91 2.79\nSpatially-lagged background-PM2.5 local 0.94 3.07 2.75\nMonth 1.76 2.72 2.68\n2m Air temperature 2.60 2.93 2.65\nWind speed 3.08 3.75 2.53\nSea-level pressure 3.09 2.60 2.49\nRelative humidity 1.77 1.56 1.81\nNearest non-traﬃc monitor distance 3.10 2.30 1.78\nNote: The top 15 predictors in the RF importance ranking order is determined by the year 2018. The importance is\nmeasured by the amount of error reduced due to the splits of a given predictor over all trees used in the RF ensemble.\nTable 4 shows the results of the 10-Fold CV Stage-3 RF models by year. The results indicate a\ngood predictive performance of the model throughout the study period. Overall cross-validated R2\nranged from 0.704 (2008) to 0.821 (2011), with an average of 0.767. The average prediction error is\n4.042 µg/m3, with a negligible bias in intercept and slope. The inspection of the spatial and temporal\ncontributions shows that the model performs well generally across the two components, displaying a\nspatial performance drop only for 2008 (0.486) and 2015 (0.579). The cross-validated spatial R 2 ranges\nfrom 0.486 (2008) to 0.746 (2017), while the cross-validated temporal R2 from 0.738 (2010) to 0.843 (2011).\nThe two components have an average of 0.658 and 0.795, respectively. The high spatial R2 performance\nacross the years demonstrates that the Stage-3 RF models were able to predict the spatial variation\nof long-term PM2.5 across Great Britain with good accuracy. In Supplementary Materials, Table S4\nshows the Stage-3 results by season, demonstrating that the seasonal patterns were well described by\nRF models, although with a lower accuracy for the temporal domain in summer, characterized by a\nlower 10-Fold R2. This drop in performance during summer was also seen by other studies [17,20].\nRemote Sens. 2020, 12, 3803 11 of 19\nTable 4. Predicted-PM2.5 concentrations obtained from Stage-3 RF models were regressed against\nStage-1 measured/predicted-PM2.5 concentrations in a linear regression model. The CV–R2 (how well\nthe model described the PM2.5 variability in new locations) described in three diﬀerent patterns (overall,\nspatial, and temporal), RMSE (µg/m3), intercept (µg/m3), and slope (µg/m3).\nStage-3\nOverall Spatial Temporal\nR2 RMSE Inter. Slope R2 RMSE Inter. Slope R2 RMSE Inter. Slope\n2008 0.704 4.547 −1.251 1.064 0.486 2.698 −0.749 1.026 0.760 3.677 0.000 1.074\n2009 0.742 4.247 −1.104 1.042 0.680 2.255 −0.203 0.982 0.762 3.593 0.000 1.055\n2010 0.709 4.330 −1.424 1.075 0.627 2.342 0.137 0.972 0.738 3.628 0.000 1.102\n2011 0.821 4.421 −0.898 1.029 0.733 2.280 −0.509 1.003 0.843 3.756 0.000 1.035\n2012 0.786 4.354 −0.749 1.027 0.661 2.527 0.073 0.966 0.823 3.552 0.000 1.043\n2013 0.764 4.305 −1.093 1.047 0.637 2.616 −0.565 1.013 0.791 3.604 0.000 1.061\n2014 0.784 4.140 −1.044 1.051 0.632 2.292 −0.145 0.983 0.815 3.478 0.000 1.062\n2015 0.736 3.792 −1.194 1.072 0.579 2.139 −0.026 0.969 0.776 3.127 0.000 1.095\n2016 0.781 3.702 −0.980 1.050 0.725 1.964 −0.532 1.010 0.796 3.149 0.000 1.061\n2017 0.816 3.343 −0.933 1.041 0.746 1.720 −0.406 0.994 0.834 2.860 0.000 1.055\n2018 0.790 3.275 −1.030 1.046 0.726 1.776 −0.745 1.015 0.807 2.775 0.000 1.056\nMean 0.767 4.042 −1.064 1.049 0.658 2.237 −0.334 0.994 0.795 3.382 0.000 1.063",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3.4 Stage-4 Results",
+      "level": 2,
+      "text": "Stage-4 provides the prediction of daily PM2.5 concentrations for each of the 234.429 1 km grids\ncovering Great Britain. Results indicate an annual PM2.5 average of 9.41 µg/m3 for 2008, 10.17 µg/m3\nfor 2013, 8.05 µg/m3 for 2018, and 8.84 µg/m3 for 2008–2018 but with a strong spatial and temporal\nvariation. The spatial distribution of annual average PM 2.5 concentrations for 2008, 2013, and 2018 are\nshown in Figure 3, revealing a decrease of pollution levels in recent years across the whole territory,\nalthough slightly stronger in England. Table S5 in Supplementary Materials provides the same\nﬁgures for all the years, conﬁrming the decreasing trend. The spatial comparison suggests that PM 2.5\nconcentrations are lower in Scotland and Wales compared to the more populated southern regions\nof England, with hotspots located in urban areas such as Liverpool, Manchester, Birmingham, and\nGreater London. At the bottom of Figure 3, the maps display the corresponding annual average of\nPM2.5 levels in London, demonstrating the precision of the multi-stage ML model in reconstructing\nPM2.5 concentrations in 1 km grid cells within urban areas. The maps show local hotspots of high\npollution, with a spatial distribution that, however, changes along the study period.\nThe greatest contribution of this study is in the ability of the satellite-based ML models to\nreconstruct daily levels of PM2.5 over a 1 km grid across a wide geographical domain. Figure 4 displays\nthe time series plots of observed and predicted PM 2.5 concentrations at three monitoring sites and\ntheir locations within the geographical domain of Great Britain. While not necessarily representative,\nthe results show that the error varies depending on location, type of monitor, and period. However,\ngenerally the plots indicate a very good performance of the ML algorithms in recovering the observed\ntemporal variation in PM2.5 levels, capturing peaks and periods of stable low concentrations.\nRemote Sens. 2020, 12, 3803 12 of 19\nRemote Sens. 2020, 12, x FOR PEER REVIEW 11 of 18 \n \n2017 0.816 3.343 −0.933 1.041 0.746 1.720 −0.406 0.994 0.834 2.860 0.000 1.055 \n2018 0.790 3.275 −1.030 1.046 0.726 1.776 −0.745 1.015 0.807 2.775 0.000 1.056 \nMean  0.767 4.042 −1.064 1.049 0.658 2.237 −0.334 0.994 0.795 3.382 0.000 1.063",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "3.4 Stage-4 Results",
+      "level": 2,
+      "text": "Stage-4 provides the prediction of daily PM2.5 concentrations for each of the 234.429 1 km grids \ncovering Great Britain. Results indicate an annual PM 2.5 average of 9.41 µg/m3 for 2008, 10.17 µg/m3 \nfor 2013, 8.05 µg/m 3 for 2018, and 8.84 µg/m 3 for 2008–2018 but with a strong spatial and temporal \nvariation. The spatial distribution of annual average PM2.5 concentrations for 2008, 2013, and 2018 are \nshown in Figure 3, revealing a decrease of pollution levels in recent years across the whole territory, \nalthough slightly stronger in England. Table C1 in Appendix C provides the same figures for all the \nyears, confirming the decreasing trend. The spatial comparison suggests that PM",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "2.5 concentrations are",
+      "level": 2,
+      "text": "lower in Scotland and Wales compared to the more populated southern regions of England, with \nhotspots located in urban areas such as Liverpool, Manchester, Birmingham, and Greater London. At \nthe bottom of Figure 3, the maps display the corresponding annual average of PM",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "2.5 levels in London,",
+      "level": 2,
+      "text": "demonstrating the precision of the multi-stage ML model in reconstructing PM2.5 concentrations in 1 \nkm grid cells within urban areas. The maps show local hotspots of high pollution, with a spatial \ndistribution that, however, changes along the study period. \n \nFigure 3. Stage-4 predicted PM2.5 concentrations across Great Britain (Top) and London (Bottom) for \n2008, 2013, and 2018 aggregated by annual means. All plots were built under the same colour scale. \nThe greatest contribution of this study is in the ability of the satellite-based ML models to \nreconstruct daily levels of PM 2.5 over a 1 km grid across a wide geographical domain. Figure 4 \ndisplays the time series plots of observed and predicted PM2.5 concentrations at three monitoring sites \nand their locations within the geographical domain of Great Britain. While not necessarily \nrepresentative, the results show that the error vari es depending on location, type of monitor, and \nperiod. However, generally the pl ots indicate a very good perfor mance of the ML algorithms in \nFigure 3. Stage-4 predicted PM2.5 concentrations across Great Britain (Top) and London (Bottom) for\n2008, 2013, and 2018 aggregated by annual means. All plots were built under the same colour scale.\nRemote Sens. 2020, 12, x FOR PEER REVIEW 12 of 18 \n \nrecovering the observed temporal variation in PM2.5 levels, capturing peaks and periods of stable low \nconcentrations. \nFigure 5 complements the analysis of daily variations by displaying the spatial distribution of \nPM2.5 estimations across Great Britain (Top) and London (Bottom) for specific days within the study \nperiod. It is interesting to note the wide variation in PM 2.5 concentrations between days in the same \narea and between areas on different days. For instan ce, the maps in the left panels represent a day \nwith almost no variation and generally low concentrations; the maps in the mid panels display a \nstrong north–south split likely linked to weather conditions; the right panels show a more complex \npattern with a wider range of PM",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "2.5 values, a large area with very high pollution concentrations",
+      "level": 2,
+      "text": "located in east London, and hotspots in highly populated urban areas across England. \n \nFigure 4. Stage-4 daily series of observed and predicted PM 2.5 values across Great Britain for 2008, \n2013, and 2018: (1) Traffic monitor—located in Du ndee (Scotland); (2) Urban monitor—located in \nLondon (England); and (3) Rural monitor—located in Sutton Bridge (England). \nFigure 4. Stage-4 daily series of observed and predicted PM2.5 values across Great Britain for 2008, 2013,\nand 2018: (1) Traﬃc monitor—located in Dundee (Scotland); (2) Urban monitor—located in London\n(England); and (3) Rural monitor—located in Sutton Bridge (England).\nRemote Sens. 2020, 12, 3803 13 of 19\nFigure 5 complements the analysis of daily variations by displaying the spatial distribution of\nPM2.5 estimations across Great Britain (Top) and London (Bottom) for speciﬁc days within the study\nperiod. It is interesting to note the wide variation in PM2.5 concentrations between days in the same\narea and between areas on diﬀerent days. For instance, the maps in the left panels represent a day with\nalmost no variation and generally low concentrations; the maps in the mid panels display a strong\nnorth–south split likely linked to weather conditions; the right panels show a more complex pattern\nwith a wider range of PM2.5 values, a large area with very high pollution concentrations located in east\nLondon, and hotspots in highly populated urban areas across England.\nRemote Sens. 2020, 12, x FOR PEER REVIEW 13 of 18 \n \n \nFigure 5. Stage-4 day-specific PM2.5 estimations across Great Britain (Top) and London (Bottom).",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "4 Discussion",
+      "level": 1,
+      "text": "This study presents the first application of satellite-based spatio-temporal ML methods to \nreconstruct levels of pollution across Great Britain, providing estimates of daily PM2.5 concentrations \nover a 1 km grid during 2008–2018. The multi-stage ML framework provided significant advantages, \nallowing the combination of information from multiple data sources, such as air quality monitoring \nnetworks, remote sensing satellite products, chemic al dispersion models, re analysis databases, and \nadministrative census data, among others. \nThe beginning of the study period (2008 and 2009) had a lower quantity of monitors measuring \nPM\n2.5 across Great Britain, but this number increased considerably from 2010 after a new measuring \nnetwork had been established in 2009 [46]. Therefor e, Stage-1 was an extrem ely important step to \nextend the number of PM 2.5 measurements. The implementation of Stage-2 was also relevant to fill \nthe gaps in MAIAC AOD retrievals from satellites, thus maximizing the available information. Stage-\n3 produced an ML prediction model based on a long  list of informative predictors, accounting for \npotentially complex inter-relationships and functional forms. The Stage-3 ML algorithms offered \nexcellent performance, showing an average cross-validated R\n2 of 0.767 across the period, with an \nincreased predictive ability in the la st years. Stage-4 provided a single PM 2.5 estimation for each of \nthe 234.429 1 km grid cells in each of the 4018 days, totalling around 950 million data points. The \nmethodology provides complete spatial coverage, hi gh resolution, and a relative small error of the \npredictions, and the ability to  capture variations in PM",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "2.5 concentrations across both spatial and",
+      "level": 2,
+      "text": "temporal domains. The model offers a prediction accuracy that makes the output suitable for \napplication in epidemiological studies on the short- and long-term health effects of air pollution. As \ndemonstrated in Figure 4, the methodological approach presented in this study was able to capture \nthe daily PM\n2.5 variability across different years, locations, and monitor types.   \nFigure 5. Stage-4 day-speciﬁc PM 2.5 estimations across Great Britain (Top) and London (Bottom).",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "4 Discussion",
+      "level": 1,
+      "text": "This study presents the ﬁrst application of satellite-based spatio-temporal ML methods to\nreconstruct levels of pollution across Great Britain, providing estimates of daily PM2.5 concentrations\nover a 1 km grid during 2008–2018. The multi-stage ML framework provided signiﬁcant advantages,\nallowing the combination of information from multiple data sources, such as air quality monitoring\nnetworks, remote sensing satellite products, chemical dispersion models, reanalysis databases,\nand administrative census data, among others.\nThe beginning of the study period (2008 and 2009) had a lower quantity of monitors measuring\nPM2.5 across Great Britain, but this number increased considerably from 2010 after a new measuring\nnetwork had been established in 2009 [ 46]. Therefore, Stage-1 was an extremely important step to\nextend the number of PM 2.5 measurements. The implementation of Stage-2 was also relevant to\nﬁll the gaps in MAIAC AOD retrievals from satellites, thus maximizing the available information.\nStage-3 produced an ML prediction model based on a long list of informative predictors, accounting\nfor potentially complex inter-relationships and functional forms. The Stage-3 ML algorithms oﬀered\nRemote Sens. 2020, 12, 3803 14 of 19\nexcellent performance, showing an average cross-validated R 2 of 0.767 across the period, with an\nincreased predictive ability in the last years. Stage-4 provided a single PM 2.5 estimation for each\nof the 234.429 1 km grid cells in each of the 4018 days, totalling around 950 million data points.\nThe methodology provides complete spatial coverage, high resolution, and a relative small error\nof the predictions, and the ability to capture variations in PM 2.5 concentrations across both spatial\nand temporal domains. The model o ﬀers a prediction accuracy that makes the output suitable for\napplication in epidemiological studies on the short- and long-term health e ﬀects of air pollution.\nAs demonstrated in Figure 4, the methodological approach presented in this study was able to capture\nthe daily PM2.5 variability across diﬀerent years, locations, and monitor types.\nThe output from the empirical ML model developed in this study complements existing databases\nof modelled PM2.5 in the United Kingdom, with some advantages for applications in epidemiological\nstudies. Country-wide maps generated by emission-dispersion models are usually available at a\ncoarser spatial or temporal resolution [32,47,48], and they generally show lower small-scale accuracy\nwhen tested against observed monitoring data [ 49,50]. The spatio-temporal ML models presented\nhere demonstrated comparable predictive performance to similar methods applied in other countries,\nbased either on single-learner ML models [ 13,20], ensemble ML models [ 18,19,21], or generalised\nadditive models (GAM) [15]. Ref [21] developed an ensemble ML model (composed by RF, Deep Neural\nNetworks, GAM, Gradient Boosting, K-nearest Neighbour) to estimate PM 2.5 for Greater London,\nreaching a mean 2005–2013 CV spatial-R2 of 0.396. Using the 2008–2013 period, this study reached a CV\nspatial-R2 of 0.637 for the whole of Great Britain. Modelling a larger area might have provided more\ninformation and a higher spatial variability, improving substantially the CV spatial-R2. The‘application\nof a single learner to model air pollution in both spatial and temporal domains for Great Britain\nachieved a satisfactory performance. Nonetheless, ensemble model formats can be used in future\napplications using the same area of study and variables to assess how much performance gain is\nreached compared to the RF-only learner.\nIn 2008, a new Air Quality Directive came into force, bringing considerable changes to the\nfollowing UK annual air quality assessments in 2010, setting an annual mean target of 25 µg/m3 [51].\nSeveral policy controls and emission reductions had been put in place aiming to reduce from 2010 the\nroad traﬃc PM emission by 83%, oﬀ-road mobile machinery by 54%, and energy production by 32%\nuntil 2020 [52]. Independently of the temporal aggregation (daily or annual), all maps shown in this\nstudy detected this considerable drop in the PM2.5 concentrations from 2010 across Great Britain.\nSome limitations of this study must be acknowledged. First, the multi-stage model relies on the\nextension of the observed series of PM2.5 by predicting values based on co-located PM10 in Stage-1.\nThis step was necessary for the application of the method in the early years characterized by sparse\nPM2.5 monitoring, which is likely to have contributed to the lower predictive performance in this\nperiod. Morover, the cross-validation procedures revealed the presence of some bias in the Stage-1\npredictions, particularly in the spatial domain, which was probably linked to limitations in modelling\nthe relative distribution of the two PM components. Second, while the model displayed a good\nperformance throughout the period, the accuracy is worse in the temporal domain in the summer\n(Table S4), suggesting limitations in capturing the higher temporal variation in this season. Third, the\ngeneralization of the prediction model was dependent on the selected locations of the monitors, which\nmay be not representative of the study domain. This can result in an underestimation of the error\nand potential biases in the predictions in more remote and less represented areas if structural spatial\ndiﬀerences are not entirely captured by the model covariates.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Spatial distribution of 581 PM10 (black star) and 183 PM 2.5 (turquoise dots) monitors across"
+    },
+    {
+      "id": "f2",
+      "caption": "Satellite-AOD 0.47 µm values are represented in Figure 2a (mean of all Terra- and Aqua-"
+    },
+    {
+      "id": "f3",
+      "caption": "Stage-4 predicted PM2.5 concentrations across Great Britain (Top) and London (Bottom) for"
+    },
+    {
+      "id": "f5",
+      "caption": "complements the analysis of daily variations by displaying the spatial distribution of"
+    },
+    {
+      "id": "f4",
+      "caption": "Stage-4 daily series of observed and predicted PM 2.5 values across Great Britain for 2008,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Predicted-PM2.5 concentrations obtained from Stage-1 RF models were regressed against"
+    },
+    {
+      "id": "t2",
+      "caption": "Predicted-AOD 0.47 µm and 0.55 µm obtained  f r o m  S t a g e - 2  R F  m o d e l s  w e r e  r e g r e s s e d"
+    },
+    {
+      "id": "t3",
+      "caption": "The list with the top-15 predictors demonstrates the larger contribution of the more informative"
+    },
+    {
+      "id": "t4",
+      "caption": "shows the results of the 10-Fold CV Stage-3 RF models by year. The results indicate a"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

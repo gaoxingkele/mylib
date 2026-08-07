@@ -1,0 +1,564 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/ijacsa/ijacsa__2017__lung_cancer_detection_and_classification_with_3d_convol__4056e70b4d.pdf",
+  "n_pages": 9,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "I NTRODUCTION",
+      "level": 1,
+      "text": "Lung cancer is one of the most common cancers, ac-\ncounting for over 225,000 cases, 150,000 deaths, and $12\nbillion in health care costs yearly in the U.S. [1]. It is also\none of the deadliest cancers; overall, only 17% of people in\nthe U.S. diagnosed with lung cancer survive ﬁve years after\nthe diagnosis, and the survival rate is lower in developing\ncountries. The stage of a cancer refers to how extensively it\nhas metastasized. Stages 1 and 2 refer to cancers localized to\nthe lungs and latter stages refer to cancers that have spread\nto other organs. Current diagnostic methods include biopsies\nand imaging, such as CT scans. Early detection of lung cancer\n(detection during the earlier stages) signiﬁcantly improves the\nchances for survival, but it is also more difﬁcult to detect early\nstages of lung cancer as there are fewer symptoms [1].\nOur task is a binary classiﬁcation problem to detect the\npresence of lung cancer in patient CT scans of lungs with and\nwithout early stage lung cancer. We aim to use methods from\ncomputer vision and deep learning, particularly 2D and 3D\nconvolutional neural networks, to build an accurate classiﬁer.\nAn accurate lung cancer classiﬁer could speed up and reduce\ncosts of lung cancer screening, allowing for more widespread\nearly detection and improved survival. The goal is to construct\na computer-aided diagnosis (CAD) system that takes as input\npatient chest CT scans and outputs whether or not the patient\nhas lung cancer [2].\nThough this task seems straightforward, it is actually a\nneedle in the haystack problem. In order to determine whether\nor not a patient has early-stage cancer, the CAD system would\nhave to detect the presence of a tiny nodule ( < 10 mm in\ndiameter for early stage cancers) from a large 3D lung CT\nscan (typically around 200 mm × 400 mm × 400 mm). An\nexample of an early stage lung cancer nodule shown in within\na 2D slice of a CT scan is given in Fig. 1. Furthermore, a\nCT scan is ﬁlled with noise from surrounding tissues, bone,\nair, so for the CAD systems search to be efﬁcient, this noise\nwould ﬁrst have to be preprocessed. Hence our classiﬁcation\npipeline is image preprocessing, nodule candidates detection,\nmalignancy classiﬁcation.\nIn this paper, we apply an extensive preprocessing tech-\nniques to get the accurate nodules in order to enhance the\naccuracy of detection of lung cancer. Moreover, we perform an\nend-to-end training of CNN from scratch in order to realize the\nfull potential of the neural network i.e. to learn discriminative\nfeatures. Extensive experimental evaluations are performed on\na dataset comprising lung nodules from more than 1390 low\ndose CT scans.\nFigure 1: 2D CT scan slice containing a small (5mm) early\nstage lung cancer nodule [3].",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Background",
+      "level": 1,
+      "text": "Typical CAD systems for lung cancer from literature\nhave the following pipeline: image preprocessing → de-\ntection of cancerous nodule candidates→ nodule candidate\nfalse positive reduction→ malignancy prediction for each\nnodule candidate→ malignancy prediction for overall CT\nscan [4]. These pipelines have many phases, each of which\nis computationally expensive and requires well-labeled data\nduring training. For example, the false positive reduction\nphase requires a dataset of labeled true and false nodule\ncandidates, and the nodule malignancy prediction phase re-\nquires a dataset with nodules labeled with malignancy.\nTrue/False labels for nodule candidates and malignancy\nlabels for nodules are sparse for lung cancer, and may be\nnonexistent for some other cancers, so CAD systems that\nrely on such data would not generalize to other cancers. In\norder to achieve greater computational efﬁciency and gen-\neralizability to other cancers, our CAD system will have\nshorter pipeline and will only require the following data\nduring training: a dataset of CT scans with true nodules\nlabeled, and a dataset of CT scans with an overall malig-\nnancy label. State-of-the-art CAD systems that predict ma-\nlignancy from CT scans achieve AUC of up to 0.83 [5].\nHowever, as mentioned above, these systems take as input\nvarious labeled data that we do not use. We aim for our\nsystem to reach close to this performance.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Data",
+      "level": 1,
+      "text": "Our primary dataset is the patient lung CT scan dataset\nfrom Kaggle’s Data Science Bowl 2017 [6]. The dataset\ncontains labeled data for 2101 patients, which we divide\ninto training set of size 1261, validation set of size 420, and\ntest set of size 420. For each patient the data consists of\nCT scan data and a label (0 for no cancer, 1 for cancer).\nNote that the Kaggle dataset does not have labeled nodules.\nFor each patient, the CT scan data consists of a variable\nnumber of images (typically around 100-400, each image is\nan axial slice) of 512× 512 pixels. The slices are provided\nin DICOM format. Around 70% of the provided labels in\nthe Kaggle dataset are 0, so we use a weighted loss function\nin our malignancy classiﬁer to address this imbalance.\nBecause the Kaggle dataset alone proved to be inade-\nquate to accurately classify the validation set, we also use\nthe patient lung CT scan dataset with labeled nodules from\nthe LUng Nodule Analysis 2016 (LUNA16) Challenge [7]\nto train a U-Net for lung nodule detection. The LUNA16\ndataset contains labeled data for 888 patients, which we di-\nvide into a training set of size 710 and a validation set of\nsize 178. For each patient the data consists of CT scan data\nand a nodule label (list of nodule center coordinates and di-\nameter). For each patient, the CT scan data consists of a\nvariable number of images (typically around 100-400, each\nimage is an axial slice) of 512× 512 pixels.\nLUNA16 data was used to train a U-Net for nodule de-\ntection, one of the phases in our classiﬁcation pipeline. The\nproblem is to accurately predict a patient’s label (‘cancer’\nor ‘no cancer’) based on the patient’s Kaggle lung CT scan.\nWe will use accuracy, sensitivity, speciﬁcity, and AUC of\nthe ROC to evaluate our CAD system’s performance on the\nKaggle test set.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 Methods",
+      "level": 1,
+      "text": "We preprocess the 3D CT scans using segmentation, nor-\nmalization, downsampling, and zero-centering. Our initial\napproach was to simply input the preprocessed 3D CT scans\ninto 3D CNNs, but the results were poor, so we needed ad-\nditional preprocessing to input only regions of interests into\n3D CNNs. To identify regions of interest, we train a U-\nnet for nodule candidate detection. We then input regions\naround nodule candidates detected by the U-net into 3D\nCNNs to ultimately classify the CT scans as positive or neg-\native for lung cancer. The structure of our code and weight-\nsaving methods is from CS224N Winter 2016 Assignment\n4 starter code.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "4.1 Proprocessing and Segmentation",
+      "level": 2,
+      "text": "For each patient, we ﬁrst convert the pixel values in each\nimage to Hounsﬁeld units (HU), a measurement of radio-\ndensity, and we stack 2D slices into a single 3D image. Be-\ncause tumors form on lung tissue, we use segmentation to\nmask out the bone, outside air, and other substances that\nwould make our data noisy, and leave only lung tissue in-\nformation for the classiﬁer. A number of segmentation ap-\nproaches were tried, including thresholding, clustering (K-\nmeans and Meanshift), and Watershed. K-means and Mean-\nshift allow very little supervision and did not produce good\nqualitative results. Watershed produced the best qualitative\nresults, but took too long to run to use by the deadline. Ul-\ntimately, thresholding was used in our pipeline. Thresh-\nolding and Watershed segmentation are described below.\n2\nFigure 1: 2D CT scan slice containing a small (5mm) early\nstage lung cancer nodule.\nThe paper’s arrangement is as follows: Related work is\nsummarized brieﬂy in Section II. Dataset for this paper is\ndescribed in Section III. The methods for segmentation are\npresented in section IV. The nodule segmentation is introduced\nin Section V based on U-Net architecture. Section VI presents\n3D Convolutional Neural Network for nodule classiﬁcation and\nwww.ijacsa.thesai.org 409 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\npatient classiﬁcation. Our discussion and results are described\nin details in Section VII. Section VIII concludes the paper.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "R ELATED WORK",
+      "level": 1,
+      "text": "Recently, deep artiﬁcial neural networks have been ap-\nplied in many applications in pattern recognition and machine\nlearning, especially, Convolutional neural networks (CNNs)\nwhich is one class of models [3]. Another approach of CNNs\nwas applied on ImageNet Classiﬁcation in 2012 is called an\nensemble CNNs which outperformed the best results which\nwere popular in the computer vision community [4]. There\nhas also been popular latest research in the area of medical\nimaging using deep learning with promising results.\nSuk et al. [5] suggested a new latent and shared feature\nrepresentation of neuro-imaging data of brain using Deep\nBoltzmann Machine (DBM) for AD/MCI diagnosis. Wu et al.\n[6] developed deep feature learning for deformable registration\nof brain MR images to improve image registration by using\ndeep features. Xu et al. [7] presented the effectiveness of\nusing deep neural networks (DNNs) for feature extraction in\nmedical image analysis as a supervised approach. Kumar et\nal. [8] proposed a CAD system which uses deep features\nextracted from an autoencoder to classify lung nodules as\neither malignant or benign on LIDC database. In [9], Yaniv\net al. presented a system for medical application of chest\npathology detection in x-rays which uses convolutional neural\nnetworks that are learned from a non-medical archive. that\nwork showed a combination of deep learning (Decaf) and\nPiCodes features achieves the best performance. The proposed\ncombination presented the feasibility of detecting pathology\nin chest x-ray using deep learning approaches based on non-\nmedical learning. The used database was composed of 93\nimages. They obtained an area under curve (AUC) of 0.93\nfor Right Pleural Effusion detection, 0.89 for Enlarged heart\ndetection and 0.79 for classiﬁcation between healthy and\nabnormal chest x-ray.\nIn [10], Suna W. et al., implemented three different deep\nlearning algorithms, Convolutional Neural Network (CNN),\nDeep Belief Networks (DBNs), Stacked Denoising Autoen-\ncoder (SDAE), and compared them with the traditional image\nfeature based CAD system. The CNN architecture contains\neight layers of convolutional and pooling layers, interchange-\nably. For the traditional compared to algorithm, there were\nabout 35 extracted texture and morphological features. These\nfeatures were fed to the kernel based support vector machine\n(SVM) for training and classiﬁcation. The resulted accuracy for\nthe CNN approach reached 0.7976 which was little higher than\nthe traditional SVM, with 0.7940. They used the Lung Image\nDatabase Consortium and Image Database Resource Initiative\n(LIDC/IDRI) public databases, with about 1018 lung cases.\nIn [11], J. Tan et al. designed a framework that detected\nlung nodules, then reduced the false positive for the detected\nnodules based on Deep neural network and Convolutional\nNeural Network. The CNN has four convolutional layers and\nfour pooling layers. The ﬁlter was of depth 32 and size 3,5.\nThe used dataset was acquired from the LIDC-IDRI for about\n85 patients. The resulted sensitivity was of 0.82. The False\npositive reduction gotten by DNN was 0.329.\nIn [12], R. Golan proposed a framework that train the\nweights of the CNN by a back propagation to detect lung\nnodules in the CT image sub-volumes. This system achieved\nsensitivity of 78.9% with 20 false positives, while 71.2% with",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "10 FPs per scan, on lung nodules that have been annotated by",
+      "level": 1,
+      "text": "all four radiologists\nConvolutional neural networks have achieved better than\nDeep Belief Networks in current studies on benchmark com-\nputer vision datasets. The CNNs have attracted considerable\ninterest in machine learning since they have strong representa-\ntion ability in learning useful features from input data in recent\nyears.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "D ATA",
+      "level": 1,
+      "text": "Our primary dataset is the patient lung CT scan dataset\nfrom Kaggles Data Science Bowl (DSB) 2017 [13]. The dataset\ncontains labeled data for 1397 patients, which we divide into\ntraining set of size 978, and test set of size 419. For each\npatient, the data consists of CT scan data and a label (0 for\nno cancer, 1 for cancer). Note that the Kaggle dataset does\nnot have labeled nodules. For each patient, the CT scan data\nconsists of a variable number of images (typically around 100-\n400, each image is an axial slice) of 512 × 512 pixels. The\nslices are provided in DICOM format. Around 70% of the\nprovided labels in the Kaggle dataset are 0, so we used a\nweighted loss function in our malignancy classiﬁer to address\nthis imbalance.\nBecause the Kaggle dataset alone proved to be inadequate\nto accurately classify the validation set, we also used the\npatient lung CT scan dataset with labeled nodules from the\nLung Nodule Analysis 2016 (LUNA16) Challenge [14] to\ntrain a U-Net for lung nodule detection. The LUNA16 dataset\ncontains labeled data for 888 patients, which we divided into\na training set of size 710 and a validation set of size 178. For\neach patient, the data consists of CT scan data and a nodule\nlabel (list of nodule center coordinates and diameter). For each\npatient, the CT scan data consists of a variable number of\nimages (typically around 100-400, each image is an axial slice)\nof 512× 512 pixels.\nLUNA16 data was used to train a U-Net for nodule\ndetection, one of the phases in our classiﬁcation pipeline. The\nproblem is to accurately predict a patient’s label (‘cancer’ or\n‘no cancer’) based on the patient’s Kaggle lung CT scan. We\nwill use accuracy, sensitivity, speciﬁcity, and AUC of the ROC\nto evaluate our CAD system’s performance on the Kaggle test\nset.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "M ETHODS",
+      "level": 1,
+      "text": "Typical CAD systems for lung cancer have the following\npipeline: image preprocessing, detection of cancerous nodule\ncandidates, nodule candidate false positive reduction, malig-\nnancy prediction for each nodule candidate, and malignancy\nprediction for overall CT scan [15]. These pipelines have\nmany phases, each of which is computationally expensive and\nrequires well-labeled data during training. For example, the\nfalse positive reduction phase requires a dataset of labeled\ntrue and false nodule candidates, and the nodule malignancy\nprediction phase requires a dataset with nodules labeled with\nmalignancy.\nwww.ijacsa.thesai.org 410 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\nFigure 2: 3D convolutional neural networks architecture.\nTrue/False labels for nodule candidates and malignancy\nlabels for nodules are sparse for lung cancer, and may be\nnonexistent for some other cancers, so CAD systems that rely\non such data would not generalize to other cancers. In order to\nachieve greater computational efﬁciency and generalizability to\nother cancers, the proposed CAD system has shorter pipeline\nand only requires the following data during training: a dataset\nof CT scans with true nodules labeled, and a dataset of CT\nscans with an overall malignancy label. State-of-the-art CAD\nsystems that predict malignancy from CT scans achieve AUC\nof up to 0.83 [16]. However, as mentioned above, these systems\ntake as input various labeled data that is not used in this\nframework. The main goal of the proposed system is to reach\nclose to this performance.\nThe proposed CAD system starts with preprocessing the 3D\nCT scans using segmentation, normalization, downsampling,\nand zero-centering. The initial approach was to simply input\nthe preprocessed 3D CT scans into 3D CNNs, but the results\nwere poor. So an additional preprocessing was performed to\ninput only regions of interests into the 3D CNNs. To identify\nregions of interest, a U-Net was trained for nodule candidate\ndetection. Then input regions around nodule candidates de-\ntected by the U-Net was fed into 3D CNNs to ultimately\nclassify the CT scans as positive or negative for lung cancer.\nThe overall architecture is shown in Fig. 2, all details of layers\nwill be described in the next sections.\nA. Proprocessing and Segmentation\nFor each patient, pixel values was ﬁrst converted in each\nimage to Hounsﬁeld units (HU), a measurement of radioden-\nsity, and 2D slices are stacked into a single 3D image. Because\ntumors form on lung tissue, segmentation is used to mask out\nthe bone, outside air, and other substances that would make\ndata noisy, and leave only lung tissue information for the\nclassiﬁer. A number of segmentation approaches were tried,\nincluding thresholding, clustering (Kmeans and Meanshift),\nand Watershed. K-means and Meanshift allow very little super-\nvision and did not produce good qualitative results. Watershed\nproduced the best qualitative results, but took too long to run\nto use by the deadline. Ultimately, thresholding was used.\nAfter segmentation, the 3D image is normalized by apply-\ning the linear scaling to squeezed all pixels of the original\nunsegmented image to values between 0 and 1. Spline inter-\npolation downsamples each 3D image by a scale of 0.5 in each\nof the three dimensions. Finally, zero-centering is performed\non data by subtracting the mean of all the images from the\ntraining set.\nAfter segmentation, we normalize the 3D image by apply-\ning the linear scaling to squeezed all pixels of the original\nunsegmented image to values between 0 and 1. Then we\nuse spline interpolation to downsample each 3D image by\na scale of 0.5 in each of the three dimensions. Finally, we\nzero-center the data be subtracting the mean of all the im-\nages from the training set.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1.1 Thresholding",
+      "level": 3,
+      "text": "Typical radiodensities of various parts of a CT scan are\nshown in Table 1. Air is typically around−1000 HU, lung\ntissue is typically around−500, water, blood, and other tis-\nsues are around 0 HU, and bone is typically around 700\nHU, so we mask out pixels that are close to−1000 or above\n−320 to leave lung tissue as the only segment. The distri-\nbution of pixel Hounsﬁeld units at various axial slices for a\nsample patient are shown in Figure 2. Pixels thresholded at",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "400 HU are shown in Figure 3, and the mask is shown in",
+      "level": 1,
+      "text": "Figure 4 However, to account for the possibility that some\ncancerous growth could occur within the bronchioles (air\npathways) inside the lung, which are shown in Figure 5,\nwe choose to include this air to create the ﬁnalized mask as\nshown in Figure 6.\nSubstance Radiodensity (HU)\nAir -1000\nLung tissue -500\nwater and blood 0\nbone 700\nTable 1: typical radiodensities in HU of various substances\nin a CT scan [8]",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1.2 Watershed",
+      "level": 3,
+      "text": "The segmentation obtained from thresholding has a lot of\nnoise- many voxels that were part of lung tissue, especially\nvoxels at the edge of the lung, tended to fall outside the\nrange of lung tissue radiodensity due to CT scan noise. This\nmeans that our classiﬁer will not be able to correctly clas-\nsify images in which cancerous nodules are located at the\nedge of the lung. To ﬁlter noise and include voxels from\nthe edges, we use Marker-driven watershed segmentation,\nas described in Al-Tarawneh et al. [9]. An original 2D CT\nslice of a sample patient is given in Figure 7. The resulting\n2D slice of the lung segmentation mask created by thresh-\nolding is shown in Figure 8, and the resulting 2D slice of\nthe lung segmentation mask created by Watershed is shown\nin Figure 10. Qualitatively, this produces a much better seg-\nmentation than thresholding. Missing voxels (black dots in\nFigure 8) are largely reincluded. However, this is much less\nefﬁcient than basic thresholding, so due to time limitations,\n(a) Histograms of pixel values in HU for sample patient’s CT scan\nat various slices.\n(b) Corresponding 2D axial slices\nFigure 2: (a) Histogram of HU values at (b) corresponding\naxial slices for sample patient 3D image at various axial\nslice\nwe were unable to preprocess all CT scans using Watershed,\nso we used thresholding.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f10",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.2 U-Net for Nodule Detection",
+      "level": 2,
+      "text": "We initially tried directly inputting the entire segmented\nlungs into malignancy classiﬁers, but the results were poor.\nIt was likely the case that the entire image was too large a\nsearch space. Thus we need a way of inputting smaller re-\ngions of interest instead of the entire segmented 3D image.\nOur way of doing this is selecting small boxes containing\ntop cancerous nodule candidates. To ﬁnd these top nodule\n3\n(a) Histograms of pixel values in HU for sample patients\nCT scan at various slices.\nAfter segmentation, we normalize the 3D image by apply-\ning the linear scaling to squeezed all pixels of the original\nunsegmented image to values between 0 and 1. Then we\nuse spline interpolation to downsample each 3D image by\na scale of 0.5 in each of the three dimensions. Finally, we\nzero-center the data be subtracting the mean of all the im-\nages from the training set.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1.1 Thresholding",
+      "level": 3,
+      "text": "Typical radiodensities of various parts of a CT scan are\nshown in Table 1. Air is typically around−1000 HU, lung\ntissue is typically around−500, water, blood, and other tis-\nsues are around 0 HU, and bone is typically around 700\nHU, so we mask out pixels that are close to−1000 or above\n−320 to leave lung tissue as the only segment. The distri-\nbution of pixel Hounsﬁeld units at various axial slices for a\nsample patient are shown in Figure 2. Pixels thresholded at",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "400 HU are shown in Figure 3, and the mask is shown in",
+      "level": 1,
+      "text": "Figure 4 However, to account for the possibility that some\ncancerous growth could occur within the bronchioles (air\npathways) inside the lung, which are shown in Figure 5,\nwe choose to include this air to create the ﬁnalized mask as\nshown in Figure 6.\nSubstance Radiodensity (HU)\nAir -1000\nLung tissue -500\nwater and blood 0\nbone 700\nTable 1: typical radiodensities in HU of various substances\nin a CT scan [8]",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.1.2 Watershed",
+      "level": 3,
+      "text": "The segmentation obtained from thresholding has a lot of\nnoise- many voxels that were part of lung tissue, especially\nvoxels at the edge of the lung, tended to fall outside the\nrange of lung tissue radiodensity due to CT scan noise. This\nmeans that our classiﬁer will not be able to correctly clas-\nsify images in which cancerous nodules are located at the\nedge of the lung. To ﬁlter noise and include voxels from\nthe edges, we use Marker-driven watershed segmentation,\nas described in Al-Tarawneh et al. [9]. An original 2D CT\nslice of a sample patient is given in Figure 7. The resulting\n2D slice of the lung segmentation mask created by thresh-\nolding is shown in Figure 8, and the resulting 2D slice of\nthe lung segmentation mask created by Watershed is shown\nin Figure 10. Qualitatively, this produces a much better seg-\nmentation than thresholding. Missing voxels (black dots in\nFigure 8) are largely reincluded. However, this is much less\nefﬁcient than basic thresholding, so due to time limitations,\n(a) Histograms of pixel values in HU for sample patient’s CT scan\nat various slices.\n(b) Corresponding 2D axial slices\nFigure 2: (a) Histogram of HU values at (b) corresponding\naxial slices for sample patient 3D image at various axial\nslice\nwe were unable to preprocess all CT scans using Watershed,\nso we used thresholding.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f10",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4.2 U-Net for Nodule Detection",
+      "level": 2,
+      "text": "We initially tried directly inputting the entire segmented\nlungs into malignancy classiﬁers, but the results were poor.\nIt was likely the case that the entire image was too large a\nsearch space. Thus we need a way of inputting smaller re-\ngions of interest instead of the entire segmented 3D image.\nOur way of doing this is selecting small boxes containing\ntop cancerous nodule candidates. To ﬁnd these top nodule\n3\n(b) Corresponding 2D axial slices.\nFigure 3: 3a Histogram of HU values at 3b corresponding axial\nslices for sample patient 3D image at various axial.\n1) Thresholding: Typical radiodensities of various parts of\na CT scan are shown in Table I. Air is typically around -1000\nHU, lung tissue is typically around -500, water, blood, and\nother tissues are around 0 HU, and bone is typically around 700\nHU, so pixels that are close to -1000 or above -320 are masked\nwww.ijacsa.thesai.org 411 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\n(a)\n (b)\n(c)\n (d)\nFigure 4: (4a) Sample patient 3D image with pixels values\ngreater than 400 HU reveals the bone segment, (4b) Sample\npatient bronchioles within lung, (4c) Sample patient initial\nmask with no air, and (4d) Sample patient ﬁnal mask in which\nbronchioles are included.\nout to leave lung tissue as the only segment. The distribution\nof pixel Hounsﬁeld units at various axial slices for a sample\npatient are shown in Fig. 3. Pixels thresholded at 400 HU are\nshown in Fig. 3a, and the mask is shown in Fig. 3b. However,\nto account for the possibility that some cancerous growth could\noccur within the bronchioles (air pathways) inside the lung,\nwhich are shown in Fig. 4c, this air is included to create the\nﬁnalized mask as shown in Fig. 4d.\nTable I: Typical Radiodensities in HU of Various Substances\nin a CT Scan\nSubstance Radiodensity (HU)\nAir -1000\nLung tissue -500\nWater and Blood 0\nBone 700\n2) Watershed: The segmentation obtained from threshold-\ning has a lot of noise. Many voxels that were part of lung\ntissue, especially voxels at the edge of the lung, tended to fall\noutside the range of lung tissue radiodensity due to CT scan\nnoise. This means that our classiﬁer will not be able to cor-\nrectly classify images in which cancerous nodules are located\nat the edge of the lung. To ﬁlter noise and include voxels from\nthe edges, we use Marker-driven watershed segmentation, as\ndescribed in Al-Tarawneh et al. [17]. An original 2D CT slice\nof a sample patient is given in Fig. 5a. The resulting 2D slice of\nthe lung segmentation mask created by thresholding is shown\nin Fig. 5b, and the resulting 2D slice of the lung segmentation\nmask created by Watershed is shown in Fig. 5d. Qualitatively,\nthis produces a much better segmentation than thresholding.\nMissing voxels (black dots in Fig. 5b) are largely re-included.\nHowever, this is much less efﬁcient than basic thresholding,\nso due to time limitations, it was not possible to preprocess\nall CT scans using Watershed, so thresholding is used instead.\nFigure 3: Sample patient 3D image with pixels values\ngreater than 400 HU reveals the bone segment.\nFigure 4: Sample patient initial mask with no air\ncandidates, we train a modiﬁed version of the U-Net as de-\nscribed in Ronneberger et al. on LUNA16 data [10]. U-Net\nis a 2D CNN architecture that is popular for biomedical im-\nage segmentation. We designed a stripped-down version of\nthe U-Net to limit memory expense. A visualization of our\nU-Net architecture is included in Figure 11 and is described\nin detail in Table 2. During training, our modiﬁed U-Net\ntakes as input 256× 256 2D CT slices, and labels are pro-\nvided (256×256 mask where nodule pixels are 1, rest are 0).\nThe model is trained to output images of shape 256× 256\nwere each pixels of the output has a value between 0 and 1\nindicating the probability the pixel belongs to a nodule. This\nis done by taking the slice corresponding to label one of the\nFigure 5: Sample patient bronchioles within lung\nFigure 6: Sample patient ﬁnal mask in which bronchioles\nare included\nFigure 7: original 2D slice of sample patient\n4\n(a)\nFigure 8: lung segmentation mask by thresholding of sam-\nple patient\nFigure 9: ﬁnal watershed segmentation mask of sample pa-\ntient\nFigure 10: ﬁnal watershed lung segmentation of sample pa-\ntient\nsoftmax of the ﬁnal U-Net layer. Corresponding U-Net in-\nputs, labels, and predictions on a patient from the LUNA16\nvalidation set is shown in Figures 12, 13, and 14 respec-\ntively. most nodules are much smaller A weighted softmax\ncross-entropy loss calculated for each pixel, as a label of\n0 is far more common in the mask than a label of 1. The\ntrained U-Net is then applied to the segmented Kaggle CT\nscan slices to generate nodule candidates.\nFigure 11: Modiﬁed U-Net architecture\nLayer Params Activation Output\nInput 256 x 256 x 1\nConv1a 3x3x3 ReLu 256 x 256 x 32\nConv1b 3x3x3 ReLu 256 x 256 x 32\nMax Pool 2x2, stride 2 128 x 128 x 32\nConv2a 3x3x3 ReLu 128 x 128 x 80\nConv2b 3x3x3 ReLu 128 x 128 x 80\nMax Pool 2x2, stride 2 64 x 64 x 80\nConv3a 3x3x3 ReLu 64 x 64 x 160\nConv3b 3x3x3 ReLu 64 x 64 x 160\nMax Pool 2x2, stride 2 32 x 32 x 160\nConv4a 3x3x3 ReLu 32 x 32 x 320\nConv4b 3x3x3 ReLu 32 x 32 x 320\nUp Conv4b 2x2 64 x 64 x 320\nConcat Conv4b,Conv3b 64 x 64 x 480\nConv5a 3x3x3 ReLu 64 x 64 x 160\nConv5b 3x3x3 ReLu 64 x 64 x 160\nUp Conv5b 2x2 128 x 128 x 160\nConcat Conv5b,Conv2b 128 x 128 x 240\nConv6a 3x3x3 ReLu 128 x 128 x 80\nConv6b 3x3x3 ReLu 128 x 128 x 80\nUp Conv6b 2x2 256 x 256 x 80\nConcat Conv6b,Conv1b 256 x 256 x 112\nConv6a 3x3x3 ReLu 256 x 256 x 32\nConv6b 3x3x3 ReLu 256 x 256 x 32\nConv7 3x3x3 256 x 256 x 2\nTable 2: U-Net architecture (Dropout with 0.2 probability\nafter each ‘a’ conv layer during training, ‘Up’ indicates re-\nsizing of image via bilinear interpolation, Adam Optimizer,\nlearning rate = 0.0001)\n4.3. Malignancy Classiﬁers\nOnce we trained the U-Net on the LUNA16 data,\nwe ran it on 2D slices of Kaggle data and stacked the\n5 (b)\nFigure 8: lung segmentation mask by thresholding of sam-\nple patient\nFigure 9: ﬁnal watershed segmentation mask of sample pa-\ntient\nFigure 10: ﬁnal watershed lung segmentation of sample pa-\ntient\nsoftmax of the ﬁnal U-Net layer. Corresponding U-Net in-\nputs, labels, and predictions on a patient from the LUNA16\nvalidation set is shown in Figures 12, 13, and 14 respec-\ntively. most nodules are much smaller A weighted softmax\ncross-entropy loss calculated for each pixel, as a label of\n0 is far more common in the mask than a label of 1. The\ntrained U-Net is then applied to the segmented Kaggle CT\nscan slices to generate nodule candidates.\nFigure 11: Modiﬁed U-Net architecture\nLayer Params Activation Output\nInput 256 x 256 x 1\nConv1a 3x3x3 ReLu 256 x 256 x 32\nConv1b 3x3x3 ReLu 256 x 256 x 32\nMax Pool 2x2, stride 2 128 x 128 x 32\nConv2a 3x3x3 ReLu 128 x 128 x 80\nConv2b 3x3x3 ReLu 128 x 128 x 80\nMax Pool 2x2, stride 2 64 x 64 x 80\nConv3a 3x3x3 ReLu 64 x 64 x 160\nConv3b 3x3x3 ReLu 64 x 64 x 160\nMax Pool 2x2, stride 2 32 x 32 x 160\nConv4a 3x3x3 ReLu 32 x 32 x 320\nConv4b 3x3x3 ReLu 32 x 32 x 320\nUp Conv4b 2x2 64 x 64 x 320\nConcat Conv4b,Conv3b 64 x 64 x 480\nConv5a 3x3x3 ReLu 64 x 64 x 160\nConv5b 3x3x3 ReLu 64 x 64 x 160\nUp Conv5b 2x2 128 x 128 x 160\nConcat Conv5b,Conv2b 128 x 128 x 240\nConv6a 3x3x3 ReLu 128 x 128 x 80\nConv6b 3x3x3 ReLu 128 x 128 x 80\nUp Conv6b 2x2 256 x 256 x 80\nConcat Conv6b,Conv1b 256 x 256 x 112\nConv6a 3x3x3 ReLu 256 x 256 x 32\nConv6b 3x3x3 ReLu 256 x 256 x 32\nConv7 3x3x3 256 x 256 x 2\nTable 2: U-Net architecture (Dropout with 0.2 probability\nafter each ‘a’ conv layer during training, ‘Up’ indicates re-\nsizing of image via bilinear interpolation, Adam Optimizer,\nlearning rate = 0.0001)\n4.3. Malignancy Classiﬁers\nOnce we trained the U-Net on the LUNA16 data,\nwe ran it on 2D slices of Kaggle data and stacked the\n5\n(c)\nFigure 8: lung segmentation mask by thresholding of sam-\nple patient\nFigure 9: ﬁnal watershed segmentation mask of sample pa-\ntient\nFigure 10: ﬁnal watershed lung seg",
+      "refs": {
+        "figures": [
+          "f7",
+          "f4",
+          "f8",
+          "f9",
+          "f3",
+          "f5",
+          "f11",
+          "f10",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "U-N ET FOR NODULE DETECTION",
+      "level": 1,
+      "text": "Feeding the entire segmented lungs into malignancy clas-\nsiﬁers made results very poor. It was likely the case that the\nentire image was too large search space. Thus feeding smaller\nregions of interest instead of the entire segmented 3D image is\nmore convenient. This was achieved by selecting small boxes\ncontaining top cancerous nodule candidates. To ﬁnd these top\nnodule candidates, a modiﬁed version of the U-Net was trained\nas described in Ronneberger et al. on LUNA16 data [18]. U-\nNet is a 2D CNN architecture that is popular for biomedical\nimage segmentation. A stripped-down version of the U-Net is\ndesigned to limit memory expense. A visualization of the U-\nNet architecture is included in Fig. 6 and is described in detail\nin Table II. During training, the modiﬁed U-Net takes as input\n256× 256 2D CT slices, and labels are provided (256 × 256\nmask where nodule pixels are 1, rest are 0).\nThe model is trained to output images of shape 256 ×",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "256 were each pixels of the output has a value between 0",
+      "level": 1,
+      "text": "and 1 indicating the probability the pixel belongs to a nodule.\nThis is done by taking the slice corresponding to label one\nof the softmax of the ﬁnal U-Net layer. Corresponding U-Net\ninputs, labels, and predictions on a patient from the LUNA16\nvalidation set is shown in Fig. 7a, 7b, and 7c, respectively.\nwww.ijacsa.thesai.org 412 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\nFigure 8: lung segmentation mask by thresholding of sam-\nple patient\nFigure 9: ﬁnal watershed segmentation mask of sample pa-\ntient\nFigure 10: ﬁnal watershed lung segmentation of sample pa-\ntient\nsoftmax of the ﬁnal U-Net layer. Corresponding U-Net in-\nputs, labels, and predictions on a patient from the LUNA16\nvalidation set is shown in Figures 12, 13, and 14 respec-\ntively. most nodules are much smaller A weighted softmax\ncross-entropy loss calculated for each pixel, as a label of\n0 is far more common in the mask than a label of 1. The\ntrained U-Net is then applied to the segmented Kaggle CT\nscan slices to generate nodule candidates.\nFigure 11: Modiﬁed U-Net architecture\nLayer Params Activation Output\nInput 256 x 256 x 1\nConv1a 3x3x3 ReLu 256 x 256 x 32\nConv1b 3x3x3 ReLu 256 x 256 x 32\nMax Pool 2x2, stride 2 128 x 128 x 32\nConv2a 3x3x3 ReLu 128 x 128 x 80\nConv2b 3x3x3 ReLu 128 x 128 x 80\nMax Pool 2x2, stride 2 64 x 64 x 80\nConv3a 3x3x3 ReLu 64 x 64 x 160\nConv3b 3x3x3 ReLu 64 x 64 x 160\nMax Pool 2x2, stride 2 32 x 32 x 160\nConv4a 3x3x3 ReLu 32 x 32 x 320\nConv4b 3x3x3 ReLu 32 x 32 x 320\nUp Conv4b 2x2 64 x 64 x 320\nConcat Conv4b,Conv3b 64 x 64 x 480\nConv5a 3x3x3 ReLu 64 x 64 x 160\nConv5b 3x3x3 ReLu 64 x 64 x 160\nUp Conv5b 2x2 128 x 128 x 160\nConcat Conv5b,Conv2b 128 x 128 x 240\nConv6a 3x3x3 ReLu 128 x 128 x 80\nConv6b 3x3x3 ReLu 128 x 128 x 80\nUp Conv6b 2x2 256 x 256 x 80\nConcat Conv6b,Conv1b 256 x 256 x 112\nConv6a 3x3x3 ReLu 256 x 256 x 32\nConv6b 3x3x3 ReLu 256 x 256 x 32\nConv7 3x3x3 256 x 256 x 2\nTable 2: U-Net architecture (Dropout with 0.2 probability\nafter each ‘a’ conv layer during training, ‘Up’ indicates re-\nsizing of image via bilinear interpolation, Adam Optimizer,\nlearning rate = 0.0001)\n4.3. Malignancy Classiﬁers\nOnce we trained the U-Net on the LUNA16 data,\nwe ran it on 2D slices of Kaggle data and stacked the\n5\nFigure 6: Modiﬁed U-Net architecture.\nFigure 12: U-Net sample input from LUNA16 validation\nset. Note that the above image has the largest nodule from\nthe LUNA16 validation set, which we chose for clarity-\nmost nodules are signiﬁcantly smaller than the largest one\nin this image.\nFigure 13: U-Net sample labels mask from LUNA16 vali-\ndation set showing ground truth nodule location\n2D slices back to generate nodule candidates (Pre-\nprocessing and reading of LUNA16 data code based\non https://www.kaggle.com/arnavkj95/\ncandidate-generation-and-luna16-preprocessing ).\nIdeally the output of U-Net would give us the exact loca-\ntions of all the nodules, and we would be able to say images\nwith nodules as detected by U-Net are positive for lung\ncancer, and images without any nodules detected by U-Net\nare negative for lung cancer. However, as shown in Figure\n14, U-Net produces a strong signal for the actual nodule,\nbut also produces a lot of false positives, so we need\nan additional classiﬁer that determines the malignancy.\nFigure 14: U-Net predicted output from LUNA16 valida-\ntion set\nBecause our U-Net generates more suspicious regions than\nactual nodules, we located the top 8 nodule candidates\n(32× 32× 32 volumes) by sliding a window over the data\nand saving the locations of the 8 most activated (largest\nL2 norm) sectors. To prevent the top sectors from simply\nbeing clustered in the brightest region of the image, the 8\nsectors we ultimately chose were not permitted to overlap\nwith each other. We then combined these sectors into a\nsingle 64× 64× 64 image, which will serve as the input to\nour classiﬁers, which assign a label to the image (cancer or\nnot cancer).\nWe use a linear classiﬁer as a baseline, a vanilla 3D\nCNN, and a Googlenet-based 3D CNN. Each of our clas-\nsiﬁers uses weighted softmax cross entropy loss (weight for\na label is the inverse of the frequency of the label in the\ntraining set) and Adam Optimizer, and the CNNs use ReLU\nactivation and droupout after each convolutional layer dur-\ning training. The vanilla 3D CNN is based on a 3D CNN de-\nsigned for this task [11]. We shrunk the network to prevent\nparameter overload for the relatively small Kaggle dataset.\nA visualization of our vanilla 3D CNN architecture is in-\ncluded in Figure 15 and described in detail in Table 3\nWe also designed a 3D Googlenet-based model is based\non the 2D model designed in Szegedy et al. for image clas-\nsiﬁcation [12]. A visualization of our 3D Googlenet is in-\ncluded in Figure 16 and described in detail in Table 4. Re-\nfer to Szegedy et al. for more information on the inception\nmodule [12].",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9",
+          "f12",
+          "f14",
+          "f11",
+          "f10",
+          "f13",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5 Results",
+      "level": 1,
+      "text": "The results are shown in Table 5, and ROC curves for the\nVanilla CNN and 3D Googlenet are shown in Figure 17.\n6\n(a)\nFigure 12: U-Net sample input from LUNA16 validation\nset. Note that the above image has the largest nodule from\nthe LUNA16 validation set, which we chose for clarity-\nmost nodules are signiﬁcantly smaller than the largest one\nin this image.\nFigure 13: U-Net sample labels mask from LUNA16 vali-\ndation set showing ground truth nodule location\n2D slices back to generate nodule candidates (Pre-\nprocessing and reading of LUNA16 data code based\non https://www.kaggle.com/arnavkj95/\ncandidate-generation-and-luna16-preprocessing ).\nIdeally the output of U-Net would give us the exact loca-\ntions of all the nodules, and we would be able to say images\nwith nodules as detected by U-Net are positive for lung\ncancer, and images without any nodules detected by U-Net\nare negative for lung cancer. However, as shown in Figure\n14, U-Net produces a strong signal for the actual nodule,\nbut also produces a lot of false positives, so we need\nan additional classiﬁer that determines the malignancy.\nFigure 14: U-Net predicted output from LUNA16 valida-\ntion set\nBecause our U-Net generates more suspicious regions than\nactual nodules, we located the top 8 nodule candidates\n(32× 32× 32 volumes) by sliding a window over the data\nand saving the locations of the 8 most activated (largest\nL2 norm) sectors. To prevent the top sectors from simply\nbeing clustered in the brightest region of the image, the 8\nsectors we ultimately chose were not permitted to overlap\nwith each other. We then combined these sectors into a\nsingle 64× 64× 64 image, which will serve as the input to\nour classiﬁers, which assign a label to the image (cancer or\nnot cancer).\nWe use a linear classiﬁer as a baseline, a vanilla 3D\nCNN, and a Googlenet-based 3D CNN. Each of our clas-\nsiﬁers uses weighted softmax cross entropy loss (weight for\na label is the inverse of the frequency of the label in the\ntraining set) and Adam Optimizer, and the CNNs use ReLU\nactivation and droupout after each convolutional layer dur-\ning training. The vanilla 3D CNN is based on a 3D CNN de-\nsigned for this task [11]. We shrunk the network to prevent\nparameter overload for the relatively small Kaggle dataset.\nA visualization of our vanilla 3D CNN architecture is in-\ncluded in Figure 15 and described in detail in Table 3\nWe also designed a 3D Googlenet-based model is based\non the 2D model designed in Szegedy et al. for image clas-\nsiﬁcation [12]. A visualization of our 3D Googlenet is in-\ncluded in Figure 16 and described in detail in Table 4. Re-\nfer to Szegedy et al. for more information on the inception\nmodule [12].",
+      "refs": {
+        "figures": [
+          "f12",
+          "f14",
+          "f13"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5 Results",
+      "level": 1,
+      "text": "The results are shown in Table 5, and ROC curves for the\nVanilla CNN and 3D Googlenet are shown in Figure 17.\n6 (b)\nFigure 12: U-Net sample input from LUNA16 validation\nset. Note that the above image has the largest nodule from\nthe LUNA16 validation set, which we chose for clarity-\nmost nodules are signiﬁcantly smaller than the largest one\nin this image.\nFigure 13: U-Net sample labels mask from LUNA16 vali-\ndation set showing ground truth nodule location\n2D slices back to generate nodule candidates (Pre-\nprocessing and reading of LUNA16 data code based\non https://www.kaggle.com/arnavkj95/\ncandidate-generation-and-luna16-preprocessing ).\nIdeally the output of U-Net would give us the exact loca-\ntions of all the nodules, and we would be able to say images\nwith nodules as detected by U-Net are positive for lung\ncancer, and images without any nodules detected by U-Net\nare negative for lung cancer. However, as shown in Figure\n14, U-Net produces a strong signal for the actual nodule,\nbut also produces a lot of false positives, so we need\nan additional classiﬁer that determines the malignancy.\nFigure 14: U-Net predicted output from LUNA16 valida-\ntion set\nBecause our U-Net generates more suspicious regions than\nactual nodules, we located the top 8 nodule candidates\n(32× 32× 32 volumes) by sliding a window over the data\nand saving the locations of the 8 most activated (largest\nL2 norm) sectors. To prevent the top sectors from simply\nbeing clustered in the brightest region of the image, the 8\nsectors we ultimately chose were not permitted to overlap\nwith each other. We then combined these sectors into a\nsingle 64× 64× 64 image, which will serve as the input to\nour classiﬁers, which assign a label to the image (cancer or\nnot cancer).\nWe use a linear classiﬁer as a baseline, a vanilla 3D\nCNN, and a Googlenet-based 3D CNN. Each of our clas-\nsiﬁers uses weighted softmax cross entropy loss (weight for\na label is the inverse of the frequency of the label in the\ntraining set) and Adam Optimizer, and the CNNs use ReLU\nactivation and droupout after each convolutional layer dur-\ning training. The vanilla 3D CNN is based on a 3D CNN de-\nsigned for this task [11]. We shrunk the network to prevent\nparameter overload for the relatively small Kaggle dataset.\nA visualization of our vanilla 3D CNN architecture is in-\ncluded in Figure 15 and described in detail in Table 3\nWe also designed a 3D Googlenet-based model is based\non the 2D model designed in Szegedy et al. for image clas-\nsiﬁcation [12]. A visualization of our 3D Googlenet is in-\ncluded in Figure 16 and described in detail in Table 4. Re-\nfer to Szegedy et al. for more information on the inception\nmodule [12].",
+      "refs": {
+        "figures": [
+          "f12",
+          "f14",
+          "f13"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5 Results",
+      "level": 1,
+      "text": "The results are shown in Table 5, and ROC curves for the\nVanilla CNN and 3D Googlenet are shown in Figure 17.\n6 (c)\nFigure 7: (7a) U-Net sample input from LUNA16 validation\nset. Note that the above image has the largest nodule from\nthe LUNA16 validation set, which we chose for clarity-most\nnodules are signiﬁcantly smaller than the largest one in this\nimage, (7b) U-Net predicted output from LUNA16 validation\nset, (7c) U-Net sample labels mask from LUNA16 validation\nset showing ground truth nodule location.\nMost nodules are much smaller. A weighted softmax cross-\nentropy loss calculated for each pixel, as a label of 0 is far\nmore common in the mask than a label of 1. The trained U-\nNet is then applied to the segmented Kaggle CT scan slices to\ngenerate nodule candidates.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "M ALIGNANCY 3D CNN C LASSIFIERS",
+      "level": 1,
+      "text": "Once the U-Net was trained on the LUNA16 data, it is ran\non 2D slices of Kaggle data and stacked the 2D slices back\nto generate nodule candidates 1. Ideally the output of U-Net\nwould give the exact locations of all the nodules, and it would\nbe able to declare images with nodules as detected by U-Net\nare positive for lung cancer, and images without any nodules\ndetected by U-Net are negative for lung cancer. However, as\nshown in Fig. 7c, U-Net produces a strong signal for the actual\nnodule, but also produces a lot of false positives, so we need\nan additional classiﬁer that determines the malignancy.\nBecause U-Net generates more suspicious regions than\nactual nodules, the top 8 nodule candidates are located (32×\n32×32volumes) by sliding a window over the data and saving\nthe locations of the 8 most activated (largest L2 norm) sectors.\nTo prevent the top sectors from simply being clustered in the\nbrightest region of the image, the 8 sectors were not permitted\nto overlap with each other. Then these sectors are combined\n1Preprocessing and reading of LUNA16 data code based on\nhttps://www.kaggle.com/arnavkj95/ candidate-generation-and-luna16-\npreprocessing\nTable II: U-Net Architecture (Dropout with 0.2 Probability\nafter each ‘a’ Conv. Layer during Training, ‘Up’ Indicates\nResizing of Image via Bilinear Interpolation, Adam Optimizer,\nLearning Rate = 0.0001)\nLayer Params Activation Output\nInput 256 × 256 × 1\nConv1a 3 × 3× 32 ReLu 256 × 256 × 32\nConv1b 3 × 3× 32 ReLu 256 × 256 × 32\nMax Pool 2× 2, stride 2 128 × 128 × 32\nConv2a 3 × 3× 80 ReLu 128 × 128 × 80\nConv2b 3×3× 80 ReLu 128 × 128 × 80\nMax Pool 2× 2, stride 2 64 × 64 × 80\nConv3a 3× 3× 160 ReLu 64 × 64 × 160\nConv3b 3× 3× 160 ReLu 64 × 64 × 160\nMax Pool 2× 2, stride 2 32 × 32 × 160\nConv4a 3× 3× 320 ReLu 32 × 32 × 320\nConv4b 3× 3× 320 ReLu 32 × 32 × 320\nUp Conv4b 2×2 64 × 64 × 320\nConcat Conv4b,Conv3b 64 × 64 × 480\nConv5a 3× 3× 160 ReLu 64 × 64 × 160\nConv5b 3× 3× 160 ReLu 64 × 64 × 160\nUp Conv5b 2× 2 128 × 128 × 160\nConcat Conv5b,Conv2b 128 × 128 × 240\nConv6a 3× 3× 80 ReLu 128 × 128 × 80\nConv6b 3× 3× 80 ReLu 128 × 128 × 80\nUp Conv6b 2×2 256 × 256 × 80\nConcat Conv6b,Conv1b 256 × 256 × 112\nConv6a 3× 3× 32 ReLu 256 × 256 × 32\nConv6b 3× 3× 32 ReLu 256 × 256 × 32\nConv7 3× 3× 3 256 × 256 × 2\ninto a single 64×64×64 image, which will serve as the input\nto classiﬁers, which assign a label to the image (cancer or not\ncancer).\nA 3D CNN is used as linear classiﬁer. It uses weighted\nsoftmax cross entropy loss (weight for a label is the inverse\nof the frequency of the label in the training set) and Adam\nOptimizer, and the CNNs use ReLU activation and droupout\nafter each convolutional layer during training. The network is\nshrunk to prevent parameter overload for the relatively small\nKaggle dataset. The 3D CNN architecture is described in detail\nin Table III.\nConvolutional neural network consists of some number of\nconvolutional layers, followed by one or more fully connected\nlayers and ﬁnally an output layer. An example of this archi-\ntecture is illustrated in Fig. 8.\nFigure 4. An example architecture of a 3D Convolutional Neural Network used here. On the left is the input 3D volume, followed by two\nconvolutional layers, a fully connected layers and an output layer. In the convolutional layers, each ﬁlter (or channel) is represented by a\nvolume.\nits orientation in the CT scan. In the remainder of this sec-\ntion, we describe the technical details of the neural network\narchitecture we used and how it was trained.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "2.2.1 Convolutional Neural Networks",
+      "level": 3,
+      "text": "A convolutional neural network consists of some number\nof convolutional layers, followed by one or more fully con-\nnected layers and ﬁnally an output layer. An example of\nthis architecture is illustrated in Figure 4. Formally, we de-\nnote the input to layer m of the network by I (m) . The\ninput to a 3D convolutional layer m of a neural network is\nan(m−1)\n1 ×n(m−1)\n2 ×n(m−1)\n3 3D object withn(m−1)",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "chan-",
+      "level": 1,
+      "text": "nels, so I (m−1)∈ Rn(m−1)\n1 ×n(m−1)\n2 ×n(m−1)\n3 ×n(m−1)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "and its",
+      "level": 1,
+      "text": "elements are denoted by I (m,ℓ)\ni,j,k where i, j, and k index\nthe 3D volume and ℓ selects the channel. The output of\na convolutional layer m is deﬁned by its dimensions, i.e.,\nn(m)\n1 ×n(m)\n2 ×n(m)\n3 as well as the number of ﬁlters or chan-\nnels it produces n(m)\nc . The output of layer m is a convolu-\ntion of its input with a ﬁlter and is computed as\nI (m,ℓ)\ni,j,k =ftanh(b(m,ℓ)+\n∑\ni′,j′,k′,ℓ′\nI (m−1,ℓ′)\ni′,j′,k′ W (m,ℓ)\ni−i′,j−j′,k−k′,ℓ′)\n(3)\nwhere W (m,ℓ) and b(m,ℓ) are the parameters which deﬁne\ntheℓth ﬁlter in layer m The locations where the ﬁlters are\nevaluated (i.e., the values ofi,j,k for whichI (m,ℓ)\ni,j,k is com-\nputed) and the size of the ﬁlters ( i.e., the values of W (m,ℓ)\nwhich are non-zero) are parameters of the network architec-\nture. Finally, we use a hyperbolic tangent activation func-\ntion withftanh(a) = tanh(a).\nConvolutional layers preserve the spatial structure of the\ninputs, and as more layers are used, build up more and more\ncomplex representations of the input. The output of the con-\nvolutional layers is then used as input to a fully connected\nnetwork layer. To do this, the spatial and channel struc-\nture is ignored and the output of the convolutional layer is\ntreated as a single vector. The output of a fully connected\nis a 1D vector I (m) whose dimension is a parameter of the\nnetwork architecture. The output of neuron i in layer m is\ngiven by\nI (m)\ni =fReLU\n\nb(m,i) +\n∑\nj\nI (m−1)\nj W (m,i)\nj\n\n (4)\nwhereW (m,i) andb(m,i) are the parameters of neuron i in\nlayer m and the sum over j is a sum over all dimensions\nof the input. The activation function fReLU(·) here is cho-\nsen to be a Rectiﬁed Linear Unit (ReLU) with fReLU(a) =\nmax(0,a ). This activation function has been widely used in\na number of domains [24, 16] and is believed to be particu-\nlarly helpful in classiﬁcation tasks as the sparsity it induces\nin the outputs helps create separation between classes dur-\ning learning [17, 3].\nThe last fully connected layer is used as input to the out-\nput layer. The structure and form of the output layer de-\npends on the particular task. Here we consider two different\ntypes of output functions. In classiﬁcation problems withK\nclasses, a common output function is the softmax function\nfi = exp(I (o)\ni )\n∑\nj exp(I (o)\nj )\n(5)\nI (o)\ni = b(o,i) +\nK∑\nk=1\nW (o,i)\nk I (N )\nk (6)\nwhereN is the index of the last fully connected layer,b(o,i)\nandW (o,i) are the parameters of theith output unit andfi∈\n[0, 1] is the output for classi which can be interpreted as the\nprobability of that class given the inputs. We also consider\na variation on the logistic output function\nf =a+(b−a)\n\n1 + exp(b(o) +\n∑\nj\nW (o)\nj I (N )\nj )\n\n\n−1\n(7)\nFigure 8: An example architecture of a 3D convolutional neural\nnetwork used here. On the left is the input 3D volume, followed\nby two convolutional layers, a fully connected layers and an\noutput layer. In the convolutional layers, each ﬁlter (or channel)\nis represented by a volume.\nFormally, we denote the input to layer m of the network\nby I (m). The input to a 3D convolutional layer m of a neural\nnetwork is an(m−1)\n1 ×n(m−1)\n2 ×n(m−1)\n3 3D object withn(m−1)\nc\nwww.ijacsa.thesai.org 413 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\nso I (m−1) ∈ (Rn(m−1)\n1 ×n(m−1)\n2 ×n(m−1)",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3 and its elements are",
+      "level": 1,
+      "text": "denoted by I (m,ℓ)\ni,j,k where i, j, and k index the 3D volume and\nℓ selects the channel. The output of a convolutional layer m is\ndeﬁned by its dimensions, i.e., n(m)\n1 ×n(m)\n2 ×n(m)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3 as well as",
+      "level": 1,
+      "text": "the number of ﬁlters or channels it produces n(m)\nc . The output\nof layer m is a convolution of its input with a ﬁlter and is\ncomputed as\nI (m,ℓ)\ni,j,k =ftanh(b(m,ℓ) +\n∑\n˜i,˜j,˜k, ˜ℓ\nI (m−1,˜ℓ)\n˜i,˜j,˜k W (m,ℓ)\ni−˜i,j−˜j,k−˜k, ˜ℓ) (1)\nwhere,W (m,ℓ) andb(m,ℓ) are the parameters which deﬁne\nthe ℓth ﬁlter in layer m The locations where the ﬁlters\nare evaluated (i.e., the values of i,j,k for which I (m,ℓ)\ni,j,k is\ncomputed) and the size of the ﬁlters (i.e., the values ofW (m,ℓ))\nwhich are non-zero) are parameters of the network architecture.\nFinally, we use a hyperbolic tangent activation function with\nftanh(a) =tanh(a).\nConvolutional layers preserve the spatial structure of the\ninputs, and as more layers are used, build up more and\nmore complex representations of the input. The output of the\nconvolutional layers is then used as input to a fully connected\nnetwork layer. To do this, the spatial and channel structure is\nignored and the output of the convolutional layer is treated\nas a single vector. The output of a fully connected is a 1D\nvector I (m) whose dimension is a parameter of the network\narchitecture. The output of neuron i in layer m is given by\nI (m)\ni =fReLU\n\nb(m,i) +\n∑\nj\nI (m−1)\nj W (m,i)\nj\n\n (2)\nwhere,W (m,i) andb(m,i) are the parameters of neuron i in\nlayerm and the sum overj is a sum over all dimensions of the\ninput. The activation function fReLU(.) here is chosen to be\na Rectiﬁed Linear Unit (ReLU) with fReLU(a) =max(0,a ).\nThis activation function has been widely used in a number of\ndomains [19], [20] and is believed to be particularly helpful\nin classiﬁcation tasks as the sparsity it induces in the outputs\nhelps create separation between classes during learning.\nThe last fully connected layer is used as input to the output\nlayer. The structure and form of the output layer depends on\nthe particular task. Here we consider two different types of\noutput functions. In classiﬁcation problems with K classes, a\ncommon output function is the softmax function:\nfi = exp(I (o)\ni )\n∑\njexp(I (o)\nj )\n(3)\nI (o)\ni =b(o,i) +\nK∑\nk=1\nW (o,i)\nk I (N )\nk (4)\nwhere, N is the index of the last fully connected layer,\nb(o,i) and W (o,i) are the parameters of the ith output unit and\nfi∈ [0, 1] is the output for class i which can be interpreted as\nthe probability of that class given the inputs. We also consider\na variation on the logistic output function:\nf =a + (b−a)\n\n1 +exp(b(o) +\n∑\nj\nW (o)\nj I (N )\nj\n\n\n−1\n(5)\nwhich provides a continuous outputf which is restricted to\nlie in the range (a,b ) with parameters b(o) and W (o). We call\nthis the scaled logistic output function. We note that when\nconsidering a ranking-type multi-class classiﬁcation problem\nlike predicting the malignancy level this output function might\nbe expected to perform better.\nTable III: 3D CNN Architecture (Dropout with 0.2, Adam\nOptimizer, Learning Rate = 0.0001)\nLayer Params Activation Output\nInput 28 × 28 × 28\nConv1 5 × 5× 5 ReLu 28 × 28 × 28× 7\nMax Pool 1× 1× 1, stride 2 × 2× 4 14 × 14 × 7 × 7\nConv2 5 × 5× 3 ReLu 14 × 14 × 7 × 17\nMax Pool 2× 2 × 2, stride 1 × 1 × 0 6 × 6 × 3 × 17\nDense 256\nDense 2\nA. Training\nGiven a collection of data and a network architecture, the\nmain goal is to ﬁt the parameters of the network to that data.\nTo do this we will deﬁne an objective function and use gradient\nbased optimization to search for the network parameters which\nminimize the objective function. Let D = ni,y iD\ni=1 be the\nset of D (potentially augmented) training examples where n\nis an input (a portion of a CT scan) and y is the output\n(the malignancy level or a binary class indicating benign or\nmalignant) and Θ denote the collection of all weights W and\nbiases b for all layers of the network. The objective function\nhas the form\nE(Θ) =\nD∑\ni=1\nL(yi,f (ni, Θ)) +λEprior(Θ) (6)\nwhere,f(ni, Θ)) is the output of the network evaluated on\ninput n with parameters Θ,L (yi,f (ni, Θ)) is a loss function\nwhich penalizes differences between the desired output of the\nnetwork y and the prediction of the network ˆy. The function\nEprior(Θ) = ∥W∥2 is a weight decay prior which helps\nprevent over-ﬁtting by penalizing the norm of the weights and\nλ controls the strength of the prior.\nWe consider two different objective functions in this paper\ndepending on the choice of output function. For the softmax\noutput function we use the standard cross-entropy loss function\nL(yi, ˆy) = − ∑K\nk=1yklog(ˆyk) where y is assumed to be a\nbinary indicator vector and ˆy is assumed to be a vector of\nprobabilities for each of the K classes. A limitation of a cross-\nentropy loss is that all class errors are considered equal, hence\nmislabeling a malignancy level 1 as a level 2 is considered just\nas bad as mislabeling it a 5. This is clearly problematic, hence\nfor the scaled logistic function we use the squared error loss\nfunction to capture this. Formally, L(yi, ˆy) = (y− ˆy)2 where\nwe assume y and ˆy to be real valued.\nGiven the objective function E(Θ), the parameters Θ are\nlearned using stochastic gradient descent (SGD) [21]. SGD\nwww.ijacsa.thesai.org 414 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\noperates by randomly selecting a subset of training examples\nand updating the values of the parameters using the gradient\nof the objective function evaluated on the selected examples.\nTo accelerate progress and reduce noise due to the random\nsampling of training examples we use a variant of SGD with\nmomentum [22]. Speciﬁcally, at iteration t, the parameters are\nupdated as\nΘt+1 = Θt +△Θt+1 (7)\n△Θt+1 =ρ△Θt−ϵ∇Et(Θt) (8)\nwhere, ρ = 0.9 is the momentum parameter, △Θt+1 is\nthe momentum vector, ϵt is the learning rate and ∇Et(Θt)\nis the gradient of the objective function evaluated using only\nthe training examples selected at iteration t. At iteration 0,\nall biases are set to 0 and the values of the ﬁlters and\nweights are initialized by uniformly sampling from the inter-\nval [−\n√\n6\nfan in+fan out\n,\n√\n6\nfan in+fan out\n] as suggested by [23]\nwhere fan in and fan out respectively denote the number of\nnodes in the previous hidden layer and in the current layer.\nGiven this initialization and setting ϵt = 0.01, SGD is running\nfor 2000 epochs, during which ϵt is decreased by 10% every\n25 epochs to ensure convergence.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "S IMULATION RESULTS",
+      "level": 1,
+      "text": "The experiments are conducted using DSB dataset. In\nthis dataset, a thousand low-dose CT images from high-risk\npatients in DICOM format is given. The DSB database consists\nof 1397 CT scans and 248580 slices. Each scan contains a\nseries with multiple axial slices of the chest cavity. Each scan\nhas a variable number of 2D slices (Fig. 9), which can vary\nbased on the machine taking the scan and patient. The DICOM\nﬁles have a header that contains the necessary information\nabout the patient id, as well as scan parameters such as the\nslice thickness. It is publicly available in the Kaggle [13].\nDicom is the de-facto ﬁle standard in medical imaging. This\npixel size/coarseness of the scan differs from scan to scan\n(e.g. the distance between slices may differ), which can hurt\nperformance of our model.\n0 200 400 600 800 1000 1200 1400\n0\n100\n200\n300\n400\n500",
+      "refs": {
+        "figures": [
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "600 Number of Slices for each Patient",
+      "level": 1,
+      "text": "Patient Number\nNumber of Slices\n \n \nNumber of Slices\nFigure 9: Number of slices per patient in data science bowl\ndataset.\nThe experiments are implemented on computer with CPU\ni7, 2.6 GHz, 16 RAM, Matlab 2013b, R-Studio, and Python.\nInitially speaking, the nodules in DSB dataset are detected and\nsegmented using thresholding and U-Net Convolutional Neural\nNetwork. The diameters of the nodules range from 3 to 30 mm.\nEach slice has 512× 512 pixels and 4096 gray level values in\nHounsﬁeld Unit (HU), which is a measure of radiodensity.\nIn the screening setting, one of the most difﬁcult decisions\nis whether CT or another investigation is needed before the\nnext annual low-dose CT study. Current clinical guidelines are\ncomplex and vary according to the size and appearance of the\nnodule. The majority of nodules were solid in appearance. For\npulmonary nodule detection using CT imaging, CNNs have\nrecently been used as a feature extractor within a larger CAD\nsystem.\nFor simplicity in training and testing we selected the\nratings of a single radiologist. All experiments were done using\n50% training set, 20% validation set and 30% testing set. To\nevaluate the results we considered a variety of testing metrics.\nThe accuracy metric is the used metric in our evaluations. In\nour ﬁrst set of experiments we considered a range of CNN\narchitectures for the binary classiﬁcation task. Early experi-\nmentation suggested that the number of ﬁlters and neurons per\nlayer were less signiﬁcant than the number of layers. Thus, to\nsimplify analysis the ﬁrst convolutional layer used seven ﬁlters\nwith size 5×5×5, the second convolutional layer used 17 ﬁlters\nwith 5×5×3 and all fully connected layers used 256 neurons.\nThese were found to generally perform well and we considered\nthe impact of one or two convolutional layers followed by one\nor two fully connected layers. The networks were trained as\ndescribed above and the results of these experiments can be\nfound in Table I. Our results suggest that two convolutional\nlayers followed by a single hidden layer is one of the optimal\nnetwork architecture for this dataset. The average error for\ntraining is described in Fig. 10.\n0 10 20 30 40 50 60 70 80 90 100\n0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n3D CNN Training Error\nIteration Number\nAverage Training Error\nFigure 10: Average training error in 3D CNN.\nAnother important parameter in the training of neural\nnetworks is the number of observations that are sampled\nwww.ijacsa.thesai.org 415 | P a g e\n(IJACSA) International Journal of Advanced Computer Science and Applications,\nV ol. 8, No. 8, 2017\nat each iteration, the size of the so-called minibatch. The\nuse of minibatches is often driven in part by computational\nconsiderations but can impact the ability of SGD to ﬁnd a\ngood solution. Indeed, we found that choosing the proper\nminibatch size was critical for learning to be effective. We\ntried minibatches of size 1, 10, 50 and 100. While the nature\nof SGD suggests that larger batch sizes should produce better\ngradient estimates and therefor work better, our results here\nshow that the opposite is true. Smaller batch sizes, even as\nsmall as 1, produce the best results. We suspect that the added\nnoise of smaller batch sizes allows SGD to better escape poor\nlocal optima and thus perform better overall.\nThe recognition results are shown by confusion matrix\nachieved on the DSB dataset with 3D CNN as shown in Table\nIV. As shown from the Table IV, Accuracy of model is 86.6%,\nMis-classiﬁcation rate is 13.4%, False positive rate is 11.9%,\nand False Negative is 14.7%. Almost all patients are classiﬁed\ncorrectly. Additionally, there is an enhancement on accuracy\ndue to efﬁcient U-Net architecture and segmentation.\nTable IV: Confusion Matrix of 3D CNN using 30% Testing\nPredicted\nAbnormal Normal\nActual\nAbnormal 0.853 0.147\nNormal 0.119 0.881",
+      "refs": {
+        "figures": [
+          "f9",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "C ONCLUSION",
+      "level": 1,
+      "text": "In this paper we developed a deep convolutional neural net-\nwork (CNN) architecture to detect nodules in patients of lung\ncancer and detect the interest points using U-Net architecture.\nThis step is a preprocessing step for 3D CNN. The deep 3D\nCNN models performed the best on the test set. While we\nachieve state-of-the-art performance AUC of 0.83, we perform\nwell considering that we use less labeled data than most state-\nof-the-art CAD systems. As an interesting observation, the\nﬁrst layer is a preprocessing layer for segmentation using\ndifferent techniques. Threshold, Watershed, and U-Net are used\nto identify the nodules of patients.\nThe network can be trained end-to-end from raw image\npatches. Its main requirement is the availability of training\ndatabase, but otherwise no assumptions are made about the\nobjects of interest or underlying image modality.\nIn the future, it could be possible to extend our current\nmodel to not only determine whether or not the patient has\ncancer, but also determine the exact location of the cancerous\nnodules. The most immediate future work is to use Watershed\nsegmentation as the initial lung segmentation. Other oppor-\ntunities for improvement include making the network deeper,\nand more extensive hyper parameter tuning. Also, we saved\nour model parameters at best accuracy, but perhaps we could\nhave saved at other metrics, such as F1. Other future work\ninclude extending our models to 3D images for other cancers.\nThe advantage of not requiring too much labeled data speciﬁc\nto our cancer is it could make it generalizable to other cancers.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "2D CT scan slice containing a small (5mm) early"
+    },
+    {
+      "id": "f2",
+      "caption": "3D convolutional neural networks architecture."
+    },
+    {
+      "id": "f4",
+      "caption": "However, to account for the possibility that some"
+    },
+    {
+      "id": "f8",
+      "caption": ") are largely reincluded. However, this is much less"
+    },
+    {
+      "id": "f3",
+      "caption": "3a Histogram of HU values at 3b corresponding axial"
+    },
+    {
+      "id": "f5",
+      "caption": "Sample patient bronchioles within lung"
+    },
+    {
+      "id": "f6",
+      "caption": "Sample patient ﬁnal mask in which bronchioles"
+    },
+    {
+      "id": "f7",
+      "caption": "original 2D slice of sample patient"
+    },
+    {
+      "id": "f9",
+      "caption": "ﬁnal watershed segmentation mask of sample pa-"
+    },
+    {
+      "id": "f10",
+      "caption": "ﬁnal watershed lung segmentation of sample pa-"
+    },
+    {
+      "id": "f11",
+      "caption": "Modiﬁed U-Net architecture"
+    },
+    {
+      "id": "f12",
+      "caption": "U-Net sample input from LUNA16 validation"
+    },
+    {
+      "id": "f13",
+      "caption": "U-Net sample labels mask from LUNA16 vali-"
+    },
+    {
+      "id": "f14",
+      "caption": "U-Net predicted output from LUNA16 valida-"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "typical radiodensities in HU of various substances"
+    },
+    {
+      "id": "t2",
+      "caption": "U-Net architecture (Dropout with 0.2 probability"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 14,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

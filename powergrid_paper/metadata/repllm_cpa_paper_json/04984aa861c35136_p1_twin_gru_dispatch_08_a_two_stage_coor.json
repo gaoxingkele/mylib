@@ -1,0 +1,373 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__08__a_two_stage_coordinated_dispatch_framework_for_integrated_energy_syste__4dadd14e4b.pdf",
+  "n_pages": 33,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 ZJU-UIUC, Zhejiang University, Haining 314400, China",
+      "level": 1,
+      "text": "* Correspondence: ruishengdiao@intl.zju.edu.cn\nAbstract\nWith the strategic advancement of energy structure transformation and the implementation\nof carbon peaking and carbon neutrality goals, the Integrated Energy System (IES) has\nbecome a core research direction owing to its superior performance in multi-energy com-\nplementation, operational efficiency, and low-carbon emission characteristics. Nevertheless,\nexisting studies reveal that the optimal operation of IES still faces significant challenges,\nincluding the high complexity of multi-energy coupling, supply–demand imbalance caused\nby renewable energy penetration, and insufficient exploitation of demand-side flexibil-\nity. As a core measure of demand-side management, demand response (DR) provides\nan effective approach to motivate users to adjust power load via price incentives or di-\nrect load control. DR can effectively smooth load profiles, improve resource utilization,\nand boost the consumption level of renewable energy. To meet the operational demands\nof modern IES, this paper establishes a security-constrained economic dispatch model\nembedded with multi-level demand response mechanisms. The proposed framework is\ndivided into four key modules: First, a price-based demand response strategy is developed\nto dynamically guide users in regulating multi-energy consumption behaviors. Second,\nelectric vehicles (EVs) are considered flexible demand-side resources with unique response\ncharacteristics. An aggregated EV charging–discharging model is established to suppress\npower fluctuations and support high proportions of renewable energy integration. Third, to\nprecisely calculate the overall operating cost of IES, a combined economic evaluation index\nintegrating time-of-use tariff and Levelized Cost of Electricity is adopted. It maintains a\nbalance between amortized long-term generation investment and short-term operational\nexpenditure, and coordinates the economic benefits and operational reliability of the whole\nsystem. Finally, numerical simulations are performed on a coupled test system comprising\nan IEEE 33-bus distribution network and a 20-node natural gas network. Simulation re-\nsults verify that the proposed co-optimization model can effectively reduce total system\noperating costs and greatly improve the local assumption of fluctuating renewable energy.\nKeywords: integrated energy system; demand response; vehicle-to-grid; renewable energy\nintegration; economic dispatch",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Driven by the goals of carbon peaking and carbon neutrality, the global energy struc-\nture is undergoing a profound transition from a centralized fossil-fuel-dominated paradigm\nEnergies 2026, 19, 3238 https://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 2 of 33\nto a decarbonized, distributed, and multi-vector configuration [1]. Against this backdrop,\nthe Integrated Energy System (IES) has gained traction as an infrastructure that ties electric-\nity, natural gas, heat, and cooling into one framework; because these carriers are coupled\nand energy can be converted across them, resources are used in cascade rather than carrier\nby carrier [2]. Compared with conventional decoupled energy networks, the IES offers\nsignificant advantages in accommodating renewable energy, achieving comprehensive\nenergy efficiency, and reducing carbon emissions [ 3]. However, the high proportion of\nintegration of fluctuating renewables, the strong nonlinear coupling among diverse energy\ncarriers, and the insufficient exploitation of demand-side flexibility have posed significant\nchallenges to the secure and economic operation of the IES [ 4]. Therefore, developing a\ncoordinated co-optimization scheduling framework that fully unlocks supply-side and\ndemand-side flexibility has become a research focus in recent years [5].\nAs a core measure of demand-side management, demand response (DR) provides\nan effective approach to motivate end users to actively regulate their energy consump-\ntion through price incentives or direct load control [6]. Among various DR mechanisms,\nprice-based demand response (PDR) guided by time-of-use (TOU) tariffs has been widely\nadopted owing to its market compatibility, minimal administrative intervention, and broad\nsocial acceptability [7]. Reference [8] established a TOU pricing model based on a cross-\nprice elasticity matrix to characterize consumers’ multi-period, interdependent response\nbehaviors. In reference [9], a multi-energy PDR framework was developed for an IES opera-\ntor, in which shiftable and interruptible loads were jointly scheduled to flatten the net-load\ncurve. Reference [10] proposed a dynamic TOU pricing mechanism that accounts for both\nwholesale procurement cost volatility and peak-to-valley regulation, thereby improving\npeak shaving performance. A Stackelberg game between the operator and multi-energy\nconsumers was solved in [11] to recover the optimal retail price vector, while [12] folded\nrenewable forecast uncertainty into a real-time pricing scheme so that flexible loads would\nrespond more sharply to scarcity. Taken together, these works confirm that PDR can re-\nshape the load profile. What they share is a narrow treatment of the TOU price vector: it is\nbounded but otherwise left free, and the constraints that keep the market itself stable—caps\non the peak-to-valley ratio, an enforced ordering of peak, flat, and valley tariffs—are rarely\nwritten into the formulation, even though it is precisely these limits that protect social\nwelfare and head off clearing failures.\nAlongside these stationary resources, the spread of electric vehicles (EVs) has turned\nthe vehicle-to-grid (V2G) concept into a fast-acting source of flexibility [ 13]. With bidi-\nrectional chargers, an aggregated fleet behaves like distributed mobile storage: it soaks\nup surplus renewable output overnight and returns energy to the grid when demand\npeaks [14]. A series of modeling efforts builds on this idea. The aggregated dispatch model\nin [15] represents the random arrival and departure of vehicles with normal distributions;\nref. [16] coordinates charging to damp wind fluctuations and curb curtailment; ref. [ 17]\nstudies V2G supplying ancillary services such as frequency regulation and spinning reserve\ninside a distribution network; and [18] embeds V2G in microgrid energy management to\nprice the gains from two-way exchange. Comparing uncoordinated against coordinated\noperation, ref. [19] then quantifies how V2G smooths load and steadies voltage. What these\nstudies have in common is that they stay almost entirely within the electrical subsystem,\nand seldom ask how V2G flexibility travels into a coupled carrier—above all how it relieves\nthe gas network indirectly by trimming the peaking duty of gas turbines.\nFor the IES involving electricity and natural gas, cross-carrier coupling is primarily\nachieved through Combined Heat and Power (CHP) units, gas-fired turbines, and power-\nto-gas (P2G) facilities, which together form a bidirectional energy loop [20]. Reference [21]\nformulated a joint optimal power–gas flow model and demonstrated that multi-energy co-\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 3 of 33\nordination can effectively mitigate localized congestion in both networks. In reference [22],\na P2G-based mechanism was developed to convert surplus wind generation into synthetic\nnatural gas, achieving deep renewable accommodation. A security-constrained co-dispatch\nframework in [23] writes the Weymouth pipeline-flow equation directly into the problem,\nand [24] goes a step further, carrying the gas network’s multi-period nodal pressures and\nline-pack behavior into a day-ahead schedule; ref. [25] then layers on renewable uncertainty\nand gas-source production limits. So, the physical electricity–gas coupling is modeled in\nsteadily finer detail, yet the demand side stays underexplored—in particular, how PDR\nand V2G act together to relax the stress that accumulates between the two networks.\nOn the methodological side, IES scheduling is most often cast as a mixed-integer linear\nprogram (MILP), which solves reliably and runs on off-the-shelf commercial solvers [26].\nNonlinear terms—the Weymouth gas-flow relation and the quadratic generator cost\ncurves—are handled through piecewise linearization, keeping the model within reach\nof those solvers [27]. From the economic evaluation perspective, conventional dispatch\nmodels often consider only short-term operational expenditures while neglecting the lifecy-\ncle degradation of capital-intensive assets such as electrochemical energy storage systems\n(EESS). To address this issue, the Levelized Cost of Electricity (LCOE) framework has been\nintroduced to amortize lifecycle capital and maintenance expenditures over the asset oper-\nating horizon [28]. Reference [29] integrated LCOE-based depreciation costs for EESS into\na day-ahead dispatch model to prevent overly optimistic charging–discharging schedules.\nNevertheless, few studies have combined the LCOE evaluation with both TOU-based PDR\nand V2G coordination under a unified electricity–gas IES scheduling framework.\nIn response to the above analyses, this paper establishes a security-constrained eco-\nnomic co-optimization scheduling model for a coupled electricity–gas IES that embeds\nmulti-level demand-side flexibility mechanisms. A TOU-based PDR strategy that considers\ncross-price elasticities and market stability constraints is developed to dynamically reshape\nmulti-energy consumption profiles. An aggregated V2G model with stochastic mobility\npatterns is developed to exploit the bidirectional flexibility of EV fleets. A combined eco-\nnomic evaluation index integrating TOU tariff and LCOE is adopted to balance short-term\noperational expenditure and long-term asset depreciation. The main contributions of this\npaper are summarized as follows.\n(1) Under a coupled power–gas IES architecture, the synergistic interaction between PDR\nand V2G is comprehensively considered, which fully unlocks demand-side flexibility\nand coordinates the supply–demand balance across electricity and natural gas vectors.\n(2) The PDR framework rests on a TOU tariff and a cross-price elasticity description of\nuser behavior, but unlike most formulations it is fenced in by explicit market-stability\nconstraints: the peak, flat, and valley tariffs must keep their ordering, and the peak-\nto-valley ratio is held within fixed bounds. User adaptation is therefore captured\nmathematically without let",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Operational Mechanisms for IES-DR",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Operator Architecture and Energy Flow Model for IES",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.1 Structure of the IES Operator",
+      "level": 3,
+      "text": "The Integrated Energy System (IES), serving as a crucial physical paradigm of the mod-\nern Energy Internet, is an advanced energy infrastructure that organically synthesizes the\nproduction, transmission, storage, and consumption of diverse energy vectors—including\nelectricity, thermal energy, natural gas, and cooling power—via highly interconnected\nphysical distribution and transmission multi-networks, thereby achieving cross-carrier\nmulti-energy synergy, cascade utilization, and low-carbon transformations. Inside this\nsystem, the IES Operator (IESO) is the entity that actually runs things: it manages the\ninternal co-dispatch, decides how the multi-carrier coupling components are configured,\nand handles clearing and settlement in the retail energy markets. Its makeup is corre-\nspondingly broad, spanning source-side input interfaces, the cross-carrier conversion grids,\nhybrid storage banks, terminal load-control systems, and a Cyber-Physical Systems (CPS)\nmanagement center. This is a departure from the older picture of an isolated power or gas\ndispatcher; the operator now aggregates several energy streams at once, converts among\nthem, coordinates the network as a whole, and matches supply to end-use demand as\nconditions change. By dissolving the physical and managerial divisions that come with\nrunning each carrier on its own, the IESO becomes a single digital control entity with\nunified dispatch authority—which in turn hardens the system against the shocks of high\nrenewable penetration and opens room to develop the multi-energy market.\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 5 of 33",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.2 Analysis of Internal Energy Flow and Coupling Characteristics",
+      "level": 3,
+      "text": "Complex nonlinear coupling and multi-form transformations among electricity, heat,\ngas, and cooling vectors across spatiotemporal scales interweave within the IES’s internal\narchitecture as shown as Figure 1. On the energy input side, the IES exhibits strong\ninclusivity, accommodating diverse multi-energy streams from upstream wholesale markets\nand natural energy networks. These include highly stochastic, volatile clean power from\nwind turbines and photovoltaic arrays; thermal energy harvested from gas boilers; deep\ngeothermal resources; and industrial waste heat recovery systems, as well as natural\ngas sourced from primary high-pressure pipelines. During the internal conversion stage,\nvarious multi-energy converters serve as physical nodes for energy transmission. Take\nelectric heat pumps (HPs): their high coefficient of performance (COP) lets high-grade\nelectricity be turned into heat or cooling at low loss. Power-to-gas (P2G) units run in the\nopposite direction, drawing on surplus or cheaply curtailed wind and solar to electrolyze\nwater and convert the resulting hydrogen, which opens a reverse path from electricity\nback to gas and lets energy move across the two grids. Combined Heat and Power (CHP)\nunits consume natural gas to generate high-grade electricity and usable thermal energy\nsimultaneously, serving as core devices for multi-energy coupling. Absorption chillers\nfurther recover high-temperature waste heat from CHPs or boilers to produce cooling\nenergy, realizing cascade utilization of thermal energy for cooling supply. On the energy\nstorage and regulation side, the system organically integrates a hybrid energy storage\nsystem comprising lithium-ion batteries, vanadium redox flow batteries, hot water tanks,\nice storage tanks, and underground gas storage caverns, thereby extending the temporal\nflexibility of energy dispatch. On the terminal demand side, load profiles cover highly\ninterruptible heavy industrial loads, shiftable thermal and cooling loads with strong thermal\ninertia, and spatially movable Vehicle-to-Grid (V2G) bidirectional charging piles. The\ninherent temporal inertia of thermal and gas energy, coupled with multi-dimensional\nspatial energy conversions, defines the physical boundaries and mathematical constraints\nfor internal energy flow optimization [30].\n \n \nFigure 1. The structure of the IES.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 TOU Pricing Mechanism Considering Energy Procurement Cost",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.1 Upstream Energy Procurement Cost Mechanism",
+      "level": 3,
+      "text": "The IES operator acts simultaneously as a wholesale-side buyer and a retail-side\nseller within the energy value chain. On the wholesale trade front, the operator faces\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 6 of 33\ndiverse procurement cost variations driven by external bulk power grid spot markets, long-\nterm high-pressure natural gas pipeline contracts, and dynamic multi-energy commodity\nmarkets. Procurement on the power side is volatile, tracking day-ahead spot clearing\nprices, real-time balancing charges, and capacity-based network tariffs at the same time.\nWhen demand peaks or renewable output runs low, the day-ahead price climbs steeply; on\nwindy nights, with wind plentiful, it collapses. Upstream natural gas procurement costs\nare governed by a hybrid weighted combination of long-term pipeline capacity contract\nprices and dynamic spot gas prices, exhibiting nonlinear stepped fluctuations subject to gas\npipeline pressure constraints. To mathematically solve the system dispatch problem over a\nscheduling horizon T, the operator’s comprehensive wholesale multi-energy procurement\ncost function is formulated as follows.\nCproc =\nT\n∑\nt=1\n\"\nλt\ne,spot Pt\ngrid + λt\ng,spot Vt\ngas + λt\nh,wholesale Qt\nheat + Cpunish\n\u0000\nPt\ncurtail\n\u0001\n+ ∑\nm∈MC\nCm,O&M\n\u0000\nPt\nm\n\u0001\n#\n(1)\nwhere Cproc is the total multi-energy procurement and systemic operational cost of the\noperator across the entire scheduling horizon T; λt\ne,spot Pt\ngrid represents the cost of electricity\npurchased from the external grid, whereλt\ne,spot is the dynamic clearing tariff of the upstream\nwholesale power spot market at time slot t and Pt\ngrid is the active power procured by the\noperator from the external bulk grid; λt\ng,spot Vt\ngas represents the cost of purchased natural\ngas, where λt\ng,spot is the dynamic gas price of the upstream natural gas network at time slott\nand Vt\ngas is the volumetric flow rate of natural gas consumed by the system; λt\nh,wholesale Qt\nheat\nrepresents the cost of purchased thermal energy, where λt\nh,wholesale is the wholesale heat\nprice of the upstream district heating network at time slot t and Qt\nheat is the actual thermal\npower procured; Cpunish\n\u0000\nPt\ncurtail\n\u0001\ndenotes the penalty cost for wind and solar curtailment,\nwhich is formulated as a high-penalty function to enforce the prioritized accommodation of\nlocal renewable energy and mitigate economic losses incurred by unabsorbed wind/solar\noutput Pt\ncurtail ; ∑\nm∈MC\nCm,O&M\n\u0000\nPt\nm\n\u0001\nis the total operation, maintenance, and depreciation\ncost of internal coupling devices, where M represents the set of all multi-energy conver-\nsion components, and Cm,O&M is the comprehensive O&M and physical wear-and-tear\ndepreciation cost function of the m-th device operating at an output level of Pt\nm.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.2 Downstream TOU-Based Load Regulation Framework for Operators",
+      "level": 3,
+      "text": "To efficiently transfer wholesale-side spot price volatility, operational cost pressures,\nand physical renewable supply–demand imbalances down to terminal consumption\nlayers—while unleashing the latent cross-carrier flexibility of multi-energy complemen-\ntary optimization—the operator must construct an adaptive retail-side TOU pricing and\nmulti-energy load regulation framework. This framework centers on customized retail\nTOU electricity tariffs, accompanied by temporally coordinated retail TOU gas and ther-\nmal price matrices. By deep mining historical multi-energy load big data and upstream\nspot-clearing patterns, the operator segments the 24 h horizon into peak, flat, and valley\nblocks. Daytime hours, when commercial load and procurement cost are both high, fall\ninto the peak band; the quiet overnight hours, when wind is abundant, become the valley.\nWidening the gap between the two prices is what gives the tariff its bite. A high peak rate,\nswitched on when bulk power is tight or procurement turns expensive, pushes users to\ntrim flexible load or postpone it, while a low valley rate, released during heavy curtailment\nor the overnight trough, pulls demand the other way. Underneath sits the usual digital\nlayer—smart grids, an automated Advanced Distribution Management System, an Energy\nManagement System (EMS), and dense Advanced Metering Infrastructure (AMI)—which\ntracks the power, heat, and gas use of each user in a closed loop and keeps the physical,\ninformation, and price flows tied together for the sake of flexibility and grid stability.\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 7 of 33",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.3 TOU-Based PDR Framework",
+      "level": 2,
+      "text": "Putting price-based demand response (PDR) into practice inside the IES means co-\nordinating flexible resources through prices rather than commands: the operator sets\nmulti-carrier retail price vectors and lets the market do the balancing. The idea rests on\none mathematical object, the cross-price elasticity matrix, which encodes how end-users\nrespond economically to those prices. Demand response then closes a loop between grid\nand consumer, and the price elasticity of demand is what measures the strength of that\ntwo-way link.\nIn concrete terms, the price elasticity of demand measures how far load moves for a\ngiven change in commodity price over a period, and is written as\nε = ∆P/P0\n∆λ/λ0\n(2)\nwhere ε denotes the price elasticity coefficient; ∆P and ∆λ represent the variations in load\ndemand and retail price before and after the execution of demand response, respectively;\nP0 and λ0 are the baseline load demand and the initial energy price prior to demand\nresponse, respectively.\nIn practical power grid operations, load variation within a specific time interval not\nonly correlates with concurrent prices but is also inherently influenced by energy prices\nacross other operational intervals throughout the day. To accurately capture these multi-\nperiod interdependencies of a single energy vector across the scheduling horizon, the\ncross-price elasticity coefficient is introduced. The cross-price elasticity of demand reflects\nthe sensitivity of the demand quantity in a given period to the price variations in another\ncorrelated period, expressed as\nεij = ∆Pi/Pi,0\n∆λj/λj,0\n(3)\nwhere εij denotes the cross-price elasticity coefficient between time sloti and time slot j; ∆Pi\nis the variation in load demand during time sloti; ∆λj signifies the price change during time\nslot j; Pi,0 represents the initial baseline load in time slot i; and λj,0 is the initial electricity\nprice in time slot j.\nOver a scheduling horizon of n periods, the collective response of end-users to the\nprice vector collapses into a single object, the demand price elasticity matrix E:\nE =\n\n\nε11 ε12 . . . ε1n\nε21 ε22 . . . ε2n\n... ... ... ...\nεn1 εn2 . . . εnn\n\n\n(4)\nOnce the operator derives multi-carrier TOU or real-time pricing (RTP) signals from\nits wholesale cost analytics and pushes them over a two-way communication network to\nthe retail nodes, each user responds on its own terms—minimizing its bill—and the sum\nof those self-interested adjustments reshapes the multi-energy demand profile, so peak\nshaving happens without anyone being told to do it.\nTo represent this adjustment, loads are split into three groups according to how freely\nthey can be moved or shed: fixed, shiftable, and interruptible.\nFixed loads are the baseline demand that cannot be moved in time or trimmed in\nmagnitude. Supply to them has to be continuous, since interrupting it would disrupt\nproduction or daily life, and because users will not—or cannot—change how they draw\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 8 of 33\nthis power, the quantity holds essentially flat even when prices spike. In the PDR model\nthey enter as demand that must be met first, defined as\nPt\nf ixed = C f ixed (5)\nwhere Pt\nf ixed denotes the fixed load at time slot t, and C f ixed is a constant representing the\nrigid demand threshold.\nShiftable loads keep the same total energy over the cycle but can be slid along the time\naxis. Responding to retail prices, users bring these operations forward or push them back,\nand because such customers are price-sensitive they tend to migrate consumption into the\ncheap valley hours, sometimes backed by on-site storage. The model for shiftable load is\nPt\nshi f t = Pt,0\nshi f t +\nn\n∑\nj=1\nεtj,shi f t · Pt,0\nshi f t · λj − λj,0\nλj,0 (6)\nn\n∑\nt=1\nPt\nshi f t =\nn\n∑\nt=1\nPt,0\nshi f t (7)\n0 ≤ Pt\nshi f t ≤ Pmax\nshi f t (8)\nwhere Pt\nshi f t and Pt,0\nshi f t represent the post-response and pre-response shiftable loads at time\nslot t, respectively; εtj,shi f t is the element of the demand price elasticity matrix reflecting\nthe temporal shifting characteristics of the load; λj and λj,0 denote the post-response and\npre-response electricity prices at time slot j, respectively; and Pmax\nshi f t represents the upper\ncapacity limit of shiftable loads that can be accommodated within the given time interval.\nInterruptible loads can be cut back or switched off for a while. Under a prior contract\nor a compensation arrangement, the user lets the operator suspend supply when defined\nconditions arise; such loads are usually energy-intensive and can ride through short outages\nor reduced-power spells, which makes them well suited to emergency frequency support\nor operating reserve. The interruptible-load model reads\nPt\ninter = Pt,0\ninter +\nn\n∑\nj=1\nεtj,inter · Pt,0\ninter · λj − λj,0\nλj,0 (9)\n0 ≤ ∆Pt\ninter ≤ Pmax\ninter (10)\nwhere Pt\ninter and Pt,0\ninter represent the post-response and pre-response interruptible loads at\ntime slot t, respectively; εtj,inter is the corresponding elasticity matrix element mapping the\ncurtailment behavior; and Pmax\ninter denotes the maximum allowable interruption capacity.\nTo guarantee that flexible resources are not counted twice, the baseline demand at\neach node is partitioned into three mutually exclusive and collectively exhaustive subsets,\nnamely fixed, shiftable, and interruptible, so that any given unit of load belongs to ex-\nactly one demand response category. A single consumer block is therefore prevented by\nconstruction from participating simultaneously in both the shiftable and the interruptible\nprogram, and the post-response load is obtained by summing over these disjoint subsets.\nThis partitioning removes any possibility of double-counting the same flexibility across\ntwo mechanisms.\nConsequently, by aggregating the aforementioned distinct load components, the total\npost-demand response load profilePt\ntotal interacting with the power grid can be dynamically\nderived as\nPt\ntotal = Pt\nf ixed + Pt\nshi f t + Pt\ninter (11)\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 9 of 33\nwhere Pt\ntotal represents the modified aggregate load of the grid at time slot t following the\nimplementation of PDR.\nOn a practical spatiotemporal operational plane, this multi-energy response manifests\nthrough three highly complementary dimensions:\n1. Temporal shifting and adaptive curtailment of flexible multi-carrier loads: Upon\nobserving premium retail peak power tariffs during industrial peak hours, large-\nscale industrial microgrids automatically reduce the direct current of their smelting\ncells; commercial facilities simultaneously utilize the structural thermal inertia of\nmodern smart buildings to actively scale down HVAC compressor power during peak\nintervals, smoothly deferring these large thermal-driven power loads to nighttime\nvalley periods with ultra-low energy prices.\n2. Cross-carrier substitution between energy vectors: Where heat can be met either\nelectrically or by gas, the choice follows price. If daytime power prices jump while\ngas tariffs hold steady, a dual-fuel consumer backs off its electric heat pumps and\nheats with a gas boiler or CHP instead; when wind floods the system overnight and\npower turns cheap, the same consumer drops gas and heats electrically. The swap is\nhorizontal, carrier for carrier, and driven by the retail tariff alone.\nThe cross-price elasticity matrix is not estimated afresh in this study; its self- and\ncross-elasticity entries are adopted from the established demand response literature for\nelectricity end-uses and are treated as exogenous parameters representative of a price-\nresponsive commercial, residential mix, which an operator would in practice calibrate from\nhistorical smart-meter and tariff records by regressing observed load on price. Realism and\nuser acceptability are preserved not through the elasticity values alone but through the\nbounds imposed on the response. User comfort and the limited willingness to participate\nare captured by capping ",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Mathematical Modeling and Constraints",
+      "level": 1,
+      "text": "To prevent any ambiguity arising from the term “two-stage,” the proposed framework\nis organized into two sequentially coupled decision stages that share the same 24 h day-\nahead horizon at hourly resolution but differ in their decision variables and information\nsets, as summarized in Figure 2. In the first stage, the retail-pricing and demand-shaping\nstage, the IES operator determines the time-of-use retail price vector for the peak, flat, and\nvalley blocks subject to the market-stability constraints of Section 3.2.1; acting through\nthe cross-price elasticity matrix, this price vector yields the price-responsive shiftable and\ninterruptible load. The settled price vector and the resulting post-PDR nodal load are the\nfirst-stage decision variables and are passed downward as fixed boundary conditions. In\nthe second stage, the security-constrained dispatch stage, taking the reshaped load as the\nboundary condition, the operator co-optimizes the dispatch of conventional and gas-fired\nunits, CHP and P2G plants, the EESS, and the bidirectional V2G fleet, together with the cou-\npled electricity- and gas-network constraints, so as to minimize the total operating cost. The\ntwo stages are coupled through a one-directional price-to-load information flow: the first\nstage decides how much demand to move and at what price, and the second stage decides\nhow to serve the resulting demand securely and economically. Because the user response\nis endogenous to the pricing decision and both stages share the same day-ahead time\nscale, they are assembled and solved as a single mixed-integer linear programming (MILP)\ninstance rather than by an iterative master–subproblem decomposition; this preserves\nglobal optimality while retaining the conceptual two-stage decision logic. The second stage\ntherefore plays the role of the recourse-like dispatch layer that realizes the price decision\nrather than a separate real-time correction.\nFigure 2. Information flow of the proposed two-stage coordinated dispatch framework.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1 Objective Function",
+      "level": 2,
+      "text": "To balance the systemic economic benefits with the complementary advantages of\nmulti-carrier energy coupling, this study establishes an economic-optimal scheduling\nmodel with the core objective of minimizing the system’s total operational cost within a\nday-ahead scheduling horizon. This objective function not only coordinates the synergetic\nprocurement of multi-carrier energy flows on the wholesale side but also mathematically\ncaptures the nonlinear energy-consumption characteristics of multi-energy conversion\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 11 of 33\ndevices and the lifecycle degradation of energy storage assets. The objective function to\nminimize the total systemic cost is formulated as follows:\nminC = min(C1 + C2 + C3)\n\n\nC1 = ∑\nt∈T\n\u0010\nλt\ne,spotPt\ngrid + λt\ng,spotVt\ngas\n\u0011\nC2 = ∑\nt∈T\n\"\n∑\nh∈Nh\n\u0010\nah(Ph,t)2 + bhPh,t + ch\n\u0011\n+ ∑\nu∈Nu\n\u0010\nau(Pu,t)2 + buPu,t + cu\n\u0011\n+ ∑\np∈Np\nCpPp,t\n#\nC3 = CLCOE ∑\nt∈T\nPout\nEESS,t∆t\n(12)\nwhere C is the total day-ahead operational cost of IES over the scheduling horizon and\nC1, C2, and C3 represent the upstream multi-energy procurement cost, the equipment\noperations and maintenance (O&M) cost, and the electrochemical energy storage system\n(EESS) lifecycle depreciation cost, respectively.\nThe upstream multi-energy procurement cost C1 quantifies the total capital expendi-\nture incurred by the IES operator when purchasing primary energy from external multi-\ncarrier energy networks within the day-ahead wholesale market. By embedding time-\nvarying price vectors, this term guides the system to perceive external market price fluctua-\ntions at the source side. Its mathematical expression is given as above, where T represents\nthe complete time horizon for day-ahead economic scheduling; in this study, T = 24 h with\na discrete operational time step of ∆t = 1 h; λt\ne,spot and λt\ng,spot denote the dynamic clearing\ntariff of the upstream power spot market (RMB/kWh) and the real-time procurement price\nof the natural gas market (RMB/m3) at time slot t, respectively; Pt\ngrid is the active power\nexchanged with the external main grid through the tie-line at time slot t (kW), where a\npositive value signifies power procurement; and Vt\ngas represents the volumetric flow rate of\nnatural gas purchased from the external gas source at time slot t (m3/h).\nThe equipment operations and maintenance cost C2 is designed to rigorously quantify\nthe fuel consumption, routine maintenance, and physical wear-and-tear of core energy-\nconversion units within the IES during the execution of horizontal multi-energy complemen-\ntation and temporal energy shifting. Specifically, the energy consumption characteristics of\ngas-fired power plants and CHP units are approximated using quadratic functions. This\nnonlinear formulation accurately models the real-world physical behavior in which thermal\nprime movers deviate from their nominal efficiency at part-load conditions. Conversely,\nP2G facilities are characterized using a linear operational cost coefficient. The comprehen-\nsive cost function is expressed as above, where Nh and Nu represent the sets of internal\nCHP units and conventional gas-fired power plants, respectively; Np denotes the set of\nP2G conversion devices; Ph,t and Pu,t indicate the actual active power output of the h-th\nCHP unit and the u-th gas-fired plant at time slot t (kW), respectively; Pp,t represents the\nactive electrical power input consumed by the p-th P2G device at time slot t (kW); ah, bh, ch\nand au, bu, cu are the quadratic, linear, and constant cost coefficients governing the fuel\nconsumption and O&M expenses of the CHP and gas plants, respectively; and Cp signifies\nthe unit O&M cost coefficient of the P2G facilities (RMB/kWh).\nThe electrochemical energy storage system (EESS) lifecycle cost explicitly maps the im-\nplicit costs of physical degradation, cycle-life degradation, and internal chemical efficiency\nlosses using Levelized Cost of Energy (LCOE) principles, thereby preventing aggressive\nor overly optimistic scheduling profiles resulting from idealized modeling. This cost com-\nponent is quasi-linearized based on the discharge throughput over the dispatch horizon,\nwhere CLCOE represents the levelized depreciation and maintenance cost coefficient of\nthe EESS (RMB/kWh), which comprehensively factors in the initial capital investment,\nbattery replacement costs, maximum cycle life, and salvage value; and Pout\nEESS,t denotes the\nactual active discharging power of the EESS at time slot t (kW). The integration of this\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 12 of 33\nterm effectively penalizes the “shallow cycle creeping” caused by frequent charging and\ndischarging transitions, mitigating accelerated aging of battery assets and ensuring an\noptimal trade-off between day-ahead operational economy and asset longevity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.2 Constraints",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2.1 TOU Pricing Vector and Market Stability Constraints",
+      "level": 3,
+      "text": "When designing or implementing retail TOU electricity pricing strategies, the grid\noperator must systematically balance the regulatory efficacy of grid peak shaving with\nsocial welfare and market financial sustainability. The peak tariff has to be high enough\nto hold back demand when it matters most, but push it too far and consumer goodwill,\nhousehold budgets, and industrial output all suffer. The valley tariff faces the mirror\nproblem: low enough to pull load into the surplus hours, yet not so low that upstream\ngenerators are starved of revenue. To keep the pricing vector from drifting into gouging,\nwelfare loss, or outright clearing failure, it is hemmed in by a set of tiered bounds.\nFirst, the hierarchical relationship and absolute operational boundaries governing the\npeak, flat, and valley electricity tariffs are mathematically constrained as follows:\nλmin\npeak ≤ λt\ne ≤ λmax\npeak, ∀t ∈ Ωpeak (13)\nλmin\nvalley ≤ λt\ne ≤ λmax\nvalley, ∀t ∈ Ωvalley (14)\nmaxt∈Ωvalley (λt\ne) < λτ\ne < mint∈Ωpeak (λt\ne), ∀τ ∈ Ωflat (15)\nwhere Ωpeak, Ωflat, and Ωvalley denote the mutually exclusive sets of peak, flat, and valley\ntime slots within the scheduling horizon T, respectively; λt\ne and λτ\ne represent the optimized\nretail electricity tariffs at the corresponding time intervals; λmin\npeak and λmax\npeak signify the rigid\nlower and upper bounds of the peak period tariff, mapping the baseline pricing efficacy and\nthe upper tolerance limit of public expenditure, respectively; similarly,λmin\nvalley and λmax\nvalley\nrepresent the lower boundary to protect generation-side profit margins and the upper\nboundary to guarantee sufficient demand stimulation during valley periods, respectively.\nFurthermore, to suppress malicious market speculation, mitigate cross-period price\narbitrage risks, and eliminate extreme pricing volatility that could trigger systemic market\nchaos, the peak-to-valley price ratio must be tightly constrained within a verified economic\nequilibrium corridor. This spatial price-spread constraint is expressed as follows:\nγ =\nλpeak\nλvalley\n(16)\nγmin ≤ γ ≤ γmax (17)\nwhere γ is the macro peak-to-valley price ratio defined by the average peak tariff λpeak and\nthe average valley tariff λvalley; and γmin and γmax are the lower and upper limits on that\nratio. In practice, γmin is usually fixed at 2 so the spread is wide enough to actually shift\ndemand, whereas γmax is capped at 5 so that vulnerable retail customers are shielded from\nextreme price shocks and the wider market stays stable.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2.2 Integrated Network Operational Constraints",
+      "level": 3,
+      "text": "Security, reliability, and thermodynamic efficiency in the co-optimized IES all\nrest on a single constraint framework, which gathers the physical laws, operating en-\nvelopes, and technical limits of the electricity distribution grid and the gas transmission\nnetwork—two systems that are distinct in their physics yet tightly coupled in operation.\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 13 of 33\nThe operational safe tracking of the electrical distribution grid is formulated using a\ngeneralized branch-flow model. This multi-period framework encompasses distribution\nnetwork Distflow equations, transmission line thermal boundaries, nodal voltage/current\nsecurity margins, generator capacity limits, unit commitment and ramping restrictions, and\nsystem-wide spinning reserve requirements.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4 Nodal Power Flow and Distflow Constraints",
+      "level": 1,
+      "text": "The steady-state multi-period power flow within the distribution network is modeled\nusing the branch-flow model. These equations capture the active and reactive power\nbalance mechanisms coupled with network voltage drop laws:\n∑\nj∈ΩN\nPji,t − ∑\nk∈ΩN\n(Pik,t + rik I2\nik,t) +Pin\ni,t = Pload\ni,t (18)\n∑\nj∈ΩN\nQji,t − ∑\nk∈ΩN\n(Qik,t + xik I2\nik,t) +Qin\ni,t = Qload\ni,t (19)\nV2\nj,t = V2\ni,t − 2(rij Pij,t + xij Qij,t) + (r2\nij + x2\nij )I2\nij,t (20)\nP2\nij,t + Q2\nij,t = V2\ni,t I2\nij,t (21)\nwhere Pin\ni,t and Qin\ni,t denote the active and reactive power inputs injected into node i at time\nt, respectively; Pload\ni,t and Qload\ni,t represent the localized active and reactive load demands;\nPij,t and Qij,t indicate the active and reactive power flows traversing from node i to node j;\nΩN represents the complete set of all electrical nodes in the network; V2\ni,t and V2\nj,t are the\nsquared voltage magnitudes at nodes i and j; rij and xij denote the inherent resistance and\nreactance of the transmission line segment connecting nodes i and j; and I2\nij,t represents the\nsquared current magnitude of line ij at time t.\nThe power balance conditions represent the strict application of the first law of ther-\nmodynamics to maintain system-wide power equilibrium. The voltage-drop relation does\nthe spatial counterpart: it links the voltages of neighboring buses and accounts for the\nlosses and drops that line impedance produces. With the Distflow constraints in force, the\ngrid is held in a secure operating state, resources are placed sensibly across the network,\nand the chance of a local power mismatch or voltage excursion cascading into wider failure\nis kept low.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Line Transmission Thermal Boundaries",
+      "level": 1,
+      "text": "Transmission limits exist to protect the physical line itself. Push the flow past a line’s\nrated capacity and the overcurrent dumps excess Joule heat into the conductor; that heat\nages the insulation faster and makes phase-to-ground faults, mechanical damage, or fire\nmore likely. A badly overloaded line also drags down the voltage at downstream nodes,\nand once that voltage falls below its nominal band, sensitive equipment misbehaves and\npower quality suffers. Capping the active and reactive flows on each line keeps it clear of\nthermal overload and preserves a safe transfer margin:\n−αij Pmax\nij ≤ Pij,t ≤ αij Pmax\nij (22)\n−αij Qmax\nij ≤ Qij,t ≤ αij Qmax\nij (23)\nwhere Pmax\nij and Qmax\nij set the active- and reactive-power thermal ratings of branch ij,\nrespectively, and αij is a continuous safety-margin coefficient.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "6 Nodal Voltage and Current Security Envelopes",
+      "level": 1,
+      "text": "Keeping nodal voltages and branch currents inside their local limits is central to grid\nstability. When voltage sags too low, machines lose electromagnetic torque or are starved\nhttps://doi.org/10.3390/en19143238\nEnergies 2026, 19, 3238 14 of 33\nof power, so motors fail to start and control loops behave erratically; when it climbs too\nhigh, the insulation in power electronics and transformers is overstressed, which ages it\nprematurely or breaks it down outright. Currents matter for a different reason. Holding a\nbranch current within its continuous rating limits resistive loss, whereas an unbounded\ncurrent bleeds energy away as heat, raises operating cost, and shortens the life of the asset:\nV2\ni,min ≤ V2\ni,t ≤ V2\ni,max (24)\n0 ≤ I2\ni,t ≤ I2\ni,max (25)\nwhere V2\ni,min and V2\ni,max denote the minimum and maximum allowable operational limits of\nthe squared voltage magnitude at node i, respectively. Similarly, I2\ni,t represents the squared\ncurrent magnitude at node i, restricted by its absolute maximum thermal threshold I2\ni,max.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "7 Generation Capacity and Ramping Restrictions",
+      "level": 1,
+      "text": "The dynamic operational scheduling of generating units is regulated by a combination\nof capacity boundaries, unit commitment statuses, and ramp-rate limitations. By con-\nstraining active power output to a stable operating range and limiting the rate of power\nadjustment during transitional intervals, these constraints prevent severe mechanical fa-\ntigue and thermal stress from aggressive load-following maneuvers. This extends the\nservice life of dispatchable units and ensures continuous, high-fidelity power tracking\nacross diverse grid conditions:\nui,tPmin\ni ≤ Pi,t ≤ ui,tPmax\ni (26)\n(ui,t − ui,t−1)RSU\ni + (1 − ui,t)Pmax\ni ≥ Pi,t − Pi,t−1 (27)\n(ui,t−1 − ui,t)RSD\ni + (1 − ui,t−1)Pmax\ni ≥ Pi,t−1 − Pi,t (28)\n−Rdown\ni ≤ Pi,t − Pi,t−1 ≤ Rup\ni (29)\n\u0000\nTon\ni,t−1 − Ton\ni,min\n\u0001\n(ui,t−1 − ui,t) ≥ 0 (30)\n\u0010\nTo f f\ni,t−1 − To f f\ni,min\n\u0011\n(ui,t − ui,t−1) ≥ 0 (31)\nwhere ui,t is a binary variable representing the unit commitment status, equaling 1 when\nthe unit is online and 0 when offline. Pi,t denotes the active power output of the generator,\nbounded by its maximum allowable capacity Pmax",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "and minimum stable generation limit",
+      "level": 1,
+      "text": "Pmin\ni . The parameters Ton\ni,t and To f f\ni,t are state timers tracking the consecutive operational or\nnon-operational hours of the unit, bounded by the minimum up-time Ton\ni,min and minimum\ndown-time To f f\ni,min. Lastly, RSU",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "and RSD",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "denote the start-up and shut-down ramping con-",
+      "level": 1,
+      "text": "straints, while Rup",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "and Rdown",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "represent the maximum upward and downward ramp-rate",
+      "level": 1,
+      "text": "limits during normal continuous operation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "8 System Spinning Reserve Capacity Constraints",
+      "level": 1,
+      "text": "Reserve capacity constraints dictate that at any given hour within the dispatch horizon,\nthe cumulative residual generating capacity of all online synchronized units must strictly\nexceed the system’s prevailing spinning reserve demand. This headroom is what lets the\nIES ride out random disturbances. Real grids are routinely hit by the unexpected—a unit\ntrips, or load jumps—and with too little spinning reserve the balance breaks immediately,\nforcing load shedding or, worse, a cascading blackout that takes economic and social costs\nwith it:\n∑\ni∈ΩG\n(ui,tPmax\ni − Pi,t) ≥ Rreq\nt (32)\nhttps://doi.org/10.3390/en19143238",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The structure of the IES."
+    },
+    {
+      "id": "f2",
+      "caption": "Information flow of the proposed two-stage coordinated dispatch framework."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparison between the proposed framework and representative existing studies."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "(16)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 6
+  }
+}

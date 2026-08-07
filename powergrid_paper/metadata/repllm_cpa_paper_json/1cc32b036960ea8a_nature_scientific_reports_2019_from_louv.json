@@ -1,0 +1,323 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/nature-scientific-reports/nature-scientific-reports__2019__from_louvain_to_leiden_guaranteeing_well_connected_comm__055478626b.pdf",
+  "n_pages": 25,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "In many complex networks, nodes cluster and form rel-\natively dense groups—often called communities [1, 2].\nSuch a modular structure is usually not known before-\nhand. Detecting communities in a network is therefore\nan important problem. One of the best-known methods\nfor community detection is called modularity [3]. This\nmethod tries to maximise the diﬀerence between the ac-\ntual number of edges in a community and the expected\nnumber of such edges. We denote byec the actual num-\nber of edges in communityc. The expected number of\nedges can be expressed asK2\nc\n2m, whereKc is the sum of the\ndegrees of the nodes in communityc and m is the total\nnumber of edges in the network. This way of deﬁning\nthe expected number of edges is based on the so-called\nconﬁguration model. Modularity is given by\nH = 1\n2m\n\nc\n(\nec−γK 2\nc\n2m\n)\n, (1)\nwhereγ >0 is a resolution parameter [4]. Higher resolu-\ntions lead to more communities, while lower resolutions\nlead to fewer communities.\nOptimising modularity is NP-hard [5], and consequen-\ntially many heuristic algorithms have been proposed,\nsuch as hierarchical agglomeration [6], extremal optimi-\nsation [7], simulated annealing [4, 8] and spectral [9] al-\ngorithms. One of the most popular algorithms to opti-\nmise modularity is the so-called Louvain algorithm [10],\nnamed after the location of its authors. It was found to\nbe one of the fastest and best performing algorithms in\ncomparative analyses [11, 12], and it is one of the most-\ncited works in the community detection literature.\n∗v.a.traag@cwts.leidenuniv.nl\nAlthough originally deﬁned for modularity, the Lou-\nvain algorithm can also be used to optimise other quality\nfunctions. An alternative quality function is the Con-\nstant Potts Model (CPM) [13], which overcomes some\nlimitations of modularity. CPM is deﬁned as\nH =\n\nc\n[\nec−γ\n(nc\n2\n)]\n, (2)\nwhere nc is the number of nodes in communityc. The\ninterpretation of the resolution parameter γis quite\nstraightforward. The parameter functions as a sort of\nthreshold: communities should have a density of at least\nγ, whilethedensitybetweencommunitiesshouldbelower\nthanγ. Higher resolutions lead to more communities and\nlower resolutions lead to fewer communities, similarly to\nthe resolution parameter for modularity.\nIn this paper, we show that the Louvain algorithm has\na major problem, for both modularity and CPM. The\nalgorithm may yield arbitrarily badly connected commu-\nnities, over and above the well-known issue of the reso-\nlution limit [14] (Section IIA). Communities may even\nbe internally disconnected. To address this important\nshortcoming, we introduce a new algorithm that is faster,\nﬁnds better partitions and provides explicit guarantees\nand bounds (Section III). The new algorithm integrates\nseveral earlier improvements, incorporating a combina-\ntion of smart local move [15], fast local move [16, 17] and\nrandom neighbour move [18]. We prove that the new\nalgorithm is guaranteed to produce partitions in which\nall communities are internally connected. In addition,\nwe prove that the algorithm converges to an asymptot-\nically stable partition in which all subsets of all com-\nmunities are locally optimally assigned. The quality of\nsuch an asymptotically stable partition provides an up-\nper bound on the quality of an optimal partition. Fi-\nnally, we demonstrate the excellent performance of the\nalgorithm for several benchmark and real-world networks\n(Section IV). To ensure readability of the paper to the\narXiv:1810.08473v3  [cs.SI]  30 Oct 2019",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 a) b)",
+      "level": 1,
+      "text": "c) d)\nMove nodes\nAggregate\nMove nodes\nLevel 1\nLevel 2\nFIG. 1. Louvain algorithm. The Louvain algorithm starts\nfrom a singleton partition in which each node is in its own\ncommunity (a). The algorithm moves individual nodes from\none community to another to ﬁnd a partition (b). Based on\nthis partition, an aggregate network is created (c). The algo-\nrithm then moves individual nodes in the aggregate network\n(d). These steps are repeated until the quality cannot be\nincreased further.\nbroadest possible audience, we have chosen to relegate\nall technical details to appendices. The main ideas of our\nalgorithm are explained in an intuitive way in the main\ntext of the paper. We name our algorithm theLeiden\nalgorithm, after the location of its authors.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "LOUVAIN ALGORITHM",
+      "level": 1,
+      "text": "The Louvain algorithm [10] is very simple and elegant.\nThealgorithmoptimisesaqualityfunctionsuchasmodu-\nlarityorCPMintwoelementaryphases: (1)localmoving\nof nodes; and (2) aggregation of the network. In the local\nmoving phase, individual nodes are moved to the commu-\nnity that yields the largest increase in the quality func-\ntion. In the aggregation phase, an aggregate network is\ncreated based on the partition obtained in the local mov-\ning phase. Each community in this partition becomes\na node in the aggregate network. The two phases are\nrepeated until the quality function cannot be increased\nfurther. The Louvain algorithm is illustrated in Fig. 1\nand summarised in pseudo-code in Algorithm A.1 in Ap-\npendix A.\nUsually, the Louvain algorithm starts from a singleton\npartition, in which each node is in its own community.\na) b)\n0\n1\n2\n3\n4\n5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "6 Rest of network",
+      "level": 1,
+      "text": "0\n1\n2\n3\n4\n5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "6 Rest of network",
+      "level": 1,
+      "text": "FIG. 2.Disconnected community.Consider the partition\nshown in (a). When node 0 is moved to a diﬀerent community,\nthe red community becomes internally disconnected, as shown\nin (b). However, nodes 1–6 are still locally optimally assigned,\nand therefore these nodes will stay in the red community.\nHowever, it is also possible to start the algorithm from\na diﬀerent partition [15]. In particular, in an attempt\nto ﬁnd better partitions, multiple consecutive iterations\nof the algorithm can be performed, using the partition\nidentiﬁed in one iteration as starting point for the next\niteration.\nA. Badly connected communities\nWe now show that the Louvain algorithm may ﬁnd\narbitrarily badly connected communities. In particular,\nwe show that Louvain may identify communities that\nare internally disconnected. That is, one part of such\nan internally disconnected community can reach another\npart only through a path going outside the community.\nImportantly, the problem of disconnected communities\nis not just a theoretical curiosity. As we will demon-\nstrate in Section IV, the problem occurs frequently in\npractice when using the Louvain algorithm. Perhaps sur-\nprisingly, iterating the algorithm aggravates the problem,\neven though it does increase the quality function.\nIn the Louvain algorithm, a node may be moved to a\ndiﬀerent community while it may have acted as a bridge\nbetween diﬀerent components of its old community. Re-\nmoving such a node from its old community disconnects\nthe old community. One may expect that other nodes in\nthe old community will then also be moved to other com-\nmunities. However, this is not necessarily the case, as the\nother nodes may still be suﬃciently strongly connected\nto their community, despite the fact that the community\nhas become disconnected.\nTo elucidate the problem, we consider the example il-\nlustrated in Fig. 2. The numerical details of the example\ncan be found in Appendix B. The thick edges in Fig. 2\nrepresent stronger connections, while the other edges rep-\nresent weaker connections. At some point, the Louvain\nalgorithm may end up in the community structure shown\n3\nin Fig. 2(a). Nodes 0–6 are in the same community.\nNodes 1–6 have connections only within this community,\nwhereas node 0 also has many external connections. The\nalgorithm continues to move nodes in the rest of the net-\nwork. At some point, node 0 is considered for moving.\nWhen a suﬃcient number of neighbours of node 0 have\nformed a community in the rest of the network, it may\nbe optimal to move node 0 to this community, thus cre-\nating the situation depicted in Fig. 2(b). In this new\nsituation, nodes 2, 3, 5 and 6 have only internal connec-\ntions. These nodes are therefore optimally assigned to\ntheir current community. On the other hand, after node\n0 has been moved to a diﬀerent community, nodes 1 and\n4 have not only internal but also external connections.\nNevertheless, depending on the relative strengths of the\ndiﬀerent connections, these nodes may still be optimally\nassigned to their current community. In that case, nodes\n1–6 are all locally optimally assigned, despite the fact\nthat their community has become disconnected. Clearly,\nit would be better to split up the community. Nodes 1–3\nshould form a community and nodes 4–6 should form an-\nother community. However, the Louvain algorithm does\nnot consider this possibility, since it considers only indi-\nvidual node movements. Moreover, when no more nodes\ncan be moved, the algorithm will aggregate the network.\nWhen a disconnected community has become a node in\nan aggregate network, there are no more possibilities to\nsplit up the community. Hence, the community remains\ndisconnected, unless it is merged with another commu-\nnity that happens to act as a bridge.\nObviously, this is a worst case example, showing that\ndisconnected communities may be identiﬁed by the Lou-\nvain algorithm. More subtle problems may occur as well,\ncausing Louvain to ﬁnd communities that are connected,\nbut only in a very weak sense. Hence, in general, Louvain\nmay ﬁnd arbitrarily badly connected communities.\nThis problem is diﬀerent from the well-known issue\nof the resolution limit of modularity [14]. Due to the\nresolution limit, modularity may cause smaller commu-\nnities to be clustered into larger communities. In other\nwords, modularity may “hide” smaller communities and\nmay yield communities containing signiﬁcant substruc-\nture. CPM does not suﬀer from this issue [13]. Never-\ntheless, when CPM is used as the quality function, the\nLouvain algorithm may still ﬁnd arbitrarily badly con-\nnected communities. Hence, the problem of Louvain out-\nlinedaboveisindependentfromtheissueoftheresolution\nlimit. In the case of modularity, communities may have\nsigniﬁcant substructure both because of the resolution\nlimit and because of the shortcomings of Louvain.\nIn fact, although it may seem that the Louvain al-\ngorithm does a good job at ﬁnding high quality parti-\ntions, in its standard form the algorithm provides only\none guarantee: the algorithm yields partitions for which\nit is guaranteed that no communities can be merged. In\nother words, communities are guaranteed to be well sep-\narated. Somewhat stronger guarantees can be obtained\nby iterating the algorithm, using the partition obtained\nin one iteration of the algorithm as starting point for the\nnext iteration. When iterating Louvain, the quality of\nthe partitions will keep increasing until the algorithm is\nunable to make any further improvements. At this point,\nit is guaranteed that each individual node is optimally\nassigned. In this iterative scheme, Louvain provides two\nguarantees: (1) no communities can be merged and (2)\nno nodes can be moved.\nContrary to what might be expected, iterating the\nLouvain algorithm aggravates the problem of badly con-\nnected communities, as we will also see in Section IV.\nThis is not too diﬃcult to explain. After the ﬁrst itera-\ntion of the Louvain algorithm, some partition has been\nobtained. In the ﬁrst step of the next iteration, Louvain\nwill again move individual nodes in the network. Some\nof these nodes may very well act as bridges, similarly to\nnode 0 in the above example. By moving these nodes,\nLouvain creates badly connected communities. More-\nover, Louvain has no mechanism for ﬁxing these commu-\nnities. Iterating the Louvain algorithm can therefore be\nseen as a double-edged sword: it improves the partition\nin some way, but degrades it in another way.\nThe problem of disconnected communities has been\nobserved before in the context of the label propagation\nalgorithm [19]. However, so far this problem has never\nbeen studied for the Louvain algorithm. Moreover, the\ndeeper signiﬁcance of the problem was not recognised:\ndisconnected communities are merely the most extreme\nmanifestation of the problem of arbitrarily badly con-\nnected communities. Trying to ﬁx the problem by sim-\nply considering the connected components of communi-\nties[19–21]isunsatisfactorybecauseitaddressesonlythe\nmost extreme case and does not resolve the more funda-\nmental problem. We therefore require a more principled\nsolution, which we will introduce in the next section.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "LEIDEN ALGORITHM",
+      "level": 1,
+      "text": "We here introduce the Leiden algorithm, which guaran-\ntees that communities are well connected. The Leiden\nalgorithm is partly based on the previously introduced\nsmart local move algorithm [15], which itself can be seen\nas an improvement of the Louvain algorithm. The Lei-\nden algorithm also takes advantage of the idea of speed-\ning up the local moving of nodes [16, 17] and the idea of\nmoving nodes to random neighbours [18]. We consider\nthese ideas to represent the most promising directions\nin which the Louvain algorithm can be improved, even\nthough we recognise that other improvements have been\nsuggested as well [22]. The Leiden algorithm consists of\nthree phases: (1) local moving of nodes, (2) reﬁnement of\nthe partition and (3) aggregation of the network based on\nthe reﬁned partition, using the non-reﬁned partition to\ncreate an initial partition for the aggregate network. The\nLeiden algorithm is considerably more complex than the\nLouvain algorithm. Fig. 3 provides an illustration of the\nalgorithm. The algorithm is described in pseudo-code in",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 a) b) c)",
+      "level": 1,
+      "text": "d) e) f)\nMove nodes Reﬁne\nAggregate\nMove nodes Reﬁne\nLevel 1\nLevel 2\nFIG. 3.Leiden algorithm. The Leiden algorithm starts from a singleton partition (a). The algorithm moves individual nodes\nfrom one community to another to ﬁnd a partition (b), which is then reﬁned (c). An aggregate network (d) is created based\non the reﬁned partition, using the non-reﬁned partition to create an initial partition for the aggregate network. For example,\nthe red community in (b) is reﬁned into two subcommunities in (c), which after aggregation become two separate nodes in (d),\nboth belonging to the same community. The algorithm then moves individual nodes in the aggregate network (e). In this case,\nreﬁnement does not change the partition (f). These steps are repeated until no further improvements can be made.\nAlgorithm A.2 in Appendix A.\nIn the Louvain algorithm, an aggregate network is cre-\nated based on the partition P resulting from the local\nmoving phase. The idea of the reﬁnement phase in the\nLeiden algorithm is to identify a partitionPreﬁnedthat\nis a reﬁnement ofP. Communities in P may be split\ninto multiple subcommunities inPreﬁned. The aggregate\nnetwork is created based on the partitionPreﬁned. How-\never, the initial partition for the aggregate network is\nbased on P, just like in the Louvain algorithm. By cre-\nating the aggregate network based onPreﬁnedrather than\nP, the Leiden algorithm has more room for identifying\nhigh-quality partitions. In fact, by implementing the re-\nﬁnement phase in the right way, several attractive guar-\nantees can be given for partitions produced by the Leiden\nalgorithm.\nThe reﬁned partitionPreﬁnedis obtained as follows.\nInitially, Preﬁnedis set to a singleton partition, in which\neach node is in its own community. The algorithm then\nlocally merges nodes inPreﬁned: nodes that are on their\nown in a community inPreﬁnedcan be merged with a dif-\nferent community. Importantly, mergers are performed\nonly within each community of the partitionP. In ad-\ndition, a node is merged with a community inPreﬁned\nonly if both are suﬃciently well connected to their com-\nmunity in P. After the reﬁnement phase is concluded,\ncommunities inP often will have been split into multiple\ncommunities in Preﬁned, but not always.\nIn the reﬁnement phase, nodes are not necessarily\ngreedily merged with the community that yields the\n5\nlargest increase in the quality function. Instead, a node\nmaybemergedwithanycommunityforwhichthequality\nfunction increases. The community with which a node is\nmerged is selected randomly (similar to [18]). The larger\nthe increase in the quality function, the more likely a\ncommunity is to be selected. The degree of randomness\nintheselectionofacommunityisdeterminedbyaparam-\neter θ>0. Randomness in the selection of a community\nallows the partition space to be explored more broadly.\nNode mergers that cause the quality function to decrease\nare not considered. This contrasts with optimisation al-\ngorithms such as simulated annealing, which do allow the\nquality function to decrease [4, 8]. Such algorithms are\nrather slow, making them ineﬀective for large networks.\nExcluding node mergers that decrease the quality func-\ntion makes the reﬁnement phase more eﬃcient. As we\nprove in Appendix C1, even when node mergers that\ndecrease the quality function are excluded, the optimal\npartition of a set of nodes can still be uncovered. This\nis not the case when nodes are greedily merged with the\ncommunity that yields the largest increase in the quality\nfunction. In that case, some optimal partitions cannot\nbe found, as we show in Appendix C2.\nAnother important diﬀerence between the Leiden al-\ngorithm and the Louvain algorithm is the implementa-\ntion of the local moving phase. Unlike the Louvain algo-\nrithm, the Leiden algorithm uses a fast local move pro-\ncedure in this phase. Louvain keeps visiting all nodes\nin a network until there are no more node movements\nthat increase the quality function. In doing so, Louvain\nkeeps visiting nodes that cannot be moved to a diﬀer-\nent community. In the fast local move procedure in the\nLeiden algorithm, only nodes whose neighbourhood has\nchanged are visited. This is similar to ideas proposed re-\ncently as “pruning” [16] and in a slightly diﬀerent form\nas “prioritisation” [17]. The fast local move procedure\ncan be summarised as follows. We start by initialising\na queue with all nodes in the network. The nodes are\nadded to the queue in a random order. We then remove\nthe ﬁrst node from the front of the queue and we deter-\nmine whether the quality function can be increased by\nmoving this node from its current community to a diﬀer-\nent one. If we move the node to a diﬀerent community,\nwe add to the rear of the queue all neighbours of the\nnode that do not belong to the node’s new community\nand that are not yet in the queue. We keep removing\nnodes from the front of the queue, possibly moving these\nnodes to a diﬀerent community. This continues until the\nqueue is empty. For a full speciﬁcation of the fast local\nmove procedure, we refer to the pseudo-code of the Lei-\nden algorithm in Algorithm A.2 in Appendix A. Using\nthe fast local move procedure, the ﬁrst visit to all nodes\nin a network in the Leiden algorithm is the same as in\nthe Louvain algorithm. However, after all nodes have\nbeen visited once, Leiden visits only nodes whose neigh-\nbourhood has changed, whereas Louvain keeps visiting\nall nodes in the network. In this way, Leiden implements\nthe local moving phase more eﬃciently than Louvain.\nTABLE I. Overview of the guarantees provided by the Lou-\nvain algorithm and the Leiden algorithm.\nLouvain Leiden\nEach\niteration\nγ-separation \u0013 \u0013\nγ-connectivity \u0013\nStable\niteration\nNode optimality \u0013 \u0013\nSubpartition γ-density \u0013\nAsymptotic Uniform γ-density \u0013\nSubset optimality \u0013\nA. Guarantees\nWe now consider the guarantees provided by the Lei-\nden algorithm. The algorithm is run iteratively, using\nthe partition identiﬁed in one iteration as starting point\nfor the next iteration. We can guarantee a number of\nproperties of the partitions found by the Leiden algo-\nrithm at various stages of the iterative process. Below\nwe oﬀer an intuitive explanation of these properties. We\nprovide the full deﬁnitions of the properties as well as the\nmathematical proofs in Appendix D.\nAfter each iteration of the Leiden algorithm, it is guar-\nanteed that:\n1. All communities areγ-separated.\n2. All communities areγ-connected.\nIn these properties,γrefers to the resolution parameter\nin the quality function that is optimised, which can be\neither modularity or CPM. The property ofγ-separation\nis also guaranteed by the Louvain algorithm. It states\nthat there are no communities that can be merged. The\nproperty ofγ-connectivity is a slightly stronger variant\nof ordinary connectivity. As discussed in Section IIA,\nthe Louvain algorithm does not guarantee connectivity.\nIt therefore does not guaranteeγ-connectivity either.\nAn iteration of the Leiden algorithm in which the par-\ntition does not change is called a stable iteration. After a\nstable iteration of the Leiden algorithm, it is guaranteed\nthat:\n3. All nodes are locally optimally assigned.\n4. All communities are subpartitionγ-dense.\nNode optimality is also guaranteed after a stable itera-\ntion of the Louvain algorithm. It means that there are no\nindividual nodes that can be moved to a diﬀerent com-\nmunity. Subpartitionγ-density is not guaranteed by the\nLouvain algorithm. A community is subpartitionγ-dense\nif it can be partitioned into two parts such that: (1) the\ntwo parts are well connected to each other; (2) neither\npart can be separated from its community; and (3) each\npart is also subpartitionγ-dense itself. Subpartition γ-\ndensity does not imply that individual nodes are locally\noptimally assigned. It only implies that individual nodes\nare well connected to their community.\n6\nTABLE II. Overview of the empirical networks and of the\nmaximalmodularityafter 10replicationsof 10iterationseach,\nboth for the Louvain and fo",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "EXPERIMENTAL ANALYSIS",
+      "level": 1,
+      "text": "In the previous section, we showed that the Leiden\nalgorithm guarantees a number of properties of the par-\ntitions uncovered at diﬀerent stages of the algorithm. We\nalso suggested that the Leiden algorithm is faster than\nthe Louvain algorithm, because of the fast local move\napproach. In this section, we analyse and compare the\nperformance of the two algorithms in practice1. All ex-\nperiments were run on a computer with 64 Intel Xeon\nE5-4667v3 2GHz CPUs and 1TB internal memory. In all\nexperiments reported here, we used a value of0.01 for the\nparameterθthat determines the degree of randomness in\nthe reﬁnement phase of the Leiden algorithm. However,\nvalues ofθwithin a range of roughly[0.0005, 0.1] all pro-\nvide reasonable results, thus allowing for some, but not\ntoo much randomness. We use six empirical networks\nin our analysis. These are the same networks that were\nalso studied in an earlier paper introducing the smart lo-\ncal move algorithm [15]. Table II provides an overview of\nthe six networks. First, we show that the Louvain algo-\nrithm ﬁnds disconnected communities, and more gener-\nally, badly connected communities in the empirical net-\nworks. Second, to study the scaling of the Louvain and\nthe Leiden algorithm, we use benchmark networks, al-\nlowing us to compare the algorithms in terms of both\ncomputational time and quality of the partitions. Fi-\nnally, we compare the performance of the algorithms on\nthe empirical networks. We ﬁnd that the Leiden algo-\nrithm commonly ﬁnds partitions of higher quality in less\ntime. The diﬀerence in computational time is especially\npronounced for larger networks, with Leiden being up to\n20 times faster than Louvain in empirical networks.\nA. Badly connected communities\nWe study the problem of badly connected communi-\nties when using the Louvain algorithm for several empir-\nical networks. For each community in a partition that\nwas uncovered by the Louvain algorithm, we determined\nwhether it is internally connected or not. In addition,\nto analyse whether a community is badly connected, we\nran the Leiden algorithm on the subnetwork consisting of\nall nodes belonging to the community.2 The Leiden al-\ngorithm was run until a stable iteration was obtained.\nWhen the Leiden algorithm found that a community\ncould be split into multiple subcommunities, we counted\nthe community as badly connected. Note that if Lei-\nden ﬁnds subcommunities, splitting up the community is\nguaranteed to increase modularity. Conversely, if Leiden\ndoes not ﬁnd subcommunities, there is no guarantee that\nmodularity cannot be increased by splitting up the com-\nmunity. Hence, by counting the number of communities\nthathavebeensplitup, weobtainedalowerboundonthe\nnumber of communities that are badly connected. The",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "1 We implemented both algorithms in Java, available from",
+      "level": 1,
+      "text": "github.com/CWTSLeiden/networkanalysis and deposited at\nZenodo [23]. Additionally, we implemented a Python pack-\nage, available from github.com/vtraag/leidenalg and deposited\nat Zenodo [24].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2 We ensured that modularity optimisation for the subnetwork",
+      "level": 1,
+      "text": "was fully consistent with modularity optimisation for the whole\nnetwork [13].\n7\n0\n5\n10\n15\n20\n25",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "30 DBLP Amazon",
+      "level": 1,
+      "text": "0",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5 IMDB Live Journal",
+      "level": 1,
+      "text": "1 2 3 4\n0\n5\n10\n15\n20",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "25 Web of Science",
+      "level": 1,
+      "text": "1 2 3 4\nWeb UK (2005)\nDisconnected (Louvain) Badly connected (Louvain)\nBadly connected (Leiden)\n% communities\nIterations\nFIG. 4. Badly connected communities. Percentage of\ncommunities found by the Louvain algorithm that are either\ndisconnected or badly connected compared to percentage of\nbadly connected communities found by the Leiden algorithm.\nNote that communities found by the Leiden algorithm are\nguaranteed to be connected.\ncount of badly connected communities also included dis-\nconnected communities. For each network, we repeated\nthe experiment 10 times. We used modularity with a\nresolution parameter ofγ= 1 for the experiments.\nAs can be seen in Fig. 4, in the ﬁrst iteration of the\nLouvain algorithm, the percentage of badly connected\ncommunities can be quite high. For the Amazon, DBLP\nand Web UK networks, Louvain yields on average respec-\ntively 23%, 16% and 14% badly connected communities.\nThe percentage of disconnected communities is more lim-\nited, usually around1%. However, in the case of the Web\nof Science network, more than5% of the communities are\ndisconnected in the ﬁrst iteration.\nLater iterations of the Louvain algorithm only ag-\ngravate the problem of disconnected communities, even\nthough the quality function (i.e. modularity) increases.\nThe second iteration of Louvain shows a large increase\nin the percentage of disconnected communities. In sub-\nsequent iterations, the percentage of disconnected com-\nmunities remains fairly stable. The increase in the per-\ncentage of disconnected communities is relatively limited\nfor the Live Journal and Web of Science networks. Other\nnetworks show an almost tenfold increase in the percent-\nage of disconnected communities. The percentage of dis-\nconnected communities even jumps to16% for the DBLP\nnetwork. The percentage of badly connected communi-\nties is less aﬀected by the number of iterations of the\nLouvain algorithm. Presumably, many of the badly con-\nnected communities in the ﬁrst iteration of Louvain be-\ncome disconnected in the second iteration. Indeed, the\npercentage of disconnected communities becomes more\ncomparable to the percentage of badly connected com-\nmunities in later iterations. Nonetheless, some networks\nstill show large diﬀerences. For example, after four itera-\ntions, the Web UK network has8% disconnected commu-\nnities, but twice as many badly connected communities.\nEven worse, the Amazon network has5% disconnected\ncommunities, but 25% badly connected communities.\nThe above results shows that the problem of discon-\nnected and badly connected communities is quite per-\nvasive in practice. Because the percentage of discon-\nnected communities in the ﬁrst iteration of the Louvain\nalgorithm usually seems to be relatively low, the prob-\nlem may have escaped attention from users of the algo-\nrithm. However, focussing only on disconnected commu-\nnities masks the more fundamental issue: Louvain ﬁnds\narbitrarily badly connected communities. The high per-\ncentage of badly connected communities attests to this.\nBesides being pervasive, the problem is also sizeable. In\nthe worst case, almost a quarter of the communities are\nbadly connected. This may have serious consequences\nfor analyses based on the resulting partitions. For exam-\nple, nodes in a community in biological or neurological\nnetworks are often assumed to share similar functions or\nbehaviour [25]. However, if communities are badly con-\nnected, this may lead to incorrect attributions of shared\nfunctionality. Similarly, in citation networks, such as the\nWeb of Science network, nodes in a community are usu-\nally considered to share a common topic [26, 27]. Again,\nif communities are badly connected, this may lead to in-\ncorrect inferences of topics, which will aﬀect bibliomet-\nric analyses relying on the inferred topics. In short, the\nproblem of badly connected communities has important\npractical consequences.\nThe Leiden algorithm has been speciﬁcally designed\nto address the problem of badly connected communities.\nFig. 4 shows how well it does compared to the Louvain\nalgorithm. The Leiden algorithm guarantees all commu-\nnities to be connected, but it may yield badly connected\ncommunities. In terms of the percentage of badly con-\nnectedcommunitiesintheﬁrstiteration, Leidenperforms\neven worse than Louvain, as can be seen in Fig. 4. Cru-\ncially, however, the percentage of badly connected com-\nmunities decreases with each iteration of the Leiden al-\ngorithm. Starting from the second iteration, Leiden out-\nperformed Louvain in terms of the percentage of badly\nconnected communities. In fact, if we keep iterating the\nLeiden algorithm, it will converge to a partition with-\nout any badly connected communities, as discussed in\nSection III. Hence, the Leiden algorithm eﬀectively ad-\ndresses the problem of badly connected communities.\nB. Benchmark networks\nTo study the scaling of the Louvain and the Leiden al-\ngorithm, we rely on a variant of a well-known approach\n8\n0.74\n0.76\n0.78\n0.8\nµ = 0.2\n0.54\n0.56\n0.58\n0.6\nµ = 0.4\n0.34\n0.36\n0.38\n0.4\nµ = 0.6\n0.22\n0.24\n0.26\nµ = 0.8\n103 105 107\n10−1\n101\n103\n103 105 107\n10−1\n101\n103\n103 105 107\n10−1\n101\n103\n103 105 107\n10−1\n102",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "105 Louvain Leiden",
+      "level": 1,
+      "text": "Nodes\nQualityTime (s)\nFIG. 5. Scaling of benchmark results for network size. Speed and quality of the Louvain and the Leiden algorithm\nfor benchmark networks of increasing size (two iterations). For larger networks and higher values ofµ, Louvain is much slower\nthan Leiden. For higher values ofµ, Leiden ﬁnds better partitions than Louvain.\n20 40 60 80 100\n0.79725\n0.7973\n0.79735\n0.7974\nµ = 0.2\n40 60 80 100 120\n0.595\n0.596\n0.597\nµ = 0.4\n100 200 300\n0.32\n0.34\n0.36\n0.38\n0.4\nµ = 0.6\n102 103\n0.202\n0.204\n0.206\n0.208\n0.21\nµ = 0.8\n500 1,000\n0.80026\n0.80028\n0.8003\n0.80032\n0.80034\n500 1,000 1,500\n0.599\n0.5995\n0.6\n0.6005\n1,0002,0003,0004,000\n0.32\n0.34\n0.36\n0.38\n0.4\n103 104\n0.204\n0.206",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "0.208 Louvain Leiden",
+      "level": 2,
+      "text": "Time (s)\nQuality n = 10 6n = 10 7\nFIG. 6. Runtime versus quality for benchmark networks. Speed and quality for the ﬁrst10 iterations of the Louvain\nand the Leiden algorithm for benchmark networks (n = 106 and n = 107). The horizontal axis indicates the cumulative time\ntaken to obtain the quality indicated on the vertical axis. Each point corresponds to a certain iteration of an algorithm, with\nresults averaged over10 experiments. In general, Leiden is both faster than Louvain and ﬁnds better partitions.\nfor constructing benchmark networks [28]. We generated\nbenchmark networks in the following way. First, we cre-\nated a speciﬁed number of nodes and we assigned each\nnode to a community. Communities were all of equal\nsize. A community size of50 nodes was used for the re-\nsults presented below, but larger community sizes yielded\nqualitatively similar results. We then created a certain\nnumber of edges such that a speciﬁed average degree⟨k⟩\nwas obtained. For the results reported below, the average\ndegree was set to⟨k⟩= 10. Edges were created in such\na way that an edge fell between two communities with a\nprobabilityµand within a community with a probability\n1−µ. We applied the Louvain and the Leiden algorithm\nto exactly the same networks, using the same seed for\nthe random number generator. For both algorithms,10\niterations were performed. We used the CPM quality\nfunction. The value of the resolution parameter was de-\ntermined based on the so-called mixing parameterµ[13].\nWe generated networks withn = 103 to n = 107 nodes.\nFor each set of parameters, we repeated the experiment\n10 times. Below, the quality of a partition is reported as\nH\n2m, where H is deﬁned in Eq. (2) andm is the number\n9\n0.2 0.4 0.6 0.8\n102\n103\n104",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "105 Louvain",
+      "level": 1,
+      "text": "Leiden\nµ\nTime (s)\nFIG. 7. Scaling of benchmark results for diﬃculty of\nthe partition. Speed of the ﬁrst iteration of the Louvain\nand the Leiden algorithm for benchmark networks with in-\ncreasingly diﬃcult partitions (n = 107). In the most diﬃcult\ncase (µ= 0.9), Louvain requires almost2.5 days, while Leiden\nneeds fewer than10 minutes.\nof edges.\nAs shown in Fig. 5, for lower values ofµthe partition\nis well deﬁned, and neither the Louvain nor the Leiden\nalgorithm has a problem in determining the correct par-\ntition in only two iterations. Hence, for lower values of\nµ, the diﬀerence in quality is negligible. However, asµ\nincreases, the Leiden algorithm starts to outperform the\nLouvain algorithm. The diﬀerences are not very large,\nwhich is probably because both algorithms ﬁnd parti-\ntions for which the quality is close to optimal, related to\nthe issue of the degeneracy of quality functions [29].\nThe Leiden algorithm is clearly faster than the Louvain\nalgorithm. For lower values ofµ, the correct partition\nis easy to ﬁnd and Leiden is only about twice as fast as\nLouvain. However, forhighervaluesof µ, Leidenbecomes\nordersofmagnitudefasterthanLouvain, reaching 10–100\ntimes faster runtimes for the largest networks. As can be\nseen in Fig. 7, whereas Louvain becomes much slower for\nmore diﬃcult partitions, Leiden is much less aﬀected by\nthe diﬃculty of the partition.\nFig. 6 presents total runtime versus quality for all iter-\nations of the Louvain and the Leiden algorithm. As can\nbe seen in the ﬁgure, Louvain quickly reaches a state in\nwhich it is unable to ﬁnd better partitions. On the other\nhand, Leiden keeps ﬁnding better partitions, especially\nfor higher values ofµ, for which it is more diﬃcult to\nidentify good partitions. A number of iterations of the\nLeiden algorithm can be performed before the Louvain\nalgorithm has ﬁnished its ﬁrst iteration. Later iterations\nof the Louvain algorithm are very fast, but this is only\nbecause the partition remains the same. With one ex-\nception (µ= 0.2 and n = 107), all results in Fig. 6 show\nthat Leiden outperforms Louvain in terms of both com-\nputational time and quality of the partitions.\nDBLPAmazon IMDB\nLive Journal\nWeb of ScienceWeb UK (2005)\n1\n10\n100\n1,000\n10,000Time (s)\nLouvain\nLeiden\nFIG. 8. First iteration runtime for empirical net-\nworks. Speed of the ﬁrst iteration of the Louvain and the\nLeiden algorithm for six empirical networks. Leiden is faster\nthan Louvain especially for larger networks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "Empirical networks",
+      "level": 1,
+      "text": "Analyses based on benchmark networks have only a\nlimited value because these networks are not represen-\ntative of empirical real-world networks. In particular,\nbenchmark networks have a rather simple structure. Em-\npirical networks show a much richer and more complex\nstructure. We now compare how the Leiden and the Lou-\nvain algorithm perform for the six empirical networks\nlisted in Table II. Our analysis is based on modularity\nwith resolution parameterγ= 1. For each network, Ta-\nble II reports the maximal modularity obtained using the\nLouvain and the Leiden algorithm.\nAs can be seen in Fig. 8, the Leiden algorithm is signiﬁ-\ncantly faster thanthe Louvain algorithm alsoin empirical\nnetworks. In the ﬁrst iteration, Leiden is roughly2–20\ntimes faster than Louvain. The speed diﬀerence is espe-\ncially large for larger networks. This is similar to what\nwe have seen for benchmark networks. For the Ama-\nzon and IMDB networks, the ﬁrst iteration of the Leiden\nalgorithm is only about 1.6 times faster than the ﬁrst\niteration of the Louvain algorithm. However, Leiden is\nmore than 7 times faster for the Live Journal network,\nmore than11 times faster for the Web of Science network\nand more than20 times faster for the Web UK network.\nIn fact, for the Web of Science and Web UK networks,\nFig. 9 shows that more than10 iterations of the Leiden\nalgorithmcanbeperformedbeforetheLouvainalgorithm\nhas ﬁnished its ﬁrst iteration.\nAs shown in Fig. 9, the Leiden algorithm also performs\nbetter than the Louvain algorithm in terms of the qual-\n10\nity of the partitions that are obtained. For all networks,\nLeidenidentiﬁessubstantiallybetterpartitionsthanLou-\nvain. Louvain quickly converges to a partition and is then\nunable to make further improvements. In contrast, Lei-\nden keeps ﬁnding better partitions in each iteration.\nThe quality improvement realised by the Leiden algo-\nrithm relative to the Louvain algorithm is larger for em-\npirical networks than for benchmark networks. Hence,\nthe complex structure of empirical networks creates an\neven stronger need for the use of the Leiden algorithm.\nLeiden keeps ﬁnding better partitions for empirical net-\nworks also after the ﬁrst10 iterations of the algorithm.\nThis contrasts to benchmark networks, for which Leiden\noften converges after a few iterations. For empirical net-\nworks, it may take quite some time before the Leiden\nalgorithm reaches its ﬁrst stable iteration. As can be\nseen in Fig. 10, for the IMDB and Amazon networks,\nLeiden reaches a stable iteration relatively quickly, pre-\nsumablybecausethesenetworkshaveafairlysimplecom-\nmunity structure. The DBLP network is somewhat more\nchallenging, requiring almost80 iterations on average to\nreach a stable iteration. The Web of Science network is\nthe most diﬃcult one. For this network, Leiden requires\nover 750 iterations on average to reach a stable iteration.\nImportantly, the ﬁrst iteration of the Leiden algorithm is\nthe most computationally intensive one, and subsequent\niterations are faster. For example, for the Web of Science\nnetwork, the ﬁrst iteration takes about110–120 seconds,\nwhile subsequent iterations require about40 seconds.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "DISCUSSION",
+      "level": 1,
+      "text": "Community detection is an important task in the anal-\nysis of complex networks. Finding communities in large\nnetworks is far from trivial: algorithms need to be fast,\nbut they also need to provide high-quality results. One\nof the most widely used algorithms is the Louvain algo-\nrithm [10], which is reported to be among the fastest and\nbestperformingcommunitydetectionalgorithms[11,12].\nHowever, as shown in this paper, the Louvain algorithm\nhas a major shortcoming: the algorithm yields commu-\nnities that may be arbitrarily badly connected. Commu-\nnities may even be disconnected.\nTo overcome the problem of arbitrarily badly con-\nnected communities, we introduced a new algorithm,\nwhich we refer to as the Leiden algorithm. This algo-\nrithm provides a number of explicit guarantees. In par-\nticular, it yields communities that are guaranteed to be\nconnected. Moreover, when the algorithm is applied it-\neratively, it converges to a partition in which all subsets\nof all communities are guaranteed to be locally optimally\nassigned. In practical applications, the Leiden algorithm\nconvincingly outperforms the Louvain algorithm, both in\nterms of speed and in terms of quality of the results, as\nshown by the experimental analysis presented in this pa-\nper. We conclude that the Leiden algorithm is strongly\npreferable to the Louvain algorithm.\n[1] S. Fortunato, Phys. Rep.486, 75 (2010).\n[2] M. A. Porter, J.-P. Onnela, and P. J. Mucha, Not. AMS\n56, 1082 (2009).\n[3] M. E. J. Newman and M. Girvan, Phys. Rev. E 69,\n026113 (2004).\n[4] J. Reichardt and S. Bornholdt, Phys. Rev. E74, 016110\n(2006).\n[5] U. Brandes, D. Delling, M. Gaertler, R. Gorke, M. Hoe-\nfer, Z. Nikoloski, D. Wagner, R. G, M. Hoefer,\nZ. Nikoloski, and D. Wagner, IEEE Trans. Knowl. Data\nEng. 20, 172 (2008).\n[6] A. Clauset, M. E. J. Newman, and C. Moore, Phys. Rev.\nE 70, 066111 (2004).\n[7] J. Duch and A. Arenas, Phys. Rev. E72, 027104 (2005).\n[8] R. Guimerà and L. A. Nunes Amaral, Nature433, 895\n(2005).\n[9] M. E. J. Newman, Phys. Rev. E74, 036104 (2006).\n[10] V. D. Blondel, J.-L. Guillaume, R. Lambiotte, and\nE. Lefebvre, J. Stat. Mech. Theory Exp.10008, 6 (2008).\n[11] A. Lancichinetti and S. Fortunato, Phys. Rev. E 80,\n056117 (2009).\n[12] Z. Yang, R. Algesheimer, and C. J. Tessone, Sci. Rep.\n6, 30750 (2016).\n[13] V. A. Traag, P. Van Dooren, and Y. Nesterov, Phys.\nRev. E84, 016114 (2011).\n[14] S. Fortunato and M. Barthélemy, Proc. Natl. Acad. Sci.\nU. S. A.104, 36 (2007).\n[15] L. Waltman and N. J. van Eck, Eur. Phys. J. B86, 471\n(2013).\n[16] N. Ozaki, H. Tezuka, and M. Inaba, Int. J. Comput.\nElectr. Eng.8, 207 (2016).\n[17] S. Bae, D. Halperin, J. D. West, M. Rosvall, and\nB. Howe, ACM Trans. Knowl. Discov. Data11, 1 (2017).\n[18] V. A. Traag, Phys. Rev. E92, 032801 (2015).\n[19] U. Raghavan, R. Albert, and S. Kumara, Phys. Rev. E\n76, 036106 (2007).\n[20] M. D. Luecken,Application of multi-resolution partition-\ning of interaction networks to the study of complex dis-\nease, Ph.D. thesis, University of Oxford (2016).\n[21] F. A. Wolf, F. Hamey, M. Plass, J. Solana, J. S. Dahlin,\nB. Gottgens, N. Rajewsky, L. Simon, and F. J. Theis,\nbioRxiv (2018), 10.1101/208819.\n[22] R. Rotta and A. Noack, J. Exp. Algorithmics 16, 2.1\n(2011).\n[23] V. A. Traag, L. Waltman, and N. J. van Eck, “net-\nworkanalysis,” Zenodo, 10.5281/zenodo.1466831 (2018),\nSource Code.\n[24] V. A. Traag, “leidenalg 0.7.0,” Zenodo, 10.5281/zen-\nodo.1469357 (2018), Source Code.\n[25] E. Bullmore and O. Sporns, Nat. Rev. Neurosci.10, 186\n(2009).\n[26] L. Waltman and N. J. van Eck, J. Am. Soc. Inf. Sci.\nTechnol.63, 2378 (2012).\n[27] R. Klavans and K. W. Boyack, J. Assoc. Inf. Sci. Technol.\n11\n1 2 3 4\n0.825\n0.83",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "0.835 Quality",
+      "level": 2,
+      "text": "DBLP\n1 2 3 4\n0.926\n0.928\n0.93\n0.932",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "0.934 Amazon",
+      "level": 2,
+      "text": "10 20\n0.698\n0.7\n0.702",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "0.704 Quality",
+      "level": 2,
+      "text": "IMDB\n100 200\n0.75\n0.76",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "0.77 Live Journal",
+      "level": 2,
+      "text": "1,000 2,000\n0.775\n0.78\n0.785",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "0.79 Time (s)",
+      "level": 2,
+      "text": "Quality\nWeb of Science\n2,000 4,000\n0.9794\n0.9796\n0.9798",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "0.98 Time (s)",
+      "level": 2,
+      "text": "Web UK\nLouvain Leiden\nFIG. 9. Runtime versus quality for empirical net-\nworks. Speed and quality for the ﬁrst10 iterations of the\nLouvain and the Leiden algorithm for six empirical networks.\nThe horizontal axis indicates the cumulative time taken to\nobtain the quality indicated on the vertical axis. Each point\ncorresponds to a certain iteration of an algorithm, with re-\nsults averaged over 10 experiments. Leiden is both faster\nthan Louvain and ﬁnds better partitions.\n68, 984 (2017).\n[28] A. Lancichinetti, S. Fortunato, and F. Radicchi, Phys.\nRev. E78, 046110 (2008).\n[29] B. H. Good, Y. A. De Montjoye, and A. Clauset, Phys.\nRev. E81, 046106 (2010).\n[30] V. A. Traag and J. Bruggeman, Phys. Rev. E80, 036115\n(2009).\n[31] T. N. Dinh, X. Li, and M. T. Thai, in2015 IEEE Int.\nConf. Data Min. (IEEE, 2015) pp. 101–110.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "Eq. (2)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

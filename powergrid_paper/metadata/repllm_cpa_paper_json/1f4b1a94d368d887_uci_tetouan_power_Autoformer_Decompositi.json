@@ -1,0 +1,676 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/uci_tetouan_power/uci_tetouan_power__Autoformer_Decomposition_Transformers__f608dea01f.pdf",
+  "n_pages": 20,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Time series forecasting has been widely used in energy consumption, trafﬁc and economics planning,\nweather and disease propagation forecasting. In these real-world applications, one pressing demand\nis to extend the forecast time into the far future, which is quite meaningful for the long-term planning\nand early warning. Thus, in this paper, we study the long-term forecasting problem of time series,\ncharacterizing itself by the large length of predicted time series. Recent deep forecasting models\n[48, 23, 26, 34, 29, 35, 25, 41] have achieved great progress, especially the Transformer-based models.\nBeneﬁting from the self-attention mechanism, Transformers obtain great advantage in modeling\nlong-term dependencies for sequential data, which enables more powerful big models [8, 13].\nHowever, the forecasting task is extremely challenging under the long-term setting. First, it is\nunreliable to discover the temporal dependencies directly from the long-term time series because\nthe dependencies can be obscured by entangled temporal patterns. Second, canonical Transformers\nwith self-attention mechanisms are computationally prohibitive for long-term forecasting because\nof the quadratic complexity of sequence length. Previous Transformer-based forecasting models\n[48, 23, 26] mainly focus on improving self-attention to a sparse version. While performance is\nsigniﬁcantly improved, these models still utilize the point-wise representation aggregation. Thus, in\nthe process of efﬁciency improvement, they will sacriﬁce the information utilization because of the\nsparse point-wise connections, resulting in a bottleneck for long-term forecasting of time series.\n35th Conference on Neural Information Processing Systems (NeurIPS 2021).\narXiv:2106.13008v5  [cs.LG]  7 Jan 2022\nTo reason about the intricate temporal patterns, we try to take the idea of decomposition, which is a\nstandard method in time series analysis [1, 33]. It can be used to process the complex time series and\nextract more predictable components. However, under the forecasting context, it can only be used\nas the pre-processing of past series because the future is unknown [20]. This common usage limits\nthe capabilities of decomposition and overlooks the potential future interactions among decomposed\ncomponents. Thus, we attempt to go beyond pre-processing usage of decomposition and propose a\ngeneric architecture to empower the deep forecasting models with immanent capacity of progressive\ndecomposition. Further, decomposition can ravel out the entangled temporal patterns and highlight\nthe inherent properties of time series [20]. Beneﬁting from this, we try to take advantage of the series\nperiodicity to renovate the point-wise connection in self-attention. We observe that the sub-series at\nthe same phase position among periods often present similar temporal processes. Thus, we try to\nconstruct a series-level connection based on the process similarity derived by series periodicity.\nBased on the above motivations, we propose an originalAutoformer in place of the Transformers for\nlong-term time series forecasting. Autoformer still follows residual and encoder-decoder structure but\nrenovates Transformer into a decomposition forecasting architecture. By embedding our proposed\ndecomposition blocks as the inner operators, Autoformer can progressively separate the long-term\ntrend information from predicted hidden variables. This design allows our model to alternately\ndecompose and reﬁne the intermediate results during the forecasting procedure. Inspired by the\nstochastic process theory [9, 30], Autoformer introduces an Auto-Correlation mechanism in place\nof self-attention, which discovers the sub-series similarity based on the series periodicity and aggre-\ngates similar sub-series from underlying periods. This series-wise mechanism achievesO(L logL)\ncomplexity for length-L series and breaks the information utilization bottleneck by expanding the\npoint-wise representation aggregation to sub-series level. Autoformer achieves the state-of-the-art\naccuracy on six benchmarks. The contributions are summarized as follows:\n• To tackle the intricate temporal patterns of the long-term future, we present Autoformer as a\ndecomposition architecture and design the inner decomposition block to empower the deep\nforecasting model with immanent progressive decomposition capacity.\n• We propose an Auto-Correlation mechanism with dependencies discovery and information\naggregation at the series level. Our mechanism is beyond previous self-attention family and\ncan simultaneously beneﬁt the computation efﬁciency and information utilization.\n• Autoformer achieves a 38% relative improvement under the long-term setting on six bench-\nmarks, covering ﬁve real-world applications: energy, trafﬁc, economics, weather and disease.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Related Work",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Models for Time Series Forecasting",
+      "level": 2,
+      "text": "Due to the immense importance of time series forecasting, various models have been well developed.\nMany time series forecasting methods start from the classic tools [38, 10]. ARIMA [7, 6] tackles the\nforecasting problem by transforming the non-stationary process to stationary through differencing.\nThe ﬁltering method is also introduced for series forecasting [ 24, 12]. Besides, recurrent neural\nnetworks (RNNs) models are used to model the temporal dependencies for time series [42, 32, 47, 28].\nDeepAR [34] combines autoregressive methods and RNNs to model the probabilistic distribution\nof future series. LSTNet [25] introduces convolutional neural networks (CNNs) with recurrent-skip\nconnections to capture the short-term and long-term temporal patterns. Attention-based RNNs\n[46, 36, 37] introduce the temporal attention to explore the long-range dependencies for prediction.\nAlso, many works based on temporal convolution networks (TCN) [40, 5, 4, 35] attempt to model the\ntemporal causality with the causal convolution. These deep forecasting models mainly focus on the\ntemporal relation modeling by recurrent connections, temporal attention or causal convolution.\nRecently, Transformers [41, 45] based on the self-attention mechanism shows great power in sequen-\ntial data, such as natural language processing [13, 8], audio processing [19] and even computer vision\n[16, 27]. However, applying self-attention to long-term time series forecasting is computationally\nprohibitive because of the quadratic complexity of sequence length L in both memory and time.\nLogTrans [26] introduces the local convolution to Transformer and proposes the LogSparse attention\nto select time steps following the exponentially increasing intervals, which reduces the complexity to\nO(L(logL)2). Reformer [23] presents the local-sensitive hashing (LSH) attention and reduces the\ncomplexity toO(L logL). Informer [48] extends Transformer with KL-divergence based ProbSparse\n2\nattention and also achievesO(L logL) complexity. Note that these methods are based on the vanilla\nTransformer and try to improve the self-attention mechanism to a sparse version, which still follows\nthe point-wise dependency and aggregation. In this paper, our proposed Auto-Correlation mechanism\nis based on the inherent periodicity of time series and can provide series-wise connections.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Decomposition of Time Series",
+      "level": 2,
+      "text": "As a standard method in time series analysis, time series decomposition [1, 33] deconstructs a time\nseries into several components, each representing one of the underlying categories of patterns that are\nmore predictable. It is primarily useful for exploring historical changes over time. For the forecasting\ntasks, decomposition is always used as the pre-processing of historical series before predicting future\nseries [20, 2], such as Prophet [39] with trend-seasonality decomposition and N-BEATS [29] with\nbasis expansion and DeepGLO [35] with matrix decomposition. However, such pre-processing is\nlimited by the plain decomposition effect of historical series and overlooks the hierarchical interaction\nbetween the underlying patterns of series in the long-term future. This paper takes the decomposition\nidea from a new progressive dimension. Our Autoformer harnesses the decomposition as an inner\nblock of deep models, which can progressively decompose the hidden series throughout the whole\nforecasting process, including both the past series and the predicted intermediate results.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Autoformer",
+      "level": 1,
+      "text": "The time series forecasting problem is to predict the most probable length- O series in the future\ngiven the past length-I series, denoting as input-I-predict-O. The long-term forecasting setting is to\npredict the long-term future, i.e. largerO. As aforementioned, we have highlighted the difﬁculties\nof long-term series forecasting: handling intricate temporal patterns and breaking the bottleneck of\ncomputation efﬁciency and information utilization. To tackle these two challenges, we introduce\nthe decomposition as a builtin block to the deep forecasting model and propose Autoformer as a\ndecomposition architecture. Besides, we design the Auto-Correlation mechanism to discover the\nperiod-based dependencies and aggregate similar sub-series from underlying periods.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Decomposition Architecture",
+      "level": 2,
+      "text": "We renovate Transformer [41] to a deep decomposition architecture (Figure 1), including the inner\nseries decomposition block, Auto-Correlation mechanism, and corresponding Encoder and Decoder.\nSeries decomposition block To learn with the complex temporal patterns in long-term forecasting\ncontext, we take the idea of decomposition [1, 33], which can separate the series into trend-cyclical\nand seasonal parts. These two parts reﬂect the long-term progression and the seasonality of the series\nrespectively. However, directly decomposing is unrealizable for future series because the future is just\nunknown. To tackle this dilemma, we present a series decomposition block as an inner operation of\nAutoformer (Figure 1), which can extract the long-term stationary trend from predicted intermediate\nhidden variables progressively. Concretely, we adapt the moving average to smooth out periodic\nﬂuctuations and highlight the long-term trends. For length-L input seriesX∈ RL×d, the process is:\nXt = AvgPool(Padding(X ))\nXs =X−X t, (1)\nwhereXs,Xt∈ RL×d denote the seasonal and the extracted trend-cyclical part respectively. We adopt\nthe AvgPool(·) for moving average with the padding operation to keep the series length unchanged.\nWe useXs,Xt = SeriesDecomp(X ) to summarize above equations, which is a model inner block.\nModel inputs The inputs of encoder part are the pastI time stepsXen∈ RI×d. As a decomposition\narchitecture (Figure 1), the input of Autoformer decoder contains both the seasonal part Xdes∈\nR( I\n2 +O)×d and trend-cyclical partXdet∈ R( I\n2 +O)×d to be reﬁned. Each initialization consists of\ntwo parts: the component decomposed from the latter half of encoder’s inputXen with length I\n2 to\nprovide recent information, placeholders with lengthO ﬁlled by scalars. It’s formulized as follows:\nXens,Xent = SeriesDecomp(Xen I\n2 :I )\nXdes = Concat(Xens,X0)\nXdet = Concat(Xent,XMean),\n(2)",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 Input Data Mean",
+      "level": 1,
+      "text": "Auto-\nCorrelation\nSeries\nDecomp\nTrend-cyclical Init\nSeasonal Init\nFeed \nForward\nSeries\nDecomp\nAuto-\nCorrelation\nSeries\nDecomp\nAuto-\nCorrelation\nN x\nM x\n+\nEncoder Input\nAutoformer Decoder\nAutoformer Encoder\n+\nPrediction\n+++\nFeed \nForward\nSeries\nDecomp+Series\nDecomp+\n+ +\nZero\nTo Predict Zero\nData\nMean\nTime\nSeries\nSeasonal\nPart\nTrend\n-cyclical\nPart\nK\nV\nQ\nK\nV\nQ\nK\nV\nQ\nFigure 1: Autoformer architecture. The encoder eliminates the long-term trend-cyclical part by series\ndecomposition blocks (blue blocks) and focuses on seasonal patterns modeling. The decoder accu-\nmulates the trend part extracted from hidden variables progressively. The past seasonal information\nfrom encoder is utilized by the encoder-decoder Auto-Correlation (center green block in decoder).\nwhereXens,Xent∈ R\nI\n2×d denote the seasonal and trend-cyclical parts of Xen respectively, and\nX0,XMean∈ RO×d denote the placeholders ﬁlled with zero and the mean ofXen respectively.\nEncoder As shown in Figure 1, the encoder focuses on the seasonal part modeling. The output of\nthe encoder contains the past seasonal information and will be used as the cross information to help\nthe decoder reﬁne prediction results. Suppose we haveN encoder layers. The overall equations for\nl-th encoder layer are summarized asXl\nen = Encoder(Xl−1\nen ). Details are shown as follows:\nSl,1\nen, = SeriesDecomp\n(\nAuto-Correlation(Xl−1\nen ) +Xl−1\nen\n)\nSl,2\nen, = SeriesDecomp\n(\nFeedForward(Sl,1\nen ) +Sl,1\nen\n)\n,\n(3)\nwhere “ ” is the eliminated trend part.Xl\nen =Sl,2\nen,l∈{ 1,··· ,N} denotes the output ofl-th encoder\nlayer andX 0\nen is the embeddedXen.Sl,i\nen,i ∈{ 1, 2} represents the seasonal component after the\ni-th series decomposition block in thel-th layer respectively. We will give detailed description of\nAuto-Correlation(·) in the next section, which can seamlessly replace the self-attention.\nDecoder The decoder contains two parts: the accumulation structure for trend-cyclical components\nand the stacked Auto-Correlation mechanism for seasonal components (Figure 1). Each decoder\nlayer contains the inner Auto-Correlation and encoder-decoder Auto-Correlation, which can reﬁne\nthe prediction and utilize the past seasonal information respectively. Note that the model extracts\nthe potential trend from the intermediate hidden variables during the decoder, allowing Autoformer\nto progressively reﬁne the trend prediction and eliminate interference information for period-based\ndependencies discovery in Auto-Correlation. Suppose there areM decoder layers. With the latent\nvariableXN\nen from the encoder, the equations of l-th decoder layer can be summarized as Xl\nde =\nDecoder(Xl−1\nde ,XN\nen ). The decoder can be formalized as follows:\nSl,1\nde,Tl,1\nde = SeriesDecomp\n(\nAuto-Correlation(Xl−1\nde ) +Xl−1\nde\n)\nSl,2\nde,Tl,2\nde = SeriesDecomp\n(\nAuto-Correlation(Sl,1\nde,XN\nen ) +Sl,1\nde\n)\nSl,3\nde,Tl,3\nde = SeriesDecomp\n(\nFeedForward(Sl,2\nde ) +Sl,2\nde\n)\nTl\nde =Tl−1\nde +Wl,1∗T l,1\nde +Wl,2∗T l,2\nde +Wl,3∗T l,3\nde ,\n(4)\nwhereXl\nde =Sl,3\nde,l∈{ 1,··· ,M} denotes the output ofl-th decoder layer.X 0\nde is embedded from\nXdes for deep transform andT 0\nde =Xdet is for accumulation.Sl,i\nde,Tl,i\nde,i∈{ 1, 2, 3} represent the\nseasonal component and trend-cyclical component after thei-th series decomposition block in the\nl-th layer respectively.Wl,i,i∈{ 1, 2, 3} represents the projector for thei-th extracted trendTl,i\nde .\n4\n…",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "Q K V",
+      "level": 1,
+      "text": "FFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "SxC SxC",
+      "level": 1,
+      "text": "LxCx2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "LxC",
+      "level": 1,
+      "text": "LxCx2\nConjugateLxCx2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "Resize Resize",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "Roll(     )",
+      "level": 1,
+      "text": "Roll(     )\nRoll(     )\nx\nx\nx\n…\nFusion\nTime\nDelay\nT op k\nkxC\nSoftMax\ntest\nhaixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧ 1\n⌧ 2\n⌧ k\nR ( ⌧ 1\n)\nR ( ⌧ 2\n)\nR ( ⌧ k\n)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "1 test",
+      "level": 1,
+      "text": "haixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧ 1\n⌧ 2\n⌧ k\nR ( ⌧ 1\n)\nR ( ⌧ 2\n)\nR ( ⌧ k\n)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "1 test",
+      "level": 1,
+      "text": "haixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧ 1\n⌧ 2\n⌧ k\nR ( ⌧ 1\n)\nR ( ⌧ 2\n)\nR ( ⌧ k\n)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "1 test",
+      "level": 1,
+      "text": "haixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧1\n⌧2\n⌧k\nR (⌧1 )\nR (⌧2 )\nR (⌧k )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "1 test",
+      "level": 1,
+      "text": "haixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧1\n⌧2\n⌧k\nR (⌧1 )\nR (⌧2 )\nR (⌧k )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "1 test",
+      "level": 1,
+      "text": "haixu wu\nApril 2021",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "⌧1\n⌧2\n⌧k\nR (⌧1 )\nR (⌧2 )\nR (⌧k )\n1\nFigure 2: Auto-Correlation (left) and Time Delay Aggregation (right). We utilize the Fast Fourier\nTransform to calculate the autocorrelationR(τ ), which reﬂects the time-delay similarities. Then the\nsimilar sub-processes are rolled to the same index based on selected delayτ and aggregated byR(τ ).\nThe ﬁnal prediction is the sum of the two reﬁned decomposed components, as WS∗X M\nde +TM\nde ,\nwhereWS is to project the deep transformed seasonal componentXM\nde to the target dimension.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "3.2 Auto-Correlation Mechanism",
+      "level": 2,
+      "text": "As shown in Figure 2, we propose the Auto-Correlation mechanism with series-wise connections to\nexpand the information utilization. Auto-Correlation discovers the period-based dependencies by\ncalculating the series autocorrelation and aggregates similar sub-series by time delay aggregation.\nPeriod-based dependencies It is observed that the same phase position among periods naturally\nprovides similar sub-processes.\nInspired by the stochastic process theory [9, 30], for a real discrete-time process{Xt}, we can obtain\nthe autocorrelationRXX (τ ) by the following equations:\nRXX (τ ) = lim\nL→∞\n1\nL\nL∑\nt=1\nXtXt−τ. (5)\nRXX (τ ) reﬂects the time-delay similarity between{Xt} and itsτ lag series{Xt−τ}. As shown in\nFigure 2, we use the autocorrelationR(τ ) as the unnormalized conﬁdence of estimated period length\nτ. Then, we choose the most possiblek period lengthsτ1,··· ,τk. The period-based dependencies\nare derived by the above estimated periods and can be weighted by the corresponding autocorrelation.\nTime delay aggregation The period-based dependencies connect the sub-series among estimated\nperiods. Thus, we present the time delay aggregationblock (Figure 2), which can roll the series based\non selected time delayτ1,··· ,τk. This operation can align similar sub-series that are at the same\nphase position of estimated periods, which is different from the point-wise dot-product aggregation\nin self-attention family. Finally, we aggregate the sub-series by softmax normalized conﬁdences.\nFor the single head situation and time seriesX with length-L, after the projector, we get queryQ, key\nK and valueV. Thus, it can replace self-attention seamlessly. The Auto-Correlation mechanism is:\nτ1,··· ,τk = arg Topk\nτ∈{1,···,L}\n(RQ,K(τ ))\nˆRQ,K(τ1),··· , ˆRQ,K(τk) = SoftMax (RQ,K(τ1),··· ,RQ,K(τk))\nAuto-Correlation(Q,K,V) =\nk∑\ni=1\nRoll(V,τi)ˆRQ,K(τi),\n(6)\nwhere arg Topk(·) is to get the arguments of the Topk autocorrelations and letk =⌊c× logL⌋,c\nis a hyper-parameter.RQ,K is autocorrelation between seriesQ andK. Roll(X,τ ) represents the\noperation toX with time delayτ, during which elements that are shifted beyond the ﬁrst position\nare re-introduced at the last position. For the encoder-decoder Auto-Correlation (Figure 1),K,V are\nfrom the encoderXN\nen and will be resized to length-O,Q is from the previous block of the decoder.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "5 Period 1Period 2 Period N",
+      "level": 1,
+      "text": "…\n(d) Auto-Correlation Time\n(b) Sparse Attention Time\n(a) Full Attention Time\n(a) LogSparse Attention Time\nFigure 3: Auto-Correlation vs. self-attention family. Full Attention [41] (a) adapts the fully connection\namong all time points. Sparse Attention [23, 48] (b) selects points based on the proposed similarity\nmetrics. LogSparse Attention [26] (c) chooses points following the exponentially increasing intervals.\nAuto-Correlation (d) focuses on the connections of sub-series among underlying periods.\nFor the multi-head version used in Autoformer, with hidden variables ofdmodel channels,h heads,\nthe query, key and value fori-th head areQi,Ki,Vi∈ RL×\ndmodel\nh ,i∈{ 1,··· ,h}. The process is:\nMultiHead(Q,K,V) =Woutput∗ Concat(head1,··· , headh)\nwhere headi = Auto-Correlation(Qi,Ki,Vi). (7)\nEfﬁcient computation For period-based dependencies, these dependencies point to sub-processes\nat the same phase position of underlying periods and are inherently sparse. Here, we select the most\npossible delays to avoid picking the opposite phases. Because we aggregateO(logL) series whose\nlength isL, the complexity of Equations 6 and 7 isO(L logL). For the autocorrelation computation\n(Equation 5), given time series{Xt},RXX (τ ) can be calculated by Fast Fourier Transforms (FFT)\nbased on the Wiener–Khinchin theorem [43]:\nSXX (f ) =F (Xt)F∗ (Xt) =\n∫ ∞\n−∞\nXte−i2πtf dt\n∫ ∞\n−∞\nXte−i2πtf dt\nRXX (τ ) =F−1 (SXX (f )) =\n∫ ∞\n−∞\nSXX (f )ei2πfτ df,\n(8)\nwhereτ∈{ 1,··· ,L},F denotes the FFT andF−1 is its inverse.∗ denotes the conjugate operation\nandSXX (f ) is in the frequency domain. Note that the series autocorrelation of all lags in{1,··· ,L}\ncan be calculated at once by FFT. Thus, Auto-Correlation achieves theO(L logL) complexity.\nAuto-Correlation vs. self-attention family Different from the point-wise self-attention family,\nAuto-Correlation presents the series-wise connections (Figure 3). Concretely, for the temporal\ndependencies, we ﬁnd the dependencies among sub-series based on the periodicity. In contrast,\nthe self-attention family only calculates the relation between scattered points. Though some self-\nattentions [26, 48] consider the local information, they only utilize this to help point-wise depen-\ndencies discovery. For the information aggregation, we adopt the time delay block to aggregate the\nsimilar sub-series from underlying periods. In contrast, self-attentions aggregate the selected points\nby dot-product. Beneﬁting from the inherent sparsity and sub-series-level representation aggregation,\nAuto-Correlation can simultaneously beneﬁt the computation efﬁciency and information utilization.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "We extensively evaluate the proposed Autoformer on six real-world benchmarks, covering ﬁve\nmainstream time series forecasting applications: energy, trafﬁc, economics, weather and disease.\nDatasets Here is a description of the six experiment datasets: (1) ETT [48] dataset contains the data\ncollected from electricity transformers, including load and oil temperature that are recorded every\n6\nTable 1: Multivariate results with different prediction lengthsO∈{ 96, 192, 336, 720}. We set the\ninput lengthI as 36 for ILI and 96 for the others. A lower MSE or MAE indicates a better prediction.\nModels Autoformer Informer[48] LogTrans[26] Reformer[23] LSTNet[25] LSTM[17] TCN[4]\nMetric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAEETT∗\n96 0.255 0.339 0.365 0.453 0.768 0.642 0.658 0.619 3.142 1.365 2.041 1.073 3.041 1.330\n192 0.281 0.340 0.533 0.563 0.989 0.757 1.078 0.827 3.154 1.369 2.249 1.112 3.072 1.339\n336 0.339 0.372 1.363 0.887 1.334 0.872 1.549 0.972 3.160 1.369 2.568 1.238 3.105 1.348\n720 0.422 0.419 3.379 1.388 3.048 1.328 2.631 1.242 3.171 1.368 2.720 1.287 3.135 1.354\nElectricity\n96 0.201 0.317 0.274 0.368 0.258 0.357 0.312 0.402 0.680 0.645 0.375 0.437 0.985 0.813\n192 0.222 0.334 0.296 0.386 0.266 0.368 0.348 0.433 0.725 0.676 0.442 0.473 0.996 0.821\n336 0.231 0.338 0.300 0.394 0.280 0.380 0.350 0.433 0.828 0.727 0.439 0.473 1.000 0.824\n720 0.254 0.361 0.373 0.439 0.283 0.376 0.340 0.420 0.957 0.811 0.980 0.814 1.438 0.784\nExchange\n96 0.197 0.323 0.847 0.752 0.968 0.812 1.065 0.829 1.551 1.058 1.453 1.049 3.004 1.432\n192 0.300 0.369 1.204 0.895 1.040 0.851 1.188 0.906 1.477 1.028 1.846 1.179 3.048 1.444\n336 0.509 0.524 1.672 1.036 1.659 1.081 1.357 0.976 1.507 1.031 2.136 1.231 3.113 1.459\n720 1.447 0.941 2.478 1.310 1.941 1.127 1.510 1.016 2.285 1.243 2.984 1.427 3.150 1.458\nTrafﬁc\n96 0.613 0.388 0.719 0.391 0.684 0.384 0.732 0.423 1.107 0.685 0.843 0.453 1.438 0.784\n192 0.616 0.382 0.696 0.379 0.685 0.390 0.733 0.420 1.157 0.706 0.847 0.453 1.463 0.794\n336 0.622 0.337 0.777 0.420 0.733 0.408 0.742 0.420 1.216 0.730 0.853 0.455 1.479 0.799\n720 0.660 0.408 0.864 0.472 0.717 0.396 0.755 0.423 1.481 0.805 1.500 0.805 1.499 0.804\nWeather\n96 0.266 0.336 0.300 0.384 0.458 0.490 0.689 0.596 0.594 0.587 0.369 0.406 0.615 0.589\n192 0.307 0.367 0.598 0.544 0.658 0.589 0.752 0.638 0.560 0.565 0.416 0.435 0.629 0.600\n336 0.359 0.395 0.578 0.523 0.797 0.652 0.639 0.596 0.597 0.587 0.455 0.454 0.639 0.608\n720 0.419 0.428 1.059 0.741 0.869 0.675 1.130 0.792 0.618 0.599 0.535 0.520 0.639 0.610\nILI\n24 3.483 1.287 5.764 1.677 4.480 1.444 4.400 1.382 6.026 1.770 5.914 1.734 6.624 1.830\n36 3.103 1.148 4.755 1.467 4.799 1.467 4.783 1.448 5.340 1.668 6.631 1.845 6.858 1.879\n48 2.669 1.085 4.763 1.469 4.800 1.468 4.832 1.465 6.080 1.787 6.736 1.857 6.968 1.892\n60 2.770 1.125 5.264 1.564 5.278 1.560 4.882 1.483 5.548 1.720 6.870 1.879 7.127 1.918\n* ETT means the ETTm2. See Appendix A for the full benchmark of ETTh1, ETTh2, ETTm1.\n15 minutes between July 2016 and July 2018. (2) Electricity1 dataset contains the hourly electricity\nconsumption of 321 customers from 2012 to 2014. (3) Exchange [25] records the daily exchange\nrates of eight different countries ranging from 1990 to 2016. (4) Trafﬁc2 is a collection of hourly data\nfrom California Department of Transportation, which describes the road occupancy rates measured\nby different sensors on San Francisco Bay area freeways. (5) Weather3 is recorded every 10 minutes\nfor 2020 whole year, which contains 21 meteorological indicators, such as air temperature, humidity,\netc. (6) ILI4 includes the weekly recorded inﬂuenza-like illness (ILI) patients data from Centers for\nDisease Control and Prevention of the United States between 2002 and 2021, which describes the\nratio of patients seen with ILI and the total number of the patients. We follow standard protocol and\nsplit all datasets into training, validation and test set in chronological order by the ratio of 6:2:2 for\nthe ETT dataset and 7:1:2 for the other datasets.\nImplementation details Our method is trained with the L2 loss, using the ADAM [22] optimizer\nwith an initial learning rate of 10−4. Batch size is set to 32. The training process is early stopped\nwithin 10 epochs. All experiments are repeated three times, implemented in PyTorch [ 31] and\nconducted on a single NVIDIA TITAN RTX 24GB GPUs. The hyper-parameterc of Auto-Correlation\nis in the range of 1 to 3 to trade off performance and efﬁciency. See Appendix E and B for standard\ndeviations and sensitivity analysis. Autoformer contains 2 encoder layers and 1 decoder layer.\nBaselines We include 10 baseline methods. For the multivariate setting, we select three latest state-\nof-the-art transformer-based models: Informer [48], Reformer [23], LogTrans [26], two RNN-based\nmodels: LSTNet [25], LSTM [17] and CNN-based TCN [4] as baselines. For the univariate setting,\nwe include more competitive baselines: N-BEATS[29], DeepAR [34], Prophet [39] and ARMIA [1].\n1https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014\n2http://pems.dot.ca.gov\n3https://www.bgc-jena.mpg.de/wetter/\n4https://gis.cdc.gov/grasp/fluview/fluportaldashboard.html\n7\nTable 2: Univariate results with different prediction lengths O∈{ 96, 192, 336, 720} on typical\ndatasets. We set the input lengthI as 96. A lower MSE or MAE indicates a better prediction.\nModels AutoformerN-BEATS[29]Informer[48]LogTrans[26]Reformer[23]DeepAR[34]Prophet[39] ARIMA[1]\nMetric MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE MSE MAE\nETT\n96 0.065 0.189 0.082 0.219 0.088 0.225 0.082 0.217 0.131 0.288 0.099 0.237 0.287 0.456 0.211 0.362\n192 0.118 0.256 0.120 0.268 0.132 0.283 0.133 0.284 0.186 0.354 0.154 0.310 0.312 0.483 0.261 0.406\n336 0.154 0.305 0.226 0.370 0.180 0.336 0.201 0.361 0.220 0.381 0.277 0.428 0.331 0.474 0.317 0.448\n720 0.182 0.335 0.188 0.338 0.300 0.435 0.268 0.407 0.267 0.430 0.332 0.468 0.534 0.593 0.366 0.487\nExchange\n96 0.241 0.387 0.156 0.299 0.591 0.615 0.279 0.441 1.327 0.944 0.417 0.515 0.828 0.762 0.112 0.245\n192 0.273 0.403 0.669 0.665 1.183 0.912 1.950 1.048 1.258 0.924 0.813 0.735 0.909 0.974 0.304 0.404\n336 0.508 0.539 0.611 0.605 1.367 0.984 2.438 1.262 2.179 1.296 1.331 0.962 1.304 0.988 0.736 0.598\n720 0.991 0.768 1.111 0.860 1.872 1.072 2.010 1.247 1.280 0.953 1.894 1.181 3.238 1.566 1.871 0.935",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "4.1 Main Results",
+      "level": 2,
+      "text": "To compare performances under different future horizons, we ﬁx the input length and evaluate models\nwith a wide range of prediction lengths: 96, 192, 336, 720. This setting precisely meets the deﬁnition\nof long-term forecasting. Here are results on both the multivariate and univariate settings.\nMultivariate results As for the multivariate setting, Autoformer achieves the consistent state-of-\nthe-art performance in all benchmarks and all prediction length settings (Table 10). Especially, under\nthe input-96-predict-336 setting, compared to previous state-of-the-art results, Autoformer gives74%\n(1.334→0.339) MSE reduction in ETT, 18% (0.280→0.231) in Electricity, 61% (1.357→0.509)\nin Exchange, 15% (0.733→0.622) in Trafﬁc and 21% (0.455→0.359) in Weather. For the input-\n36-predict-60 setting of ILI, Autoformer makes 43% (4.882→2.770) MSE reduction. Overall,\nAutoformer yields a 38% averaged MSE reduction among above settings. Note that Autoformer still\nprovides remarkable improvements in the Exchange dataset that is without obvious periodicity. See\nAppendix E for detailed showcases. Besides, we can also ﬁnd that the performance of Autoformer\nchanges quite steadily as the prediction lengthO increases. It means that Autoformer retains better\nlong-term robustness, which is meaningful for real-world practical applications, such as weather\nearly warning and long-term energy consumption planning.\nUnivariate results We list the univariate results of two typical datasets in Table 2. Under the\ncomparison with extensive baselines, our Autoformer still achieves state-of-the-art performance for\nthe long-term forecasting tasks. In particular, for the input-96-predict-336 setting, our model achieves\n14% (0.180→0.145) MSE reduction on the ETT dataset with obvious periodicity. For the Exchange\ndataset without obvious periodicity, Autoformer surpasses other baselines by 17% (0.611→0.508)\nand shows greater long-term forecasting capacity. Also, we ﬁnd that ARIMA [1] performs best in the\ninput-96-predict-96 setting of the Exchange dataset but fails in the long-term setting. This situation\nof ARIMA can be beneﬁted from its inherent capacity for non-stationary economic data but is limited\nby the intricate temporal patterns of real-world series.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "4.2 Ablation studies",
+      "level": 2,
+      "text": "Table 3: Ablation of decomposition in multivariate ETT with MSE metric. Ours adopts our progres-\nsive architecture into other models. Sep employs two models to forecast pre-decomposed seasonal\nand trend-cyclical components separately. Promotion is the MSE reduction compared to Origin.\nInput-96 Transformer[41] Informer[48] LogTrans[23] Reformer[26] Promotion\nPredict-O Origin Sep Ours Origin Sep Ours Origin Sep Ours Origin Sep Ours Sep Ours\n96 0.604 0.311 0.204 0.365 0.490 0.354 0.768 0.862 0.231 0.658 0.445 0.218 0.069 0.347\n192 1.060 0.760 0.266 0.533 0.658 0.432 0.989 0.533 0.378 1.078 0.510 0.336 0.300 0.562\n336 1.413 0.665 0.375 1.363 1.469 0.481 1.334 0.762 0.362 1.549 1.028 0.366 0.434 1.019\n720 2.672 3.200 0.537 3.379 2.766 0.822 3.048 2.601 0.539 2.631 2.845 0.502 0.079 2.332\nDecomposition architecture With our proposed progressive decomposition architecture, other\nmodels can gain consistent promotion, especially as the prediction lengthO increases (Table 3). This\n8\nveriﬁes that our method can generalize to other models and release the capacity of other dependencies\nlearning mechanisms, alleviate the distraction caused by intricate patterns. Besides, our architecture\noutperforms the pre-processing, although the latter employs a bigger model and more parameters.\nEspecially, pre-decomposing may even bring negative effect because it neglects the interaction of\ncomponents during long-term future, such as Transformer [41] predict-720, Informer [48] predict-336.\nAuto-Correlation vs. self-attention family As shown in Table 4, our proposed Auto-Correlation\nachieves the best performance under various input-I-predict-O settings, which veriﬁes the effective-\nness of series-wise connections comparing to point-wise self-attentions (Figure 3). Furthermore, we\ncan also observe that Auto-Correlation is memory efﬁciency from the last column of Table 4, which\ncan be used in long sequence forecasting, such as input-336-predict-1440.\nTable 4: Comparison of Auto-Correlation and self-attention in the multivariate ETT. Wereplace the\nAuto-Correlation in Autoformer with different self-attentions. The “-” indicates the out-of-memory.\nInput Length I 96 192 336\nPrediction Length O 336 720 1440 336 720 1440 336 720 1440\nAuto- MSE 0.339 0.422 0.555 0.355 0.429 0.503 0.361 0.425 0.574\nCorrelation MAE 0.372 0.419 0.496 0.392 0.430 0.484 0.406 0.440 0.534\nFull MSE 0.375 0.537 0.667 0.450 0.554 - 0.501 0.647 -\nAttention[41] MAE 0.425 0.502 0.589 0.470 0.533 - 0.485 0.491 -\nLogSparse MSE 0.362 0.539 0.582 0.420 0.552 0.958 0.474 0.601 -\nAttention[26] MAE 0.413 0.522 0.529 0.450 0.513 0.736 0.474 0.524 -\nLSH MSE 0.366 0.502 0.663 0.407 0.636 1.069 0.442 0.615 -\nAttention[23] MAE 0.404 0.475 0.567 0.421 0.571 0.756 0.476 0.532 -\nProbSparse MSE 0.481 0.822 0.715 0.404 1.148 0.732 0.417 0.631 1.133\nAttention[48] MAE 0.472 0.559 0.586 0.425 0.654 0.602 0.434 0.528 0.691",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "4.3 Model Analysis",
+      "level": 2,
+      "text": "Time series decomposition As shown in Figure 4, without our series decomposition block, the\nforecasting model cannot capture the increasing trend and peaks of the seasonal part. By adding the\nseries decomposition blocks, Autoformer can aggregate and reﬁne the trend-cyclical part from series\nprogressively. This design also facilitates the learning of the seasonal part, especially the peaks and\ntroughs. This veriﬁes the necessity of our proposed progressive decomposition architecture.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "0100200300400500600700 length",
+      "level": 1,
+      "text": "0\n2\n4\n6\n8value\nTime Series\nSeasonal Part\nTrend-cyclical\nTime Series\nSeasonal Part\nTrend-cyclical\n8\n6\n2\n0\n1000 200300\nTime",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "400500600700 Value",
+      "level": 1,
+      "text": "4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "0100200300400500600700 length",
+      "level": 1,
+      "text": "0\n2\n4\n6\n8value\nTime Series\nSeasonal Part\nTrend-cyclical\nTime Series\nSeasonal Part\nTrend-cyclical\n8\n6\n2\n0\n1000 200300\nTime",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "400500600700 Value",
+      "level": 1,
+      "text": "4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "0100200300400500600700 length",
+      "level": 1,
+      "text": "0\n2\n4\n6\n8value Time Series\nSeasonal Part\nTrend-cyclical\nTime Series\nSeasonal Part\nTrend-cyclical\n8\n6\n2\n0\n1000 200300\nTime",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "400500600700 Value",
+      "level": 1,
+      "text": "4",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "0100200300400500600700 length",
+      "level": 1,
+      "text": "0\n2\n4\n6\n8value\nTime Series\nSeasonal Part\nTrend-cyclical\nTime Series\nSeasonal Part\nTrend-cyclical\nValue\n8\n6\n4\n2",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "0 Time",
+      "level": 1,
+      "text": "1000 200300400500600700\n(b) One decomposition block(a) Without decomposition block (c) Two decomposition blocks(d) Three decomposition blocks\nFigure 4: Visualization of learned seasonalXM\nde and trend-cyclicalTM\nde of the last decoder layer. We\ngradually add the decomposition blocks in decoder from left to right. This case is from ETT dataset\nunder input-96-predict-720 setting. For clearness, we add the linear growth to raw data additionally.\nDependencies learning The marked time delay sizes in Figure 5(a) indicate the most likely periods.\nOur learned periodicity can guide the model to aggregate the sub-series from the same or neighbor\nphase of periods by Roll(X,τi), i∈{ 1,··· , 6}. For the last time step (declining stage), Auto-\nCorrelation fully utilizes all similar sub-series without omissions or errors compared to self-attentions.\nThis veriﬁes that Autoformer can discover the relevant information more sufﬁciently and precisely.\nComplex seasonality modeling As shown in Figure 6, the lags that Autoformer learns from deep\nrepresentations can indicate the real seasonality of raw series. For example, the learned lags of the\n9\n0 20 40 60 80100\nlength\n-2\n-1.5\n-1\n-0.5\n0\n0.5",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "1 value",
+      "level": 1,
+      "text": "Time Series\nAttention\nquery\nTime Series\nQuery\nAttention\n1\n0.5\n0\n-0.5\n-1\n-1.5\n-2\nValue\n0 20 40 60 80 100\nTime0 20 40 60 80100\nlength\n-2\n-1.5\n-1\n-0.5\n0\n0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "1 value",
+      "level": 1,
+      "text": "Time Series\nAttention\nquery\nTime Series\nQuery\nAttention\n1\n0.5\n0\n-0.5\n-1\n-1.5\n-2\nValue\n0 20 40 60 80 100\nTime0 20 40 60 80100\nlength\n-2\n-1.5\n-1\n-0.5\n0\n0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "1 value",
+      "level": 1,
+      "text": "Time Series\nAttention\nquery\nTime Series\nQuery\nAttention\n1\n0.5\n0\n-0.5\n-1\n-1.5\n-2\nValue\n0 20 40 60 80 100Time0 20 40 60 80100\nlength\n-2\n-1.5\n-1\n-0.5\n0\n0.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "1 value",
+      "level": 1,
+      "text": "Time Series\nRoll\nTime Series1\n0.5\n0\n-0.5\n-1\n-1.5\n-2\nValue\n0 20 40 60 80 100TimeTime Time Time Time\n(a) Auto-Correlation (b) Full Attention (c) LSH Attention (d) ProbSparse Attention\nTime Delay\nFigure 5: Visualization of learned dependencies. For clearness, we select the top-6 time delay sizes\nτ1,··· ,τ 6 of Auto-Correlation and mark them in raw series (red lines). For self-attentions, top-6\nsimilar points with respect to the last time step (red stars) are also marked by orange points.\n050100150200250300350 050100150200250300350 050100150200250300350 050100150200250300350\nDensity(x10   )\n0\n5\n10\n15\n20\n25\n30-3\nDensity(x10   )-3\nDensity(x10   )-3\nDensity(x10   )-3\n0\n5\n10\n15\n20\n25\n30\n0\n5\n10\n15\n20\n25\n30\n0\n5\n10\n15\n20\n(a) Electricity (Hourly Recorded) (b) Exchange (Daily Recorded) (c) Trafﬁc (Hourly Recorded) (d) Weather (10min Recorded)\nWeekly\nPeriod\nLags Lags Lags Lags\nDaily\nPeriod\nMonthly\nPeriod\nQuarterly\nPeriod\nYearly\nPeriod\nDaily\nPeriod\nWeekly\nPeriod\nDaily Period\nFigure 6: Statistics of learned lags. For each time series in the test set, we count the top 10 lags\nlearned by decoder for the input-96-predict-336 task. Figure (a)-(d) are the density histograms.\ndaily recorded Exchange dataset present the monthly, quarterly and yearly periods (Figure 6 (b)). For\nthe hourly recorded Trafﬁc dataset (Figure 6 (c)), the learned lags show the intervals as 24-hours and\n168-hours, which match the daily and weekly periods of real-world scenarios. These results show\nthat Autoformer can capture the complex seasonalities of real-world series from deep representations\nand further provide a human-interpretable prediction.\nEfﬁciency analysis We compare the running memory and time among Auto-Correlation-based and\nself-attention-based models (Figure 7) during the training phase. The proposed Autoformer shows\nO(L logL) complexity in both memory and time and achieves better long-term sequences efﬁciency.\n1 2 3 4 5\npredict length\n0\n5000\n10000\n15000MAE\nAutoCorrelation(from autoformer)Full attention(from transformer)LSH attention(from reformer)Prob attention(from informer)\n1 2 3 4 5\npredict length\n0\n0.01\n0.02\n0.03\n0.04\n0.05MAE\nAutoCorrelation(from autoformer)Full attention(from transformer)LSH attention(from reformer)Prob attention(from informer)\nMemory(GB)\nTime(ms)\n(a) Memory Efﬁciency Analysis (b) Running Time Efﬁciency Analysis\n0\n5\n10\n15\n192 384 768 1536 3072\nAuto-Correlation From Autoformer\nFull Attention From Transformer\nLSH Attention From Reformer\nProbSparse Attention From Informer\nAuto-Correlation From Autoformer\nFull Attention From Transformer\nLSH Attention From Reformer\nProbSparse Attention From Informer\n0\n10\n20\n30\n50\n40\n512 1024 2048 4096 8192\nOutput Length Output Length\nFigure 7: Efﬁciency Analysis. For memory, we replace Auto-Correlation with self-attention family in\nAutoformer and record the memory with input 96. For running time, we run the Auto-Correlation or\nself-attentions 103 times to get the execution time per step. The output length increases exponentially.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s43",
+      "title": "5 Conclusions",
+      "level": 1,
+      "text": "This paper studies the long-term forecasting problem of time series, which is a pressing demand for\nreal-world applications. However, the intricate temporal patterns prevent the model from learning\nreliable dependencies. We propose the Autoformer as a decomposition architecture by embedding\nthe series decomposition block as an inner operator, which can progressively aggregate the long-\nterm trend part from intermediate prediction. Besides, we design an efﬁcient Auto-Correlation\nmechanism to conduct dependencies discovery and information aggregation at the series level, which\ncontrasts clearly from the previous self-attention family. Autoformer can naturally achieveO(L logL)\ncomplexity and yield consistent state-of-the-art performance in extensive real-world datasets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s44",
+      "title": "10 Acknowledgments and Disclosure of Funding",
+      "level": 1,
+      "text": "This work was supported by the National Natural Science Foundation of China under Grants 62022050\nand 62021002, Beijing Nova Program under Grant Z201100006820041, China’s Ministry of Industry\nand Information Technology, the MOE Innovation Plan and the BNRist Innovation Fund.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Autoformer architecture. The encoder eliminates the long-term trend-cyclical part by series"
+    },
+    {
+      "id": "f2",
+      "caption": "Auto-Correlation (left) and Time Delay Aggregation (right). We utilize the Fast Fourier"
+    },
+    {
+      "id": "f3",
+      "caption": "Auto-Correlation vs. self-attention family. Full Attention [41] (a) adapts the fully connection"
+    },
+    {
+      "id": "f4",
+      "caption": "Visualization of learned seasonalXM"
+    },
+    {
+      "id": "f5",
+      "caption": "Visualization of learned dependencies. For clearness, we select the top-6 time delay sizes"
+    },
+    {
+      "id": "f6",
+      "caption": "Statistics of learned lags. For each time series in the test set, we count the top 10 lags"
+    },
+    {
+      "id": "f7",
+      "caption": "Efﬁciency Analysis. For memory, we replace Auto-Correlation with self-attention family in"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Multivariate results with different prediction lengthsO∈{ 96, 192, 336, 720}. We set the"
+    },
+    {
+      "id": "t2",
+      "caption": "Univariate results with different prediction lengths O∈{ 96, 192, 336, 720} on typical"
+    },
+    {
+      "id": "t3",
+      "caption": "Ablation of decomposition in multivariate ETT with MSE metric. Ours adopts our progres-"
+    },
+    {
+      "id": "t4",
+      "caption": "Comparison of Auto-Correlation and self-attention in the multivariate ETT. Wereplace the"
+    },
+    {
+      "id": "t5",
+      "caption": "Multivariate results on the four ETT datasets with predicted length as {24, 48, 168, 288, 336,"
+    },
+    {
+      "id": "t6",
+      "caption": "Autoformer performance under different choices of hyper-parameter c in the Auto-"
+    },
+    {
+      "id": "t7",
+      "caption": "Autoformer performance under different input lengths. We ﬁx the forecasting horizon as 48"
+    },
+    {
+      "id": "t8",
+      "caption": "Autoformer performance under different lengths of input of the decoder.O, I"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Equation 5)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 8,
+    "n_algorithms": 0,
+    "n_equations": 6
+  }
+}

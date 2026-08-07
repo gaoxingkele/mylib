@@ -1,0 +1,388 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/wiley-ccpe/wiley-ccpe__2021__enforcing_trustworthy_cloud_sla_with_witnesses_a_game_t__7d2ca7264e.pdf",
+  "n_pages": 15,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Informatics Institute, University of",
+      "level": 1,
+      "text": "Amsterdam, Amsterdam, The Netherlands",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 School of Computer Science, National",
+      "level": 1,
+      "text": "University of Defense Technology, Changsha,\nChina",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 School of Electronic Sciences, National",
+      "level": 1,
+      "text": "University of Defense Technology, Changsha,\nChina\nCorrespondence\nZhiming Zhao, Informatics Institute, University\nof Amsterdam, 1012 XH Amsterdam,\nThe Netherlands.\nEmail: z.zhao@uva.nl\nPresent Address\nZhiming Zhao, Informatics Institute, University\nof Amsterdam, Science Park 904, 1098 XH\nAmsterdam, the Netherlands.\nFunding information\nH2020 European Research Council,\nGrant/Award Number: ARTICONF 825134,\nENVRIPLUS 654182, and ENVRI-FAIR\n824068; China Scholarship Council\nSummary\nThere lacks trust between the cloud customer and provider to enforce traditional cloud\nSLA (Service Level Agreement) where the blockchain technique seems a promising solution.\nHowever, current explorations still face challenges to prove that the off-chain SLO (Service\nLevel Objective) violations really happen before recorded into the on-chain transactions. In this\npaper, a witness model is proposed implemented with smart contracts to solve this trust issue.\nThe introduced role, ‘‘Witness’’, gains rewards as an incentive for performing the SLO violation\nreport, and the payoff function is carefully designed in a way that the witness has to tell the\ntruth, for maximizing the rewards. This fact that the witness has to be honest is analyzed and\nproved using the Nash Equilibrium principle of game theory. For ensuring the chosen witnesses\nare random and independent, an unbiased selection algorithm is proposed to avoid possible\ncollusions. An auditing mechanism is also introduced to detect potential malicious witnesses.\nSpecifically, we define three types of malicious behaviors and propose quantitative indicators to\naudit and detect these behaviors. Moreover, experimental studies based on Ethereum blockchain\ndemonstrate the proposed model is feasible, and indicate that the performance, ie, transaction\nfee, of each interface follows the design expectations.\nKEYWORDS\nblockchain, cloud computing, game theory, service level agreement, smart contract",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "Cloud computing is a popular business model nowadays for sharing physical resources among multiple tenants. A cloud customer can rent and\nuse various resources as service, including computing, storage, and network, from the provider through a network (typically via the Internet)\nwithout maintaining the physical hardware. Although convenience is conveyed, this causes the challenge of ‘‘ Cloud Performance Unpredictability ’’\n1\nwhen migrating time-critical applications onto clouds.2 Cloud SLA (Service Level Agreement) is therefore proposed to ensure that certain service\nquality can be met, and in the case of violation, the customer can get the corresponding compensation from the provider. It compensates the\ncustomer's loss due to the cloud performance uncertainty from the economic perspective.\nTraditionally, SLA is a business concept which defines the contractual financial agreements between the roles who are engaging in the business\nactivity.3 As to cloud computing, it is an agreement between the cloud customer and provider on the quality of the cloud service. For instance,\nthe IaaS (Infrastructure-as-a-Service) provider, Amazon Elastic Compute Cloud (EC2), claims that the availability of its data center is no less tha n\n99%. If this number is not achieved, it will pay 30% credits back to the customer as compensation. * However, it is hard to enforce this agreement\nin practice. The significant challenges that hinder the conceptual SLA to be widely applied in the real-life industry are (1) there lacks an automatic\nmechanism to enforce the agreement, especially automate the compensation after SLO violation. The current process involves a lot of manual work\nThe first two authors have contributed equally to this work.\n*https://aws.amazon.com/compute/sla/\nThis is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided\nthe original work is properly cited.\n© 2019 The Authors. Concurrency and Computation: Practice and Experience Published by John Wiley & Sons Ltd.\nConcurrency Computat Pract Exper . 2019;e5511. wileyonlinelibrary.com/journal/cpe 1o f1 5\nhttps://doi.org/10.1002/cpe.5511\nThis is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium,\nprovided the original work is properly cited.\n© 2019 The Authors. Concurrency and Computation: Practice and Experience published by John Wiley & Sons Ltd.\nConcurrency Computat Pract Exper. 2021;33:e5511. wileyonlinelibrary.com/journal/cpe 1 of 15\nhttps://doi.org/10.1002/cpe.5511\n2o f1 5 ZHOU ET AL .\nsuch as doing the verification through emails before compensation, ie, the customer needs to submit a claim to EC2 website for its SLO violation∗;\n(2) the provider has more rights in current agreement model, because it has the right to verify the violation and decide whether to compensate\nthe customer. On the contrary, the customer has little space to negotiate about the price or the amount of compensation; (3) the agreement is\nonly between the cloud customer and the provider. It is hard for the customer to prove and convince the provider that the violation has really\nhappened. For example, EC2 requires the customer to provide detailed logs that record the dates and times of each unavailability incident. *\nThe blockchain\n4 technology brings in a new hint for possible solutions to address these challenges. Especially, the smart contract in Ethereum 5\nmakes it possible to automate the SLA on the blockchain. For instance, Nakashima and Aoyama 6 designed a set of web APIs based on Ethereum\nto automate the SLA enforcement. They introduce a new role called ‘‘ Service Performance Monitor ’’ into the scenario, which detects the SLO\nviolation and sends the notification. However, this work does not discuss the trust issue for this newly proposed role, which is very important in\nblockchain-based systems.\nIt is challenging to achieve consensus on an event that happens outside of the blockchain. The bridge between the events that on and outside\nof the chain is called ‘‘Oracle’’. † One of the solutions is to retrieve data from ‘‘oraclize’’, ‡ a third trusted company performing as a trustful data\nsource. Town Crier7 and TLS-N 8 perform as oracles from the hardware and infrastructure perspective, which require specific hardware support.\nMoreover, these solutions are centralized, which suffer from single-point failure and are easy to be compromised.\nIn this paper, a model based on smart contracts is proposed to tackle the challenge of detecting SLO violations in a trustworthy way. A new\nrole termed as ‘‘Witness’’ is added in the traditional cloud service delivering scenario to perform as the service monitor. The witness is designed\nas an anonymous participant in the system, who desires to gain rewards through offering the violation reporting service. The payoff function for\ndifferent actions in our agreement model is carefully designed in a way that the witness will have to always behave honestly in order to gain the\nmaximum profit for himself. In other words, the trust issue of the witness in our model is proved by game theory through the use of the Nash\nEquilibrium principle.\nIn addition, an unbiased random selection algorithm is developed in our witness model to select a certain number of witnesses for constructing\na committee. The committee members are randomly selected, and any entity cannot dominate the selection results, which is essential to avoid\nthe situation that the majority of the delegates are representing the same side, either the customer or the provider. Besides, this algorithm is\nalso capable of eliminating the opportunity of collusion because the committee members are not pre-determined, and there is little possibility for\nthem to know each other in advance.\nFinally, a prototype system\n§ using smart contracts of the Ethereum5 blockchain is implemented to automate the SLA lifecycle and empower the\nfairness between roles, especially for the customer. Rinkeby, ¶ which is a world-wide blockchain test net for developers to debug the developed\nsmart contracts, is leveraged in this paper to conduct the experiments. The experimental study demonstrates the feasibility of our witness model\nand system performance.\nThe rest of this paper is organized as follows. Section 2 discusses the related work on cloud SLA and blockchain. Then, Section 3 describes the\nwitness model design with smart contracts. In Section 4, we detail crucial techniques including the unbiased random selection algorithm and the\npayoff function design, the trustworthiness of which is proved by Nash Equilibrium principle; Section 5 introduces the prototype implementation\nand experiments; Section 6 summarizes this paper with conclusion and future work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 RELATED WORK",
+      "level": 1,
+      "text": "SLA is a hot research topic, specifically well discussed in the context of cloud computing. It establishes the quality of service agreement between\nthe service provider and the customer, which ensures the customer's benefit even when the resource planning\n9,10 has failed to satisfy the\napplication's requirements due to the cloud failures. This agreement is especially important for operating time critical applications on clouds. 11-13\nA typical SLA lifecycle consists of different enforcement phases, including negotiation, establishment, monitoring, violation reporting, and\ntermination.\n3 Most of the research work focuses on three aspects, ie, (1) syntax definition of the SLA terms and parameters. Its goal is to\nstandardize the representation and make SLA easy to be processed online by computer systems. There is a set of domain specific languages\nproposed to solve the issue, such as SLAC 14 and CSLA15; (2) resource allocation techniques to ensure the SLA. The work in this aspect focuses\non the algorithm to optimize resource allocation, making sure the SLO violation does not happen. Here, SLA is considered as constraints 16;\n(3) systems or methods to address the issue in some specific phase of the SLA lifecycle. In this aspect, a systematic survey3 on cloud SLA concludes\nthat papers they found are distributed to SLA phases as follows: negotiation and establishment(22%), monitoring and deployment(73%), SLO\nviolation management (3%), and reporting (1%). Here, the goal of negotiation is to maximize either the provider or the customer's rewards by\nadopting some negotiation strategy. 17 For example, Groléat and Pouyllau 18 leveraged reinforcement learning method to learn and update the\nnegotiation policy. The monitoring phase is mainly about what to monitor and how to automate the process. 19 However, the most challengeable\nphase, violation management and report, is seldom touched. In industry, Amazon CloudWatch service# is an example that the provider automates\n† https://blog.ethereum.org/2014/07/22/ethereum-and-oracles/\n‡ http://www.oraclize.it\n§ https://github.com/zh9314/SmartContract4SLA\n¶ https://www.rinkeby.io/\n# http://aws.amazon.com/cloudwatch/\n2 of 15 ZHOU ET AL .\n\nZHOU ET AL . 3o f1 5\nmonitoring and notification. In this case, the provider has to be trusted by the customer. Müller et al 20 developed a platform, named as\nSALMonADA, to deal with the SLO violation at runtime. It works as a third trusted party to perform the monitoring and violation reporting. All\nthese work treat the violation reporting is trustworthy as an assumption. Nevertheless, it is precisely the trust issue of cloud systems, 21 making it\ndifficult to let the provider and customer have consensus on the violation in reality.\nSmart contract concept was first proposed by Nick Szabo in 1994, which digitally facilitates, verifies, and enforces a contract through a\ncomputer protocol.22 Scoca et al23 combined this concept with cloud SLA negotiation. It focuses on the semantics expressions of smart contracts\nto automate the negotiation. However, it lacks a trustworthy underlying platform to execute the smart contract. Hence, the smart contract\nrequires a strong assumption that no one can tamper its execution. Town Crier7 and TLS-N8 ensure the trustworthy execution and communication\nenvironment from hardware and transmission protocol, respectively. However, they are either centralized or require specific hardware support.\nBlockchain4 is a promising technique to be the execution platform since the interactions on the chain are immutable. Especially, Ethereum 5\nfirst realizes to execute a general-purpose program on its blockchain. They design several programming languages, which make it possible to\nimplement smart contracts. Nakashima and Aoyama\n6 leveraged Ethereum and designed a set of web APIs. They attempt to automate the SLA\nlifecycle enforcement on the blockchain. A new role called ‘‘ Service Performance Monitor ’’ is introduced in their paper, which is responsible for the\nviolation management and reporting. However, whether the violation reports sent to the blockchain can be trusted is not discussed. In essence,\nthis is still a gap for blockchain based systems. That is how to credibly record a random event happening outside of the blockchain onto the chain.\nIt is called ‘‘ oracle’’,† which is a party performing as a ‘‘data-carrier’’ for the blockchain. Oraclize ‡ is a third trusted company currently offering\nthe service as an oracle. Nevertheless, a third trusted party exists single-point failure and deviates from the decentralization idea of blockchain .\nHence, ChainLink 24 works on distributed oracles. Only when an agreement is achieved among the oracles, the result data of the event can\nbe carried onto the chain or trigger a transaction. However, it has some downsides, such as no incentive for individuals to do this, requiring\nindividuals being independent and trustworthy, the consensus issue among oracles, etc.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 THE WITNESS MODEL USING SMART CONTRACT",
+      "level": 1,
+      "text": "In this section, the related roles in the proposed model design are introduced, especially the witness role. Then, the overall system architecture\nfor SLA enforcement with smart contracts on a public blockchain is illustrated, followed by a detailed description of the major responsibility of\nwitnesses, ie, SLO violation detection and reporting.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 The witness Role and assumptions",
+      "level": 2,
+      "text": "There are mainly two roles in the traditional cloud SLA lifecycle. One is the cloud provider role, P, which offers cloud service. The other is the\ncloud customer role, C, which consumes the cloud service and pay the service fee. To demonstrate the critical contribution of our work, we take\na basic example to formulate our problem as follows.\nAc l o u dp r o v i d e r ,p, is an IaaS (Infrastructure-as-a-Service) provider. It provisions VMs (Virtual Machine) on demand with public addresses for\nits customers to use. For instance, according to the request of a customer c,p r o v i d e rp provisions a VM with a public IP address, IPpub .D u r i n gt h e\nservice time, Tservice , the customer, only the customer c is able to SSH and login to the VM through the corresponding address IPpub .I nt h i sc a s e ,\nt h eS L Ac a nb et h a tt h ep r o v i d e rp claims that during the service time, the provisioned VM will always be accessible. If this is true, the customer\nc must pay the service fee, Fservice ,t ot h ep r o v i d e rp after the ending of the service. Otherwise, the customer c can acquire a compensation fee,\nFcompensation . That is, the customer c only needs to pay Fservice − Fcompensation to the provider p in the end, where we assume that Fservice > Fcompensation .\nFor the latter case, if it happens, we define it as an SLO violation event. Besides, it is worth to mention that we should exclude the case that the\ninaccessibility is caused by the customer's own network problem, to be a violation event.\nWith only these two roles in the agreement, it is hard to ensure that the provider can get paid or the customer can get compensation paid back\nif the service fee is prepaid. Hence, we leverage blockchain to play as the trusted party to afford a platform for these two roles and enforce these\nmonetary transmissions. However, it is still extremely difficult to convince both roles whether the violation happens and whether it is caused by\nthe customer's own network problem. We therefore bring in another new role in the traditional SLA lifecycle, named as witness role, W.T h e ya r e\nalso the normal participants in the blockchain and volunteers to take part in our SLA system to gain their own rewards through offering monitoring\nservice. In order to solve the trust issue, a set of N witnesses,\n{w1, w2, …, wN}, is selected to form a committee in a specific SLA lifecycle. They\ntogether report the violation event and may obtain witness fee, Fwitness , as rewards from both the provider and the customer. Moreover, the wallet\naddress of a specific role on the blockchain is denoted as a filed value of it, x.address.F o ri n s t a n c e ,wk.address is the wallet address of witness wk.\nIn this paper, we make the basic assumption on the witness role that it is always selfish and aims at maximizing its own rewards.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 Overall system architecture",
+      "level": 2,
+      "text": "Figure 1 illustrates the system architecture we design for cloud SLA enforcement. It consists of two types of smart contracts on the blockchain.\nOne is the witness-pool smart contract, which is the fundamental smart contract of the system to manage all the registered witnesses. The\nother type is the SLA smart contract for a specific SLA enforcement. The responsibilities of the witness-pool smart contract include witness\nZHOU ET AL . 3 of 15\n\n4o f1 5 ZHOU ET AL .\nFIGURE 1 System architecture for cloud\nSLA enforcement\nGenerate SLA  \nSmart Contract \nUnbiased Random \nSortition\nPublish Service Detail and \nSetup SLA \nReport \nviolation Enforce the \ncorresponding fees  \n… \nCloud Customer \nCloud Provider \nWitnesses Pool \nWitness Committee \nSLA \nSmart Contract Cloud Service",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Monitor",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "7 Compensation",
+      "level": 1,
+      "text": "Fee \nService Fee \nWitness\nFee2\nTest and adopt \nWitness-Pool \nSmart Contract \n5a \n4b \n6a",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "1 Off-chain",
+      "level": 1,
+      "text": "negotiation \nProvider \nprovision 4a \nAccept \nSLA \n5b \n6b \nOff-chain \ninteraction \nOn-chain \ninteraction \n(possible happening) \nmanagement, specific SLA contracts generation, and witness committee construction. Any user of the blockchain, who has a wallet address, can\nregister its wallet address into the witness pool to be a member of witnesses. They can keep themselves online and wait to be selected for some\nspecific SLA contract. The incentive for the witness to participant in this system is to obtain rewards. Moreover, the more witness participants in\nthe system, the more reliable and trustful the system would be.\nThe entire SLA lifecycle then becomes as follows. Certain provider p first leverages the smart contract of witness pool to generate an SLA\nsmart contract for itself. Prior to setting up SLA, the customer c should negotiate with the provider p about the detailed SLA terms, including\nTservice , Fservice , Fcompensation , etc. Here, one of the most important terms is to determine N, which is the number of witnesses would be involved in the\nenforcement of this SLA. The more witnesses involved in an SLA, the more credible the violation detection results are. On the other hand, however,\nthe more witness fee would be paid, and both the customer and the provider need to afford this fee equally. According to this negotiation, the\nprovider can reset these parameters of the generated SLA contract. Afterward, a set of N witness members can be selected to form a witness\ncommittee through the selection algorithm in Section 4.1, which is implemented by the witness pool smart contract on the blockchain. We design\nthe algorithm to be random and being able to convince both, c and p, that most ones in the witness committee are independent and would not\nbelong to the adverse role. After dynamically selecting the witness committee member, only the candidate witness can join the specific SLA\ncontract. Meanwhile, the provider provisions its cloud service for the customer to use and is able to publish its service details in the SLA contract.\nThe witnesses from the committee therefore start to monitor the service. In the case of our problem assumption in Section 3.1, the provider p\nprovisions a VM on demand and notify the public address IP\npub to all the committee members and customer c through the service detail field of\nthe SLA contract. Therefore, the customer can use the VM, and each witness starts to ‘‘ping’’ the address IPpub constantly. If the violation happens\nduring the service time, ie, the address IPpub is not accessible, the witness can report this event immediately. However, this is a naive example. In\nreal SLAs of more complex scenarios, the service monitoring component can be negotiated and provided by the provider and customer. Besides,\nthis component can be delivered in the form of containers, which is lightweight and portable. Then, the witness is able to first download the\ncontainer and query the container to detect SLO violation. Section 3.3 describes how the violation state can be finally determined through these\nwitnesses' reports. If the violation event is approved, then the customer can get back its compensation fee. All the dash lines in Figure 1 mean it\nmay happen according to the actual event. Anyhow, the provider and witnesses from the committee are able to get corresponding fees.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3 SLO violation detection and report",
+      "level": 2,
+      "text": "The critical role in our SLA enforcement system is the witness. It takes the responsibility of monitoring the service and determining whether there\nis a violation. In this section, we present our smart contract model in a specific SLA lifecycle to demonstrate crucial functionalities of a witness,\nie, SLO violation detection and report.\nThe sequence diagram in Figure 2 shows how different roles interact with the smart contract, especially involving the witness in our model.\nAfter witnesses being selected, the entire lifecycle of a specific SLA begins. The provider p provisions the cloud service and deploy the smart\ncontract on the blockchain. In order to set up an SLA, p must prepay the corresponding fee PFprepaid to the smart contract first. The amount\n4 of 15 ZHOU ET AL .\n\nZHOU ET AL . 5o f1 5\nCloud \nProvider \nWitness \nwk\nCloud \nService \nCloud \nCustomer \nWitness Committee (N) \nSmart \nContract \nProvision \nSetup SLA & Pay PF  \nAccept SLA & Pay CF  \nNotify \nNotify \nConstantly \nMonitoring \nIf violation happens,  \nReport & Pay WF\n \nM out of N reports \nconfirm the violation \nSLA \nEnds \nWithdraw F  \nIf violation happens, \nWithdraw F  \nWithdraw F  \nFIGURE 2 Sequence diagram of\ndifferent roles in the witness\nmodel\nof PF\nprepaid is determined by half of the maximum witness fee. The customer c is then notified about the service and the content of the smart\ncontract. As all the smart contract on the blockchain is public, the customer can verify the contract and the service status to decide whether to\naccept the SLA in a particular time window. In order to accept the SLA, the customer also needs to transfer the prepaid fee, CFprepaid .I ti n c l u d e s\nthe service fee, Fservice , and the other half of the maximum witness fee. As we assume Fservice > Fcompensation , the compensation fee would be directly\ndeducted from this part of the prepaid fee, if the violation happens. Afterward, every witness in the committee is notified to start monitoring the\nservice continuously.\nDuring the service time, the witness can decide whether to report the event to the smart contract, if there is an SLO violation that for instance,\nt h eV Mi sn o ta c c e s s i b l e .W ed e s i g nt h er u l et h a tt h ew i t n e s swk also needs to transfer a small amount of fee, WFprepaid , to endorse its report at\nthe same time. The incentive persuading wk to report the event is that it would gain relative more rewards as a witness fee if the violation event\nis finally confirmed by the smart contract. On the contrary, if the violation is not confirmed, wk would not get back the prepaid endorsement fee,\nWFprepaid , as a penalty. This design prevents wk from reporting fake violations just for maximizing its rewards. Moreover, the violation is finally\nconfirmed by the smart contract as the explanation as follows.\nSince the first violation report, the smart contract would start counting a time window, Treport . Within this time window, the smart contract\naccepts reports from other witnesses. When the time window Treport is over, the violation is automatically confirmed, if there are no less thanM out\nof N reports from the witness committee received by the smart contract. M is also negotiated by p and c. It is then defined in the smart contract.\nOf course, M must be bigger than half of N. Furthermore, the bigger the M is, the more trustworthy the violation is. For example, if there are N = 3\nwitnesses in the committee, the SLO violation can only be confirmed when at least M = 2 of them report the event. Here, it is worth to mention\nthat the smart contract is designed to receive the report only from the committee member. Besides, the second report from the same witness is\nrefused within the same report time window. In some sense, these N independent witnesses constitute a n− player game, in which each witness\nwould like to maximize its rewards. We specially design the payoff function, shown in Section 4.2, and leverage the Nash Equilibrium of game\ntheory to prove that the witness has to be an honest player in this game. That is, they have to report the violation according to the real event.\nFinally, the SLA ends in two cases. One case is the service time Tservice is over, and there is no violation. The other case is that the SLA is violated.\nAccording to these different cases, the three roles can withdraw corresponding fees from the smart contract. Section 4.2 explains more details.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 KEY TECHNIQUES TO ENSURE TRUSTWORTHINESS",
+      "level": 1,
+      "text": "In this section, we describe key techniques adopted in our witness model in detail. This model enables the automatic detection on the SLO\nviolation, the results of which can convince both sides: the provider and customer. First, the unbiased random selection algorithm is leveraged to\nguarantee that most of the witnesses selected into the committee are random and independent. It is also essential to make both sides achieve\na consensus that most of the selected witnesses would not delegate the opponent's benefit. Based on this, we give the payoff function for the\nwitness model in Section 3.3. Moreover, through the Nash Equilibrium principle, we prove that the ‘‘player’’ from the witness committee have to\nZHOU ET AL . 5 of 15\n\n6o f1 5 ZHOU ET AL .\nbehave honestly and tell the truth to maximize its rewards. Furthermore, we analyze some possible fraudulent behaviors from a malicious witness\nand propose quantitative indications to audit them from the action history.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1 Unbiased random selection",
+      "level": 2,
+      "text": "It is crucial in the witness model that the witness selection for a specific SLA contract is unbiased, ie, neither the provider nor the customer can\nhave advantages in the committee selection. Comparing to our previous work, 25 we propose a simpler random selection algorithm for committee\nselection, which is also implemented in the smart contract. We briefly describe it as follows.\n(1) There is a basic smart contract to manage the witness pool. It affords a set of interfaces for any blockchain user to register into the pool.\nMoreover, the registered witness is able to turn its state ‘‘Online’’ or ‘‘Offline’’ in order to indicate whether it can be selected. The detailed witness\nstate management is shown in Section 5.2. A set of interfaces registration allows nodes to register as a witness and to be added in the witness\npool. The addresses of the witness pool are managed as a list in the registration order.\n(2) The ‘‘request’’ interface is first invoked by a specific SLA contract at block Bb. It means this transaction is involved in the block, whose index\nis bth . The hash value of this block is Bhash\nb .A f t e rK blocks generated by the blockchain, the other interface ‘‘sortition’’ can be invoked to select N\nonline witnesses as candidates. The selection algorithm is shown in Algorithm 1.\n(3) It takes the hash values of the former Ks out of K blocks mentioned above as a seed. In addition, we need to wait for other Kc blocks to\nconfirm the adopted recent ones, where the total is K = Ks + Kc . Here, Ks should be chosen such that the probability of some parties sequentially\ngenerating Ks blocks are very small. Kc needs to be chosen such that the candidate blocks before are finally involved in the main chain with a\ndominant probability. These two values depend on the blockchain's own properties. Considering the main net of Ethereum, Gencer et al26 showed\n6 of 15 ZHOU ET AL .\n\nZHOU ET AL . 7o f1 5\nWitness \nWitness-Pool \nSmart Contract \nSLA \nSmart Contract \nProvider \nCustomer \nX SLA::genSLAContract\nreturn: SLA_address\nP SLA::requestSortition  +\nP SLA::sortitionFromWP\n1a \nX WP::register \nW WP::turnOn\nW WP::turnOff\nW WP::reject \nW WP::reverse \nX WP::checkWState\nP SLA::publishService\n+ P SLA::setupSLA\n4\n5\n6\n1b \n2a \n2b \n3b \n3a \nFIGURE 3 Interactions among roles and\nsmart contracts\nthat the top four miners control 61% of the mining power. Thus, we recommendKs = 10 so that with more than 99% probability that theseed is not\nmanipulatable and predictable even if the top four miners collude. On the other hand, it is commonly believed that Kc should be 12. ‖ Considering\nthe average block time of Ethereum is 15 seconds, the duration between the interfaces ‘‘request’’ and ‘‘sortition’’ is less than 6 minutes.\n(4) Only the ‘‘Online’’ witness with positive reputation can be selected by the seed from the list of the witness address pool. Anyhow, a new\nseed is generated based on the hash value of the previous seed. This process is repeated until the required N witnesses are selected. At the\nbeginning of Algorithm 1, there are two assertions. We first check whether there has already been the expected number of blocks generated\nafter invoking the ‘‘request’’ interface to ensure the unbiasedness of the random seed from the hash values of these blocks. The other assertion\nis to make sure that there are at least 10 times of available witnesses than required N. It ensures that the number of online witnesses (ie, the\npotential ones can be selected into the witness committee) is large enough to achieve the randomness among the committee members and\nprevent collusion. The invoker can only wait for the condition to be met if any of the assertions are violated.\nIt is worth mentioning that oc is leveraged to keep recording how many witnesses are in the ‘‘Online’’ state currently, shown as Figure 4,\nwhen the witness is selected by the selection algorithm, and its state turns into ‘‘Candidate’’, demonstrated as Line 23 of Algorithm 1. The online\nwitness number, oc, should be counted down in Line 24.\nConsidering the difficulty itself of generating a hash value for a block and combining the sequential Ks blocks as seed,w ec a np r o v et h a tt h e\nselection algorithm is random and unbiased, ie, neither the provider nor the customer can take advantage in the committee with the assumption\nof trusting the security of Ethereum.\nFinally, we analyze the security and trust issues in this design. First, the witness pool should be Sybil-attack-proof. This protection can be\nachieved by requesting a certain amount of deposit to pay to the witness-pool smart contract when the blockchain participant registers as a\nwitness. Therefore, an entity cannot register a lot of fake witness accounts because that requires a large amount of deposit in total. Second,\nthere is no protection against corruption after the committee candidates are determined. The provider or customer can attack the unwanted\ncandidates to prevent them from joining the committee or bribe them when they are in. However, we argue that this kind of attack or collusion\namong the provider, customer, and committee members is not easy, ie, (1) the address to identify a witness is the blockchain wallet address in\nEthereum, which is just a dynamically user-generated public key. It is not linked to any real identity or IP address. Therefore, using off-chain\nmethods, it is even difficult for the witness to convince other committee members that it is also one of the members; (2) any suspicious behavior\ncan be audited, because all the interactions on the blockchain are public and immutable, eg, the possible bribery. Then, the witness' reputation\nvalue described in Section 5.2 can be influenced through auditing. Hence, the on-chain collusion is easy to detect and audit; and (3) when the\nwitness pool is big enough, the unbiased selection algorithm proposed in this section is able to ensure that most of the committee members are\nnot known with each other before and changes every time, since no one can determine the selection result. Therefore, the cost for collusion is\nhigh, and the trade-off prompts the witness to perform honestly for rewards.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.2 Payoff function and nash equilibrium",
+      "level": 2,
+      "text": "Game theory targets to mathematically predict and capture behavior in a strategic situation, where each player's rewards depends on the\nstrategies of itself and also others. There is currently a wide range of applications, including economics, evolutionary biology, computer science ,\npolitical science, philosophy,\n27 and also SLA negotiation. 28\n‖https://blog.ethereum.org/2015/09/14/on-slow-and-fast-block-times/\nZHOU ET AL . 7 of 15\n\n8o f1 5 ZHOU ET AL .\nThe strategic or matrix form, of an n-player game, is the most common representation of strategic interactions in game theory. The definition\nconsists of a set of players, a set of strategy profiles and a design of payoff functions. Based on the basic type of strategic form game with\ncomplete information in game theory, we define our witness game as follows.\nDefinition 1. Witness Game: It is a n-player game represented as a triple (SW, Σ, Π), where\n• SW ={ w1, w2, …, wn} is a set of n players. Each player is a selected witness and they form the witness committee.\n• Σ=Σ 1 ×Σ 2 ×…×Σ n is a set of strategy profiles, where Σk is a set of actions for the witness wk,i e , wk can choose any action 𝜎k ∈Σ k.A\nstrategy profile is therefore a vector 𝜎∗ =( 𝜎∗\n1,𝜎∗\n2, …,𝜎∗\nn),w h e r e𝜎∗\nk is a specific action of Σk,( k = 1, 2,.., n).\n• Π={ 𝜋1,𝜋 2, …,𝜋 n} is a set of payoff functions, where 𝜋k ∶Σ → R is the payoff function determining the rewards for witness wk under a\ncertain strategy, (k = 1, 2,.., n). R is the corresponding rewards.\nIn addition, 𝜎−k ={ 𝜎1,𝜎 2, …,𝜎 k−1,𝜎 k+1, …,𝜎 n} is defined as any strategy profile 𝜎 without player k's action. The full strategy can then be\nwritten as 𝜎 ={ 𝜎k,𝜎−k}. Actually, there are only two actions in our witness game, which is Σk ={ 𝜎(r)\nk ,𝜎(s)\nk }. 𝜎(r)\nk means Report the SLO violation\nto the smart contract. 𝜎(s)\nk means do not report and keep Silence to the smart contract. In this N-witness game, we define the set of witnesses\nchoosing the action of Report as, Wreport ,w h e r e∀wk ∈ Wreport ,t h e 𝜎∗\nk = 𝜎(r)\nk . Respectively, Wsilence is the set of witnesses not reporting, where\n∀wk ∈ Wsilence ,t h e𝜎∗\nk = 𝜎(s)\nk . These actions determine the final state of SLA, ie, SLAstatus = Violated, there is an SLO violation; SLAstatus = Completed,\nservice is completed without violation. We then define the violation confirmation as Definition 2.\nDefinition 2. Violation Confirmation: Based on the result of a strategy profile in a N-witness game, the SLO violation is confirmed, only\nwhen ||Wreport || ≥ M,w h e r e1 < N∕2 < M < N, N, M ∈ ℕ. Otherwise, it is treated as there is no violation happened.\nIt is worth mentioning that we define N > 2 and M < N here, in order to achieve the violation confirmation reliably and fairly. According to our\nwitness model, the witness is designed to report the violation along with endorsement fee to the SLA smart contract. Therefore, if the violation\nis not confirmed, the witness cannot retrieve back its endorsement fee as a penalty. The detailed payoff function design is shown as Definition 3\naccording to the aforementioned definitions and analysis. Thereinto, the value of each function is only leveraged to quantitatively represent the\nrelative relationship among the fees. Hence, 1 represents one share of profit. 10 is ten times shares of 1. −1 means losing one share of profit.\nDefinition 3. Payoff Functions: The values of payoff functions are designed according to the final SLA status.\n• When SLAstatus = Violated: • When SLAstatus = Completed:\n∀wk ∈ Wreport,𝜋 k(𝜎(r)\nk ,𝜎−k)= 10; ∀wk ∈ Wreport,𝜋 k(𝜎(r)\nk ,𝜎−k)=− 1;\n∀wk ∈ Wsilence,𝜋 k(𝜎(s)\nk ,𝜎−k)= 0. ∀wk ∈ Wsilence,𝜋 k(𝜎(s)\nk ,𝜎−k)= 1.\nIn a n-player game, if a player knows the others' actions, it would choose a strategy to maximize its payoff. This is referred as its best response.\nTherefore, the best response of the witness wk can be defined as follows.\nDefinition 4. Witness wk 's best response: In order to maximize its rewards, wk 's best response to a strategy profile 𝜎∗\n−k is a strategy 𝜎∗\nk ∈Σ k ,\nsuch that 𝜋k(𝜎∗\nk,𝜎∗\n−k) ≥ 𝜋k(𝜎k,𝜎∗\n−k) for∀𝜎k ∈Σ k(k = 1, 2, …, n).\nA Nash Equilibrium point27 is therefore able to be defined as a stable state, where no player has an incentive to deviate from current strategy.\nIt is actually a strategy under which every player adopts its own best response.\nDefinition 5. Nash Equilibrium point: It is a specific strategy profile 𝜎∗ =( 𝜎∗\nk,𝜎∗\n−k), if for every witness wk, 𝜎∗\nk is a best response to 𝜎∗\n−k ,i e ,\n∀wk ∈ SW and∀𝜎k ∈Σ k(k = 1, 2, …, n), 𝜋k(𝜎∗\nk,𝜎∗\n−k) ≥ 𝜋k(𝜎k,𝜎∗\n−k).\nBased on the Nash Equilibrium point definition and payoff functions, we can derive the theorem as follows.\nTheorem 1. In a witness game, the only two Nash Equilibrium points are following strategy profiles:\n• 𝜎∗ =( 𝜎∗\n1,𝜎∗\n2, …,𝜎∗\nn),o fw h i c h∀wk ∈ SW, 𝜎∗\nk = 𝜎(r)\nk ;\n• 𝜎∗ =( 𝜎∗\n1,𝜎∗\n2, …,𝜎∗\nn),o fw h i c h∀wk ∈ SW, 𝜎∗\nk = 𝜎(s)\nk .\nProof. According to Definitions 1 and 2, in a N-witness game, N ≥ 3, N∕2 < M ≤ N− 1 and M ≥ 2,w h e r eN, M ∈ ℕ.\nFor the strategy profile of ∀wk ∈ SW, 𝜎∗\nk = 𝜎(r)\nk ,w h i c hm e a n s||Wreport || = N > M. The SLO violation status is therefore violated,\nSLAstatus = V. According to payoff functions design in Definition 3, for ∀wk, its rewards is 𝜋k(𝜎(r)\nk ,𝜎∗\n−k)= 10.I fa n y wk chooses the other action,\nSilence, instead of Report. The final status of SLA, however, would not be modified, due to ||Wreport ||= N − 1 ≥ M. Then, w′\nk sr e w a r d si s\n𝜋k(𝜎(s)\nk ,𝜎∗\n−k)= 0 < 10 = 𝜋k(𝜎(r)\nk ,𝜎∗\n−k). According to Definition 5, this strategy profile is a Nash Equilibrium point.\nAnalogously, for the strategy profile of ∀wk ∈ SW, 𝜎∗\nk = 𝜎(s)\nk ,w h i c hm e a n s||Wreport ||= 0 < 2 ≤ M. The SLO violation status is therefore\nnot violated, SLAstatus = C. According to payoff functions design in Definition 3, for ∀wk, its rewards is 𝜋k(𝜎(s)\nk ,𝜎∗\n−k)= 1.I fa n y wk chooses the\nother action, Report, instead of Silence. The final status of SLA, however, would not be modified, due to ||Wreport ||= 1 < 2 ≤ M. Then, wk's\nrewards is𝜋k(𝜎(r)\nk ,𝜎∗\n−k)=− 1 < 1 = 𝜋k(𝜎(s)\nk ,𝜎∗\n−k). According to Definition 5, this strategy profile is also a Nash Equilibrium point.\n8 of 15 ZHOU ET AL .\n\nZHOU ET AL . 9o f1 5\nw3\n𝝈(r)\n𝟑 : Report 𝝈(s)\n𝟑 : Silence\nw1 w2 w2\n𝝈(r)\n𝟐 : Report 𝝈(s)\n𝟐 : Silence 𝝈(r)\n𝟐 : Report 𝝈(s)\n𝟐 : Silence\n𝜎(r)\n1 : Report (10, 10, 10) (10, 0, 10) (10, 10, 0) (-1, 1, 1)\n𝜎(s)\n1 : Silence (0, 10, 10) (1, 1, -1) (1, -1, 1) (1, 1, 1)\nT ABLE 1 Payoff functions for a three-witness game\nFor all the other strategy profiles, they are all a mix of actions, Report and Silence. It means Wreport ≠ ∅ and Wsilence ≠ ∅.W h e nSLAstatus = V,\nie, ||Wreport || ≥ M,t h e r ei sa l w a y s∃wk ∈ Wsilence ; it can change the action to Report. However, the SLA status would not change, because\nof ||Wreport ||+ 1 > M.H e n c e ,wk increases its rewards, from 𝜋k(𝜎(s)\nk ,𝜎∗\n−k)= 0 to 𝜋k(𝜎(r)\nk ,𝜎∗\n−k)= 10. On the other hand, when SLAstatus = C,i e ,\n||Wreport ||< M,t h e r ei sa l w a y s∃wk ∈ Wreport ; it can change the action to Silence. However, the SLA status would not change, because of\n||Wreport ||− 1 < M.H e n c e ,wk increases its rewards, from 𝜋k(𝜎(r)\nk ,𝜎∗\n−k)=− 1 to 𝜋k(𝜎(s)\nk ,𝜎∗\n−k)= 1. These counterexamples demonstrate all these\nstrategy profiles are not Nash Equilibrium points.\nTherefore, in a witness game, there are two and only two Nash Equilibrium points. They are 𝜎∗ =( 𝜎(r)\n1 ,𝜎(r)\n2 , …,𝜎(r)\nn ) and 𝜎∗ =\n(𝜎(s)\n1 ,𝜎(s)\n2 , …,𝜎(s)\nn ).\nWe take the basic three-witness game as an example, where N = 3. Therefore, M can only be equal to 2 based on Definition 2. Table 1 shows\npayoff functions according to our previous definitions. The value element in Table 1 is the vector of corresponding payoff function values. It is\nrepresented as\n(𝜋1,𝜋 2,𝜋 3). According to Theorem 1, Nash Equilibrium points in this game are (10, 10, 10) and (1, 1, 1), respectively.\nBased on the aforementioned analysis, for a rational and selfish witness, who wants to maximize its rewards through offering services, would\n",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.3 Witness audit",
+      "level": 2,
+      "text": "The selection algorithm, Algorithm 1, ensures that the selected witnesses are independent to a great extent. The payoff function design stimulates\nthe witness telling the truth. However, an auditing mechanism is still needed to ensure that the malicious or irrational witness can be detected\nand kicked out from the witness pool. As all the interactions with the smart contract, ie, transactions, are public and permanently stored on the\nblockchain, it is possible to audit a witness through its behavior history. We mainly exploit the following information in the history to do auditing.\nIt is expressed as Equation (1). It represents a set of events of the witness, w\nk. The witness can adopt the action of silence 𝜎(s)\nk or the action\nof report 𝜎(r)\nk . 𝜎∗\nk means the SLA event with any action adopted by wk. To be specific, when the action is report, we can also further know its\norder among all the witnesses' reports, first to report or not, and the reporting time Tr, relatively from the SLA starting time. In addition, status\nexpresses whether the SLA is violated or completed. ∗ means the event with any SLA status is counted in this set\nEvent\n(\nwk,𝜎(s)\nk\n||||\n[\n𝜎(r)\nk ∶( order, Tr)\n]||||\n𝜎∗\nk, status ∶ C|V| ∗\n)\n. (1)\nBased on the information above, we analyze that there are three types of malicious witnesses, ie, lazy witness, speculative witness, and\nsacrificed witness.\nLazy witness refers to the one, who prefers not to report the violation. Since there is a case that the higher incentive for reporting a violation is\nnot enough to motivate the lazy one, they can choose the strategy not to really monitor the service. Then, they always keep silence and never\nreport the violation. With this strategy, they would not pay the penalty, even if the final status of SLA is actually violated. Considering violation\nis not a regular event, the lazy witness is still able to gain some rewards via multiple ‘‘games’’. However, this type of lazy witness can be audited\nthrough the active rate, which is defined as follows.\nDefinition 6. Active rate (\n𝜂active(wk)): This is the metric to measure the activeness of witness wk, when there is a violation\n𝜂active(wk)=\n‖‖\n‖Event(w\nk,𝜎(r)\nk , status ∶ V)‖‖\n‖\n‖‖‖Event(wk,𝜎∗\nk, status ∶ V)‖‖‖\n. (2)\n𝜂active(wk)= 0 means that the witness wk never reports the violation event, although there actually is one. A threshold, ̂𝜂active(wk) therefore can\nbe set to determine whether wk is a lazy witness, ie, still 𝜂active(wk) <̂𝜂active(wk),w h e nwk has already been involved into many SLA events.\nZHOU ET AL . 9 of 15\n\n10 of 15 ZHOU ET AL .\nSpeculative witness refers to the one, who is more likely to report in a speculative way. Since all the actions are public and transparent on the\nblockchain, there is a possible speculative behavior for the witness, which is only to follow others' report. The witness does not monitor the\nservice. Instead, it monitors transactions on the blockchain to see whether some other witness is reporting the violation. Then, it immediately\nfollows and reports, trying to gain the maximum rewards. Although we can set a relatively short report time window in the model design of\nSection 3.3, its speculative reports might still be counted in the following blocks of the blockchain. Moreover, this speculative witness also needs\nto take the risk that the violation may not be confirmed finally. Anyhow, this type of speculative witness can be audited through the following rate.\nDefinition 7. Following rate (\n𝜂follow(wk)): This is the metric to measure the frequency that the witnesswk follows the reports of other witnesses\n𝜂follow(wk)=\n‖‖\n‖‖\nEvent\n(\nw\nk,𝜎(r)\nk ∶( NotFirst, Tr), status ∶ V\n)‖‖\n‖‖\n‖‖\n‖\n‖\nEvent\n(\nw\nk,𝜎(r)\nk ∶( order, Tr), status ∶ V\n)‖‖\n‖\n‖\n.\n(3)\nHere, NotFirst means that the transaction containing the report of wk is not the first block in the reporting time window. Therefore,\n𝜂follow(wk)= 100% means for all violated SLA events involving the witness wk, it is never the first one to report. A threshold,̂𝜂follow(wk) therefore can\nbe set to determine whether wk is a speculative witness through following, ie, when 𝜂follow(wk) >̂𝜂follow(wk),i f wk is involved into many SLA events.\nSacrificed witness refers to the one, who always reports at a specific time stamp. For instance, wk always reports the violation within one minute\nafter the SLA starts. Although the witness may pay a lot of penalty for its malicious behavior at the beginning, it can show other witnesses its\nbehavior pattern from its history later on. In some sense, it is able to imply to others that it would report at some time stamp. Then, as long as\nothers have analyzed its behavior pattern and followed, it can most likely gain the maximum rewards. Hence, it is crucial to audit this type of\nwitness through the following fixed pattern rate.\nDefinition 8. Fixed pattern rate (\n𝜂fix(wk)): This is the metric to measure the frequency that the witness wk reports the violation at a specific\ntime stamp, ̂Tr\n𝜂fix(wk)=\n‖‖\n‖\n‖\nEvent\n(\nw\nk,𝜎(r)\nk ∶( order,̂Tr), status ∶∗\n)‖‖\n‖\n‖\n‖\n‖\n‖Event(w\nk,𝜎∗\nk, status ∶∗)‖‖\n‖\n.\n(4)\nHere, 𝜂fix(wk)= 100% means for all of the SLA events, which involves the witness wk, it always reports at time stamp, ̂Tr .At h r e s h o l d ,̂𝜂fix(wk)\ntherefore can be set to determine whether wk is a sacrificed witness through following, ie, when 𝜂fix(wk) >̂𝜂fix(wk),e v e ni fwk is just involved into\nseveral SLA events.\nIt is worth to mention that these auditing mechanisms can also be implemented in the smart contract, in order to avoid a third party to\ndominate the judgment. It can be combined with the reputation value of the witness, which is further explained as the witness reputation in the\nimplementation part of Section 5.2. Therefore, when the witness' reputation decreases to zero, that witness would also be blocked automatically\nby the selection algorithm.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 PROTOTYPE IMPLEMENTATION AND EXPERIMENTS",
+      "level": 1,
+      "text": "According to the witness model and the payoff function design, we implement a prototype system based on the smart contracts of Ethereum.\nWe leverage the programming language, Solidity, ** provided by Ethereum, to program smart contracts. In this section, we first would like to\ndiscuss the overall relationship among different roles and smart contracts in our SLA system. Afterward, we illustrate the state transition in the\nsmart contract of witness pool and SLA, respectively. Via this, we describe the detailed functionalities of the interfaces in the smart contracts and\nshow how they are leveraged to transit the states. Finally, we show some experimental study on the transaction cost of these interfaces on the\nEthereum test net, ‘‘Rinkeby’’.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "5.1 Overall system implementation",
+      "level": 2,
+      "text": "Overall, there are three roles and two types of smart contracts in our SLA enforcement system. Roles include the traditional Provider and\nCustomer, as well as the introduced Witness. The smart contracts include the witness-pool smart contract and the SLA smart contract. Figure 3\nillustrates the relationship among these entities through different interfaces. These interfaces are named as the text on the arrow. The format of\n** http://solidity.readthedocs.io\n10 of 15 ZHOU ET AL .\n\nZHOU ET AL . 11 of 15\nCandidate Offline Busy \nOnline \nW WP::register \nW WP::turnOn\nW WP::turnOff\nW WP::reverse \n(reputation ) \nout in\nW WP::reject \nW SLA:witnessRelease\nSC WP::release \nP SLA::resetSLA\nFIGURE 4 Witness state transition diagram\nin the witness pool smart contract\nin\nActive \nFresh \nInit\nCompleted \nCustomer \nProvider \nWitness \nP setupSLA",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "acceptSLA",
+      "level": 1,
+      "text": "W reportViolation\nP providerEndNSLAandWithdraw",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "customerEndVSLAandWithdraw",
+      "level": 1,
+      "text": "Violated \nP resetSLA\nW witnessWithdraw\nP restartSLA\nP setCustomer P publishService …\nP requestSortition\nP sortitionFromWP\nW witnessConfirm\nW witnessRelease\nout\nin\nP cancleSLAout",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "resetWitness",
+      "level": 1,
+      "text": "yes\nno\nFIGURE 5 State transition diagram\nof SLA lifecycle for a specific SLA\nsmart contract\nthe text is ‘‘ Rrole → [Ctype ::]Ninterface ’’. It means that only the role Rrole can invoke the interface, Ninterface , which is defined in the smart contract of\nCtype . The corresponding implementation is achieved by the checking mechanism, which is the property of the programming language provided\nby Ethereum. Therefore, the smart contract restricts that only the specified role can interact with the smart contract in a certain state. The\nrepresentation of the Rrole are P for Provider, C for Customer, SC for a generated SLA Smart Contract, and X for any blockchain user. Moreover,\nfor Ctype , WP is for the witness-pool type of smart contract, and SLA is for the generated ones for SLA enforcement. In addition, this interface\ndefinition also applies to Figures 4 and 5.\nThe witness-pool smart contract is the basis in order to set up the system. Any blockchain user can register and become the Witness role\nthrough the interface ‘‘register’’ provided by the witness-pool smart contract. There are also some other interfaces for the witness to invoke\nto change its state in the pool in order to be selected. More details are discussed in Section 5.2. For a specific SLA lifecycle, any user X can\ninvoke the interface ‘‘genSLAContract’’ provided by the witness-pool smart contract. Afterward, a specific SLA smart contract is generated by the\nwitness-pool smart contract, and the contract address is returned back. This address is also recorded in the witness-pool. It ensures the validity of\nthe SLA smart contract to interact with other roles. Meanwhile, the user X becomes the Provider role of the generated SLA smart contract. It can\ncustomize the contract, including setting the customer's address, and other negotiated contract parameters, such as service duration and witness\ncommittee scale N. It is also responsible for performing the unbiased random selection algorithm, explained in Section 4.1. As this selection\nalgorithm is leveraged by the provider through a specific SLA contract, the online witness can know it is selected by which SLA smart contract,\nbasically the contract address, from checking its own state. Then, it can make a confirmation to the SLA contract to join the witness committee.\nSimultaneously, the SLA smart contract further invokes interfaces of witness-pool smart contract to acknowledge the witness management.\nAfter a proper witness committee is constructed, the provider can publish its service detail on the chain to initiate the SLA lifecycle. Details are\nexplained in Section 5.3.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.2 Witness-pool smart contract implementation",
+      "level": 2,
+      "text": "In this part, we focus on implementation details about the witness-pool smart contract, especially the witness management. Figure 4 illustrates\nthe states of a witness role defined in the smart contract. It includes four states, ie, ‘‘Online’’, ‘‘Offline’’, ‘‘Candidate’’, and ‘‘Busy’’. The st ate\ntransition of the witness is as follows.\nZHOU ET AL . 11 of 15\n\n12 of 15 ZHOU ET AL .\nAfter registration in the witness pool, only the witness itself can turn its state into ‘‘Online’’. It then probably selected by a specific SLA smart\ncontract. Hence, it needs to monitor its own state on the blockchain continuously. This operation is feasible, as the read-only operation does not\nneed any transaction fee. Once it is selected by a specific smart contract through performing ‘‘sortition’’ algorithm, its state turns into ‘‘Candidate’’.\nWithin a confirmation time window, eg, 2 minutes, the witness can look through the SLA smart contract, which selects it, and decide whether to\nconfirm or reject this selection. If it rejects, the provider of the SLA smart contract has to perform another selection. Otherwise, its state turns\ninto ‘‘Busy’’, after it invokes the interface, ‘‘witnessConfirm’’, of the SLA smart contract. By the end of each SLA lifecycle iteration, the witness\nhas the right to actively leave the SLA contract by leveraging the interface ‘‘witnessRelease’’. On the other hand, it can also be passively released\nfrom the SLA contract if the provider invokes the interface ‘‘resetSLA’’ to dismiss the witness committee. Finally, the witness can ‘‘trunOff’’ to\navoid being selected before it is not available to the Internet.\nIn order to prevent some malicious intentions, we bring in a reputation value for each witness to measure their behaviors. First, each witness\nhas an initial reputation value of R\ninit at registration, which could be a predetermined constant value. Then, for instance, some witness may not\nturn its state into ‘‘Offline’’, when it is not actually available or does not frequently check its state. Then, it would not be able to confirm the\nselection and join the SLA contract within the confirmation time window, if it is chosen. In this case, the witness would not be chosen again,\nsince its state becomes ‘‘Candidate’’. To reverse back to the state ‘‘Online’’, in which it can be selected, the witness has to leverage the interface,\n‘‘reverse’’. In this case, its reputation value decreases by 10. If this value becomes zero or less, it would be permanently blocked by the selection\nprocess according to Algorithm 1. We also combine the reputation value with the auditing mechanism mentioned above in some sense. For\nexample, the reputation of the witness, who does not report, would decrease by 1, when the violation is confirmed. It is the same with the one,\nwho reports the violation but not finally confirmed.\nIt is worth mentioning that in the current implementation, we have not designed the scenario where the reputation can be heightened. The\nidea is to make the reputation decreasing as a soft punishment, not directly losing tokens (money). However, when the reputation is too low, the\naccount is blocked, and the witness has to register another account. Meanwhile, the witness would lose the deposit of the blocked account in\nthis case. On the hand, if the witness can heighten its reputation through performing honestly, even the increasing scale is much smaller than\nthe decreasing scale. This design would still give witnesses the chance to balance the reputation through performing different times of honest\nbehaviors and malicious behaviors, eg, performing maliciously once and ten times of honest behaviors afterward.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5.3 SLA smart contract implementation",
+      "level": 2,
+      "text": "Figure 5 shows the SLA state transition to implement a specific SLA smart contract enforcement. This type of smart contract is generated by\nthe witness-pool smart contract. All the interfaces annotated in this figure belongs to this type of SLA smart contract. Hence, we omit the\ndefinition scope Ctype ::. There are five states, ie, ‘‘Fresh’’, ‘‘Init’’, ‘‘Active’’, ‘‘Violated’’, and ‘‘Completed’’, shown as circle in Figure 5. The dashed\narrows demonstrate the state transition path when a violation happens. The three squares in the figure represent the respective roles in this\nsmart contract. At the end of SLA, they can withdraw the rewards, respectively. The dashed line here also refers to the action adopted under the\nsituation of the violation.\nThe contract is generated in the state of ‘‘Fresh’’. In this state, the provider can customize the SLA parameters according to the negotiated\nresults with the customer. Furthermore, the service detail can also be published onto the contract through ‘‘publishService’’. In our case, the\ndetail is the public IP of the VM. All others are therefore being notified. However, this SLA only proceeds when the number of the members in\nthe witness committee is satisfied. Otherwise, the provider is unable to leverage the interface, ‘‘setupSLA’’, to transit into ‘‘Init’’ state. Acco rding\nto the witness model design in Section 3.3, the provider needs to prepay some fee, PF\nprepaid , to the smart contract for hiring witnesses. The actual\namount of fee is calculated by the smart contract according to the scale of committee member and a basic hiring fee. Moreover, this amount of\ntokens is one of the requirements to invoke the interface. It ensures that only that amount of prepaid fee is transferred into the smart contract.\nThe customer then decides whether to accept the SLA. If it accepts the SLA, it also needs to prepay the fee, CFprepaid , including the service fee\nand its part of the hiring fee for witnesses. If not, the provider can ‘‘cancelSLA’’ and withdraw back its money. When the service is completed,\nall corresponding roles can retrieve their rewards through a set of withdrawing interfaces. After all the money is withdrawn from the contract,\nthe provider can leverage ‘‘resetSLA’’ or ‘‘restartSLA’’ to rotate back to the previous state. These interfaces are designed for continuous service\ndelivery instead of a long service duration to stuck witnesses. The difference between these two interfaces is ‘‘resetSLA’’ dismisses the witness\ncommittee and the provider can change some other terms. On the other hand, ‘‘restartSLA’’ would keep the committee and quickly proceed\nanother round of SLA iteration.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "5.4 Experimental study",
+      "level": 2,
+      "text": "In order to test all the functionalities of our model and system design, we deploy the implemented smart contracts on the test net of Ethereum\nblockchain, ‘‘Rinkeby’’. It is a world-wide test blockchain for developers to debug the smart contract. The ‘‘Ether’’, which is the cryptocurrency\nof Ethereum, does not worth real value on the test net and can be applied for debugging. Hence, we generate several accounts on ‘‘Rinkeby’’\nto simulate different roles, ie, the provider, customer, and witnesses. We leverage the retrieved ‘‘Ether’’ on each simulated account to execute\nthe interfaces and prepay different types of fees according to the model. To conduct the experiment, we first deploy the basic witness-pool\nsmart contract and make all the accounts registered to the witness pool. The provider then generates an SLA smart contract to start the SLA\n12 of 15 ZHOU ET AL .\n\nZHOU ET AL . 13 of 15\nFIGURE 6 The gas consumption for each interface in smart contracts\nlifecycle with the customer. Afterward, we test all possible scenarios to exploit and validate the functionality of different interfaces. The resul ts\ndemonstrate that our system implementation satisfies our model and payoff function design.\nThe trust part of the system is proved by game theory and ensured by the unbiased selection algorithm, whose credibility is endorsed by the\nblockchain technique. Therefore, we mainly analyze some performance information from our experimental study. Here, the performance refers\nto the complexity of each interface in the smart contract. It determines the transaction fee needed to pay the miner in Ethereum since the miner\nneeds to execute the program defined in the interface, which consumes the electricity power of the miner. The more complex of the interface is\nthe more transaction fee required when it is invoked. The transaction fee is measured as ‘‘Gas’’ defined in Ethereum, which is a unit that refers to\nhow much work taken by the miner when executing the transaction. The final fee is the product of gas amount and the gas price for each unit.\nHence, the gas consumption is similar no matter on the test net or main net. We therefore record all the gas consumption for each interface from\nthe transaction history of the experiment.\nFigure 6 illustrates the gas consumption of each interface. We show the major interfaces defined in the two types of smart contracts, which\nconstruct the system. Some simple interfaces, such as the one that sets the SLA parameters, are omitted. Their gas consumptions are similar to\n‘‘setServiceDuration’’ in the figure. Some other interfaces of the witness-pool smart contract are also omitted, as these are the ones that can only\nbe invoked by the SLA smart contract. Its consumption is involved in some interface in the right part of the figure. Besides, the consumption of\n‘‘genSLAContract’’ in the witness-pool smart contract is also not shown in the figure, because it is more than 10 times higher than others, which\nis around 2 200 958. However, it is acceptable for the provider to invoke this to generate a new SLA smart contract, especially the SLA smart\ncontract can be reusable.\nFrom the experimental study, it can be derived that, compared with the customer and the witness, the provider tends to require more gas\nin the entire SLA lifecycle. The interfaces of customer and witness consume less. The consumption of different roles fits our model design and\nreality, because in most cases, the provider earns the most rewards through offering service. It has the incentive to proceed with the lifecycle.\nThe lightweight gas consumption for witness role is also able to convince blockchain users to take part in the system to work as a witness.\nMoreover, these gas consumption values are achieved through experiments based on the current implementation. There is still possible space to\noptimize the interface implementation further, in order to lower the gas consumption.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6 CONCLUSION",
+      "level": 1,
+      "text": "In this paper, a witness model has been proposed for cloud SLA enforcement and specially design the payoff function for each witness. We\nleverage the game theory to analysis that the witness has to offer honest monitoring service in order to maximize its own rewards. Finally, a\nprototype system is fully implemented using smart contracts of Ethereum to realize the witness model, not only the SLA enforcement lifecycle\nbut also the witness management of witness pool is implemented with the smart contract. The experimental study demonstrates the feasibility\nof our model and shows the system performance. Via this way, the trust problem is transferred to economic issues. It is not the witness itself\nwould like to be honest, but the economic principles force them to tell the truth. Here, the blockchain plays as public and immutable monetary\nmanagement platform according to some predefined rules. We also believe the witness model can be applied in other scenarios with blockchain,\nwhere originally only two roles are involved in a contract, and oracles are required to provide results of off-chain events.\nFor future work, there are mainly two directions, ie, on-chain and off-chain. For the on-chain part of work, we are going to further optimize\nthe interface implementation to reduce the gas consumption and enrich the functionalities of the smart contract. Besides, some more scenarios\nshould be considered to apply our model. Moreover, a more practical mechanism for the witnesses to achieve consensus on the off-chain events\nshould be considered. For the off-chain part of work, user-friendly tools are going to be developed for each role in the system to monitor\nthe state on the chain and perform their corresponding interactions. On the other hand, it can also be combined with our cloud application\nZHOU ET AL . 13 of 15\n\n14 of 15 ZHOU ET AL .\nDevOps framework, CloudsStorm, 29 to construct the witness ecosystem. The vision is to ensure cloud performance for applications through\nautomated SLA.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "illustrates the system architecture we design for cloud SLA enforcement. It consists of two types of smart contracts on the blockchain."
+    },
+    {
+      "id": "f2",
+      "caption": "Sequence diagram of"
+    },
+    {
+      "id": "f3",
+      "caption": "Interactions among roles and"
+    },
+    {
+      "id": "f4",
+      "caption": "Witness state transition diagram"
+    },
+    {
+      "id": "f5",
+      "caption": "State transition diagram"
+    },
+    {
+      "id": "f6",
+      "caption": "The gas consumption for each interface in smart contracts"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 3
+  }
+}

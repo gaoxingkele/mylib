@@ -1,0 +1,301 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p4_resilience_distribution_planning/p4_resilience_distribution_planning__09__distribution_network_optimization_and_flexibility_enhan__b694db46c3.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The rapid increase in renewable energy integration has led to significant structural\nchanges in modern power systems. While promoting clean energy transformation, high\nrenewable energy penetration also brings inherent variability and uncertainty, posing chal-\nlenges to system stability, operational cost, and supply–demand balance [1,2]. In particular,\nthe distribution network is most impacted due to its proximity to distributed generation\nsources, such as rooftop photovoltaic (PV) and local wind farms [3]. Many countries are\nadapting their power system operations and market frameworks to accommodate this\nshift. For instance, Del Pizzo et al. analyzed the operational adjustments made by the\nItalian TSO to manage high RES penetration during low-load seasons [4]. Similarly, Wang\net al. emphasized the risk of insufficient dispatchable capacity under high renewable\nconditions, advocating for new capacity pricing strategies [5]. These studies highlight the\nEnergies 2025, 18, 4833 https://doi.org/10.3390/en18184833\nEnergies 2025, 18, 4833 2 of 18\nneed for both technical and market mechanisms to ensure adequacy and flexibility in future\npower systems.\nAt the distribution level, various studies have explored strategies to handle renewable\nuncertainty, including scenario-based stochastic programming, robust optimization, and\nreconfiguration techniques [6–8]. Luo et al. proposed a dynamic reconfiguration strategy\nthat models wind and solar uncertainties through interval prediction and scenario genera-\ntion [9]. Gong and Wu introduced a risk assessment model combining stochastic power\nflow and failure probability to quantify operational risk [10]. These works demonstrate the\nvalue of modeling uncertainty in renewable-rich distribution networks. Recent studies have\nalso explored distributed optimization frameworks for coordinating user-side resources\namong multiple stakeholders, such as photovoltaic owners, grid operators, and end-users,\naiming to improve source–load matching and enhance grid integration flexibility [11,12].\nThese works demonstrate the value of modeling uncertainty in renewable-rich distribution\nnetworks. Flexibility has emerged as a key metric in the design and operation of modern\npower systems [ 13,14]. However, existing flexibility metrics are often static and fail to\ncapture system-wide spatial and temporal constraints [15,16]. Herath et al. proposed a flex-\nibility enhancement process using a Normalized Flexibility Index and Violation Probability\nmetric to guide planning [17]. Huang et al. developed a multi-scale flexibility quantification\napproach in district heating networks to support EPS scheduling [18].\nFrom a control strategy perspective, robust optimization methods offer strong potential\nfor accommodating uncertainty in real-time operation [19,20]. Yi et al. developed a multi-\nobjective robust dispatch framework incorporating demand response uncertainty [21]. Liao\net al. proposed an affine adjustable robust strategy coordinating PV , load, and storage under\ndistribution network uncertainty [22]. Yet, these methods typically treat dispatch decisions\nindependently of network structure, limiting their ability to address topological constraints\nand flexibility allocation simultaneously. Recently, two-layer optimization frameworks\nhave gained attention due to their ability to separate structural decisions (e.g., network\nreconfiguration) from operational decisions (e.g., dispatch or control) [ 23,24]. Huang\net al. designed a web-of-cells two-layer model incorporating supply–demand flexibility\nmetrics [25], and Hao et al. proposed a similar structure integrating EV scheduling with\ndistribution network loss minimization [ 26]. In parallel, equipment-level research has\nshown that structural design at the device layer can significantly impact system-level\nenergy performance. For example, Zhao et al. [ 27] investigated the optimal electrode\nconfiguration for a compactly assembled industrial alkaline water electrolyzer, whose\nresult highlights the importance of coupling hardware optimization with system-level\nscheduling and control, particularly in renewable-powered hydrogen production scenarios.\nThese studies illustrate the benefits of decoupled modeling, though they rarely address\ncoordination with equipment maintenance or dynamic reconfigurability.\nThis study addresses the following research questions:\n(1) The first question concerns the co-optimization of grid reconfiguration and source–\nload dispatch under renewable energy uncertainty.\n(2) The second question focuses on how to evaluate and incorporate flexibility into\ndispatch decisions to improve robustness and efficiency.\nTo answer these, a two-layer optimization model is proposed. The upper layer opti-\nmizes network topology based on branch flexibility, while the lower layer performs dis-\ntributed robust dispatch considering uncertainty. A hybrid metaheuristic algorithm (ACO–\nFHO–DE) is developed for efficient solution. Compared with existing approaches, our\nmodel integrates reconfiguration, flexibility assessment, robust scheduling, and maintain-\nability in a unified framework, validated on the CPS62 system with Monte Carlo scenarios.\nEnergies 2025, 18, 4833 3 of 18\nThe remainder of this paper is structured as follows: Section 2 describes the modeling\nframework and algorithm design. Section 3 presents simulation setups and comparative\nresults. Section 4 discusses practical implications and deployment scenarios. Section 5\nconcludes the study with future work suggestions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 System Model and Two-Layer Optimization Framework for",
+      "level": 1,
+      "text": "Grid-Based Active Distribution Networks",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Upper-Layer Model",
+      "level": 2,
+      "text": "The upper-layer model optimizes with the branch flexibility index and network loss\nas objectives. If the two are directly and simply added, it will affect the optimization effect.\nAs shown in Equation (1):\nmax\n(\nCloss − min(Closs)\nmax (Closs) − min(Closs) − FBF − min(FBF)\nmax (FBF) − min(FBF)\n)\n(1)\n\n\n\nFBF = ∑\n∀c∈Nc\nFBF\nc\nCloss =\nT\n∑\nt=1\nclossPloss\nt\n, (2)\nwhere FBF is the branch flexibility adequacy of the distribution network,Closs is the network\nloss cost of the distribution network, Ploss\nt is the power loss on the distribution network\nline at time t, and closs is the network loss cost.\nThe relevant constraint models of the upper-layer model are as follows:\n(1) The traditional Disflow power flow model is a simplified power flow calculation\nmethod widely used in distribution network analysis, proposed by Baran and Wu [28].\nIt simplifies the three-phase power flow equations into a single-phase model based\non the characteristics of radial distribution networks, converting nonlinear power\nflow relationships into linear or quasi-linear equations. This simplification signifi-\ncantly reduces computational complexity, making it suitable for distribution network\nreconfiguration and optimization problems where rapid solution iteration is required.\nHowever, the original Disflow model assumes a fixed network topology, which is\nnot adaptable to the continuous adjustments in distribution network reconfiguration.\nThe traditional Disflow power flow constraints are not adaptable to the continuous\nadjustments in distribution network reconfiguration, so the model is optimized. By\nintroducing the line-switching 0–1 variable αl, the equations are relaxed to form equa-\ntions that are more suitable for the operational changes in the distribution network:\n\n\n\n∑\nl(j,:)∈Ωb\nαlPl,t − ∑\nl(:,j)∈Ωb\nαl(Pl,t − rlLl,t) =Pj,t\n∑\nl(j,:)∈Ωb\nαlQl,t − ∑\nl(:,j)∈Ωb\nαl(Ql,t − xlLl,t) =Qj,t\n, (3)\nVj,t = Vi,t − 2(Pl,trl + Ql,txl) + (r2\nl + x2\nl )Ll,t∀l(i, j) ∈ Ωb, αl = 1, (4)\n\r\r\r\r\r\r\r\n2Pl,t\n2Ql,t\nLl,t − Vj,t\n\r\r\r\r\r\r\r\n2\n≤ Ll,t + Vj,t (5)\nwhere αl is a 0–1 variable representing the switching status of branch l, in which αl = 1\nindicates the branch l is in the closed state. Pl,t, Ql,t are the net injected active power\nand reactive power at node I at time t, respectively. Pj,t, Qj,t are the net injected active\npower and reactive power at the node in period. The resistance and reactance of\nEnergies 2025, 18, 4833 4 of 18\nbranch l are denoted as rl, xl. Li,t is the square of the current flowing through branch l\nat time t. Vi,t is the square of the voltage at node I at time t; Ωb represents the set of\ndistribution network branches.\nSince the above model is a non-convex model, convex relaxation is performed on the\nabove power flow model, and the final equation is as follows:\n(\nVj,t ≤ M4(1 − αl) +Vi,t − 2(Pl,trl + Ql,txl) + (rl2 + xl2)Ll,t\nVj,t ≥ −M4(1 − αl) +Vi,t − 2(Pl,trl + Ql,txl) + (rl2 + xl2)Ll,t\n, (6)\nwhere M4 is a sufficiently large positive number.\n(2) System security constraints:\n0 ≤ Ll,t ≤ (Imax\nl )2, (7)\n−Pmax\nl ≤ Pl,t ≤ Pmax\nl , (8)\n(Umin\ni )\n2\n≤ Vi,t ≤ (Umax\ni )2, (9)\nwhere Imax\nl , Imin",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "represent the upper and lower limits of the current in branch l,",
+      "level": 1,
+      "text": "respectively. Umax\ni , Umin",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "represent the upper and lower limits of the voltage at node i,",
+      "level": 1,
+      "text": "respectively. Finally,Pmax\ni represents the active power upper limit of branch l.\n(3) Power constraints for injection into the substation:\n(\nPsub,min\ni ≤ Psub\ni,t ≤ Psub,max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "Qsub,min",
+      "level": 1,
+      "text": "i ≤ Qsub\ni,t ≤ Qsub,max\ni\n, (10)\nwhere at node i, Psub,max\ni , and Psub,main",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "represent the maximum and minimum values",
+      "level": 1,
+      "text": "of active power during transmission, respectively. Qsub, max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "and Qsub,min",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "represent",
+      "level": 1,
+      "text": "the maximum and minimum values of reactive power during transmission, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2 Lower-Layer Model",
+      "level": 2,
+      "text": "The lower-layer model uses the grid topology from the upper layer. It considers the\nuncertainty of wind and solar output to find the worst-case operation strategy. This is\nachieved by analyzing historical data of loads and renewable energy. The distribution-\nally robust model involved in this paper is a two-stage optimization problem, expressed\nas follows:\nmin\nx\n \nf1(x) +max\npk∈Ω\nK\n∑\nk=1\npk min\nyk∈U(x,ξk)\nf2(yk)\n!\n, (11)\nf1(x) =Csub + CGT + CESS, (12)\n\n\n\nCsub =\nT\n∑\nt=1\n∑\ni∈Nsub\ncsub\nt Psub\ni,t\nCGT =\nT\n∑\nt=1\n∑\ni∈NGT\ncGTPGT\ni,t\nCESS =\nT\n∑\nt=1\n∑\ni∈NESS\ncESS(Pch\ni,t + Pdis\ni,t )\n, (13)\nf2(y) =CTL + Cpv + CWT + Cflex, (14)\nEnergies 2025, 18, 4833 5 of 18\n\n\n\nCTL =\nT\n∑\nt=1\n∑\ni∈NTL\ncTLPTL\ni,t\nCpw =\nT\n∑\nt=1\n∑\ni∈Npw\ncpw( ˆPpw\ni,t − Ppw\ni,t )\nCpv =\nT\n∑\nt=1\n∑\ni∈Npv\ncpv( ˆPpv\ni,t − Ppv\ni,t )\nCflex =\nT\n∑\nt=1\ncflex(Fflex,up\nt + Fflex,dn\nt )\n, (15)\nwhere x and y are first-stage and second-stage variables. K is the number of discrete scenar-\nios after sample reduction. ξk, pk are the k-th scenario and its occurrence probability. Ω is\nthe comprehensive norm ambiguity set. Csub, CGT, CESS, CTL, Cpw, Cpv, and C f lew are the\nmain grid power purchase cost, gas turbine (GT) operation cost, energy storage system\n(ESS) operation cost, transferable load response cost, wind curtailment cost, solar curtail-\nment cost, and flexibility deficit loss cost, respectively. Finally,ctsub, cGT, cESS, cTL, cvw, cpv,\nand c f lex are the unit prices of power purchased from the upper-level grid, gas turbine\ngeneration, ESS operation and maintenance, transferable load response, wind curtailment,\nsolar curtailment, and flexibility deficit loss cost coefficient at time t, respectively.\nThe model uses historical data and clustering to select K typical scenarios from M\nsamples. These scenarios represent possible uncertainty conditions and construct an\ninitial provability distribution of the uncertainty set. However, due to the limitations\nof historical data, the initial probability distribution obtained deviates from the actual\nsituation. Therefore, a comprehensive norm constraint is further introduced to construct a\nset as shown in Equation (16):\nΩ =\n\n\n\n{pk}\n\f\f\f\f\f\f\f\f\f\f\f\f\f\f\npk ≥ 0, k = 1, . . . ,K\nK\n∑\nk=1\npk = 1\nK\n∑\ns=1\n\f\fpk − p0\nk\n\f\f ≤ θ1\nmax\n1≤k≤K\n\f\fpk − p0\nk\n\f\f ≤ θ∞\n, (16)\nwhere θ1 and θ∞ are the probability allowable deviation limits under 1-norm and ∞-norm\nconstraints, respectively.\nThe confidence constraint can be constructed based on the given confidence level and\nhistorical data volume as shown in Equation (17):\n\n\n\nPr\n\u001a K\n∑\nk=1\n\f\fpk − p0\nk\n\f\f ≤ θ1\n\u001b\n≥ 1 − 2Ke−2Mθ1/K\nPr\n\u001a\nmax\n1≤k≤K\n\f\fpk − p0\nk\n\f\f ≤ θ∞\n\u001b\n≥ 1 − 2Ke−2Mθ∞\n. (17)\nLet the right-hand sides of the above inequalities be equal to α1 and α∞, respectively,\nas shown in Equation (18): (\nθ1 = K\n2M In 2K\n1−α1\nθ∞ = 1\n2M In 2K\n1−α∞\n, (18)\nwhere values θ1 and θ∞ represent the maximum degree of deviation between the distribu-\ntionally robust optimization (DRO) scenario probabilities and the initial scenario probabilities.\nAn increase in these values implies that the robust model tends to be more conservative,\nwhile a decrease assumes more risks. The confidence set of probability distributions in this\npaper is subject to the joint constraints of 1-norm and ∞-norm, which effectively avoids the\noccurrence of extreme cases.\nEnergies 2025, 18, 4833 6 of 18\nIn this paper, robustness refers to the ability of the optimization model to maintain\nfeasible and near-optimal solutions under renewable generation and load uncertainty.\nThe proposed model adopts a DRO framework that does not rely on exact probability\ndistributions, but instead uses an ambiguity set to cover a range of possible scenario\ndeviations. This formulation ensures that the dispatch plan remains effective even in\nworst-case or highly uncertain scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Two-Layer Optimization Model",
+      "level": 2,
+      "text": "The two-layer optimization model established in this paper is shown in Figure 1.\nFigure 1. Double-layer optimization structure of grid distribution network.\nThe two-layer model uses a centralized distributed optimization structure, where the\nupper layer uses centralized optimization and the lower layer uses distributed optimiza-\ntion for each grid. This structure meets the operational needs of grid-based distribution\nnetworks. The top-level design of the model is based on branch flexibility indicators and\nnetwork loss costs; it applies strategies to determine the optimal division method of the\ndistribution network structure. The bottom-layer model focuses on dispatching adjustable\nresources on both the supply and demand sides to reduce the risk of system flexibility\nshortages. It feeds the dispatch results back to the top-layer model. Based on the feedback,\nthe top layer adjusts its strategy and determines a new optimal grid division scheme.\nThrough the mutual iteration of the upper- and lower-layer models, the solution to the\nproblem is achieved.\nThe upper- and lower-layer models contain a large number of variables. Therefore, a\ntwo-layer iterative hybrid optimization algorithm is used. The algorithm combines ACO,\nFHO, and DE. It also introduces Tent chaos mapping for population initialization and\nan adaptive weight mechanism. This hybrid algorithm fully utilizes the global search\ncapability of ACO, the local optimization capability of FHO, and the global exploration\ncapability of DE [29–31]. Tent chaotic mapping can enhance population diversity, and the\nadaptive weight mechanism balances global and local searches [32,33]. These techniques\nhelp the algorithm handle multivariable optimization problems in complex models while\nalso ensuring that high-quality solutions are found within a reasonable computational time.\nAs shown in Figure 2, the optimization process follows a two-layer iterative architecture.\nThe algorithm begins with grid initialization and upper-layer topology optimization, tar-\ngeting the minimization of power loss and the maximization of the flexible branch factor.\nThe resulting topology is then passed to the lower layer, where multi-scenario robust\ndispatch is performed to minimize operational cost, renewable curtailment, and flexibility\ndegradation. The hybrid optimization algorithm employs a global-local strategy: ACO is\nused to explore the initial solution space, FHO performs local refinement, and convergence\nis iteratively checked. If convergence is not achieved, the updated solution is fed back to\nEnergies 2025, 18, 4833 7 of 18\nthe upper layer for re-optimization. This feedback loop continues until the system reaches\nconvergence. The final output yields the co-optimized topology and dispatch scheme that\nbalances physical structure and operational efficiency under uncertainty.\nFigure 2. Double-layer iterative solution process.\n(1) The ant colony algorithm generates the initial solution.\nThe Tent chaos mapping is utilized to generate the initial population X0\ni :\nxn+1 =\n( xn\nµ , 0 ≤ xn < µ\n1−xn\n1−µ , µ ≤ xn ≤ 1, (19)\nX0\ni = Xmin + xi · (Xmax − Xmin), (20)\nwhere xn represents the n-th value of the chaotic sequence. µ is the control parameter,\nusually taken as µ = 0.5. xmin and xmax are the lower and upper bounds of the solution\nspace, respectively.\nEnergies 2025, 18, 4833 8 of 18\nThe path selection probability Pk\nij (t) of the ant colony algorithm is used to construct\npaths and generate the initial solution Sk. The objective function value f (Sk), such as the\nflexibility index of the distribution network or the network loss cost, is then calculated:\nPk\nij (t) = [τij (t)]α · [ηij ]β\n∑\nl∈N k\ni\n[τil (t)]α · [ηil ]β,\n(21)\nwhere Pk\nij (t) denotes the probability that the k-th ant selects node j from node i at time\nt. τij (t) is the pheromone concentration from node i to node j. ηij is the reciprocal of the\npath length α and β represent the importance parameters of pheromone and heuristic\ninformation, respectively. Nk\ni is the set of optional nodes for ant k at node i.\n(2) Local optimization by FHO algorithm\nThe initial solution Sk generated by the ACO is used as the initial positions X0\ni of\nthe fire hawks and prey. Perform local optimization using the adaptive weight and the\nposition update formula of the FHO algorithm, Xt",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "is the position of the i-th fire hawk or",
+      "level": 1,
+      "text": "prey at time t.\nXt+1\ni = w(t) · Xt\ni + ∆Xt\ni (22)\nThen, calculate the updated objective function value f (Xt+1\ni ).\n(3) Differential Evolution Strategy\nPerform mutation, crossover, and selection operations of differential evolution on the\npositions updated by the FHO algorithm to generate new candidate solutions. Calculate\nthe objective function value f (Ut\ni ) of the new candidate solutions:\nVt\ni = Xt\nr1 + F · (Xt\nr2 − Xt\nr3), (23)\nUt\nij =\n(\nVt\nij, if rand ≤ CR or j = jrand\nXt\nij, otherwise , (24)\nwhere Vt\ni denotes the mutation vector of the i-th individual. F is the scaling factor, typically\ntaking values in [0, 2]. Ut\nij, Vt\nij and Xt\nij are the j-th dimension of the trial vector, mutation\nvector, and current individual, respectively. Finally, CR represents the crossover probability,\nusually within [0, 1].\n(4) Combination of Pheromone and Position Updates\nBased on the positions updated by the DE strategy, the pheromone enhancement\namount is calculated by\n∆τij (t) = Q\nf (Ut\ni ) , (25)\nτij (t + 1) = (1 − ρ) · τij (t) +∆τij (t), (26)\nwhere Q is the pheromone enhancement constant.\n(5) Iterative Optimization\nRepeat steps (1) to (4) until the convergence condition is met.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3 Case Study and Verification of Distribution System Model",
+      "level": 1,
+      "text": "The CPS62-node distribution system used in this study is a benchmark case derived\nfrom a real-world medium-voltage grid in China. It features distributed PV , wind, energy\nstorage, and demand-side flexibility resources, along with multiple tie-lines and a radial\nEnergies 2025, 18, 4833 9 of 18\nconfiguration. These characteristics make it more representative of practical active distribu-\ntion networks than classical IEEE test systems, which often lack topological complexity and\nrenewable uncertainty modeling [34,35]. The CPS62 system offers a balance between com-\nputational tractability and modeling richness, enabling effective evaluation of coordinated\nreconfiguration and robust dispatch strategies [36].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.1 Analysis of Optimization Results",
+      "level": 2,
+      "text": "This paper designs three different schemes to verify the economy and flexibility\nof the model. Scheme 1 does not consider the flexibility index or grid interconnection.\nScheme 2 includes the flexibility index but does not include grid interconnection. Scheme 3\nconsiders both grid interconnection and the operational flexibility index. Scheme 1 uses\nthe traditional optimization method to optimize only the operation cost. As shown in\nTable 1, the flexibility deficits of Grid 1 and Grid 2 are relatively high, accompanied by\nsevere wind/solar curtailment and line overload conditions. Table 2 indicates that although\nthe operation cost of Scheme 1 is the lowest among the three schemes, its comprehensive\ncost is the highest due to the high flexibility deficit cost. Scheme 1 does not include the\noperational flexibility index or flexible interconnection between grids in the optimization\nprocess. As a result, it cannot solve the problem of serious local flexibility shortages caused\nby the high penetration of new energy sources.\nTable 1. Grid indicator results of each scheme.\nScheme Grid Curtailed Wind-Solar\nEnergy/(kWh)\nGrid Flexibility\nDeficit\nGrid Branch Flexibility\nAdequacy\nOne\n1⃝ 253 0.18 0.72\n2⃝ 61 0.31 0.35\n3⃝ 0 0 0.86\nTwo\n1⃝ 297 0.14 0.67\n2⃝ 145 0.17 0.31\n3⃝ 0 0 0.86\nThree\n1⃝ 82 0.04 0.62\n2⃝ 54 0.06 0.57\n3⃝ 9 0.01 0.71\nTable 2. Optimization results under different schemes/CNY 10,000.\nParameters and Units Scheme 1 Scheme 2 Scheme 3\nOver Source—side\nResource Cost\nMain Grid Power Purchase 2.2371 2.2725 2.2751\nTotal Network Loss 0.0746 0.0738 0.0654\nMTG Power Generation 0.9163 0.9377 0.9787\nEnergy Storage 0.2422 0.2226 0.2137\nWind—Solar Curtailment 0.0316 0.0444 0.0147\nLoad—side Resource Cost Transferable Load Response 0.0950 0.0933 0.0938\nTotal Operation Cost 3.6346 3.6794 3.6479\nFlexibility Deficit Cost 0.1685 0.0815 0.0184\nComprehensive Cost 3.7743 3.7249 3.6686\nThe simulation test adopts a modified CPS62-node active distribution system, as\nillustrated in Figure 3. Topology of the modified CPS62-node distribution system with\nrenewable and flexible resources. The system consists of three interconnected grids (Grid 1,\nGrid 2, and Grid 3) linked by tie-lines (red dashed lines). Each black solid line represents\nEnergies 2025, 18, 4833 10 of 18\na feeder section, with numbered nodes indicating bus locations. Photovoltaic generation\nunits (blue diamonds) are installed at nodes 14,35 and 49, wind turbines (red triangles) at\nnodes 6, 26, and 55, and energy storage systems (green squares) at nodes 8, 31, and 50. Load\npoints are located at all numbered buses except those hosting only generation or storage.\nThe unit costs of various source-load resources are shown in Figure 4. The standard value\nof voltage is set to 12.66 kV , the power reference value is 1 MVA, and the upper limit of\ntransmission capacity for each branch circuit is 1 MW. The active power output of the GT\nunits is capped at 0.3 MW, the ramp rate is limited to 0.1 MW, and the maximum permissible\nenergy capacity of the ESS is 0.9 MWh. The upper limit of charging and discharging power\nis 0.3 MW. The charging and discharging efficiencies are 0.95. Figure 5 shows the forecasted\npower profiles, including Figure 5a the predicted output of PV systems and wind turbines,\nand Figure 5b the load curves for Grid 1, Grid 2, and Grid 3. It should be noted that\nthe wind power profile shown in Figure 5a is a smoothed representative curve used for\nvisualization purposes. In practice, wind power output is inherently intermittent and\nvolatile. This variability is fully accounted for in the model through the generation of\n500 uncertainty scenarios using Latin Hypercube Sampling based on historical wind data\ndistributions. These scenarios capture the full range of wind generation fluctuations and\nare used in the lower-layer robust dispatch to ensure that uncertainty is properly reflected\nin the optimization process.\nFigure 3. CPS62 node simulation example. The red dotted lines represent normally open tie-lines.\n \n \nFigure 4. Unit cost of source load resources.\nEnergies 2025, 18, 4833 11 of 18\n  \n(a) (b) \n \n \n \n \n \n \n \n \nFigure 5. Forecasted source and load profiles. (a) Output curves of wind and PV . (b) Load curves of\nGrid 1, Grid 2, and Grid 3.\nScheme 2 adopts the initial grid state and takes the flexibility index as the optimization\nobjective. Table 1 shows that the flexibility deficits of Grid 1 and Grid 2 are lower than\nthose in Scheme 1. However, this improvement comes at the cost of reduced wind-solar\nutilization and decreased branch capacity margin. As a result, the actual problem remains\nunsolved. The indicators of Grid 3 are almost the same as those in Scheme 1, suggesting\nthat Grid 3 does not fully utilize its own advantages and highlighting an imbalance in\ndynamic resource allocation among the grids.\nScheme 3 employs the double-layer optimization model proposed in this paper, allow-\ning power interconnection between grids. Figure 6 shows the switching states of lines after\ngrid interconnection. Compared with Scheme 1 and Scheme 2, Scheme 3 achieves a dy-\nnamic balance of supply and demand in each grid. It uses flexibility indicators and power\ninterconnection between grids to guide the adjustment process. This approach effectively\nsolves local flexibility shortages that may appear in real power system operations.\nFigure 6. Calculation example after grid interconnection. The red dotted lines represent normally\nopen tie-lines.\nSimulation also reveals that renewable energy locations and capacities significantly\ninfluence optimization outcomes. For instance, if PVs are unevenly distributed among\ngrids, local flexibility mismatch worsens without proper grid reconfiguration. The model\neffectively reallocates power paths and adjusts flexibility reserves to mitigate this imbalance.\nIn the proposed framework, the upper-layer optimization determines the most effective\ngrid partitioning and branch switching plan to improve network-wide flexibility. The\nEnergies 2025, 18, 4833 12 of 18\nlower-layer optimization then performs dispatch decisions for each grid under uncertainty.\nResults show that this interaction reduces curtailment, enhances load balancing, and\nminimizes risk across all operating scenarios.\nA comparative analysis of the three schemes highlights their distinct characteristics\nand advantages. Scheme 1, which only considers operation costs, demonstrates lower direct\ncost but suffers from high flexibility deficits and resource curtailment. This shows that it\nis economical but not suitable under high renewable penetration. Scheme 2 introduces a\nflexibility index into the optimization but lacks grid interconnection. It reduces flexibility\nlosses but cannot fully leverage flexible resources across the system, resulting in unbalanced\nperformance among grids. Scheme 3, which integrates both flexibility index and grid inter-\nconnection based on the proposed two-layer model, achieves the best overall performance.\nIt balances supply and demand dynamically, minimizes curtailment, and reduces total\ncost, demonstrating superior adaptability under uncertainty. These results confirm that\nincorporating flexibility indicators and network reconfiguration simultaneously is essential\nfor enhancing economic and operational performance in modern distribution systems.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.2 Analysis and Comparative Analysis of Robust Optimization Results",
+      "level": 2,
+      "text": "In this study, uncertainties primarily arise from renewable generation variability (wind\nand PV output), load demand fluctuations, and forecasting errors. Disturbances may also\ninclude equipment outages, unexpected changes in network topology, and communication\ndelays. The proposed DRO framework accounts for these factors by constructing an\nambiguity set that captures deviations from the nominal probability distribution.\nTo comprehensively evaluate the effectiveness of the proposed optimization method\nunder uncertainty, this study compares four dispatch strategies with distinct modeling\nphilosophies. The deterministic optimization model is based on forecast point values\nwithout considering uncertainty, and although simplistic, it provides a baseline reference\nto quantify the value of uncertainty modeling. The stochastic programming model incor-\nporates multiple probabilistic scenarios with assigned occurrence probabilities, enabling\nthe assessment of expected performance but potentially leading to suboptimal results in\nrare but severe conditions. In contrast, the traditional robust optimization model protects\nagainst the worst-case scenario, ensuring operational feasibility under extreme conditions,\nthough often at the cost of overly conservative solutions and higher average costs. The\nproposed DRO model adopts an ambiguity set approach to capture uncertainty without\nrequiring precise probability distributions. This allows for a more balanced solution that\nmaintains robustness while improving economic efficiency. The comparative analysis that\nfollows demonstrates the relative strengths and trade-offs of these methods across a wide\nrange of simulated scenarios.\nTo evaluate the robustness and adaptability of the model under renewable energy\nuncertainty, we adopt a Monte Carlo simulation approach. A total of 500 synthetic wind–\nsolar–load scenarios are constructed based on historical data patterns, incorporating fluctu-\nations in PV and wind output as well as grid load variations. The scenarios are generated\nusing Latin Hypercube Sampling and then clustered to ensure coverage of a wide range of\noperating conditions. Among these scenarios, three typical cases are selected for detailed\nanalysis. The first is a high wind–solar generation combined with peak load, which poses a\nsevere challenge to dispatch flexibility due to simultaneous supply and demand surges. The\nsecond represents a medium wind–solar output with a flat load profile, corresponding to\ntypical operating conditions. The third scenario involves low renewable energy generation\nduring valley load hours, leading to an increased risk of flexibility deficits and supply\ninadequacy. These representative cases enable a comprehensive evaluation of the model’s\nperformance under various uncertainty conditions. As illustrated in Figure 8, the determin-\nEnergies 2025, 18, 4833 13 of 18\nistic model exhibits the highest average and maximum costs due to its inability to account\nfor uncertainty. Although the stochastic optimization model achieves a lower average\ncost, it lacks robustness, resulting in high operational risks under unfavorable renewable\ngeneration and load conditions. The robust model offers better protection against cost\nspikes, but its overly conservative nature leads to higher comprehensive costs. In contrast,\nthe proposed model achieves the lowest average cost and the lowest maximum cost across\nall scenarios. These results demonstrate that the proposed approach effectively balances\ncost and risk, offering superior robustness and economic performance compared with the\nother three methods.\nFigure 7. Comparison of Monte Carlo statistical results/CNY 10,000.\n \nFigure 8. Cont.\nEnergies 2025, 18, 4833 14 of 18\nFigure 8. Cost comparison among different optimization models under typical scenarios. (a) High\nwind–solar generation and peak load. ( b) Medium wind–solar generation and flat load. ( c) Low\nwind–solar generation and valley load.\nThe proposed two-layer optimization model and hybrid algorithm are designed in a\nmodular and scalable way. Therefore, they can be extended to larger systems or systems\nwith different configurations with minor adjustments to parameters and constraints. All\nmodeling, simulation, and optimization were implemented in MATLAB R2021a. The math-\nematical formulation of the optimization model was encoded using YALMIP (version 0.9.7),\nwhile the hybrid algorithm was developed using customized scripts. All simulations were\nrun on a standard desktop computer with Intel i7 CPU and 32 GB RAM.\nTo evaluate the robustness of the proposed model, we compare the distribution of total\noperating cost across 500 scenarios for four models: deterministic, stochastic, traditional\nrobust, and proposed DRO. Two performance indicators are used: Maximum cost across all\nscenarios (reflects worst-case behavior). Average cost across all scenarios (reflects overall\nperformance stability). As shown in Figure 8, the deterministic model has the highest\nmaximum and average cost due to its lack of uncertainty handling. The stochastic model\nperforms well on average but exhibits cost spikes under adverse conditions. The traditional\nrobust model is safer but overly conservative. The proposed model achieves the lowest\nmaximum cost (i.e., best worst-case performance) and a moderate average cost, confirming\nits superior robustness and cost-effectiveness.\nSeveral existing studies have addressed the problem of scheduling in uncertain distri-\nbution networks. For instance, Yi et al. [17] proposed a multi-objective robust optimization\nmodel incorporating demand response uncertainty, achieving 4.2% cost reduction in IEEE\n33-bus system under 200 scenarios. Liao et al. [18] employed affine adjustable robust control\nand showed improved feasibility under deep renewable penetration. Huang et al. [ 19]\ndeveloped a web-of-cells-based two-layer optimization, achieving balanced flexibility\nallocation but with higher average cost due to lack of loss minimization.\nCompared with these studies, the proposed method achieves both lower average and\nworst-case cost across 500 scenarios, and additionally considers equipment maintainability\nthrough branch flexibility evaluation. As shown in Table 2 and Figure 8, our model\nachieves an average cost reduction of 6.8% compared with traditional robust methods, and\nup to 14.5% compared with deterministic optimization. These results confirm the model’s\nsuperior adaptability and economic performance under uncertainty.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4 Discussion",
+      "level": 1,
+      "text": "The simulation results confirm that the proposed two-layer optimization model effec-\ntively enhances both economic performance and operational flexibility under renewable\nenergy uncertainty. Compared with deterministic, stochastic, and classical robust optimiza-\ntion models, the proposed approach consistently achieves lower average and maximum",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Double-layer optimization structure of grid distribution network."
+    },
+    {
+      "id": "f2",
+      "caption": "Double-layer iterative solution process."
+    },
+    {
+      "id": "f3",
+      "caption": "CPS62 node simulation example. The red dotted lines represent normally open tie-lines."
+    },
+    {
+      "id": "f4",
+      "caption": "Unit cost of source load resources."
+    },
+    {
+      "id": "f5",
+      "caption": "Forecasted source and load profiles. (a) Output curves of wind and PV . (b) Load curves of"
+    },
+    {
+      "id": "f6",
+      "caption": "Calculation example after grid interconnection. The red dotted lines represent normally"
+    },
+    {
+      "id": "f7",
+      "caption": "Comparison of Monte Carlo statistical results/CNY 10,000."
+    },
+    {
+      "id": "f8",
+      "caption": "Cost comparison among different optimization models under typical scenarios. (a) High"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": ", the flexibility deficits of Grid 1 and Grid 2 are relatively high, accompanied by"
+    },
+    {
+      "id": "t2",
+      "caption": "Optimization results under different schemes/CNY 10,000."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

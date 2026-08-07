@@ -1,0 +1,274 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-machines/mdpi-machines__2022__fault_detection_and_diagnosis_with_imbalanced_and_noisy__de312cf20a.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Rotating machinery is one of the essential equipment in today’s industrial environments. From\npetroleum, automobile, chemicals, pharmaceutical, mining, power generation plants to consumer\ngoods, at least there is a machine with a rotating component. The rotating component could be\nthe gearbox, axles, wind, steam and gas turbines, centrifugal and oil-free screw compressors,\nand pumps. 30% of rotating machinery breakdowns are mainly caused by loose, partially\nArXiv preprint\n/envelope-openmasoud.jalayer@polimi.it (M. Jalayer); amin.kaboli@epfl.ch (A. Kaboli); carlotta.orsenigo@polimi.it\n(C. Orsenigo); carlo.vercellis@polimi.it (C. Vercellis)\n/orcid0000-0001-8013-8613 (M. Jalayer)\n1\narXiv:2202.04212v1  [cs.LG]  9 Feb 2022\nMasoud Jalayer et al. - Preprint 1–23\nFigure 1: Main steps of an automated Fault Detection and Diagnosis system\nrubbed, misaligned, cracked, and unbalanced rotating parts [ 1]. Machine breakdowns can\npresent complex challenges during day-to-day operations and significantly impact business\nprofitability and operations productivity. Monitoring machine health conditions can prevent\nmachine breakdowns and reduce the maintenance costs of manufacturing systems [ 2]. It is,\nhence, crucial to develop efficient diagnosis systems to analyze different health conditions of\nthe rotating components.\nThere are two main approaches for coping with fault detection and diagnosis in rotating\nmachinery: (1) physical-based control systems and (2) data-driven-based models. Recent ad-\nvancements in computer processing and digital technologies enhanced the robustness and\nhigher computational capabilities to use data-driven fault detection and diagnosis models. Im-\nplementing these models enable us to monitor and control the parameters of machines from a\nremote distance and drive insights. That is the main reason for which data-driven fault detection\nand diagnosis models are used in smart manufacturing systems [2].\nThe main contributions of this paper are as follows: (1) In order to get higher classification\nperformance in different environments, a hybrid deep learning architecture is designed such\nthat it takes Fourier and Wavelet spectra of the vibration signals. This architecture uses CNN\nblocks to find shift-agnostic characteristics of the fault types, a LSTM block which understands\nthe spatiotemporal and sequential features of it and, finally, a Weighted ELM classifier which is\neffective in learning from scarce patterns, the necessity of which is examined through experi-\nmental comparisons. The proposed classifier is named CLSTM-ELM. (2) A Wasserstein-GAN\nmodel with a gradient penalty is developed and employed in the hybrid framework to reproduce\nrare patterns and enhance the training set. The effectiveness of this proposition is investigated\nin Section 5. (3) A comprehensive set of scenarios is designed to study the effect of different\nimbalance severities and noise degrees on the performance of the framework. A sensitivity\nanalysis is conducted on the scenarios revealing more insights about the characteristics of\nthe model. (4) Seven state-of-the-art FDD models are chosen to compete with the proposed\n2\nMasoud Jalayer et al. - Preprint 1–23\nframework on four different dataset settings. The experimental comparison illustrates how\nimplementing WGAN-GP and W-ELM can improve the classifier performance and shows the\nsuperiority of GAN-CLSTM-ELM over other algorithms.\nThe rest of the paper is organized as follows. Section 2 provides an overview of the principal\nAI-based approaches proposed for FDD problems. In Section 3, the theory behind WGAN-\nGP, LSTM, Convolutional layers and W-ELM is briefly reviewed. Then, the proposed hybrid\nframework, GAN-CLSTM-ELM, is presented in Section 4. Section 5 compares the performance\nof different FDD algorithms on different imbalance ratios and noise severities. Finally, some\nresearch conclusions and future extensions are provided in Section 6.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Review of Current Models",
+      "level": 1,
+      "text": "Early data-driven fault detection and diagnosis (hereafter FDD) models have benefited from\ntraditional Artificial Intelligence (AI) models, or “shallow learning” models, such as Support\nVector Machines (SVM), Decision Trees (DT), and Multi-layer Perceptron (MLP) [3]. Despite the\napplicability of traditional AI models to FDD problems, these models show poor performances\nand limitations when dealing with complicated fault patterns such as the above-mentioned\nrotating machinery faults [4]. One of the first applications of rotating machinery FDD dates back\nto 1969 in Boeing Co., when Balderston [5] illustrated some characteristics of the fault signs\non the signals measured by an accelerometer in natural and high frequencies. [ 6] employed\nthe rectified envelope signals with a synchronous averaging, which was later called “envelope\nanalysis”, to identify bearing local faults. The peak localization in the vibration signal spectrum\nis another classical example of the fault detection methods for the ball bearing faults [7].\nRecently, with the emergence of novel deep learning (DL) architectures and their promising\npattern recognition capabilities, many researchers proposed deep learning solutions for data-\ndriven-based FDD systems [8]. These FDD approaches rely on the common assumption that\nthe distribution of classes for different machine health conditions is approximately balanced.\nIn practice, however, the number of instances may significantly differ from a fault class to\nanother. This causes a crucial issue since a classifier which has been trained on such a data\ndistribution primarily exhibits a skewed accuracy towards the majority class, or fails to learn the\nrare patterns. Most of the proposed FDD approaches, thus, suffer from higher misclassification\nratios when dealing with scarce conditions such as in high-precision industries where the\nnumber of faults are limited [9].\nThrough their deep architectures, DL-based methods are capable of adaptively capturing\nthe information from sensory signals through non-linear transformations and approximate\ncomplex non-linear functions with small errors [3]. Auto-encoders (AE) are among the most\npromising DL techniques for automatic feature extraction of mechanical signals. They have been\nadopted in a variety of FDD problems in the semiconductor industry [10], foundry processes\n[11], gearboxes [12] and rotating machinery [13], [14]. [15] employed the “stacked” variation\nof AE to initialize the weights and offsets of a multi-layer neural network and to provide an\nexpert knowledge for spacecraft conditions. However, to cope with mechanical signals, using a\nsingle AE architecture has shown some drawbacks: it may only learn similar features in feature\nextraction and the learned features may have shift variant properties which potentially lead to\n3\nMasoud Jalayer et al. - Preprint 1–23\nmisclassification. Some approaches were proposed to make this architecture appropriate for\nsignal-based fault diagnosis tasks. [16] used a local connection network on a normalized sparse\nAE, called NSAE-LCN, to overcome these shortcomings. [17] developed a stacked-AE to directly\nlearn features of mechanical vibration signals on a motor bearing dataset and a locomotive\nbearing dataset; specifically, they first used a two-layer AE for sparse filtering and then applied\na softmax regression to classify the motor condition. The combination of these two techniques\nlet the method achieved high accuracy in bearing fault diagnosis.\nExtreme learning machine (ELM) is a competitive machine learning technique, which is\nsimple in theory and fast in implementation. As an effective and efficient machine learning\ntechnique, ELM has attracted tremendous attention from various fields in recent years. Some\nresearchers suggest ELM and Online Sequential ELM (OS-ELM) for learning from imbalance\ndata [18]; [19]; [20]. ELM and OS-ELM can learn extremely fast due to their ability to learn data\none-by-one or chunk-by-chunk [21]. Despite their effective performances on online sequential\ndata, the performance associated to their classical implementation on highly imbalanced data\nis controversial; according to [22], for example, OS-ELM tends to have poor accuracy on such\ndata. Therefore, they proposed a voting-based weighted version of it, called VWOS-ELM, to\ncope with severely rare patterns, whereas [9] developed a two-stage hybrid strategy using a\nmodified version of OS-ELM, named PL-OSELM. In offline stage, the principal curve is employed\nto explore the data distribution and develop an initial model on it. In online stage, some virtual\nsamples are generated according to the principal curve. The algorithm chooses virtual minority\nclass samples to feed more valuable training samples.\nConsidering the promising results obtained by ELM- based classifiers coping with imbalanced\ndata, they accordingly became one of the mainstreams in FDD research area. In [23], the authors\ndeveloped an evolutionary OS-ELM for FDD for bearing elements of high-speed electric multiple\nunits. They employed a K-means synthetic minority oversampling technique (SMOTE) for\noversampling the minority class samples. They also used an artificial bee colony (ABC) algorithm\nto find a near-optimum combination of input weights, hidden layer bias, and number of hidden\nlayer nodes of the OS-ELM. In another paper, [24] used density-weighted one-class ELM for\nfault diagnosis in high-voltage circuit breakers (HVCBs), using vibration signals. [25] applied\nan adaptive class-specific cost regulation ELM (ACCR-ELM) with variable-length brainstorm\nalgorithm for its parameter optimization to conveyor belt FDD. The proposed algorithm exhibits\na stable performance under different imbalance ratios. [ 26] presented a feature extraction\nscheme on time-domain, frequency-domain, and time-frequency-domain, to feed a full spectrum\nof information gained from the vibration signals to the classifier. They also demonstrated that\nthe cost-sensitive gradient boosting decision tree (CS-GBDT) shows a satisfactory performance\nfor imbalanced fault diagnosis. In another FDD framework for rolling bearings [27], the authors\ncoupled an Optimized Unsupervised Extreme Learning Machine (OUSELM) with an Adaptive\nSparse Contractive Auto-encoder (ASCAE). The ASCAE can gain an effectual sparse and more\nsensitive feature extraction from the bearing vibration signals. A Cuckoo search algorithm\nwas also proposed to optimize the ELM hyper-parameters. Another variation of ELM was\ndeveloped by [28] to deal with imbalanced aircraft engines fault data which is derived from\nthe engine’s thermodynamic maps. This ELM variation flexibly sets a soft target margin for\neach training sample; hence, it does not need to force the margins of all the training samples\nexactly equaling one from the perspective of margin learning theory. After some experiments\n4\nMasoud Jalayer et al. - Preprint 1–23\non different datasets, including the aircraft engine, it is concluded that SELM outperforms ELM.\nOn the other hand, there are frameworks for imbalanced and noisy FDD without the employ-\nment of any ELM variation. [16] proposed a Deep Normalized Convolutional Neural Network\n(DNCNN) for FDD under imbalanced conditions. The DNCNN employs a weighted softmax loss\nwhich assumes that the misclassification errors of different health conditions share an equivalent\nimportance. Subsequently, it minimizes the overall classification errors during the training\nprocesses and achieves a better performance when dealing with imbalanced fault classification\nof machinery adaptively. [29] used WGAN-GP to interpolate stochastically between the actual\nand virtual instances so that it ensures that the transition region between them is stable. They\nalso utilized a Stacked-AE to classify the enhanced dataset and determined the availability of the\nvirtual instances. Since a single GAN model encounters hardship and poor performance when\ndealing with FDD datasets, [30] proposed a framework based on",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Background Theory",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 WGAN-GP",
+      "level": 2,
+      "text": "In the classical definition, GANs consist of two adversarial networks trained in opposition to\none another: (1) a generative model, 𝐺, which learns the data distribution to generate a fake\nsample 𝑥˜(𝑖) = 𝐺(𝑧) from a random vector 𝑧, where 𝑧∼ P𝑧 and P𝑧 is the noise distribution;\n(2) a discriminator model, 𝐷, which determines if the sample is generated by 𝐺 or is a real\nsample. 𝐺 strives to deceive 𝐷 by making realistic random samples, while 𝐷 receives both real\nand fake samples. On the contrary, 𝐷 tries to find out the source of each sample by calculating\nits corresponding probability, 𝑝(𝑆|𝑥) = 𝐷(𝑥), and is trained to maximize the log-likelihood it\nassigns to the correct source [34]\n5\nMasoud Jalayer et al. - Preprint 1–23\nmin\n𝐺\nmax\n𝐷\n𝑉 (𝐷, 𝐺) = E𝑥∼P𝑟[log(𝐷(𝑥))] + E𝑥˜∼P𝑓 [log(1− 𝐷(𝑥˜))], (1)\nwhere P𝑟 and P𝑓 denote the distribution of the raw data and of the fake samples, respectively.\nThen, the model reaches a dynamic equilibrium if P𝑓 = P𝑟 [34].\nWhile GAN is a powerful generative model, it suffers from training instability. Some different\nsolutions have been proposed to solve this problem. Wasserstein GAN (WGAN) is one of\nthe novel proposed techniques offering a new loss function which has demonstrated a better\nperformance and a better model stability. The present paper uses a variation of GAN, Entropy-\nbased WGAN-GP proposed by [35], generating an entropy-weighted label vector for each class\nwith respect to its frequency.\nWhen the discriminator 𝐷 is sufficiently trained, the gradient of the generator 𝐺 is relatively\nsmall; when the effect of 𝐷 is lower, it gets larger. WGAN employs a distance called Wasserstein\nto calculate the difference between the distributions of the real and fake samples [36], which\ncan be mathematically written as follows:\n𝒲(P𝑟, P𝑓) = inf\n𝜆∈Π(P𝑟,P𝑓 )\nE(𝑎,𝑏)∼𝜆[‖𝑎− 𝑏‖], (2)\nwhere Π(P𝑟, P𝑓) denotes the set of all distributions with margins ofP𝑟 and P𝑓 , and 𝜆(𝑎, 𝑏)\nrepresents the distance between two given distributions, 𝑎 and 𝑏. Therefore, the Wasserstein\nvariable can be interpreted as the transportation cost between the distributions of real and\nfake datasets. To avoid the gradient uninformativeness issue and to guarantee the existence\nand uniqueness of the optimal discriminative function and the respective Nash equilibrium,\nLipschitz condition is applied [ 37]. In the proposed WGAN, the discriminative function is\nrestricted to 1-Lipschitz. The WGAN, hence, proposes a revised objective function based on 1,\nusing Kantorovich-Rubinstein duality, and is formulated as:\nmin\n𝐺\nmax\n𝐷∈ℒ1\nE𝑥∼P𝑓 [𝐷(𝑥)]− E𝑥˜∼P𝑟[𝐷(𝑥˜)], (3)\nwhereℒ1 is the collection of 1-Lipschitz functions. In this case, under an optimal discriminator\nwhich minimizes the objective function with respect to the parameters of 𝐺, the model strives\nto minimize𝒲(P𝑟, P𝑓).\nLet 𝛿∼ 𝑈[0, 1] be a random number to have a linear interpolation between 𝑥 and 𝑥˜:\n𝑥^ = 𝛿𝑥 + (1− 𝛿)𝑥˜, (4)\nTherefore, the loss function of the discriminator, L𝐷, can be determined as follows\nL𝐷 = E𝑥˜∼P𝑔[𝐷(𝑥˜)]− E𝑥∼P𝑟[𝐷(𝑥)] + 𝛾E𝑥^∼P𝑧[(‖∇𝑥^𝐷(𝑥^)‖2− 1)2], (5)\nwhere 𝛾 stands for the gradient penalty coefficient. The last part of Eq.5 denotes the gradient\npenalty: 𝛾E𝑥^∼P𝑧[(‖∇𝑥^𝐷(𝑥^)‖2− 1)2] [38].\nFigure 2 exhibits the simplified process of synthesizing rotating machinery signal samples\nout of some random noises in a conventional GAN model.\n6\nMasoud Jalayer et al. - Preprint 1–23\nFigure 2: The schematic process in GANs",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 CLSTM",
+      "level": 2,
+      "text": "RNN (Recurrent Neural Network) is a powerful class of artificial deep learning architectures\nproposed to identify patterns in sequential data. It can consider time and sequence by taking\nthe present data and the recent past data as inputs. RNN is trained across the time steps using\nbackpropagation. However, due to the multiplication of gradients at time steps the gradient\nvalue may vanish or blow up rapidly. This issue limits its usage when the time window is greater\nthan 10 discrete time steps [39]. By adding constant error carousels and introducing forget gates\nto RNN, a new form of RNN architecture is proposed, named LSTM. These adopted forget gates\nare able to control the utilization of information in the cell states and impede the vanishing\nor exploding gradient issues [ 40]. Compared to RNN, LSTM is more powerful in capturing\nlong-term dependencies of the data features where it can handle time-windows exceeding 1000\ndiscrete time stamps [39].\nOn the other hand, convolutional neural networks are mainly composed of convolutional, pool-\ning and normalization layers, making them capable of understanding the data shift-invariance\nand sharing the weights through convolutional connections. This weight sharing makes CNN\nlighter for computation since it reduces the number of parameters in the network.\nLet 𝑥𝑖 = [𝜅1, . . . , 𝜅𝐿] be the sequential data, where 𝐿 denotes the length of the signal sample,\nand 𝜅𝑖∈ R𝑑 the set of values at each timestamp, where 𝑑 is the number of channels. The\nconvolution operation is defined as the following dot product:\n𝑐𝑖 = 𝜙(𝑢· 𝜅𝑖:𝑖+𝑚−1 + 𝑏), (6)\nwhere 𝑢∈ R𝑚𝑑 is a filter vector, 𝑏 is the bias, 𝜙 is an activation function, and 𝜅𝑖:𝑖+𝑚−1\nrepresents an 𝑚-length window starting from the 𝑖𝑡ℎ time stamp of the sample. Sliding the\n7\nMasoud Jalayer et al. - Preprint 1–23\nfilter window from the first timestamp of the sample to its last possible one, a feature map is\ngiven as follows:\nC𝜉 = [𝑐1, 𝑐2, . . . , 𝑐𝐿−𝑚+1], (7)\nwhere C𝜉 corresponds to the 𝜉𝑡ℎ filter.\nTo reduce the length of these feature maps and minimizing the model parameters, pooling\nlayers are proposed. Max Pooling layer is one of the most common pooling techniques. The\ncompressed feature vector, H , is defined as follows:\nH = [ℎ1, ℎ2, . . . , ℎ( 𝐿−𝑚\n𝑠 )+1], (8)\nwhere ℎ𝜉 = max( C(𝜉−1)𝑠, C(𝜉−1)𝑠+1, . . . ,C(𝜉𝑠−1)) on the 𝑠 consecutive values of feature\nmap C𝜉 and 𝑠 denotes the pooling length. Batch normalization is widely used in CNN blocks\nto reduce the shift of interval covariance and make the learning quicker by alleviating the\ncomputational load. The normalization is completed by making each individual scalar feature\nwith zero mean and unit variance. This process can be mathematically described as:\n𝜅𝑖^ = ( 𝜅𝑖− E[𝑥𝑖])\n√︀\n𝑉 𝑎𝑟(𝑥𝑖) + 𝜖, (9)\nwhere 𝜖 is a small constant added for numerical stability. However, the extracted features\ncan be affected when the features of a certain layer are normalized directly by Eq. 9, leading to\npoor network expression abilities. To resolve this issue, each normalized value 𝜅𝑖 is modified\nbased on the scale parameter 𝜚𝑖 and the shift parameter 𝜛𝑖. These two learnable reconstruction\nparameters can recover the feature distribution of the original network. The following formula\ncan be used to determine the output of the neuron response:\n𝜈𝑖^ = 𝜚𝑖𝜅𝑖^ + 𝜛𝑖. (10)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 W-ELM",
+      "level": 2,
+      "text": "ELM is in general a single-hidden-layer feed-forward neural network (SLFN). The difference\nbetween SLFN and ELM lies in how the weights of hidden layer and output layer neurons are\nupdated. In SLFN, the weights of both input and outputs layers are initialized randomly, and the\nweights of both the layers are updated by the backpropagation algorithm. In ELM, the weights\nof the hidden layers are assigned randomly but never updated, and only the weights of the\noutput layer are updated during the training process. As in ELM, the weights of only one layer\nare to be updated as opposed to both layers of SLFN; this makes ELM faster than SLFN.\nLet the training dataset be{(𝑥𝑖, 𝑦𝑖)}𝑁\n(𝑖=1), where 𝑥𝑖 is the input vector and 𝑦𝑖 is the output\nvector. The output of the 𝑗𝑡ℎ hidden layer neuron is given by 𝜙𝑎(𝑎𝑗, 𝑏𝑗, 𝑥𝑖), where 𝑎𝑗 is the\nweight vector connecting the input neurons to the 𝑗𝑡ℎ hidden layer neuron, 𝑏𝑗 is the bias of the\n𝑗𝑡ℎ hidden neuron, and 𝜙𝑎 is the activation function. Each hidden layer neuron of ELM is also\nconnected to each output layer neuron with some associated weights. Let𝛽 = [𝛽1, 𝛽2, . . . , 𝛽𝐾]𝑇\ndenote the output weights connecting the hidden layer (composed of 𝐾 hidden nodes) with\n8\nMasoud Jalayer et al. - Preprint 1–23\noutput neurons. Thus, the 𝑖𝑡ℎ output is determined as:\n𝑜𝑖 =\n𝐾∑︁\n𝑗=1\n𝛽𝑗𝜑𝑎(𝑎𝑗, 𝑏𝑗, 𝑥𝑖), 𝑖 = 1, . . . , 𝑁. (11)\nLet 𝐻 = (𝐻𝑖𝑗) = (𝜑𝑎(𝑤𝑗, 𝑏𝑗, 𝑥𝑖)) be the hidden layer matrix. The 𝑁 equations of the output\nlayer (Eq. 11) can be shortly written as follows:\n𝑂 = 𝐻𝛽. (12)\nUsing Moore-Penrose generalized inverse [41], 𝐻†, a least square solution, referred to as the\nextreme learning machine, can be determined mathematically as follows:\n𝛽 = 𝐻†𝑌 =\n{︃\n𝐻 𝑇 ( 1\n𝐶 + 𝐻𝐻 𝑇 )−1𝑌 𝑁 < 𝐾\n( 1\n𝐶 + 𝐻 𝑇 𝐻)−1𝐻 𝑇 𝑌 𝑁 ≥ 𝐾, (13)\nwhere 𝐶 is a positive parameter to achieve a better generalization performance [42]. Weighted\nELM [20] considers a 𝑁 ×𝑁 diagonal matrix 𝑊 associated with each training sample 𝑥𝑖. If 𝑥𝑖\nbelongs to the minority class, the algorithm allocates a relatively larger weight to𝑤𝑖 rather than\nthose of majority classes, which intensifies the impact of minority classes in the training phase.\nTherefore, the solution of Eq. 12 will be obtained by using the optimization formula of ELM:\nMinimize : 𝐿𝑃 𝐸𝐿𝑀 = 1\n2‖𝛽‖2 + 𝐶𝑊 1\n2\n𝑁∑︁\n𝑖=1\n‖𝜂𝑖‖2\nsubject to : ℎ(𝑥𝑖)𝛽 = 𝑦𝑇\n𝑖 − 𝜂𝑇\n𝑖 , 𝑖= 1, . . . , 𝑁.\n(14)\nAccording to the KKT theorem [43], the solution to Eq. 14 is obtained as follows:\n𝛽 = 𝐻†𝑌 =\n{︃\n𝐻 𝑇 ( 1\n𝐶 + 𝑊 𝐻𝐻𝑇 )−1𝑊 𝑌 𝑁 < 𝐾\n( 1\n𝐶 + 𝐻 𝑇 𝑊 𝐻)−1𝑊 𝐻𝑇 𝑌 𝑁 ≥ 𝐾. (15)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 The Proposed FDD Model",
+      "level": 1,
+      "text": "As mentioned in Section 1, there is a need to improve the performance of imbalanced and noisy\nFDD systems. Therefore, this paper presents a hybrid framework which embeds three steps: (1)\nthe employment of a generative algorithm to improve the training set, (2) the signal processing\nwith FFT and CWT techniques providing the DL classifier a deeper understanding of the fault’s\nidentity, (3) the development of a hybrid classifier based on CNN, LSTM and weighted ELM, as\nillustrated in Figure 3.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.1 Sample generation model design",
+      "level": 2,
+      "text": "The structure of the WGAN-GP generator 𝐺 comprises a five-layered autoencoder of 𝑙, 𝑙\n2 , 𝑙\n4 , 𝑙\n2\nand 𝑙 neurons, while the discriminator 𝐷 is composed of three convolutional-LSTM blocks. The\n9\nMasoud Jalayer et al. - Preprint 1–23\ninput variable 𝑧 has a dimension of 𝑙× 1. Due to the poor performance in weight clipping of\nWGAN-GP, the paper uses an alternative in the form of a gradient penalty in the discriminator\nloss function, which has been introduced by [ 44] and which achieves high performances\ncompared to other GAN models. Algorithm 1 shows how WGAN-GP works, where 𝜌 is the\ngradient coefficient, 𝜒𝑑 is the number of discriminator iterations per each generator iteration,\n𝜒𝑏 denotes the batch size, 𝜗,𝜇1 and 𝜇2 are the Adam hyperparameters, and 𝜔1 and 𝜃1 represent\nthe initial discriminator and generator parameters, respectively.\nInput: 𝛾, 𝑛𝑐𝑟𝑖𝑡𝑖𝑐, 𝑚, 𝛼, 𝛽1, 𝛽2, 𝜔0, 𝜃0\n1 while 𝜃 is not converged do\n2 for 𝑡← 1, ..., 𝑛𝑐𝑟𝑖𝑡𝑖𝑐 do\n3 for 𝑖← 1, ..., 𝑚do\n4 Sample from real dataset 𝑥∼ P𝑟,\n5 Generate noise samples 𝑧∼ P𝑧,\n6 Generate a random number 𝛿∼ 𝑈[0, 1]\n7 𝑥˜← 𝐺𝜃(𝑧)\n8 𝑥^← 𝛿𝑥 + (1− 𝛿)𝑥˜\n9 L (𝑖)← 𝐷𝜔(𝑥˜)− 𝐷𝜔(𝑥) + 𝛾(‖∇𝑥˜𝐷𝜔(𝑥^)‖2− 1)2\n10 𝜔← 𝐴𝑑𝑎𝑚(∇𝜔 1\n𝑚\n∑︀𝑚\n𝑖=1 𝐿𝑖, 𝜔, 𝛼, 𝛽1, 𝛽2)\n11 Sample batch of 𝑚 noise samples{𝑧𝑖}𝑚\n𝑖=1∼ P𝑧\n12 𝜃← 𝐴𝑑𝑎𝑚(∇𝜃 1\n𝑚\n∑︀𝑚\n𝑖=1−𝐷𝜔(𝐺𝜃(𝑧)), 𝜔, 𝛼, 𝛽1, 𝛽2)\nAlgorithm 1: WGAN-GP",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.2 Fault diagnosis model design",
+      "level": 2,
+      "text": "In order to reveal more information about the fault characteristics, the paper separately employs\ntwo signal processing feature extraction techniques on the input samples: FFT and CWT [45],\nwhose results are merged to be passed to the deep learning architectures. As it is demonstrated\nin [46], employing these two feature extraction techniques significantly improves the diagnosis\nperformance and increases the accuracy.\nAs it is shown in Figure 3, the paper proposes a dual-path deep learning architecture which\ncombines LSTM and CNN. The reason behind this duality lies in the nature of these two\narchitectures and the fact that each of them explains a different feature type. More specifically,\n[47] illustrated that the concatenation of CNN and LSTM features meaningfully enhances the\nclassification accuracy.\nIn the first pathway, after applying a one-dimensional convolutional layer on the pre-\nprocessed input tensors which extracts the local and discriminative features, an LSTM is added\nto encode the long-term temporal patterns. The importance of adding a convolutional layer\nprior to the LSTM layer is not only that it reduces the high-frequency noise impact, but it also\nhelps the LSTM to learn more effectively. The convolutional layer processes the sequence of\nthe features extracted after FFT and CWT. The model slides the kernel filters on the sequence\nand generates feature maps. These feature maps are subsequently processed by an LSTM which\n10\nMasoud Jalayer et al. - Preprint 1–23\nacquires the spatial dependencies of these sequenced features.\nOn the other hand, in the second pathway three one-dimensional CNN blocks are adjoined to\nbetter extract the local features of the Fourier and Wavelet transform-based diagrams. Each CNN\nblock contains a convolutional layer which convolves the local regions of the diagrams, and a\nRectified Linear Unit (ReLU) activation function, which helps the network achieve a non-linear\nexpression and, consequently, make the learned features more distinguishable. To reduce the\ncomputational complexity and decrease the covariance of shift intervals, a batch normalization\nlayer is added to each CNN block, following by a max pooling layer which compresses the learnt\nfeatures, advances its local translation invariance and also alleviates the learning computational\nexpenses. These CNN blocks are followed by a flatten layer that reshapes the tensor size to a\nvector to become compatible to join the output of the first pathway and to be fed to the classifier.\nFor the classification architecture, the paper employs a weighted ELM which is introduced in\nSection 3.3. ELM classifiers can get fast training speeds by means of non-tuned training strategy.\nThey also tend to have high generalization performance in multi-class problems and showed\nexcellent classification performance in different studies [19]. Compared to unweighted ELM,\nweighted ELM is aimed to put an additional accent on the samples implying the imbalanced\nclass distribution, so that the features in samples from the minority class are also well perceived\nby the ELM [20]. Therefore, after concatenating the outputs of both pathways, their combined\nlearnt features are passed to the W-ELM to diagnose the fault types.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.3 General procedure of the proposed model",
+      "level": 2,
+      "text": "The schematic flowchart of the proposed intelligent FDD model is illustrated in Figure 3. The\ngeneral procedure of this model is summarized as follows:\n• Step 1: The sensory signals are collected from the accelerometers mounted on the rotating\nmachinery.\n• Step 2: The training, the test, and the validation datasets are constructed from the raw\nsignals to separate bursts by resampling.\n• Step 3: The training dataset is augmented using WGAN-GP introduced in Section 3.1 on\nthe minority classes. The fake samples are added to the real samples to make the training\ndataset balanced.\n• Step 4: By employing FFT and CWT techniques the model can extract fault signatures\nwhich were hidden in the raw signals. The extracted Fourier and Wavelet transform-based\ndiagrams are concatenated to form three-dimensional matrices which can be given in\ninput to the deep learning blocks.\n• Step 5: These pre-processed samples go through two different paths of deep learning\nblocks: (1) a one -dimensional convolutional layer followed by an LSTM block, and (2)\nthree blocks of CNN architectures followed by flatten and dense layers.\n• Step 6: After concatenating the outputs of the two deep learning paths, a W-ELM tech-\nnique is used to classify the extracted deep features and diagnose the fault type.\n11\nMasoud Jalayer et al. - Preprint 1–23\nFigure 3: Schematic illustration of the proposed model for the training set",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5 Results",
+      "level": 1,
+      "text": "To evaluate the effectiveness of the proposed method, some experiments were run on one\nof the most widely used bearing fault datasets, known as Case Western Reserve University\n(CWRU) bearing dataset1. To conduct a comprehensive comparison, we defined different noise\nand imbalance conditions on which eight different DL-based FDD methods were tested. All\nexperiments were performed by using Python 3.9 on a computer with a GPU of NVIDIA Geforce\nGTX 1070 with CUDA version of 10.1 and 16 GB of memory.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "5.1 Dataset description",
+      "level": 2,
+      "text": "The paper employs CWRU bearing dataset using the test stand shown in Figure 4, that consists\nof a motor, a torque transducer/encoder, a dynamometer, and control electronics. The dataset\nconsists of five different types of faults corresponding to inner race, balls and outer race in\nthree different orientations: 3 o’clock (directly in the load zone), 6 o’clock (orthogonal to the\nload zone) and 12 o’clock (opposite to the load zone). Moreover, the faults are collected in a\nrange of severity varying between 0.007 inches to 0.040 inches in diameter. The dataset is also\nrecorded for motor loads, from 0 to 3 horsepower. However, for the sake of simplicity this paper\nuses only one motor speed of 1797 RPM. The samples are collected at 12,000 samples/second\n1https://csegroups.case.edu/bearingdatacenter/home\n12\nMasoud Jalayer et al. - Preprint 1–23\nFigure 4: Two-horsepower (left), a torque transducer and encoder (center) and a dynamometer (right)\nused to collect the dataset\nFigure 5: Some noisy signal samples generated from raw sensory data with different SNRs\nfrequency from two accelerometers mounted on fan-end and drive-end of the machine. In the\nexperiments we took signal bursts of 800 timestamps, equal to 66.6 milli-seconds, to generate\nsome different datasets of approximately 25,500 signal bursts.\nTo explore the diagnostic capabilities of the proposed framework in imbalanced conditions,\nsome non-equitant sets of samples were selected such that a fault class becomes rare. Table 1\nshows the distribution of samples for each machine condition in the selected sets, where the\nvalue of 𝛼 denotes the percentage of minority class within the whole dataset. Accordingly, as 𝛼\ndecreases the imbalance degree increases. In this paper we chose “out3” class to represent the\nminority class, whose samples correspond to the outer race faults of opposite load zone position.\nIn these scenarios, the “health” class, corresponding to the healthy condition, represents (80− 𝛼)\npercent of the whole dataset, while the other fault classes account for 5% each. The generative\nalgorithm, subsequently, strives to equalize the sample size of the fault classes in the training\nset by augmenting the minority class.\nAdding “additive white Gaussian noise” with different signal-to-noise ratios (SNRs) to the\noriginal samples, the paper is able to examine the performance of GAN-CLSTM-ELM framework\non different natural noise severities. These noisy samples better portray the real-world industrial\nproduction settings where the noise varies a lot. The original drive-end and fan-end signals\nwith their driven noisy samples are exhibited in Figure 5.\n13\nMasoud Jalayer et al. - Preprint 1–23\nTable 1\nThe distribution of condition type samples in the cases\nminority\nshare(%)\nPercentage of training samples in each condition\nhealth inner ball out1 out2 out3\n𝛼 = 4 76% 5% 5% 5% 5% 4%\n𝛼 = 2 78% 5% 5% 5% 5% 2%\n𝛼 = 1 79% 5% 5% 5% 5% 1%\n𝛼 = 0.5 79.5% 5% 5% 5% 5% 0.5%\n𝛼 = 0.25 79.75% 5% 5% 5% 5% 0.25%\nFigure 6: The generator and discriminator loss values for different GAN architectures",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5.2 GAN model selection",
+      "level": 2,
+      "text": "As it is mentioned in the previous section, the proposition of Wasserstein loss function and\nadding the gradient penalty to its loss function help stabilize the generative algorithm. Figure 6\ndepicts how the proposed WGAN-GP reaches an equilibrium after 9000 epochs where it can\ngenerate realistic samples. Whereas, the other GAN generators make samples which cannot\ndevise their discriminators. As it can be clearly seen in Figure 6 their generator loss values\ngo significantly higher than those of the discriminators. This comparison demonstrates why\nthe implementation of WGAN-GP is preferred. Figure 7 shows some real samples of normal\nbaseline, and fault conditions associated with the bearing ball, inner race and outer race with\nfault diameters of 7 mils and 21 mils. Figure 8, similarly, visualizes the synthetic samples\ngenerated by WGAN-GP after 10000 epochs.",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5.3 The sensitivity analysis",
+      "level": 2,
+      "text": "In this section the paper illustrates a sensitivity analysis on the performance of the proposed\nmodel by changing the 𝛼 values and the SNRs. Specifically, we considered 25 points with respect\nto 𝛼 = 2𝑘 : 𝑘 =−2,−1, 0, 1, 2 and SNR = (10, 20, 50, 75, 100), and run the model 10 times at\neach point to achieve a robust analysis. Figure 9 and Figure 10 demonstrate the performance of\nGAN-CLSTM-ELM model with different metrics on these points.\nAs it can be seen in the figures, high levels of noise impact on the performance of the model,\nchanging the 𝑓1 score from 100% to 95.91%, and from 99.7% to 81.45% when𝛼 = 4 and 𝛼 = 0.25,\n14",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Main steps of an automated Fault Detection and Diagnosis system"
+    },
+    {
+      "id": "f2",
+      "caption": "exhibits the simplified process of synthesizing rotating machinery signal samples"
+    },
+    {
+      "id": "f3",
+      "caption": "Schematic illustration of the proposed model for the training set"
+    },
+    {
+      "id": "f4",
+      "caption": "Two-horsepower (left), a torque transducer and encoder (center) and a dynamometer (right)"
+    },
+    {
+      "id": "f5",
+      "caption": "Some noisy signal samples generated from raw sensory data with different SNRs"
+    },
+    {
+      "id": "f6",
+      "caption": "The generator and discriminator loss values for different GAN architectures"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "The distribution of condition type samples in the cases"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "WGAN-GP"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e5",
+      "latex_or_text": "Eq.5"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "Eq. 9"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "Eq. 11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "Eq. 12"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 1,
+    "n_algorithms": 1,
+    "n_equations": 5
+  }
+}

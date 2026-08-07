@@ -1,0 +1,291 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2025_rag_aws_threat.pdf",
+  "n_pages": 25,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 ContributionandScope",
+      "level": 1,
+      "text": "WhiletheRetrieval-AugmentedGeneration(RAG)architectureitselffollowsestablishedpatternsfrom\nprior work, this study makes four key contributions to the field of cloud security and automated threat\ndetection:\n1. DomainApplication: We provide the first systematic evaluation (to our knowledge) of RAG-enabled\nLarge Language Models (LLMs) specifically for CloudTrail threat detection with automated MITRE\nATT&CK attribution. While previous research has applied RAG to general log analysis, this work\naddressesthespecificgapincloudauditlogsandsecurityframeworkmapping.\n2. Empirical Validation:Through controlled evaluation on 200 CloudTrail events (122 malicious, 78\nbenign)generatedviaadversaryemulation,wedemonstratesubstantialperformanceimprovement.The\nRAG-enabled Gemini 2.5 Pro achieved an F1-score of 80% compared to 45% for the baseline model,\nrepresenting a 77.8% relative improvement. This establishes that grounding LLM predictions in threat\nintelligenceprovidesmeasurablevalueoverrelyingsolelyonpre-trainedknowledge.\n3. SystematicErrorAnalysis: Wecategorizesystemmisclassificationsintothreefailuremodes:retrieval-\ngeneration gaps (60%), knowledge base gaps (20%), and ambiguous ground truth (20%). This analysis\nComputMaterContin. 2026;87(2):100 3\nidentifies that retrieval quality, rather than LLM generation capability, is the primary performance\nbottleneck.\n4. Production Deployment Considerations:We provide a comprehensive cost and latency analysis\nshowinga2.3 ×costoverhead($0.00376vs.$0.00163perevent)and2.7 ×latencyoverhead(4.1vs.1.5s)\ncompared to baseline LLM inference. We further identify specific operational scenarios where these\noverheadsarejustified,suchasforhigh-valueassetsandcompliance-heavyenvironments.\n3R e l a t e dW o r k\nAmazon Web Services (AWS) is a major cloud service provider offering a broad set of services\nacrossglobalregionsandavailabilityzones,includingcompute,storage,networking,security,andanalytics.\nOrganisations commonly rely on Amazon Elastic Compute Cloud (EC2), Amazon Simple Storage Service\n(S3), and AWS Lambda for infrastructure deployment, and on AWS CloudTrail to record and deliver API\nevents across multiple AWS environments [5]. AWS CloudTrail is the auditing service that supports risk\nauditing, compliance monitoring, and governance across AWS accounts. Actions performed through the\nAWSManagementConsole,theCommandLineInterface(CLI),andSoftwareDevelopmentKits(SDKs)by\nusers, roles, or AWS services are captured as events in CloudTrail. Customers can view, search, download,\nretain for long-term auditing, and forward these events into central monitoring platforms. This allows\nsecurityanalyststoanalyseandrespondtoactivity,suchasdeterminingwhoorwhatperformed anaction,\nonwhichresources,andwhen[ 6].\nThe attack surface in cloud environments continues to expand, driven by external threat actors and\ninternal factors such as misconfigurations by cloud administrators, DevOps engineers, and occasional\noversights by cloud security engineers. Operating at scale introduces practical challenges such as multi-\naccountarchitectures,frequentservicechanges,andhigheventvolumesgeneratecomplexstreamsofactivity\nthatteamsmusttriageandinterpret[ 7].Thisstudyusestwosecurityframeworkstointerpretactivityevents\nrecorded in CloudTrail. The MITRE ATT&CK framework provides a mapping of adversary behaviours to\ntactics,techniquesandprocedures across enterprise, mobile andindustrialdomains, and is widely adopted\nacross industry and government [8]. STRIDE supports structured threat modelling by grouping risks as\nspoofing,tampering,repudiation,informationdisclosure,denialofserviceandelevationofprivilege.Using\ntheseframeworkshelpstranslateraweventdataintobehaviouralcontextthatiscomparable.\nRef. [9] defined Retrieval-Augmented Generation (RAG)-enabled large language model (LLM) as\na hybrid approach in Generative AI that combines the capabilities of LLMs with external knowledge\nbases, rather than relying solely on LLMs pre-trained data. RAG technique was introduced to mitigate\nhallucinationsinlargelanguagemodels(LLMs),suchasoutdatedknowledge,entityandrelationshiperrors,\nand unverifiable assertions. Through the integration of RAG with LLMs, security professionals can supply\nexternalknowledge-basedrepositoryduringthegenerationprocess,enablingthemodeltoretrieverelevant\ninformation in real time and better understand adversary tactics to support proactive defence against\nemergingthreats[ 10].\nRef.[1]highlightedgrowingconcernsasorganisationsadoptmulti-cloudplatforms.Securityteamshave\nmajor issues when managing heterogeneous cloud architectures, as solutions like AWS CloudTrail may not\nprovidecompletevisibilityacrossallcreatedevents.Theserestrictionsbroadentheattacksurface,exposing\nbusinesses to dangers from both foreign threat actors and internal misconfigurations. In addition, Ref. [1]\ncriticisestherelianceonadvancedloggingsolutionsthatuseLLM-drivenanomalydetection.Thesesystems\noftenfailbecausetheyrelyonlarge,taggeddatasetstoeffectivelydetectattackpatternsandinformdecision-\nmaking. Similarly, while blockchain-based techniques to exchanging threat intelligence offer increased\n4 ComputMaterContin. 2026;87(2):100\ndata integrity, they pose scalability constraints and latency issues, making them unsuitable for real-time\nthreatdetection.\nExtending the concerns and critiques raised by [1] regarding the limitations of LLMs, Ref. [11]f u r t h e r\ncontends that despite recent developments in advanced LLMs, including Chat Generative Pre-trained\nTransformer(ChatGPT),Gemini,Claude,andLargeLanguageModelMetaAI(LLaMA),whichdemonstrate\nremarkableproficiencyinnaturallanguagecomprehension,reasoning,andhandlingextensivedatasetsusing\ntransformer-based parallel processing, these models still fall short in replicating the nuanced judgement\nand contextual awareness of human analysts. Addressing the concerns raised in the research by [1,11], this\nstudy seeks to overcome the constraints of pre-trained LLMs, which typically cannot access current threat\nintelligenceorcomprehensiveattackmethodologies.ToenhancethecontextualaccuracyofLLM-generated\noutputs, this research employs a two-step RAG approach that anchors LLM responses in an external,\ncontinuouslyupdatedknowledgebase.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3.1 ExistingCloudTrailAnalysisApproaches",
+      "level": 2,
+      "text": "SeveralapproacheshavebeenproposedforanalyzingAWSCloudTraillogs,eachwithdistinctstrengths\nandlimitations.Thesearecategorizedintotraditional,machinelearning-based,andLargeLanguageModel\n(LLM)-basedmethodologies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3.2 TraditionalSIEM-BasedApproaches",
+      "level": 2,
+      "text": "Mala [12] conducted a comparative analysis of Splunk versus AWS native monitoring tools for threat\ndetectionandanalysis.Thestudynotedthatcloud-nativetoolsmaybemorefavorableintermsofintegration,\nscalability, and real-time responsiveness when compared to traditional security operations approaches that\nreliedonthird-partySecurityInformationandEventManagement(SIEM)systemssuchasSplunk.However,\ntraditionalSIEMapproachesfacesignificantchallenges:\n• Highfalse-positiveratesrequiringextensivemanualtuning;\n• Difficultyadaptingrulestoevolvingcloudattackpatterns;\n• Limitedcontextualunderstandingofcloud-specificthreats;\n• Dependencyonpredefinedsignaturesthatmissnovelattacks.\nTykholaz et al. [13] highlighted that organizations can protect critical data by implementing AWS\ndetectivecontrolssuchasCloudTrail,VPCFlowLogs,GuardDuty,andTrustedAdvisor.ThesenativeAWS\ntoolsprovideautomatedthreatdetectionbutoperateasblack-boxsystemswithlimitedtransparencyintheir\ndetectionlogic.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.3 MachineLearningandDeepLearningApproaches",
+      "level": 2,
+      "text": "Kumaret al.[14]identifiedseveraldeploymentconstraintsforMachineLearning(ML)-basedintrusion\ndetection systems in cloud environments, including difficulty deploying in dynamic cloud environments,\nlimited benchmark datasets, and compliance issues. Their analysis revealed that while ML approaches can\nachieve high accuracy on training data, they struggle with model obsolescence as threat landscapes evolve\nrapidly, a requirement for large, labeled datasets of malicious events, and an inability to provide human-\ninterpretableexplanations.\nLe and Zhang [15] noted that detection quality depends heavily on data balance, noise levels, and\ninconsistent evaluation metrics. Deep Learning (DL) models trained on historical CloudTrail data may fail\ntogeneralizetonovelattacktechniquesnotrepresentedintrainingsets.Talukderetal.[ 16]highlightedthat\nComputMaterContin. 2026;87(2):100 5\nmany existing works overlook data balancing techniques, leading to performance variations and models\nunsuitableforreal-worldscenarioswhereclassimbalanceiscommon.\nTable 1summarizes the key limitations of traditional ML/DL approaches for cloud threat detection\nidentifiedinpriorresearch.\nTable 1:LimitationsoftraditionalML/DL approachesforcloudthreatdetection.\nChallenge Description Reference\nModel\nObsolescence\nModelstrainedonhistoricaldatabecomeoutdatedas\nthreatsevolve;continuouslearningmechanismsrequired [17]\nAdversarial\nAttacks\nThreat actors manipulate inputs to bypass detection;\nrequires defensive measures [17]\nPerformance\nMonitoring\nContinuousevaluationbyanalystsneededtorefineand\nimprovemodelaccuracyovertime [17]\nDeployment\nConstraints\nDifficultydeployingMLindynamiccloudenvironments,\nlimitedbenchmarkdatasets,complianceissues [14]\nModelReliability Detectionqualitydependsheavilyondatabalance,noise\nlevels,andinconsistentevaluationmetrics [15]\nDataset&Cost\nClassimbalanceleadstoperformance variations;many\nexistingmodelsunsuitableforreal-worldscenarioswith\nimbalanceddata\n[16]\nComputational\nComplexity\nDeeplearningmodelsrequiresignificantresourcesand\nrely on assumptionsthat limit scalability [18]",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.4 LLM-BasedApproacheswithoutRAG",
+      "level": 2,
+      "text": "Recent studies have explored using LLMs directly for security analysis without external knowledge\naugmentation.However,Barach[ 1]critiquedtherelianceonadvancedloggingtoolsthatemployLLM-driven\nanomaly detection, noting that these systems frequently underperform as their effectiveness depends on\nlarge,labeleddatasets.\nFrench [11] argued that although Large Language Models (LLMs) have demonstrated remarkable\ncapabilities, they are inherently limited by their training data cutoff dates. LLMs may generate plausible\nbut inaccurate responses when queried about recent threats or cloud service changes not present in their\ntrainingcorpus.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.5 PositioningoftheProposedRAG-EnabledApproach",
+      "level": 2,
+      "text": "TheapproachproposedinthisstudyaddressesseveralcriticallimitationsofexistingCloudTrailanalysis\nmethods. Through the integration of Retrieval-Augmented Generation (RAG) with the Gemini 2.5 Pro\nmodel,thesystemmovesbeyondstaticdetection.\n3.6ComparisonwithSIEMandRule-BasedS ystems\nUnliketraditionalSIEMorrule-basedsignatures,theproposedsystem:\n• Providesdeepcontextualunderstandingthatgoesbeyondsimplesignaturematching;\n6 ComputMaterContin. 2026;87(2):100\n• Adaptstoemergingthreatsthroughdynamicknowledgebaseupdatesratherthanrequiringmanualrule\nreconfiguration;\n• Generates natural language explanations, allowing security analysts to verify findings with higher\nconfidence.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.7 ComparisonwithTraditionalML/DLModels",
+      "level": 2,
+      "text": "IncontrasttostandardMachineLearning(ML)andDeepLearning(DL)approaches,ourmethod:\n• RequiresnoextensivelabeledtrainingdatasetsofmaliciousCloudTrailevents,whichareoftencostlyor\nunavailable;\n• Updates its intelligence via a knowledge base refresh rather than computationally expensive model\nretraining;\n• Delivers interpretable reasoning and direct MITRE ATT&CK mappings, addressing the “black-box”\nnatureoftraditionalDL.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.8 ComparisonwithBaselineLLMs",
+      "level": 2,
+      "text": "ComparedtostandardLargeLanguageModels(LLMs)usedwithoutRAG,thisapproach:\n• Grounds all responses in verifiable, current threat intelligence from the MITRE ATT&CK knowledge\nbase;\n• Significantlyreducestheriskofmodelhallucinati onsthrough retrieval-augmented constraints;\n• Maintains technical currency by integrating external knowledge that post-dates the model’s initial\ntrainingcutoff.\n4M e t h o d o l o g yO v e r v i e w\nThis research adopted an applied experimental design, integrating artificial and real-world AWS\nCloudTraildatawithstructuredthreatintelligencefromtheMITREATT&CKframework,threatintelligence\nreports, and recent cloud security blogs as the external knowledge base for context augmentation. The\nprocess begins with data acquisition and preparation, whereby different categories of CloudTrail events,\nmanagement, data, network activity, and insight events, are collected, normalised, and anonymised to\npreserve security and privacy. Prompt engineering strategies, including few-shot and chain-of-thought\n(CoT)prompting,arethenappliedtotheseCloudTraileventstoevaluatethecapabilityoftheRAG-enabled\nLLMarchitectureinrecognisingandclassifyingpotentialadversarybehavioursandsequences,aswellasin\nproducing reactive threat modelling.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 GroundTruthAnnotationMethodology",
+      "level": 2,
+      "text": "4.1.1ExpertAnnotatorCredentials\nGround truth labels for the 200-event evaluation dataset were created by a cybersecurity expert with\nthefollowingqualifications:\n• MScinCybersecurity(BirminghamCityUniversity,2025)\n•5 +yearsofprofessionalexperienceincloudsecurityoperations\n• MITREATT&CKframeworkcertification\n• Hands-onexperiencewithAWSCloudTrailanalysisinproductionenvironments\n• FamiliaritywithadversaryemulationusingStratusRedTeamandsimilartools\nComputMaterContin. 2026;87(2):100 7\nTheannotator’sexpertisespansbothoffensivesecurity(redteaming,penetrationtesting)anddefensive\nsecurity (SIEM analysis, incident response), providing comprehensive perspective on attack detection\nandclassification.\n4.1.2AnnotationGuidelines\nThe annotation process followed structured guidelines to ensure consistency and accuracy across all\nevents.EachCloudTraileventunderwentasystematicfour-stepevaluation:\nStep1:EventContextAnalysis\nThe annotator reviewed CloudTrail JSON structure analyzing AWS service (API operations),\nrequest parameters (e.g., withDecryption: true ), user agent strings, source IP addresses, and\nsuccess/failurestatus.\nStep2:MITREATT&CKMapping\nEventsweremappedtospecificMITREATT&CKtechniquesthroughconsultationofofficialEnterprise\nCloudmatricesandtheAWSThreatTechniqueCatalogue,mappingtothemostspecificsub-techniquelevel\n(e.g., T1552.001 rather than T1552). When multiple techniques applied, the primary technique representing\nthemostdirectadversaryobjectivewasselected.\nStep3:Maliciousvs.BenignClassification\nEvents were classified as malicious (Stratus Red Team simulations identifiable through “stratus-red-\nteam”useragentmarkers)orbenign(legitimateAWSSDK/CLI/consoleoperations).\nStep4:STRIDEClassificationandSeverityAssessment\nMalicious events were classified according to STRIDE categories (Spoofing, Tampering, Repudiation,\nInformation Disclosure, Denial of Service, Elevation of Privilege) and assigned severity levels: Critical\n(immediate account compromise), High (significant breach enabling data access/privilege escalation),\nMedium(reconnaissance/lateralmovement),andLow(limited-impactactivities).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2 DataAcquisitionandPreprocessing",
+      "level": 2,
+      "text": "The CloudTrail logs used in this research were generated using the Stratus Red Team adversary\nemulation tool. Stratus Red Team is a cloud offensive emulation tool designed to simulate Advanced\nPersistent Threat (APT) attack techniques, mapped to the MITRE ATT&CK tactics and techniques, within\ncloud environments such as AWS, Azure, Kubernetes, and GCP. The tool leverages Terraform to provision\nandteardowntheresourcesrequiredforeachattacktechniquewithinthetargetedcloudenvironment[ 19].\nThetoolconsistsoffourdistinctstateswhichdefinethelifecycleofanemulatedattack:\n1. Warmingup: Preliminaryphaseensuringallprerequisitesaremetwithoutinitiatingtheattack;\n2. Detonating:Activeexecutionoftheattacktechniqueinaliveenvironment;\n3. Reverting: Termination or cancellation of an attack technique after the intended side effect has been\nobserved;\n4. Cleaningup: Removalofallinfrastructureandresourcescreatedduringtheattack.\nTwenty out of forty-four AWS-specific attack techniques were simulated within a controlled sand-\nbox account, generating a comprehensive dataset of 1,724 total CloudTrail events across multiple AWS\nservices. Table 2provides a complete breakdown of the twenty attack techniques simulated, organized by\nMITREATT&CKphaseandmappedtotheircorrespondingtactics.\n8 ComputMaterContin. 2026;87(2):100\nTable 2:AWSattacktechniquessimulatedusingstratusredteam.\nPhase AttackTechnique MITREATT&CK\nTactic(s)\nInitialAccess ConsoleLoginwithoutMFA InitialAccess\nDiscovery\nEnumerateSES Discovery\nDo wnloadEC2I nstanceU serDa ta Disco very\nExecuteDiscoveryCommandsonEC2Instance Discovery\nCredentialAccess\nRetrieveEC2PasswordData CredentialAccess\nRetrieveAndDecryptSSMParameters CredentialAccess\nStealEC2InstanceCredentials CredentialAccess\nPersistence\nCreateaLoginProfileonanIAMUser Persistence/Privilege\nEscalation\nCreateanAccessKeyonanIAMUser Persistence/Privilege\nEscalation\nBackdoor Lambda FunctionThrough\nResource-BasedPolicy Persistence\nPrivilegeEscalation CreateanIAMRolesAnywheretrustanchor Persistence/Privilege\nEscalation\nChangeIAMUserPassword PrivilegeEscalation\nExecution LaunchUnusualEC2Instances Execution\nExecu teCo mmandso nEC2I nstanceviaU serDa ta Execution/Privilege\nEscalation\nDefenseEvasion\nStopCloudTrailTrail DefenseEvasion\nDeleteCloudTrailTrail DefenseEvasion\nRemoveVPCFlowLogs DefenseEvasion\nExfiltration\nExfiltrate EBS Snapshot by Sharing It Exfiltration\nExfiltrate RDS Snapshot by Sharing Exfiltration\nBackdooranS3BucketviaitsBucketPolicy Exfiltration\nSource:AdaptedfromDataDog(2021).",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.3 DatasetCompositionandSamplingMethodology",
+      "level": 2,
+      "text": "Fromthecomprehensivesetof1724generatedevents,200uniqueCloudTraileventsweresystematically\nsampled for evaluation, comprising 122 malicious events and 78 benign events. This represents an 8.3-\nfold increase over preliminary studies and provides sufficient statistical power for rigorous comparative\nevaluation. The expanded dataset covers 9 distinct MITRE ATT&CK techniques across 8 tactics, spanning\n9 AWS services including Identity and Access Management (IAM), Elastic Compute Cloud (EC2), Simple\nStorageService(S3),SystemsManager(SSM),KeyManagementService(KMS),RelationalDatabaseService\n(RDS),SecurityTokenService(STS),CloudTrail,andRoute53Resolver.\nComputMaterContin. 2026;87(2):100 9",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.3.1 Intelligent Stratified Sampling",
+      "level": 3,
+      "text": "The 200-event dataset was constructed using intelligent stratified sampling to maximize diversity\nand representativeness while ensuring balanced coverage across attack categories. The sampling process\nemployedafour-tierstrategy:\nPriority Selection (60 events):All Critical and High severity attack events were included to ensure\ncomprehensive coverage of the most dangerous threat patterns. This priority tier encompassed techniques\nsuchascredentialtheft(T1552.001),defenseevasionthroughlogdeletion(T1562.008),anddataexfiltration\n(T1537,T1530).\nTacticBalancing(56events): Eventsweredistributedacrossthe8MITREATT&CKtacticstoprevent\nover-representation of any single attack type. This stratification ensures the evaluation reflects diverse\nadversarybehaviorsspanningreconnaissance,persistence,privilegeescalation,andothertacticalobjectives.\nMaliciousQuota Fill(44 events):Additional diverse attack events of Medium and Low severity were\nincluded to represent the full spectrum of threat activities, including subtle reconnaissance operations that\nmay indicate early-stage attacks.\nBenign Operations (40 events): Legitimate operational activities were incorporated to assess\nthe system’s false positive rate. These benign events represent routine AWS operations such\nas DescribeRouteTables, PutObject,a n dGetBucketAcl performed through standard AWS\nSDKsandCLItools.\nThe sampling process was randomized (seed= 42) to eliminate ordering bias while maintaining the\nstratification constraints. This methodology ensures that the evaluation dataset is representative of realistic\ncloudenvironmentswheremaliciousactivitiescoexistwithroutineoperationalevents.\n4.3.2MITREATT&CKTechniqueCoverage\nThe dataset provides comprehensive coverage of cloud-specific attack techniques documented in the\nMITRE ATT&CK Enterprise Cloud matrix.Table 3presents the distribution of events across MITRE\nATT&CKtechniquesandtheirassociatedseveritylevels.\nTable 3:MITREATT&CKtechniquecoverageinevaluationdataset.\nTechnique\nID\nDescription Count Severity\nT1552.001 Unsecured Credentials: Credentials In Files 63 High\nT1580 CloudInfrastructureDiscovery 54 Low\nT1098.001 AccountManipulation:AdditionalCloudCredentials 16 High\nT1578.002 ModifyCloudComputeInfrastructure:CreateCloudInstance 16 Medium\nT1562.008 ImpairDefenses:DisableCloudLogs 6C r i t i c a l\nT1537 TransferDatatoCloudAccount 7H i g h\nT1530 DatafromCloudStorage 4M e d i u m\nT1078.004 ValidAccounts:CloudAccounts 1M e d i u m\nT1651 CloudAdministrationCommand Included High\nThiscoveragespansthefullattacklifecyclefrominitialaccessthroughcredentialtheft,discovery,priv-\nilegeescalation,defenseevasion,andexfiltration,reflect ingrealisticthreatscenariosincloudenvironments.\n10 ComputMaterContin. 2026;87(2):100\n4.3.3DatasetLimitations\nSeveral limitations of this dataset should be acknowledged to provide context for interpretation\nof results:\nControlledEnvironment: AllmaliciouseventsweregeneratedinacontrolledAWSsandboxenviron-\nment using automated adversary emulation. Real-world attacks may exhibit additional complexity, evasion\ntechniques,andmulti-stagecoordinationnotcapturedinsingle-eventsimulations.\nSimulationToolDependency: Eventsarelimitedtothe20AWS-specificattacktechniquessupported\nbyStratusRedTeam(of44totaltechniquesavailableinthetool).Productionenvironmentsmayencounter\nnovelattackpatternsnotrepresentedinthissimulation-baseddataset.\nTemporal Context:ThedatasetconsistsofindividualCloudTraileventswithouttemporalsequencesor\ncorrelation across events. Some sophisticated attacks require multi-event analysis to identify attack chains,\nwhichisbeyondthescopeofthissingle-eventclassificationstudy.\nBenignRepresentation: BenigneventsrepresentstandardAWSSDKandCLIoperationsbutmaynot\nfullycapturethediversityoflegitimateoperationalpatternsacrossdifferentorganizationalcontextsandAWS\nserviceusageprofiles.\nDespite these limitations, the dataset provides a rigorous foundation for comparative evaluation of\nCloudTrail threat detection approaches, with sufficient scale (200 events) and diversity (9 techniques, 8\ntactics,9services)tosupportmeaningfulstatisticalanalysis.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.4 SystemArchitecture",
+      "level": 2,
+      "text": "Modern generalised LLMs, such as Gemini, Claude, GPT-5, and LLaMA 3, are extensively trained on\nheterogeneousdatasetscoveringmultipledomains,topics,andtexttypes,withoutadedicatedfocusonany\nsingle discipline. Applying these models to security tasks, such as threat detection and threat modelling,\noften necessitates strategic fine-tuning, prompt engineering, or the use of RAG to enhance accuracy in\ncaseswherepre-traineddatalackdomain-specificknowledgeorthemostup-to-dateinformation.TheRAG\narchitecture deployed in this study, as depicted inFig.1, consists of a two-phase pipeline developed to\nconduct threat detection and modeling on AWS CloudTrail logs. In the initial phase, the raw CloudTrail\nJSON event is processed by the Gemini Pro model to generate a high-quality natural language search\nquerythatencapsulatesthecontextualsummaryoftheevent’ssecurity-relevantattributes.Thissearchquery\nis subsequently forwarded to the second stage of the pipeline. In the second stage of the RAG pipeline,\nthe external knowledge base, comprising the MITRE ATT&CK framework, the AWS Threat Technique\nCatalogue, recent security blogs, and contemporary threat reports, is transformed into high-dimensional\nvector representations using advanced embedding models and subsequently stored in a vector database.\nThe natural language search query, containing event-specific details generated in the first stage of the RAG\npipeline, is then processed by the LLM using a RAG-grounded prompting approach to retrieve the top k\nmostsemanticallysimilarentriesfromthevectordatabase.\nComputMaterContin. 2026;87(2):100 11\nFigure1: Two-stepRAGarchitecture.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.5 ThreatIntelligenceSources",
+      "level": 2,
+      "text": "The data from the threat intelligence knowledge base used in this study are sourced from the miter\nATT&CK framework (Enterprise Cloud matrices), supplemented by various cloud-related threat reports\nand cloud security blogs. These sources form the external RAG knowledge base, providing context-specific\ninformation not present in the LLMs’ pre-trained data. This integration addresses LLM hallucinations and\nstrengthens the accuracy of cloud-based threat detection and modeling. Textual content for the threat\nintelligence knowledge base was gathered using web crawling techniques and segmented intofive-sentence\nparagraphs with Python libraries like BeautifulSoup and urlparse. The processed files were saved in .txt\nformatanduploadedtoaGoogleCloudStorage(GCS)bucket.Thecontentwasthensegmentedtosupport\nthe embedding process, enabling the selected Google embedding model text-multilingual-embedding-002\nto divide the material into semantically coherent segments of 1024 tokens with a 256-token overlap. This\ntechnique optimized the granularity of retrieval while ensuring contextual continuity remained intact. The\ntext-multilingual-embedding-002 model constitutes a high-dimensional embedding framework capable of\ngeneratingsemanticallyrichvectorrepresentationsinmultiplelanguages.Followingthisprocess,eachchunk\nof text was embedded into numerical vector form and stored, along with associated metadata, in a vector\ndatabase(VertexAIRAGVectorDatabase).Thisfacilitatedefficientsemanticsearchandretrievalofthemost\nrelevantchunksduringthequerystageoftheRAGpipeline.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.6 ModelSelection",
+      "level": 2,
+      "text": "ThisstudyusedGoogle’slatestandmostadvancedreasoningmodel,Gemini2.5Pro,asthemainLLM\nfor RAG-enabled AWS CloudTrail threat detection and modelling. The implementation was performed\non the Google Vertex AI unified development platform, which provides integrated features for building,\ndeploying,andmanagingAIworkflows.\n12 ComputMaterContin. 2026;87(2):100\nVertex AI eliminates infrastructure setup complexity through its support for precise augmentation,\nintelligent data chunking, optimal retrieval approaches, and efficient vector storage mechanisms [20]. The\nGemini 2.5 Pro model provides enhanced reasoning capabilities alongside an exceptionally large context\nwindow,processingupto1,048,576inputtokensandgeneratingupto65,535outputtokens[ 21].Pre-training\nutilized comprehensive datasets spanning multiple domains and modalities, incorporating programming\nlanguage source code, publicly available web documents, and multimedia data including video and audio,\nwithknowledgecurrenttoJanuary2025.Post-trainingm ethodologieswereappliedtoenhancethestability,\nreasoning capacity, and multi-step task performance of Gemini 2.5 Pro. Improvements to dataset quality\nincluded enhanced supervised fine-tuning, advanced reward modelling, increased reinforcement learning\ncompute, and refined algorithmic processes. These developments have led to notable performance gains,\nwithGemini2.5Proachievinga122-pointincreaseinLMArenaEloscorescomparedtoGemini1.5Pro[ 22].\nThe evaluation of Gemini 2.5 Pro against other large language models (LLMs), indicates that Gemini\nachieved the highest performance scores on the Aider Polyglot coding task, Humanity’s Last Exam, GPQA\n(diamond), and the SimpleQA and FACTS Grounding factuality benchmarks. Beyond these benchmark\nassessments, an external cybersecurity evaluation was conducted to examine the model’s potential use by\nm a l i c i o u sa c t o r sa c r o s sv a r i o u sa t t a c kv e c t o r s .Th e s ei n c l u d e dc y b e rs k i l l ss u c ha sv u l n e r a b i l i t yd i s c o v e r y\nand exploitation, social engineering, prompt injection attacks, and cyberattack planning, all tested within\nsimulatedenvironmentsreplicatingrealistictargetednetworks,systems,andsecuritycontrols.Thefindings\nfrom this security assessment demonstrate that Gemini 2.5 Pro is both suitable and highly capable of\nperformingcybersecurity-relatedtasks[ 22].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.7 PromptEngineeringStrategies",
+      "level": 2,
+      "text": "This study primarily utilised few-shot and chain-of-thought prompting techniques, alongside com-\nplementary methods such as RAG-grounded prompting, role prompting, structured output prompting,\nrubric-based prompting, evidence-grounded prompting, and prompt chaining. Few-Shot Prompting tech-\nnique provides in-context learning for the LLM to learn desired format, output, and content for better\nperformance [23]. This prompting technique includes role prompting and structured output prompting,\nwhichguide Gemini2.5 Pro on how to generate high-qualitysearch queries from the given CloudTrail raw\nlog events. Chain-of-thought (CoT) prompting enables complex reasoning tasks to be broken into smaller,\nsequential steps, which improves the accuracy of the final LLM output [24]. The Hidden CoT prompting\ndirectedGemini2.5Protoperformstructuredintermediatereasoningstepsthatwerehiddenfromtheuser.\nThis was combined with prompt chaining, where the output of the first LLM pipeline stage served as the\ninput to the second LLM pipeline. The RAG-grounded prompt retrieved relevant contextual information\nfromtheknowledgebasebasedonthegeneratedquery.Inaddition,evidence-grounded,structured-output,\nand role prompts were used to guide Gemini 2.5 Pro to respond with the expected perspective, tone, and\ndomain knowledge, while citing concrete evidence from the data and adhering to a fixed, human-readable\noutput schema.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 ExperimentalSetup",
+      "level": 1,
+      "text": "TheexperimentalsetupforthisstudywasconductedonGoogleVertexAIUnified,whichsupportedthe\nsmooth execution of experiments and real-time analysis of results, contributing to the overall development\nprocess.\n• VertexAIColabNotebooks: ThesenotebooksservedastheprimaryenvironmentforexecutingPython\ncodefortheRAG-enabledLLManalysisofCloudTrailevents.Aninitialruntimeinstancewassetupto\nComputMaterContin. 2026;87(2):100 13\nensuretheColabJupyternotebookexecutedcorrectly.Theruntimeinstancewascreatedusingthedefault\nconfigurationtemplate,whichincludedamachinetypeofe2-standard-4anda100GBStandardDisk.\n• GoogleCloudStorage: Thisservicewasusedtosto r etheK no wledg eBasedocumen tsr eq uir edf o rthe\nRAGpipeline.\n• GoogleArtifactRegistry: ThisservicewasusedtostorecontainerimagesbuiltfromthePython-based\nRAG-enabledLLMsystem.Theimages,whichcontainedboththeapplicationcodeanditsdependencies,\nwer ela terdeplo yedo nGoogleClo udR un.\n• Google Cloud Run:Th i ss e r v i c ew a su s e da st h es e r v e r l e s sc o n t a i n e rh o s t i n gp l a t f o r mt od e p l o yt h e\nbackend API. After the two-stage RAG-enabled pipelines were tested and executed successfully in\nthe Colab notebook, the containerised images stored in Google Artifact Registry were deployed on\nCloudRun.\n• VisualStudioCode: ThisservedasthesecondprimaryIntegratedDevelopmentEnvironment(IDE)for\nbackendAPIandfrontenddevelopment,aswellasforconfiguringdeploymenttoGoogleCloudservices.\n• Programming Languages and Libraries:The implementation of this study relied on a defined set\nof programming languages and libraries to build and integrate the components of the RAG-enabled\nLLMsystem.\n• Version Control:Gitversioncontrolwasusedtotrackchangestocodeduringdevelopmentandtesting\nof both frontend andbackend.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "6 ResultsandDiscussion",
+      "level": 1,
+      "text": "This research evaluates the RAG-enabled LLM system’sperformance through a combined quantitative\nand qualitative methodology. Quantitative assessment utilizes performance metrics including Accuracy,\nPrecision, Recall, and F1-score, computed via the scikit-learn Python library. MITRE ATT&CK technique\nmappings generated by the RAG-enabled LLM system were evaluated against mappings from the baseline\nGemini 2.5 Pro model and against systematically annotated expert ground truth. Qualitative analysis\ncomplements this evaluation through systematic error categorization, examining the system’s reasoning\ncapabilitiesandidentifyingdistinctfailuremodes.Theevaluationutilizedadatasetof200uniqueCloudTrail\neventsderivedfromStratusRedTeamadversaryemulationsimulations.\nTheperformancemetricsassessMITREATT&CKmappingoutputsfromthefollowingsystems:\n• RAG-Enabled LLM System: Developed for this study, this system employs a two-step RAG\npipeline integrating external cybersecurity knowledge sources to map CloudTrail events to MITRE\nATT&CKtechniques.\n• Gemini 2.5 Pro (Baseline):This system relies solely on the model’s pre-trained knowledge, without\nexternalknowledgeaugmentation,toperformMITREATT&CKmapping.\n• ExpertGroundTruth: Systematicexpertannotationsservingasthereferencestandardforevaluation.\nBoth systems were evaluated against expert ground truth using the 200-event dataset. Performance\nmetricswerecalculatedusingthescikit-learnlibrary.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "6.1 QuantitativePerformanceAnalysis",
+      "level": 2,
+      "text": "Table 4presents the comparative performance of the baseline Gemini 2.5 Pro model and the RAG-\nenabled system. The RAG-enabled system demonstrates substantial improvement across all metrics,\na c h i e v i n ga nF 1 - s c o r eo f7 9 %c o m p a r e dt o4 5 %f o rt h eb a s e l i n em o d e l ,r e p r e s e n t i n ga7 6 . 4 %r e l a t i v e\nimprovement.\n14 ComputMaterContin. 2026;87(2):100\nTable 4:QuantitativeperformancecomparisonofbaselineandRAG-enabledGemini2.5Prosystems.\nPerformanceMetric BaselineGemini2.5Pro(%) RAG-EnabledGemini2.5Pro(%)\nAccuracy 46 78\nF1-Score 45 79\nPrecision 69 85\nRecall 46 78\nThe RAG-enabled system achieved 78% accuracy, representing a 70.5% relative improvement over the\nbaseline’s 46% accuracy. This enhancement demonstrates the system’s improved ability to correctly classify\nCloudTrail events. The F1-score improvement from 45% to 79% (76.4% relative improvement) indicates\nsignificantlyimprovedbalancebetweenprecisionandrecall,criticalforoperationaldeploymentwhereboth\nfalsepositivesandfalsenegativesimposecostsonsecurityteams.\nPrecisionincreasedfrom69%to85%(23.6%relativeimprovement),demonstratingreducedfalseposi-\ntiverates.Whilethisrepresentsthesmallestrelativeimprovement,thebaselinealreadyachievedreasonable\nprecision;theRAGsystemfurtherrefinedclassificationaccuracybygroundingpredictionsinauthoritative\nthreat intelligence. Recall improved from 46% to 78% (70.5% relative improvement), substantially reducing\nfalsenegativeratesandenablingmorecomprehensivethreatdetection.\nFigs.2 and3visualizetheseperformanceimprovements,clearlyillustratingtheRAGsystem’sconsistent\nsuperiority across all evaluation metrics. The particularly notable improvements in F1-score and recall\nindicate that the RAG approach successfully addresses the baseline model’s primary limitation: insufficient\ncontextualknowledgeaboutcurrentthreatsandAWS-specificattackpatterns.\nFigure2: Modelperformancemetricscomparison.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1s",
+      "caption": "ummarizes the key limitations of traditional ML/DL approaches for cloud threat detection"
+    },
+    {
+      "id": "t1",
+      "caption": "LimitationsoftraditionalML/DL approachesforcloudthreatdetection."
+    },
+    {
+      "id": "t2",
+      "caption": "AWSattacktechniquessimulatedusingstratusredteam."
+    },
+    {
+      "id": "t3",
+      "caption": "MITREATT&CKtechniquecoverageinevaluationdataset."
+    },
+    {
+      "id": "t4p",
+      "caption": "resents the comparative performance of the baseline Gemini 2.5 Pro model and the RAG-"
+    },
+    {
+      "id": "t4",
+      "caption": "QuantitativeperformancecomparisonofbaselineandRAG-enabledGemini2.5Prosystems."
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

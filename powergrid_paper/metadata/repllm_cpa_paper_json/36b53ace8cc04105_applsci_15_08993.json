@@ -1,0 +1,425 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-15-08993.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "As global energy systems evolve and low-carbon economies progress, many countries\nhave enacted stringent carbon reduction policies to combat climate change [ 1]. These\npolicies challenge traditional power systems, driving a shift toward renewable energy-\nbased production and consumption models [2]. Microgrids, as a flexible and controllable\ndistributed energy solution, have attracted growing attention. However, individual micro-\ngrids are often constrained by equipment capacity and environmental conditions, limiting\noptimal resource utilization [3,4]. Therefore, promoting collaboration and resource sharing\nbetween multiple microgrids can achieve coordinated energy and carbon emission opti-\nmization, enhancing economic and environmental outcomes while advancing low-carbon\nenergy systems.\nMulti-source energy systems, which integrate diverse generation technologies includ-\ning renewable sources (solar PV , wind), conventional units (gas turbines), and energy\nstorage systems, have become the foundation of modern microgrid design [ 5]. These\nsystems are characterized by the heterogeneous nature of their energy sources, each with\ndistinct operational characteristics, output patterns, and environmental impacts. Renewable\nsources such as solar and wind provide clean energy but exhibit inherent variability due to\nAppl. Sci. 2025, 15, 8993 https://doi.org/10.3390/app15168993\nAppl. Sci. 2025, 15, 8993 2 of 22\nweather conditions and seasonal fluctuations [6]. Conventional generation units like gas tur-\nbines offer controllable and dispatchable power but contribute to carbon emissions. Energy\nstorage systems serve as crucial components for temporal energy shifting, load balancing,\nand grid stabilization services. The integration of these diverse energy technologies within\nmulti-microgrid frameworks creates complex interdependencies that require careful consid-\neration of both individual source characteristics and their collective system-wide impacts.\nIn addition to the integration of multiple energy sources, the physical structure of\nmicrogrids has also evolved to meet the increasingly complex demands of smart energy\nsystems [7]. Hybrid AC/DC microgrid architectures have emerged as a promising solution\ndue to their ability to reduce power conversion losses, improve energy efficiency, and\nenhance compatibility with renewable energy sources and energy storage systems [ 8].\nThese hybrid systems facilitate more flexible scheduling and resilient operation, particularly\nin urban environments where diverse types of loads and distributed resources coexist.\nReference [9] identified the grid of hybrid AC/DC microgrids as a new paradigm for future\nsmart cities, enabling seamless interconnection and advanced coordinated control across\nheterogeneous microgrids.\nDriven by low-carbon policies, multi-microgrid systems play a pivotal role in dis-\ntributed energy management [10]. Compared to single microgrids, they enable regional\nresource sharing and coordinated scheduling, promoting efficient use of renewable en-\nergy resources [11]. This enhances energy supply stability and reduces carbon emissions.\nHowever, realizing these benefits requires seamless collaboration among microgrids and\nstrong coordination with grid operators to manage electricity and carbon trading [ 12].\nThrough such cooperation, multi-microgrids can obtain grid support during peak demand\nand supply excess energy during surpluses, maintaining supply–demand balance [13,14].\nAdditionally, peer-to-peer (P2P) trading allows flexible allocation of electricity and carbon\nquotas, boosting system efficiency and adaptability [15]. These collaborative mechanisms\nsupport clean energy integration and the development of low-carbon, efficient power\nsystems. Nonetheless, ensuring fair and effective coordination among multiple microgrids\nremains a key challenge.\nDespite efforts to optimize resource allocation and utilization in multi-microgrid col-\nlaborations, current solutions still face certain limitations [16]. One prominent challenge\narises from the differing objectives regarding supply, demand, and resource allocation,\nwhich complicates direct resource sharing and cost distribution [ 17]. Yang et al. [ 18] in-\ntroduced an asymmetric Nash bargaining-based approach for integrated energy systems\n(IES), leveraging P2P trading to enhance coordination and ensure equitable benefit dis-\ntribution. Similarly, Wu et al. [19] developed an energy management model based on a\nStackelberg–Nash game to regulate electricity trading among photovoltaic (PV) prosumers,\nincorporating demand response (DR) and carbon emission considerations. While these\nstudies offer valuable insights, they largely address isolated components of a complex\noptimization problem, leaving several critical issues unresolved.\nAt the same time, carbon trading mechanisms have become the collaborative opti-\nmization of multi-microgrid systems and grid operators [20]. As carbon reduction targets\nintensify, their influence on power system operations grows, complicating trading dynam-\nics. Carbon trading impacts microgrid operating costs, grid operators’ emission goals, and\nsystem scheduling strategies. By engaging in carbon markets, microgrids can balance elec-\ntricity use with emissions, improving both economic and environmental performance [21].\nHowever, challenges persist in quota allocation, fair trading, and cost management. Han\net al. [22] applied a nonlinear energy mapping function to quantify microgrid contributions\nand allocate benefits, but they focused mainly on electricity, overlooking carbon reduction.\nSimilarly, Liu et al. [23] proposed a blockchain-based model for secure electricity trading,\nAppl. Sci. 2025, 15, 8993 3 of 22\nyet failed to capture the interdependence of power and carbon contributions. Wu et al. [24]\nintroduced a VCG-based method to promote truthful demand response, but they did not\naddress cooperative optimization or benefit sharing. The aforementioned approaches high-\nlight the pressing need for holistic solutions that not only coordinate power and carbon but\nalso ensure fair and incentive benefit distribution.\nFurthermore, in the collaborative optimization of multi-microgrid systems and grid\noperators, the increasing complexity of electricity and carbon trading presents challenges\nin ensuring efficient resource allocation and equitable benefit distribution [ 25,26]. Tra-\nditional centralized optimization methods often struggle with the large-scale data and\nmulti-dimensional constraints involved. For instance, Karush–Kuhn–Tucker (KKT)-based\nreformulations and heuristic algorithms have been used to simplify such problems, but their\nscalability and applicability remain limited [27]. Although suitable for specific cases, these\nmethods often fall short in dynamic, multi-agent environments. Feng et al. [28] proposed a\ndecentralized P2P trading model incorporating network constraints, using an event-driven\nmechanism and a fast dual ascent algorithm to enable efficient local trading while ensur-\ning system safety. Chen et al. [ 29] developed a distributed optimization framework for\nmulti-energy microgrids (MEMGs), integrating electricity, heat, and carbon emission rights\n(CER) trading, and they employed an adaptive consensus ADMM algorithm to enhance\nprivacy and transparency. While these approaches mark meaningful progress, challenges\nin convergence speed, computational efficiency, and real-time responsiveness remain.\nExisting research indicates that the collaborative optimization between multi-microgrid\nsystems and grid operators still has room for improvement, particularly in carbon trad-\ning mechanisms, multi-agent resource coordination, and equitable benefit distribution.\nThis study presents a collaborative optimization strategy for power and carbon marginal\ncontributions in multi-microgrid systems, developed within a cooperative Stackelberg\ngame framework. To achieve both system efficiency and fairness, the strategy combines\ncooperative ga",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 System Models",
+      "level": 1,
+      "text": "The multi-microgrid system comprises a grid operator, a microgrid alliance, and\nindividual microgrids, as depicted in Figure 1. The grid operator acting as the upper-level\nauthority oversees power supply adjustments and manages energy and carbon quota\ninteractions. The microgrid alliance serves as an intermediary, facilitating coordination\nbetween the grid operator and individual microgrids. Based on its own energy needs and\ncarbon targets, a microgrid can trade energy and carbon quotas with the grid operator or\nother microgrids, enhancing overall system performance.\n \n \n \n \n \n \n \n \n \nFigure 1. Framework of the multi-microgrid system.\nThe grid operator and microgrid alliance interact through power coordination, infor-\nmation exchange, and dynamic carbon trading. If emissions exceed limits, the alliance\ncan buy additional quotas. It shares power demand and emissions data with the operator\nto support scheduling, while microgrids conduct P2P energy trading and adjust carbon\nquotas within the alliance.\nEffective coordination among multiple energy sources within each microgrid is essen-\ntial for optimal system performance. Each microgrid integrates gas turbines, PV systems,\nwind power, and energy storage, requiring sophisticated coordination to balance renew-\nable intermittency with load demands. The coordination strategy follows the following\nhierarchical approach: local source optimization within each microgrid, alliance-level re-\nsource sharing through P2P trading, and system-level coordination via the grid operator.\nThis multi-source management framework ensures reliable operation while maximizing\nrenewable energy utilization and minimizing carbon emissions.\nAppl. Sci. 2025, 15, 8993 5 of 22",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Grid Operator Model",
+      "level": 2,
+      "text": "The grid operator maintains supply–demand balance and optimizes operations by\ncoordinating with the microgrid alliance. It allocates resources and uses controllable\ngeneration and energy storage to support peak demand or emergencies.\nThe grid operator primarily utilizes diesel generators as its generation units, modeled\nas follows [30]:\nPG\nm,t = η f uel · Pf uel (1)\nwhere PG\nm,t is the output of generation unit m at time t; η f uel is the fuel-to-electricity conver-\nsion efficiency; Pf uel is the fuel power input to the generator.\nThe output of the generation units must satisfy the following conditions:\nsG\nm,tPG\nm,min ⩽ PG\nm,t ⩽ sG\nm,tPG\nm,max, sG\nm,t ∈ {0, 1}\nTmin\non\n\u0010\nsG\nm,t − sG\nm,t−1\n\u0011\n⩽\nt+Tminon −1\n∑\nx=t\nsG\nm,x\nTmin\no f f\n\u0010\nsG\nm,t−1 − sG\nm,t\n\u0011\n⩽\nt+Tmin\no f f −1\n∑\nx=t\nsG\nm,x\n(2)\nwhere PG\nm,min and PG\nm,max denote the lower and upper output limits of generation unit m;\nTmin\non and Tmin\no f f signify the minimum on-time and minimum off-time for generation unit m,\nrespectively; sG\nm,x represents the binary variable indicating the startup and shutdown status\nof the unit m.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Microgrid Alliance Model",
+      "level": 2,
+      "text": "The microgrid alliance coordinated dispatch by aggregating data from individual\nmicrogrids, enabling internal energy sharing and unified grid transactions [31]. Each micro-\ngrid manages local operations with gas turbines, renewables, and storage and collaborates\nthrough the alliance when needed.\nThe power generation from renewable sources, such as PV and wind units, is inher-\nently influenced by environmental parameters. For PV systems, solar irradiance determines\nthe amount of electricity produced, while ambient temperature affects the conversion ef-\nficiency of photovoltaic panels. In the case of wind power, generation depends on both\nwind speed and wind direction—where higher wind speeds increase output, and favorable\nwind direction improves turbine alignment and energy capture. These factors introduce\nuncertainty and volatility into renewable generation, thereby affecting energy manage-\nment strategies, scheduling decisions, and the need for coordinated resource sharing in\nmulti-microgrid systems.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2.1 Gas Turbine Unit Model",
+      "level": 3,
+      "text": "The gas turbine unit operated by burning natural gas is necessary to generate electricity\nefficiently [32]. The relationship between the electricity produced by the gas turbine unit in\nmicrogrid i and natural gas consumption is expressed as follows:\nPGT\ni,t = ηGT QCH4 VGT\ni,t (3)\nwhere PGT\ni,t and ηGT denote the power output and power generation of the gas turbine unit,\nrespectively; QCH4 signifies the calorific value of natural gas; and VGT\ni,t refers to the amount\nof natural gas consumed by the unit.\nThe gas turbine unit’s output must follow the minimum and maximum constraints,\nas follows:\nPGT\ni,min ≤ PGT\ni,t ≤ PGT\ni,min (4)\nAppl. Sci. 2025, 15, 8993 6 of 22",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.2 Photovoltaic Model",
+      "level": 3,
+      "text": "The PV system’s output power is calculated as follows:\nPPV\ni,t = ηpv · [1 − αT(Tcell − TSTC )] · APV · It (5)\nwhere ηpv refers to the efficiency of the PV panel, Tcell is the actual working temperature of\nthe PV cell, TSTC is the PV cell temperature under standard test conditions, generally 25 ◦C,\nApv represents the surface area of the PV panel, andIt denotes the solar irradiance intensity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.3 Wind Power Model",
+      "level": 3,
+      "text": "The output power of a wind turbine is primarily influenced by wind speed, which\ntypically follows a Weibull distribution. Based on this, the wind turbine units’ output\npower model can be expressed as follows:\nPW\ni,t =\n\n\n\n0 vi,t < vin\ni,t, vi,t > vout\ni,t\nPr\ni,t\nvi,t−vin\ni,t\nvr\ni,t−vin\ni,t\nvin\ni,t ⩽ vi,t ⩽ vr\ni,t\nPr\ni,t vr\ni,t < vi,t ⩽ vout\ni,t\n(6)\nwhere Pr\ni,t is the rated power of the wind turbine, vin\ni,t is the cut-in wind speed, vout\ni,t is the\ncut-out wind speed, and vr\ni,t is the rated wind speed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.4 Energy Storage System Model",
+      "level": 3,
+      "text": "The ESS stores surplus power from generation units and releases it during peak\ndemand to balance supply and demand. Its charging and discharging behavior is modeled\nas follows:\nsoc i,t+1 = soc i,t +\n\u0010\nηchPch\ni,t − Pdis\ni,t /ηdis\n\u0011\n∆t (7)\nwhere pch\ni,t and pdis\ni,t are the charging and discharging power of energy storage unit i at time\nt, respectively; ηch and ηdis denote the charging and discharging efficiencies, respectively.\nThe state of charge (SOC) is subject to upper and lower limits, as well as constraints on\ncharging and discharging power:\nThe soc is constrained by the following:\nsocmin ≤ soc i,t ≤ socmax\n0 ≤ Pch\ni,t ≤ pch\nmax\n0 ≤ Pdis\ni,t ≤ pdis\nmax\nsoc i,T = soc i,0\n(8)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.5 Demand Response Model",
+      "level": 3,
+      "text": "This study examines the adjustable and transferable DR loads. The electricity demand\nof microgrids is divided into fixed loads PLD\ni,t and controllable loads PcLD\ni,t . Controllable\nloads PcLD\ni,t are further classified into transferable loads Ptran\ni,t and reducible loads Pcut\ni,t , as\noutlined below:\nControllable loads can be reformulated as follows:\nPcLD\ni,t = Ptran\ni,t + Pcut\ni,t (9)\nTransferable loads can be shifted to other time periods to reduce costs or gain compen-\nsation. Their constraints are shown as follows:\nAppl. Sci. 2025, 15, 8993 7 of 22\n−v1Pfr\ni,t ≤ Ptran\ni,t ≤ v1Pfr\ni,t\nT\n∑\nt=1\nPtran\ni,t = 0 (10)\nwhere v1 represents the proportion of transferable loads in the total electricity load; T\nsignifies the total time; Pfr\ni,t denotes the pre-demand-response electricity load; and Ptran\ni,t\ncorresponds to the transferable load.\nReducible loads allow users to cut power use in response to demand signals or price\nchanges, with constraints as follows:\n0 ≤ Pcut\ni,t ≤ v2Pfr\ni,t (11)\nwhere v2 refers to the proportion of reducible loads in the total electricity load, and Pcut\ni,t\ndenotes the reducible load.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.3 Carbon Emission Model",
+      "level": 2,
+      "text": "This study adopts a carbon trading mechanism to manage the microgrid alliance’s\nemissions. Microgrids exceeding their quotas must purchase allowances, while those with\nsurplus can sell them.\nThe carbon quota of the grid operator is mainly allocated based on fossil fuel genera-\ntion units, calculated as follows:\nEUG\nm,0 = σ\nT\n∑\nt=1\nPG\nm,t (12)\nThe associated carbon emission is expressed as follows:\nEUG\nm,CO2 = λUG\nT\n∑\nt=1\nPG\nm,t (13)\nThe carbon emission model for the microgrid alliance framed in this study includes\nthe following two key components: (1) allocation of emissions for gas turbine units, and\n(2) allocation of emissions for renewable energy units. The corresponding calculation is as\nfollows:\nEMG\ni,0 = σ1\nT\n∑\nt=1\nPGT\ni,t + σ2\nT\n∑\nt=1\nPPV\ni,t (14)\nwhere σ1 and σ2 denote the emission allocation per unit of power output for conventional\nand renewable generation units, respectively.\nThe actual carbon emissions are given by the following:\nEMG\ni,CO2 = λ\nT\n∑\nt\nPGT\ni,t (15)\nwhere λ denotes the emission factors for the gas turbine unit.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Mechanism Design",
+      "level": 1,
+      "text": "This section builds on the previous models by introducing a bi-level game framework\nand benefit allocation mechanism. A Stackelberg game is formed between the grid operator\nand the microgrid alliance, where the operator sets prices as the leader, and the alliance\nresponds to maximize overall benefit. Within the alliance, microgrids engage in a coopera-\ntive game, optimizing internal scheduling and trading to minimize costs before submitting\na unified strategy to the operator.\nAppl. Sci. 2025, 15, 8993 8 of 22",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1 Cooperative Stackelberg Game Framework",
+      "level": 2,
+      "text": "In the Stackelberg game, the grid operator manages the supply–demand balance by\ncontrolling power distribution to microgrids [33]. When electricity prices are low, micro-\ngrids prefer purchasing from the grid; at higher prices, they turn to ESS or peer trading.\nThe grid operator’s scheduling model aims to minimize the total operational cost of\nboth the grid and the microgrid system, with the objective function defined as follows:\nminCUG = CG + CDN + CMG + CCO2 (16)\nCG =\nNt\n∑\nt=1\nNG\n∑\nm=1\nρ f uel am,tPG\nm,t + ρon\nm,tsG\nm,t\n\u0010\n1 − sG\nm,t−1\n\u0011\n+ ρoff\nm,tsG\nm,t−1\n\u0010\n1 − sG\nm,t\n\u0011\nCDN =\nNt\n∑\nt=1\nρDN\nt PDN\nt\nCMG =\nNt\n∑\nt=1\nNMG\n∑\ni=1\nρMG\ni,t PMG\ni,t\nCCO2 =\nNG\n∑\nm=1\nρUG\nCO2\n(EUG\nm,CO2\n− EUG\nm,0)\n(17)\nwhere CG indicates the operating and startup/shutdown costs of the grid operator’s\ngeneration units; ρ f uel refers to the operational cost of fuel; am,t denotes the generation\nunit parameters; ρon\nm,t and ρoff\nm,t signify the startup and shutdown costs, respectively; CDN\nrepresents the cost of distribution transactions; ρDN\nt indicates the distribution price; CMG\ncorresponds to the transaction cost between the grid operator and the microgrid alliance;\nρMG\ni,t and ρUG\nCO2\nsignify the transaction and carbon trading prices, respectively; and CCO2\nrefers to the carbon trading cost.\nMicrogrids interact with the grid operator to regulate interconnection power. The grid\noperator manages this exchange to balance system load and ensure overall optimization.\nThe following constraints must be met:\n(1) Power Balance Constraint: At each time step t, the power exchange between the\ngrid operator, generation units, loads, and microgrids must be balanced, as follows:\nPDN\nt +\nNG\n∑\ni=1\nPG\ni,t =\nNLD\n∑\nn=1\nPLD\nn,t +\nNcLD\n∑\nn=1\nPcLD\nn,t +\nNMG\n∑\ni=1\nPMG\ni,t (18)\nwhere PDN\nt refers to the power transfer between the grid operator and the upper-level grid;\nPG\ni,t corresponds to the power output of generation unit i; PLD\nn,t indicates the load demand of\nthe n-th load; and PMG\ni,t denotes the power exchanged between the microgrid alliance and\nthe grid operator.\n(2) Interchange Power Constraint: The power exchanged between the microgrid\nalliance and grid operator must stay within interconnection and transmission capacity\nlimits, as follows:\nPDN\nmin ≤ PDN\nt ≤ PDN\nmax\nPMG\nmin ≤ PMG\ni,t ≤ PMG\nmax\n(19)\nwhere PDN\nmin and PDN\nmax signify the minimum and maximum power exchange limits between\nthe grid operator and the upper-level grid, respectively; PMG\nmin and PMG\nmax denote the mini-\nmum and maximum power exchange limits between the grid operator and the microgrid\nalliance, respectively.\nEach microgrid within the alliance aims to minimize costs through a shared energy\noptimization model. The specific formulation is outlined as follows:\nminCMG\ni = CE\ni + CCO2\ni (20)\nAppl. Sci. 2025, 15, 8993 9 of 22\nCE\ni = CGT\ni + CESS\ni + CDR\ni + CLink\ni + CTrading",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "CCO2",
+      "level": 1,
+      "text": "i = ρMG\nCO2\n\u0010\nEMG\ni,CO2\n− EMG\ni,0\n\u0011\nCGT\ni =\nNt\n∑\ni=1\n\u0014\na1PGT\ni,t + b1\n\u0010\nPGT\ni,t\n\u00112\n+ c1\n\u0015\nCESS\ni = ς\nT\n∑\ni=1\nPch\ni,t + ς\nT\n∑\ni=1\nPdis\ni,t ; CDR\ni =\nNcLD\n∑\nn=1\nNt\n∑\nt=1\n\u0010\nρcLD\nn,t PcLD\nn,t\n\u0011\nCLink\ni =\nNt\n∑\nt=1\nρLink\ni,t PLink\ni,t ; CTrading\ni =\nNt\n∑\nt=1\nρTrading\ni,t PTrading\ni,t\n(21)\nIn Equations (20) and (21), CMG\ni denotes the total operating cost of microgrid i; CE\ni\ndenotes the electricity-related operating cost of microgrid i, including costs associated\nwith power generation, energy storage, demand response, grid interaction, and electricity\ntrading; CCO2\ni denotes the carbon emission costs of microgrid i; ρMG\nCO2\nsignifies the carbon\ntrading prices; CGT\ni refers to the cost of the microgrid’s gas turbine unit; a1, b1, and c1\nsignify the cost coefficients for gas turbines; CESS",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "denotes the depreciation coefficient for",
+      "level": 1,
+      "text": "the ESS; ς represents the depreciation coefficient of ESS; CLink",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "refers to the interaction cost",
+      "level": 1,
+      "text": "between the microgrid and the grid operator; ρLink\ni,t signifies the electricity trading prices,\nrespectively; CDR\ni denotes the DR costs; ρcLD\nn,t refers to the compensation for controlled\nloads; CTrading\ni corresponds to the cost of power trading between microgrids; and ρTrading\ni,t\nrepresents the trading price.\nIn addition to the gas turbine unit constraints, microgrids must adhere to the power\nbalance requirement, as follows:\nPLink\ni,t + PGT\ni,t + (Pdis\ni,t − Pch\ni,t ) +PPV\ni,t + PTrading\ni,t = PLD\ni.t + PcLD\ni.t , ∀t ∈ Nt, ∀i ∈ NMG (22)\nThe upper and lower bounds on the linking power between the microgrids and the\ngrid operator, along with the power exchanged between the microgrids, are outlined\nas follows:\nPLink\nmin ≤ PLink\ni,t ≤ PLink\nmax (23)\nThe power transfer between microgrids must adhere to the following conditions:\nNMG\n∑\ni=1\nPTrading\ni,t = 0\nPTrading\nmin ≤ PTrading\ni,t ≤ PTrading\nmax\n(24)\nMicrogrids can also trade with each other to reduce the alliance’s overall costs, which\nare then allocated based on individual contributions to encourage participation. This study\nassumes full cooperation to minimize total electricity and carbon trading costs. Internal\ntransactions are modeled using Nash bargaining, as defined in Equation (26), ensuring that\nno microgrid can improve its benefit without reducing overall efficiency [22].\n\n\n\nmax\nNMG\n∏\ni=1\n\u0010\nCMG\ni − CMG\ni,0\n\u0011\ns.t. CMG\ni − CMG\ni,0 ≥ 0\n(25)\nwhere CMG\ni,0 refers to the independent operational cost of microgridi when it is not involved\nin the alliance, serving as the breakdown point in the Nash bargaining; at this juncture,\nPTrading\ni,t = 0; CMG\ni represents the total operational cost of microgrid i within the alliance;\nand CMG\ni − CMG\ni,0 indicates the revenue generated by microgrid i through cooperation.\nDue to the model’s non-convexity and nonlinearity, it is reformulated into two sub-\nproblems for tractability. Framed as a cost-minimization problem, cooperative cost savings\nAppl. Sci. 2025, 15, 8993 10 of 22\ndefine microgrid revenues. The total cost equals the sum of individual energy expenditures,\nleading to the following Nash bargaining-based energy-sharing model:\n\n\n\nmin\nNMG\n∏\ni=1\nCMG\ni\ns.t.(3)–(11), (14)–(15), (22)–(24)\n(26)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.2 VCG-Based Contribution Factors for Revenue Allocation",
+      "level": 2,
+      "text": "After minimizing the alliance’s total cost, the main challenge is fair revenue allocation\nthat encourages participation. Since microgrids contribute differently to power supply and\ncarbon reduction, allocations must reflect their impact on overall system performance.\nThis study introduces a power and carbon contribution factor to quantify each micro-\ngrid’s role in trading and emission reduction, linking earnings to actual contribution. To\nimprove fairness and accuracy, the VCG mechanism [34–36] is integrated by calculating\neach microgrid’s marginal impact as the difference in system performance with and without\nits participation. This ensures incentive compatibility, prevents manipulation, and aligns\nlocal decisions with global optimization. The calculation is as follows:\nei =\n NMG\n∑\nj=1,j̸=i\nCE\nj − CE\ni\n!,NMG\n∑\nj=1\nCE\nj (27)\nwhere ei refers to the power contribution factor of microgridi, which represents its marginal\ncontribution to reducing system-wide electricity costs. CE\nj denotes the electricity-related\ncost of microgrid j. The numerator reflects the total cost without microgrid i, minus the\ncost with its inclusion, thus capturing its VCG-based marginal benefit. A higher value of ei\nindicates a greater contribution of microgrid i to system efficiency, reflecting the marginal\nbenefit principle at the core of the VCG mechanism.\nThe carbon emission contribution factor, based on the VCG mechanism, measures each\nmicrogrid’s marginal impact on total emission reduction by comparing system performance\nwith and without its participation. This ensures incentive compatibility, rewards greater\ncontributors, and encourages low-carbon involvement. The calculation is shown as follows:\n∆Ei = Ei,0 − Ei,CO2\nci =\n \nNMG\n∑\nj=1,j̸=i\n∆Ej − ∆Ei\n!,\nNMG\n∑\ni=1\n∆Ei\n(28)\nwhere Ei,0 and Ei,CO2 refer to the carbon emissions of microgrid i before and after coop-\neration, and ∆Ei is the corresponding reduction for microgrid i. The contribution factor\nci is calculated via the VCG mechanism, reflecting the marginal change in system-wide\nemission reduction due to microgrid i’s participation. It captures the difference in total\nemissions with and without microgrid i, reflecting its actual impact.\nTo assess microgrid contributions to power supply and carbon reduction, a Sigmoid-\nbased function maps values between 0 and 1 [37]. This nonlinear approach avoids extreme\nallocations, rewards high contributors, and encourages improvement from others. Ad-\njustable parameters ensure flexibility across scenarios, balancing efficiency and fairness.\nThe corresponding formula is as follows:\ndi = 1/1 + e−µ(ηe·ei+ηc·ci) (29)\nwhere ηe and ηc refer to the weights for power and carbon emission contributions, satisfying\nηe + ηc = 1.\nAppl. Sci. 2025, 15, 8993 11 of 22\nBased on power and carbon contribution factors, revenue is allocated using a Nash\nbargaining model that maximizes the Nash product. At its maximum, no microgrid can\nincrease its benefit without reducing overall system efficiency. This ensures fair, optimal,\nand stable allocation, with revenues reflecting each microgrid’s contribution to power\ntrading and carbon reduction, and this is shown as follows:\nmax\nNMG\n∏\ni=1\n\u0010\nC0\ni − CMG\ni\n\u0011di\n(30)\nThe natural logarithm is a monotonically increasing convex function; thus, ap-\nplying it to Equation (30) converts the maximization into the following equivalent\nminimization problem:\nmin\nNMG\n∑\ni=1\n−di ln\n\u0010\nC0\ni − CMG\ni\n\u0011\n(31)\nThe Nash bargaining model ensures equitable revenue distribution by accounting for\ndifferences in power and carbon contributions. A microgrid’s revenue is proportional to its\ncontribution, with higher contributions resulting in greater revenue.\nThis study also assesses the fairness of benefit distribution improvements using the\nJain fairness index [38], which is calculated as follows:\nIjain =\n NMG\n∑\ni=1\nBi\n!2,\nNMG\nNMG\n∑\ni=1\nB2\ni (32)\nwhere Bi denotes the benefit improvements of microgrid i.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "4 Model Solution Based on the Improved ATC Algorithm",
+      "level": 1,
+      "text": "The ATC algorithm is a hierarchical optimization method that decomposes a global\nobjective into layered sub-problems coordinated via coupling variables. This study refines\nATC by introducing decoupling variables, transforming the bi-level Stackelberg model into\ntwo independent single-level problems.\nFigure 2 provides a detailed overview of the proposed hierarchical optimization\nprocess. The left section presents the structure of the improved ATC algorithm, where\nthe upper-level scheduling problem coordinates the operation of individual microgrids\nthrough iterative information exchange. The lower-level problems, representing local\nmicrogrid decision-making, are solved in parallel, and their feedback guides the upper-\nlevel adjustments.\nThe right section illustrates the integration of Anderson acceleration, which enhances\nthe convergence of the iterative process. It leverages the iteration history to adjust key\nvariables more effectively, avoiding oscillation and reducing the number of iterations\nrequired. During each acceleration step, adjustments are made to the main coordination\nparameters based on past iteration data, and the penalty parameters are updated adaptively\nuntil convergence is achieved.\nTo resolve the coupling between the upper and lower levels, this study introduces an\naugmented Lagrangian penalty function.\n\n\n\nmin\nxUG\nFUG = CUG (xUG) +\nNt\n∑\nt=1\nNMG\n∑\nn=1\n\u0014\nvi,t\n\u0010\nPMG\ni,t − ˆPMG\ni,t\n\u0011\n+ ωi,t\n\u0010\nPMG\ni,t − ˆPMG\ni,t\n\u00112\u0015\ns.t.(1)–(2), (12)–(13), (18)–(19)\n(33)\nAppl. Sci. 2025, 15, 8993 12 of 22\n \n \n \n \n \n \nFigure 2. Improved ATC optimization.\nIn the lower level, due to power exchanges between microgrids, the penalty term must\naccount for iterative updates of exchanged power between microgrids, as follows:\n\n\n\nmin\nxMG",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "FMG",
+      "level": 1,
+      "text": "i = CMG\ni (xMG\ni ) +\nNt\n∑\nt=1\n\u0014\nvi.t\n\u0010\nPLink\ni,t − ˆPLink\ni,t\n\u0011\n+ ωi.t\n\u0010\nPLink\ni,t − ˆPLink\ni,t\n\u00112\u0015\ns.t.(3)–(11), (14)–(15), (22)–(24)\n(34)\nwhere FUG and FMG\ni signify the objective functions of the grid operator and microgrids;xUG\nand xMG\ni denote the decision variables of Equations (33) and (34); ˆPMG\ni,t and ˆPLink\ni,t denote the\nfeedback values exchanged between upper and lower levels; and vi,t and ωi,t are the first-\nand second-order penalty coefficients used to constrain microgrid transaction behaviors.\nTo expedite optimization process convergence, this study applies the Anderson accel-\neration algorithm to update power rates [39]:\n(1) Microgrid Power Update:\nPMG\ni,t,k+1 =\nNMG\n∑\ni=0\nγMG",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "PMG",
+      "level": 1,
+      "text": "i,t,k (35)\n(2) Linking Power Update:\nPLink\ni,t,k+1 =\nNMG\n∑\ni=0\nγLink",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "PLink",
+      "level": 1,
+      "text": "i,t,k (36)\n(3) Determination of Anderson Acceleration Coefficients:\nrMG\ni,t,k+1 = PMG\ni,t,k+1 − PMG\ni,t,k\nrLink\ni,t,k+1 = PLink\ni,t,k+1 − PLink\ni,t,k\n(37)\n(4) Solution of Coefficients:\n\n\n\nminα0,...,αm\nNMG\n∑\ni=0\n\r\r\rαirMG\ni,t,k−i\n\r\r\r\n2\n2\ns.t.\nNMG\n∑\ni=0\nαi = 1\n;\n\n\n\nmin\nβ0,..., βm\nNMG\n∑\ni=0\n\r\r\rβirLink\ni,t,k−i\n\r\r\r\n2\n2\ns.t.\nNMG\n∑\ni=0\nβi = 1\n(38)\nAppl. Sci. 2025, 15, 8993 13 of 22\n(5) Convergence Criterion: \r\r\rPMG\ni,t,k+1 − PMG\ni,t,k\n\r\r\r\n2\n2\n< ϵ1\n\r\r\rPLink\ni,t,k+1 − PLink\ni,t,k\n\r\r\r\n2\n2\n< ϵ2\n(39)\nThe updated rules for the first- and second-order penalty multipliers are as follows:\n\n\n\nvk+1\ni,t = vk\ni,t + 2ωk\ni,tωk\ni,t(PMG\ni,t,k − PLink\ni,t,k )\nωk+1\ni,t =\n(\nωk\ni,t, if(PMG\ni,t,k − PLink\ni,t,k ) ⩽ µ1(PMG\ni,t,k − PLink\ni,t,k )\nµ2ωk\ni,t, otherwise\n)\n(40)\nwhere vk\ni,t and ωk\ni,t are the first- and second-order penalty multipliers in the k-th iteration,\ntypically initialized as small constants; β is the expansion factor for penalty adjustment,\nand γ is the threshold for updating ωk\ni,t; PMG\ni,t,k and PLink\ni,t,k represent the linking variables in\nthe k-th iteration for the upper- and lower-level problems.\nThe convergence criteria are defined as follows:\n\f\f\fPMG\ni,t,k − PLink\ni,t,k\n\f\f\f ⩽ ε1\f\f\fPLink\ni,t.k − PLink\ni,t.k−1\n\f\f\f ⩽ ε2\n(41)\nwhere ε1 and ε2 are convergence tolerances. ε1 controls the precision of linking variable\noptimization, while ε2 ensures overall system efficiency and coordination.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5 Case Study",
+      "level": 1,
+      "text": "This study investigates energy transactions between a grid operator and a microgrid\nalliance consisting of three microgrids, each equipped with renewable energy sources and\nadjustable loads. The grid operator operates three diesel generators with capacities of\n350 kW, 300 kW, and 250 kW. Microgrid 1 includes a 200 kW gas turbine, a 150 kW PV\nunit, and a 150 kW ESS. Microgrid 2 is equipped with a 200 kW PV unit, a 130 kW wind\npower unit, and a 200 kW ESS. Microgrid 3 contains a 400 kW gas turbine, a 100 kW wind\nunit, a 130 kW PV unit, and a 150 kW ESS. The configuration of each microgrid is shown in\nTable 1.\nTable 1. Configuration of each microgrid.\nMicrogrid Gas T urbine (kW) PV (kW) Wind Power (kW) ESS (kW)\nMicrogrid 1 200 150 - 150\nMicrogrid 2 - 200 130 200\nMicrogrid 3 400 130 100 150\nIn the implementation, the first- and second-order penalty multipliers vi,t and ωi,t\nwere initialized to 0.01. The expansion factor β for penalty adjustment was set to 1.05, and\nthe threshold γ for the multiplier update was defined as 10−3. The convergence tolerances\nε1 and ε2 were both set to 10 −3, and the maximum iteration count was limited to 20. In\naddition, Anderson acceleration was incorporated to improve convergence speed during\nthe iterative coordination process.\nThe proposed bi-level optimization model and the improved ATC algorithm were\nimplemented in MATLAB R2020b, with Gurobi 10.0 serving as the optimization solver\nthrough the YALMIP R20230622 interface. Numerical simulations were conducted on\na PC equipped with an Intel Core i7-12700H CPU (Intel Corporation, Santa Clara, CA,\nUSA) and 32 GB RAM (Samsung Electronics Co., Ltd., Suwon, Republic of Korea). The\nupper- and lower-level problems were solved using an iterative coordination framework\nAppl. Sci. 2025, 15, 8993 14 of 22\nbased on augmented Lagrangian decomposition. The Anderson acceleration technique\nwas embedded into the solution process to enhance convergence speed and stability.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.1 Revenue and Cost Analysis",
+      "level": 2,
+      "text": "Table 2 presents the changes in operational costs before and after cooperation. The\nalliance’s total revenue increased by CNY 1956.55, with individual gains of 4.5%, 8.79%,\nand 1.85%. These results show that internal electricity trading improved microgrid benefits,\nwhile the grid operator’s revenue declined due to reduced dependence from the alliance.\nTable 2. Cost and benefit analysis before and after cooperation.\nMicrogrid Cost Before P2P Cost After P2P Final Cost After Allocation Revenue Increasement\nMicrogrid 1 12,166.49 12,083.09 11,608.90 557.59\nMicrogrid 2 6093.24 6118.13 5557.93 535.31\nMicrogrid 3 45,133.72 43,265.68 44,300.07 833.65\nMicrogrid\nAlliance 63,393.45 61,436.9 0 1956.55\nGrid Operator 55,294.96 55,414.99 0 −120.03\nTables 3 and 4 compare the effects of asymmetric and standard Nash bargaining on\nrevenue distribution. In standard Nash bargaining (Table 3), Microgrid 3 gains the most\ndue to its larger capacity and higher generation. However, this method overlooks the\nrenewable energy contributions of Microgrids 1 and 2, offering limited incentives for clean\nenergy and carbon reduction, leading to suboptimal results.\nTable 3. Benefit distribution of the standard model.\nMicrogrid Cost After P2P Bargaining Cost of\nStandard NB Model\nFinal Cost of\nStandard NB Model\nBenefit\nImprovement of\nStandard NB Model\nMicrogrid 1 12,083.09 −326.54 11,756.55 409.94\nMicrogrid 2 6118.13 −356.32 5761.81 331.43\nMicrogrid 3 43,265.68 682.86 43,948.54 1185.18\nTable 4. Benefit distribution of the asymmetric bargaining model.\nMicrogrid Bargaining Factor Bargaining Cost Final Cost Benefit Improvement\nMicrogrid 1 0.7751 −537.3808 11,608.90 620.7808\nMicrogrid 2 0.7663 −638.7066 5557.93 613.8166\nMicrogrid 3 0.8641 1176.0874 44,300.07 691.9526\nBy applying asymmetric Nash bargaining with a Sigmoid-based contribution model,\ngreater benefits are allocated to microgrids with higher contributions. Adjusting power\nand carbon factors emphasizes emission reductions, ensuring fairer revenue distribution\nand encouraging further low-carbon efforts.\nTable 4 shows that increasing carbon contribution weights and applying exponential\nscaling raised the revenues of smaller microgrids like Microgrids 1 and 2. However, due to\ntheir lower renewable output and higher reliance on imported electricity, their contribution\nfactors remain low, limiting revenue gains. As a result, Microgrid 3 retains the largest share.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5.2 Fairness Analysis",
+      "level": 2,
+      "text": "Table 5 presents the Jain fairness index for different bargaining models, where higher\nvalues indicate fairer benefit distribution. Incorporating power and carbon contribution",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Framework of the multi-microgrid system."
+    },
+    {
+      "id": "f2",
+      "caption": "provides a detailed overview of the proposed hierarchical optimization"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Table 1. Configuration of each microgrid."
+    },
+    {
+      "id": "t2",
+      "caption": "presents the changes in operational costs before and after cooperation. The"
+    },
+    {
+      "id": "t3",
+      "caption": "Benefit distribution of the standard model."
+    },
+    {
+      "id": "t4",
+      "caption": "Benefit distribution of the asymmetric bargaining model."
+    },
+    {
+      "id": "t5",
+      "caption": "presents the Jain fairness index for different bargaining models, where higher"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "Equation (26)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "(30)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "(31)"
+    },
+    {
+      "id": "e33",
+      "latex_or_text": "(33)"
+    },
+    {
+      "id": "e34",
+      "latex_or_text": "(34)"
+    },
+    {
+      "id": "e37",
+      "latex_or_text": "(37)"
+    },
+    {
+      "id": "e38",
+      "latex_or_text": "(38)"
+    },
+    {
+      "id": "e39",
+      "latex_or_text": "(39)"
+    },
+    {
+      "id": "e40",
+      "latex_or_text": "(40)"
+    },
+    {
+      "id": "e41",
+      "latex_or_text": "(41)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 5,
+    "n_algorithms": 0,
+    "n_equations": 19
+  }
+}

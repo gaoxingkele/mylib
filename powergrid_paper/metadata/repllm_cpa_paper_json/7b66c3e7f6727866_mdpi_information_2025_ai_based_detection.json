@@ -1,0 +1,149 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2025__ai_based_detection_of_optical_microscopic_images_of_lt___197e48bb19.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Biofilm-forming microbes synthesize different signaling biomolecules such as proteins, \ncarbohydrates, and DNA, which help in their cooperative activities and attachments to \nbiotic or abiotic surfaces to create organized multicellular communities called biofilm [1–3]. \nStudies on biofilm by the gram-positive bacterium were pioneered by Ferdinand Cohn in \n1877 [1]. Numerous studies on the biofilms of various Bacillus species (Bacillus cereus, \nBacillus anthracis, and Bacillus thuringiensis, BT) [4–7] and other bacterial species (gram-\nnegative Pseudomonas aeruginosa, PA) were conducted in the last decade to understand \nthe mechanism of the growth and control of biofilms [8,9]. Many medically important \nfungi form biofilms [10–12] (including yeast Candida [13] and mold [10], which are \nresistant to antifungal drugs). Biofilm formation causes chronic infections and a loss of \nimmune responses in individuals with underlying health problems and can even lead to \ndeath, creating a severe danger to public health [14–16]. This is due to the resistance of \nthe biofilms against antimicrobial agents [14]. Biofilms also cause significant problems by \ncontaminating medical devices, food, and the environment [17,18], threatening healthcare \nindustries, including hospital devices, human health, and biotech [19,20] companies. \nAccording to a study by the NIH [21], biofilm formation can be attributed to a significant \nportion (65% and 80%) of all microbial and related recurring infections.\nDesigning effective strategies to combat biofilm-related infections is crucial, as it demands a \ndetailed understanding of the underlying processes in biofilm formation, and the unraveling \ntheir scientific implications. Phenotypes of biofilm-forming microbes differ from their \nplanktonic states, leading to the rise of antibiotic resistance and the failure of modern \nantibiotics to treat biofilm infections [14,22]. An alternative approach to combating these \ndeadly biofilms needs to be addressed.\nNanotechnology has become prominent in reducing and controlling biofilm formation [23–\n26]. In personal and medical care and household products, silver is one of the most widely \nused metals [27–29]. Recently, Ag nanoparticles (NP) were used to prevent biofilm in \ngram-positive and gram-negative bacteria [28,30–32]. Small DNA stretches are designed \nto make aptamer molecular beacons, called functionalized aptamers [33–35], for detecting \nbiofilms. Sengupta’s group has pioneered the usefulness of DNA aptamers to scaffold and \ncarry silver nanoclusters (Ag-NC) to influence biofilm formation [7,8]. They have also \nshown that a capping agent like methyl-beta-cyclodextrin (CDx) [7]-bound Ag-NC has a \nbetter preventive effect on biofilm.\nThe full and partial formation of biofilms by a controlling substance, by Ag-NC, is difficult \nto predict by a simple statistical analysis. Recently, artificial intelligence (AI approaches \nsuch as convolutional neural networks (CNN) have come into prominence for biofilm \n(object) detection [36–39]. The effective AI model Unet [37] is widely recognized as \nSengupta et al. Page 2\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nsuitable and has the potential for different types of biomedical image segmentation. The \nnetwork architecture contains a fully convolutional encoder-decoder with skip connections \nbetween the encoder blocks and their symmetric decoder blocks. ResNet [37,40] introduces \nthe concept of skip connections, allowing the network to skip specific layers to let the model \nlearn effectively. It can be shown that a U-Net framework built with a ResNet encoder can \nleverage the power of deep residual learning and enhance the feature extraction process \nto improve the overall segmentation performance [41]. Beyond U-Net-based approaches, \nother deep learning models have also demonstrated strong segmentation capabilities. \nDeepLabV3 uses atrous spatial pyramid pooling (ASPP) to capture multi-scale contextual \ninformation, improving segmentation accuracy for objects of different sizes [42]. Attention \nU-Net enhances the standard U-Net by integrating attention mechanisms, helping the \nmodel focus on important regions while reducing background noise. BASNet (Boundary-\nAware Segmentation Network) prioritizes boundary refinement, making it particularly \neffective for applications requiring precise edge detection [43]. F-CN (Image Segmentation \nusing Composable Fully-Convolutional Networks), a deeper fully convolutional network, \nefficiently learns spatial hierarchies without requiring explicit region proposals [44], though \nit may struggle with boundary precision. Each of these models has distinct strengths and \ndifferent parameters based on the structure. The identification of biofilm is difficult for \nhumans to identify with visual information; extensive and essential features related to \nbiofilm are expected to be captured through a deep network learning process. Biofilm bright \nfield images can be characterized using U-Net architecture with ResNet18 and ResNet34 \nbackbone and other convolutional models. This research exploits an AI-based model to \npredict and detect the microbial biofilm of gram-negative Pseudomonas aeruginosa, PA [8] \nwith higher accuracy against a given aptamer-DNA-based Ag-NC. Our results show that this \nAI model can be applied to any image to detect biofilm formation with higher accuracy.\nThis paper reports the prevention of PA biofilm by the Ag-NC, which is synthesized on a \nDNA aptamer matrix. In particular, we created biofilm using PA in 2D fully or partially \non a glass slide, with or without the treatment of PA targeted DNA aptamer-enclosed \nAg-NC. Large-volume bright-field images of the PA biofilms grown on glass slides were \nthen generated using an automated transmission microscope. Finally, we analyze the large-\nvolume bright field data via AI, especially U-net with ResNet. For the AI analyses, the AI \nalgorithm is first fed with bright-field images with marked biofilms; then, unknown biofilms \nare fed to the leaned AI model for detection. The results show the detection of biofilm \nformation/prevention with higher accuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Results and Discussions",
+      "level": 1,
+      "text": "Figure 1 shows representative bright field images of control (Figure 1A) and aptamer-\nenclosed nanocluster-treated (Figure 1B) samples of Pseudomonas aeruginosa. The \nincubation of the PA cells with the aptamer-enclosed Ag-NC for 48 h cleared the turbidity \n(see Figure 1B inset), which was observed in control and was indicative of biofilm formation \n[7,8] (as shown in Figure 1A).\nSengupta et al. Page 3\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nMachine Learning Results for Biofilm Segmentation\nThe AI frameworks′ training inputs are image data with their corresponding biofilm \nannotations, and the output is the model-predicted biofilm mask. The binary cross entropy \nloss between the actual label and the prediction is computed and minimized in the training. \nThe Adam optimizer with weight decay is determined with a learning rate of 5 × 10−4. All \nthe models use a batch size of 8.\nThe loss and accuracy curves between different backbone learning frameworks are shown \nin Figure 2A,A′ for U-Net-ResNet18 and in Figure 2B,B′ for U-Net-ResNet34. Each \nmodel was configured to train for up to 200 epochs. However, early stopping was used \nto prevent overfitting with patience of 5 while monitoring the test accuracy. Specifically, \nif there was no improvement in test accuracy for five consecutive epochs, the training \nprocess was halted automatically. This strategy ensured that the model did not continue \nlearning non-generalizable patterns. To further stabilize and enhance the training process, \nbatch normalization layers and increased dropout were incorporated into the architecture. \nAs illustrated in Figure 2A,A′, as well as in Figure 2B,B′, both showed a decrease in \ntraining and validation losses, while train accuracy and test accuracy improved on both sets \nuntil approximately the 20th and 19th epochs, respectively. Here, the test set represents \nthe validation set. Given the limited dataset, the models are learning very fast with a very \nlimited number of epochs and generalizing well on the unseen dataset. Early stopping \nwas triggered around this point, and the best-performing weights were saved, helping to \nmaintain optimal performance and minimize the risk of overfitting. We report the model \ntest accuracy, precision, recall, F-1 score, and IoU (Intersection over Union) in Table 1. The \nresults show that the ResNet-18-based U-Net architecture achieved a better segmentation \ntest performance, with 90.74% accuracy, 75.98% precision, 79.57% recall, 77.74% F-1 \nscore, and 63.58% IoU. It is also demonstrated that more informative biofilm features are \nlearned through a deeper encoder architecture.\nIt provides a balance between learning biofilm features and maintaining the generalization \nof the test samples. When comparing deeper architectures, such as U-Net-ResNet34, it \nperformed with improved precision, but the recall was low. This says that it struggles \nto capture all relevant biofilm regions, leading to under-segmentation. Additionally, \nDeeplabV3+ with multi-scale feature extraction through convolutions gives good accuracy \nand recall, but the precision is low, stating that it may misclassify non-biofilm regions \ntargeting false positives. Additionally, Attention U-Net focuses on segmentation through \nattention mechanics; it has better recall, indicating that the detection of biofilm is high, \nand due to its lower precision and IoU scores, it tends to include non-biofilms regions, \npotentially causing over-segmentation. Lastly, the full CNN and BASNet performed well in \nterms of accuracy, but the models struggled with low precision, recall, and IoU.\nPost-processing was performed to generate binary-predicted masks based on the output-\npredicted probability maps. Mainly, Otsu thresholding [45] was applied to binarize the \nsegmentation prediction. A comparison of the model raw output mask and ground truth \nmask is shown in Figure 3; the first column has three different biofilm samples of \nPseudomonas aeruginosa (PA) (Figure 3A,E,I). Figure 3D,H,L illustrate the related true \nmasks provided by human experts. Note that Figure 3I is an image of Pseudomonas \nSengupta et al. Page 4\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\naeruginosa (PA) cells in a planktonic state. Based on each image input, the U-Net-ResNet34 \nalgorithm, as shown in Figure 3, generates the related biofilm probability map, as shown \nin Figure 3B,F,J, where yellow shows the probability of being biofilm. Otsu thresholding \nis applied to binarize the biofilm probability map (Figure 3B,F,J) to generate the predicted \nmask, as shown in Figure 3C,G,K. The outperformed U-Net-ResNet34 architecture predicts \nthe masks. It is demonstrated that the expected biofilm regions are aligned with the \nground truth annotations, and the general shape of the biofilm is indicated. Hence, the \nResNet-based U-Net method has great potential in this studied biofilm segmentation task. \nThe experimental results demonstrated that the proposed model could achieve effective \nsegmentation performance by generating accurate biofilm predictions compared to ground \ntruth masks. Further quantitative measures can be computed and analyzed with this \nprediction.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Experimental Methodology and Instrumentation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Preparation of DNA-Templated Silver Nanocluster",
+      "level": 2,
+      "text": "The silver nanocluster (Ag-NC) was prepared on the aptamer DNA 5′-CCC CCG TTG CTT \nTCG CTT TTC CTT TCG CTT TTG TTC GTT TCG TCC CTG CTT CCT TTC TTG-3′ \n(which is specific for PA [46]), following the protocol published elsewhere [47].\nThis DNA oligonucleotide was custom-synthesized from Integrated DNA Technologies \n(IDT, Coralville, IA, USA). Lyophilized DNA was hydrated with triple distilled water \n(obtained from Sigma, Tokyo, Japan). Ag-NC was synthesized by combining 15 μM DNA \nand 90 μM Ag+ with 6BH4−/oligonucleotide solutions, followed by vortex mixing for 1 min. \nThe sample was stored overnight in the dark at 4 °C. UV/V is absorption, and fluorescence \nemission studies were conducted in the solution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Preparation of Bacterial Samples for Biofilm Study",
+      "level": 2,
+      "text": "Pseudomonas aeruginosa ATCC 10145, Lot 416-116-4, was obtained from Microbiologics \nInc., St. Cloud, MN, USA. PA was grown in 200 mL Tryptic Soy Broth (TSB, FisherSci., \nHampton, NH, USA) at 23 °C overnight, and 25% of Ag-NC solution was added to media \ncontaining bacterial culture. In a separate study, PA in 100% media and in the presence \nof 25% water (the same volume added for Ag-NC) showed little difference in bacterial \ngrowth. Hence, this work has used PA culture with 25% water as a control. The plates were \nincubated at 23 °C for two days in six-well plates. Following our previous work, turbidity \nin the wells indicated biofilm formation [7,48]. Cells from the plates were heat-fixed on the \nglass slides for bright-field imaging.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Steady-State Absorption, Fluorescence",
+      "level": 2,
+      "text": "We performed steady-state absorption and fluorescence spectroscopic measurements to \nconfirm Ag-NC formations. Steady-state absorption spectra were recorded with a Shimadzu \nUV 2550 spectrophotometer (Kyoto, Japan). Steady-state fluorescence measurements were \ncarried out with a PerkinElmer FL 6500 fluorescence spectrophotometer (Shelton, CT, \nUSA). Excitation and emission slit widths were 5/10 nm. All reported luminescence spectra \nwere corrected for the detector′s spectral response.\nSengupta et al. Page 5\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nThe fluorescence and absorption experiments were performed to characterize the spectral \nproperties of the DNA aptamer scaffolded silver nanoclusters, which were reported in our \nprevious work [8]. We repeated these measurements to ensure the reproducibility of the \nAg-NC formation on the DNA-templated aptamer and were able to reproduce similar results \nto those reported in [8]. The repeated measured fluorescence and absorption spectra have \nbeen reported in the Appendix A for the completeness of this article. In brief, for example, \nfluorescence emission spectra of aptamer-DNA 5′-CCC CCG TTG CTT TCG CTT TTC \nCTT TCG CTT TTG TTC GTT TCG TCC CTG CTT CCT TTC TTG-3′ templated Ag-NC \nshow the absorption band around the wavelength region 380–390 nm. An absorption band \npeaking around 427 nm, with a shorter band peaking around ~530 nm, was observed. \nThis indicates the formation of more than one type of silver nanocluster. Furthermore, the \nemission spectra of Ag-NCs showed stronger fluorescence with λemmax at ~633 nm for λex \n=540 nm, compared to the emission band with λemmax at 530 nm for λex = 450 nm, agreeing \nwith our earlier work [8].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.4 Instrumentation",
+      "level": 2,
+      "text": "Olympus BX61 optical microscope (Tokyo, Japan), CCD camera, and PRIOR Test Control \n(OptiScan software, PriorTest version 2.24.0.0) were used for large-volume bright-field \ntransmission imaging. Rather than the traditional way of manual imaging, we used the \nautoscan feature of the microscope to identify and diagnose the biofilm prevention/formation \nand their statistical mixtures in thin biofilms on glass slides. To image the biofilms, we \nused a conventional Olympus BX61 (Figure 4) motorized system microscope with a 40X \nobjective (UIS2) series, and a CCD camera mounted on the top of a BX61 microscope. In \naddition, we used the PRIOR Test Control via OptiScan software to move the microscope \nstage to synchronize with the camera while taking the scattering micrographs in the \ntransmission mode.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.5 Scanning Method",
+      "level": 2,
+      "text": "The most significant squares within each observation site of the biofilm over the glass slide \nwere determined and divided into numbers proportional to the objective lens used (40X). \nAltogether, ~2000 microscopic micrographs were generated from each type of sample (C, \nCN1, CN2, CN3…) for the AI analyses.\n3.6. AI: ResNet-Based U-Net Biofilm Segmentation\nIn this section, a U-Net-based segmentation model is used to segment biofilm to further \nretrieve the demanded quantitative measures of the bacteria, such as the covered area and \ncell count. We performed a pixel-level biofilm semantic segmentation using a U-Net1-based \n[40,49] AI framework within the studied regions. The analyzed dataset includes a total \nof 184 microbial images with annotated biofilm masks. Data robustness is ensured by \ntolerating variations in its collection and annotation procedure, where one image sample \nmay contain from none to multiple segmented biofilm regions. The dataset is divided \ninto a training set with ~150 samples and a test set with 34 samples. Each image datum \nwith annotated masks is resized to the same input shape 512 × 512. The pixel values are \nnormalized between 0 and 1. A preprocessed image sample with its ground truth mask is \nSengupta et al. Page 6\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nshown in Figures 5A and 5B, respectively. The bright-field imaging system captured the \ninput image data, and domain experts collected and validated the corresponding manually \nannotated masks (yellow areas indicate biofilm).\nUNet is widely recognized as an effective AI model for biomedical image segmentation. The \nnetwork architecture contains a fully convolutional encoder-decoder with skip connections \nbetween the encoder blocks and their symmetric decoder blocks. This encoder-decoder \nstructure of U-Net has inspired many segmentations in medical imaging; for instance, the \nattention mechanism has been employed in medical image segmentation and become widely \nadopted. The variation of U-Net-related deep learning networks is designed to optimize \nresults by improving medical image segmentation′s accuracy and computing efficiency \nthrough changing network structures.\nThe convolution scheme is modified and extended in the conventional U-Net framework \nto work with few training images and produce more accurate segmentation. The general \nshrinkage network is replaced with sequential layers. The high resolution of the contracted \npath is combined with the upsampled output for localization. Therefore, sequential \nconvolutional layers can study informative features and output more accurate segmentation. \nThe network applies the practical part of every convolution, where the segmentation map \ncontains mere pixels, and the complete context of the pixels can be obtained in the input \nimage.\nResNet [37–39] introduces skip connections, allowing the network to skip specific layers to \nlet the model learn effectively. A U-Net framework built with a ResNet encoder can leverage \nthe power of deep residual learning and enhance the feature extraction process to improve \nthe overall segmentation performance [41]. In addition, the shortcut mechanism added \nby the ResNet tends to avoid gradient vanishing and improve the network convergence \nefficiency. Because biofilm is even more complex for humans to identify with visual \ninformation, extensive and essential features related to biofilm are expected to be captured \nthrough a deep network learning process. The proposed ResNet-based U-Net segmentation \nframework is shown in Figure 6. This study investigated U-Net architecture with ResNet18 \nand ResNet34 backbones, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Conclusions and Discussion",
+      "level": 1,
+      "text": "We experimented to prevent biofilm formation using silver nanoclusters, which were \nsynthesized on DNA aptamer matrices and were used to treat the bacterial biofilms of \nPseudomonas aeruginosa. The experimental results showed that in the presence of Ag-NC, \nthe degree of the 2D biofilm formation decreased.\nThe biofilm formation/prevention analysis was performed using AI-based models. We have \nperformed the accuracy of the model using several standard-AI models: DeepLabV3+F-CN, \nBASNet, Attention U-net, U-Net-ResNet34, and U-Net-ResNet18. Our results show that \nU-Net-Resnet18 and U-Net-Resnet34 have the top accuracy.\nThe AI algorithm was trained for two cases: the formation and prevention of biofilm, \nfollowed by the testing of the AI model for its ability to detect biofilm among many images \nSengupta et al. Page 7\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nof Pseudomonas aeruginosa. The results show that the accuracy of detection is 91%. The \ndeveloped technique can be used to quickly detect biofilms by healthcare, biotech, and \nenvironmental agencies. In our study, we currently employ early stopping and model check-\npointing to save the best-performing weights based on validation performance. Additional \ntechniques, such as data augmentation (e.g., rotation, scaling, and elastic deformations) and \ndropout regularization, could be incorporated to improve generalization further. In addition, \ntransfer learning with pre-trained encoders, self-supervised learning, and synthetic data \naugmentation using generative models (e.g., GANs or diffusion models) could enhance \nmodel performance in our low-data settings, which is one of our potential future directions.\nFunding:\nP.P. acknowledges partial support from the National Institute of Health (Grant No. R21CA260147); HW \nacknowledges support from the National Institute of Health (Grant No. R03DE032766). B.S. acknowledges support \nfrom the Welch Foundation Grant (No. AN-0008) at the Department of Chemistry and Biochemistry and a Center \nfor Applied Research and Rural Innovation grant at SFASU.\nData Availability Statement:\nData are available from the corresponding author (P.P.) on personal request.\nSengupta et al. Page 8\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nAppendix A.: Characterization of the Aptamer-Templated Ag-Nc Using the \nAbsorption and Fluorescence Spectroscopy\nFigure A1. \n(A,B) shows typical absorption and fluorescence spectra of aptamer-DNA templated Ag-NC. \nThe inset in Figure (A) focuses on the Ag-NC′s absorption region only.\nThe absorption and fluorescence spectroscopic characterization of the Ag-NCs in aptamer \nhas been reported in our earlier publication using a series of DNA aptamers [8]. We re-\nexperimented the most efficient targeted aptamer [8] for forming Ag-NC and verifying the \nrepeatability of our previous work. The results show similar absorption and fluorescence \nemission profile features to our earlier publication [8], indicating the Ag-NC formation on \nthe aptamer template.\nFigure A1 shows the typical absorption and fluorescence emission spectra of aptamer-DNA \n5′-CCC CCG TTG CTT TCG CTT TTC CTT TCG CTT TTG TTC GTT TCG TCC CTG \nCTT CCT TTC TTG-3′ templated Ag-NC. The Ag-NCs were made in deionized water with \nDNA (15 μM), AgNO3 (90 μM), and NaBH4 (90 μM) to optimize nanoparticle formation, \nSengupta et al. Page 9\nInformation (Basel). Author manuscript; available in PMC 2026 January 16.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nwhich is shown by the absorption band around the 380–390 nm region. The absorption \nof the nucleobases in the UV region is shown in Figure A1, while the inset highlights \nthe absorbance of Ag-NC. An absorption band with a peak around 427 nm and a shorter \nband of ~530 nm were observed, proving the formation of more than one type of silver \nnanocluster on this PA-specific aptamer template, which agrees with our previous work [8]. \nThe emission profiles of these Ag-NCs show that for λex =540 nm, the NC showed stronger \nfluorescence with λemmax at ~633 nm compared to the emission band with λemmax at 530 nm for \nλex= 450 nm, agreeing with our earlier work [8].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "shows representative bright field images of control (Figure 1A) and aptamer-"
+    },
+    {
+      "id": "f2",
+      "caption": "A comparison of loss and accuracy curves between the segmentation model with different"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

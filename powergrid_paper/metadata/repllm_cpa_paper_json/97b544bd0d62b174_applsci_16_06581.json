@@ -1,0 +1,505 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-16-06581.pdf",
+  "n_pages": 24,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "45 Zhongshan Middle Road, Liupanshui 553001, China",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3 Marine Engineering College, Dalian Maritime University, Dalian 116026, China",
+      "level": 1,
+      "text": "* Correspondence: liu_changxin@dlmu.edu.cn (C.L.); weiy@dlmu.edu.cn (W.Y.)\nAbstract\nThis paper investigates the coordinated deployment and routing of communication equip-\nment by a Sub-mother UAV swarm in power-grid emergency communication scenarios.\nConsidering mission timeliness and payload constraints, a heterogeneous MUAV–SUAV\ncoordinated deployment-and-routing model is established to minimize the total system\ncost, including platform flight cost, SUAV activation cost, and penalty cost caused by de-\nlayed deployment. To solve this problem, a two-stage optimization framework is proposed.\nIn the first stage, an improved K-means clustering algorithm with neighborhood search\n(K-means-NS) is developed to divide deployment points into feasible sub-regions while\nsatisfying SUAV endurance constraints and maintaining the deployment–retrieval payload\nbalance required by the MUAV . In the second stage, the MUAV inter-region visiting se-\nquence is treated as a routing subproblem, and an improved adaptive genetic algorithm\n(IAGA) is designed to optimize the coordinated routes of the MUAV and SUAVs within\neach sub-region. The IAGA adopts hybrid encoding, feasible-solution adjustment, elitist\nselection, and adaptive crossover–mutation operations to improve search efficiency under\ncomplex constraints. Numerical experiments on small-, medium-, and large-scale scenarios\nshow that the proposed method can generate feasible sub-region divisions and coordinated\nrouting schemes. Compared with GA and G-PSHA, IAGA reduces the total flight cost by\napproximately 21.2%, 10.5%, and 23.2% relative to GA and by approximately 0.2%, 2.5%,\nand 8.1% relative to G-PSHA in the three scenarios, respectively. Sensitivity analysis further\nindicates that stricter mission-timeliness requirements increase penalty costs, highlighting\nthe importance of timely communication-device deployment in emergency restoration.\nKeywords: sub-mother UAV swarm; power grid emergency communication; deployment\nand routing; improved K-means clustering; improved adaptive genetic algorithm",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In recent years, extreme natural disasters such as earthquakes, floods, and ice storms\nhave frequently damaged power infrastructure and communication networks, creating\nserious challenges for emergency repair and grid restoration [1,2]. In post-disaster power-\ngrid scenarios, temporary communication equipment must be rapidly deployed to support\nrepair command, on-site information backhaul, and emergency decision-making [ 3,4].\nAppl. Sci. 2026, 16, 6581 https://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 2 of 24\nHowever, damaged roads, disrupted traffic, and inaccessible repair sites often make con-\nventional ground-based communication support difficult to implement [5,6]. In addition,\nemergency communication tasks are usually subject to strict timeliness requirements, and\ndelayed deployment may reduce the effectiveness of disaster-response operations [ 7,8].\nTherefore, aerial emergency communication deployment has become an important solution\nfor restoring communication services in disaster areas.\nSub-unmanned aerial vehicles (SUAVs) have advantages in high mobility, flexible\nvertical take-off and landing capability, and access to scattered task points, but their payload\ncapacity and endurance are limited [ 9,10]. Mother unmanned aerial vehicles (MUAVs),\nin contrast, have stronger carrying capacity and longer endurance and can transport\ncommunication devices and multiple SUAVs to the disaster area [11–14]. A coordinated\nMUAV–SUAV system can therefore combine the long-distance transportation and carrying\ncapability of the MUAV with the local flexible deployment capability of SUAVs. In the con-\nsidered power-grid emergency communication scenario, the MUAV carries communication\ndevices and SUAVs to the task area, while SUAVs perform local delivery and activation of\ncommunication devices. The MUAV also participates in inter-region movement, device\nreplenishment, and retrieval operations. This coordinated mechanism is suitable for rapid\ncommunication restoration in no-signal or weak-signal areas [15,16].\nThe coordinated deployment and routing of MUAV–SUAV systems is related to several\nresearch streams, including UAV routing, heterogeneous fleet routing, truck–drone logistics,\ntime-window routing, location-routing problems, and emergency communication deploy-\nment. Existing studies have investigated truck–drone cooperative delivery, two-echelon\nrouting, drone scheduling, and route optimization under operational constraints [17–21].\nAdaptive genetic algorithms have also been used for heterogeneous multi-UAV task\nassignment [22], while exact and heuristic approaches have been developed for multi-\nechelon drone-routing and truck–drone scheduling problems [ 23,24]. More specifically,\nRef. [25] considers heterogeneous truck–drone cooperative delivery and pickup services.\nIn addition, recent location-sizing and routing studies have shown the effectiveness of\nintegrating location decisions with routing optimization in complex logistics systems [26].\nHowever, most existing methods are designed for conventional logistics delivery or ho-\nmogeneous vehicle routing settings. They usually do not jointly consider the deployment\nand retrieval of emergency communication devices, the dynamic payload evolution of a\nMUAV , SUAV activation cost, rendezvous coordination, and time-window penalties caused\nby delayed communication-device activation. These features make the present power-grid\nemergency communication problem different from standard vehicle routing or truck–drone\ndelivery problems.\nCompared with Ref. [25], the present problem introduces two additional couplings.\nFirst, the MUAV payload changes dynamically because communication devices are de-\nployed and retrieved during the mission. This makes the feasibility of sub-region division\ndependent on the deployment–retrieval payload balance. Second, emergency communi-\ncation devices must be deployed and activated within mission time windows; otherwise,\npenalty costs are incurred.\nTo address the above issues, this paper studies a heterogeneous MUAV–SUAV co-\nordinated deployment-and-routing problem with payload constraints and mission time-\nwindow penalties. The objective is to minimize the total system cost, including platform\nflight cost, SUAV activation cost, and delayed-deployment penalty cost. The proposed\nframework is intended to provide decision support for power-grid emergency commu-\nnication restoration by balancing deployment urgency, UAV resource allocation, and\noperational cost.\nThe main contributions of this paper are summarized as follows.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 3 of 24\nFirst, a heterogeneous MUAV–SUAV coordinated deployment-and-routing model is es-\ntablished for power-grid emergency communication scenarios. Different from conventional\nlogistics routing models, the proposed model considers communication-device deployment\nand retrieval, MUAV payload evolution, SUAV dispatching, platform-dependent flight\ncosts, and mission time-window penalties within a unified cost-minimization framework.\nSecond, a K-means clustering algorithm with neighborhood search (K-means-NS) is\ndeveloped to generate feasible sub-regions before route optimization. The algorithm adjusts\nnoise points through neighborhood search so that the generated sub-regions satisfy SUAV\nendurance constraints, SUAV payload constraints, and the MUAV deployment–retrieval\npayload balance. This provides feasible regional inputs for subsequent coordinated routing.\nThird, an improved adaptive genetic algorithm (IAGA) is designed for coordinated\nMUAV–SUAV route optimization within and between sub-regions. The IAGA adopts hy-\nbrid encoding, feasible-solution adjustment, elitist selection, adaptive crossover–mutation\noperations, and a historical-improvement-based mutation operator. These mechanisms\njointly optimize the MUAV visiting sequence and SUAV task assignment under coupled\npayload and time-window constraints.\nThe remainder of this paper is organized as follows. Section 2 describes the problem\nand formulates the heterogeneous MUAV–SUAV coordinated deployment-and-routing\nmodel. Section 3 presents the two-stage solution framework, including K-means-NS\nclustering and IAGA-based route optimization. Section 4 reports numerical experiments, al-\ngorithm comparisons, and sensitivity analysis. Section 5 concludes the paper and discusses\nfuture research directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 Problem Description",
+      "level": 1,
+      "text": "This paper investigates the optimal cost problem for the coordinated deployment and\nnecessary retrieval of communication equipment in disaster areas by MUAV collaborating\nwith multiple SUAVs, under the dual constraints of mission timeliness and payload ca-\npacity. The total system cost primarily includes the MUAV’s flight cost, the fixed dispatch\ncost for SUAVs, the SUAVs’ flight cost, and penalty costs incurred due to deployment\ndelays at deployment points. Therefore, the problem studied in this paper is defined as a\nheterogeneous MUAV–SUAV coordinated deployment-and-routing problem with payload\nconstraints and mission time-window penalties. For consistency, the MUAV denotes the\nmother UAV , the SUAV denotes the sub-UAV , a deployment point denotes a task point\nwhere a communication device is delivered and activated, a retrieval point denotes a task\npoint where an existing communication device is picked up, and a sub-region denotes a\ntask area assigned for coordinated MUAV–SUAV operation.\nThe following modeling assumptions are adopted in this study:\nThe analytical description below follows a two-stage deployment-and-routing logic.\nThe first stage divides the task area into feasible sub-regions. The second stage optimizes\nthe coordinated routes of MUAVs and SUAVs within and across these sub-regions, as\nshown in Figure 1.\n1. Each dispatch of a SUAV from the MUAV to execute a task incurs a fixed cost, regard-\nless of the flight distance or duration.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 The number of key devices retrieved by the unmanned platform within a sub-area",
+      "level": 1,
+      "text": "and the number of new devices to be deployed must satisfy a dynamic payload and\ncapacity balance constraint for the platform.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 The deployment time of the MUAV or SUAV at any deployment point must be com-",
+      "level": 1,
+      "text": "pleted within the specified time window; exceeding this window incurs a correspond-\ning penalty cost.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 4 of 24",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 To simplify the model, both the MUAV and SUAVs are assumed to fly at constant",
+      "level": 1,
+      "text": "speeds; dynamic speed variations are not considered at this stage. This assumption\nsimplifies the calculation of flight time and operational cost but may affect cost es-\ntimation and route-feasibility evaluation in real post-disaster environments, where\nUAV speed and endurance can be influenced by wind, payload variation, battery\nstate, altitude, route geometry, and weather. Variable speed and payload-dependent\nendurance will be considered in future work.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "5 When the MUAV and a SUAV rendezvous at a predetermined meeting point, the",
+      "level": 1,
+      "text": "party arriving first enters a waiting state (incurring no additional cost) until the other\narrives, after which the handover of communication equipment (for replenishment or\nretrieval) is completed.\nFigure 1. Two-phase solution algorithm flowchart.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 5 of 24",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.1 Modeling of a Heterogeneous Unmanned Platform Emergency System with Mission",
+      "level": 2,
+      "text": "Timeliness Constraints\nIn this paper, the heterogeneous platform coordinated scheduling optimization prob-\nlem is decomposed into two subproblems: MUAV path planning and SUAV path planning.\nAs the MUAV’s payload constraint is introduced, its path planning between sub-regions\nmust not only consider flight distance but also satisfy real-time capacity limitations.\nThe parameters and their meanings are defined in Table 1.\nTable 1. Symbols and descriptions of system.\nParameter Description\nN The total number of points requiring deployment or redeployment of\ncommunication equipment\nP Set of the total number of points requiring deployment of communication\nequipment P = {p1, p2, . . . ,pN}\nA Set of SUAVs, A = {a1, a2, . . . ,an}\nK Subset of deployment point regions, K = {k1, k2, . . . ,kn}, ki represents the i-th\nsub-region\nC Set of cluster centers, C = {c1, c2, . . . ,cn}, ci represents the cluster center of the i-th\nsub-region\nNk Number of deployment point sub-regions\nNs Number of deployment points with deployment demands\nPs Set of deployment points with deployment demands, Ps = {p1, p2, . . . ,pN1}\nNq Number of retrieval points of communication equipment\nPq Set of deployment points with deployment requirements, Pq = {p1, p2, . . . ,pN2}\nNsq Number of deployment points with either deployment or redeployment\nPsq\nSet of deployment points with either deployment or redeployment,\nPsq = {p1, p2, . . . ,pN3}, satisfying Psq = Ps ∩ Pq\nPw Set of deployment points with no demand status, Pw = P − Ps ∪ Pq\nPf Takeoff point for the SUAV swarm within the region\nPl Landing point for the SUAV swarm within the region\nva SUAV flight speed\nvt MUAV flight speed\nPa Set of points traversed by SUAVs within a sub-region, Pa = Pf ∪ Ps ∪ Pl\nPt Set of points traversed by the MUAV within a sub-region, Pt = Pf ∪ Pq ∪ Pl\nPtotal Set of all points, Ptotal = Pf ∪ P ∪ Pl\ne Maximum allowed deployment time for the MUAV or SUAV at a deployment point\nsp\nPenalty cost per unit time when the MUAV or SUAV exceeds the maximum\ndeployment time\nτc Actual deployment time of the MUAV or SUAV at deployment pointpc\n2.2. SUAV Deployment T ask Model for Communication Equipment Under Mission Timeliness and\nPayload Constraints\nThe parameters and meanings of the SUAV are shown in Table 2:\nTable 2. SUAV parameters and descriptions.\nParameter Meaning\nSA Total flight cost of the SUAV swarm within the region\nSk\nA Total flight cost of the SUAV swarm within region k\nSK\na Total flight distance of the a-th SUAV within the area\nSk\na Flight cost of the a-th SUAV within region k\nSk\na(pi,pj) Flight cost of the a-th SUAV from point pi to point pj in region k\nDk\na(pi,pj) Distance traveled by the a-th SUAV from point pi to pj in sub-region k\nDa\nmax Ideal maximum flight range of the a-th SUAV\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 6 of 24\nTable 2. Cont.\nParameter Meaning\nDmax\nMaximum flight distance under ideal maximum payload capacity and\nenergy consumption of the SUAV\nsd Flight cost per unit time for the SUAV\nsa\nf ix Fixed dispatch cost for the SUAV\nQk\na Actual payload capacity of the a-th SUAV at takeoff in sub-region k\nQa\nmax Ideal maximum payload capacity of the a-th SUAV\ndk",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "Weight of the communication device to be delivered to the i-th",
+      "level": 1,
+      "text": "deployment point with deployment demand in sub-region k\nNk\ns Number of deployment points with deployment demand in region k\nThe SUAV deployment subproblem aims to minimize the operational cost of the SUAV\nswarm within each sub-region. The objective function consists of three components: the\nfixed SUAV dispatch cost, the SUAV flight cost, and the penalty cost caused by exceeding the\nmission time window. Based on the parameters and decision variables defined above, the\nSUAV deployment subproblem is formulated in the following standard optimization form:\nmin SA = ∑k∈K Sk\nA (1)\nDk\na = ∑(pi,pj)∈pa,i̸=j Dk\na(pi,pj)\ns.t. Dk\na ≤ Da\nmax\nDa\nmax = Qmax\nQa(p f )\n× Dmax\n(2)\nQk\na ≤ Qa\nmax (3)\ndk\ni ≤ Qa\nmax (4)\n∑\na∈A\nXk\na ≤ |A| (5)\n∑\ni∈ps\ndk\ni = ∑\na∈A\nQk\na ≤ ∑\na∈A\nQa\nmax (6)\n∑a∈A ∑pi∈Ps,i̸=j Xk\na(pi,pj) = 1 (7)\n∑a∈A ∑pi∈Ps,i̸=j ∑pj∈Ps,i̸=j Xk\na(pi,pj) = Nk\ns (8)\nAmong them, (1) is the objective function; constraint condition (2) indicates that the\nactual flight distance of the SUAV does not exceed its maximum flight distance; constraint\ncondition (3) states that the actual payload capacity of the a-th SUAV cannot exceed the\nSUAV’s maximum payload capacity; constraint (4) specifies that the weight of a single\ncommunication device must not exceed the ideal maximum payload capacity of each SUAV;\nin order to minimize the number of round trips and thus reduce the total flight distance,\nconstraint condition (5) stipulates that each SUAV can take off at most once within one\nregion; constraint condition (6) indicates that the total weight of communication devices\nin that region must not exceed the combined maximum payload capacity of all SUAVs;\nand (7) and (8) ensure that all deployment points with deployment demands are served by\nSUAVs exactly once where the binary domains are Xk\na ∈ {0, 1} and Xk\na(pi,pj) ∈ {0, 1}, for all\na ∈ A, k ∈ K, and pi, pj ∈ Pk.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 7 of 24",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Modeling for MUAV Path Planning in Communication Equipment Deployment Under",
+      "level": 2,
+      "text": "Payload Constraints\nMUAV parameters and descriptions are shown in Table 3:\nTable 3. MUAV parameters and descriptions.\nParameter Description\nST Total flight cost of the MUAV\nSk",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "Total flight cost of the MUAV within sub-region k",
+      "level": 1,
+      "text": "So Total flight cost of the MUAV between sub-regions\nsc Flight cost per unit time for the MUAV\nSk\ni(pi,pj)\nFlight cost for the MUAV from retrieval-demand deployment point pi to\nretrieval-demand deployment point pj within sub-region k\nS\n(ki,kj)\no Flight cost for the MUAV from sub-region Ki to sub-region Kj\nQt\nmax Ideal maximum load capacity of the MUAV\nQt\nk Total load of the MUAV before arriving at the k-th sub-region\nQk\nq\nWeight of communication devices to be picked up by the MUAV in the\nk-th sub-region\nbk",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "Weight of the communication device to be picked up from the i-th",
+      "level": 1,
+      "text": "deployment with retrieval demand in sub-region k\nDk\ni(pi,pj)\nDistance traveled by the MUAV from deployment point pi to pj (both\nwith retrieval demand) in sub-region k\nNk\nt Number of customers with retrieval demand in sub-region k\nD\n(ki,kj)\no Distance traveled by the MUAV from sub-region Ki to sub-region Kj\nD Total flight distance of all unmanned vehicles in the collaborative\ndeployment and retrieval system\nS Total flight cost of all unmanned vehicles in the collaborative\ndeployment and retrieval system\nThe binary decision variables used in the SUAV and MUAV routing models are listed\nseparately in Table 4.\nTable 4. Decision variables used in the model.\nVariable Description\nXk\na\nbinary variable that equals 1 if SUAV a is dispatched in sub-region k;\notherwise 0\nXk\na(pi,pj)\nbinary variable that equals 1 if SUAV a travels from node pi to pj in\nsub-region k; otherwise 0\nXk\ni(pi,pj)\nbinary variable that equals 1 if MUAV travels from pi to pj in sub-region\nk; otherwise 0\nXo(ki,kj)\nbinary variable that equals 1 if MUAV moves from sub-region ki to kj;\notherwise 0\nThe MUAV routing subproblem determines both the intra-region retrieval route and\nthe inter-region visiting sequence of the MUAV . The objective function includes the MUAV\nflight cost within sub-regions, the MUAV flight cost between sub-regions, and the penalty\ncost associated with delayed deployment. Based on the parameters and decision variables\ndefined above, the MUAV routing subproblem is formulated in the following standard\noptimization form:\nmin ST = ∑k∈K ∑(pi,pj)∈pt,i̸=j Sk\ni(pi,pj)Xk\ni(pi,pj) + S\n(ki,kj)\no Xo(ki,kj) + sp(τj − eX k\ni(pi,pj))\n+\n(9)\ns.t. 0 ≤ ∑\nk∈K\n∑\na∈A\nQk\na ≤ Qt\nmax (10)\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 8 of 24\n0 ≤ Qt\nk ≤ Qt\nmax (11)\n0 ≤ Qt\nk + ∑\na∈A\nQk\na − Qk\nq ≤ Qmax (12)\nbk\ni ≤ Qt\nmax (13)\n∑k∈K ∑i∈Pq\nbk\ni ≤ Qt\nmax (14)\n∑pi∈Pq,i̸=j Xk\nit(pi,pj) = 1 (15)\n∑pi∈Pq,i̸=j ∑pj∈Pq,i̸=j Xk\nit(pi,pj) = Nk\nt (16)\n∑\nki∈K,i̸=j\nXo(ki,kj) = 1 (17)\n∑kj∈K ∑ki∈K,i̸=j Xo(ki,kj) = Nk (18)\nAmong them, (9) is the objective function; (10) indicates that the total weight of\ncommunication devices to be delivered within the entire deployment area does not exceed\nthe MUAV’s ideal maximum payload capacity; (11) states that before serving the k-th sub-\nregion, the MUAV’s load does not exceed its ideal maximum payload capacity; (12) ensures\nthat after completing the deployment and retrieval tasks in each sub-region, the load inside\nthe MUAV will not exceed its ideal maximum payload capacity; (13) specifies that the\nweight of a single communication device to be picked up cannot exceed the MUAV’s ideal\nmaximum payload capacity; (14) states that the total weight of communication devices to\nbe picked up in the entire task area must not exceed the MUAV’s ideal maximum payload\ncapacity; and constraints (15) and (16) ensure that each retrieval point is served exactly\nonce by the MUAV , while constraints (17) and (18) jointly ensure that each sub-region is\nvisited exactly once by the MUAV . where the binary domains are Xk\ni(pi,pj) ∈ {0, 1} and\nXo(ki,kj) ∈ {0, 1}.\nFinally, the overall objective function integrates the SUAV-related cost and the MUAV-\nrelated cost. The total system cost is minimized as follows:\nminS = SA + ST (19)\nFrom an engineering perspective, the objective functions evaluate both flight distance\nand the operational cost of heterogeneous MUAV–SUAV cooperation. The time-window\npenalty reflects the additional loss caused by delayed communication-device deployment,\nwhile the deployment–retrieval payload balance ensures that the MUAV has sufficient\ncapacity for both newly deployed and retrieved devices. Therefore, payload constraints\nare directly related to route feasibility, since a shorter route may still be infeasible if the\nMUAV or SUAV payload limit is violated. In addition, the rendezvous waiting condition is\ntreated as an operational assumption without introducing additional waiting cost in the\npresent model.\nRemark: This paper extends the Time-dependent Collaborative SUAV Path Planning\nProblem (TDCDPPP) proposed in reference [25] by further introducing the payload con-\nstraint of the MUAV and the mission timeliness constraint for sub-regions. The inclusion\nof these two types of constraints increases the complexity of the problem and enhances\nits alignment with real-world scenarios. The payload constraint not only limits the total\namount of communication equipment the MUAV can carry in a single trip but also, by\ninfluencing the total equipment allocation between the MUAV and UAVs within each\nsub-region, inversely determines the feasibility of the initial sub-region division in the\nfirst stage. Meanwhile, the mission timeliness constraint requires all equipment to be\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 9 of 24\ndeployed within specified time windows, imposing stricter timing requirements on the\ncoordinated path planning of the MUAV and UAVs. These constraints render the Het-\nerogeneous Collaborative Optimization Algorithm (HDFOS) from reference [25] unable\nto directly solve the new problem. Therefore, this paper proposes improvements in a\ntwo-stage algorithm: First, a new clustering algorithm is introduced to generate an initial\nsub-region division that satisfies both payload and timeliness constraints. Second, in the\npath optimization stage, the strategy of separately solving the paths for the MUAV and\nUAVs, as used in the original algorithm, is abandoned. Instead, a unified encoding scheme\nand an integrated mutation operator are designed, merging the path planning for the\nheterogeneous platforms into a single IAGA framework for simultaneous optimization.\nThrough carefully designed genetic operators and adaptive mechanisms, this algorithm\nachieves a higher-quality coordinated scheduling solution while effectively controlling\ncomputational complexity.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3 Optimal Cost Path Planning Algorithm Design",
+      "level": 1,
+      "text": "This section develops a path planning algorithm to minimize the cost of collaborative\ndeployment and retrieval of communication devices by multiple MUAVs and SUAVs, as\ndescribed earlier. Due to the differing roles of MUAVs and SUAVs, we continue to use a\ntwo-stage approach that first clusters the target locations and then solves the path planning\nproblem. The basic steps of the algorithm are as follows: first, deployment points are\ndivided into several sub-regions that satisfy constraints (2–4, 6, 11–13); then, the optimal\npath for MUAV between sub-regions is solved. Here, since only the flight between sub-\nregions by MUAV is considered, only path cost is involved. The MUAV inter-region visiting\nsequence can be abstracted as a TSP subproblem, because only the visiting order and path\ncost between sub-regions are considered at this stage.\nThe algorithm framework is shown as follows:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.1 Clustering Algorithm Design",
+      "level": 2,
+      "text": "Due to the addition of MUAV payload capacity constraints in this paper, clustering\nmust comprehensively consider the total weight of communication devices delivered by\nSUAVs (i.e., satisfying constraints (2–4) and (6)) and the weight of communication devices\nretrieved by MUAV (i.e., satisfying constraints (11–13)). To avoid a situation in any sub-\nregion where the total weight of communication devices to be delivered is less than the\ntotal weight of communication devices to be retrieved, which would lead to exceeding the\nMUAV’s payload capacity constraint, this paper must ensure that after clustering, the total\nweight of communication devices to be deployed in each sub-region is not less than the\ntotal weight of communication devices to be retrieved. The increase in constraint conditions\nand the heightened coupling between MUAVs and SUAVs make the clustering problem\nsignificantly more complex, rendering the clustering method proposed in [25] inadequate.\nFollowing this line of thinking, this subsection improves upon the Ck-means algorithm\nby adding neighborhood search to the original algorithm, designing a K-means clustering\nalgorithm based on neighborhood search.\nObjective function\nJ(K) =min\nnk\n∑\nj=1\n∑\npi∈kj\n\f\f\f\n\f\f\fpi − µ(j)\n\f\f\f\n\f\f\f\n2\n2\n. (20)\n∀(pi ∈ ki)\n\f\f\f\n\f\f\fpi − µ(j)\n\f\f\f\n\f\f\f2 ≤ Da\nmax (21)\n0 ≤ ∑\ni∈pq\nbk\ni ≤ Qt\nmax (22)\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 10 of 24\n0 ≤ ∑\nj∈ps\ndk\nj ≤ ∑\na∈A\nQa\nmax (23)\n∑\ni∈pq\nbk\ni ≤ ∑\nj∈ps\ndk\nj (24)\n∀(k ∈ K)( ∑\ni∈pq\nbk\ni + ∑\nj∈ps\ndk\nj ) > 0 (25)\nAmong them, (20) is the objective function for clustering; (21) indicates that the\ndistance between any deployment point with deployment demand within a sub-region\nand its cluster center does not exceed the maximum flight range of the SUAV; (22) states\nthat the total demand of deployment points requiring retrieval deployment in sub-region\nk does not exceed the MUAV’s maximum load capacity; (23) states that the total demand\nof deployment points requiring deployment in the k-th sub-region does not exceed the\ncombined maximum payload capacity of all SUAVs; (24) states that the total demand for\ndeployment within sub-region k is not less than the total demand for retrieval; (25) ensures\nthat no sub-region consists solely of deployment points with no demand.\nSpecific clustering steps are as follows:\n(a) Cluster the deployment points using the CK-means algorithm to obtain an initial\nclustering result. Since the state of each deployment point is determined by its de-\nployment quantity and retrieval quantity, any deployment point pi can be uniquely\nrepresented by a two-dimensional array, that is pi(wsi, wqi), where wsi and wqi denote\nthe deployment quantity and retrieval quantity of deployment point pi, respectively.\nIt should be noted that the clustering result at this stage already satisfies the payload\ncapacity and range constraints of the SUAVs. Therefore, it is only necessary to further\nadjust the clustering to meet the MUAV’s payload capacity constraint. As the MUAV\nhas no range limitation, the process essentially involves reassigning those deployment\npoints that only require retrieval service, represented aspi(0, wqi), which do not satisfy\nthe requirements within the current clusters.\n(b) Calculate the distances from each cluster center to all others, obtaining a distance\nmatrix between the cluster centers.\n(c) Calculate the deployment volume ∑\nj∈ps\ndk\nj and the retrieval volume ∑\ni∈pq\nbk",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "within each",
+      "level": 1,
+      "text": "sub-region to obtain a set of sub-regions that satisfy constraint (24) (valid) and a set of\nsub-regions that do not satisfy constraint (24).\n(d) Process each sub-region within the set. First, calculate the distances from all deploy-\nment points satisfying pi(0, wqi) to the cluster center within each sub-region. Then\nsort these distances in descending order.\n(e) For each illegal sub-region, sequentially strip away deployment points that satisfy\npi(0, wqi) until the sub-region becomes legal. The stripped deployment points are\ncollectively referred to as noise points.\n(f) Legitimate sub-regions perform a neighborhood search around their cluster centers.\nUnder the premise of satisfying constraint (24), noise points near the cluster center are\nincorporated into the sub-region. This process continues until all noise points have\nbeen assigned, completing the regional division.\nThe pseudocode is provided in Algorithm 1.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 11 of 24\nAlgorithm 1: K-means-NS Pseudocode\nInput : The weight demand of the communication devices to be deployed for the\ni-th deployment di; the weight demand of the communication device to be retrieved for\nthe i-th deployment bi; the ideal maximum payload capacity of the a-th SUAV Qa\nmax; the\nexpected maximum load capacity of the MUAV Qt\nmax; the set of subregions obtained via\nthe CK-means algorithm Kp =\nn\nk1\np, k2\np, . . . ,kn\np\no\n1. Iter = 1 (Iter is the iteration count)\n2. While Iter ≤ size(Kp)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3 If within subregion kiter",
+      "level": 1,
+      "text": "p : ∑\ni∈pq\nbk\ni > Qt\nmax || ∑\ni∈pq\nbk\ni > ∑\nj∈ps\ndk\nj\n4. D ←Calculate the distance from each point to all cluster centers\n5. While ∑\ni∈pq\nbk\ni > Qt\nmax || ∑\ni∈pq\nbk\ni > ∑\nj∈ps\ndk\nj\n6. Noi ← Remove the farthest point pi(0, wqi) from\nsubregion kiter\np and store it in the noise point set Noi",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "7 kiter",
+      "level": 1,
+      "text": "p ← Update deployment points within the subregion",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "8 End while",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "9 Else continue",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "10 End if",
+      "level": 1,
+      "text": "11. Iter = Iter + 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "12 End while",
+      "level": 1,
+      "text": "13. Iter 0 = 1\n14. Iter = 1\n15. While Iter 0 ≤ size(Noi)\n16. While Iter ≤ size(Kp)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "17 If adding the noise point to subregion kiter",
+      "level": 1,
+      "text": "p satisfies\nthe constraints\n∑\ni∈pq\nbk\ni ≤ Qt\nmax && ∑\ni∈pq\nbk\ni ≤ ∑\nj∈ps\ndk\nj",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "18 kiter",
+      "level": 1,
+      "text": "p ← Noi(Iter 0)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "19 End if",
+      "level": 1,
+      "text": "20. Iter = Iter + 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "21 End while",
+      "level": 1,
+      "text": "22. Iter 0 = Iter 0 + 1\nEnd while\nOutput : The set of subregions Kp, Kp =\nn\nk1\np, k2\np, . . . ,kn\np\no\n; the set of cluster centers\nC, C = {c1, c2, . . . ,cn}; the set of noise points Noi\nNote: Not all noise points in Noi can be assigned to feasible sub-regions after neigh-\nborhood search. If a noise point cannot be inserted into any sub-region without violating\nconstraint (24), it is temporarily kept outside the sub-region set rather than being forced\ninto an infeasible cluster. Since the MUAV is not subject to the SUAV range constraint, these\nunassigned noise points are subsequently treated as independent MUAV service points\nand are considered together with the cluster centers during the MUAV inter-sub-region\nroute planning. The MUAV route is then solved under the premise of satisfying the MUAV\npayload constraint.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 12 of 24\n3.2. Design of a Coordinated Deployment Path Planning Algorithm for Heterogeneous Platforms\nWithin Sub-Regions\nFirst, the traversal order between sub-regions is solved using the ant colony algorithm.\nThen, within each sub-region, an IAGA is designed to solve the path planning problem for\nMUAVs and SUAVs with the minimum cost. The SUAV intra-region routing subproblem is\nrelated to the 2p-mVRPTW class because it involves multiple SUAVs, pickup-and-delivery\noperations, and mission time-window constraints. Therefore, this paper takes the minimum-\ncost path planning of the SUAV swarm within a sub-region as an example to illustrate the\nalgorithm design in detail. The specific algorithm design is as follows:\n1. Encoding method and initialization:\nThis paper still adopts the sequence encoding method, setting the population size to\nNp. Each individual’s gene consists of two parts, the routing sequence and the breakpoint\nsequence, and is initialized using prior knowledge. The individual gene is illustrated in\nFigure 2 below:\nFigure 2. Schematic diagram of individual gene sequence encoding.\nThe ‘Routes sequence’ defines the overall task visiting order, and the ‘Interruption\nsequence’ separates the routes of individual SUAVs.\nThe launch point is the location of the deployment point within this region that has\ndeployment or retrieval needs and is closest to the landing point of the previous sub-region\n(or the starting point where the warehouse is located). The endpoint is the cluster center\npoint of the sub-region.\nThe hybrid encoding jointly represents the MUAV visiting sequence and the SUAV\ntask assignment in one chromosome, which allows the fitness function to evaluate hetero-\ngeneous platform coordination directly. The feasibility flag is used to distinguish feasible\nand infeasible individuals after repair, so that infeasible solutions caused by payload or\nrange violations can be retained with lower priority instead of being immediately dis-\ncarded. Compared with a conventional adaptive GA, this design preserves population\ndiversity while guiding the search toward feasible coordinated routes under the coupled\nMUAV–SUAV constraints.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "2 Population Individual Adjustment",
+      "level": 1,
+      "text": "For individuals that do not satisfy the constraint conditions (2–4, 6), the adjustment\nstrategy from [ 25] is still employed to modify them, aiming to make each individual\nfeasible. However, due to the randomness inherent in the initial path permutation and the\ndemand of each deployment point, a small number of individuals may still fail to meet the\nconstraints even after adjustment. Therefore, in this paper, and considering the need for\ngenetic diversity, such individuals are defined as infeasible solutions but are nonetheless\nretained within the population. To distinguish between feasible and infeasible solutions,\nthe encoding of an individual’s gene is adjusted as follows in this paper. It is stipulated\nthat the first code of the individual’s gene serves as a flag bit. If the flag bit is 0, the solution\nrepresented by that individual’s gene is a feasible solution; if the flag bit is −1, it represents\nan infeasible solution.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 13 of 24",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3 Adaptive Configuration",
+      "level": 1,
+      "text": "Inspired by the adaptive setup in genetic manipulation in ref. [22], this paper dynami-\ncally adjusts the number of crossover offspring and mutation offspring within the iteration\nperiod. The adaptive formula is as follows:\nNcr = round [(Np − γ) · e\n(− Niter\nNg )\n] (26)\nNmu = Np − γ − Ncr (27)\nHere, Ng denotes the total number of iterations, Niter denotes the current iteration\nnumber, round [·] represents the rounding operation,Ncr is the number of offspring obtained\nthrough the crossover operator, γ is the number of offspring selected by the selection\noperator to enter the next generation, and Nmu is the number of offspring obtained through\nthe mutation operator.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "4 Selection Operator Design",
+      "level": 1,
+      "text": "First, an elitism approach is adopted to select Ne optimal feasible individuals to\nenter the next generation. Infeasible individuals, which typically violate payload or range\nconstraints, are retained by relaxing these constraints during fitness evaluation. They\nare then evaluated for fitness in the same way as other feasible individuals, so that all\nindividuals in the population can participate in selecting the remaining γ − Ne individuals\nto enter the next generation through a roulette wheel selection method.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "5 Reproduction Operator Design",
+      "level": 1,
+      "text": "The design of reproduction operators mainly includes the design of the crossover\noperator and the mutation operator.\n(a) Crossover Operator Design\nTwo individuals are randomly selected as parents from within feasible solutions,\nbetween feasible and infeasible solutions, and within infeasible solutions, respectively, to\nperform crossover and generate offspring, aiming to achieve global optimization of the\nalgorithm. The specific operation is as follows:\nA conventional crossover algorithm randomly selects a segment of the parents for\ncrossover, generating two offspring. This approach results in low utilization of parental\ngenes and low crossover efficiency. Therefore, to fully utilize the genes of each parent pair,\nthis paper employs a method where a pair of genomes, each with a gene count of ng, are\ncrossed over group by group, with each group consisting of nc genes. This generates a set\nof offspring numbering ng − nc, from which the best individual is selected as the offspring.\nTaking nc = 4 as an example, the specific operation is illustrated in the following Figure 3:\nFigure 3. Selection crossover operator operation diagram. The ellipsis indicates intermediate offspring\ngenerated by the crossover operator that are omitted for clarity.\nhttps://doi.org/10.3390/app16136581\nAppl. Sci. 2026, 16, 6581 14 of 24\n(b) Mutation Operator Design\n(i) For the optimal cost path planning problem for MUAVs, the mutation operator\nin this paper adopts a commonly used multi-point mutation method. This\ninvolves randomly selecting a parent and rearranging chromosomes from\nmultiple parent individuals to generate new offspring.\n(ii) For the optimal cost path planning problem involving multiple UAVs, consid-\nering that the selection of mutation individuals in existing mutation operators\nis random and cannot evolve in a specific direction to find better solutions, this\npaper treats the path segment of each UAV as an operator. By altering the path\nof each UAV to achieve optimal individual cost, the overall optimal cost for\nthe UAV swarm is ultimately realized. However, considering the high time\ncomplexity of mutating the gene segments of all UAV individuals, inspired by\nthe pheromone setting in ant colony optimization algorithms, this paper uses\nthe change in fitness value of each UAV in the parent individual as a reference\nfor selecting each UAV’s path segment in the next iteration. The roulette wheel\nalgorithm is employed to select only one UAV’s path segment for rearrange-\nment in each iteration. Consequently, a larger change in the fitness value of\na UAV’s path segment indicates greater room for improvement, and thus a\nhigher probability of being selected in the next iteration, allowing the parent\nindividual to exhibit a trend of evolution towards optimizing the objective\nfunction. This operator thereby serves the algorithm’s function of local search.\nThe pseudo code is provided in Algorithm 2:\nAlgorithm 2: IAGA pseudo code.\nInput : Sub-region setKp, Kp =\nn\nk1\np, k2\np, . . . ,kn\np\no\n; Cluster center setC, C = {c1, c2, . . . ,cn}\n; Number of SUAVs Na; Population size Np; Number of iterations x; Noise point Noi\n1. Pf p ←Calculate the deployment point in the next sub-region that is closest to the\nprevious sub-region1.\n2. C ←The cluster center set C serves as the destination\n3. Iter 0 = 1 (Iter 0 is the iteration count)\n4. While Iter 0 ≤ Sizeo f (Kp)",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a2"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "5 R, Dr Initialize the population to obtain path genes R and interrupted",
+      "level": 1,
+      "text": "genes Dr\n6. Iter 1 = 1\n7. While Iter 1 ≤ x\n8. i = 1\n9. While i ≤ Np",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "10 If Ri, Dri Constraints are not met",
+      "level": 1,
+      "text": "11. Ri, Dri←Adjust the path genes and interrupted genes of individuals that\ndo not meet the constraints",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "12 End if",
+      "level": 1,
+      "text": "13. Fit(i) ← Calculate the fitness value for each individual\n14. ki\np ← Assign labels to the deployment points in each subregion",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "15 End while",
+      "level": 1,
+      "text": "16. ### Design of Selection Operator ###\n17. Ne ← Select the optimal individual Ne through elitism\n18. R, Dr ← Select γ − Ne individuals as offspring using the roulette wheel method\n19. ### Design of Crossover Operator ###\nhttps://doi.org/10.3390/app16136581",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Two-phase solution algorithm flowchart."
+    },
+    {
+      "id": "f2",
+      "caption": "Schematic diagram of individual gene sequence encoding."
+    },
+    {
+      "id": "f3",
+      "caption": "Selection crossover operator operation diagram. The ellipsis indicates intermediate offspring"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Symbols and descriptions of system."
+    },
+    {
+      "id": "t2",
+      "caption": "SUAV parameters and descriptions."
+    },
+    {
+      "id": "t3",
+      "caption": "MUAV parameters and descriptions."
+    },
+    {
+      "id": "t4",
+      "caption": "Decision variables used in the model."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "K-means-NS Pseudocode"
+    },
+    {
+      "id": "a2",
+      "caption": "IAGA pseudo code."
+    }
+  ],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 4,
+    "n_algorithms": 2,
+    "n_equations": 2
+  }
+}

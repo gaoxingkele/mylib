@@ -1,0 +1,524 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p1_twin_gru_dispatch/p1_twin_gru_dispatch__10__self_unit_commitment_of_combined_cycle_units_with_real_operational_con__c6281ef483.pdf",
+  "n_pages": 18,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "28015 Madrid, Spain",
+      "level": 1,
+      "text": "* Correspondence: maurgonzalez@utb.edu.co\nAbstract: This paper highlights the importance of accurately modeling the operational constraints\nof Combined-Cycle Gas Turbines (CCGTs) within a unit-commitment framework. In practice, in\nColombia, when given an initial dispatch by the Independent System Operator, CCGT plants are\noperated according to the results of heuristic simulation codes. Such heuristics often omit technical\noperating constraints, including hot, warm, or cold startup ramps; the minimum operation hours\nrequired for a gas turbine to start a steam turbine; the relationship between the dispatched number of\nsteam and gas turbines; the load distribution among gas turbines; and supplementary fires. Most unit-\ncommitment models in the literature represent standard technical constraints like startup, shutdown,\nup/down ramps, and in some cases, supplementary fires. However, they typically overlook other\nreal-life CCGT operating constraints, which were considered in this work. These constraints are\ncrucial in integrated energy systems to avoid equipment damage, which can potentially put CCGT\nplants out of service and ultimately lead to lower operating costs.\nKeywords: Combined-Cycle Gas Units (CCGs); unit commitment; steam turbines; startup ramps",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.1 Motivation",
+      "level": 2,
+      "text": "In modern power systems, power plant operators and Independent System Operators\n(ISOs) rely on mathematical models to simulate various operating conditions for specific\nscenarios, ensuring power system security and reliability. These models are crucial, espe-\ncially for Combined-Cycle Gas Turbine (CCGT) plants, which are prevalent worldwide\ndue to their high efficiency and flexibility in integrating renewable energy resources [ 1–3].\nAccurate representation of CCGTs’ operational elements is essential for simulating the\ncorrect power output available to the ISO for meeting demand and avoiding equipment\ndamage [4–6].\nThe Colombian power system, with its diverse CCGT plants, exemplifies this need.\nThe largest plant, TEBSA, located in northern Colombia with a 5 × 2 configuration (5 gas\nturbines and 2 steam turbines), plays a vital role in system reliability and security. Its\nactual power output depends on the thermal states of the gas turbines and their interaction\nwith the steam turbines, which require specific temperature and pressure conditions to\noperate effectively.\nCurrently, most Colombian CCGT plants, including TEBSA, lack a mathematical\noptimization model for detailed operation planning based on dispatch. Moreover, the\nColombian ISO lacks a faithful technical representation of these plants. This gap often leads\nto operational inefficiencies and technical issues, such as equipment failures or deviations\nfrom unit-commitment programs. For instance, TEBSA’s operations often assume a hot\nstartup condition or overlook the minimum number of gas units needed for steam turbine\nEnergies 2024, 17, 51. https://doi.org/10.3390/en17010051 https://www.mdpi.com/journal/energies\nEnergies 2024, 17, 51 2 of 18\noperation, leading to preventable equipment issues [7] (see Figure 1). Addressing these\nchallenges requires a comprehensive optimization model that accurately represents the\ncomplex operating conditions of CCGTs.\nFigure 1. Steam turbine equipment failures due to inadequate steam temperature and pressure\nconditions.\nTherefore, this paper proposes a Self-Unit-Commitment (SEUC) model, formulated as\na Mixed-Integer Programming (MIP) problem, to address these challenges and to accurately\nrepresent the detailed operating conditions of a CCGT plant given a specific dispatch.\nThe model introduces two novel aspects: firstly, it considers the minimum operation\nhours required for a gas turbine to start a steam turbine, a factor not previously included\nin existing Unit-Commitment (UC) models to the best of our knowledge; secondly, it\naccounts for the load distribution among gas turbines. A crucial feature of our model is its\ntreatment of the CCGT plant, representing gas and steam turbines separately, rather than\nas a single entity. This granular representation enables the ISO to execute a more-precise\nunit-commitment plan for these plants, ensuring better accuracy in active and reactive\npower output. Such accuracy is vital for supporting grid constraints and adhering to the\noperational rules of the CCGT, thereby reducing program deviations (Although reactive\npower output is not directly considered, the model’s active power outputs for each CCGT\nunit can be utilized in power system analysis software by the ISO, where the capability\ncurve of each unit at different voltage levels is modeled). Furthermore, this model can be\nintegrated into a broader UC framework for dispatching CCGT plants within a general\npower system.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1.2 Literature Review",
+      "level": 2,
+      "text": "Modeling approaches for Combined-Cycle Gas Turbines (CCGTs) in the literature vary\nsignificantly. One method involves representing CCGT components individually, focusing\non the separate functionality of gas and steam turbines, as seen in studies like [ 8–13].\nAnother common approach models the entire CCGT plant using configurations or modes,\nas detailed in [ 2,14–22]. Our work adopted an individual component representation,\nbut included constraints typical of CCGT configurations, such as power output limits,\nstartup/shutdown ramps, and the number of gas and steam units. This approach is similar\nto that in [12], but our model uniquely combines both component and mode models.\nCCGTs are often modeled using either configurations or individual representations\nof gas and steam turbines. Works like [ 2,14,18] propose a Mixed-Integer Programming\n(MIP) model for Unit Commitment (UC), considering CCGT operation modes and ad-\nEnergies 2024, 17, 51 3 of 18\ndressing ramping and minimum uptime/downtime constraints. They also consider\nstartup/shutdown costs associated with mode transitions, improving computational per-\nformance. However, these models typically overlook operational constraints like the\nminimum operation hours required for a gas turbine to start a steam turbine and load\ndistribution requirements.\nRefs. [8,9] propose componentwise formulations for CCGTs, incorporating them into\nUC problems. These models address the interdependence of gas and steam turbines, with\nthe steam turbine’s power output dependent on the gas turbine’s performance. Ref. [ 8]\nfocuses on ramping constraints on a minute-by-minute basis, aligning with the hourly\ndispatch requirements of the Colombian energy market. However, this model does not\nconsider crucial constraints like minimum startup hours, differentiation between hot and\ncold startups for steam turbines, and the load distribution among gas turbines, which are\nessential for maintaining operational integrity and preventing equipment failures.\nOur work presents a hybrid model that captures the benefits of both component-\nand configuration-based approaches. Unlike [23], which proposes a similar hybrid model,\nour approach is tailored to the Colombian energy market framework, considering the\nspecific operational constraints and bidding policies for CCGT units. We incorporated\nsupplementary fires, an element also modeled in [8,23], which enhance the steam turbine’s\npower output without increasing the gas turbine’s output. This was achieved using the Heat\nRecovery Steam Generator (HRSG), with the assumption that steam quality is maintained\nwhen the operational constraints are met.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "1.3 Contributions",
+      "level": 2,
+      "text": "The main contributions of this paper are as follows:\n• The introduction of the SEUC model for CCGT hourly dispatch, accommodating\nindividual the minimum uptime/downtime constraints for each gas and steam unit,\nramp rates, and operational rules for steam turbines, including the requisite number\nof gas turbines for optimal steam production.\n• The incorporation of steam turbine startup processes in the model, taking into account\nthe thermal state of each unit (hot or cold) and the minimum operation hours required\nfor a gas turbine to initiate a steam turbine.\n• The implementation of a load distribution constraint among gas turbines. This feature\nis crucial for maintaining uniform temperature conditions across the steam turbine\nrotors, thereby preventing thermal stress and ensuring consistent steam production\nfor the steam turbines.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 Mathematical Formulation",
+      "level": 1,
+      "text": "In this section, we present the novel mathematical formulation of the Self-Unit-\nCommitment (SEUC) model of a CCGT.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.1 Objective Function",
+      "level": 2,
+      "text": "The self-unit commitment of the CCGT presented in this paper aims at minimizing\nthe total operational cost of the CCGT given by the following components: (i) the cost of\nthe CCGT in each hourly period; (ii) the cost of non-served energy, the energy related to\nthe wasted steam, and the auxiliary consumption; (iii) the startup costs of the gas turbines;\n(iv) the costs related to the additional fire, as follows:\n∑\nt∈≪\n∑\nc∈NC\nPCC · (gtc + a ftc) + ∑\nt∈≪\nPBC · (grt + ft)+\n∑\nt∈≪\n∑\nc∈NC\nCSC · ytc + ∑\nt∈≪\n∑\ns∈NS\nCSS · yts+\n∑\nt∈≪\n∑\nc∈NC\n∑\ncc̸=c∈NC\nDSC · vhdr t,c,cc + ∑\nt∈≪\nCCC · cct\n(1)\nEnergies 2024, 17, 51 4 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2 CCGT Operational Constraints",
+      "level": 2,
+      "text": "This section describes the constraints related to the energy balance and limits to the\noperational constraints for each unit and the CCGT.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.1 Energy Balance Constraints",
+      "level": 3,
+      "text": "Constraint (2) outlines the load to be met, whereLt represents the initial input load and\ngrt denotes the energy that the CCGT is unable to serve. The variable et is a slack variable\nintroduced to prevent infeasibilities during the startup and shutdown ramps when the\nCCGT output falls below the minimum output of the configuration. Lastly, gcct t signifies\nthe total output of the CCGT.\ngcct t + grt − et = Lt ∀t (2)\n0 ≤ et ≤ GCC ∀t (3)\nEquations (4)–(6) delineate the operational limits, specifically the minimum and maxi-\nmum output of the gas turbines gtc, steam turbines gts, and the CCGT gcct. The term gcct\nspecifically refers to the total output when the CCGT is operating in combined-cycle mode.\n2.2.2. Gas Turbines’ Operational Limits\nEquations (4) and (5) define the maximum and minimum output limits for each gas\nand steam turbine unit, respectively.\nGc · utc ≤ gtc ≤ Gc · utc ∀t, c (4)\n2.2.3. Steam Turbines’ Operational Limits\nThe minimum output limit outlined in Equation (5) is associated with Equation (32),\nwhich equals 1 to accommodate either a hot or cold startup of a steam turbine. Following\nthis logic, for a hot or cold startup of a steam turbine, the term (uts − yts) equals zero. This\nallows the output of the steam turbine to match the output value determined for each\nrespective thermal status startup.\nGs · (uts − yts) ≤ gts ≤ Gs · uts ∀t, s (5)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.2.4 Combined-Cycle Operational and Commitment Limits",
+      "level": 3,
+      "text": "GCC · cct ≤ gcct ≤ GCC · cct ∀t (6)\ncct − ∑\ns∈NS\nuts ≤ 0 ∀t (7)\nMUG · cct − ∑\nc∈NC\nutc ≤ 0 ∀t (8)\nMUG · uts ≤ ∑\nc∈NC\nutc ∀t, s (9)\n∑\ns∈NS\nuts ≤ ∑\nc∈NC\nutc ∀t (10)\nvht ≤ GCC · (1 − cct) ∀t (11)\nConstraints (7) through (10) define the minimum number of gas units required for a\ncoupled operation in a combined cycle with steam turbines. Specifically, the inequality\n(10) ensures that the number of online steam units does not exceed the number of gas\nturbine units.\nConstraint (7) ensures that only one steam unit will be dispatched if the plant is operat-\ning in combined-cycle mode. Lastly, the constraints (8) and (9) ensure that a combined-cycle\noperation is only possible when the minimum number of gas turbines (MUG)is dispatched.\nEnergies 2024, 17, 51 5 of 18",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.3 Constraints Related to The Combined-Cycle Operation",
+      "level": 2,
+      "text": "The following constraints represent the combined-cycle operation associated with the\ncoupled operation between gas turbines and steam turbines.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.3.1 CCGT Output Constraints",
+      "level": 3,
+      "text": "gcct + vht = ∑\nc∈NC\ngtc + ∑\ns∈NS\ngts − auxg t ∀t (12)\ngcct t = gcct + ddet + ndet ∀t (13)\nEquations (12) and (13) represent the total generation of the CCGT including the\ncontribution of the gas turbines ∑c∈NC gtc and the steam turbines ∑s∈NS gts and subtracting\nthe auxiliary energy consumption auxg t.\nOn the other hand, Equation (13) describes the total output of the CCGT gcct t. This is\nequal to the output of the CCGT gcct when operating in combined-cycle mode, plus the\nstartup and shutdown output ramps (ddet and ndet, respectively).\n2.3.2. Steam–Gas Coupling Operation Constraints\n∑\ns∈NS\ngts + gvsc t = STF · ∑\nc∈NC\ngtc+ ∑\nc∈NC\na fts ∀t (14)\na fts ≤ PAF · utc ∀t, s (15)\ngvsc ts ≤ ∑\ns∈NS\nGs · (uts + uts) ∀t (16)\n∑\ns∈NS\ngts ≥ uts · ∑\ns∈NS\nGs ∀t (17)\nEquation (14) relates the energy produced by steam turbines as a function of the energy\nproduced by gas turbines. The STF (For the sake of simplifying our model, we assumed a\nconstant steam-to-gas output factor, directing our focus towards resolving the operational\nconstraints linked to the steam turbines. Indeed, a more-precise approach accounting\nfor variable steam-to-gas output ratios could be proposed as an area for future research).\nrelates the amount of energy produced for each MW produced by the gas turbine. Also,\nthe energy produced by the steam turbines depend on the status of the additional fire\na f, which depends on the status of the gas turbine, i.e., there are supplementary fires for\neach gas turbine that can increase the output of the steam turbine unit until the maximum\ncapacity of the unit. Each additional fire is represented by the inequality (15). Also, for a\ncertain level of load, the control valves of the steam turbines are fully open, and the HRSGs\nare then used to increase or decrease the pressure rating in the turbines.\nIn the same Equation (14), the steam waste gvsc t is represented, which represents the\namount of energy that is no longer delivered when it is not possible to take advantage of\nall the steam generated by the gas turbines. This variable is defined by Equation (16), and\nits quantity is limited by the maximum capacity that a steam turbine can deliver, as long as\nit is online.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.3.3 CCGT Auxiliary Consumption",
+      "level": 3,
+      "text": "auxg t = AUXCC · cct + AUXGT · ∑\nc∈NC\nutc+\nAUXST · ∑\ns∈NS\nuts ∀t (18)\nEquation (18) represents the maximum and minimum limits of auxiliary consumption\nauxg t, both for steam turbines and for gas turbines. It is important to note at this juncture\nthat auxiliary consumption is considered only when each unit, be it a gas or steam turbine,\nis in operation. For this reason, each value of auxiliary consumption is multiplied by the\nEnergies 2024, 17, 51 6 of 18\non/off binary variable of each unit. The same principle applies to the combined-cycle mode\noperation cct.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.4 Minimum Uptime and Downtime Constraints",
+      "level": 2,
+      "text": "The following constraints represent the minimum uptime and downtime for each gas\nand steam unit and CCGT, adopted from [ 4,5]. Equation (19) describes the startup and\nshutdown processes for each gas turbine, steam turbine, and the entire CCGT plant.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.4.1 Gas Turbines Minimum Uptime and Downtime Constraints",
+      "level": 3,
+      "text": "Delving into the details of Equation (19), one can observe the following: If the variable\nut,c/s/cc transitions from 0 at period t − 1 to 1 at period t, this indicates a startup of the\nunit or plant, denoted as yt,c/s/cc = 1. Conversely, if the unit or plant transitions from\nut−1,c/s/cc = 1 in t − 1 to ut,c/s/cc = 0 at period t, the equation signifies a shutdown,\nrepresented by zt,c/s/cc = 1.\nyt,c/s/cc − zt,c/s/cc = ut,c/s/cc − ut−1,c/s/cc ∀t, c, s, cc (19)\nFor the first period, variable ut−1 has to be replaced in constraint (19) by OnO f f ,\nconsidering the initial conditions of the gas and steam turbines.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.4.2 Startup and Shutdown Mutually Exclusive Variables",
+      "level": 3,
+      "text": "yt,c/s/cc + zt,c/s/cc ≤ 1 ∀t, c, s, cc (20)\nEquation (20) ensures that a startup and shutdown do not occur simultaneously within\nthe same period.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.4.3 Status to Reach The Minimum Uptime/Downtime",
+      "level": 3,
+      "text": "ut,c/s/cc = OnO f f t = 1; ∀c, s, cc,\nLupmin + Ldownmin > t (21)\nEquation (21) sets the variable ut,c/s/cc to the value of the initial status at period 1 if the\nminimum uptime and the minimum downtime have not been met. To clarify, if the unit was\n“on” during the last period of the previous day and has not yet fulfilled the required number\nof periods in that state, it must remain online until it completes the minimum uptime. The\nsame logic applies when the unit is in the “off” condition. These conditions are effectively\naddressed by the constraints (22) and (23), which are detailed in the subsequent sections.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "2.4.4 Minimum Uptime and Downtime Condition Constraint",
+      "level": 3,
+      "text": "ut,c/s/cc ≥ ∑\nc,s∈N\nyi,c/s/cc ∀t, c, s, cc\ni ≥ t − UT + CountOn · max (0, 2 − i) +1,\ni ≤ t (22)\nEquation (22) sets the variable ut,c/s/cc to be greater than 0 to ensure the unit meets\nthe minimum uptime, UT.\n1 − ut,c/s/cc ≥ ∑\ni∈τ\nyi,/c/s/cc ∀t, c, s, cc,\ni ≥ t,\ni ≥ (t − DT + 1) (23)\nOtherwise, Equation (23) sets the left side of the equation 1 − ut,c/s/cc to be greater\nthan 0 to ensure the unit meets the minimum downtime, DT.\nEnergies 2024, 17, 51 7 of 18\n2.5. Ramps’ Constraints\nThe following equations represent the ramping constraints for the CCGT. Constraints\n(24)–(30) represent the startup ( ddet) and shutdown ( ndet) constraints proposed by [ 24].\nAs previously noted, the Colombian ISO adheres to the startup and shutdown guidelines\noutlined in [7]. According to these guidelines, thermal power plants are required to follow\na predetermined startup sequence, using hourly energy blocks that progress from 0 to the\nplant’s minimum power output. Similarly, during shutdown, the plant should adhere to\nthe declared hourly energy blocks, descending from the minimum generation output to\n0. It is essential to specify that these startup ramps are determined based on the thermal\nstatus of the plant, namely: hot, warm, and cold conditions, which are described as follows.\nTwo types of overlaps between states arise during the application of startup ramps,\nespecially in periods adjacent to those defining each state. The first overlap concerns the\nchange in thermal state amidst the startup ramp process. For instance, while applying fixed\nincrease blocks for the ‘hot’ condition, the resource might transition to the ‘warm’ state.\nThe second overlap stems from the varied count of fixed increase blocks assigned to each\nthermal state, leading to a situation where the commencement of fixed blocks for the suc-\nceeding state overlaps with the current state. This is evident when, to implement the fixed\naugmentation blocks for the ‘cold’ state, initiation in the ‘warm’ state becomes necessary.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "2.5.1 Hot Startup Ramp Constraints",
+      "level": 3,
+      "text": "For periods when the CCGT is deemed to be in a ‘hot’ thermal state (t + to f f ≤ te1),\nthe programmed generation conforming to the startup ramp is governed by Equation (24).\nThis constraint integrates two components: the first delineates the ‘hot’ energy blocks,\nwhile the second encompasses the ‘warm’ fixed energy blocks that need to be factored in\nduring a ‘hot’ startup process for the CCGT.\nddet =\nnSe1\n∑\ni=1\nSe1 · yt+i +\nnSe2\n∑\nj=1\nSe2 · yt+j\n∀ t + to f f ≤ te1 (24)\nyt = 0 to f f ≤ te1; t ≤ nSe1 (25)\nIf the CCGT begins in an offline state and the conditions for a ‘hot’ startup ramp\nremain viable (i.e., to f f ≤ te1), the plant can initiate a startup during periods when those\nfixed energy blocks are achievable. To facilitate this, the constraints (25) ensure the variable\nyt = 0 for periods where the CCGT cannot fulfill all the requisite startup energy blocks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "2.5.2 Warm Startup Ramp Constraints",
+      "level": 3,
+      "text": "For periods when the CCGT is deemed to be in a ‘warm’ thermal state ( te1 < t +\nto f f ≤ te2), the programmed generation conforming to the startup ramp is governed by\nEquation (26). This constraint integrates three components: the first delineates the ‘hot’\nenergy blocks that began to be applied in the ‘warm’ state; the second represents the fixed\naugmentation blocks to make the ‘warm’ startup; the third represent the ‘cold’ fixed energy\nblocks that need to be factored in during a ‘warm’ startup process for the CCGT.\nddet =\nnSe1\n∑\ni=1\nSe1 · yt+i +\nnSe2\n∑\nj=1\nSe2 · yt+j+\nnSe3\n∑\nk=1\nSe3 · yt+k ∀te1 < t + to f f ≤ te2 (26)\nyt = 0 ∀te1 < t + to f f ≤ te2; t ≤ nSe2 (27)\nIf the CCGT begins in an offline state and the conditions for a ‘warm’ startup ramp\nremain viable (i.e., te1 < to f f ≤ te1), the plant can initiate a startup during periods when\nthose fixed energy blocks are achievable. To facilitate this, the constraints (27) ensure\nEnergies 2024, 17, 51 8 of 18\nthe variable yt = 0 for periods where the CCGT cannot fulfill all the requisite startup\nenergy blocks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "2.5.3 Cold Startup Ramp Constraints",
+      "level": 3,
+      "text": "For periods when the CCGT is deemed to be in a ‘cold’ thermal state (t + to f f > te2),\nthe programmed generation conforming to the startup ramp is governed by Equation (28).\nThis constraint integrates two components: the first delineates the ‘warm’ energy blocks\nthat began to be applied in the ‘cold’ state, and the second represents the fixed augmentation\nblocks to make the ‘cold’ startup.\nddet =\nnSe2\n∑\nj=1\nSe2 · yt+j+\nnSe3\n∑\nk=1\nSe3 · yt+k∀ t + to f f > te2 (28)\nyt = 0 ∀ to f f > te2; t ≤ nSe3 (29)\nIf the CCGT begins in an offline state and the conditions for a ‘cold’ startup ramp\nremain viable (i.e., to f f > te2), the plant can initiate a startup during periods when those\nfixed energy blocks are achievable. To facilitate this, the constraints (29) ensure the variable\nyt = 0 for periods where the CCGT cannot fulfill all the requisite startup energy blocks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "2.5.4 Shutdown Ramp Constraint",
+      "level": 3,
+      "text": "Equation (30) characterizes the shutdown process using fixed energy blocks.\nndet =\nnSr\n∑\ni=1\nSri · zcct − i + 1 ∀t t ≤ i (30)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "2.5.5 Operating Ramp Constraints",
+      "level": 3,
+      "text": "Constraint (31) represent the ramping constraint between two consecutive hours.\n−RD ≤ gcct t − gcct t−1 ≤ RU ∀t (31)\nEquation (31) stipulates that the variation in the output from one hour to the next is\nconstrained to RU and RD for upward and downward changes, respectively. Here, RU and\nRD represent the maximum block of energy that the CCGT can increase or decrease from\none hour to the next, based on the configuration or mode selected a priori for operation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "2.6 Steam T urbine Startup",
+      "level": 2,
+      "text": "Constraint (32) introduces two binary variables that distinguish between a cold (C)\nand hot (H) start of the steam turbine. Constraint (33) stipulates that a hot start cannot be\nperformed unless the steam turbine has been dispatched within the preceding 9 h.\nConstraint (34) asserts that a hot start for the steam turbine is not possible unless at\nleast one of the gas turbines was connected in the previous hour.\nyt,s = yC\nt,s + yH\nt,s ∀t, s (32)\nyH\nt,s ≤ AA t,s +\nt−1\n∑\nj=t−8\nuj,s ∀t, s (33)\nyH\nt,s ≤ ∑\nc\nut−1,c ∀t > 1, s (34)\nyH\nt,s ≤ ∑",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "ono f f t0",
+      "level": 1,
+      "text": "c ∀t = 1, s (35)\nEnergies 2024, 17, 51 9 of 18\nBBt,c +\nt\n∑\nj=t−2\nuj,c ≥ KMH · bt,c ∀t, c (36)\nyC\nt,s ≤ ∑\nc\nbt,c ∀t, c (37)\nyt,s, yC\nt,s, yH\nt,s, bt,c ∈ {0, 1} ∀t, s, c (38)\nConstraint (36) introduces an auxiliary binary variable, bt,c, which is set to 1 if a gas\nturbine has been connected during the last KMH hours and 0 otherwise. Constraint (37)\nmodels the condition that a cold start (or any startup, for that matter) cannot be performed\nunless at least one of the gas turbines has been connected for the past 6 h. Finally, the\nconstraint (38) designates the new variables as binary.\nThe startup of a steam turbine depends on the unit’s temperature in each period,\nwhich, in turn, depends on the number of hours the unit has been offline. Once the number\nof hours that the steam turbine is in a cold state (denoted as KST) is defined, it is necessary\nto determine the number of hours that must have elapsed since the first gas turbine started.\nThis is crucial to ensure the temperature required for the steam turbine startup is reached.\nWe define KGC for a cold startup and KGH for a hot startup.\nThe following constraints depict how the steam turbine should be started, taking into\naccount the unit’s state (cold or hot startup) as explained above.\nAnother crucial aspect to consider for the steam turbine startup is the power output in\nthe first time period. For a cold startup, the power output should be at a low load to prevent\nthermo-mechanical damage. The subsequent constraints represent the power output of\nthe steam turbine unit at startup, taking into account the type of startup, i.e., cold startup\n(GTSC ) or hot startup (GTSH ):\ngt,s ≤ GSTC · yC\nt,s+\nGSTH · yH\nt,s + Gs · (ut,s − yt,s) ∀t, s (39)\ngt,s ≥ GSTC · yC\nt,s + GSTH · yH\nt,s ∀t, s (40)\nFigure 2, adopted from [13], summarizes the previous steam turbines startup explained\nin the set of equations from (32) to (40).\nFigure 2. Cold and hot steam turbine startup and shutdown condition.\n2.7. Load Distribution between Gas T urbines’ Constraints\nLoad Distribution Constraint\nThe following set of constraints capture the fact that CCGT operators strive to achieve\na similar power output among the gas turbines that operate above their technical minimum.\nFor that purpose, we introduce the following constraints, which establish the absolute\nvalue of the difference in power output between two different gas turbines.\nEnergies 2024, 17, 51 10 of 18\ngcdr tc − gcdr tcc ≤ ∆t,c,cc ∀t, cc ̸= c (41)\n∆t,c,cc ≥ 0 ∀t, cc ̸= c (42)\nNote that this difference gcdr tc − gcdr tcc could be either positive or negative; however,\nif gcdr tc − gcdr tcc is negative, then gcdr tcc − gcdr tc will be positive, yielding a positive lower\nbound for ∆t,cc,c. We leave one of the sums on purpose in order to not count the power\ndeviation twice.\nThis difference in power output could be penalized in the objective function value;\nhowever, we can only take it into account if both gas turbines are actually above the\ntechnical minimum (It should not be taken into account when one gas turbine is off, and\nthe other one is above the technical minimum,) . Hence, we define binary variable δt,c,cc,\nwhich takes a value of 1 if both gas turbines are above the technical minimum:\nutc + utcc ≤ 1 + δt,c,cc ∀t, cc ̸= c (43)\n∆t,c,cc − GCC · (1 − δt,c,cc) ≤ vhdr t,c,cc ∀t, cc ̸= c (44)\nδt,c,cc ∈ {0, 1} ∀t, cc ̸= c (45)\nGCC ≥ vhdr t,c,cc ≥ 0 ∀t, cc ̸= c (46)\nHowever, when the load distribution among the gas turbines is unequal, the steam\ndelivered through the common collector exhibits varying thermal characteristics. This leads\nto temperature differences between the surface and the center of the steam turbine rotors,\nwhich can cause long-term damage.\nIn practical applications, maintaining an equal load distribution may not always be\nfeasible. For instance, depending on the grid’s condition, the ISO may require more output\npower from a specific gas turbine unit than from others. Despite this, the ISO strives to\nadhere to this constraint as closely as possible during operations.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "3 Results and Discussion",
+      "level": 1,
+      "text": "This section presents the analysis of two distinct numerical case studies:\n(I) The first case involves a CCGT that is operational at the end of the previous day\nand, then, shuts down at the beginning of the analyzed day, only to restart and reach the\nmaximum output capacity by the day’s end.\n(II) The second case examines a scenario where the CCGT is initially offline on the\nanalyzed day, but starts up later, eventually achieving maximum output capacity by the\nend of the day.\nThe input parameters for both cases are detailed in Table 1. Additionally, the startup\nand shutdown ramping processes for these scenarios are outlined in Table 2.\nTable 1. CCGT parameters.\nVariable Value Unit\nGCC 800 MW\nGCC 210 MW\nPAF 15 MW\nAUXCC 5 MW\nAUXGT 0.45 MW\nAUXST 2 MW\nRD/RU 335 MWh\nPCC 120 USD/MWh\nPBC 500 USD/MWh\nCSC 15,000 USD\nEnergies 2024, 17, 51 11 of 18\nTable 1. Cont.\nVariable Value Unit\nMUG 2 p.u.\nSTF 0.613 p.u.\nNC 5 p.u.\nNS 2 p.u.\nt1 t <= 16 Hours\nt2 16 < t <= 30 Hours\nt3 t > 30 Hours\nKGC 3 Hours\nTable 2. Startup and shutdown ramps.\nHour H-Startup W-Startup C-Startup Shutdown\nH1 50 50 50 210\nH2 100 100 100 100\nH3 150 100 100 50\nH4 210 150 100 0\nH5 0 210 150 0\nH6 0 0 210 0\nFor the cases simulated in this work, NC gas turbines and NS steam turbines have the\nsame characteristics. Figure 3 shows the general scheme of the CCGT plant considered for\nthe simulations.\nFigure 3. The 5 × 2 CCGT scheme.\nEnergies 2024, 17, 51 12 of 18\nTables 3 and 4 show the characteristics of the gas and steam turbine units.\nTable 3. Gas turbines.\nVariable Value Units\nG 100 MW\nG 50 MW\nTC 5 MW/min\nTD 5 MW/min\nTable 4. Steam turbines.\nVariable Value Units\nG 170 MW\nG 80 MW\nGSTH 80 MW\nGSTC 30 MW",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2",
+          "t3",
+          "t1",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3.1 Case I",
+      "level": 2,
+      "text": "The initial conditions for the CCGT are outlined in Table 5. In Figure 4, the actual\nCCGT operation (discontinuous red line) is shown to deviate from the initial dispatch L\ndue to the ramping constraints. Specifically, the model initiates a shutdown ramp in period\n5, rendering the CCGT offline until period 15, followed by a hot startup ramp. Notably, the\nmodel ramps up in period 19, achieving the maximum CCGT capacity from periods 20 to\n22, as necessitated by the constraint (31).\nTable 5. Initial conditions of units—Case I.\nUnit ton/o f f (Hours) Gt0 (MW)\nGT1 8 67\nGT2 0 0\nGT3 0 0\nGT4 0 0\nGT5 8 67\nST1 8 83\nST2 0 0\nFigure 4. CCGT power output vs. initial load for Case I.\nEnergies 2024, 17, 51 13 of 18\nFigure 5 displays the unitwise dispatch and auxiliary consumption. The model main-\ntains units GT1, GT5, and ST1 online to meet the initial dispatch requirements. For starting\nup, it activates units GT3, GT5, and GT11, with ST2 undergoing a cold startup, necessitating\nat least 3 h of operation from the gas units.\nFigure 5. Power output by unit for Case I.\nAdherence to a heuristic-model-based dispatch (yellow line) leads to significant devia-\ntions from scheduled production, primarily due to the misrepresentation of the CCGT’s\noperational rules. Realistically, the CCGT cannot accurately follow such heuristic dispatches\nbecause of technical constraints like the operational hours’ relationship between gas and\nsteam turbines. As per [25], deviations exceeding five percent between the heuristic and\nactual generation are penalized. Assuming the model’s results (discontinuous red line)\nrepresent actual generation and the penalty cost is PCC, as per [25], this would result in\na daily penalty of USD 60,957 for Case I. Such a penalty, recurring daily in scenarios like\nthose depicted in Figure 6, represents a substantial financial burden. Furthermore, these\ndeviations necessitate the use of costly reserves by the system operator to balance the grid.\nEmploying a more-realistic model, like the one proposed in this paper, can prevent these\ncostly penalties and reserve activations by enabling more-accurate dispatch decisions.\nFigure 6. CCGT power output vs. initial load for Case II.\nTo achieve maximum capacity during periods 20 to 22, the model strategically dis-\npatches all units, utilizing supplementary fires to ensure the steam turbines deliver the\nrequired energy. This highlights the model’s capability to optimize unit-specific operations,\na significant advancement over the heuristic simulation model. The heuristic approach, in\ncontrast, represents the CCGT output in aggregate, failing to detail the individual contri-\nbutions of each gas and steam turbine. This underscores the superiority of the proposed\nEnergies 2024, 17, 51 14 of 18\nSEUC optimization model, which offers a more-granular and -realistic representation of\nCCGT operations, crucial for accurate energy management and decision-making.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.2 Case II",
+      "level": 2,
+      "text": "In this scenario, all units begin offline, as indicated in Table 6. The results for Case II,\nshown in Figure 6, revealed that a warm startup is needed from periods 14 to 18 to meet\nthe initial dispatch L. As in Case I, an increased ramp in period 19 is crucial to achieve\nmaximum capacity from periods 20 to 22. Contrarily, the heuristic model opts for a hot\nstartup, neglecting the prior state of the units, which could lead to long-term equipment\ndamage and plant unavailability, thus affecting power system reliability (see Figure 1).\nTable 6. Initial conditions of units—Case II.\nUnit ton/o f f (Hours) Gt0 (MW)\nGT1 8 0\nGT2 8 0\nGT3 8 0\nGT4 8 0\nGT5 8 0\nST1 8 0\nST2 8 0\nCalculating the penalties for Case II, as we did in Case I, we found daily penalties\namounting to USD 66,093 due to discrepancies between the heuristic schedule and the actual\nCCGT operation. These penalties can significantly impact the power plant’s profitability\nand system operations, depending on the frequency of such startups annually.\nAs depicted in Figure 7, the startup ramp involved units GT2, GT3, and GT4, with ST2\nstarting in cold mode in period 18. To achieve the CCGT’s maximum capacity, all units\nwere utilized at full output, including one supplementary fire, contributing an additional\n4.75 MW.\nFigure 7. Power output by unit for Case II.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f1",
+          "f6"
+        ],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "4 Conclusions",
+      "level": 1,
+      "text": "In this paper, we proposed a self-unit-commitment model to optimize the dispatch of\na CCGT with real operational constraints. This approach seeks to improve upon heuristic\nmodels in use currently by CCGT operators in the Colombian electric power system. We\nhighlighted the importance for ISOs and generation companies to employ precise tools, as\nthe model proposed in this paper, when planning operating decisions, as they can avoid",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Steam turbine equipment failures due to inadequate steam temperature and pressure"
+    },
+    {
+      "id": "f2",
+      "caption": ", adopted from [13], summarizes the previous steam turbines startup explained"
+    },
+    {
+      "id": "f3",
+      "caption": "The 5 × 2 CCGT scheme."
+    },
+    {
+      "id": "f4",
+      "caption": "CCGT power output vs. initial load for Case I."
+    },
+    {
+      "id": "f5",
+      "caption": "displays the unitwise dispatch and auxiliary consumption. The model main-"
+    },
+    {
+      "id": "f6",
+      "caption": "CCGT power output vs. initial load for Case II."
+    },
+    {
+      "id": "f7",
+      "caption": "Power output by unit for Case II."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "CCGT parameters."
+    },
+    {
+      "id": "t2",
+      "caption": "Startup and shutdown ramps."
+    },
+    {
+      "id": "t3",
+      "caption": "Gas turbines."
+    },
+    {
+      "id": "t4",
+      "caption": "Steam turbines."
+    },
+    {
+      "id": "t5",
+      "caption": "Initial conditions of units—Case I."
+    },
+    {
+      "id": "t6",
+      "caption": "Initial conditions of units—Case II."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Equation (5)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "Equation (32)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "Equation (13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "Equation (14)"
+    },
+    {
+      "id": "e16",
+      "latex_or_text": "Equation (16)"
+    },
+    {
+      "id": "e18",
+      "latex_or_text": "Equation (18)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "Equation (19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "Equation (20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "Equation (21)"
+    },
+    {
+      "id": "e22",
+      "latex_or_text": "Equation (22)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "Equation (23)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "Equation (24)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "Equation (26)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "Equation (28)"
+    },
+    {
+      "id": "e30",
+      "latex_or_text": "Equation (30)"
+    },
+    {
+      "id": "e31",
+      "latex_or_text": "Equation (31)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 7,
+    "n_tables": 6,
+    "n_algorithms": 0,
+    "n_equations": 17
+  }
+}

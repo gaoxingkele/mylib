@@ -1,0 +1,209 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/tamu_test_cases/tamu_test_cases__PACR_Parameter-Optimized_AC_Power_Flow_Restoration_for_AC_Feasible_DCOPF_Dispatch__d3b7320759.pdf",
+  "n_pages": 10,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "T\nHE DC optimal power flow (DCOPF) problem is a\ncore computational tool in power system operations,\nmarkets, and planning due to its tractability, scalability, and\neconomic alignment with time-critical decision-making [1]. The\nDCOPF is valuable in settings requiring repeated solves across\nlarge scenario sets, fast contingency screening, or integration\nwithin learning loops [2]–[10]. However, DCOPF solutions\noften violate the nonlinear AC power flow equations and/or\noperational constraints such as voltage limits and reactive power\ncapabilities when these DCOPF setpoints are evaluated with\nan AC power flow (ACPF) [1], [11]–[13]. To address this\nchallenge, this paper develops a structured learning approach\nforAC feasibility restoration.\nIn standard ACPF restoration of DCOPF dispatches, con-\nvergence and solve-time performance are strongly influenced\nby how active- and reactive-power infeasibilities are handled.\nActive-power imbalance is often resolved using a single-slack-\nbus formulation, but such formulations can struggle to recover\nAC feasibility from DCOPF approximations, often leading to\nconstraint violations or infeasible restored states [11], [12],\n[14]. On the reactive-power side, iterative solvers typically\nrely on discrete PV/PQ switching, which can incur excessive\nouter-loop recalculations when generators reach reactive limits,\nthereby increasing computational cost and creating numerical\nconvergence difficulties [15], [16].\nRecent work has shown that both distributed slack and im-\nproved reactive-power adjustments can substantially strengthen\nAC restoration. In particular, our earlier work introduced a\nstructured DCOPF →ACPF restoration pipeline that incorpo-\nrates distributed slack and PV/PQ switching directly within the\nAC restoration step, and demonstrated that doing so materially\nimproves the recovery of AC-feasible operating points from\nDC solutions [14]. More broadly, distributed-slack formulations\nspread active-power imbalance across multiple generators,\nhelping to avoid individual generators from exceeding their\nlimits during restoration [17], [18], while homotopy methods\nand smoothing of reactive-power curves can reduce Newton-\nRaphson iterations by mitigating the repeated recalculations\ncaused by discrete PV/PQ switching [16], [19]–[21].\nThis paper builds directly on these structured restoration\nframeworks. Rather than introducing new restoration policies,\nit studies how the distributed-slack and PV/PQ policies can be\nparameterized, smoothed, and learned to yield an even more\neffective approach. This is important because the quality of the\narXiv:2606.29011v1  [eess.SY]  27 Jun 2026\n2\nTABLE I: TUNABLE PARAMETERS IN THEPACR METHOD\nParameter (role) Interpretation\nπ(softplus steepness) Smooth headroom map for slack weights (˜hi)\nϕ(softmax temperature) Smooth participation-factor map (αi) from headroom\nψ†s (sigmoid steepness) Smooth PV/PQ regulation / PV–PQ surrogate\nψt (tolerance band) Margin of reactive limits for stable switching\nvsp†\ni (voltage setpoint) Tunable reference used in the PV/PQ surrogate\n† The learned quantities are the voltage setpoints vsp and softmax temperature\nϕ influencing participation factors. Steepness parameters {π, ψs, ψt} are\nselected from empirically stable intervals for robust Newton convergence.\nModel 1:DC Optimal Power Flow (DCOPF)\nmin\nX\ni∈G\n\u0000\nc2,i p2\ng,i +c 1,i pg,i +c 0,i\n\u0001\n(Cost Minimization) (1a)\ns.t.p g,i −p d,i =\nX\nj∈E\n− →pj,i −\nX\nj∈E\n− →pi,j ∀i∈ N(Balance Eqn.) (1b)\n− →pi,j =b i,j(θdc\ni −θ dc\nj )∀(i, j)∈ E(DC Flow) (1c)\n|− →pi,j| ≤pmax\ni,j ∀(i, j)∈ E(Line Limit) (1d)\npmin\ng ≤p dc\ng ≤p max\ng (Gen. Active Power) (1e)\nModel 2:Parameter-Optimized ACPF Restoration (PACR)\nPower Injection Mismatches:\n∆pi =p dc\ng,i +α i ·ℓ| {z }\nsmooth distributed slack\n−pd,i\n−\nX\nj∈N\nvivj(gi,j cosθ i,j +b i,j sinθ i,j)∀i∈ N(2a)\n∆qi =q ac\ng,i(vi)| {z }\nsmooth PV/PQ\n−qd,i\n−\nX\nj∈N\nvivj(gi,j sinθ i,j −b i,j cosθ i,j)∀i∈ N(2b)\nSmooth Distributed Slack (Participation) ∗:\n˜hi = 1\nπ ln(1 +e π(pmax\ng,i −pdc\ng,i))− ln 2\nπ ∀i∈ G(2c)\nαi = eϕ˜hi\nP\nj∈G eϕ˜hj\n,\nX\ni∈G\nαi = 1∀i∈ G(2d)\nSmooth PV/PQ Control ∗:\nqmax\ng,i ←q max\ng,i −ψ t, q min\ng,i ←q min\ng,i +ψ t\n| {z }\nupdated reactive-power limits\nqac\ng,i =q min\ng,i + qmax\ng,i −q min\ng,i\n1 +e\nψs(vi−vsp\ni )+ln\n \nqmax\ng,i −qsp\ng,i\nqsp\ng,i −qmin\ng,i\n! ∀i∈ G(2e)\nAugmented Jacobian System:\n\n∂∆p\n∂θ\n∂∆p\n∂v α\n∂∆q\n∂θ\n∂∆q\n∂v 0\n0T 0T 0\n\n\n| {z }\nJac\n\n\n∆θ\n∆v\n∆ℓ\n\n =−\n\n\n∆p\n∆q\nℓ\n\n (2f)\nConvergence:∥∆p∥ ∞,∥∆q∥ ∞ <ϵ.\n∗ PACR by default uses smooth surrogates for distributed slack and PV/PQ control, and\napproaches the discrete logic of these controls [14], as smoothing is removed; see Fig. 2.\nrestoration outcome depends critically on parameter choices\nsuch as participation factors and voltage setpoints, and poor\nchoices can lead to slow convergence or infeasible solutions [6],\n[22], [23]. To address this challenge, this paper develops\na supervised learning framework that optimizes restoration\nparameters offline using ACOPF solutions as ground truth.\nSmoothing is introduced to make the restoration method\ndifferentiable and the parameter-learning more tractable. In\nsummary, the paper’s main contributions are:\n1)Developing a parameter-optimized ACPF restoration\n(PACR) formulation with smooth approximations for distributed\nslack (softplus headroom, softmax participation factors) and\nreactive power regulation (sigmoid PV/PQ curves), replacing\ndiscrete logic used in standard formulations.\n2)Designing an implicit-function theorem-based parameter\nlearning approach for ACPF restoration, enabling gradient-\nbased optimization of parameters for differentiable correction\nof DCOPF dispatches to AC feasible points.\n3)Demonstrating the transferability of optimized restoration\nparameters from the smooth differentiable ACPF formulation\nto the discrete ACPF recovery framework, while showing that\nthe smooth formulation provides the strongest overall trade-off\nbetween AC feasibility, dispatch accuracy, and computational\nefficiency relative to the prior discrete framework [14].\nThe remainder of the paper is organized as follows. Section II\nreveals the parameter-optimized AC restoration (PACR) method.\nSection III describes the DCOPF→ACPF feasibility restoration\npipeline. Section IV reports the numerical results, and Section V\nconcludes and provides future research directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "PARAMETERIZING THEACPF RESTORATION METHOD",
+      "level": 1,
+      "text": "This section introduces the parameterized DCOPF →ACPF\nrestoration pipeline used in PACR. As shown in Fig. 1,\nload inputs first define the DCOPF problem, whose solution\nprovides active-power dispatch and angle initializations for\nAC restoration. A parameterized ACPF model then restores\nthe DC operating point to an AC-feasible state through two\ninternal regulation modules: distributed slack for active-power\nbalancing and PV/PQ regulation for reactive-power control. The\nkey idea is to parameterize these internal restoration policies,\nso that the correction step itself becomes more effective and\ndifferentiable. Figure 2 illustrates the corresponding smooth\nsurrogates, and Table I summarizes the PACR parameters used.\nWe emphasize that all learned parameters are internal to\nthe PACR method and are trained offline to improve the\nDCOPF→ACPF correction. They do not modify operational\nAGC participation factors, A VR setpoints, or other controls in\nthe actual system, nor do they model dynamic system response.\nThe discussion below follows the two main restoration modules\nin turn: smooth distributed slack share for active-power\nbalancing, and smooth PV/PQ switching for reactive-power\nand voltage control.\nA. Distributed Slack for Active Power Balancing\nThe first lever in PACR is the distributed-slack mechanism\nembedded in Model 2, which is initialized from the standard\nDCOPF setpoints obtained from Model 1. As also illustrated by\nthe distributed-slack controls in the caption of Fig. 1, its role\nis to absorb the active-power imbalance that appears when the\nDCOPF dispatch is mapped into the nonlinear AC equations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Parameterized DCOPF",
+      "level": 1,
+      "text": "Back propagation\n  \n   \n  \n  \nFig. 1:Loadinputs (pd,q d) feed aDCOPF( DCBASE ) via pd, producing DC setpoints zdc = (p dc\ng ,θ dc). These initialize theACPF\nthat maps (pd,q d,z dc)7→x ac ={(p ac\ng ,θ ac),(q ac\ng ,v),i line}. The ACPF contains switchableregulation controls:1) Distributed slack\ncontrol with parameters π (softplus headroom steepness) and ϕ (softmax participation temperature), and2) PV/PQ regulationcontrol with\nψ={ψ s,ψ t,v sp} (sigmoid steepness, tolerance, and voltage setpoint). Bothcontrols 1) & 2)aresmooth(S) implementations, thus yielding\nDCACSS, and replacing the discrete pipelinesDCAC DD [14].Outputsare trained with supervised learning (SL), using ACOPF targets.\ndiscrete\npmax\ng,i −pdc\ng,i\n˜hi\nπ1 < π2 < π3\n(a)Discrete vs. softplus headroom ( ˜hi)\ndiscrete\n1\n˜hi − ˜hj\nαi\nϕ1 < ϕ2 < ϕ3 (b)Discrete vs. softmax participation factor (α i)\nvmin vmax\nqmin\ng,i\nqmax\ng,i discrete\nvsp",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "qsp",
+      "level": 1,
+      "text": "g,i\nψt\nψt\nvm\nψs1 < ψs2 < ψs3 (c)Discrete vs. sigmoid PV/PQ control curve\nFig. 2: Discrete vs. Smooth AC surrogates. (a) Softplus headroom for slack allocation, (b) softmax participation factors, and (c) differentiable\nsigmoid PV/PQ control.Greendenotes discrete baselines [14] andRed/Orange/Bluedenote increasing smoothness. The smoothness\nadjustments are tuned via(π, ϕ, ψs)and shaped byv sp (curve shift) andψ t (Q-limit tolerance beforeq min\ng,i /qmax\ng,i limits engage).\nRather than assigning all imbalance to a single slack bus,\nthe restoration distributes this correction across generators\naccording to their available headroom [14], [17], [18]. Prior\nwork shows that headroom-aware slack allocation is effective\nat reducing post-restoration active-power violations [14].\nIn the discrete setting, headroom and participation choices are\nassigned through non-smooth logic. Model 2 replaces this with\na differentiable two-stage mapping. First, the softplus surrogate\nin Fig. 2a computes smooth generator headroom ˜hi through (2c).\nSecond, the softmax mapping in Fig. 2b converts these values\ninto normalized participation factors αi through (2d). The pa-\nrameters π and ϕ control the sharpness of these approximations\nand determine how closely the smooth model approaches the\ncorresponding discrete rule. These participation factors enter\ndirectly into the active-power mismatch equations (2a) and the\naugmented Jacobian system (2f), allowing slack allocation and\nAC restoration to be solved simultaneously.\nB. PV/PQ Switching for Reactive Power and V oltage Control\nThe second lever in PACR is the reactive-power regulation\nmechanism in Model 2, again applied after the standard DCOPF\ninitialization from Model 1. This part of the restoration replaces\nthe conventional discrete PV/PQ switching rule used in previous\nAC power flow pipelines [14]. In the standard formulation, a\ngenerator remains in PV mode while it can regulate voltage\nwithin its reactive limits, and switches to PQ mode once one of\nthose limits is reached. Although physically meaningful, this\nrule introduces discontinuities into the restoration map, making\nthe ACPF harder to solve and unsuitable for gradient-based\ntraining [16], [19], [20]. PACR replaces this discrete switching\nrule with a smooth surrogate.\nFigure 2c shows the transition from discrete PV/PQ switching\nto a differentiable sigmoid-based PV/PQ control curve. Instead\nof abruptly changing modes at qmin\ng,i or qmax\ng,i , the smooth\nregulation in Model 2, given by (2e), creates a continuous rela-\ntionship between voltage deviation and reactive-power response.\nThe steepness parameter ψs controls how sharply the sigmoid\napproximates the discrete switch, ψt introduces a tolerance\nband near the reactive limits to improve numerical robustness,\nand the voltage setpoint vsp",
+      "refs": {
+        "figures": [
+          "f2c"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "shifts the curve to define the",
+      "level": 1,
+      "text": "desired operating point. The logarithmic offset in (2e) ensures\nthat when vi =v sp\ni , the reactive injection equals the desired\nsetpoint qsp\ng,i, as shown in Appendix A. Embedding this smooth\nPV/PQ relation into the reactive mismatch equations (2b) and\nthe augmented Jacobian system (2f) yields a tunable restoration\nprocedure compatible with Newton-based AC correction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "AC RESTORATIONLEARNINGALGORITHM",
+      "level": 1,
+      "text": "The discussion below focuses on the optimization of the\nDCOPF→ACPF restoration pipeline. In particular, we show",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4 Training Samples",
+      "level": 1,
+      "text": "Load Input\nSolve DCOPF Variant\nRun Parameterized ACPF\nLoss minimized?\nBackpropagate Gradients\nACPF Reference Targets\nSave Optimized Model\nNo\nYes\nNew Scenario Data\nInput Scenario\nSolve DCOPF\nRun ACPF Inference\nusing\nOutput AC State\nSolve DCOPF Variants \nOnline\nImplementation\nOffline \nTraining\nLoad Injections\nLoss \nminimized?\nSolve ACOPF  \nRun Parameterized ACPFBackpropagate \nGradients\nNo\nSave Optimized\nParameters\nYes\nNew Load InjectionsSolve DCOPFs\nRun the Discrete or Smooth ACPF\nusing optimized parameters\nOutput AC State\nEnd\nStart\nSolve DCOPF \nOnline\nImplementation\nOffline \nTraining\nLoad Injections\nLoss \nminimized?\nSolve ACOPF  \nRun Smooth Parameterized \nACPF Restoration Backpropagate \nGradients\nNo\nSave Optimized\nParameters\nYes\nNew Load InjectionsSolve DCOPFs\nRun the Smooth ACPF\nusing Optimized Parameters\nOutput AC StateEnd\nSolve DCOPF Variants \nOnline\nImplementation\nOffline \nTraining\nLoad Injections\nLoss \nminimized?\nSolve ACOPF  \nRun Parameterized ACPFBackpropagate \nGradients\nNo\nSave Optimized\nParameters\nYes\nNew Load InjectionsSolve DCOPFs\nRun the Discrete or Smooth ACPF\nusing optimized parameters\nOutput AC StateEnd\nStart\nFig. 3: Flowchart of the algorithm, illustrating the offline training and\nonline implementation of the DCOPF→ACPF pipeline.\nhow the parameter-optimized ACPF restoration (PACR) model\ncan be trained to improve the differentiable correction of\nDCOPF dispatches to AC-feasible operating points through\nsmooth distributed slack and smooth reactive-power regulation.\nFig. 3 summarizes the offline–online workflow, and Algorithm 1\noutlines the corresponding parameter-optimization training\nprocedure. The two main ingredients here are the sensitiv-\nity analysis required to differentiate through the converged\naugmented ACPF equations, and the supervised objective used\nto train PACR parameters against ACOPF reference solutions.\nA. Sensitivities of the DCOPF→ACPF Pipeline\nThe smooth PACR formulation enables gradient-based param-\neter optimization through the implicit function theorem (IFT).\nStarting from a DCOPF initialization zdc and reactive demand\nqd, the augmented ACPF system is solved with Newton–\nRaphson using smooth distributed slack and smooth PV/PQ\nswitching. At convergence, the restored AC state:\nxac = (pac\ng ,θ ac,q ac\ng ,v)\nsatisfies the following:\ng(xac;π,ϕ,ψ) =0,\nwhere π governs the smooth headroom map, ϕ controls\nparticipation factors, and ψ={ψ s,ψ t,v sp} defines the\nsmooth PV/PQ regulation, and includes voltage setpoints.\nBecause the converged solution is defined implicitly by the\naugmented ACPF equations, its parameter sensitivities can be\ncomputed from the converged Jacobian Jac in (2f). For any\nparameter blockξ∈ {π,ϕ,ψ},\n∂xac\n∂ξ =−J −1\nac\n∂g\n∂ξ .(3)\nThis reuses the same augmented Jacobian needed in the forward\nsolve and avoids explicit unrolling of all Newton iterations.\nAdditional derivations are given in Appendix B.\nB. Optimizing the Parameterized ACPF Restoration Method\nParameter optimization requires careful loss function se-\nlection to balance AC feasibility, DC consistency, and com-\nputational efficiency. The DCACSS formulation serves as\nthe differentiable pipeline for computing optimal parameters\nπ⋆,ϕ ⋆,ψ ⋆ through Algorithm 1. Supervised learning is used\nfor training, with AC references (pref\ng ,v ref ) obtained from\nACOPF solutions. The full-batch loss overDis:\nL= 1\n|D|\nX\nD\nh\nwP\n\r\rpac\ng −p ref\ng\n\r\r\n1 +w V\n\r\rv−v ref \r\r\n1\ni\n.(4)\nThe gradient-computation step in Algorithm 1 combines\nthe loss derivatives with the sensitivity analysis from (3),\nenabling efficient parameter updates through Adam. The loss\nfunction (4) is augmented with a reference regularization term\nwreg\n\u0000\n∥ψ−ψ ref ∥2\n2 +∥π−π ref ∥2\n2 +∥ϕ−ϕ ref ∥2\n2\n\u0001\nto prevent\noverfitting and improve parameter stability. This term discour-\nages large deviations from nominal and stable smoothness\nvalues rather than driving the parameters toward zero. For\nevaluation, DCACBASE denotes the conventional single-slack\nrestoration baseline without regulation or parameter optimiza-\ntion, while this paper’s DCACSS and the DCACDD [14] incor-\nporate smooth and discrete distributed-slack/PV–PQ regulation,\nrespectively. Each method is tested with eitherunoptimized\nparameters(init) oroptimized parameters(opt), where the\nlatter are learned through Algorithm 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "NUMERICALEXPERIMENTS ANDDISCUSSIONS",
+      "level": 1,
+      "text": "The DCOPF →ACPF pipeline described in Section III-B\nis evaluated through offline parameter optimization using\nsupervised learning. This section presents the computational\nsetup and results. Experiments were conducted on an IEEE\ntest case {ieee_118}, ACTIVSg networks {ACTIVSg_200,\nACTIVSg_500}, and PEGASE networks {pegase_1354,\npegase_2869, pegase_9241}. For each case, 5,000 per-\nturbed loading scenarios were generated, yielding 30,000\ntotal scenarios across the six systems; these were split into\n4,000 training and 1,000 test samples per case. Computations\nwere carried out on the Darwin high-performance computing\nsystem at Los Alamos National Laboratory, using single 24-\ncore compute nodes equipped with 32 GB RAM. ACOPF\nand DCOPF were modeled using PowerModels.jl [24]\nand solved using Ipopt [25], while the ACPF implementa-\ntion was developed using pandapower.py [26]. ACOPF\nwas used as labeled targets for supervised learning. Active\npower demands ( pd) were perturbed using bounded Gaussian\n5\nAlgorithm 1: Adam Parameter Training using PACR 1\nInput:Training setD={(p d,q d,p ref\ng ,v ref )}\nFixed DCOPF mapDC(·)producingz dc = (pdc\ng ,θ dc)\nInitial parameters π1 ={π} , ϕ1 ={ϕ} , ψ1 ={ψ s, ψt,v sp}\nV oltage limitsv min,v max, gen. limitsp min\ng ,p max\ng\nOutput:Trained parametersπ ⋆,ϕ ⋆,ψ ⋆\nHyperparameters:Max iterationsN iter; toleranceϵ; Adam\nstepsizeη; momentsβ 1, β2; weights\nwP , wV , wreg\n1Initialize Adam momentsm ξ,s ξ ←0forξ∈ {π,ϕ,ψ}\n2forj= 1, . . . , Niter do\n3Initialize full-batch tracking lossL ←0\n// 1) Full-Batch Forward Pass\n4foreach(p d,q d,p ref\ng ,v ref )∈ Ddo\n5(p dc\ng ,θ dc)←DCOPF\n6(p ac\ng ,q ac\ng ,v,i)←ACPF πj ,ϕj ,ψj (pd,q d,p dc\ng ,θ dc)\n7L sc ←w P\n\r\rpac\ng −p ref\ng\n\r\r\n1 +w V\n\r\rv−v ref \r\r\n1\n8L ← L+L sc // Scenario loss\n// 2) Objective and Gradient Compute\n9J ← 1\n|D| L+\nwreg\n\u0000\n∥πj −π ref ∥2\n2 +∥ϕ j −ϕ ref ∥2\n2 +∥ψ j −ψ ref ∥2\n2\n\u0001\n10Compute sensitivities and full-batch gradients ofJ:\n11g π =∇ πJ,g ϕ =∇ ϕJ,g ψ =∇ ψJ\n12ifmax{∥g π∥∞,∥g ϕ∥∞,∥g ψ∥∞}< ϵthen\n13break// Convergence achieved\n// 3) Adam Parameter Update\n14foreachξ∈ {π,ϕ,ψ}do\n15m ξ ←β 1mξ + (1−β 1)gξ\n16s ξ ←β 2sξ + (1−β 2)(gξ ⊙g ξ)\n17 bmξ ←m ξ/(1−β j\n1), bsξ ←s ξ/(1−β j\n2)\n18ξ j+1 ←ξ j −η bmξp\nbsξ +ε adam\n19returnπ ⋆ =π j,ϕ ⋆ =ϕ j,ψ ⋆ =ψ j\n20The optimized PACR parameters defineDCAC SSopt.\nmultiplicative noise, where the scaling factors were sampled\nfrom N(1.0,(15%) 2). Reactive power demands (qd) were then\nrecomputed from randomly sampled power factors in [0.95,1.0] .\nACOPF scenarios that failed to converge were excluded from\nthe training dataset. The convergence rate exceeded 90%\nacross all ACPF variants with DCACBASE as setpoints. For\ncomputational efficiency, only voltage setpoints vsp for PV/PQ\nregulation and the softmax temperature ϕ for distributed-slack\nparticipation were optimized. The remaining smooth-control\nparameters {π, ψs, ψt} were fixed to reference smoothing\nvalues selected from preliminary sweeps to ensure robust\nNewton-Raphson convergence. These reference values define\nmoderately smooth approximations of the discrete controls,\nrather than serving as optimization variables. For example,\nappropriate PV/PQ sigmoid steepness selection reduced ACPF\niterations from35to4on thepegase_1354case.\nParameter optimization was performed using Adam from\nscipy.optimize.minimize with box constraints: ϕ∈\n[50,900] for the participation temperature and vsp ∈\n[0.95,1.05] for voltage setpoints. The regularization term\npenalizes deviations from the stable reference smoothing values,\nrather than driving the parameters toward zero. This discourages\nunnecessarily steep or ill-conditioned smooth approximations\nwhile allowing the optimized parameters to improve AC\nfeasibility restoration. Loss function weights were used to select\nprimary importance of generation dispatch and voltage profiles.\nGradients were computed using ACPF derivatives. To maximize\ncomputational efficiency during optimization, the ACPF solver\nleverages sparse Jacobian construction with scipy.sparse\nCSC matrices, executing fast linear system updates via\nscipy.sparse.linalg.spsolve. This interface utilizes\nSuperLU, for large, nonsymmetric sparse systems via LU\ndecomposition. Optimized parameters were deployed in both\nDCACSSopt and DCACDDopt variants to verify transferability of\nthe training method. These optimized pipelines were compared\nagainstinitial parameter values:voltage setpoints initialized\nto 1.0 p.u. and the initial participation factors corresponding to\na single-slack allocation, with participation factor 1.0 assigned\nto the designated slack bus and 0.0 assigned to other buses.\nNewton-Raphson convergence tolerances was set to 10−6 p.u.\nMean absolute error (MAE) and cost difference (CD) are\naccuracies relative to ACOPF (|G| is the number of generators):\nMAE = 1\n|G|\n\r\rpg −p ACOPF\ng\n\r\r\n1 .(5)\nCD =\n\f\fCostDCAC −Cost ACOPF\f\f\nCostACOPF ·100.(6)\nA. AC Feasibility Restoration Assessment: Initialized versus\nOptimized Smooth Pipelines ((DCAC SSinit ) vs. (DCAC SSopt )):\nThis subsection evaluates the effect of parameter optimization\nwithin the smooth AC restoration pipeline. Specifically, the\ninitialized smooth pipeline, DCACSSinit is compared against\nthe optimized smooth pipeline, DCACSSopt, with DCACBASE\nincluded as a conventional single-slack reference. The goal is to\nassess whether the learned smooth distributed-slack and PV/PQ\nregulation parameters improve AC feasibility restoration from\nthe lossless initialized pipeline, while maintaining favorable\ncost, dispatch-error, and computational performance.\n1) Constraint Violation Table Analysis:Table II compares\nactive-power, reactive-power, voltage-limit, and line-limit viola-\ntions for DCACBASE, DCACSSinit, and DCACSSopt across 1,000\ntest samples. The single-slack baseline frequently leaves resid-\nual AC infeasibilities, especially reactive-power violations,with\naverage violation rates of 18.46%, 15.69%, and 14.74%\non pegase_1354, pegase_2869, and pegase_9241,\nrespectively. In contrast, both smooth pipelines eliminate active-\nand reactive-power violations across all tested systems. The\noptimized smooth pipeline further improves the remaining\nfeasibility behavior relative to the initialized smooth pipeline. It\nremoves the small line-limit violations observed for DCACSSinit\non ACTIVSg_500 and reduces the average voltage-violation\nrates from 0.21% to 0.03% on pegase_2869 and from\n3.75% to 2.61% on pegase_9241. Thus, parameter opti-\nmization preserves major feasibility gains of the initialized\nsmooth pipeline while further reducing residual voltage and\nline-limit violations in the more challenging cases.\n2) Evaluation-Loss and Performance Table Analysis:Ta-\nble IV reports the evaluation loss (4) for the baseline and\n6\nTABLE II:AVERAGECONSTRAINTVIOLATIONRATES ANDMAXIMUMVIOLATIONMAGNITUDES FORDCAC BASE ,DCAC SS INIT ,AND\nDCACSS OPT ACROSS1,000LOADSAMPLES(USINGDC BASE SETPOINTS)\nTest case Method Active Power (p.u.) Reactive Power (p.u.) Voltage Limit (p.u.) Line Limit (%)% viol. Max % viol. Max % viol. Max % viol. Max\nieee_118DCACBASE 1.61 0.01 5.56 2.93 0.05 0.01 0.00 0.20DCACSSinit 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00DCACSSopt 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00\nACTIVSg_200DCACBASE 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00DCACSSinit 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00DCACSSopt 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00\nACTIVSg_500DCACBASE 0.00 0.00 8.03 0.06 0.00 0.00 0.00 0.00DCACSSinit 0.00 0.00 0.00 0.00 0.00 0.00 0.03 0.71DCACSSopt 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00\npegase_1354DCACBASE 0.46 0.02 18.46 18.28 0.00 0.00 0.00 0.00DCACSSinit 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00DCACSSopt 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00\npegase_2869DCACBASE 0.51 2.63 15.69 13.73 0.00 0.00 0.00 0.00DCACSSinit 0.00 0.00 0.00 0.00 0.21 0.02 0.00 0.00DCACSSopt 0.00 0.00 0.00 0.00 0.03 0.01 0.00 0.00\npegase_9241DCACBASE 2.31 14.66 14.74 10.71 17.23 0.07 2.31 44.73DCACSSinit 0.00 0.00 0.00 0.00 3.75 0.02 0.00 0.00DCACSSopt 0.00 0.00 0.00 0.00 2.61 0.02 0.10 0.05\nTABLE III:PERFORMANCETABL",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "850 Frequency",
+      "level": 1,
+      "text": "mean=4.3 mean=4.8 mean=8.1 mean=9.7 DCBASE\nDCACSSopt DCACSSinit DCACDDopt DCACDDinit\n(a) Iteration count forpegase_1354on1,000samples.\n3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19\nIteration Count\n0\n425",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "850 Frequency",
+      "level": 1,
+      "text": "mean=4.4 mean=5.3 mean=10.2 mean=13.6 DCBASE\nDCACSSopt DCACSSinit DCACDDopt DCACDDinit (b) Iteration count forpegase_2869on1,000samples.\nFig. 4: Iteration count comparison for the four DCAC variants under load uncertainty using 1,000 samples per case. (a) pegase_1354. (b)\npegase_2869. The compared methods are DCACSSopt (blue), DCACSSinit (green), DCACDDopt (orange), and DCACDDinit [14] (red).\nThe‘opt’variant uses parameters trained via Algorithm 1, and ‘init’ uses initial flat-start parameter values.\n10−2\n10−1\n100\n101\n|pg − pACOPF\ng |[p.u.]\n80\n85\n90\n95\n100\nCumulative Proportion (%) DCBASEDCACSSopt\nDCACSSinit\nDCACDDopt\nDCACDDinit\n(a) Cumulative plot ofp g error forpegase_2869on1,000samples.\n10−2\n10−1\n100\n101\n|pg − pACOPF\ng |[p.u.]\n80\n85\n90\n95\n100\nCumulative Proportion (%) DCBASEDCACSSopt\nDCACSSinit\nDCACDDopt\nDCACDDinit (b) Cumulative plot ofp g error forpegase_9241on1,000samples.\nFig. 5: Empirical cumulative distribution of active-power dispatch error, |pg −p ACOPF\ng |, using 1,000 samples per case. (a) pegase_2869.\n(b) pegase_9241. The DCAC methods are DCACSSopt (blue), DCACSSinit (green), DCACDDopt (orange), and DCACDDinit [14] (red).\nThe‘opt’variant uses parameters trained via Algorithm 1, and ‘init’ uses initial flat-start parameter values.\nline-limit violation on ACTIVSg_500, and achieves zero\nviolations on ieee_118, ACTIVSg_200, ACTIVSg_500,\npegase_1354, and pegase_2869. On pegase_9241, it\neliminates active-power, reactive-power, and line-limit viola-\ntions, while leaving a small average voltage-violation rate\nof 1.02%. These results show that the optimized parameters\nlearned in the smooth formulation transfer effectively to\nthe discrete restoration setting. This is important because\nmany existing ACPF tools use discrete PV/PQ switching\nand distributed-slack logic; therefore, the learned parameters\ncan improve standard discrete recovery procedures without\nrequiring a fully differentiable solver implementation.\n2) Performance Table Analysis:Table VI compares cost\ndifference, generator active-power MAE, iteration count, and\nsolve time for the baseline and discrete restoration pipelines.\nThe optimized discrete pipeline improves the restored operating\npoint relative to the initialized discrete pipeline on the larger\nPEGASE systems. On pegase_1354, the cost difference\ndecreases from 0.354% to 0.300% and MAE decreases from\n0.049 to 0.047 p.u. On pegase_9241, MAE decreases\nfrom 0.036 to 0.033 p.u., while solve time is lowered from\n15.410 s to 12.743 s. Relative to the single-slack baseline,\nDCACDDopt provides stronger feasibility restoration and better\ndispatch accuracy on the large cases. For pegase_2869,\nit attains a 0.038 p.u. MAE and 0.293% cost difference,\ncompared with 0.042 p.u. and 0.458% for DCACBASE. For\npegase_9241, it achieves 0.033 p.u. MAE and 0.521%\ncost difference, compared with 0.038 p.u. and 0.631% for\nthe baseline. Although the discrete restoration pipeline requires\nmore Newton iterations than the single-slack ACPF baseline, it\nproduces a much stronger AC feasibility recovery, confirming\nthat optimized distributed slack and voltage regulation improve\nthe quality of the restored AC operating point.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "Complete Performance Comparison of Discrete and Smooth",
+      "level": 1,
+      "text": "DCAC Pipelines ((DCAC DD ) vs. (DCAC SS)):\nThis subsection directly compares the proposed smooth\nrestoration pipeline against the discrete restoration pipeline [14],\nafter parameter optimization. The purpose is to separate the\nbenefit of the learned parameters from the additional benefit of\nusing a smooth differentiable ACPF formulation. The results\nshow that although both optimized pipelines improve restoration\nquality, as shown in Sections IV-A and IV-B, the smooth\npipeline achieves better accuracy, with substantially lower\ncomputational effort than our former discrete framework [14].\n9\n1) Optimized Pipeline Solve-Time Analysis:Table VII com-\npares the solve times of DCACSSopt, DCACDDopt, and ACOPF\nacross all test cases using DCBASE setpoints. The optimized\nsmooth pipeline is the fastest method in every case, with solve\ntimes ranging from 0.16 s on ACTIVSg_200 to 7.62 s on\npegase_9241. Relative to the optimized discrete pipeline,\nDCACSSopt reduces solve time by 4.8%–49.0%. Relative to\nACOPF, the reduction is larger, ranging from 55.6% to 83.8%.\nThis shows that the smooth formulation improves computa-\ntional efficiency while preserving the speed advantage of DC-\nbased dispatch followed by AC feasibility restoration. The gains\nover DCACDDopt suggest that avoiding discrete distributed-slack\nand PV/PQ switching updates reduces the computational burden\nof the restoration step.\n2) Iteration Count Figure Analysis:Figures 4a and 4b com-\npare Newton iteration-count distributions for pegase_1354\nand pegase_2869 across 1,000 load-uncertainty scenarios\nusing DCBASE setpoints. The optimized smooth pipeline\nDCACSSopt concentrates most of its probability mass at the\nlowest iteration counts, with mean values of approximately\n4.3 and 4.4 iterations on pegase_1354 and pegase_2869,\nrespectively. The initialized smooth version DCACSSinit remains\ncompetitive, with means of 4.8 and 5.3 iterations, indicat-\ning that the smooth formulation itself provides a favorable\nnumerical structure even before training. By contrast, the\ndiscrete pipelines require substantially more iterations. On\npegase_1354, DCACDDopt and DCACDDinit average approxi-\nmately 8.1 and 9.7 iterations, respectively. On pegase_2869,\nthe corresponding averages are approximately10.2and13.6.\nThese results highlight a tradeoff between the two imple-\nmentations. The smooth pipeline provides the best accuracy\nand speed because it avoids outer-loop bus-type switching and\ndiscontinuous PV/PQ updates [15], [16]. However, the discrete\npipeline is often more directly compatible with traditional\npower-flow packages that implement PV/PQ switching and\ndistributed slack through discrete logic. The relatively small\ndegradation of DCACDDopt compared with DCACSSopt therefore\nsuggests that parameters optimized in the smooth formulation\ncan still be useful in standard discrete ACPF implementations.\n3) Cumulative Error Plot Analysis:Figures 5a and 5b report\nthe empirical cumulative distributions of the generator active-\npower dispatch error, |pg −p ACOPF\ng |, for pegase_2869\nand pegase_9241. Near the 10−2 p.u. threshold, all vari-\nants show similar cumulative behavior. For pegase_2869,\nDCACSSopt places approximately 81.9% of generator errors\nbelow this threshold, compared with 81.8% for DCACDDopt\nand about 81.6% for the initialization-based variants. For\npegase_9241, the optimized smooth pipeline again gives\nthe highest proportion, approximately 83.3%, while the other\nmethods remain close at about83.0%.\nThe main separation appears in the right tail. On\npegase_2869, the worst-case error for DCACSSopt is approx-\nimately 2.53 p.u., compared with roughly 2.97–3.17 p.u. for\nthe other variants. On pegase_9241, the optimized smooth\npipeline reaches a worst-case error of approximately 2.29 p.u.,\nwhile the other variants lie between about 2.99 and 3.22 p.u.\nThus, the optimized smooth formulation does not only improve\naverage behavior; it also reduces the largest dispatch deviations,\nwhich is important for robust restoration under load uncertainty.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "CONCLUSION",
+      "level": 1,
+      "text": "This work develops a smooth, differentiable ACPF restora-\ntion learning method (PACR) for mapping DCOPF dispatches\nto AC-consistent operating points. The method replaces discrete\nrestoration logic in our previous work [14], with smooth\nsurrogates, including softmax-based distributed slack and\nsigmoid PV/PQ regulation, allowing voltage setpoints and\nslack-participation parameters to be optimized. Experiments\non IEEE, ACTIVSg, and PEGASE systems show that the\noptimized pipelines improve AC feasibility, reduce Newton\niterations, and lower dispatch errors relative to conventional\nsingle-slack ACPF recovery. The gains are strongest on large\nPEGASE cases: the optimized smooth DCAC method reduces\ncost difference by approximately 95% on the 2,869-bus case\nand 80% on the 9,241-bus case, while solving the 9,241-bus\ncase about 75% faster than ACOPF. Overall, the optimized\nsmooth pipeline is the best-performing restoration method,\nand its learned participation factors and voltage setpoints also\ntransfer effectively to the discrete DCAC pipeline [14].\nFuture work will extend the differentiable restoration method\nto additional corrective controls, including transformer taps and\ncapacitor shunts, and will explore end-to-end self-supervised\ntraining of the full DCOPF →ACPF pipeline. This direction\nconnects naturally with recent work on parameterized and\noptimized DCOPF models [7], [8], [27], while posing a more\ndemanding learning problem: the DCOPF parameters must\nbe optimized not only for dispatch cost, but also for their\ndownstream effect on AC inequality constraint violations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f2c",
+      "caption": "shows the transition from discrete PV/PQ switching"
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "Adam Parameter Training using PACR 1"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 4
+  }
+}

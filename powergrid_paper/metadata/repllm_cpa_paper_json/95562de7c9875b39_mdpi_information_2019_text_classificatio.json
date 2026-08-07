@@ -1,0 +1,500 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/mdpi-information__2019__text_classification_algorithms_a_survey__8f5c297b70.pdf",
+  "n_pages": 68,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "3 School of Data Science, University of Virginia, Charlottesville, VA 22904, USA",
+      "level": 1,
+      "text": "* Correspondence: kk7nc@virginia.edu; Tel.: +1-202-812-3013\nReceived: 22 March 2019; Accepted: 17 April 2019; Published: 23 April 2019\n/gid00030/gid00035/gid00032/gid00030/gid00038/gid00001/gid00033/gid00042/gid00045/gid00001\n/gid00048/gid00043/gid00031/gid00028/gid00047/gid00032/gid00046\nAbstract: In recent years, there has been an exponential growth in the number of complex documents\nand texts that require a deeper understanding of machine learning methods to be able to accurately\nclassify texts in many applications. Many machine learning approaches have achieved surpassing\nresults in natural language processing. The success of these learning algorithms relies on their capacity\nto understand complex models and non-linear relationships within data. However, ﬁnding suitable\nstructures, architectures, and techniques for text classiﬁcation is a challenge for researchers. In this\npaper, a brief overview of text classiﬁcation algorithms is discussed. This overview covers different\ntext feature extractions, dimensionality reduction methods, existing algorithms and techniques, and\nevaluations methods. Finally, the limitations of each technique and their application in real-world\nproblems are discussed.\nKeywords: text classiﬁcation; text mining; text representation; text categorization; text analysis;\ndocument classiﬁcation",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Text classification problems have been widely studied and addressed in many real applications[1–8]\nover the last few decades. Especially with recent breakthroughs in Natural Language Processing\n(NLP) and text mining, many researchers are now interested in developing applications that leverage\ntext classiﬁcation methods. Most text classiﬁcation and document categorization systems can be\ndeconstructed into the following four phases: Feature extraction, dimension reductions, classiﬁer\nselection, and evaluations. In this paper, we discuss the structure and technical implementations of\ntext classiﬁcation systems in terms of the pipeline illustrated in Figure 1 (The source code and the\nresults are shared as free tools at https://github.com/kk7nc/Text_Classiﬁcation).\nThe initial pipeline input consists of some raw text data set. In general, text data sets contain\nsequences of text in documents asD ={X1, X2, . . ., XN} where Xi refers to a data point (i.e., document,\ntext segment) with s number of sentences such that each sentence includes ws words with lw letters.\nEach point is labeled with a class value from a set of k different discrete value indices [7].\nThen, we should create a structured set for our training purposes which call this section Feature\nExtraction. The dimensionality reduction step is an optional part of the pipeline which could be part of\nthe classiﬁcation system (e.g., if we use Term Frequency-Inverse Document Frequency (TF-IDF) as our\nfeature extraction and in train set we have 200k unique words, computational time is very expensive,\nso we could reduce this option by bringing feature space in other dimensional space). The most\nsigniﬁcant step in document categorization is choosing the best classiﬁcation algorithm. The other\npart of the pipeline is the evaluation step which is divided into two parts (prediction the test set and\nInformation 2019, 10, 150; doi:10.3390/info10040150 www.mdpi.com/journal/information\narXiv:1904.08067v5  [cs.LG]  20 May 2020\nInformation 2019, 10, 150 2 of 68\nevaluating the model). In general, the text classiﬁcation system contains four different levels of scope\nthat can be applied:\n1. Document level: In the document level, the algorithm obtains the relevant categories of a full\ndocument.\n2. Paragraph level: In the paragraph level, the algorithm obtains the relevant categories of a single\nparagraph (a portion of a document).\n3. Sentence level: In the sentence level, obtains the relevant categories of a single sentence (a portion\nof a paragraph).\n4. Sub-sentence level: In the sub-sentence level, the algorithm obtains the relevant categories of\nsub-expressions within a sentence (a portion of a sentence )).\nFeature Extraction\nDimensionality \nReduction\nClassification\n(Learning model)\nPrediction \n(Predict test data)\nEvaluation of model\nEvaluation\nFigure 1. Overview of text classiﬁcation pipeline.\n(I) Feature Extraction: In general, texts and documents are unstructured data sets. However,\nthese unstructured text sequences must be converted into a structured feature space when using\nmathematical modeling as part of a classiﬁer. First, the data needs to be cleaned to omit unnecessary\ncharacters and words. After the data has been cleaned, formal feature extraction methods can be\napplied. The common techniques of feature extractions are Term Frequency-Inverse Document\nFrequency (TF-IDF), Term Frequency (TF) [ 9], Word2Vec [ 10], and Global Vectors for Word\nRepresentation (GloVe) [11]. In Section 2, we categorize these methods as either word embedding or\nweighted word techniques and discuss the technical implementation details.\n(II) Dimensionality Reduction: As text or document data sets often contain many unique words,\ndata pre-processing steps can be lagged by high time and memory complexity. A common solution\nto this problem is simply using inexpensive algorithms. However, in some data sets, these kinds of\ncheap algorithms do not perform as well as expected. In order to avoid the decrease in performance,\nmany researchers prefer to use dimensionality reduction to reduce the time and memory complexity\nfor their applications. Using dimensionality reduction for pre-processing could be more efﬁcient than\ndeveloping inexpensive classiﬁers.\nIn Section 3, we outline the most common techniques of dimensionality reduction, including\nPrincipal Component Analysis (PCA), Linear Discriminant Analysis (LDA), and non-negative\nmatrix factorization (NMF). We also discuss novel techniques for unsupervised feature extraction\ndimensionality reduction, such as random projection, autoencoders, and t-distributed stochastic\nneighbor embedding (t-SNE).\n(III) Classiﬁcation Techniques: The most important step of the text classiﬁcation pipeline is\nchoosing the best classiﬁer. Without a complete conceptual understanding of each algorithm, we\ncannot effectively determine the most efﬁcient model for a text classiﬁcation application. In Section 4,\nwe discuss the most popular techniques of text classiﬁcation. First, we cover traditional methods of text\nclassiﬁcation, such as Rocchio classiﬁcation. Next, we talk about ensemble-based learning techniques\nsuch as boosting and bagging, which have been used mainly for query learning strategies and text\nanalysis [12–14]. One of the simplest classiﬁcation algorithms is logistic regression (LR) which has\nbeen addressed in most data mining domains [15–18]. In the earliest history of information retrieval as\nInformation 2019, 10, 150 3 of 68\na feasible application, The Naïve Bayes Classiﬁer (NBC) was very popular. We have a brief overview\nof Naïve Bayes Classiﬁer which is computationally inexpensive and also needs a very low amount of\nmemory [19].\nNon-parametric techniques have been studied and used as classiﬁcation tasks such as k-nearest\nneighbor (KNN) [20]. Support Vector Machine (SVM) [ 21,22] is another popular technique which\nemploys a discriminative classiﬁer for document categorization. This technique can also be used in all\ndomains of data mining such as bioinformatics, image, video, human activity classiﬁcation, safety and\nsecurity, etc. This model is also used as a baseline for many researchers to compare against their own\nworks to highlight novelty and contributions.\nTree-based classiﬁers such as decision tree and random forest have also been studied with\nrespect to document categorization [ 23]. Each tree-based algorithm will be covered in a separate\nsub-section. In recent years, graphical classiﬁcations have been considered [ 24] as a classiﬁcation task\nsuch as conditional random ﬁelds (CRFs). However, these techniques are mostly used for document\nsummarization [25] and automatic keyword extraction [26].\nLately, deep learning approaches have achieved surpassing results in comparison to previous\nmachine learning algorithms on tasks such as image classiﬁcation, natural language processing, face\nrecognition, etc. The success of these deep learning algorithms relies on their capacity to model\ncomplex and non-linear relationships within data [27].\n(IV) Evaluation: The ﬁnal part of the text classiﬁcation pipeline is evaluation. Understanding\nhow a model performs is essential to the use and development of text classiﬁcation methods. There are\nmany methods available for evaluating supervised techniques. Accuracy calculation is the simplest\nmethod of evaluation but does not work for unbalanced data sets [ 28]. In Section 5, we outline the\nfollowing evaluation methods for text classiﬁcation algorithms: Fβ Score [29], Matthews Correlation\nCoefﬁcient (MCC) [ 30], receiver operating characteristics (ROC) [ 31], and area under the ROC\ncurve (AUC) [32].\nIn Section 6, we talk about the limitations and drawbacks of the methods mentioned above.\nWe also brieﬂy compare the steps of pipeline including feature extractions, dimensionality reduction,\nclassiﬁcation techniques, and evaluation methods. The state-of-the-art techniques are compared in this\nsection by many criteria such as architecture of their model, novelty of",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 Text Preprocessing",
+      "level": 1,
+      "text": "Feature extraction and pre-processing are crucial steps for text classiﬁcation applications. In this\nsection, we introduce methods for cleaning text data sets, thus removing implicit noise and allowing\nInformation 2019, 10, 150 4 of 68\nfor informative featurization. Furthermore, we discuss two common methods of text feature extraction:\nWeighted word and word embedding techniques.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 Text Cleaning and Pre-processing",
+      "level": 2,
+      "text": "Most text and document data sets contain many unnecessary words such as stopwords,\nmisspelling, slang, etc. In many algorithms, especially statistical and probabilistic learning algorithms,\nnoise and unnecessary features can have adverse effects on system performance. In this section,\nwe brieﬂy explain some techniques and methods for text cleaning and pre-processing text data sets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1.1 Tokenization",
+      "level": 3,
+      "text": "Tokenization is a pre-processing method which breaks a stream of text into words, phrases,\nsymbols, or other meaningful elements called tokens [ 39,40]. The main goal of this step is the\ninvestigation of the words in a sentence [40]. Both text classiﬁcation and text mining require a parser\nwhich processes the tokenization of the documents, for example:\nsentence [41]:\nAfter sleeping for four hours, he decided to sleep for another four.\nIn this case, the tokens are as follows:\n{ “After” “sleeping” “for” “four” “hours” “he” “decided” “to” “sleep” “for” “another” “four” }.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1.2 Stop Words",
+      "level": 3,
+      "text": "Text and document classiﬁcation includes many words which do not contain important\nsigniﬁcance to be used in classiﬁcation algorithms, such as { “a”, “about”, “above”, “across”, “after”,\n“afterwards”, “again”,. . .}. The most common technique to deal with these words is to remove them from\nthe texts and documents [42].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.1.3 Capitalization",
+      "level": 3,
+      "text": "Text and document data points have a diversity of capitalization to form a sentence. Since\ndocuments consist of many sentences, diverse capitalization can be hugely problematic when\nclassifying large documents. The most common approach for dealing with inconsistent capitalization\nis to reduce every letter to lower case. This technique projects all words in text and document into\nthe same feature space, but it causes a signiﬁcant problem for the interpretation of some words\n(e.g., “US” (United States of America) to “us” (pronoun)) [43]. Slang and abbreviation converters can\nhelp account for these exceptions [44].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.1.4 Slang and Abbreviation",
+      "level": 3,
+      "text": "Slang and abbreviation are other forms of text anomalies that are handled in the pre-processing\nstep. An abbreviation [45] is a shortened form of a word or phrase which contain mostly ﬁrst letters\nform the words, such as SVM which stands for Support Vector Machine.\nSlang is a subset of the language used in informal talk or text that has different meanings such as\n“lost the plot”, which essentially means that they’ve gone mad [46]. A common method for dealing\nwith these words is converting them into formal language [47].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.1.5 Noise Removal",
+      "level": 3,
+      "text": "Most of the text and document data sets contain many unnecessary characters such as punctuation\nand special characters. Critical punctuation and special characters are important for human\nunderstanding of documents, but it can be detrimental for classiﬁcation algorithms [48].\nInformation 2019, 10, 150 5 of 68",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.1.6 Spelling Correction",
+      "level": 3,
+      "text": "Spelling correction is an optional pre-processing step. Typos (short for typographical errors) are\ncommonly present in texts and documents, especially in social media text data sets (e.g., Twitter). Many\nalgorithms, techniques, and methods have addressed this problem in NLP [ 49]. Many techniques\nand methods are available for researchers including hashing-based and context-sensitive spelling\ncorrection techniques [50], as well as spelling correction using Trie and Damerau–Levenshtein distance\nbigram [51].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.1.7 Stemming",
+      "level": 3,
+      "text": "In NLP , one word could appear in different forms (i.e., singular and plural noun form) while the\nsemantic meaning of each form is the same [52]. One method for consolidating different forms of a\nword into the same feature space is stemming. Text stemming modiﬁes words to obtain variant word\nforms using different linguistic processes such as afﬁxation (addition of afﬁxes) [53,54]. For example,\nthe stem of the word “studying” is “study”.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.1.8 Lemmatization",
+      "level": 3,
+      "text": "Lemmatization is a NLP process that replaces the sufﬁx of a word with a different one or removes\nthe sufﬁx of a word completely to get the basic word form (lemma) [54–56].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.2 Syntactic Word Representation",
+      "level": 2,
+      "text": "Many researchers have worked on this text feature extraction technique to solve the loosing\nsyntactic and semantic relation between words. Many researchers addressed novel techniques for\nsolving this problem, but many of these techniques still have limitations. In [ 57], a model was\nintroduced in which the usefulness of including syntactic and semantic knowledge in the text\nrepresentation for the selection of sentences comes from technical genomic texts. The other solution\nfor syntactic problem is using the n-gram technique for feature extraction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.2.1 N-Gram",
+      "level": 3,
+      "text": "The n-gram technique is a set of n-word which occurs “in that order” in a text set. This is not a\nrepresentation of a text, but it could be used as a feature to represent a text.\nBOW is a representation of a text using its words (1-gram ) which loses their order (syntactic).\nThis model is very easy to obtain and the text can be represented through a vector, generally of a\nmanageable size of the text. On the other hand, n-gram is a feature of BOW for a representation of a\ntext using 1-gram. It is very common to use 2-gram and 3-gram. In this way, the text feature extracted\ncould detect more information in comparison to 1-gram.\nAn Example of 2-Gram\nAfter sleeping for four hours, he decided to sleep for another four.\nIn this case, the tokens are as follows:\n{ “After sleeping”, “sleeping for”, “for four”, “four hours”, “four he” “he decided”, “decided to”,\n“to sleep”, “sleep for”, “for another”, “another four” }.\nAn Example of 3-Gram\nAfter sleeping for four hours, he decided to sleep for another four.\nIn this case, the tokens are as follows:\n{ “After sleeping for”, “sleeping for four”, “four hours he”, “ hours he decided”, “he decided to”,\n“to sleep for”, “sleep for another”, “for another four” }.\nInformation 2019, 10, 150 6 of 68",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.2.2 Syntactic N-Gram",
+      "level": 3,
+      "text": "In [58], syntactic n-grams are discussed which is deﬁned by paths in syntactic dependency or\nconstituent trees rather than the linear structure of the text.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.3 Weighted Words",
+      "level": 2,
+      "text": "The most basic form of weighted word feature extraction is TF, where each word is mapped to a\nnumber corresponding to the number of occurrences of that word in the whole corpora. Methods that\nextend the results of TF generally use word frequency as a boolean or logarithmically scaled weighting.\nIn all weight words methods, each document is translated to a vector (with length equal to that of\nthe document) containing the frequency of the words in that document. Although this approach is\nintuitive, it is limited by the fact that particular words that are commonly used in the language may\ndominate such representations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.3.1 Bag of Words (BoW)",
+      "level": 3,
+      "text": "The bag-of-words model (BoW model) is a reduced and simpliﬁed representation of a text\ndocument from selected parts of the text, based on speciﬁc criteria, such as word frequency.\nThe BoW technique is used in several domains such as computer vision, NLP , Bayesian spam\nﬁlters, as well as document classiﬁcation and information retrieval by Machine Learning.\nIn a BoW, a body of text, such as a document or a sentence, is thought of like a bag of words.\nLists of words are created in the BoW process. These words in a matrix are not sentences which\nstructure sentences and grammar, and the semantic relationship between these words are ignored\nin their collection and construction. The words are often representative of the content of a sentence.\nWhile grammar and order of appearance are ignored, multiplicity is counted and may be used later to\ndetermine the focus points of the documents.\nHere is an example of BoW:\nDocument\n“As the home to UV A’s recognized undergraduate and graduate degree programs in systems\nengineering. In the UV A Department of Systems and Information Engineering, our students are\nexposed to a wide range of range”\nBag-of-Words (BoW)\n{“As”, “the”, “home”, “to”, “UV A’s”, “recognized”, “undergraduate”, “and”, “graduate”, “degree”,\n“program”, “in”, “systems”, “engineering”, “in”, “Department”, “Information”,“students”, “ ”,“are”,\n“exposed”, “wide”, “range” }\nBag-of-Feature (BoF)\nFeature = {1,1,1,3,2,1,2,1,2,3,1,1,1,2,1,1,1,1,1,1}",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "2.3.2 Limitation of Bag-of-Words",
+      "level": 3,
+      "text": "Bag0of-words models encode every word in the vocabulary as one-hot-encoded vector e.g., for\nthe vocabulary of size|Σ|, each word is represented by a|Σ| dimensional sparse vector with 1 at index\ncorresponding to the word and 0 at every other index. As vocabulary may potentially run into millions,\nbag-of-word models face scalability challenges (e.g., “This is good” and “Is this good” have exactly the\nsame vector representation). The technical problem of the bag-of-word is also the main challenge for\nthe computer science and data science community.\nTerm frequency, also called bag-of-words, is the simplest technique of text feature extraction.\nThis method is based on counting the number of words in each document and assigning it to the\nfeature space.\nInformation 2019, 10, 150 7 of 68",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "2.3.3 Term Frequency-Inverse Document Frequency",
+      "level": 3,
+      "text": "K. Sparck Jones [ 59] proposed Inverse Document Frequency (IDF) as a method to be used in\nconjunction with term frequency in order to lessen the effect of implicitly common words in the corpus.\nIDF assigns a higher weight to words with either high or low frequencies term in the document.\nThis combination of TF and IDF is well known as Term Frequency-Inverse document frequency\n(TF-IDF). The mathematical representation of the weight of a term in a document by TF-IDF is given in\nEquation (1).\nW(d, t) = TF (d, t)∗ log ( N\nd f(t) ) (1)\nHere N is the number of documents and d f(t) is the number of documents containing the term t\nin the corpus. The ﬁrst term in Equation (1) improves the recall while the second term improves the\nprecision of the word embedding [60]. Although TF-IDF tries to overcome the problem of common\nterms in the document, it still suffers from some other descriptive limitations. Namely, TF-IDF cannot\naccount for the similarity between the words in the document since each word is independently\npresented as an index. However, with the development of more complex models in recent years,\nnew methods, such as word embedding, have been presented that can incorporate concepts such as\nsimilarity of words and part of speech tagging.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "2.4 Word Embedding",
+      "level": 2,
+      "text": "Even though we have syntactic word representations, it does not mean that the model captures\nthe semantics meaning of the words. On the other hand, bag-of-word models do not respect the\nsemantics of the word. For example, words “airplane”, “aeroplane”, “plane”, and “aircraft” are often\nused in the same context. However, the vectors corresponding to these words are orthogonal in the\nbag-of-words model. This issue presents a serious problem to understanding sentences within the\nmodel. The other problem in the bag-of-word is that the order of words in the phrase is not respected.\nThe n-gram does not solve this problem so a similarity needs to be found for each word in the sentence.\nMany researchers worked on word embedding to solve this problem. The Skip-gram and continuous\nbag-of-words (CBOW) models of [61] propose a simple single-layer architecture based on the inner\nproduct between two word vectors.\nWord embedding is a feature learning technique in which each word or phrase from the vocabulary\nis mapped to a N dimension vector of real numbers. Various word embedding methods have been\nproposed to translate unigrams into understandable input for machine learning algorithms. This work\nfocuses on Word2Vec, GloVe, and FastText, three of the most common methods that have been\nsuccessfully used for deep learning techniques. Recently, the Novel technique of word representation\nwas introduced where word vectors depend on the context of the word called“Contextualized Word\nRepresentations” or “Deep Contextualized Word Representations”.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "2.4.1 Word2Vec",
+      "level": 3,
+      "text": "T. Mikolov et al. [61,62] presented \"word to vector\" representation as an improved word embedding\narchitecture. The Word2Vec approach uses shallow neural networks with two hidden layers,\ncontinuous bag-of-words (CBOW), and the Skip-gram model to create a high dimension vector for\neach word. The Skip-gram model dives a corpus of wordsw and context c [10]. The goal is to maximize\nthe probability:\narg max\nθ ∏\nw∈T\n[\n∏\nc∈c(w)\np(c| w; θ)\n]\n(2)\nwhere T refers to Text, and θ is parameter of p(c| w; θ).\nInformation 2019, 10, 150 8 of 68\nFigure 2 shows a simple CBOW model which tries to ﬁnd the word based on previous words,\nwhile Skip-gram tries to ﬁnd words that might come in the vicinity of each word. The weights between\nthe input layer and output layer represent v× N [63] as a matrix of w.\nh = WTc = WT\nk,. := vT\nwI (3)\nThis method provides a very powerful tool for discovering relationships in the text corpus as well\nas similarity between words. For example, this embedding would consider the two words such as\n“big” and “bigger” close to each other in the vector space it assigns them.\nW(t)\nW(t-2)\nW(t-1)\nW(t+1)\nW(t+2)\nInput Projection Output\nW(t-2)\nW(t-1)\nW(t+1)\nW(t+2)\nW(t)\nInput Projection Output\nSkip-gramCBOW\nFigure 2. The continuous bag-of-words (CBOW) architecture predicts the current word based on the\ncontext, and the Skip-gram predicts surrounding words based on the given current word [61].\nContinuous Bag-of-Words Model\nThe continuous bag-of-words model is represented by multiple words for a given target of words.\nFor example, the word “airplane” and “military” as context words for “air-force” as the target word.\nThis consists of replicating the input to hidden layer connections β times which is the number of\ncontext words [61]. Thus, the bag-of-words model is mostly used to represent an unordered collection\nof words as a vector. The ﬁrst thing to do is create a vocabulary, which means all the unique words in\nthe corpus. The output of the shallow neural network will be wi that the task as “predicting the word\ngiven its context”. The number of words used depends on the setting for the window size (common\nsize is 4–5 words).\nContinuous Skip-Gram Model\nAnother model architecture which is very similar to CBOW [ 61] is the continuous Skip-gram\nmodel, however this model, instead of predicting the current word based on the context, tries to\nmaximize classiﬁcation of a word based on another word in the same sentence. The continuous\nbag-of-words model and continuous Skip-gram model are used to keep syntactic and semantic\ninformation of sentences for machine learning algorithms.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "2.4.2 Global Vectors for Word Representation (GloVe)",
+      "level": 3,
+      "text": "Another powerful word embedding technique that has been used for text classiﬁcation is Global\nVectors (GloVe) [11]. The approach is very similar to the Word2Vec method, where each word is\nInformation 2019, 10, 150 9 of 68\npresented by a high dimension vector and trained based on the surrounding words over a huge corpus.\nThe pre-trained word embedding used in many works is based on 400,000 vocabularies trained over\nWikipedia 2014 and Gigaword 5 as the corpus and 50 dimensions for word presentation. GloVe also\nprovides other pre-trained word vectorizations with 100, 200, 300 dimensions which are trained over\neven bigger corpora, including Twitter content. Figure 3 shows a visualization of the word distances\nover a sample data set using the same t-SNE technique [64]. The objective function is as follows:\nf (wi− wj,˜wk) = Pik\nPjk\n(4)\nwhere wi refers to the word vector of word i, and Pik denotes to the probability of word k to occur in\nthe context of word i.\nMan\nWoman\nUncle\nAunt\nKing\nQueen\nNiece \nNephew\nFigure 3. GloVe: Global Vectors for Word Representation.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "2.4.3 FastText",
+      "level": 3,
+      "text": "Many other word embedding representations ignore the morphology of words by assigning a\ndistinct vector to each word [65]. Facebook AI Research lab released a novel technique to solve this\nissue by introducing a new word embedding method called FastText. Each word, w, is represented as\na bag of character n-gram. For example, given the word “introduce” and n = 3, FastText will produce\nthe following representation composed of character tri-grams:\n< in, int, ntr, tro, rod, odu, duc, uce, ce >\nNote that the sequence <int>, corresponding to the word here is different from the tri-gram “int”\nfrom the word introduce.\nSuppose we have a dictionary of n-grams of size G, and given a word w which is associated as a\nvector representation zg to each n-gram g. The obtained scoring function [65] in this case is:\ns(w, c) = ∑\ng∈gw\nzT\ng vc (5)\nwhere gw∈{ 1, 2, . . . ,G} .\nFacebook published pre-trained word vectors for 294 languages which are trained on Wikipedia\nusing FastText based on 300 dimension. The FastText used the Skip-gram model [ 65] with default\nparameters.\nInformation 2019, 10, 150 10 of 68",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "2.4.4 Contextualized Word Representations",
+      "level": 3,
+      "text": "Contextualized word representations are another word embedding technique which is based\non the context2vec [ 66] technique introduced by B. McCann et al. The context2vec method uses\nbidirectional long short-term memory (LSTM). M.E. Peters et al. [ 67] built upon this technique to\ncreate the deep contextualized word representations technique. This technique contains both the main\nfeature of word representation: (I) complex characteristics of word use (e.g., syntax and semantics)\nand (II) how these uses vary across linguistic contexts (e.g., to model polysemy) [67].\nThe main idea behind these word embedding techniques is that the resulting word vectors are\nlearned from a bidirectional language model (biLM), which consist of both forward and backward LMs.\nThe forward LMs are as follows:\np(t1, t2, . . . ,tN) =\nN\n∏\nk=1\np(tk|t1, t2, . . . ,tk−1) (6)\nThe backward LMs are as follows:\np(t1, t2, . . . ,tN) =\nN\n∏\nk=1\np(tk|tk+1, tk+2, . . . ,tN) (7)\nThis formulation jointly maximizes the log-likelihood of the forward and backward directions\nas follows:\nN\n∑\nk=1\n\n log p(tk|t1, . . . ,tk−1; Θx,− →Θ LSTM , Θs)+\nlog p(tk|tk+1, . . . ,tN; Θx,← −Θ LSTM , Θs)\n\n (8)\nwhere Θx is the token representation and Θx refers to the softmax layer. Then, ELMo is computed as a\ntask-speciﬁc weighting for all biLM layers as follows:\nELMo task\nk = E(Rk; Θtask ) = γtask\nL\n∑\nj=0\nstask\nj hLM\nk,j (9)\nwhere hLM\nk,j is calculated by:\nhLM\nk,j =\n[− →h LM\nk,j ,← −h LM\nk,j\n]\n(10)\nwhere stask stands for softmax-normalized weights, and γtask is the scalar parameter.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "2.5 Limitations",
+      "level": 2,
+      "text": "Although the continuous bag-of-words model and continuous Skip-gram model are used to keep\nsyntactic and semantic information of per-sentences for machine learning algorithms, there remains\nthe issue how to keep full meaning of coherent documents for machine learning.\nExample:\nDocument: {“ Maryam went to Paris on July 4th, 2018. She missed the independence day ﬁreworks and\ncelebrations. This day is a federal holiday in the United States commemorating the Declaration of Independence\nof the United States on July 4, 1776. The Continental Congress declared that the thirteen American colonies\nwere no longer subject to the monarch of Britain and were now united, free, and independent states. She wants\nto stay in the country for next year and celebrate with her friends.”}\nSentence level of this document:\nS1: {“Maryam went to Paris on July 4th, 2018.”}\nS2: {“She missed the independence day ﬁreworks and celebrations.”}\nS3: {“This day is a federal holiday in the United States commemorating the Declaration of Independence of the\nInformation 2019, 10, 150 11 of 68\nUnited States on July 4, 1776.”}\nS4: {“ The Continental Congress declared that the thirteen American colonies were no longer subject to the\nmonarch of Britain and were now united, free, and independent states.”}\nS5: {“She has a plan for next year to stay in the country and celebrate with her friends.”}\nLimitation:\nFigure 4 shows how the feature extraction fails for per-sentence level. The purple color shown\nin ﬁgure is the brief history of “This day”. Furthermore, “This day” refers to “July 4th”. In S5, “She”\nrefers to the S1 “Maryam”.\nFigure 4. Limitation of document feature extraction by per-sentence level.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "3 Dimensionality Reduction",
+      "level": 1,
+      "text": "Text sequences in term-based vector models consist of many features. Thus, time complexity and\nmemory consumption are very expensive for these methods. To address this issue, many researchers\nuse dimensionality reduction to reduce the size of feature space. In this section, existing dimensionality\nreduction algorithms are discussed in detail.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "3.1 Component Analysis",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "3.1.1 Principal Component Analysis (PCA)",
+      "level": 3,
+      "text": "Principal component analysis (PCA) is the most popular technique in multivariate analysis and\ndimensionality reduction. PCA is a method to identify a subspace in which the data approximately\nlies [68]. This means ﬁnding new variables that are uncorrelated and maximizing the variance to\n“preserve as much variability as possible” [69].\nSuppose a data set x(i); i = 1, ...,m is given and x(i)∈ Rn for each i (n≪ m). The jth column of\nmatrix X is vector, xj that is the observations on the jth variable. The linear combination of xjs can be\nwritten as: m\n∑\nj=1\najxj = Xa (11)\nwhere a is a vector of constants a1, a2, ...,am. The variance of this linear combination can be given as:\nvar(Xa) = aTSa (12)\nwhere S is the sample co-variance matrix. The goal is to ﬁnd the linear combination with maximum\nvariance. This translates into maximizing aTSa− λ(aTa− 1), where λ is a Lagrange multiplier.\nInformation 2019, 10, 150 12 of 68\nPCA can be used as a pre-processing tool to reduce the dimension of a data set before running a\nsupervised learning algorithm on it (x(i)s as inputs). PCA is also a valuable tool as a noise reduction\nalgorithm and can be helpful in avoiding the over-ﬁtting problem [70]. kernel principal component\nanalysis (KPCA) is another dimensionality reduction method that generalizes linear PCA into the\nnonlinear case by using the kernel method [71].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "3.1.2 Independent Component Analysis (ICA)",
+      "level": 3,
+      "text": "Independent component analysis (ICA) was introduced by H. Jeanny [72]. This technique was\nthen further developed by C. Jutten and J. Herault [ 73]. ICA is a statistical modeling method\nwhere the observed data are expressed as a linear transformation [ 74]. Assume that 4 n linear\nmixtures (x1, x2, . . . ,xn) are observed where independent components:\nxj = aj1s1 + aj2s2 + . . .+ ajnsn∀j (13)\nThe vector-matrix notation is written as:\nX = As (14)\nDenoting them by ai, the model can also be written [75] as follows:\nX =\nn\n∑\ni=1\naisi (15)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "3.2 Linear Discriminant Analysis (LDA)",
+      "level": 2,
+      "text": "LDA is a commonly used technique for data classiﬁcation and dimensionality reduction [76]. LDA\nis particularly helpful where the within-class frequencies are unequal and their performances have been\nevaluated on randomly generated test data. Class-dependent and class-independent transformation\nare two approaches to LDA in which the ratio of between class variance to within class variance and\nthe ratio of the overall variance to within class variance are used respectively [77].\nLet xi ∈ Rd which be d-dimensional samples and yi ∈ {1, 2, ...,c} be associated target or\noutput [76], where n is the number of documents and c is the number of categories. The number of\nsamples in each class is calculated as follows:\nSw =\nc\n∑\nl=1\nsl (16)\nwhere\nSi = ∑\nx∈wi\n(x− µi)(x− µi)T, µi = 1\nNi\n∑\nx∈wi\nx (17)\nThe generalization between the class scatter matrix is deﬁned as follows:\nSB =\nc\n∑\ni=1\nNi(µi− µ)(µi− µ)T (18)\nwhere\nµ = 1\nN ∑\n∀x\nx (19)\nRespect to c− 1 projection vector of wi that can be projected into W matrix:\nW = [w1|w2| . . .|wc−1] (20)\nyi = wT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "x (21)",
+      "level": 1,
+      "text": "Information 2019, 10, 150 13 of 68\nThus, the µ (mean) vector and S matrices (scatter matrices) for the projected to lower dimension\nas follows:\n˜Sw =\nc\n∑\ni=1\n∑\ny∈wi\n(y−˜µi)(y−˜µi)T (22)\n˜SB =\nc\n∑\ni=1\n(˜µi−˜µ)(˜µi−˜µ)T (23)\nIf the projection is not scalar (c− 1 dimensions), the determinant of the scatter matrices will be\nused as follows:\nJ(W) = |˜SB|\n|˜SW|\n(24)\nFrom the ﬁsher discriminant analysis (FDA) [76,78], we can re-write the equation as:\nJ(W) = |WTSBW|\n|WTSWW| (25)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "3.3 Non-Negative Matrix Factorization (NMF)",
+      "level": 2,
+      "text": "Non-negative matrix factorization (NMF) or non-negative matrix approximation has been shown\nto be a very powerful technique for very high dimensional data such as text and sequences analysis [79].\nThis technique is a promising method for dimension reduction [80]. In this section, a brief overview\nof NMF is discussed for text and document data sets. Given a non-negative n× m in matrix V is an\napproximation of:\nV≈ WH (26)\nwhere W = Rn×r and H = Rr×m. Suppose (n + m) r < nm, then the product WH can be regarded\nas a compressed form of the data in V. Then vi and hi are the corresponding columns of V and H.\nThe computation of each corresponding column can be re-written as follows:\nui≈ Whi (27)\nThe computational time of each iteration, as introduced by S. Tsuge et al. [ 80], can be written\nas follows:\nHij = Hij\n(WTV)ij\n(WTWH )ij\n(28)\nWij = Wij\n(VH T)ij\n(WHH T)ij\n(29)\nThus, the local minimum of the objective function is calculated as follows:\nF = ∑\ni\n∑\nj\n(Vij− (WH )ij )2 (30)\nThe maximization of the objective function can be re-written as follows:\nF = ∑\ni\n∑\nj\n(Vij log((WH )ij )− (WH )ij ) (31)\nInformation 2019, 10, 150 14 of 68\nThe objective function, given by the Kullback–Leibler [81,82] divergence, is deﬁned as follows:\nHij = Hij ∑\nk\nWkj\nVkj\n(WH )kj\n(32)\nˆWij = Wij ∑\nk\nVik\n(WH )ik\nHjk (33)\nWij =\nˆWij\n∑k ˆWkj\n(34)\nThis NMF-based dimensionality reduction contains the following 5 steps [80] (step VI is optional\nbut commonly used in information retrieval:\n(I) Extract index term after pre-processing stem like feature extraction and text cleaning as\ndiscussed in Section 2. Then we have n documents with m features;\n(II) Create n documents (d∈{ d1, d2, . . ., dn}), where vector aij = Lij× Gi where Lij refers to local\nweights of i−th term in document j, and Gi is global weights for document i;\n(III) Apply NMF to all terms in all documents one by one;\n(IV) Project the trained document vector into r-dimensional space;\n(V) Using the same transformation, map the test set into the r-dimensional space;\n(VI) Calculate the similarity between the transformed document vectors and a query vector.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "3.4 Random Projection",
+      "level": 2,
+      "text": "Random projection is a novel technique for dimensionality reduction which is mostly used for\nhigh volume data set or high dimension feature spaces. Texts and documents, especially with weighted\nfeature extraction, generate a huge number of features. Many researchers have applied random\nprojection to text data [83,84] for text mining, text classiﬁcation, and dimensionality reduction. In this\nsection, we review some basic random projection techniques. As shown in Figure 5, the overview of\nrandom projection is shown.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "3.4.1 Random Kitchen Sinks",
+      "level": 3,
+      "text": "The key idea of random kitchen sinks [ 85] is sampling via monte carlo integration [ 86]\nto approximate the kernel as part of dimensionality reduction. This technique works only for\nshift-invariant kernel:\nK(x, x′) = < φ(x), φ(x′) >≈ K(x− x′) (35)\nwhere shift-invariant kernel, which is an approximation kernel of:\nK(x− x′) = z(x)z(x′) (36)\nK(x, x′) =\n∫\nRD\nP(w)eiwT (x−x′) (37)\nwhere D is the target number of samples, P(w) is a probability distribution, w stands for random\ndirection, and w∈ RF×D where F is the number of features and D is the target.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overview of text classiﬁcation pipeline."
+    },
+    {
+      "id": "f2",
+      "caption": "shows a simple CBOW model which tries to ﬁnd the word based on previous words,"
+    },
+    {
+      "id": "f3",
+      "caption": "GloVe: Global Vectors for Word Representation."
+    },
+    {
+      "id": "f4",
+      "caption": "shows how the feature extraction fails for per-sentence level. The purple color shown"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "(24)"
+    },
+    {
+      "id": "e28",
+      "latex_or_text": "(28)"
+    },
+    {
+      "id": "e29",
+      "latex_or_text": "(29)"
+    },
+    {
+      "id": "e32",
+      "latex_or_text": "(32)"
+    },
+    {
+      "id": "e34",
+      "latex_or_text": "(34)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 9
+  }
+}

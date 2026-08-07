@@ -1,0 +1,242 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2025_chinese_ner_muskdeer.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2.1 DynamicArchitecture-BasedMethodologies",
+      "level": 2,
+      "text": "Zhang et al. [14] proposed the Lattice LSTM model, the earliest model to apply lexical enhancement\nmethods in Chinese NER tasks. This model introduces a word cell structure based on the LSTM, incorpo-\nrating all lexical information for characters ending in that character. While this model achieved effective\nperformanceimprovementinNERbyintegratinglexicalinformation,itsuffersfromdrawbackssuchaslow\ncomputational performance, information loss, and poor portability. These issues stem from its use of RNN\n2992 ComputMaterContin. 2025;83(2)\nstructure,inabilitytoparallelizecalculations,lackofutilizationoflexicalinformationwitheachcharacteras\nanintermediatecharacter,andlimited adaptabilitytoLSTM networks. Gui et al. [15] suggested using CNN\nto encode character features, allowing for parallelized computation, and employed attention mechanisms\nto integrate lexical information. To address the issue of lexical information loss, Sui et al. [16]c o n s t r u c t e d\na collaborative graph network between characters and words, utilizing a Graph Attention Network (GAN)\nfor feature extraction. Gui et al. [17] proposed a neural network model based on a dictionary. As RNN and\nCNN structures are unable to capture long-distance dependencies in sentences, Li et al. [18] introduced\nthe Flat-Lattice Transformer model. This model excels at capturing long-distance dependencies through\nits fully connected self-attention mechanism. It integrates lattice structures by assigning head and tail\nposition encodings to each character and word. Liu et al. [19] considered that current approaches only fuse\nlexicalinformationthroughashallowrandominitialis ationlayer,andproposedtointegrateexternallexical\nknowledgedirectlyintotheBERTlayerthroughalexicaladapter.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.2 AdaptiveEmbedding-BasedMethodologies",
+      "level": 2,
+      "text": "Besidestheaforementionedmethod,whichmodifiesthemodelframeworktoincorporatelexicalinfor-\nmation, certain studies suggest approaches that exclusively integrate lexical information at the embedding\nlayer, showcasing enhanced transferability. For instance, Liu et al. [20] suggested encoding fixed-length\nrepresentations of vocabulary information ending with each character to serve as the word vector for that\ncharacter.Thecharacter’swordvectoristhenconcatenatedwithitscharactervectortoformthefinalvector\nrepresentation of the character. However, this method still lacks vocabulary information for each character\nactingasanintermediatecharacter.Maetal.[ 4]proposedasimplemethodtointegratelexicalinformationat\nthemodel’sembeddinglayerbysequentiallyobtainingallvocabularysetsforeachcharacterasthestarting,\nmiddle,ending,andstandalonecharacter.Thesesetsarethenencodedandconcatenatedwiththecharacter\nencoding.Thismethodmaximizestheutilizationofvocabularyinformation,preventsinformationloss,and\nexperimental results affirm its efficacy in enhancing the performance of Chinese NER. Motivated by the\naforementioned methodology, we employ the lexical augmentation strategy grounded in the foundational\nmodelofGlobalPointer.GiventhatthestudyconductedbyMaetal.[ 4]exclusivelydelvedintothemigratory\nimplementation of their approach onto NER models based on the sequence-labeling architectures, we\nendeavor to extend this inquiry by examining its applicability to span-based NER models. Furthermore,\nan innovative contribution of this paper lies in the introduction of a cross-attention mechanism, aimed at\nguiding the model to utilize lexical information more effectively. This augmentation serves to enhance the\nmodel’ssemanticrepresentationproficiencyanditsabilitytodiscernwordboundaries.\n3M e t h o d o l o g y\nTheCAELF-GPmodelwithenhancedlexicalfeaturesbasedoncross-attentionemploysthespan-based\narchitecture,offeringtheadvantageofrecognizingbothnestedandnon-nestedentities.Themodelcomprises\ndistinct layers: the character representation layer, feature fusion layer, span representation layer, and label\nprediction layer, as illustrated inFig.1.\nComputMaterContin. 2025;83(2) 2993\nFigure1: TheoverallarchitectureoftheCAELF-GPmodel\nThecharacterrepresentationlayerutilizestheBERTmodeltoencodetheinputtextsequence,yielding\nvectorrepresentationsforeachcharacter.Thefeaturefusionlayerenhanceslexicalfeaturesbyincorporating\nexternal information, addressing challenges in semantic representation and entity boundary recognition.\nNotably,weintroduceaninnovativecross-attentionmechanismwithinthefeaturefusionmethod,directing\nthemodel’sfocustocruciallexicalinformationbasedonthecorrelationbetweeninputsequencecharacters\nandthesetsofmatchingwords.Thespanrepresentationlayeremploysamultiplicativeattentionmechanism\non vector representations of characters, integrating positional coding to score all candidate entities within\neachentityclass.ThelabelpredictionlayeradoptsthedecodingmodulefromtheGlobalPointermodel,clas-\nsifyingcandidateentitieswithmultiplelabelsbasedontheirscores.Thisdecodingstructureaccommodates\nthe identification of both nested and non-nested entities. The training process of the model is shown in\nAlgorithm1below:\nAlgorithm1: PseudocodefortheCAELF-GPmodel\nInput:initialparameters θ,trainingdataX,externallexiconL\nOutput:Optimizedmodelparameters ˆθ\n1:Repeat\n2: Convertsentencestocharactervectors: h\ni← PLM(ci)\n3: Obtainthefourwordvectorscorrespondingtoeachcharacteraccordingto Eqs.(2)–(7):\nvS\ni (B),vS\ni (M),vS\ni (E),vS\ni(S)\n(Continued)\n2994 ComputMaterContin. 2025;83(2)\nAlgorithm1(continued)\n4: Accordingto Eqs.(8)–(12),obtainthecharactervectorrepresentation xi of thefused vocabulary\nfeatures:\nzi← CrossAttention (hi,vs\ni,j),\nxi← Concat(hi,zi)\n5: Accordingto Eqs.(13)–(15),calculatethescoreofspanbelongingtotype α basedontheheadandtail\ncharactersofspan Sα(i, j):Sα(i, j)← qi,αTRj−ikj,α\n6: Calculatetheloss:loss ←log(1+∑(i,j)∈Pα e−sα(i,j))+ log(1+∑(i,j)∈Qα esα(i,j))\n7: Updatemodelparameters: ˆθ← argmin θ(loss)\n8:Untilniterationsarecompleted",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3.1 CharacterRepresentationLayer",
+      "level": 2,
+      "text": "The CAELF-GP model uses BERT as the encoder. BERT’s input consists of three parts: word embed-\ndings, segment embeddings, and position embeddings. Word embeddings are typically at the level of\nwords, subwords, or characters. The purpose of segment embeddings is to differentiate between pairs of\nsentences. Position embeddings are used to introduce the positional information of characters into the\nmodel, addressing the issue of Transformer models failing to capture the absolute positions of tokens in\nasequence.\nSpecifically, for a sentence S composed of n characters (S={ c\n1,c2,... cn}) ,w ei n p u ti ti n t ot h ep r e -\ntrainedlanguagemodel BERT toobtainthe corresponding representations for each character:\nh1,h2,... hn= PLM(c1,c2,... cn).( 1 )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.2 FeatureFusionLayer",
+      "level": 2,
+      "text": "3.2.1LexicalFeature\nFor Chinese words, the starting character, middle character, ending character, and characters that\nindependently form a word often contain rich semantic information and word boundary information.\nMoreover, as observed from the experimental results inSection4.2,t h em o d e li n c o r p o r a t i n gt h e“ B M E S ”\nword sets achieved the best performance. Therefore, in the CAELF-GP model, the lexical features corre-\nsponding to each characterc",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "are derived from words where the character serves as the starting character,",
+      "level": 1,
+      "text": "middle character, or ending character, as well as words formed solely by the character itself. These words\nform four corresponding word sets, B (ci), M (ci), E (ci), and S (ci), which can be represented using the\nfollowingEqs.(2)–(5).H ere,wi,k representsawordintheinputsequence Sthatstartswith ci,endswith ck,\nandexistsintheexternaldictionary L.\nB(ci)={ wi,k,∀wi,k∈ L,i< k≤ n},( 2 )\nM(ci)={ wj,k,∀wj,k∈ L,1≤ j< i< k≤ n},( 3 )\nE(ci)={ wj,i,∀wj,i∈ L,1≤ j≤ i}, (4)\nS(ci)={ ti,∃ti∈ L}. (5)\nAfter obtainingthe“BMES”word setscorresponding toeachcharacter,thesesetsarecompressed into\nvectors of fixed dimensions. During computation, the word frequency of each word in the corpus (in our\nComputMaterContin. 2025;83(2) 2995\nexperiments,thecorpusreferstothedatacomposedofthetrainingandvalidationsets)isusedasitsweight.\nAdditionally,weightnormalizationisappliedtoallwordsinthefoursetsforoverallcomparison.Takingthe\nexample of the word set B corresponding to the characterci,i t sse tv e ct o rvS\ni(B)can be obtained using the\nfollowingEqs.(6) and(7).H ere,z(w)represents theword frequencyoftheword winthecorpus, and ew (⋅)\ndenotes the operation of converting the word intoa word vector.\nZ=∑w∈B∪M∪E∪S z(w),( 6 )\nvS\ni (B)= 4\nZ∑\nw∈B\nz(w)ew(w).( 7 )",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.2.2 Feature Fusion Based on Cross-Attention",
+      "level": 3,
+      "text": "Eachcharacterwithintheinputsequenceexhibitsvaryingdegreesofassociationwiththeinformation\nof its respective four lexical sets. To guide the model towards prioritizing essential lexical information, the\nincorporationofacross-attentionmechanismispropos ed.Thismechanismassignsdistinctweightstolexical\nfeatures, facilitating the derivation of a character vector representation that encompasses relevant lexical\nattributes.\nTo make it easier to understand the role of the cross-attention mechanism, we will illustrate it using\nitsapplicationina question-answeringtaskas anexa mple. In a question-answeringtask, both the question\nand the relevant paragraph are input into the model, and the model needs to generate an answer based on\nthe provided input. The role of the cross-attention mechanism is to allow the model, when generating the\nanswer, to treat the question as a query and dynamically attend to different parts of the paragraph, thereby\nlocatingthemostrelevantcontentintheparagraphandgeneratingtheanswer.Inadditiontoitsapplication\nin question-answering tasks, the cross-attention mechanism has also achieved outstanding results in many\nother tasks, including image processing [21,22] and multimodal learning [23,24]. Distinguished as an\nextension of the self-attention mechanism, the primary distinction lies in the source of input: the self-\nattention mechanism draws from the same sequence, whereas the cross-attention mechanism draws from\ndisparate sequences. In this work, the input to the cross-attention mechanism primarily originates from\nthe original input sequence and the corresponding external word sets, as shown inFig.2. The operational\nprocedureinvolvesgeneratingaQuery(Q)vectorforeachcharactervector h",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "oftheinputsequence,utilizing",
+      "level": 1,
+      "text": "the trainable parameter matrixWQ\ni .A d d i t i o n a l l y ,f o rt h ef o u rl e x i c a ls e tv e c t o r sc o r r e s p o n d i n gt ot h e\ncharacter, Key (K) and Value (V) vectors are formulated using trainable parameter matricesWK",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "and WV",
+      "level": 1,
+      "text": "i ,\nrespectively. Here,WQ\ni ∈ Rdk×de , WK\ni ,WV\ni ∈ Rdk×dge ,w i t hdk denoting the dimension of theK vector,de\ndenotingthe dimensionofthecharactervectors outputfrom BERT,and dge denotingthedimensionof the\nword vector.\nQi= WQ\ni ⋅hi, (8)\nKi,j= WK\ni ⋅vs\ni,j, (9)\nVi,j= WV\ni ⋅vs\ni,j. (10)\n2996 ComputMaterContin. 2025;83(2)\nFigure2: Cross-Attentionarchitecture\nBy computing the scaled dot product between theQvector of the current character and theK vectors\nassociated with the respective word sets, attention scores for the current character across the four word sets\nare derived. Subsequently, attention weights are obtained through the application of the softmax function.\nUtilizingtheacquiredweights,the V vectorsundergoweightingandsummationtoyieldthecharactervector\nrepresentation incorporating lexical features, denoted aszi. Since there are four word sets defined in this\nwork,specificallyidentifiedas“BMES”,thevalueofninthe Eq.(11) is4.\nzi=∑\nn\nj=1 softmax (Qi⋅Ki,j\n√dk\n)Vi,j. (11)\nUltimately, in order to retain more information, the vector representation of each character by BERT\nand the character vector representation incorporating lexical features are concatenated as the final vector\nrepresentationofthecharacter:\nxi←[ hi;zi]. (12)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.3 SpanRepresentationLayer",
+      "level": 2,
+      "text": "Afterobtainingthevectorrepresentationsforallcharactersinthesentence,aspancanberepresentedby\nitsfirstandlastcharacters.Upon acquiringthe sentencerepresentation X, it undergoes processing through\nfully-connectedlayerstoderivecharacterheadandtailvectorrepresentationsdenotedas q\ni,α andki,α.These\nrepresentationsareinstrumentalintheidentificationofentitiesbelongingtothespecifiedtype α.\nqi,α= Wq,αxi+bq,α, (13)\nki,α= Wk,αxi+bk,α. (14)\nThe scoreSα(i, j) for predicting spans[i∶ j] as an entity of typeα c a nb eo b t a i n e db ym u l t i p l y i n gt h e\nvectorrepresentationsofthefirstandlastcharactersofspan s[i∶ j].Thecalculationof Sα(i, j)appliesRotary\nPositional Encoding (RoPE) [25], which explicitly injects relative positional information to better utilize\nwordboundaryinformation.Here,Risatransformationmatrix,anditsatisfies Ri\nTRj= Rj−i.\nSα(i, j)=( Riqi,α)T(Rjkj,α),( 1 5 )\n= qi,α\nTRi\nTRjkj,α\n= qi,α\nTRj−ikj,α\nComputMaterContin. 2025;83(2) 2997",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.4 LabelPredictionLayer",
+      "level": 2,
+      "text": "Inthetaskofidentifyingentitiesoftype αfromsentenceswithasequencelengthofn,theselectionofk\nentitiesisrequiredfromapoolofn(n +1)/2candidateentities.Thus,thetasktransformsintoamulti-label\nclassificationtask.Weemployalossfunctiondesignedfor multi-labelclassificationtasks,anditscalculation\nformula is as follows. During the decoding phase, all segmentss[i∶ j]satisfying Sα(i, j)> 0 are considered\naso u tp u tso fen ti tieso ftypeα.\nloss=log(1+∑(i,j)∈Pα\ne−sα(i,j))+ log(1+∑(i,j)∈Qα\nesα(i,j)).( 1 6 )\nPα denotes the set of all spans belonging to entities of typeα,a n dQα denotes the set of all spans\nbelongingtonon-entitiesorentitiesnotoftype α.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4 Experiments",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.1 DatasetandLabelingStrategy",
+      "level": 2,
+      "text": "ToassessthesuperiorityoftheCAELF-GPmodel,weconductedexperimentsusingtwopublicdatasets\nand a self-constructed literature abstract NER dataset specific to the musk deer field (MDNER).Table 1\npresents information for each dataset. Specifically, two public datasets originate from distinct domains:\nWeibo [4],gatheredfromthesocialmediawebsiteWeibo,andCLUENER[ 26],obtainedfromthenewsfield.\nAs the test set of the CLUENER dataset lacks annotations and cannot be employed to evaluate the model’s\neffectiveness,wecombinethetrainingandvalidationsetsofCLUENER.Subsequently,weredistributethem\ninan8:1:1ratio,designatingthemasthetrainingset,validationset,andtestset.\nTable 1:Statistics of datasets\nDatasets Train Dev Test Sentencelength Numberofentitytypes\nCLUENER 9.6k 1.2k 1.2k 37.38 10\nWeibo 1.4k 0.27k 0.27k 54.57 8\nMDNER 1.7k 0.22k 0.22k 53.09 11\nMDNER datasets primarily derive from pertinent research literature accessible through the China\nNational Knowledge Infrastructure (CNKI), encompassing journal articles, master’s and doctoral theses.\nDue to the limited amount of Chinese literature on musk deer, and the reference value of closely related\nspecies for musk deer studies, we also gather relevant literature on these species (primarily red deer and\nsika deer) to augment the dataset. We search the literature on CNKI (https://www.cnki.net/ (accessed on\n1 January 2025)) using the subject words “musk deer”, “red deer” and “sika deer”, and manually filter out\nirrelevant publications. We use publicly available literature published on the internet as our data source,\nwhichdoesnotincludeanyprivatedata.Additionally,duringthedatacollectionprocess,wecarefullyreview\nthe data to ensure that it does not contain any sensitive information. Finally, a total of 1401 abstracts of\ndocuments are collected, with a total of 2165 sentences. In order to conduct NER task, these sentences are\nlabeled with entities using Label-Studio (https://labelstud.io/(accessed on 1 January 2025)). Given that our\nmodel is based on span as the basic unit for entity recognition, the annotation of the raw data needs to be\nmarkedwiththename,categoryandlocationofentitiespresentwithinthesentence.Basedontheprimary\nresearch themes in musk deer literature and the opinions of domain experts, we categorized entities into\n11 types, encompassing nature reserves, regions, tissue parts, diseases, genes, cells, bodily elements, food,\nbacteria,andresearchmethods.Duringthedataannotationprocess,thepresenceofspecializedvocabularies\n2998 ComputMaterContin. 2025;83(2)\nincreased the difficulty of understanding the text. In order to accurately annotate the entities, we carry out\nthe data annotation work under the guidance of domain experts.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.2 ExperimentSetup",
+      "level": 2,
+      "text": "The bert-base-Chinese pre-trained language model, released by Google, serves as the foundational\nencoder. For lexicons, experiments on two public datasets use the lexicon provided by [14], which are\npre-trained on Chinese Giga-Word using word2vec [27]. This lexicon is characterized by word vector of\ndimension 50, encompassing 5.7 k single-character words, 291.5 k two-character words, 278.1 k three-\ncharacter words, and 129.1 k other words. The experiments conducted on the MDNER dataset involved the\nutilization of word vectors derived from training word2vec models on a corpus of pertinent literature. In\nthe training process, we use the Adam optimizer, and adopt the dropout technique to avoid overfitting. To\ndetermine the hyperparameters of the model, we employ a random search method. By randomly selecting\nparameter combinations and conducting multiple preliminary experiments, the optimal performance of\nthe model along with the corresponding parameter configurations are recorded.Table 2shows the optimal\nhyperparametersoftheproposedmodelandtherangeoftherandomsearchfortheparameters.TheCAELF-\nGP model and the comparison model in this paper undergo training and testing on an NVIDIA RTX\nA4000GPU.\nTable 2:Optimalhyperparametervaluesandtheirsearchranges\nHyperparameters Optimalvalue Randomsearchrange\nBatchsize 16(CLUENER),5(others) [5,16,32]\nLearningrate 2 ×10−5 [2×10−5,5×10−5,5×10−4]\nDropout 0.3 [0.15,0.2,0.3]\nWordvectordimension 100(MDNER) [50,100]\nIntheevaluationofNERmodels,performanceisprimarilyassessedbycomparingtheentitiesidentified\nby the model to the ground-truth entities, which are manually annotated. In this study, we use widely\naccepted evaluation metrics: Precision (P), Recall (R), and F1 score (F1). Precision refers to the proportion\nof correctly predicted entities among all entities identified by the model, and reflects the accuracy of\nthe prediction. Recall represents the proportion of correctly predicted entities among all ground-truth\nentities, and shows the sensitivity of the model. F1 is the harmonic mean of precision and recall, and is a\ncomprehensive evaluation of model performance. The values of the above three indicators recorded in the\nexperimental results below are the average values of the results obtained from multiple experiments. The\nformulasforthesemetricsareasfollows:\nPrecision = ∑\nc\ni=1 TPi\n∑c\ni=1 TPi+∑c\ni=1 FPi\n,( 1 7 )\nRecall = ∑c\ni=1 TPi\n∑c\ni=1 TPi+∑c\ni=1 FNi\n,( 1 8 )\nF1=2∗ Precison ∗Recall\nPrecision +Recall .( 1 9 )\nIn the above formulas,c representsthetotalnumberofentitycategories.Forentitytype i,TPi denotes\nt h en u m b e ro fe n t i t i e so ft h i st y p ec o r r e c t l yp r e d i c t e db yt h em o d e l ,t h a ti s ,t h en u m b e ro fe n t i t i e sw h o s e\nComputMaterContin. 2025;83(2) 2999\npredicted label and true label both correspond to typei. FPi refers to the number of entities predicted as\ntype i b yt h em o d e l ,b u tw h o s et r u el a b e li sn o to ft h i st y p e .FNi represents the number of entities whose\ntruelabelistype i, but were not predicted as such by the model.\nTo select a more suitable word sets combination as lexical features to be integrated into the model, we\nconsideredvariouspossiblecombinationsandconductedpreliminaryexperiments. Fig.3 showstheF1scores\nobtained by models integrating different word sets when tested on the MDNER dataset. It can be seen that\nthe model incorporating the “BMES” word set achieved the best performance, with an F1 score of 86.74%.\nTherefore,insubsequentexperiments,theCAELF-GPmodeladoptsthestrategyofintegrating“BMES”word\nsetsfeatures.\nFigure3: TheperformanceofmodelsintegratingfeaturesfromdifferentwordsetsontheMDNERdataset",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.3 ResultsandDiscussion",
+      "level": 2,
+      "text": "4.3.1ComparisonwithOtherModels\nInordertovalidatethesuperiorityoftheCAELF-GPmodelbasedoncross-attentionaugmentedlexical\nfeatures, we conducted comparative experiments between the CAELF-GP model and the following models\non the Weibo dataset, the CLUENER dataset, and the MDNER dataset. Among them, models (a)–(e) are\nbaseline models for addressing the NER task, while (f) and (g) are models proposed in recent studies that\nhave demonstrated excellent performance and also adopt lexical enhancement strategies.Tables 3–5 show\nthe performance of each model obtained from our experiments on the above datasets. The best results are\nsho wninboldinthetables.\nTable 3:ResultsofdifferentmodelsonWeibo\nModels P/% R/% F1/%\nLatticeLSTM 62.97 48.07 54.52\nBERT-CRF 67.99 67.65 67.82\nBERT-BiLSTM-CRF 67.10 64.44 65.74\nSoftLexicon 70.6 67.87 69.21\nGlobalPointer 72.40 67.44 69.83\nMFGFF-BiLSTM-EGP 72.07 70.06 71.05\nBABERT 71.22 70.35 70.78\n(Continued)\n3000 ComputMaterContin. 2025;83(2)\nTable 3 (continued)\nModels P/% R/% F1/%\nCAELF-GP 71.15 70.30 70.72\nTable 4:ResultsofdifferentmodelsonCLUENER\nModels P/% R/% F1/%\nLatticeLSTM 73.00 73.15 73.07\nBERT-CRF 76.76 80.76 78.71\nBERT-BiLSTM-CRF 77.34 79.65 78.48\nSoftLexicon 78.54 80.75 79.63\nGlobalPointer 77.85 80.69 79.24\nMFGFF-BiLSTM-EGP 78.65 80.81 79.72\nBABERT 78.03 80.49 79.24\nCAELF-GP 79.39 80.63 80.01\nTable 5:ResultsofdifferentmodelsonMDNER\nModels P/% R/% F1/%\nLatticeLSTM 84.28 81.85 83.05\nBERT-CRF 83.21 84.24 83.72\nBERT-BiLSTM-CRF 83.11 84.85 83.97\nSoftLexicon 85.26 85.91 85.58\nGlobalPointer 85.77 86.61 86.19\nMFGFF-BiLSTM-EGP 86.59 87.46 87.02\nBABERT 85.91 86.27 86.09\nCAELF-GP 86.68 86.80 86.74\n(a) LatticeLSTM:amodelthatadaptstheoriginalLSTMstructuretoincorporatelexiconinformation.\n(b) BERT-CRF:abaselinemodelforNERtasksbasedonpre-trainedBERTmodelsandCRF.\n(c) BERT-BiLSTM-CRF: a model that add the BiLSTM structure as a sequence encoding layer based on\nmodel(b)toextractadditionalcontextualfeaturesinsentences.\n(d) SoftLexicon:amethodthatintegratesinformationfromallmatchingwordsinthedictionaryforeach\ncharacter into the character-based NER model by encoding vocabulary information at the character\nrepresentationlayer.\n(e) GlobalPointer: a span-based NER framework that employs a multiplicative attention mechanism and\nrelative position information to predict entities by globally considering the start and end positions of\ncandidateentities.\n(f) MFGFF-BiLSTM-EGP: a model combines the multiple fine-grained feature fusion (MFGFF) module\nwith the BiLSTM neural network and uses the efficient GlobalPointer (EGP) to predict entity posi-\ntions[28].TheMFGFFmoduleconsistsofaRoBERTa-basedcharacterencoder,awordencoderbased\noncharacter-wordmatching,andasentenceencoderbasedonSBERT.\n(g) BABERT: an architecture that utilizes unsupervised statistical boundary information and directly\nencodesthisboundaryinformationintotheBERTpre-trainedlanguagemodel[ 29].\nComputMaterContin. 2025;83(2) 3001\nTheexperimentalresults,asshownin Tables 3–5,demonstratethattheCAELF-GPmodelconsistently\noutperforms various baseline models across three datasets in terms of F1 value and achieves comparable\nperformancetorecentlyproposedmodels,namelyMFGFF-BiLSTM-EGPandBABERT.Specifically,onthe\nMDNER dataset, the CAELF-GP model attains notable performance with precision of 86.68%, recall of\n86.80%, and F1 value of 86.74%. It achieved an improvement of 0.55%–3.69% on F1 value compared to\nother baseline models. Notably, SoftLexicon and BERT-BiLSTM-CRF, both adopting a sequence-labeling\narchitectures with similar structures, differ in that the former utilizes lexical information. The results\nunderscorethesuperiorityofSoftLexiconovertheBERT-BiLSTM-CRFmodel,affirmingthefindingsofMa\netal.[ 4].TheCAELF-GPmodelexhibitsF1improvementsof0.89%,0.77%,and0.55%,respectively,relative\ntothebaselineGlobalPointermodel.Thisunderscorestheefficacyofincorporatinglexicalinformationatthe\nembedding layer, a strategy transferable to span-based NER models, enhancing their overall performance.\nNotably, the model’s most substantial performance enhancement occurs on the Weibo dataset. This can be\nattributed to the dataset’s limited size and noise, wherein the CAELF-GP model, through the integration of\nexternallexicalinformationandthestrategicguidanceprovidedbythecross-attentionmechanism,achieves\nheightenedaccuracyinnamedentityrecognition.\n4.3.2AblationExperiment\nTo assess the efficacy of integrating lexical information and the cross-attention-based feature fusion\napproachtoenhancemodelperformance,weconductedablationexperimentsontheaforementionedthree\ndatasets. As shown inTable 6, the exclusion of either the sole cross-attention mechanism or the complete\nremoval of the lexical information fusion module (reverting the model to its foundational GlobalPointer\nform)ledtoadiscernibledeteriorationinmodelperformance.Specifically,theremovalofthecross-attention\nmechanism resulted in a reduction of 0.40%, 0.74%, and 0.66% in F1 value on the Weibo, CLUENER, and\nMDNERdatasets,respectively.Theoutcomesaffirmthattheincorporationofthecross-attentionmechanism\nfacilitates a more effective utilization of lexical information, thereby enhancing the overall performance of\nthemodel.\nTable 6:Ablation results (F1/%)\nModels Weibo CLUENER MDNER\nCAELF-GP 70.72 80.01 86.74\nCAELF-GP(w/ocross-attention) 70.32 79.27 86.08\nGlobalPointer 69.97 79.08 85.85\n4.3.3EntityRecognition ResultsonMuskDeerDataset\nTofurtherassesstheCAELF-GPmodelonNERtaskinthemuskdeerfield,werecordtherecognition\nresultsofthemodelondifferentcategoriesofentities,asshownin Table 7.\nAs shown inTable 7, it can be seen that the model performs well in recognizing entities of species,\nregions,cellsandbodilyelementswithF1valuesof95.05%,86.45%,85.71%and85.71%,respectively,butthe\nF1 value for recognizing food is only 69.39%. The poor performance of the model in recognizing food-type\ne n t i t i e sm a yb ea t t r i b u t e dt ot w om a i nr e a s o n s .O nt h eo n eh a n d ,i tc o u l db ed u et ot h el i m i t e dn u m b e r\nof food-type entities in the training set, which prevents the model from fully extracting relevant feature\ninformation.Ontheotherhand,itmaystemfromthecomplexityofexpressionsforsomefood-typeentities.\nForexample,termslike“low-proteindiet”werenotfullyrecognizedasasingleentitybythemodelbutwere\n3002 ComputMaterContin. 2025;83(2)\ninstead identified as separate parts, such as “low-protein” and “protein.” In future work, we can expand our\ndataset by incorporating corpus that include food-type entities. Specifically, these entities in the additional\ncorpus will have diverse expressions. Furthermore, we can explore more sophisticated entity boundary\ndetection mechanisms, such as effectively incorporating statistical word boundary information [29], to\naddressthechallengesofrecognizingfoodentities.\nTable 7:Entityrecognitionresults\nEntity P/% R/% F1/% Numberofentities 2\nSpecies 95.05 95.05 95.05 2356\nArea 84.81 88.16 86.45 638\nNature reserve 75.76 86.21 80.65 195\nTissuesite 75.29 82.05 78.53 726\nDisease 76.47 68.42 72.22 243\nGene 91.11 77.36 83.67 304\nCell 85.71 85.71 85.71 58\nBodilyelements 81.82 90.00 85.71 732\nFood 65.38 73.91 69.39 185\nBacteria 77.78 70.00 73.68 111\nResearchmethods 88.00 82.50 85.16 1285\nAverage 81.56 81.76 81.47 621.18\nNote:2Thenumberofentitiesinthetableisforthetrainingset.\n4.3.4CaseStudy\nToelucidatetheperformanceenhancementoftheCAELF-GPmodel,anempiricalanalysisisconducted\nby randomly selecting a sentence from the test set within the musk deer domain. The sentence undergoes\nprocessing through the trained model, and the resultant weight values corresponding to the four word sets\n(“BMES”) of each character in the sentence are visually presented in the form of a heat map, as depicted\ninFig.4.Takingthesentence“Toinvestigatetheepidemio logicalcharacteristicsofforestmuskdeerabscess\ndiseaseinShaanxiProvince”.Asanillustrativeexample,itmanifeststhreeentities:“ShaanxiProvince”,“forest\nmuskdeer”,and“abscessdisease”.\nUpon scrutiny ofFig.4, a discernible pattern emerges, revea",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t6",
+          "t7",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Statistics of datasets"
+    },
+    {
+      "id": "t2",
+      "caption": "Optimalhyperparametervaluesandtheirsearchranges"
+    },
+    {
+      "id": "t3",
+      "caption": "ResultsofdifferentmodelsonWeibo"
+    },
+    {
+      "id": "t4",
+      "caption": "ResultsofdifferentmodelsonCLUENER"
+    },
+    {
+      "id": "t5",
+      "caption": "ResultsofdifferentmodelsonMDNER"
+    },
+    {
+      "id": "t6",
+      "caption": "Ablation results (F1/%)"
+    },
+    {
+      "id": "t7",
+      "caption": "Entityrecognitionresults"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e11",
+      "latex_or_text": "Eq.(11)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 7,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

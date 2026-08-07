@@ -1,0 +1,359 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pjm_dataminer/pjm_dataminer__Advanced_Capacity_Accreditation_of_Future_Energy_System_Resources_with_Deep_Uncertainties__0fde56afaa.pdf",
+  "n_pages": 10,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Advanced Capacity Accreditation of Future Energy",
+      "level": 1,
+      "text": "System Resources with Deep Uncertainties\nEthan Cantor,Student Member, IEEE,Yinyin Ge,Member, IEEE,Hongxing Ye,Senior Member, IEEE,\nJie Li,Senior Member, IEEE,\nAbstract—The electric power sector has seen an increased\npenetration of renewable energy sources (RESs) that could strain\nthe system reliability due to their inherent uncertainties in\navailability and controllability. Effective load carrying capability\n(ELCC) is widely used to quantify the reliability contributions of\nthese RESs. However, existing ELCC methods can over- or under-\nestimate their contributions and often neglect or simplify other\ncritical factors such as transmission constraints and evolving\nclimate trends, leading to inaccurate capacity credit (CC) alloca-\ntions and inefficient reliability procurement in capacity markets.\nTo address these limitations, this paper proposes TRACED\n(TRansmission And Climate Enhanced Delta)–an advanced ca-\npacity accreditation approach that integrates transmission con-\nstraints and climate-adjusted system conditions into a Delta\nELCC evaluation. Case studies on a modified IEEE-118 bus sys-\ntem with high RES and energy storage penetrations demonstrate\nthat TRACED produces portfolio-consistent CC allocations by\ncapturing resource interactions and avoiding the double-counting\nof shared reliability benefits inherent in marginal ELCC, which\nmay otherwise lead to under-procurement of reliability resources.\nResults further demonstrate that transmission congestion and\nevolving climate trends have mutual impacts on CC allocation,\njustifying their necessary integration into TRACED.\nIndex Terms—Reliability, Capacity Credit (CC), Effective Load\nCarrying Capacity (ELCC), Capacity Market.\nNOMENCLATURE\nSets and Indices\nBSet of battery storage systems, indexed byb.\nHSet of historical data years, indexed byh.\nISet of thermal generators, indexed byi.\nJSet of generators considered for capacity accredi-\ntation, indexed byj.\nLSet of transmission lines, indexed byl.\nNSet of transmission nodes, indexed byn.\nSSet of solar photovoltaic generators, indexed bys.\nTSet of time steps, indexed byt.\nWSet of wind generators, indexed byw.\nDecision Variables\nCH b,t Energy charged by batterybat timet[MW].\nDIS b,t Energy discharged by batterybat timet[MW].\nchb,t Charging on/off state of batterybat timet.\ncurts/w,t Electric energy curtailment of solar generator\ns/wind generatorwat timet[MW].\ndisb,t Discharging on/off status of batterybat timet.\nGi/s/w,t Electric energy generation at timetof thermal gen-\neratori/solar generators/wind generatorw[MW].\nLSsys\nt System load shedding at timet[MW].\nLSn,t Load shedding of nodenat timet[MW].\nlst System load shedding on/off status at timet.\nSOC b,t State of charge of batterybat end of timet[%].\nsd/sui,t Shut-down/start-up action of thermal generatoriat\nstart of timet.\nui,t On/off status of thermal generatoriat timet.\nParameters\nAARl,τair Temperature derating coefficient of linelat air\ntemperatureτ air [%/°C].\nCb/i/s/w Cost of generation of batteryb/thermal generator\ni/solar generators/wind generatorw[$/MW].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "curt",
+      "level": 1,
+      "text": "s/w Cost of curtailment of solar generators/wind gen-\neratorw[$/MW].\nDn,t Energy demand of nodenat timet[MW].\nDTi Minimum downtime of thermal generatori.\nEmax\nb Maximum capacity of batteryb[MW].\nF Ij, LIj First-in/last-in CCs of generatorj[MW].\nF ORi,τair Forced outage rate of thermal generatoriat air\ntemperatureτ air.\nGmin / max",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Minimum/maximum power output of thermal gen-",
+      "level": 1,
+      "text": "eratori[MW].\nγs/w Nominal power of solar farms/wind farmw[MW].\nηch/dis\nb Charging/discharging efficiency of batteryb.\nηs/w Efficiency of solar generators/wind generatorw.\nP T DFn,l Power transmission distribution factor of nodento\nlinel.\nSU Ci Start-up cost of thermal generatori[$].\nSDC i Shut-down cost of thermal generatori[$].\nSOC min\nb Minimum state of charge of batteryb[%].\nSOC max\nb Maximum state of charge of batteryb[%].\nU Ti Minimum uptime of thermal generatori.\nV OLLValue of Lost Load [$/MW].\nτair,t Air temperature at timet[°C].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "INTRODUCTION",
+      "level": 1,
+      "text": "T\nHE U.S. electric power sector is rapidly transitioning to-\nwards increased integration of renewable energy sources\n(RESs), primarily solar and wind, paired with energy storage.\nThis shift supports a sustainable and diversified energy portfo-\nlio with enhanced energy security. While providing low-cost,\ncarbon-free generation, RESs introduce new operational chal-\nlenges to the grid, especially in maintaining reliability under\nincreasingly frequent and severe extreme weather events.\nUnlike conventional dispatchable generators, most RESs\nlack controllability, making their reliability contribution dif-\nficult to quantify, particularly when peak demand does not\ncoincide with peak RES outputs. As RES penetrations in-\ncrease, such reliability uncertainty leads to significant con-\ncerns, elevating the risks of component and system failures.\nWhile this penetration threshold varies by system, a com-\nmonly cited benchmark is 30% [1]. For example, MISO’s\narXiv:2604.00173v1  [eess.SY]  31 Mar 2026",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Renewable Integration Impact Assessment reports significant",
+      "level": 1,
+      "text": "reliability challenges beyond 30% RES penetration without\ntransformative system changes [1], with similar findings for\nlarger regions requiring substantial flexibility enhancements\n[2]. As the nation’s RES capacity continues to grow, accurately\nquantifying their reliability contribution becomes essential\nfor planning and investment decisions and North American\nElectric Reliability Corporation (NERC) compliance. Such\nmodels are critical to maintaining a reliable electricity supply\nwhile enabling continued RES integration.\nReliability of bulk energy systems is defined as their abil-\nity to deliver uninterrupted electricity to customers [3]. The\nmost widely adopted metric is the Loss of Load Expectation\n(LOLE)–the expected number of days per year when supply\nfails to meet demand [3]. NERC Standard BAL-502-RF-03\n[4] requires Regional Transmission Organizations (RTOs) and\nIndependent System Operators (ISOs) to establish resource\nadequacy criteria, commonly adopting≤0.1 days/year. Oth-\ners have adopted a Loss of Load Hours (LOLH) of≤2.4\nhours/year to capture multiple outages per day [5]. To meet\nreliability requirements, generators are assigned reliability\ncontributions known as capacity credits (CCs), a portion of\ntheir nameplate capacities that can be relied upon during high-\ndemand periods. Traditional fossil-fired units typically receive\nCCs near 100% of their capacities due to controllability,\nwhereas RESs often receive significantly lower CCs [6]. CCs\ndetermine generator compensation in capacity markets, where\nRTOs/ISOs contractually purchase capacity for high-demand\nperiods, incentivizing generators to improve dependable ca-\npacity during system stress.\nVarious methods have been developed to calculate CCs of\ndifferent types of energy resources, generally categorized as\napproximation and reliability methods. Approximation meth-\nods are used by ISOs/RTOs for capacity planning due to lower\ndata requirements and computational simplicity, but they often\nproduce less accurate CC estimates, particularly in systems\nwith high RES penetrations [7]. Most ISOs/RTOs have im-\nplemented reliability-based methods, the most common being\nthe effective load carrying capability (ELCC), describing the\nadditional load a new generator can support to maintain the\nsame system reliability level [8].\nVariants of the ELCC method include the average and\nmarginal ELCC. Average ELCC assigns a uniform CC to all\nresources within a class based on their aggregate contribution\nto system adequacy, effectively treating the class contribution\nas static to simplify computation. However, it cannot capture\ndiminishing reliability contributions at high penetrations, of-\nten overestimating later-added RES CCs and risking under-\nprocurement. Differently, marginal ELCC calculates the in-\ncremental contribution of new resources, accounting for their\ninteractions with existing resources. For example, wind plants\nwith correlated outputs can shift net load peaks and reduce\nthe marginal reliability value of additional wind capacity. By\nreflecting these interactions, marginal ELCC provides stronger\nsignals for complementary resource investment, leading to\nimproved market efficiency [9], [10]. PJM and NYISO have\ntransitioned from average to marginal ELCC in 2024 [11],\n[12], and ISONE is planning for the adoption in 2028 [13].\nHowever, marginal ELCC often underestimate RESs’ contri-\nbutions, with the sum of individual CCs less than the portfolio\ntotal, leading to extraneous consumer costs [10].\nTwo approaches may advance the marginal ELCC method:\nthe Delta method and the Integration method. The Delta\nmethod [14] ensures that the sum of individual generator\nCCs equals the portfolio CC (P ORT) while considering the\ndifference between its first-in (FI) ELCC (i.e., marginal ELCC\nof a generator added first to the system) and last-in (LI)\nELCC (i.e., marginal ELCC of that generator added last to the\nsystem). The portfolio interactive effect (PIE)–the difference\nbetween the portfolio ELCC and the sum of LI ELCCs–is pro-\nportionately distributed based on each generator’s individual\ninteractive effect (IIE), defined as the difference between its\nFI and LI ELCCs. The Integration method [15] further refines\nthis concept by integrating across multiple installation levels\nbetween the FI and LI points, capturing the non-linear behavior\nof the ELCC curve. The Integration method is typically useful\nat the class level, losing much of individual generators’ details.\nThe FI, LI, Delta, and Integration ELCCs are illustrated in\nFigure 1. Neither method, however, considers the impact of\ngenerator location in the system.\nInstalled Capacity\nELCC\nCapacity\nPortfolio\n  ELCC\nFirst-In\n ELCC\nLast-In\n ELCC\nDelta\nELCC\nIntegration\n    ELCC\nFig. 1. Marginal, Delta, and Integration ELCC methods.\nIndeed, a generator’s location affects its reliability contribu-\ntion in two dimensions. First, locational transmission capacity\nmay limit the ability to deliver power to loads, reducing the\ngenerator CC. However, current practice typically separates\ntransmission constraints from ELCC calculations. For exam-\nple, PJM uses the Capacity Transfer Emergency Objective [16]\nto calculate LOLE specifically due to inter-load serving area\n(LSA) transmission constraints, but intra-LSA limits are ig-\nnored and generator CCs remain unaffected, reducing reliabil-\nity evaluation versatility. Research has explored incorporating\ntransmission limits into ELCC calculations. Convexified unit\ncommitment (UC) constraints were used to better assess CCs\nof wind, solar, and energy storage resources [17], but only\nconsidered an oversimplified two-node transmission system.\nA security-constrained UC problem was studied to solve\nthe ELCC of wind and solar resources [18], and tested on\nthe IEEE-118 bus system to demonstrate its applicability to\nRTO/ISO scale systems [19]. A transmission-constrained UC\nproblem was applied to the Chilean Central Interconnected\nSystem, using the PLEXOS software to evaluate wind CCs\n[20]. These works used either the average or marginal ELCC,\ninheriting their respective limitations.\nMoreover, locational weather conditions strongly affect gen-\nerator performance, particularly for RESs, impacting their\nreliability contributions. As such, RTOs/ISOs have incorpo-",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 rated forecasted weather into ELCC calculations, but assume",
+      "level": 1,
+      "text": "that future weather will resemble historic patterns, ignoring\nevolving weather trends [16], [21]. This assumption could\nunderestimate their impacts, especially as extreme weather\nevents become more frequent and severe.\nThis work addresses the above limitations by incorporating\ntransmission constraints and evolving weather patterns for\nmore realistic ELCC assessments. The major contributions are:\n1) A new ELCC method, TRACED (TRansmission And Cli-\nmate Enhanced Delta), is proposed to provide portfolio-\nconsistent CCs while incorporating key system fac-\ntors that influence reliability contributions. Specifically,\nTRACED introduces capacity accreditation corrections in\nboth spatial and temporal dimensions, addressing trans-\nmission constraints and deep uncertainties associated with\nRES outputs against evolving climate conditions.\n2) A transmission-constrained UC framework is developed\nto evaluate ELCC, with detailed component modeling\nand explicit modeling of network limitations as a spatial\ncorrection to capacity accreditation. The computational\nburden is mitigated through a reduced-complexity formu-\nlation and a rolling-horizon solution approach.\n3) Evolving weather impacts are incorporated as a temporal\ncorrection by augmenting historical weather profiles (e.g.,\ntemperature and extreme events) with long-term trends.\nThis enables a more accurate representation of their ef-\nfects on system demand, transmission capacity, generator\nforced outages, and RES characteristics.\nThe rest of this paper is organized as follows: Section II\npresents the proposed TRACED method; Section III conducts\ncomprehensive case studies to evaluate the effectiveness of\nthe proposed method in CC allocation to generation resources\nof varying size, class, and location; Section IV provides a\nconclusive discussion and potential future directions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "THEPROPOSEDTRACED METHOD",
+      "level": 1,
+      "text": "The ELCC calculation model is formulated as a\ntransmission-constrained UC problem, with the objective of\nminimizing the system operational costs, while adhering to\nprevailing operational constraints. The reliability component\nis integrated into the problem by accounting for load shedding\npenalization. System load and weather conditions are modeled\nbased on historical data while adjusted for the capacity market\nyear to be solved, considering their yearly evolving trends.\nA. Problem Formulation\n1) Objective Function:The objective function (1) is to\nminimize power production, start-up, and shut-down costs of\nthermal generators, power production and curtailment costs of\nrenewables, battery charge costs, and load shedding costs.\nmin\nX\nt∈T\nhX\ni∈I\n\u0000\nGi,t·Ci+sui,t·SU Ci+sdi,t·SDCi\n\u0001\n+\nX\ng∈{S,W}\n\u0000\nGg,t ·C g +curt g,t ·C curt\ng\n\u0001\n+\nX\nb∈B\n\u0000\nCH b,t ·C b\n\u0001\n+LS t ·V OLL\ni\n(1)\nThe production costs of thermal generators are based on\ntheir respective price curves, commonly formulated as piece-\nwise linear functions [17]. Costs associated with operating\nsolar, wind, and battery resources are assigned based on their\nrespective levelized cost of energy (LCOE). RESs are treated\nas must-take resources, such as in CAISO [22], by allowing\ncurtailment but at penalties higher than the generation cost of\nregular resources but lower than the load shedding cost.\n2) Power Balance Constraint:Hourly system balance is\nenforced to ensure that the summed thermal, renewable, and\nbattery generation equals the demand minus load shedding.\nX\nn∈N\n(Dn,t −LS n,t) =\nX\ng∈{I,S,W}\nGg,t\n+\nX\nb∈B\n\u0000\nDIS b,t −CH b,t\n\u0001\n,∀t∈ T\n(2)\n3) Transmission Constraints:DC power flow is adopted\nto model the transmission network constraints. The power\ntransmission distribution factor [24] is used to calculate the\ntotal real power transfer along each line and is limited to its\nmaximum transfer capacity (3).\f\f\f\f\f\nX\ng∈{I,S,W}\nP T DFn(g),l Gg,t+\nX\nb∈B\nP T DFn(b),l ·\n(DIS b,t −CH b,t)−\nX\nn∈N\nP T DFn,l ·(D n,t−LSn,t)\n\f\f\f\f\f\n≤C max\nl ·AAR l,τair,∀l∈ L,∀t∈ T\n(3)\nTransmission line capacities could be derated based on\nambient air temperatureAAR l,τair, referred to as ambient-\nadjusted rating (AAR). The use of hourly AAR is required by\nRTOs for studies<10 days away (e.g., the day-ahead market)\naccording to FERC Order 881. While the FERC Order allows\nfor seasonal AAR ratings for long-term applications (e.g., the\ncapacity market), it is justifiable to use the hourly AAR in\nthis work as we sample and solve multiple UC problems with\nvarying hourly-weather conditions. Several RTOs, including\nPJM and ERCOT, have implemented hourly AARs as a step-\nfunction for ambient temperature ranges [25], and a similar\nprocess is followed by applying an AAR derating coefficient.\n4) Thermal Generator Modeling:Thermal generators must\noperate within their upper and lower capacity limits (4a),\nwhich are related to a temperature-dependent forced outage\nrate (FOR)F ORi,τair. In this paper, FOR of thermal generators\nis approximated via continuous FOR functions derived by\napplying a 4 th order polynomial regression to the discrete\nFOR data [23], and is used to derate the maximum thermal\ngenerator output, which is found not to significantly impact\nthe CCs of renewables in the system [17]. State transitions\nare implemented to ensure that thermal generators’ on/off\nvariables are aligned with their coinciding start-up and shut-\ndown variables (4b). Additionally, minimum on and off times\nare guaranteed via (4c) and (4d), respectively.\nGmin\ni ·u i,t ≤G i,t ≤G max\ni ·u i,t ·\n\u0000\n1−F ORi,τair\n\u0001\n,\n∀i∈ I,∀t∈ T(4a)\nui,t −u i,t−1 =su i,t −sd i,t,∀i∈ I,∀t∈[2,T](4b)\nXt\nτ=t−U Ti+1\nsui,t ≤u i,t,∀i∈ I,∀t≥U T i (4c)\nXt\nτ=t−DT i+1\nsdi,t ≤1−u i,t,∀i∈ I,∀t≥DT i (4d)\n4\n5) Renewable Generation:This paper considers two major\ntypes of RESs, including solar photovoltaics (PVs) and wind\nfarms, whose outputs are highly dependent on weather condi-\ntions. Specifically, PVs are impacted by temperature and solar\nirradiance, and wind farm performance relies on wind speed.\nPV cell temperature is modeled as (5a) whereNOCTis\nthe nominal operating cell temperature, and the maximum PV\noutput under a specific weather condition is modeled as (5b).\nτs,t =τ air,t+(N OCTs −20)\n800 ·Ins s,t,∀s∈ S,∀t∈ T(5a)\nGmax\ns,t =γ s\nIns s,t\n1000\nh\n1−αs(τs,t−25)\ni\nηs,∀s∈ S,∀t∈ T(5b)\nThe maximum power output of a wind turbine is modeled\nas a piecewise function dependent on wind velocityv(6),\nwhere c 3 through c 0 of each turbine are defined according to\na cubic regression fitted to the turbine’s power curve data in\nthe corresponding operation region, andv ci\nw ,v r\nw,v co\nw are the\ncut-in, rated, and cut-out wind speeds of wind turbinew.\nGmax\nw,t (v) =ηw\n\n\n\n0,[0, v ci\nw )\nc3v3 +c 2v2 +c 1v+c 0,[v ci\nw , vr\nw)\nγw,[v r\nw, vco\nw )\n0,[v co\nw ,∞)\n∀w∈ W,∀t∈ T\n(6)\nTo account for the situation where transmission congestion\nprevents full power delivery from RESs, curtailment is allowed\nas in (7a) and (7b). Additionally, should a hurricane or tropical\nstorm impact the location of a wind farm, the turbines are\nforced to stall with no power output as described by binary\nvariablehurr=1.\ncurts,t =G max\ns,t −G s,t ≥0,∀s∈ S,∀t∈ T(7a)\ncurtw,t =G max\nw,t ·(1−hurr w,t)−G w,t ≥0,\n∀w∈ W,∀t∈ T(7b)\n6) Energy Storage Constraints:A battery energy storage\nsystem (BESS) is constrained by its min and max capacities\n(8a), charging and discharging limits (8b)-(8c), state transition\n(8d), and possible charging/discharging/idle operation status in\neach time step (8e).\nSOC min\nb ≤SOC b,t ≤SOC max\nb ,∀b∈ B,∀t∈ T(8a)\n0≤CH b,t ≤CH max\nb ·ch b,t,∀b∈ B,∀t∈ T(8b)\n0≤DIS b,t ≤DIS max\nb ·dis b,t,∀b∈ B,∀t∈ T(8c)\nSOC b,t·Emax\nb =SOC b,t−1·Emax\nb +CH b,t ·η char\nb\n−DIS b,t/ηdis\nb ,∀b∈ B,∀t∈[2,T](8d)\nchb,t +dis b,t ≤1,∀b∈ B,∀t∈ T(8e)\n7) Reliability Constraints:To integrate reliability con-\nstraints into the UC framework, load shedding due to insuf-\nficient generation and/or transmission capacities is allowed\nand limited to no more than the total system demand (9a).\nAdditionally, load shedding is distributed to each bus in the\nsystem according to its associated load weight (ω n) 9b.\n0≤LS sys\nt ≤ls t ·\nX\nn∈N\nDn,t,∀t∈ T(9a)\nLSn,t =ω n ·LS sys\nt ,∀n∈ N,∀t∈ T(9b)\n8) UC Model with Reduced-Complexity:To solve\nTRACED efficiently, several typical short-term UC constraints\nare simplified. Thermal generator ramping limits are removed,\nwhich is common in chronological Monte Carlo sampling\n[26]; Hot and cold reserve requirements, which primarily\nbuffer generator outages [27], are omitted because these\ncontingencies are already captured in the FOR formulation.\nLong-term system characteristics, such as load profiles and\nRES outputs, primarily exhibit monthly and seasonal patterns,\nmotivating TRACED to be solved monthly, which is also\nconsistent with NYISO’s monthly capacity market auctions.\nHowever, solving the hourly UC problem over a month is\nstill computationally intractable. To balance complexity and\ntemporal fidelity, a rolling-time horizon is implemented, well\nestablished in many UC studies [28], [29]. A 1-week horizon\nwith a 1-day overlap is adopted, sufficient to respect the\nminimum on/off time requirements of all generators.\n9) Weather and Load Modeling:The common industry\npractice for ELCC evaluation relies on historical weather data\nto predict future load and generation, while considering de-\nmand variations due to major system developments. However,\nhistorical weather data may not reflect evolving climate trends,\nwhich affect both load and generation, particularly weather-\nsensitive RESs. This work incorporates such evolving weather\ntrends to adjust system load, generator outputs, and forced\noutages, enabling more accurate system characterization and\nELCC estimation in future operational environments.\nHourly weather data of multiple historical years establish\nthe baseline for temperature, solar irradiance, wind speed,\nand storm occurrence profiles, alongside corresponding system\nloads. To capture long-term temperature evolution, monthly\naverage tempera",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "CASESTUDIES",
+      "level": 1,
+      "text": "To evaluate the performance of the proposed TRACED\nmethod, comprehensive case studies are conducted to compare\nthe CCs of RESs and BESSs across months in different sea-\nsons using the last-in marginal ELCC (i.e., industry practice)\nand TRACED. Sensitivity analyses are also performed to\nbetter understand the impacts of transmission congestion and\nforward-looking weather modeling on CC evaluation.\nAlgorithm 1TRACED Workflow for CC Evaluation\n1:Stage 1. Define bulk energy system environment:\n2:Characterize thermal generators and transmission\nconstraints;\n3:Identify RESs and BESSs for CC evaluation.\n4:Stage 2. Historical sampling and climate adjustment:\n5:SampleYhistorical years of load and weather data;\n6:Apply temperature adjustments (10) and projected\nextreme weather trends (12) - (14);\n7:Apply temperature-correlated adjustments to load (11),\ntransmission AARs (3), and PV outputs (5a).\n8:Stage 3. Compute load adjustment:\n9:foreach system type (base, FI, LI, portfolio)do\n10:InitializeLA,LA max =∞, andLA min =−∞;\n11:Add RESs/BESSs for this system;\n12:whileLOLE LA ̸=LOLE tar orLA max −LA min > ϵLA\ndo\n13:Solve hourly transmission-constrained UC across all\nsub-periods ofYsampled years (e.g., rolling\nweekly solves, carry over initial/final conditions);\n14:ComputeLOLE LA = 1\nY\nPY\ny=1 LOLEy;\n15:ifLOLE LA > LOLEtar andLA < LAmax then\n16:LA max ←LA;\n17:else ifLOLE LA < LOLEtar andLA > LA min\nthen\n18:LA min ←LA;\n19:end if\n20:ifLA min =−∞orLA max =∞then\n21:AdjustLAup or down until both bounds are finite;\n22:else ifLA min ̸=−∞andLA max ̸=∞then\n23:LA←(LA min +LA max)/2;\n24:end if\n25:end while\n26:end for\n27:Stage 4. Compute CCs via Eqs. (15a) - (15g)\n6\nA. Simulation Setup\nThe simulation is built upon the IEEE 118-bus system\n[30], which includes thermal generator characteristics (e.g.,\nmaximum/minimum outputs, minimum on/off times, pricing\ncurves, start-up and shut-down costs, and their locations in\nthe system) and transmission topology. Costs associated with\nRESs/BESSs are assigned based on their respective LCOEs\n[31], and the curtailment cost of RESs is assigned 10 times\nits LCOE. Cost of load shedding is $10,000/MWh, per MISO\n[32]. These system costs are summarized in [33].\nLoad profile of the IEEE 118-bus system is modified based\non New Jersey’s energy consumption trajectory (1993-2023)\n[34]. All transmission lines’ power transfer limits are adjusted\nbased on ambient temperature derating [35]. Historical weather\ndata from 1993 to 2023 is collected: solar irradiance and air\ntemperature data of New Jersey were collected from Open-\nMeteo [36]; wind speed data were collected from the NREL\nWind Resource Database [37] at the location of the Ocean\nWind 1 farm and the Jersey-Atlantic City Wind Farm for\noffshore and onshore wind resources, respectively; hurricane\noccurrence/duration data impacting New Jersey were collected\nfrom the NOAA Historical Hurricane Tracks database [38].\nYear-to-year trends in average monthly temperature and yearly\nhurricane occurrence were extrapolated from this data to apply\nthe future-looking weather adjustments [33]. The piecewise\nregression model for hourly load vs temperature correlation\nis developed using their historical data as shown in Figure 2,\nand then the future-weather adjustment (11) is applied.\nWith the above data of 31 weather years and 403 weekday-\nshifted load profiles, 100 monthly weather and load profiles\nwere sampled via Monte Carlo simulations. Since TRACED\nis solved hourly over one-month time spans, the standard\nLOLH of 2.4 hours/year is converted to 0.2 hours/month.\nSuch seasonal or monthly LOLH has been implemented in\nISO’s reliability studies [39]. Although these studies typically\nassign different seasonal values, with the most at-risk periods\n(typically summer) having a higher LOLH, this study assigns\neach month the same value in considering that at-risk sea-\nsons/months may shift with the transition of energy systems.\nSimulations were performed in MATLAB R2025a and Gurobi",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "12.0.3 on a Linux workstation equipped with an AMD Ryzen",
+      "level": 3,
+      "text": "Threadripper Pro 7985WX processor and 528 GB of RAM.\n-20 -10 0 10 20 30 40\nTemperature (/C)\n0.5\n1\n1.5",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2 Load (MW)",
+      "level": 1,
+      "text": "#104\nData\nPiecewise Regression\nModel\nFig. 2. Load vs temperature piecewise regression modeling.\nB. Case Study Designs\nFour cases with different portfolios of RESs and BESSs\nare built to illustrate TRACED’s performance under various\nsystem environments: (i)Case 1, a portfolio of three wind\nfarms (1 offshore and 2 onshore) totaling 3,700MW of in-\nstalled capacity (30.1% of system installed capacity); (ii)Case\n2, a portfolio of three solar farms totaling 3,700MW; (iii)Case\n3, combining the portfolios of wind and solar farms in Cases 1\nand 2, totaling 7,400 MW of installed RES capacity (46.3% of\nsystem installed capacity); and (iv)Case 4, built on Case 2 by\nadding 3 BESSs totaling 1850MW, for a combined portfolio\ncapacity of 5550MW (39.0% of system installed capacity).\nCases 1 and 2 are designed to evaluate how individual\ngenerators under the same resource class impact CCs of each\nother; Case 3 further assesses how environmentally sensitive\nRESs that tend to peak at different times (i.e., wind and\nirradiance) could impact their respective CCs; Case 4 unveils\nhow storage, as a complementary resource to RESs, can help\nimprove overall system reliability and impact CCs of other\nRESs, which is most representative of what future energy\nsystems will likely resemble. The CCs of RESs and BESSs in\nall cases are evaluated across three months (June, December,\nand April) for year 2030 to illustrate the impacts of seasonal\nvariations in load and weather. Key parameters of these four\ncases are summarized in Table I, and the modified 118-bus\nsystem is illustrated in Figure 3.\nTABLE I\nKEYPARAMETERS OFCASESTUDIES\nCase RES/Battery # Rated Capacity Bus Location\nCase 1 Wind 1/2 (onshore) 500/1,200 MW 5/49\nWind 3 (offshore) 2,000 MW 100\nCase 2 Solar 1/2/3 500/1,200/2,000 MW 30/60/106\nCase 3 Case 1 and Case 2 Generators\nCase 4\nCase 2 Generators\nBESS 1 700 MWh / 350 MW 25\nBESS 2 1000 MWh / 500 MW 48\nBESS 3 2000 MWh / 1000 MW 92\n1 2\n4\n5\n6 7\n8\n9\n10\n11\n12\n13\n14\n117\n15\n16\n17\n18\n19\n20\n21\n22\n23\n25\n26\n27\n28\n29\n113 30\n31\n32\n114 115\n33\n34\n35\n36\n37\n38\n39\n40 41 42\n43\n44\n45\n47\n46\n48\n49\n50\n51\n52\n53 54 5556\n57 58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n116\n69\n70\n71\n72\n73\n24\n74\n75\n118 76\n77\n78\n79\n80\n81\n82\n83\n84\n85\n86\n87\n88 89\n90 91\n92\n93\n9495\n96\n97\n98\n99\n100\n101 102\n103\n104 105\n106\n107\n108\n109\n110\n111\n112\nG\nG\nG\nG\nG G\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG G\nG\nG\nG\nG\nG G\nG G\nG\nG G\nG\nG\nG\nG\nG G G G G\nG\nG\n3\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nG\nOne-line Diagram of IEEE 118-bus Test System\nIIT Power Group, 2003\nSystem Description:",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "118 buses",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "186 branches",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "91 load sides",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "54 thermal units",
+      "level": 1,
+      "text": "Fig. 3. Modified IEEE 118-bus system.\nTwo sets of sensitivity analyses are further performed:\n(1)Sensitivity test of transmission congestion: ForTest 1.1,\nSolar Farm 3 and Wind Farm 3, as the two RESs whose\nCCs are mostly influenced by transmission congestion, are\nselected for analysis, and the power transfer capacity of the\nlines connected to their buses (i.e., lines 167, 169, and 172\nfor Solar Farm 3; and lines 154, 155, 158-160, 163, 164, and",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "167 for Wind Farm 3) are upgraded to assess the impacts on",
+      "level": 1,
+      "text": "their CCs; ForTest 1.2, lines 128, 129, and 155, identified\nas the most congested branches of the system, as well as",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "7 lines 37, 147, 153, and 169, as the next-level of congested",
+      "level": 1,
+      "text": "branches of the system, are upgraded and the overall system\nreliability is reevaluated. While impractical, a full system up-\ngrade test is also conducted to highlight the potential reliability\nimprovements should the transmission system no longer be\na bottleneck. These sensitivity analyses are performed on a\nportfolio of all 9 wind, solar, and BESSs using the TRACED\nmethod for the summer month of June, which is the most\ncongested season in the current system setting.\n(2)Sensitivity test of future weather trend modeling:Test 2.1\nevaluates the impact on solar farms’ CCs by adjusting the year-\nto-year temperature trend under Case 2 settings, andTest 2.2\nevaluates the impact on wind farms’ CCs by varying year-\nto-year hurricane occurrence trends under Case 1 settings,\nas their outputs and FORs are mostly influenced by ambient\ntemperature and hurricane occurrence, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "Case Study Results",
+      "level": 1,
+      "text": "1) Case 1:As shown in Figure 4, the CCs of wind farms\nvary significantly among different months, reflecting the sea-\nsonal variability of wind resources. In December, when wind\nspeeds are at their peaks, the portfolio CC also hits the highest\nvalue of 995MW (26.9% of nameplate capacity). However, this\nis not necessarily the case for individual generators. Instead,\nWind Farms 1 and 2 exhibit low ELCCs despite high wind\nresources. The offshore Wind Farm 3 saturates the system\nwith its supply, reducing Wind Farms 1 and 2’s reliability\ncontributions during the peak wind production hours due to the\nshifted net load. With the TRACED method (marked purple),\nthe FI marginal ELCC of Wind Farm 3 is 881.8MW, while\nits LI marginal ELCC is 742.2MW, resulting in a positive IIE.\nBecause of the positive PIE, those extra CCs get reallocated,\nincreasing Wind Farm 3’s CCs by 76.5MW (+10.3%). Similar\ntrends are observed for the other two generators, resulting in\nhigher accreditations by TRACED than the LI marginal ELCC.\nWind 1 Wind 2 Wind 30\n100\n200\n300\n400\n500\n600\n700\n800\n900Capacity Credit (MW)\nLast-In June\nTRACED June\nLast-In December\nTRACED December\nLast-In April\nTRACED April\nFig. 4. CCs of wind generators in different months.\nIn June, when wind resources are less, the portfolio CC is\nsmaller than that in December at 603MW (16.2%). Wind Farm\n3, integrated by mostly congested lines, contributes less to\nthe system reliability due to degraded transmission capacities,\nwhich become more impactful during the summer months with\na high system load level and elevated ambient temperatures. As\na result, the power produced by Wind Farm 3 cannot be fully\ndelivered to the system loads, reducing its CCs. This benefits\nWind Farms 1 and 2 because their locations within the system\nare not saturated with wind power, thus contributing more to\nmeet the system peak demand and resulting in higher CCs\nthan in December. Thus, wind farms, induced by transmission\ncongestion, act as complementary, where their LI CCs are\ngreater than their FI CCs, causing TRACED to accredit Wind\nFarms 2 and 3 less than the LI marginal ELCC.\nIn April, both system load and wind resources are the\nlowest compared to June and December, resulting in the\nlowest portfolio CC at 370MW (10%). From the individual\ngenerator’s perspective, Wind Farm 3 does not have enough\navailable wind resources to saturate the system. As such, Wind\nFarms 1 and 2 can supply their full output to the system, each\nat∼10% of their nameplate capacities.\nIn summary, TRACED accredits the portfolio 77.7MW less\n(-11.4%) in June compared to the LI marginal ELCC, but\n6.9MW (+1.9%) and 206MW more (+26.1%) in April and\nDecember, respectively, providing a net benefit.\n2) Case 2:Solar farms’ CCs also vary notably by month,\nreflecting the availability of solar resources and transmission\ncapacities. In June, when solar irradiance is the highest,\nthe portfolio CC peaks at 657MW (17.8%). However, Solar\nFarm 3 has a similar CC as Solar Farm 2 despite a 67%\nhigher nameplate capacity, attributed to limited transmission\ncapacities around Solar Farm 3. Because of the congestion\nsurrounding Solar Farm 3, its power output cannot be fully\ndelivered to other areas of the system. Adding other solar\nfarms actually could improve Solar Farm 3’s CCs by relieving\nstress in areas of the system where it could not supply on its\nown, resulting in a negative IIE. Because of the positive PIE,\nSolar Farm 3’s CC under the TRACED method decreases by\n11.4MW (-4.5%) compared to the LI marginal ELCC.\nSolar 1 Solar 2 Solar 30\n50\n100\n150\n200\n250\n300Capacity Credit (MW)\nLast-In June\nTRACED June\nLast-In December\nTRACED December\nLast-In April\nTRACED April\nFig. 5. CCs of solar generators in different months.\nIn December, when solar irradiance is the lowest, the port-\nfolio CC is less at 360MW (9.7%), and individual generators’\nCCs follow a more predictable pattern, scaled as the nameplate\ncapacity increases, each at 8% to 12% of their nameplate\ncapacity. This indicates that other factors (i.e., transmission\ncongestion) do not play a dominant role in influencing the\nELCC rating, which is expected as the ambient temperature\nderating improves the power transfer limit in colder months.\nIn April, despite a higher resource availability than in\nDecember, the portfolio CC is the lowest at 249MW (6.7%),\nmainly attributed to the lowest system load in shoulder sea-\nsons, as shown in Figure 2. This justifies that resources provide\nminimum reliability benefits during off-peak demand periods.\nIn summary, TRACED accredits the portfolio 61.5MW\nmore (+10.3%) in June, 16.5MW more (+4.8%) in December,\nand 100.5MW more (+67.7%) in April compared to the LI\nmarginal ELCC, providing a net benefit.\n3) Case 3:Case 3 presents similar trends that the highest\nCCs are observed in winter for Wind units and in summer\n8\nfor Solar units. Nevertheless, notable differences are worth\nemphasizing: most CC ratings for individual generators de-\ncreased compared to Cases 1 and 2, except Solar Farm 2. The\ncombined wind and solar portfolios’ CC ratings from Cases\n1 and 2 are 1,259.7MW, 1,355.4MW, and 619.2MW in June,\nDecember, and April, respectively, while are only 1,065.5MW,\n1,090.9MW, and 544.1MW in Case 3. This CC reduction\nshows that reduced reliability contributions are obtained from\nadditional resources added to the system. For example, Wind\nFarm 3 is connected to bus 100 and Solar Farm 3 to bus\n106, only 1 branch away. Wind production in December\nsaturates that area of the system, and Solar Farm 3 thus\ncannot contribute as much due to the congestion of branches\n167, 169, and 172, decreasing its CC. Similarly, when Solar\nFarm 3 produces a high output to saturate the system in June,\nthe reliability contribution of Wind Farm 3 is reduced. This\nhighlights that the locations of RESs can significantly impact\ntheir CCs and nearby RESs should be carefully studied when\nidentifying and assessing candidate RES installation sites.\nWind 1 Wind 2 Wind 3 Solar 1 Solar 2 Solar 30\n100\n200\n300\n400\n500\n600\n700Capacity Credit (MW)\nLast-In June\nTRACED June\nLast-In December\nTRACED December\nLast-In April\nTRACED April\nFig. 6. CCs of wind and solar generators in different months.\nIn summary, TRACED accredits the entire portfolio with an\nadditional 67.5 MW (+6.7%) in June, 567.4 MW (+108%) in\nDecember, and 81.2 MW (+17.5%) in April relative to the LI\nmarginal ELCC. From the perspective of individual generators,\nWind Farm 3 shows the largest CC improvement in December\nunder TRACED compared to the LI marginal ELCC. While\nits FI marginal CC remains unchanged, additional generators\nreduce its LI marginal CC to 402.3 MW. This results in the\nhighest IIE, and consequently a greater allocation of the PIE,\nyielding a 264.4 MW (+65.7%) increase in accredited capacity.\n4) Case 4:Case 4 results highlight the reliability benefits\nof complementary technologies, such as BESS, for intermittent\nRES. In particular, in December and April, it is observed\nthat when BESSs are added, the combined CCs of the solar\nfarms increased by 269MW (+74.7%) and 99.9MW (+40.1%),\nrespectively, compared to Case 2 with TRACED. This is\nbecause BESSs can reshape the load profiles, allowing excess\ngenerations to be dispatched at new net load peaks, improving\nthe CCs of solar farms. Nevertheless, such complementary\ncharacteristics are not observed in June. The combined CCs\nof solar farms decreased by 130.5MW (-24.5%) compared to\nCase 2, because the system is congested by the high demand\nand the reduced line capacities in higher ambient temperature,\nrestricting the ability of BESSs to store excess PV generation\nand supply loads during those shifted net load peaks. This case\ndemonstrates that the complementary characteristics are bene-\nficial to resource reliability contributions, but can be restricted\nby transmission capacities, emphasizing the importance of\nintegrating transmission constraints into CC evaluation.\nSolar 1 Solar 2 Solar 3 Batt 1 Batt 2 Batt 30\n100\n200\n300\n400\n500\n600\n700Cap",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "ELCC measures the improvement in reliability after adding",
+      "level": 1,
+      "text": "the solar resource to a system that already contains BESSs,\nthus attributing the complementary reliability gains enabled\nby solar–storage interactions entirely to the solar resource\nevaluated last. When this is done across all solar farms, these\ncomplementary reliability gains are double-counted, where the\nsum of LI CCs exceeds the portfolio CC. TRACED avoids\nthis double-counting effect by allocating CCs leveraging the\nsystem-wide reliability contribution, resulting in lower but\nportfolio-consistent CCs for the solar farms, reducing the\nlikelihood of resource under-procurement. TRACED accredits\nsolar farms 30.6 MW more (+6.2%) in June, 181.6 MW\nless (-22.4%) in December, and 918.7 MW less (-72.5%)\nin April. Comparisons for individual generators using LI\nmarginal ELCC and TRACED are shown in Fig. 7.\nWhile Solar Farms experience complementary benefits with\nthe BESS integration, BESS CCs do not necessarily benefit\nfrom Solar Farms, with LI CCs less than their FI CC. This is\nbecause solar farm curtailment is highly penalized but not for\nBESSs, thus prioritizing RES generation over BESS discharge\nand impacting their CCs. TRACED tends to accredit resources\nbetween their FI and LI CCs, resulting in higher CCs than the\nLI marginal ELCC. TRACED accredits the BESS combined\nCCs 246.7MW (+40.2%) and 225.1MW (+31.1%) more in\nJune and December, respectively, and 100.2MW (-10.0%) less\nin April. Comparisons for individual BESS CCs using LI\nmarginal vs TRACED can be seen in Figure 7.\nIn summary, TRACED accredits the portfolio 277.3MW\nmore (+25.0%) in June, 43.5MW more (+2.8%) in December,\nand 1018.9MW less (-44.9%) in April compared to the LI\nmarginal ELCC.\n5) Sensitivity Tests of Transmission Congestion Impact:\nTest 1.1 evaluates the impacts of transmission upgrades cen-\ntered around Solar Farm 3 and Wind Farm 3 on CCs, as shown\nin Figure 8. It was expected that when a generator has a\nlow CC due to transmission congestion, applying upgrades\nto the associated congested lines would notably boost its",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "However, this is not the case for Solar Farm 3, whose",
+      "level": 1,
+      "text": "9\nCC instead decreased (-14.9MW) compared to the base case,\nwhile BESS 3 experienced the greatest CC benefits from this\nupgrade. As a result, the total portfolio CC remains approxi-\nmately the same after transmission upgrades. Conversely, the\n2,525MW transmission upgrades around Wind Farm 3 yielded\nan additional 45.7MW CCs to Wind Farm 3, and the RES-\nBESS portfolio CC is improved by 74.2MW (+4.0%). It can\nbe concluded that generator-focused transmission upgrades\ncannot simply be used to improve the CC of a single generator,\nand further analyses should be conducted to identify proper\ntransmission upgrade strategies.\nSolar 3 Centered\nTx Upgrade\nWind 3 Centered\nTx Upgrade\n-100\n-50\n0\n50\n100\n150Change in Capacity Credit (MW)\nBatt 3\nBatt 2\nBatt 1\nSolar 3\nSolar 2\nSolar 1\nWind 3\nWind 2\nWind 1\nFig. 8. Change in CCs of the 9-generator portfolio with generator-centered\ntransmission upgrades.\nTest 1.2 further evaluates the impacts of system-focused\ntransmission upgrades, as shown in Figure 9. As the number of\ntransmission branch upgrades increases, the aggregated RES\nand BESS portfolio CC also increases. In particular, Wind\nFarm 3, Solar Farm 3, and Battery Farm 3 exhibit notable\nimprovements in their individual CCs while the remaining\nresources experience a modest reduction in their CCs, indi-\ncating reliability contributions are reasonably reallocated to-\nward higher nameplate-capacity generators once transmission\nbottlenecks are alleviated.\nNo\nUpgrades",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "3 Branch",
+      "level": 1,
+      "text": "Upgrade",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "7 Branch",
+      "level": 1,
+      "text": "Upgrade\nAll Branch\nUpgrade\n0\n500\n1000\n1500\n2000\n2500\n3000Capacity Credit (MW)\nWind 1\nWind 2\nWind 3\nSolar 1\nSolar 2\nSolar 3\nBatt 1\nBatt 2\nBatt 3\nFig. 9. System-focussed transmission upgrades.\nAlthough the most extensive transmission upgrades yield the\nhighest overall reliability improvement, it is equally important\nto evaluate the return on capacity (ROC) (i.e., increase in\nportfolio CCs over transmission capacity upgrades). The “3\nBranch Upgrade” adds 825 MW of transmission capacity and\nraises portfolio CC by 58.5 MW, corresponding to a 7.1%\nROC. The “7 Branch Upgrade” adds 1,925 MW of upgrades\nand improves the portfolio CC by 125.0 MW (6.5% ROC).\nIn contrast, the “All Branch Upgrade” applies 63,825 MW\nof upgrades to achieve 675.7MW portfolio CC improvement,\nresulting in a substantially lower ROC of 1.1%. This sensitivity\nstudy highlights the impact of transmission constraints in CCs\nand demonstrates the importance of including transmission\nconstraints in reliability studies. Study results indicate that\nRTOs can achieve more cost-effective reliability improvements\nby strategically targeting the most critical transmission bottle-\nnecks rather than pursuing widespread network upgrades that\nultimately increase costs passed on to the end consumers.\n6) Sensitivity Tests of Future Weather Trending Impact:\nTest 2.1 reevaluates Case 2 across 5 different values ofβ τ .\nβτ =0°C/yr is used to set the baseline as the current industry\npractices;β τ =0.05°C/yr is the average value across the 12\nmonths for New Jersey, andβ τ =-0.05°C/yr is to examine\nthese trends in the opposite direction;β τ =±0.1°C/yr are fur-\nther evaluated to account for extremely evolving temperature\ntrends. The impacts of evolving temperature trends on the CC\nratings of solar farms are illustrated in Figure 10. Although\ntemperature impacts multiple inputs of the UC problem (e.g.,\nsystem load, PV performance, transmission AAR) and it is\ndifficult to predict how these factors interact and ultimately\ndrive the CC ratings, a general increasing trend in CC ratings\nis observed as the evolving temperature increases. This can be\nassociated with the increase in system demand, particularly at\npeak times, raising the solar farms’ reliability contribution.\nNevertheless, atβ τ =0.1°C/yr, the portfolio CC decreases,\nwhich could be attributed to the decreased PV performance\nand transmission derating at high temperatures. Therefore, the\nnon-monotonous impacts of evolving temperature should be\nincorporated into reliability evaluation, particularly in areas\nthat are experiencing extreme temperature shifts.\n-0.1 -0.05 0 0.05 0.1\n\" °C\n0\n100\n200\n300\n400\n500\n600\n700\n800Capacity Credit (MW)\nSolar 1\nSolar 2\nSolar 3\nFig. 10. Future temperature-adjusted CC results.\nAdditionally, Test 2.2 reevaluates Case 1 for multiple values\nofβ hurr ranging from 0 to 1, whereβ hurr = 0.0108reflecting\nthe historically low increase in hurricane frequency in New\nJersey is set as the base case. The sensitivity results indicate\nthat generator CCs exhibit notable changes only whenβ hurr\napproaches 1.0, which is nearly two orders of magnitude larger\nthan the base case value. This occurs because hurricane events\nreduce generator CCs only when they coincide with peak\ndemand. Consequently, even substantially higher hurricane\nfrequencies do not necessarily translate to reduced CCs.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "CONCLUSIONS ANDFUTUREWORK",
+      "level": 1,
+      "text": "This paper studies a new ELCC methodology to enhance",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "evaluation for future energy system resources experienc-",
+      "level": 1,
+      "text": "ing deep uncertainties. Specifically, the proposed TRACED\nextends the Delta method, preserving fair CC of individual\nresources while incorporating locational transmission con-\nstraints and evolving weather trends, which have been largely\nneglected, isolated, or oversimplified in the current indus-\ntry practice. The TRACED method is evaluated against the",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "10 marginal ELCC across multiple resource portfolios and operat-",
+      "level": 1,
+      "text": "ing months. Case studies demonstrate that TRACED provides\nportfolio-consistent CC allocations by capturing complemen-\ntary resource interactions and preventing double-counting of\nshared reliability benefits inherent in the LI marginal ELCC\napproach, which may otherwise lead to under-procurement of\nreliability resources. Furthermore, transmission congestion is\nidentified as a major bottleneck in assigned CCs and has a\nsignificant influence on the complementary behaviors between\nresources. Sensitivity studies unveil that targeted transmission\nreinforcements could substantially enhance system reliability\nand unlock additional resource values, and that evolving tem-\nperature trends are found to impact CCs while hurricane oc-\ncurrence only impacts CCs when aligned with peak demands.\nThis work also motivates interesting future research di-\nrections. TRACED requires solving LOLEs for both FI and",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "systems for each generator of interest, causing scalability",
+      "level": 1,
+      "text": "challenges for systems with a large generator portfolio. Future\nwork could investigate methods to reduce runtime, such as\nreusing FI CC results across years when system conditions\nremain largely unchanged (e.g., no major generator retirements\nor transmission upgrades). Another area of improvement is the\nfuture weather trend model imposed on historical data. This\nwork applies regression methods to capture long-term weather\nevolution, while other advanced approaches such as statistical\nmodels or machine learning could further improve the future\nweather environment representation for ELCC evaluation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Neither method, however, considers the impact of"
+    }
+  ],
+  "tables": [],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "TRACED Workflow for CC Evaluation"
+    }
+  ],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 0,
+    "n_algorithms": 1,
+    "n_equations": 4
+  }
+}

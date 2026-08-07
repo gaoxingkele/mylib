@@ -1,0 +1,242 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/opfdata_landing/opfdata_landing__PGLearn_Open-Source_Learning_Toolkit_for_OPF__e04cc6fbe7.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The rapid evolution of energy systems, driven by mass integration of renewable and distributed energy\nresources, is creating new challenges in the maintenance, expansion, and operation of power grids.\nThe increased volatility and scale of power generation in modern and future grids calls for innovative\nsolutions to manage uncertainty and ensure reliability [Zhang et al., 2021]. Machine learning (ML)\nPreprint.\narXiv:2505.22825v1  [cs.LG]  28 May 2025\nML4OPF\nML for OPF Utilities\nStandard Evaluation\nPGLearn.jl\nOPF Formulations\nDataset Pipeline\nSOC DC\nAC\nFigure 1: The PGLearn Toolkit: publicly available AC, DC, and SOC optimal power flow datasets,\nPGLearn.jl for data generation, and the ML4OPF ML toolkit.\nhas emerged as a powerful tool in this context, offering the potential to address key problems such as\noptimizing grid operations and predicting power demand, enabling the use of previously intractable\napplications such as real-time risk analysis [Chen et al., 2024]. However, the success of ML models\ndepends on the availability of high-quality data, which is essential for training accurate and reliable\nmodels [Khaloie et al., 2024, Lovett et al., 2024].\nOptimal Power Flow (OPF) is a fundamental problem in power systems operations, focusing on\nhow to efficiently operate a power transmission system while satisfying physics, engineering, and\noperations constraints. Most market-clearing algorithms for real-time electricity markets are based on\nOPF, which makes it paramount to real-time operations. In addition, OPF forms the building block of\nsecurity-constrained unit commitment (SCUC) formulations used in day-ahead markets [Chen et al.,\n2023], as well as transmission expansion planning problems. In practice, many instances of OPF\nneed to be solved at once in order to account for uncertainties in renewable power generation and/or\ndemand, making it a computationally intensive task – especially given the non-convex physics of\nAC power flow. Besides its real-world applications, OPF has also garnered significant attention as a\ntest-bed for research methods integrating mathematical programming and machine learning.\nThe key motivation for using ML to address parametric OPF stems from the increased volatility\nand scale in power generation in modern and future grids. Indeed, the growing use of intermittent\nrenewable energy sources such as wind and solar generation is driving significant growth in operational\nuncertainty. This motivates a shift from deterministic to, e.g., stochastic optimization formulations\nthat explicitly consider uncertainty. Such a change results in OPF problems that are, or will be, orders\nof magnitude larger than today’s instances. In addition, the risk of energy shortage, congestion,\nand voltage issues has become substantially larger and requires novel methods to manage in real-\ntime. Machine learning offers some hope in addressing these challenges by moving much of the\ncomputational burden offline and delivering orders of magnitude speedups for real-time operations.\nThis research avenue is further justified by the fact that practitioners often solve OPF instances on\nvery similar – or even identical – transmission systems, with only renewable generation and/or power\ndemand varying across instances. Readers are referred to Hasan et al. [2020], Khaloie et al. [2024]\nfor a detailed review of prior works in machine learning for OPF. Note that many of the works therein\ndo not consider the non-convex AC-OPF formulation directly, but rather focus on more tractable, i.e.,\nconvex, OPF formulations, such as the DC-OPF linear approximation or second-order cone relaxation\n[Molzahn and Hiskens, 2019]. Although these relaxed formulations do not capture the exact physics,\nthey more closely match the problems that real power market operators and participants solve every\nday [Ma et al., 2009]. For example, Chen [2023] uses a linear formulation inspired by problem solved\nby the Midcontinent Independent System Operator (MISO) to clear its real-time market.\n1.1 Motivation: Data Scarsity in ML for OPF Research\nDespite strong interest from industry, real, industry-scale data is scarce, mainly due to regulatory\nbarriers that restrict the sharing of sensitive information on power grids. Thus, most previous ML for\nOPF works generate their own artificial datasets, often based on the Power Grid Lib Optimal Power\nFlow (PGLib-OPF) [Babaeinejadsarookolaee et al., 2019] benchmark library – a collection of grid\nsnapshots originally designed for benchmarking AC-OPF optimization algorithms.\n2\nFigure 2: Limitations of sampling strategies that do not consider correlations across individual loads.\nLeft: histogram of total demand: the absence of correlations yields a narrow range of total demand.\nRight: active power flow on branch 200; the absence of correlations in input data leads to datasets\nwith low variance and diversity.\nWhile machine learning methods usually require many thousands of data points to train accurate\nmodels, PGLib-OPF only provides a single snapshot per grid. Hence, a data augmentation strategy\nis needed to “sample around” the provided snapshots in a realistic fashion. There is however no\nconsensus in prior literature for how to perform this sampling, which has led to a highly fragmented\necosystem where it is impossible to directly compare results from different works due to the use of\nvery different data distributions [Khaloie et al., 2024]. Indeed, the characteristics of the learning\nproblem may vary substantially when considering different augmentation schemes, for example\ncorrelated versus uncorrelated noise.\nTo ensure that ML for OPF research is useful in practice, it is important to carefully consider the\nchoices involved in designing a data augmentation scheme. For example, most works surveyed in\nKhaloie et al. [2024] sample instances by perturbing individual loads independently of each other.\nFigure 2 illustrates the limitations the resulting data distribution, for a system with 1354 buses. The\nfigure shows that, i) the resulting distribution displays a very narrow range of total demand, and ii)\nthe resulting OPF solutions exhibit simplistic patterns that do not capture global dynamics over a\nwider range of total demand. As a consequence, ML models trained on data that does not capture\ncorrelations can only be expected to perform well for a small total demand range, severely limiting\ntheir usability in practice.\nFinally, the lack of publicly available standardized datasets requires individual teams to expend\nconsiderable computational resources to generate new datasets. This comes at a high financial and\nenvironmental cost, and results in most academic studies considering small, synthetic power grids\nwhich incur lower data generation costs, but are irrelevant to industry practitioners. More importantly,\nit represents a significant barrier to entry to teams without substantial computational resources.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.2 Related Work",
+      "level": 2,
+      "text": "Due to strong interest from academia and industry, several OPF datasets and data generation packages\nhave been released in recent years. However, none simultaneously meet the requirements of being\nactively maintained, considering large power networks, and using realistic sampling schemes.\nSome prior works [Donon et al., 2020, Chatzos et al., 2022, Klamkin et al., 2024] report results on\nindustry-based datasets, i.e., using data obtained from transmission system operators. Although these\nworks report more closely match real-world systems, the corresponding datasets are not publicly\navailable due to regulations around privacy and security.\nDespite a growing literature on ML for OPF, few datasets have been made publicly available. The\ndatasets initially released alongside the OPFSampler [Robson et al., 2019] codebase are no longer\navailable, and the code is unmaintained. The OPFLearn library [Joswig-Jones et al., 2022] provides\ndata augmentation tools built on top of PowerModels Coffrin et al. [2018], as well as a collection\nof 10,000 samples of AC-OPF instances and their solution for five systems with up to 118 buses.\n3\nThis code is no longer maintained, only considers uncorrelated demand perturbations, and reports\nincomplete primal/dual solutions. More recently, and closest to this paper, OPFData [Lovett et al.,\n2024] is a collection of AC-OPF datasets which considers systems with up to 13,659 buses. The\ncollection also includes instances with perturbed topology, obtained by randomly removing individual\nlines or generators in the system. The main limitation of OPFData, however, is that it only considers\nuncorrelated demand perturbation, leading to simplistic data distributions as illustrated in Figure 2.\nAdditionally, OPFData only reports AC-OPF solutions, does not include dual solutions nor metadata\nsuch as solve times, and does not include the source code used to generate and solve samples.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.3 Contributions and Outline",
+      "level": 2,
+      "text": "To address the above challenges, this paper proposes PGLearn, a collection of datasets and tools for\nML and OPF. The contributions of PGLearn are as follows:\n• PGLearn provides a collection of standardized datasets for large-scale OPF instances,\ngenerated using a realistic and reproducible data augmentation methodology. The entire\ncollection totals over 10,000,000 OPF samples, split between training and testing data to\nallow for direct comparison of results. Crucially, PGLearn is also the first OPF dataset to\nincorporate realistic time-series data for large-scale power systems.\n• Each PGLearn dataset comprises complete primal and dual solutions for several OPF\nformulations, a unique feature compared to existing literature.\n• PGLearn provides several evaluation metrics for objective and fair comparison of various ML\nmethodologies for OPF problems, together with guidelines on performance benchmarking.\n• The PGLearn.jl Julia [Bezanson et al., 2017] library containing the source code to generate\nthe PGLearn datasets. The modular design of PGLearn.jl simplifies the implementation\nand execution of new data augmentation schemes and OPF formulations.\n• The ML4OPF PyTorch [Ansel et al., 2024] library containing data parsers, optimized GPU-\nfriendly implementations of the supported OPF formulations (objective, constraints, etc.),\nand other utilities for developing new ML methods for OPF.\nThe code used to generate PGLearn is fully open-source and relies only on open-source solvers,\nallowing to interrogate, reproduce, and extend each part of the dataset generation process. By openly\ndistributing these tools and datasets, PGLearn seeks to lower the barrier of entry for researchers in\nthe field, promoting innovation and accelerating the development of ML techniques for OPF and\noptimization more broadly.\nThe rest of this paper is structured as follows. Section 2 describes each OPF formulation included\nin PGLearn. Section 3 introduces the data augmentation procedure, and Section 4 presents relevant\nfeatures of thePGLearn.jl and ML4OPF libraries. Section 5 provides recommendations for evaluation\nmetrics and their reporting. Section 6 reviews the limitations of PGLearn, and Section 7 concludes\nthe paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 OPF Formulations in PGLearn",
+      "level": 1,
+      "text": "A unique feature of PGLearn is that it provides, for each OPF instance, solutions to several OPF\nformulations. This allows to compare, for the same input data, the performance of ML models\ntrained using different formulations. Namely, PGLearn currently supports the nonlinear, non-convex\nAC-OPF, the second-order cone relaxation SOC-OPF, and the linear approximation DC-OPF. A brief\nsummary of each formulation is provided below. Due to space considerations, full OPF formulations\nare stated in Appendix A.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.1 OPF Formulations",
+      "level": 2,
+      "text": "AC-OPF The AC-OPF is considered the “full” steady-state optimal power flow formulation.\nPGLearn uses the rectangular-power polar-voltage form, matching the ACPPowerModel formulation\nimplemented in PowerModels [Coffrin et al., 2018]. This formulation includes non-convex AC power\nflow physics to accurately model the power system. The full non-linear programming formulation is\nincluded in Model 1.\n4\nTable 1: Summary statistics of the PGLearn datasets.\nCase name |N | |L| |G| |E| Total PD Total PG Global range\n14_ieee 14 11 5 20 0.3 GW 0.4 GW 70% – 110%\n30_ieee 30 21 6 41 0.3 GW 0.4 GW 60% – 100%\n57_ieee 57 42 7 80 1.3 GW 2 GW 60% – 100%\n89_pegase 89 35 12 210 6 GW 10 GW 60% – 100%\n118_ieee 118 99 54 186 4 GW 7 GW 80% – 120%\n300_ieee 300 201 69 411 24 GW 36 GW 60% – 100%\n1354_pegase 1354 673 260 1991 73 GW 129 GW 70% – 110%\nNewYork2030 1576 1446 323 2427 33 GW 42 GW 70% – 110%\n1888_rte 1888 1000 290 2531 59 GW 89 GW 70% – 110%\n2869_pegase 2869 1491 510 4582 132 GW 231 GW 60% – 100%\n6470_rte 6470 3670 761 9005 97 GW 118 GW 60% – 100%\nTexas7k 6717 4541 637 9140 75 GW 97 GW 80% – 120%\n9241_pegase 9241 4895 1445 16049 312 GW 530 GW 60% – 100%\n13659_pegase 13659 5544 4092 20467 381 GW 981 GW 60% – 100%\nMidwest24k 23643 11727 5646 33739 104 GW 318 GW 90% – 130%\nSOC-OPF The SOC-OPF is a second-order-cone relaxation of the AC-OPF proposed by Jabr\n[2006a]. The SOC-OPF better approximates the full-physics AC-OPF compared to the linear DC-\nOPF, but is more complicated to solve. A description of how to derive the SOC-OPF, and its full\nconic programming formulation, is included with Model 2.\nDC-OPF The DC-OPF is a sparse linear approximation to the AC-OPF [Christie et al., 2000]. It is\ncommonly used in industry to approximate AC-OPF in cases where solving AC-OPF within time\nconstraints is intractable. Among other simplifications, it considers only active power and fixes all\nvoltage magnitudes to 1. A list of all assumptions required to derive the DC-OPF, and its full linear\nprogramming formulation, is included with Model 4.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2 Dual OPF Formulations and Solutions",
+      "level": 2,
+      "text": "Another unique feature of PGLearn is that it provides, for each OPF formulation, complete primal and\ndual solutions. This novel capability is motivated by the recent interest in leveraging dual information\nin ML contexts. For instance, Qiu et al. [2024] and Tanneau and Van Hentenryck [2024] both\nconsider learning dual optimization proxies, wherein an ML model outputs dual-feasible solutions\nto conic optimization problems. In a similar fashion, Kotary and Fioretto [2024] leverage insights\nfrom Augmented Lagrangian methods to learn Lagrange multipliers for nonlinear problems. Finally,\nseveral recent works attempt to predict dual solutions in the context of mixed-integer optimization,\nwith the aim of obtaining high-quality dual bounds through Lagrangian duality Parjadis et al. [2023],\nDemelas et al. [2024].\nPGLearn leverages Lagrangian duality for nonlinear, non-convex problems such as AC-OPF, and\nconic duality for convex relaxations and approximations such as SOC-OPF and DC-OPF. Dual\nformulations for SOC-OPF and DC-OPF are stated in Appendix A. Note that a key advantage of\nconic (convex) relaxations is that dual-feasible solutions provide valid certificates of optimality, which\ncan be used to validate the quality of primal predictions.\nDual solutions are also at the core of price formation in electricity markets. Hence, by systematically\nproviding dual solutions, PGLearn will support future research at the intersection of optimization,\nmachine learning, and the economics of electricity markets.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 The PGLearn Collection of Datasets for Learning OPF",
+      "level": 1,
+      "text": "Like most prior work in the field, PGLearn uses a sampling scheme to convert static snapshots to\ndatasets of OPF instances. PGLearn considers a total of 14 snapshots, split into four categories based\non the number of buses:\n5\nSmall (<1k): 14_ieee, 30_ieee, 57_ieee, 89_pegase, 118_ieee, 300_ieee\nMedium (<5k): 1354_pegase, NewYork2030, 1888_rte, 2869_pegase\nLarge (<10k): 6470_rte, Texas7k, 9241_pegase\nExtra-Large (>10k): 13659_pegase, Midwest24k\nThe 89_pegase, 1354_pegase, 2869_pegase, 9241_pegase, and 13659_pegase cases from\nFliscounakis et al. [2013] are based on the European power grid, the 1888_rte and 6470_rte\ncases from Josz et al. [2016] are based on the French power grid, the nyiso_2030_v11 case from\nUniversity of Wisconsin-Madison [2024] is based on the planned 2030 New York power grid, and\nthe Texas7k and Midwest24k cases from Kunkolienkar et al. [2024] are based on the Texas power\ngrid and the US Midwest power grid, respectively. The smaller 14_ieee, 30_ieee, 118_ieee,\nand 300_ieee cases from University of Washington, Dept. of Electrical Engineering [1999] are\nsynthetic. These cases are chosen to span a range of scales and to match cases used in prior ML for\nOPF literature.\nTable 1 reports statistics of each snapshot used in the PGLearn collection. Namely, for each reference\nsnapshot, the table reports: the number of buses |N |, the number of loads |L|, the number of\ngenerators |G|, the number of branches |E|, which includes power lines and transformers, the total\nactive power demand in the reference case (Total PD), the total maximum active power generation\n(Total PG), and the range of the global scaling factor used in the data augmentation scheme described\nnext (Global range).\nDemand Sampling The PGLearn datasets sample each load’s active and reactive demand by\ncombining a global (per-sample) correlation term with local (per-load per-sample) noise. The power\nfactor of each load is varied by sampling the local noise independently for the active and reactive\ncomponents. This sampling procedure mimics real power system behavior since in practice, machine\nlearning training takes time, so models are trained day-ahead on demand ranges given by forecasting\nsystems for the next day [Chen et al., 2022]. The local noise is applied to generate diverse samples at\nall values of total load, ensuring the usability of the machine learning system under various demand\nsettings. The global correlation is important to ensure that the model captures a wide total demand\nrange rather than being specialized to a particular total demand level. This captures more operating\nregimes of the power system, as shown in Figure 2. The demand sampling process is described in\nAlgorithm 1. The Global Range column in Table 1 contains the values for bl and bu for each case.\nϵ is set to 20% for all cases. The width of the global range is fixed to 40% with bu determined by\nincrementally scaling the reference load values in 10% steps until an infeasible case is hit.\nAlgorithm 1 Demand Sampling\nInput: Reference demand (pd, qd), global range (bl, bu), noise level ϵ\nOutput: Sampled demand (˜pd, ˜qd)\n1: b ∼ Uniform(bl, bu)\n2: for i = 1 . . .|L| do\n3: ϵp\ni ∼ Uniform(1 − ϵ, 1 + ϵ)\n4: ϵq\ni ∼ Uniform(1 − ϵ, 1 + ϵ)\n5: ˜pd\ni ← b · ϵp\ni · pd\ni\n6: ˜qd\ni ← b · ϵq\ni · qd\ni\n7: end for\n8: return (˜pd, ˜qd)\nStatus Sampling To generate the N − 1 datasets, disabled branches/generators are sampled\nfollowing the procedure used in OPFData [Lovett et al., 2024]. Either one generator or one (non-\nbridge, to preserve connectedness of the network) branch is disabled per instance.\nTime-Series Sampling There are several public resources, i.e. ENTSO-E Hirth et al. [2018] and\nOEDI1, which provide time-series power demand information. Some system operators, e.g. RTE, also\npublish load information in real-time.2 Although these data sources are useful for e.g. power demand\n1https://data.openei.org/s3_viewer?bucket=arpa-e-perform\n2https://www.rte-france.com/en/eco2mix/market-data\n6\nforecasting studies, they are not detailed enough to formulate an OPF; namely a full description\nof the power system and load-level demand information is required. Motivated by this mismatch,\nthe Texas7k and Midwest24k cases include one year of synthetic time-series data at an hourly\ngranularity. PGLearn uses cubic spline interpolation to augment the provided time-series in order to\nprovide AC, DC, and SOC-OPF solutions at a five-minute granularity for Texas7k and ten-minute\ngranularity for Midwest24k.\nTrain-Test Split The training and testing sets contain only feasible input samples, i.e. those inputs\nfor which a solution was found for all formulations. The feasible samples are then shuffled using a\nseeded random number generator (MersenneTwister(42) from Julia 1.11.5). Then, the first 80%\nof the shuffled feasible samples are selected as training data and the remaining 20% as testing data.\nUsers should further split the training data to create validation and/or calibration sets as needed; the\ntesting data should be kept unchanged to allow for direct comparison of reported results. This creates\nthree datasets – train, test, and infeasible, where samples in infeasible are those for which\na (locally) optimal solution could not be found for at least one of the formulations considered.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Open-Source Implementations",
+      "level": 1,
+      "text": "PGLearn leverages two MIT-licensed open-source repositories: PGLearn.jl to generate datasets\nand ML4OPF to build machine learning models.\n4.1 PGLearn.jl: OPF Data Generation\nThe PGLearn.jl repository contains the JuMP [Lubin et al., 2023] implementations of the OPF\nformulations as well as utilities for sampling and solving datasets of instances. For each case, it first\nuses the make_basic_network function from PowerModels [Coffrin et al., 2018] to parse and pre-\nprocess the corresponding raw Matpower [Zimmerman et al., 2010] file. The MathOptSymbolicAD\n[LANL-ANSI, 2022] automatic differentiation backend is used to accelerate derivative calculations.\nPGLearn.jl leverages the GNUparallel utility [Tange, 2022] for parallelization across CPU cores\nand the SLURM workload manager [Jette and Wickberg, 2023] for parallelization across nodes.\n4.2 ML4OPF: Model Training, Evaluation and Benchmarking\nThe ML4OPF library – specifically the parsers submodule – is the standard way to work with the\nPGLearn datasets. ML4OPF also includes several other submodules that allow researchers to quickly\ncombine and modify existing methods, implement new methods, and easily compare results to prior\nworks. The layers submodule contains implementations of several useful differentiable layers\nimplemented in PyTorch [Ansel et al., 2024] for producing predictions which satisfy constraints. The\nfunctional submodule contains PyTorch JIT implementations of each formulation’s constraints,\nobjective, and incidence matrices. formulations contains a higher-level API which makes some\ncommon assumptions (e.g. only pd and qd vary per sample) to simplify common workflows. models\ncontains ready-to-train implementations of various optimization proxy model architectures including\nthe Lagrangian Dual Framework [Fioretto et al., 2021], a penalty method, and the E2ELR network\nfrom Chen [2023].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "5 Benchmarking Machine Learning Models for OPF",
+      "level": 1,
+      "text": "This section describes evaluation metrics for optimization proxies, catering to the specific context\nof learning the solution maps of optimization problems. It also provides guidelines for comparing\nand benchmarking models. It is important to recognize that there is no universal metric, and that\nresearchers should report a combination of metrics to accurately capture the behavior and performance\nof their models, keeping in mind the downstream use-cases of their contribution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "5.1 Accuracy metrics",
+      "level": 2,
+      "text": "The following lists several important metrics in the evaluation of optimization proxy models, i.e.\nmodels that predict the output of a parametric optimization problem given the parameters. They are\n7\nstated below on a per-instance basis; aggregations should be performed by taking the mean/standard\ndeviation and maximum (e.g. over the test set samples).\nOptimality gap This metric reports how close the predicted objective value (i.e. the objective value\nof the predicted solution) is to the true optimal value. It is important to note that predicted solutions\nare often infeasible, hence it is not fair to assess solutions based on optimality gap alone.\nConstraint violations This metric reports the magnitude of constraint violation, aggregated per\ngroup of constraints. Here, “group” refers to constraint of the same type, e.g. the |N |Kirchhoff’s\ncurrent law constraints in DC-OPF. In addition to average/maximum violation magnitude, researchers\nshould also report (for each group of constraints) the proportion of constraints violated and the total\nviolation (the sum of violations within each group).\nDistance to feasible set This metric reports how far the predicted solution is from the closest feasible\npoint. This requires solving the corresponding projection problem for each instance (replacing the\nobjective with ∥x − x⋆∥ where x⋆ is the predicted solution and x is subject to the original constraints).\nDistance to optimal solution This metric reports how far the predicted solution is from the optimal\nsolution. Note that a solution can exhibit small residuals but large distance to feasibility. In real-life,\nthis can mean that a solution with small residual may need large changes to become feasible, with\npotentially a large increase in cost.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "5.2 Computational performance metrics",
+      "level": 2,
+      "text": "These metrics evaluate how fast the proxy models are, compared to optimization solvers. It’s\nimportant to recognize that ML proxies are only heuristics, whereas optimization solvers have\nstronger guarantees. Two types of metrics should be reported: computing time for applications where\na single instance is solved at a time and throughput for applications that need to solve large batches\nof instances (e.g. large-scale simulations). Timing results should be reported using CPU/GPU.hour\n(i.e. 2 CPU cores for 1 hour corresponds to 2 CPU.hr). Similarly to the accuracy metrics, aggregated\ntiming results should report both the mean/standard deviation and the maximum across samples.\nFinally, in line with general guidelines for reporting ML results, researchers should always report the\ndevice (CPU and/or GPU) used for running experiments.\nData-generation time This metric reports the total time spent obtaining the ground-truth pri-\nmal/dual solutions required for the training (and validation) set of the proxy model – the time spent\ngenerating the test set can be excluded.\nTraining time This metric reports the time spent training the optimization proxy model. In addition,\nresearchers should comment on how often the model would need to be re-trained in a practical\napplication. For instance, it is not realistic to train a model every hour if the training time is 6 hours.\nInference time This metric reports the time spent producing a solution to a single instance. This\nis useful if the downstream application involves solving instances sequentially, for instance, when\nsolving a market-clearing problem every 5 minutes. Researchers should report the maximum\ntime across samples, especially for architectures that involve an iterative scheme such as gradient\ncorrection [Donti et al., 2021], implicit layers [Agrawal et al., 2019], or optimization solvers, because\nof performance variability.\nInstance throughput This metric reports how many instances can be processed per unit of time\nwith a fixed computational resource budget. This metric is relevant for settings where a large number\nof instances need to be evaluated, e.g., when running large-scale simulations that require solving\nmultiple OPF instances. In addition, it better captures the batched processing advantages of GPU\ndevices.\nThe solve_time metadata included with the PGLearn datasets can be used to obtain data-generation\ntime and instance throughput for optimization solvers. However, it is important to note that PGLearn\ndatasets are generated using a single thread per instance, and utilize multiple processes per machine.\nSuch settings are known to have an adverse impact on the performance of optimization solvers.\n8\nHence, the solving times reported in the metadata are likely over-estimates compared to solving one\ninstance at a time in a “clean” environment or with multi-threaded solvers.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "6 Limitations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "6.1 Data Limitations",
+      "level": 2,
+      "text": "In the absence of publicly-available, granular datasets released directly by system operators, PGLearn\nis limited like prior works to using synthetic time-series and data augmentation schemes to generate\nsamples. Nevertheless, it is important to note that the reference snapshots selected for PGLearn are\nbased on real power grids in France, Europe, Texas, and the American midwest [Josz et al., 2016,\nFliscounakis et al., 2013, Kunkolienkar et al., 2024, University of Wisconsin-Madison, 2024], and\nthe time-series used are based on real-world characteristics Li et al. [2020].\nAnother limitation of PGLearn is the limited variety of topologies, and the nature of topology changes.\nNamely, PGLearn considers topology variations by removing individual lines or generators. In\ncontrast, real-life operations include multiple categories of topology changes, such as switching\nmultiple lines and reconfiguring buses within a substation. Additional research is needed to better\ncapture this lesser-studied facet of power grid operations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "6.2 Future Collections",
+      "level": 2,
+      "text": "PGLearn aims to provide curated datasets that are updated over time, to integrate new data-generation\nprocedures and OPF formulations. To that end, future versions of PGLearn will comprise OPF\nformulations that include elements present in market-clearing formulations used by system operators.\nThis includes, for instance, the integration of reserve products and support for piece-wise linear\nproduction curves Ma et al. [2009].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "7 Conclusion",
+      "level": 1,
+      "text": "This paper has introduced PGLearn, an open-source learning toolkit for optimal power flow. PGLearn\naddresses the lack of standardized datasets for ML and OPF by releasing several datasets of large-\nscale OPF instances. It is the first collection that comprises complete primal and dual solutions for\nmultiple OPF formulations. In addition to releasing public datasets, PGLearn provides open-source\ntools for data generation, and for the training and evaluation of ML models. These open-source tools\nenable reproducible and fair evaluation of methods for ML and OPF, thereby democratizing access to\nthe field.\nThe PGLearn collection contains, in its initial release, over 10,000,000 OPF samples. It is released\nalongside extensive documentation and code, allowing users to generate additional datasets as needed,\nand to benchmark the performance of ML models. The paper has also provided several performance\nmetrics and guidelines on how to report them. These guidelines aim at capturing specific aspects of\nML for OPF that fall outside the scope of traditional ML applications. This includes, for instance, the\nfundamental importance of measuring and reporting constraint violations, as well as accurate reporting\nof data-generation, training and inference times when evaluating computational performance.\nFinally, PGLearn aims to democratize access to research on ML and OPF by removing the barrier to\nentry caused by the computational requirements of large-scale data generation. It also aims to align\nacademic research more closely to the scale and complexity of real-world power systems. This will,\nin turn, unlock the potential for modern AI techniques to assist in making future energy systems more\nefficient, reliable, and sustainable.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The PGLearn Toolkit: publicly available AC, DC, and SOC optimal power flow datasets,"
+    },
+    {
+      "id": "f2",
+      "caption": "Limitations of sampling strategies that do not consider correlations across individual loads."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Summary statistics of the PGLearn datasets."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "The Global Range column in Table 1 contains the values for bl and bu for each case."
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": false,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 1,
+    "n_algorithms": 1,
+    "n_equations": 0
+  }
+}

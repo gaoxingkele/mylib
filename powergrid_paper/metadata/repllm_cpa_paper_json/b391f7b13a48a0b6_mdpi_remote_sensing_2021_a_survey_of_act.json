@@ -1,0 +1,253 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-remote-sensing/mdpi-remote-sensing__2021__a_survey_of_active_learning_for_quantifying_vegetation___d9c0673acf.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "In view of the unprecedented data availability delivered by recently launched and\nplanned optical satellite missions, agricultural and other ecosystem applications will ben-\neﬁt largely from the provided up-to-date information regarding vegetation status and\nRemote Sens. 2021, 13, 287. https://doi.org/10.3390/rs13020287 https://www.mdpi.com/journal/remotesensing\nRemote Sens. 2021, 13, 287 2 of 23\ndynamics [1]. For these purposes, the remotely sensed signals must be translated into\nessential vegetation variables or functional traits at both leaf and canopy levels. Traits\ncan be of morphological, biochemical, physiological, structural or phenological nature [2],\nfor instance leaf area index (LAI), leaf water or pigment contents. With the launch of the\nCopernicus mission Sentinel-2 in 2015 (and 2017) as well as in view of upcoming satellite\nimaging spectroscopy missions, such as the Environmental Mapping and Analysis Program\n(EnMAP [3]) and the high-priority mission candidate Copernicus Hyperspectral Imaging\nMission for the Environment (CHIME, [4]), big data streams are going to increase. Hence,\nefﬁcient and accurate methods for mapping and monitoring of vegetation properties from\nthese Earth observation (EO) data are required. In the last ﬁve decades, numerous retrieval\nmethods have been proposed and developed to predict biophysical and biochemical veg-\netation traits from EO data, ranging from parametric and nonparametric regressions to\nphysically-based and hybrid approaches [ 5–7]. Since these studies provide exhaustive and\nup-to-date taxonomies of quantitative retrieval methods, we will concentrate here on the\nrecently promoted hybrid retrieval workﬂows [8–12]. Hybrid retrieval strategies denom-\ninate a combination of radiative transfer models (RTM), providing physical constraints\nand domain knowledge [ 13], with fast and ﬂexible machine learning (ML) regression\nalgorithms. In such a framework, typically conventional single (shallow) models are being\nused, whereas the development of deep learning (DL) models has not yet been applied\nfrequently [14]. Two widely used RTMs in vegetation modelling studies are the leaf optical\nproperties model PROSPECT (recent version PROSPECT-PRO [15]) and the Scattering by\nArbitrarily Inclined Leaves (SAIL) [ 16,17]. The models are usually coupled to simulate\ncanopy bidirectional reﬂectance from 400 to 2500 nm as a function of several biochemicals,\nsuch as pigment, protein and water contents, and biophysical input parameters, such as\nLAI, average leaf inclination angle, spectral soil background, as well as observation and\nviewing geometries [18,19]. This modelling scheme, here called PROSAIL-PRO, can be\nused to establish training databases composed of vegetation properties (=RTM input) and\nsimulated spectral signals (=RTM output), also known as look-up-tables (LUT). In the\nstudy by Weiss et al. [ 20], LUTs were introduced as robust physically-based inversion\nmethods in the context of vegetation properties retrieval from remote sensing data using\nPROSAIL. Extending this idea to the framework of a hybrid approach, the selected ML\nregression algorithm is run over such a predeﬁned LUT, or training database, to learn the\ninherent patterns and nonlinear relations between input and output. Finally, the established\nretrieval models can be applied over full satellite scenes to map vegetation functional traits\nin a fast and efﬁcient manner. Recently, kernel-based algorithms have been successfully\nexploited for such a retrieval scheme, namely Gaussian process regression (GPR) [21,22].\nGPR is based on a probabilistic treatment of regression problems which leads to an an-\nalytical expression of the predictive uncertainty, provided along with ﬁnal estimates of\nfunctional traits [14,23]. Together with the high accuracy achieved with these algorithms,\nthis speciﬁc characteristic renders GPR particularly attractive for solving EO regression\nproblems: information of uncertainty in the model parameterization or input data [ 24]\ncan be used to assess the models transferability to other locations and times [ 25]. Many\nalternative ML approaches have been proposed and applied typically based on artiﬁcial\nneural networks or random forest regression [6,12,26,27]. However, these algorithms do\nnot have the evident advantage of delivering associated uncertainty, which makes them\nless attractive for vegetation mapping applications.\nIn the context of PROSAIL model inversion based on the LUT-strategy, the proposed\nnumber of samples ranged up to 100,000 [ 20,28–30] combinations of input parameters.\nWith this size, the training datasets were considered as representative for a wide range of\nenvironmental situations. However, this point of view may also be traced to the radiometric\napproach of physically-based inversion: the solution here is calculated by means of a cost\nfunction that minimizes between simulated and measured spectral signatures. Since LUT-\nbased inversion strategies only exploit radiometric information, usually the larger the\ntable, the more accurate was the retrieval. Though, this also depends on the applied\nRemote Sens. 2021, 13, 287 3 of 23\nstrategy, for instance the fraction or number of simulations selected for calculation of the\nsolution [20,30].\nWhen moving towards hybrid approaches using kernel-based machine learning algo-\nrithms, processing becomes computationally unfeasible with these large training datasets.\nMoreover, retrieval results may be biased through unrealistic and redundant parameter\ncombinations within the data pool. This implies that a balance is needed: the characteristics\nof the training dataset should be a trade-off between realistic sampling and lowest possible\nsize. Dimensionality reduction (DR) is key to tackling the problem of data size. DR can\nbe done in the two dimensions of the training dataset, i.e., in the (1) spectral domain,\nreferring to the number of bands, and (2) in the sampling domain, which speciﬁes the\nnumber of available samples or the size of a training dataset [ 31]. In respect of (1), fea-\nture engineering and feature extraction methods offer the opportunity to condense data\nspace, and at the same time remove noise and redundant data [ 31,32]. These methods\nare particularly relevant when using hyperspectral data, where multicollinearity leads to\nsuboptimal regression models. However, for hybrid retrieval approaches reduction in the\nspectral domain may not be sufﬁcient regarding the huge number of possible samples\nfor instance generated by RTMs, and therefore also reduction in the sampling domain (2)\nis required. A solution to the sampling reduction problem is given by semi-supervised\napproaches, in which unlabeled samples are exploited during the design of the regression\nmodel [33]. These techniques are also known as active learning (AL), aiming to optimize\ntraining datasets through intelligent sampling by means of an iterative procedure [34].\nWith this background in mind, our study was narrowed down to the\nfollowing objectives:\n• Provide an up-to-date overview of the use of AL heuristics in the framework of\nbiophysical and biochemical vegetation traits retrieval from terrestrial EO data;\n• Identify optimal AL strategies to obtain efﬁcient training datasets for kernel-based\nML regression algorithms to be implemented in hybrid retrieval workﬂows;\n• Give recommendations and inspirations for further research under the AL perspective\nand in the context of terrestrial vegetation monitoring from EO data.\nTo achieve this, a thorough summary of AL and critical analysis of the available\nliterature is carried out in the context of estimating functional vegetation traits from EO\ndata over terrestrial surfaces. We further present two examples employing different AL\ntechniques to demonstrate the efﬁciency of this approach. Finally, challenges and future\nperspectives for implementing AL heuristics in retrieval workﬂows are summarized.\n2. Background: Active Learning Theory\nGenerally, sampling reduction o",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.2 Active Learning for Emulation",
+      "level": 2,
+      "text": "As an interesting application of AL-based sampling optimization, new AL techniques\nhave recently been implemented to construct surrogates of complex deterministic mod-\nels. This statistical technique of approximating the functioning of a physical model is\ntermed “emulation”, and has been demonstrated for a number of canopy and atmosphere\nRTMs [55–58]. In emulation, efﬁcient machine learning algorithms are being constructed\nto replace the input-output functioning of computationally costly complex models. The\nemulator is derived (trained) from a relatively small number of model runs covering a\nmultidimensional input space. Once the emulator is built, it is not necessary to perform any\nadditional run with the model, regardless of how many analyses are required to assess the\nRemote Sens. 2021, 13, 287 5 of 23\nsimulator’s behaviour. Hence, a key aspect is to identify the optimal number of simulations\nin order to build an emulator with maximal accuracy. In this respect, AL frameworks\nare being developed that sequentially choose informative input points [14,40]. The latter\nmethodology is mainly based on the notion of an acquisition function (AF), which can be\noptimized through gradient-based techniques, similar to Bayesian Optimization.\nThe related literature is wide. Several research areas have addressed the same problem\n(i.e., AL for regression/emulation) under different names, such as optimal experimental\ndesign [59–62], optimal sensor placements [63,64], generation of quasi-random uniform\nsequences (Latin Hypercube sampling), Sobol sequences [65,66] and determinantal point\nprocesses [67,68], non-uniform, adaptive sampling and quantization of a signal [ 69,70].\nMoreover, adaptive quadrature rules [71,72] and approximations of posterior densities\nhave been introduced [73,74]. Hereby, the notation of AF, explicitly or implicitly deﬁned,\nis the key point of all these techniques. Different criteria have been used for designing\nsuitable AFs based on:\n• The maximization of the predictive variance of the emulation/regression model [62];\n• Space ﬁlling procedures [66–68];\n• Combinations of the previous two strategies (maximization of the predictive variance\nand space ﬁlling) [14,40,71,72];\n• The minimization of the prediction error using a Cross-Validation (CV)procedure [75,76];\n• The maximization of the entropy or the mutual information [63,64].\nFurther, AFs can be based on classical statistical criteria. Mathematically speaking, the\ntraditional optimal criteria for the experimental design are functions of the eigenvalues of\nthe Fisher information matrix related to the model to emulate [59,60]. The most famous\ncriteria of this class are [59–61]:\n• A-optimality;\n• D-optimality;\n• E-optimality.\nA-optimality seeks to minimize the trace of the inverse of the Fisher information\nmatrix. In linear regression, this criterion results in minimizing the average variance of the\nestimates of the regression coefﬁcients. D-optimality seeks maximizing the determinant of\nthe Fisher information matrix, and E-optimality maximizes the minimum eigenvalue of the\nFisher information matrix [59–61].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.3 Active Learning for Regression",
+      "level": 2,
+      "text": "Moving towards regression applications, progress in solving problems with AL seems\ncomparatively lower than in the ﬁelds of classiﬁcation or clustering [ 45]. Whereas in\nclassiﬁcation applications the samples are labelled by a human expert (oracle), in the\ncase of AL for regression solutions and remote sensing, usually a large pool of unlabeled\nsamples is gathered at once, for instance by simulating a training dataset using RTMs or by\nﬁeld data collections. Hence, the category of pool-based sampling [ 77] is of most interest,\nand the need for human experts becomes obsolete. Traditionally, ML regression algorithms\nwork rather passively by receiving labelled data information. The major obstacle to obtain\nsuccessful retrievals comes from the machine’s inability to distinguish between low-level\nand high-level semantic meanings of these training samples [ 78]. AL overcomes this\nbottleneck by enabling the learner (machine) to collect data according to deﬁned selection\ncriteria. Hence, a statistically “optimal way” to select the most meaningful training samples\ncan be performed by the machine itself.\nTwo families or query frameworks were adapted to solve regression problems for\nEarth observation data analysis [33,41]: (1) uncertainty, e.g., [79] and (2) diversity, e.g., [80].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.3.1 Uncertainty Criteria Methods",
+      "level": 3,
+      "text": "Uncertainty sampling heuristics are perhaps the most simple and most frequently\napplied query frameworks. Hereby, samples were ranked according to their uncer-\nRemote Sens. 2021, 13, 287 6 of 23\ntainty: subsequently, only those samples were selected by the algorithm that have the\nleast certainty [39]. Here we can further distinguish between variance-based pool of re-\ngressors (PAL), entropy query-by-bagging (EQB), or residual regression active learning\n(RSAL) [34,81,82].\nPAL, for instance, at ﬁrst generates k subsets by randomly choosing samples (yi) from\nthe original training set. Each subset is then used to train a regressor and to obtain a\nprediction for each sample in the candidate set. Finally, k different predictions for each\ncandidate sample are obtained. Then, the variance of each prediction (σ2\ny) is estimated as:\nσ2\ny = 1\nk\nk\n∑\ni=1\n(yi− ¯y)2, (1)\nwhere ¯y = 1\nk ∑k\ni=1 yi. The variance gives an indication of the spread of the estimations.\nSamples with highest variance are added to the training set. The other two heuristics\n(EQB, RSAL) are explained in detail in Appendix A.1 (Uncertainty criteria methods) and in\nVerrelst et al. [41].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3.2 Diversity Criteria Methods",
+      "level": 3,
+      "text": "Choosing samples according to their diversity means that added samples are dissimilar\nfrom those already implemented in the training dataset. Here we distinguish between\nEuclidean distance-based diversity (EBD), angle-based diversity (ABD), and cluster-based\ndiversity (CBD) [81–83].\nAs an example, the EBD method [ 81] selects those samples out of the pool that are\ndistant from the already included ones in the training set, using squared Euclidean distance:\ndE =∥xu− xl∥2\n2, (2)\nwhere xu is a sample from the candidate set, and xl is a sample from the training set. All\ndistances between samples are computed and then the farthest are selected. The other two\nheuristics (ABD, CBD) are explained in detail in Appendix A.2 (Diversity criteria methods)\nand in verrelst et al. [41].\n3. Literature Survey: Active Learning under the Earth Observation Perspective\nA systematic literature analysis was carried out using predeﬁned criteria. Unlike\ntraditional review studies, the purpose of such a systematic review is to provide a complete\nlist of all published studies using a rigorous and well-deﬁned approach to identify relevant\nliterature in a speciﬁc subject area [84].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Systematic Approach",
+      "level": 2,
+      "text": "Since our objective is focused on the AL perspective for solving Earth observation\nregression problems, we searched for articles in Web of Science using the keywords “active\nlearning” and “regression” and “remote sensing”, resulting in a total of 16 records (access\ndate: 16 October 2020). Conference proceedings and technical reports were excluded\nfrom the results. Further, we searched in these records for other potentially relevant\nstudies. Finally, six peer-reviewed articles fulﬁlled our pre-deﬁned criteria: AL techniques\nin the context of estimating functional vegetation traits from EO data over terrestrial targets.\nTable 1 gives an overview of these studies, summarizing sensors used, estimated vegetation\ntraits, implemented ML algorithms and applied AL methods. The ﬁrst study was published\nin 2016 [41], and four were from 2020 suggesting increasing interest in these rarely used\ntechniques.\nThree studies [ 33,85,86] are not listed in Table 1 since their experiments were not\nfocused on terrestrial surface variables. Yet, they introduced AL in the context of remote\nsensing and regression solutions for biochemical variable retrieval: at ﬁrst, AL methods\nwere used for the inversion of radiative transfer calculations aiming to estimate chlorophyll\nRemote Sens. 2021, 13, 287 7 of 23\na, coloured dissolved organic matter and suspended particulate matter in the Caspian\nSea using MEdium Resolution Imaging Spectrometer (MERIS) data [85]. Pasolli et al. [ 33]\ndemonstrated the efﬁciency of AL on Sea-viewing Wide Field-of-view Sensor (SeaWiFS)\ndata to estimate chlorophyll concentration in coastal and open waters. The study by\nDouak et al. [86] introduced AL for the estimation of chemical concentration from spectro-\nscopic data.\nMoreover, a recent study proposed an active learning regularization (ALR) approach\nto increase the clear sky retrieval rate. Brieﬂy, a local, variable speciﬁc, representative\ncalibration database was generated, which was further used to select a subset of informative\nvegetation indices to establish local regression predictor [87].\nImportant to mention in this context are some ﬁrst attempts to optimize a training\ndatabase by Baret et al. [ 88]. The authors already proposed an optimal design of the\ntraining data pools (for a neural network algorithm), though not actually using AL. In\nthat study, the training database was streamlined in the reﬂectance space, retaining those\ncases belonging both to the simulated and actual remote sensing measurements. Here,\na threshold based on the minimum root mean square error (RMSE) value was deﬁned,\nused to decide whether a simulated case is rejected or included in the training database.\nFurther, application of additional criteria to efﬁciently streamline a training dataset were\nproposed [88,89].\nTable 1. Studies using AL strategies for regression problems in the context of terrestrial Earth observation data analysis:\nremote sensors, estimated vegetation traits (abbreviations in Section 3.2), applied machine learning regression algorithms\n(ML algorithm, abbreviations in Sections 3.2 and 3.3) and active learning strategies (AL method, best performing in bold,\nabbreviations in Section 2.3, Appendixes A.1 and A.2).\nReferences Sensors Estimated Traits ML Algorithms AL Methods\nVerrelst et al. [41] Sentinel-3 OLCI\n(simulated) LAI, Cab KRR, GPR PAL, EQB, RSAL, EBD,\nABD, CBD\nUpreti et al. [27] Sentinel-2 LAI, Cab, Fcover,\nfAPAR GPR EBD, ABD, CBD\nVerrelst et al. [90] EnMAP (resampled) Narea KRR, VHGPR PAL, EQB, RSAL, EBD,\nABD, CBD\nUpreti et al. [91] VEN µS Fcover GPR EBD\nZhou et al. [92] Landsat-8 OLI Cab GPR PAL, EQB, RSAL, EBD,\nABD, CBD\nPipia et al. [93] Sentinel-2 green LAI GPR PAL, EQB, RSAL, EBD,\nABD, CBD",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Sensors and Estimated Variables",
+      "level": 2,
+      "text": "At ﬁrst, AL heuristics were investigated on simulated Sentinel-3 OLCI data, evaluating\nthe theoretical performance of the resulting models trained on simulated resampled PRO-\nSAIL datasets [41]. With exception of the study by Verrelst et al. [90], who used proximal\nsensing spectroscopy to simulate EnMAP sensor data, mainly multispectral data sources\nwere exploited, such as Landsat-8 OLI [92], or superspectral, such as Sentinel-2 [27,93] or\nVENµS [91] (see also Table 1).\nDiverse vegetation functional traits were estimated by the selected studies, focusing\nmainly on LAI [27,41] (or green LAI [93]) and leaf chlorophyll content (Cab [27,41,92]), but\nalso fractional vegetation coverage (Fcover [27,91]), fraction of absorbed photosynthetically\nactive radiation (fAPAR [27]) and aboveground nitrogen content (Narea [90]). Results of\nthe selected studies suggest that AL methods were sensitive to the studied variables. For\ninstance, Verrelst et al. [ 41] found that Cab retrieval with kernel ridge regression (KRR)\nled to similar results when applying diversity AL methods EBD, ABD, and CBD, along\nwith the uncertainty methods PAL and EQB. In the case of LAI, however, all coefﬁcient of\nRemote Sens. 2021, 13, 287 8 of 23\ndetermination (R2) values were generally lower. Though, optimal results for LAI converged\nfaster, with maximum of 400 samples compared to 500 for Cab. This may also be due to the\ndifferent ML methods used (GPR versus KRR, see also Section 3.3). Nonetheless, also the\nstudy by Upreti et al. [27] identiﬁed different patterns of convergence depending on the\nvariable of interest. In their study, the authors tested the estimation of LAI, Cab, fAPAR,\nFcover, and canopy chlorophyll content from Sentinel-2 data using different algorithms [27].",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.3 Applied ML Algorithms and AL Heuristics",
+      "level": 2,
+      "text": "For the purpose of exploring AL strategies speciﬁcally for regression models, kernel-\nbased methods were exclusively implemented in the selected studies (Table 1). For instance,\ntwo of these algorithms were exploited by Verrelst et al. [ 90] for joint usage within the\nretrieval workﬂow. Fast KRR [94], presenting an ideal method to carry out time consuming\nsimulations [5], was used at ﬁrst to minimize and optimize the training data base using\nsix different AL heuristics. In a next step, variational heteroscedastic Gaussian process\nregression (VHGPR) was employed to accurately map Narea. VHGPR models have been\nshown to outperform standard GPR models in terms of accuracy and provided more\nrealistic uncertainty information [8,10], though at the cost of a slightly longer training time.\nThe combination of these two algorithms led to optimization of the retrieval workﬂow:\nKRR is the faster method, but VHGPR provides uncertainties of the estimates. As a\nconsequence of their fast and reliable performance, the majority of studies used standard\nGPR approaches, which often ranked as the top algorithm in theoretical performance and\nwhen validating against in situ reference data [27,91–93].\nRegarding implemented AL methods, mainly diversity and uncertainty selection\nstrategies have been successfully tested by the selected studies. Verrelst et al. [ 41] con-\ncluded that EBD, ABD and CBD performed fastest and (partly) obtained highest retrieval\naccuracy over tested variables. Random sampling, in contrast, did not offer a stable error\nminimization. Based on these ﬁndings, Upreti et al. [ 27] applied these three diversity\ncriteria for the optimization of a simulated training dataset based on PROSAIL to estimate\ndiverse biochemical and biophysical variables from Sentinel-2 data. The authors concluded\nthat the performance of the EBD methods surpassed those of ABD and CBD strategies [27].\nFurther, they found that a full training dataset of 2500 samples provided lower retrieval\naccuracy than a smaller dataset optimized with AL heuristics. This was explained by the\nfact that a largely sampled training dataset may include redundancy leading to decreas-\ning retrieval performance. In a follow-up study [ 91], EBD was directly applied within\nthe retrieval workﬂow for the estimation of Fcover from VENµS satellite data. Retrieval\naccuracy was good with R2 of 0.76 and relative RMSE (rRMSE) of 11.6%, though a slight\noverestimation of high Fcover values and underestimation of low values was observed.\nZhou et al. [92] compared the six AL methods proposed in [41], and found that EQB was\nbest performing for the retrieval of Cab from Landsat-8 OLI data. However, EBD provided\nhighest accuracy from all diversity methods, and best theoretical performance together\nwith CBD. Moreover, the study [92] conﬁrmed that signiﬁcant lower retrieval accuracy\nwas obtained when the full dataset was used (rRMSE of 56%) compared to optimized\nAL sampling using EQB or EBD (rRMSE of 22% and 25%, respectively). Likewise, the\nstudy by Verrelst et al. [ 90] obtained optimal results when using the EBD method for\nthe estimation of Narea. Second best results were achieved by PAL, however, this method\nrequired 4.7 times longer computational time for sample selection than EBD. This aspect\nof computational load for the learning process has to be considered, in particular when\nkernel-based methods are employed. In a GPR training process, the inverse of the co-\nvariance matrix is computed and the time required to evaluate it scales cubically [ 95].\nThe study from Pipia et al. [93] also obtained optimal results with EBD in the context of\ngreen LAI retrieval from Sentinel-2 data. Speciﬁcally, in this study, an adaptation of the\nstandard GPR formulation was proposed to allow parallel processing and integration into\nGoogle Earth Engine (GEE [96]). Hereby, again the six different AL methods were tested,\ni.e., ABD, CBC, EBD, EQB, PAL and RSAL. Results indicated that EBD proved the most\nRemote Sens. 2021, 13, 287 9 of 23\ncapable algorithm to provide a green LAI GPR model both in accuracy and time efﬁciency.\nTherefore, EBD-based AL methods were implemented in the retrieval workﬂow and ﬁnally\ninto the GEE environment [93].\nThe sizes of the used training datasets may seem rather small compared to the typical\nsample sizes used within radiometric LUT-based inversions strategies, or applied for train-\ning of neural networks [20,97]. Note that a standard implementation of a GPR typically\ncan not cope with more than 5000 samples within reasonable time. However, this apparent\nlimitation is well compensated by the algorithms, which require only relatively small\ntraining datasets, can adopt very ﬂexible kernel functions and also identify the relevant\nbands and observations for establishing nonlinear relationships between spectral observa-\ntion and variables of interest [98]. Four of the studies selected by our review [27,41,91,92]\nused 2500 samples as a full dataset. Applying AL heuristics led to a reduction of the\ntraining dataset to 400–500 samples for LAI and Cab [41] or 1200–1800 samples for multiple\ntraits [27]. Pipia et al. [93] and Verrelst et al. [90] used only 1000 samples as full training\ndataset, resulting in optimal size of 218 samples for green LAI retrieval [93]), and 191 for\nNarea estimation when running against an experimental validation dataset [ 90], respec-\ntively. In all cases, AL-reduced datasets signiﬁcantly outperformed the accuracy obtained\nwhen using the full datasets. The ﬁnal number of samples not only depends on the original\nsize of a training data pool, but it also depends on the targeted variable, available validation\ndata and applied ML algorithm. Int conclusion, the quality of the training data tends to be\nmore important than the quantity.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4 Experimental Case Study",
+      "level": 1,
+      "text": "Following the promising results obtained by the selected studies, we demonstrate the\nefﬁciency of AL heuristics for the estimation of two important biochemical crop traits. For\nthis purpose, the retrieval of leaf water content (Cw), in cm, and total leaf carotenoid content\n(Cxc), in µg/cm2, is presented from a hyperspectral experimental dataset. Cw is deﬁned as\nthe area-weighted leaf moisture content and is related to a range of physiological aspects.\nIn particular it can be used for evaluating vegetation physiological status, for instance\nwhen drought events occur leading to changes in most vegetation types [99]. Further, the\ndetection of water stress is important for agricultural management and can be supported\nby mapping this essential biochemical variable over time and space. Leaf carotenoids\nare pigments of major importance for crops achieving two main complementary and\nindispensable functions in the photosynthetic pathway of higher plants: light harvesting\nand photo-protection [100]. Along with Cab, they provide important information about\nvegetation photosynthetic potential and activity [101].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.1 Data Collection",
+      "level": 2,
+      "text": "The two analyzed variables were provided from multiple ﬁeld trials at a test site in\nthe North of Munich, in Southern Germany: the Munich-North-Isar (MNI) campaigns\n(N 48◦16′, E 11◦42′). The MNI site serves for data collection and algorithm validation\nin the framework of the Environmental Mapping and Analysis Program (EnMAP) [ 3]\nfor agricultural applications. Data collection was done in the growing periods of 2017\nand 2018 over winter wheat (Triticum aestivum) and corn (Zea mays). Measurements\nincluded proximal ﬁeld sensing concurrently (or shortly before) destructive and non-\ndestructive measurements of leaf biochemicals. At the two study sites, a 30× 30 m grid of\nnine 10× 10 m squares was marked out delineating the elementary sampling units (ESU)\nresembling a future EnMAP pixel. Data were collected at the following dates at the wheat\nﬁeld: 29/3, 10/4, 10/5, 29/5, 13/6, 26/6, 6/7 and 17/7 in 2017 and 12/4, 18/4, 27/4, 7/5,\n5/6, 21/6 and 13/7 in 2018. For corn, sampling was done at the following dates: 13/6, 19/6,\n26/6, 6/7, 17/7, 18/8, 30/8, 15/9 in 2017 and 15/6, 13/7, 19/7, 26/7, 17/8 and 22/8 in\n2018. With this, a total number of 28 measurements was available for validation. Extensive\ndocumentation including photographs of selected crop growth stages are provided by\nBerger et al. [10]. Further, the studies by Danner et al. [102] and Wocher et al. [99] inform\nRemote Sens. 2021, 13, 287 10 of 23\nabout sampling design, size and location of ESUs, as well as measurements of other\nbiochemical and biophysical variables.\nTo determine in situ Cxc, Cab was sampled with a speciﬁcally calibrated Konica-\nMinolta SPAD-502 handheld instrument from ﬁve leaves at different plant heights and was\naveraged to receive a representative mean value in µg/cm2. Finally, Cxc was derived from\nCab using a linear regression model, which was based on a stable relationship between the\ntwo variables for healthy green vegetation [102,103].\nFor Cw determination, two leaves were randomly cut within each of the deﬁned ESUs\n(18 samples per date). Leaf samples were weighed, packed in bags and brought to the lab.\nFinal leaf water content in cm was obtained from the mass difference of sample leaves per\nunit leaf size before and after oven-drying at 105◦C to constant weight.\nHyperspectral signatures of the canopy (within the 350–2500 nm range) were measured\nalong with the biochemicals using the Analytical Spectral Devices Inc. (ASD; Boulder, CO,\nUSA) FieldSpec4 Standard-Res Spectroradiometer. Spectral sampling design consisted of\nﬁve nadir measurements per ESU at a height of 25 cm above the canopy using a ﬁeld of view\n(FOV) of the ﬁber optic cable of 25◦. Throughout the measurements, the sensor was slightly\nmoved over the target while maintaining the nadir angle to collect representative spectral\nsignals capturing the heterogeneity of the canopy. Collected spectra were averaged per\nESU and a ﬁnal mean value was calculated over all nine ESUs to provide a representative\nreﬂectance signal of the 30× 30 m EnMAP-like grid. Processing included splice-correction,\nwhite reference baseline calibration, and slight smoothing using a Savitzky-Golay-Filter\nusing frame size of 13 nm [99].\nFinally, EnMAP spectral features were simulated from these measurements using\nspectral full width half maximum (FWHM) value information of the corresponding spectral\nresponse functions.\nSince the main purpose of optimizing a training dataset is vegetation properties\nmapping, AL efﬁciency was demonstrated for spatial retrieval of Cw. Unfortunately, no\nimaging spectroscopy scene was acquired simultaneously to the in situ data collection at\nthe MNI site. Therefore, we decided to process a well-known HyMap airborne imaging\nspectroscopy scene, acquired on 12th July 2003 over the Barrax agricultural region, La\nMancha in Spain (coordinates 30◦3′N, 2◦6′W). The ﬂight line is part of the the ESA Spectra\nBarrax Campaign (SPARC) [104] and has been described and exploited in several earlier\nstudies [10,31,32,105,106]. The Barrax site is characterized by a ﬂat topography and pivot-\nirrigated ﬁelds of alfalfa, corn, potato, winter wheat, sugar beet, garlic and onions, among\nothers. Hence, the same crop types (winter wheat/corn) as at the German test site were\npresent. However, in contrast to MNI, irrigation is required at the Spanish agricultural area,\nbeing characterized by semi-arid climate. The HyMap sensor provides 126 spectral bands\nin the range of 438 nm to 2483 nm with a ground sampling distance of 6 m. Radiometric\ncorrections were performed by the campaigns team according to the procedures described\nin [107]. For mapping application, FWHM information was used to conﬁgure and resample\nthe HyMap scene spectrally to EnMAP . In this way, the GPR models trained on EnMAP\nspectral characteristics can be applied [10].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.2 Experimental Design",
+      "level": 2,
+      "text": "At ﬁrst, we established a training dataset of 1000 (1k) different combinations from\nrandomly drawing all PROSAIL-PRO input parameters. Leaf input variables of PROSPECT-\nPRO [15] were sampled as follows: leaf structure parameter: 1.0–2.0, Cab: 0–80 µg/cm2,\nCxc: 0–15 µg/cm2, Cw: 0.001–0.03 cm, leaf anthocyanin content: 0–2 µg/cm2, leaf protein\ncontent: 0.001–0.0025 g/cm2 and carbon-based constituents: 0.001–0.01 g/cm2. Canopy-\nlevel input parameters of the 4SAIL model [17] were sampled to: LAI: 0–7 m2/m2, average\nleaf inclination angle: 30◦–70◦, hot spot parameter: 0.01–0.5 m/m, soil brightness factor\n(scales between one wet and one dry model-implemented soil reﬂectance): 0–1. The sun\nzenith angle was set to 30◦ corresponding to the mean value at all measurements. Above-\ncanopy reﬂectance was collected at nadir; hence the sensor observation angle was set to\nRemote Sens. 2021, 13, 287 11 of 23\n0◦. Parameterization was deﬁned according to previous studies and experience of the\nauthors [10,19,32,108]. The model was then run to simulate corresponding bi-directional\nvegetation canopy reﬂectances. Hereby, spectral characteristics were adapted according to\nthe future EnMAP sensor data (242 bands). In this way, the simulated training database\nand in situ measured samples were spectrally equivalent. Second, principal component\nanalysis (PCA) was applied reducing the simulated spectral features to 20 components.\nThe study by Danner et al. [ 12], which was also based on simulated EnMAP spectral\ndata, demonstrated that this number is more than sufﬁcient for GPR algorithms to ensure\nhigh theoretical estimation accuracy for LAI. Since we demonstrate the AL approach here\non two leaf biochemical traits, which are usually more difﬁcult to obtain than canopy\nvariables [25], it was decided to keep this high number of components to only lose minimal\ninformation. In a next step, a GPR was used to select most informative spectral samples\nusing the six active learning heuristics, i.e., ABD, CBC, EBD, EQB, PAL and RSAL as\nwell as RS [ 41,90,92]. Yet, when AL heuristics are employed, we start with an initially\nannotated dataset (10 samples, or 1%), which was incrementally extended by choosing\nfrom the large data pool. Note that the AL algorithm assumes the simulated training\ndatabase as an unlabeled data pool, and hence iteratively tests a new sample according\nto a pre-deﬁned query strategy (e.g., EBD or PAL). A new sample is only added when it\nfulﬁlls the requirement to improve the regression model after being labeled; otherwise,\nthe algorithm proceeds to evaluate the next sample. Optionally, a stopping criterion can\nbe deﬁned, e.g., terminating after 300 samples. Evaluation was done against the in situ\nsampled ﬁeld datasets of Cxc and Cw using the RMSE as a statistical measure. Compared\nto some studies identiﬁed by our systematic review [27,41,91,92], the size of the training\ndatabase is smaller (1000 vs. 2500). However, these studies added 50 samples per iteration.\nWe added only one per iteration to make sure that all samples were evaluated against the\nvalidation data.\nThe corresponding hybrid retrieval workﬂow including AL-based sample reduction\nand mapping application is demonstrated in Figure 1.\nFigure 1. Hybrid retrieval workﬂow employing PROSAIL-PRO (adapted from [ 19]). The RTM was used to create the\nsimulated training database, which represents the “unlabeled” data pool. Sample selection is performed with AL heuristics\nby means of GPR algorithms to establish a speciﬁc retrieval model for functional vegetation traits. Output maps provide\nestimates along with corresponding uncertainty; exemplary maps from Estévez et al. [25].\nRemote Sens. 2021, 13, 287 12 of 23",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.3 Evaluation",
+      "level": 2,
+      "text": "Figure 2 demonstrates the efﬁciency of the AL heuristics. In case ofCxc, optimal results\nwere obtained with uncertainty PAL method, reducing the RMSE from > 6 to 1.33 µg/cm2\n(rRMSE of 10.2% and R2 of 0.88) when trained on 156 samples. No other method showed\nsuperior accuracy, but they performed similarly with RMSE < 2 µg/cm2 and stopped\nbetween 100 and 200 samples, after all samples from the full simulated training database\nwere evaluated. Regarding runtime, EBD proved the most efﬁcient AL method for Cxc\nestimation, being seven times faster than PAL. In case of Cw, EBD was most convincing,\nachieving RMSE of 0.0036 cm (rRMSE of 21.2% and R2 of 0.77). Second best results were\nhere obtained by EQB method with rRMSE of 23%. Finally, a total number of 150 out of the\n1000 samples from the full training dataset was sufﬁcient to provide highest estimation\naccuracy. EBD was not only obtaining the highest retrieval performance of Cw, it was also\nthe second fastest method closely following CBD.\nFigure 2. RMSE for retrieval of Cxc (a) and Cw (b) applying six different AL methods and RS on a PROSAIL-PRO simulated\ntraining database with GPR.\nTo demonstrate a spatial retrieval application, GPR models trained over the full\ndataset (i.e., 1000 samples) and the EBD-optimized training database with only 150 selected\nsamples were compared for Cw mapping using the EnMAP-resampled HyMap scene. To\ndo so, an additional step was required to account for the fact that real images are: (1) more\nnoisy than simulated data, and also (2) consist of non-vegetated surfaces, for which the\nPROSAIL-PRO model is not optimally conﬁgured. Therefore, 5% of Gaussian noise were\ninjected and also 11 soil reﬂectance samples (including different types of bare soils and\ncrop residues) were added to both training datasets. Figure 3 demonstrates a spatial subset\n(700× 700 pixels) of the obtained Cw maps using a full 1k training database (left) versus\nthe EBD-optimized dataset (right) to establish GPR retrieval models.\nSince for this scene no in situ reference data was collected for validation, it must be\nremarked that results can only be interpreted by plausibility. Cropped ﬁelds are easily\ndistinguishable through the typical center pivot irrigation systems that characterize the\nagricultural area. In general, the full training database provided a higher variability of\nthe estimates (Figure 3a) over both vegetated (i.e., crop ﬁelds) and non-vegetated areas\n(i.e., bare ﬁelds or fallow land) than the reduced training set (Figure 3d). The higher\nintra-ﬁeld variation of estimated leaf water content, and in particular the enhanced Cw\nin the ﬁeld centers compared to ﬁeld borders, appears spatially implausible in view of\npivot-irrigated ﬁelds: this speciﬁc irrigation technique provides equal watering of the crops,\nRemote Sens. 2021, 13, 287 13 of 23\nhence triggering uniform leaf and plant growth which should be reﬂected in the retrieval\npattern. In contrast to the full simulated training database, retrieval results obtained by\nthe EBD-reduced dataset were more realistic providing equal intra-ﬁeld distribution of the\nestimated variable.\nThis is also in line with the lower uncertainties given by the EBD-reduced simulated\ntraining database compared to the full dataset (Figure 3b,e), pointing towards a more\nrealistic mapping approach when AL-based optimization methods are implemented. It is\nof interest that improvements in uncertainties are especially found over the non-irrigated,\ndried-out fallow lands. This can be explained by the following mechanisms: First, the\nreduced training dataset has been optimized against the validation dataset thanks to\nEBD sampling, thus enabling the trained model to be better adapted for interpreting real\ndata. Second, the added (11) bare soil samples play a more dominant role relative to the\nreduced training samples as opposed to the full 1k dataset. The more conﬁdent estimates\nusing EBD-based selection strategy are also reﬂected in the relative uncertainty maps\n(Figure 3c,f). Although the yellow areas indicate high uncertainties, they mark the non-\nvegetated surfaces. Here, the relative uncertainties appear beyond the given maximum of\n100% due to the estimates near to zero going along with uncertainties that are above the\nnear-zero estimates. Nevertheless, when comparing both maps, the EBD-reduced dataset\nled to a map with substantially more parcels with low uncertainties, thus giving more\nconﬁdence in the Cw mapping. Altogether, the EBD-reduced training dataset not only led\nto more realistic estimates, but also provided lower uncertainties as opposed to training\nwith the full simulated data pool.\nTwo additional remarks are worth noting. First, this experiment only serves for practi-\ncal demonstration of AL sampling strategies. Further optimization and tests go beyond\nthe scope of the present study, yet similar ﬁndings were observed when applied to other\nexperimental hyperspectral datasets (results not shown). Second, AL techniques presented\nin this study can be tested with the in-house developed software package Automated\nRadiative Transfer Models Operator (ARTMO) [109]. The AL module was recently up-\ndated, e.g., to enable running against validation data, and can be combined with ARTMO’s\nmachine learning regression algorithm (MLRA) toolbox [110]. Eventually, making use of\nAL sampling strategies may lead to new-generation hybrid retrieval algorithms and opens\nthe door for other applications, as brieﬂy discussed in the following section.\n(a) ( d)",
+      "refs": {
+        "figures": [
+          "f2",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "1000 Meters",
+      "level": 1,
+      "text": "-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n0.005\n0.01\n0.015\n0.02\n0.025\n0.03\n N",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "1000 Meters",
+      "level": 1,
+      "text": "-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n0.005\n0.01\n0.015\n0.02\n0.025\n0.03\n N \nFigure 3. Cont.\nRemote Sens. 2021, 13, 287 14 of 23\n(b) ( e)\n-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n0.002\n0.004\n0.006\n0.008\n0.01\n-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n0.002\n0.004\n0.006\n0.008\n0.01\n(c) ( f)\n-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n20\n40\n60\n80\n100\n-2° 10'47'' -2° 9'48'' -2° 8'50''\n39° 8'20''39° 7'35''39° 6'49''\n0\n20\n40\n60\n80\n100\nFigure 3. Mapping leaf water content (Cw) using GPR trained over a full training database (left) and using EBD-optimized\nsampling (right): Cw estimates in cm (a,d), absolute uncertainty in form of standard deviation cm (SD, b,e) and relative\nuncertainty in form of the coefﬁcient of variation % (CV ,c,f).",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5 Towards Advanced Use of Active Learning for Vegetation Properties Retrieval",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5.1 Discussion of Survey Results",
+      "level": 2,
+      "text": "A literature survey was conducted where we systematically identiﬁed all relevant\npapers that investigated AL heuristics using the criteria of solving regression problems\nwithin terrestrial Earth observation analysis. Speciﬁcally, AL algorithms found their way\nin hybrid regression strategies when kernel-based ML algorithms are used. One of the\nmain outcomes of this survey is that implementation of AL methods achieved superior\nretrieval of common biophysical and biochemical vegetation traits compared to the usage\nof full training datasets (Section 3). The six identiﬁed studies also conﬁrmed that tested AL\nmethods led to a smooth convergence to the full training error bound, both for experimental\nand simulated datasets. This is a highly attractive characteristic of AL-based sample\nselection, which can be explained by the fact that the strategies only allow the addition\nof those samples which also improve the overall accuracy of the retrieval model [ 41].\nObviously, a large training dataset with hundreds or thousands of samples inherently\nleads to redundancy. Instead, a small selection from the training dataset contains the major\ninformation, which can be identiﬁed using AL heuristics. Most of the identiﬁed studies\nrevealed that EBD heuristics performed superior to the other AL methods. This means that\nsearching for samples that are distant from those already included in the pool proved to be\nan efﬁcient strategy to converge towards an optimal training dataset. Moreover, testing",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Hybrid retrieval workﬂow employing PROSAIL-PRO (adapted from [ 19]). The RTM was used to create the"
+    },
+    {
+      "id": "f2",
+      "caption": "demonstrates the efﬁciency of the AL heuristics. In case ofCxc, optimal results"
+    },
+    {
+      "id": "f3",
+      "caption": "Mapping leaf water content (Cw) using GPR trained over a full training database (left) and using EBD-optimized"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "gives an overview of these studies, summarizing sensors used, estimated vegetation"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

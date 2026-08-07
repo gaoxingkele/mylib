@@ -1,0 +1,394 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-14-03253.pdf",
+  "n_pages": 24,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "The scarcity of fossil fuels and growing concerns about global warming have led\nto the emergence of renewable energy sources. Microgrids, which coordinate various\nrenewable energy resources, distributed generators, energy storage systems, and electrical\nloads alongside the conventional power grid, are a promising technique to mitigate the\ndepletion of fossil fuels and to reduce the associated carbon footprint. However, the high\npenetration of renewable energy resources, such as solar power and wind power, imposes\nnew challenges in the operation of microgrids because of their intermittent nature. To\naddress the uncertainties posed by these intermittent power sources, energy management\nsystems have been increasingly developed to increase the reliability of microgrids and to\nyield better performance. Energy management is defined as an approach to optimize the\nutilization of controllable devices in a microgrid to minimize its operation cost, emissions,\nand other objectives. This work focuses on the resilient energy management of microgrids,\nwhere, in addition to generators and storage units, various switchable and controllable\nloads can be strategically scheduled to meet the electricity demand of critical loads under\nextreme environmental conditions, such as islands, border regions, and military bases. In\nthese scenarios, access to the main power grid may be uncertain or prohibitively expensive.\nAppl. Sci. 2024, 14, 3253. https://doi.org/10.3390/app14083253 https://www.mdpi.com/journal/applsci\nAppl. Sci. 2024, 14, 3253 2 of 24\nIntroducing control over various switchable and controllable loads makes the optimization\nproblem of energy management more difficult to solve, as it exhibits the typical charac-\nteristics of being large-scale, multi-objective, and multi-constraint. Therefore, developing\neffective solution algorithms is especially necessary.\nIn recent years, diverse methods including mathematical programming-based opti-\nmization approaches and meta-heuristic algorithms have been proposed [ 1] for energy\nmanagement. Zhang et al. [ 2] tackled the energy management problem by employing\nparticle swarm optimization, taking into account the integration of photovoltaic systems\nand batteries while considering energy tariff rates. Liu et al. [ 3] delved into a stochastic op-\ntimization model, focusing on curtailing net generation costs considering real-time market\nprices. Badawy and Sozer [4] introduced a supervisory energy management method that\namalgamates fuzzy logic controllers with sliding mode control, ensuring a stable power\nsupply and uninterrupted energy delivery. Tanvir and Merabet [5] introduced an energy\nmanagement approach that seamlessly integrates batteries with wind energy systems,\nplacing significant importance on monitoring battery State of Charge (SoC) for effective\nbattery charging and discharging. Roy et al. [6] proposed a novel approach that leverages\nartificial neural networks in conjunction with hybrid whale optimization to minimize\ngeneration costs while forecasting renewable energy availability. Li et al. [7] developed an\nencompassing energy management system that optimizes the simultaneous operation of\nthermal and battery systems, resulting in improved frequency and voltage stability within\nmicrogrid networks. Pannala et al. [8] engaged in a comprehensive exploration of voltage\ncontrol and energy management strategies, employing an exhaustive approach across\nboth isolated and grid-connected microgrid systems. This approach addresses critical\nchallenges, including generation failures, low power generation, and battery constraints.\nOliveira-Assis et al. [ 9] proposed an optimized energy management approach that har-\nnesses biogeography-based modeling to minimize hydrogen fuel consumption within\ncharging-station-based microgrid systems. Zhao et al. [10] devised an optimal scheduling\nstrategy employing model predictive control to bolster system resilience in the face of\nrenewable energy variability. This strategy finds practical application in multi-microgrid\nscenarios, especially under dynamic trading conditions. Merabet et al. [11] presented an\nenergy management framework with a dual focus on reducing generation costs and opti-\nmizing battery usage. This solution also integrates load-shifting mechanisms and adapts\nto varying grid tariffs. Moreover, various approaches have been proposed to address the\ncritical presence of uncertain data in energy management optimization problems. Nam-\nmouchi et al. [12] proposed to combine Machine Learning and Robust Optimization for\noptimally scheduling energy generation, consumption, and buy/sell actions in a microgrid,\ntaking into account the uncertainty of photovoltaic power generation and user consump-\ntion. Chen et al. [13] adopted chance-constrained programming for modeling and solving\nan uncertain multi-objective microgrid scheduling problem, addressing the uncertainty\nof renewable energy generation. Rui et al. [14] combined Mixed Integer Programming\nand Stackelberg games for defining an optimal energy scheduling in a microgrid context.\nVidan et al. [15] proposed a computationally efficient Robust Optimization method for\ntackling energy price data uncertainty while optimally managing production and battery\nstorage actions. However, it should be noted that existing single-objective optimization\nmethods for energy management rarely consider the control of controllable loads, and most\nof them only utilize existing optimization methods without designing proprietary methods\nfor the complex and high-dimensional constraints present in energy management problems.\nConsequently, the convergence capability of these methods may be limited.\nVarious objectives such as cost, emissions, and battery lifespan should be considered\nwhen supplying the load. Consequently, the necessity of multi-objective optimization algo-\nrithms becomes apparent. In this context, Li and Xia [16] introduced the Non-dominated\nSorting Genetic Algorithm II (NSGA-II) method as an effective means to address multiple\nobjectives within microgrid management, with a particular emphasis on reducing operating\ncosts and mitigating air pollutants. Incorporating grid power consumption cost and battery\nAppl. Sci. 2024, 14, 3253 3 of 24\ndegradation cost, Preetha Roselyn et al. [17] developed a multi-objective genetic algorithm\nsimilar to NSGA-II to optimize the energy management strategy in microgrids. Murty\nand Kumar [18] presented a multi-objective optimization framework to obtain the optimal\nenergy dispatch strategy for grid-connected and standalone microgrids integrated with\nphotovoltaic cells, wind turbines, fuel cells, micro turbines, diesel generators, and battery\nenergy storage system. This method aims to minimize the costs of main grid energy, fuel\ncosts, emissions, and other objectives. A multi-objective grey wolf method is proposed\nin [19] to obtain the Pareto front considering the opposing objectives of energy system cost\nand battery lifespan. In this work, sizing optimization and energy management strategy are\nboth analyzed. De Kamal and Mandal [20] proposed a multi-objective modified personal\nbest particle swarm optimization method for multi-microgrids energy management. This\nwork aims to find the Pareto front of minimizing both operation costs and power losses.\nLi et al. [ 21] addressed a wide spectrum of objectives, including power quality, security,\nand financial considerations, in their quest to optimize energy scheduling within micro-\ngrids. Rajagopalan et al. [ 22] considered a variant of nature-inspired metaheuristics for\nmulti-objective power generation scheduling.\nOther multi-objective methods [23–25] have also been proposed for energy manage-\nment of microgrids considering various objectives and microgrid properties. However,\nmost existing works directly used off-the-shelf multi-objective algorithms, which might\nperform poorly on energy management problems with hard constraints. Given the substan-\ntial number of controll",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 System Model",
+      "level": 1,
+      "text": "This work focuses on the resilient energy management problem, primarily addressing\nextreme environments such as islands, border regions, and military bases. Our goal is\nto reduce the dependence on the main power grid in these areas. Given the limited\nenergy resources and the necessity to meet critical loads due to specific scenarios, not\nonly are storage and generators managed but loads are also controllable in this approach.\nThis approach ensures that essential services and operations remain uninterrupted, even\nunder challenging conditions. Therefore, given a microgrid composed of diesel generators,\nrenewable energy sources, energy storage systems (such as batteries), and various loads,\nwe aim to optimize the operation schedule for generators, energy storage, and controllable\nloads. This scheduling will take into account the operational constraints of each component\nto minimize both the operational costs and reliance on the main electricity grid. Table 1\ngives the mathematical notation used in the model.\nAppl. Sci. 2024, 14, 3253 4 of 24\nTable 1. Mathematical Notations.\nSymbol Explanation\nPmin\nbess Minimum power output of the energy storage system\nPmax\nbess Maximum power output of the energy storage system\nPbess(k) Power output of the energy storage system at time k\nEmin\nbess Minimum energy capacity of the energy storage system\nEmax\nbess Maximum energy capacity of the energy storage system\nEbess(k) Energy capacity of the energy storage system at time k\nηbess Charge/discharge efficiency of the energy storage system\nεbess Self-discharge rate of the energy storage system\n∆PDG Maximum ramping power of the diesel generator\nPDG (k) Power output of the diesel generator at time k\nPmin\nDG Minimum power output of the diesel generator\nPmax\nDG Maximum power output of the diesel generator\nton (k) Continuous running time of the generator at time k\nto f f (k) Continuous off time of the generator at time k\nTon Minimum continuous running time required for the generator\nTo f f Minimum continuous off time required for the generator\nβmincur Minimum proportion of switchable loads\nβmaxcur Maximum proportion of switchable loads\nβcur (k) Proportion of switchable loads at time k\nTstart,i Earliest start time for the i-th controllable load\nTfinish,i Latest stop time for the i-th controllable load\nTsch,i Total operating time requirement for the i-th controllable load\nEsch,i Total energy demand for the i-th controllable load\nδsch,i(k) Operating state of the i-th controllable load at time k\nPmin\nsch,i Minimum power output for the i-th controllable load\nPmax\nsch,i Maximum power output for the i-th controllable load\nC1 Operational costs of the system\nCDG (k) Operating costs of the diesel generator at time k\nCBESS (k) Operating costs of the energy storage system at time k\nCcur (k) Penalty for load shedding at time k\nCgrid (k) Cost of buying and selling electricity at time k",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "f uel (k) Fuel cost for the diesel generator at time k",
+      "level": 1,
+      "text": "OM DG Maintenance cost per unit time of generator operation\nχup\nDG (k) Fixed costs for each startup of the diesel generator\nχdown\nDG (k) Fixed costs for each shutdown of the diesel generator\na, b Constant coefficients of fuel cost for the diesel generator\nOM BESS Maintenance cost per unit time for the energy storage system\ncswitch\nBESS Cost associated with charging and discharging losses\nαcur,i(k) Penalty coefficient for the i-th load shedding\nAppl. Sci. 2024, 14, 3253 5 of 24\nTable 1. Cont.\nSymbol Explanation\nβcur,i(k) Power of the shed load for the i-th controllable load\nηgrid (k) Electricity price for buying (cbur\ngrid (k)) or selling (csel\ngrid (k))\nC2 Optimization objective to minimize dependence on the main grid\nλgrid Power purchased from the main grid",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.1 System Description",
+      "level": 2,
+      "text": "The microgrid case studied in this paper consists of a diesel generator, a wind turbine\ngenerator, a photovoltaic generator, an energy storage system, and various types of loads.\nThe loads include critical loads, switchable loads, and controllable loads. Among them, the\nelectrical demands of critical loads must be met. Depending on the actual situation, the\nelectrical demands of switchable loads can be curtailed. As for controllable loads, under\nthe conditions of meeting their total electrical demands and time constraints, their on/off\ntimes and power can be adjusted. The decision variables for energy management in this\nmicrogrid system are shown in Table 2, and by controlling the operation of the generation\nequipment, energy storage system, and smart loads, the system operation can be optimized.\nTable 2. Decision variables for energy management problem.\nDecision Variables Descriptions Type\nδDG (k) on/off status of the diesel generator at\ntime k binary\nPDG (k) output power of the diesel generator at\ntime k (kW) continuous\nδbess (k) status of the BESS at time k binary\nPbess (k) charging/discharging power of the BESS\nat time k (kW) continuous\nTon,i\nsch start time of the ith controllable load integer\nTo f f ,i\nsch\nshutdown time of the ith\ncontrollable load integer\nPsch,i(k) power consumption of the ith\ncontrollable load at time k (kW) continuous\nβcur (k) proportion of flexible load curtailment at\ntime k (%) continuous\nFor the decision variables representing the operational status of generators and control-\nlable loads, 1 represents “on” and 0 represents “off”. As for the status of the energy storage\nsystem δsch,i(k), 1 represents “discharge”, −1 represents “charge”, and 0 represents “off”.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Model Constraints",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.2.1 Energy Storage System Constraints",
+      "level": 3,
+      "text": "Consider the following constraints for the energy storage system:\nPmin\nbess ≤ Pbess (k) ≤ Pmax\nbess (1)\nEmin\nbess ≤ Ebess (k) ≤ Emax\nbess (2)\nThat is, it is necessary to satisfy the maximum charging and discharging power constraints\nof the energy storage system, and the battery capacity of the energy storage system must\nAppl. Sci. 2024, 14, 3253 6 of 24\nnot exceed the maximum and minimum capacity values. The capacity of the energy storage\nsystem is calculated as follows:\nEbess (k + 1) =Ebess (k) +ηbess Pbess (k)∆t − εbess ∆t\nηbess =\n\u001a ηc\nbess , Pbess (k) > 0\nηd\nbess , Pbess (k) ≤ 0\n(3)\nwhere ηbess represents the charge/discharge efficiency, andεbess represents the self-discharge\nrate of the battery .",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2.2 Diesel Generator Constraints",
+      "level": 3,
+      "text": "For the diesel generator, we first need to consider its ramping power constraint:\n−∆PDG ≤ PDG (k) − PDG (k − 1) ≤ ∆PDG (4)\nThis means that the change in the generator’s power output between adjacent time periods\ncannot exceed ∆PDG. Additionally, the generator’s power output must not go beyond its\nmaximum or minimum power limits:\nPmin\nDG ≤ PDG (k) ≤ Pmax\nDG (5)\nFurthermore, we need to consider the minimum on/off duration constraints for\nthe generator:\nton(k) ≥ Ton (6)\nto f f (k) ≥ To f f (7)\nHere, ton(k) represents the current continuous running time of the generator, andto f f (k)\nrepresents the current continuous off time of the generator. This means that the generator\nneeds to run continuously for Ton time periods before it can be turned off and must remain\noff for To f f time periods before it can be turned on.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.2.3 Load Constraints",
+      "level": 3,
+      "text": "The paper considers three types of typical loads: (1) critical loads; (2) switchable loads;\nand (3) controllable loads. Critical loads are associated with various critical tasks whose\nelectricity demands must be met. Switchable loads are non-critical loads whose power can\nbe adjusted based on the actual situation, such as ventilation equipment, air conditioning,\netc. The proportion of switchable loads must satisfy the following constraint:\nβmin\ncur ≤ βcur (k) ≤ βmax\ncur (8)\nCompared to critical loads, controllable loads have more flexible energy requirements\nand only need to meet their power supply needs within a predefined time range. The energy\nmanagement system can schedule their power consumption during various time periods.\nExamples of controllable loads include production tasks in industrial microgrids, various\ndevices awaiting charging, and electric vehicles awaiting charging. The paper considers\nvarious controllable loads, and for each controllable load, the following constraints must\nbe satisfied.\nThe device must operate within the time range from Tstart,i to Tfinish,i, where Tstart,i\nand Tfinish,i represent the earliest start time and the latest stop time for the i-th controllable\nload. Additionally, it is necessary to meet the total operating time requirement Tsch,i and\nthe total energy demand Esch,i for each controllable load:\nTfinish,i\n∑\nk=Tstart,i\nδsch,i(k) =Tsch,i (9)\nAppl. Sci. 2024, 14, 3253 7 of 24\nTfinish,i\n∑\nk=Tstart,i\nPsch,i(k)∆t = Esch,i (10)\nFor each operating time period, the device’s operating power must satisfy the power\nupper and lower bounds:\nδsch,i(k)Pmin\nsch,i ≤ Psch,i(k) ≤ δsch,i(k)Pmax\nsch,i (11)\nFurthermore, to prevent frequent start–stop cycles that may damage the device, once\nthe device is turned on, it cannot be stopped during its operation. This constraint is\nsatisfied by:\nk+Tsch,i−1\n∑\nτ=k\nδsch,i(τ) ≥ Tsch,i(δsch,i(k) − δsch,i(k − 1)) k = Tstart ,i, · · ·, Tf inish,i − Tsch,i + 1 (12)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2.4 Power Balance Constraints",
+      "level": 3,
+      "text": "Diesel generators, wind power, and photovoltaic power are the energy supply nodes,\nwhile critical loads, switchable loads, and controllable loads are the energy demand nodes.\nEnergy storage systems and the main grid adjust their power flow to satisfy the following\npower balance constraints:\nNsch\n∑\ni=1\nPsch,i(k)+ ˜Pcur (k)(1 − βcur (k)) + ˜Pcri (k)\n= ˜Psolar (k) +˜Pwind (k) +PDG (k) +Pgrid (k) +Pbess (k)\n(13)\nwhere the values of Pgrid (k) and Pbess (k) greater than 0 indicate that the main grid and\nenergy storage system are supplying power to the microgrid.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.3 Optimization Objectives",
+      "level": 2,
+      "text": "The objectives of the energy management for the resilient microgrid studied in this\npaper are to reduce the operational costs of the system and its dependence on the main\ngrid. Based on the generation from renewable sources such as wind and photovoltaics,\nload usage, and electricity price information, the system aims to reduce costs by charging\nduring low electricity price periods and discharging during high electricity price periods\nusing the energy storage system. Through coordinated control of generation equipment,\nenergy storage, and loads, the system also aims to decrease its reliance on the main grid.\nThis approach has several benefits, including mitigating the impact of renewable energy\nfluctuations on the main grid, increasing the utilization of renewable energy, and enhancing\nthe reliability of the microgrid system. It is suitable for energy management in extreme\nenvironments like islands, border regions, and military bases.\nTherefore, the optimization objective of the microgrid consists of two parts: minimiz-\ning the operational costs of the system and minimizing the energy exchange between the\nmicrogrid and the main grid. The calculation of operational costs is as follows:\nC1 = min\nT\n∑\nk=1\nh\nCDG (k) +Cbess (k) +Ccur (k) +Cgrid (k)\ni\n(14)\nwhere CDG (k), CBESS (k), Ccur(k), and Cgrid(k) represent the operating costs of the diesel\ngenerator and the energy storage system at time k, the penalty for load shedding, and the\ncost of buying and selling electricity, respectively.\nThe operating cost of the diesel generator includes fuel cost, startup cost, and mainte-\nnance cost, and is calculated as follows:\nCDG (k) =C f uel(k) +OM DG · δDG (k) · ∆t + χup\nDG (k) +χdown\nDG (k) (15)\nAppl. Sci. 2024, 14, 3253 8 of 24\nwhere C f uel(k) is the fuel cost for the diesel generator at time k, OM DG is the maintenance\ncost per unit time of generator operation, δDG (k) represents the operational state of the\ndiesel generator at time k (1 for on, 0 for off), and χup\nDG (k) and χdown\nDG (k) represent the fixed\ncosts for each startup and shutdown.\nThe fuel cost C f uel(k) for the diesel generator at time k is calculated as:\nC f uel(k) = (aP2\nDG (k) +bPDG (k) +ci) · ∆t (16)\nwhere a and b represent the first and second-order constant coefficients of fuel cost, PDG is\nthe power output of the diesel generator at time k, and ∆t is the time granularity, which is 1\nhour in this case.\nThe operating cost of the energy storage system includes maintenance costs and losses\nfrom charging and discharging.\nCbess (k) =|Pbess (k)|OMbess ∆t + cswitch\nbess (δbess (k) − δbess (k − 1))2 (17)\nwhere OM BESS represents the maintenance cost per unit time for the energy storage system,\nand cswitch\nBESS represents the cost associated with charging and discharging losses.\nThe penalty cost for load shedding is calculated based on the penalty coefficient\nαcur,i(k) and the power of the shed load βcur,i(k)Pcur,i(k):\nCcur (k) =αcur,i(k)βcur,i(k)Pcur,i(k) · ∆t (18)\nThe cost of buying and selling electricity is determined by the interaction power\nbetween the microgrid and the main grid Pgrid (k) and the electricity price.\nηgrid (k) =\n(\ncbur\ngrid (k) Pgrid (k) > 0\ncsel\ngrid (k) Pgrid (k) ≤ 0\nCgrid (k) =ηgrid (k)Pgrid (k)∆t\n(19)\nwhere Pgrid (k) > 0 represents that the microgrid’s generation capacity is insufficient to\nmeet the total demand, and it needs to purchase electricity from the main grid. Pgrid (k) ≤ 0\nindicates that the microgrid is selling excess electricity to the main grid. Typically, the\npurchasing price for electricity from the grid is higher than the selling price.\nThe second optimization objective is to reduce the microgrid’s dependence on the\nmain grid, specifically by minimizing the total power purchased from the main grid by the\nmicrogrid. It is calculated as:\nC2 = min ∑T\nk=1 λgrid ∆t\nλgrid (k) =\n\u001a Pgrid (k) Pgrid (k) > 0\n0 Pgrid (k) ≤ 0\n(20)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.4 Multi-Objective Optimization Model",
+      "level": 2,
+      "text": "Based on the previously mentioned system optimization objectives and model con-\nstraints, the energy management model, which is a Mixed Integer Programming problem\nwith multiple objectives, is constructed as follows:\nminx C(x) =(C1(x), C2(x))\ns.t. (8)–(20) (21)\nHere, x represents the decision variables, and the list of decision variables is shown\nin Table 2. The optimization objectives of the model are to minimize the system operating\ncost C1 and minimize the dependence on the main grid C2. These two objectives are\nconflicting—optimizing one objective typically leads to degradation in the value of the\nother objective; it is not possible to simultaneously optimize both objectives. Therefore,\nmulti-objective optimization results in a set of compromise solutions, known as the Pareto\nAppl. Sci. 2024, 14, 3253 9 of 24\noptimal solution set. Each solution in the Pareto optimal solution set is a non-dominated\nsolution, meaning that each solution does not dominate the others. If solution x1 dominates\nsolution x2 (X1 ≺ X2), it is only when the following rules are satisfied:\nfk(x1) ≤ fk(x2), k = 1, · · ·, M\nfk(x1) < fk(x2), ∃k ∈ {1, · · ·, M}. (22)\nIn other words, if solution x1 is non-dominated by solution x2 in both objectives and is\nstrictly better than solution x2 in at least one objective, then solution x1 dominates solution\nx2. Therefore, by solving this multi-objective optimization model, a set of solutions with dif-\nferent emphasis on system cost and dependence on the main grid can be obtained, allowing\ndecision-makers to choose the most suitable solution for different demand scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3 The Proposed Constraint Multi-Objective Optimization Algorithm",
+      "level": 1,
+      "text": "Multi-objective evolutionary algorithms (MOEAs) such as non-dominant sorting algo-\nrithm II (NSGA-II) can obtain a set of Pareto optimal solutions in a single run. However,\nMOEAs face challenges in dealing with high-dimensional complex constraints when di-\nrectly used to solve the resilient energy management problem studied in this paper. There\nare Nsch schedulable appliances in the studied microgrid, and the strict constraints (8)–(20)\nshould be met for all of the schedulable appliances. Moreover, the consecutive running,\nminimum on/off time and ramp power constraints should be also met for the genera-\ntors. It is hard for MOEAs and traditional constrained MOEAs to deal with the large\nnumber and complex constraints in this work. To tackle this challenge, we propose an\nimproved NSGA-II algorithm with multi-stage constraint-handling strategy, which we call\nNSGA-II-MC, to handle the high-dimensional complex constraints of the resilient energy\nmanagement problem.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.1 Algorithm Framework",
+      "level": 2,
+      "text": "Algorithm 1 presents the pseudocode of the proposed algorithm.\nAlgorithm 1 NSGA-II-MC Algorithm Framework\n1: Pt ← Initialize Population (N) ▷ Randomly generate N chromosomes\n2: t ← 1 ▷ Initialize generation count\n3: while t ≤ MaxGen do\n4: MatingPool ← Binary Tournament Selection (Pt)\n5: Qt ← Hybrid Crossover And Mutation (Mating Pool )\n6: Rt ← Pt ∪ Qt\n7: Rank ← Non Dominated Sorting-MC (Rt)\n8: Dis = Compute Crowding Distance (Rt)\n9: Pt ← Selection (Rt, Rank, Dis)\n10: t ← t + 1\n11: end while\nThe detailed demonstration of the proposed NSGA-II-MC algorithm is as follows:\n1. Design the structure of the chromosome with a grouping matrix coding strategy;\n2. Initialize the population Pt with N randomly generated chromosomes, each represent-\ning a energy management solution of the microgrid (Line 1);\n3. Initial the generation count as t = 1 (Line 2);\n4. Prepare the mating pool by performing binary tournament selection on Pt (Line 4);\n5. Perform hybrid crossover and mutation operators on the mating pool to generate the\noffspring Qt (Line 5);\n6. Combine parent and offspring population Rt = Pt ∪ Qt (Line 6);\n7. Perform the non-dominated sorting on Rt to obtain the rank of individuals in Rt. A\nmulti-stage constraint-handling strategy is used to rank the individuals to handle the\ncomplex constraints (Line 7);\nAppl. Sci. 2024, 14, 3253 10 of 24\n8. Compute the crowding distance (Line 8);\n9. Perform the selection operator on Rt according to the rank to obtain N individuals as\nthe new Pt. Individuals with larger crowding distance are preferred if they have the\nsame rank (Line 9);\n10. Increment t.\n11. Repeat steps 4 to 10 until t > MaxGen .\nIn the subsequent sections, we introduce each component of the designed algorithm\nin detail.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2 Chromosome Design",
+      "level": 2,
+      "text": "The decision variables of the resilient energy management problem have different\ntypes of variable values with complex constraints. To improve the efficiency of the evolving\nprocess, we use a grouped matrix coding strategy to code the mixed integer decision\nvariables as a group of matrices C = C1, C2, C3, C4. Specifically, C1 represents the on/off\nstatus δDG (k) of the generators that only contains values of 0 and 1; C2 represents the\nrunning status δbess (k) of the BESS that contains values of −1, 0 and 1; C3 codes the\ncontinuous decision variables as a matrix, containing the rated powers of the generators,\nthe BESS, the controllable loads, and the load curtailment βcur (k); and C4 is a matrix that\ncontains the start and shutdown time pairs in each row for all the schedulable appliances.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.3 Hybrid Variation Strategy",
+      "level": 2,
+      "text": "The crossover operator is used to inherit the genetic information of two parents\nto generate a better offspring. The mutation operator randomly alters the genes in the\nchromosome to increase the diversity of the population. Considering the complex data\nstructure of the chromosome, different crossover and mutation operators are required to\nprocess different elements in C. In this paper, we propose a hybrid variation strategy to\ngenerate the offspring by a set of crossover and mutation operators.\nFor C1 in the chromosome that represents the on/off status of the generator, we\nperform two-point crossover and bit-flip mutation operators on the bit array. The two-point\ncrossover operator randomly selects two crossover points, and swaps the elements between\nthe two points of the two parents. Since the on/off status of the generator should satisfy the\nminimum on/off time constraints, the two-point crossover operator can generate offspring\nwith less constraint violation compared with other crossover operators. In bit-flip mutation,\neach bit in C1 has a probability of 1\nDC1\nto mutate through bit flips, where DC1 is the number\nof elements in C1.\nWe also perform two-point crossover on C2, which represents the running status of\nthe BESS. For mutation, we replace the bit-flip operation in the bit-flip mutation operator\nwith a random selection from among the candidate values of −1, 0, and 1.\nFor continuous values in C3, simulated binary crossover (SBX) and polynomial mu-\ntation (PM) are used. Given parents x1\u0000\nx1\n1, · · ·, x1\nn\n\u0001\nand x2\u0000\nx2\n1, · · ·, x2\nn\n\u0001\n, the offspring\nc1\u0000\nc1\n1, · · ·, c1\nn\n\u0001\nand c2\u0000\nc2\n1, · · ·, c2\nn\n\u0001\ncan be generated through SBX as:\n\u001a c1\ni = 0.5 ×\n\u0002\n(1 + β) · x1\ni + (1 − β) · x2\ni\n\u0003\nc2\ni = 0.5 ×\n\u0002\n(1 − β) · x1\ni + (1 + β) · x2\ni\n\u0003 (23)\nβ =\n(\n(r × 2)1/(1+ηc) r ≤ 0.5\n(1/(2 − r × 2))1/(1+ηc) otherwise. (24)\nAppl. Sci. 2024, 14, 3253 11 of 24\nwhere ηc is the distribution index of simulated binary crossover. The polynomial mutation\noperator is performed on the parent xi with a distribution index ηm:\nxi = xi + δq ·\n\u0010\nxUpper\ni − xLower\ni\n\u0011\nδq =\n\n\n\n[(2r) + (1 − 2r)∗ (1 − δ1)ηm+1\u0003 1\nηm +1 − 1 if r ≤ 0.5\n1 − [2(1 − r) +2 · (r − 0.5) ∗ (1 − δ2)ηm+1\u0003 1\nηm +1 otherwise\n(25)\nwhere:\nδ1 ← xi−xLower",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "xUpper",
+      "level": 1,
+      "text": "i −xLower\ni\nδ2 ← xUpper\ni −xi\nxUpper\ni −xLower\ni\n(26)\nWe perform the point-wise SBX crossover, PM mutation, and rounding operators on\nC4 that represents the start and shutdown time for the controllable loads. The upper and\nlower limit xUpper",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "and xLower",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "for elements in C4 are initialized according to the earliest",
+      "level": 1,
+      "text": "startup and latest shutdown time of the controllable loads before conducting the point-wise\nSBX crossover.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "3.4 Multi-Stage Constraint-Handling Strategy",
+      "level": 2,
+      "text": "The constrained domination principle (CDP) is the most popular technique for han-\ndling constraints in constrained MOEAs. CDP adds a feasibility rule to the domination\nprinciple, that is, feasible solutions have better ranks than infeasible ones, and the con-\nstraint violation is compared when ranking two infeasible solutions. However, useful\ninformation contained within infeasible solutions might be lost when favoring feasible\nsolutions over infeasible ones. This problem is especially severe when handling the con-\nstraints in this work, wherein the constraints are hard to satisfy and a large number of\ninfeasible solutions arise during the search process. In the ε constraint-handling technique,\ninfeasible solutions are treated as feasible ones if their constraint violation degree is less\nthan ε. This method can take advantage of the information within infeasible solutions, and\nshow better performance than CDP . However, it is hard to controlε appropriately. In this\npaper, we propose a multi-stage constraint-handling strategy to handle the large number\nand complex constraints.\nA population can be easily become trapped in a local feasible region when tackling\ncomplicated constraints by the constrained search. For problems with small feasible regions,\nit may take an unnecessary amount of time to search the local optimal region. Therefore, at\nthe first stage, we propose to use an unconstrained search to guide the searching process\nwith more attention on convergence than feasibility. This can improve converging speed and\nalleviate the waste of computing resources caused by searching useless areas. Specifically,\nthe default domination rule is used to rank the individuals regardless of the constraints\nduring the non-dominated sorting. The unconstrained search stage runs from t = 1 to\nt = MaxGen /6.\nWe propose the use of an adaptive-linear-ε constraint-handling technique at the sec-\nond stage to gradually divert the searching goal from convergence to feasibility. In ε\nconstraint handling, solution xi is treated as better than solution xj if the following condi-\ntions are satisfied:\n(1) xi is feasible and xj is not;\n(2) They are both feasible, and xi dominates xj;\n(3) They are both infeasible, and the constraint violation of xi is less than xj.\nAppl. Sci. 2024, 14, 3253 12 of 24\nHere, a solution is treated as feasible if its degree of constraint violation is less than\nε. At this stage, the proportion of feasible solutions p f in the population is expected to\nincrease linearly to 100% with t. A simple way of achieving this is to decrease ε linearly.\nHowever, p f might not change as expected with ε, as shown in Figure 1. To overcome this\nproblem, we develop an adaptive-ε strategy. ε is first initialized to decrease linearly as:\nε∗(t) =1 − 2.5\nMaxGen\n\u0012\nt − 1",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "6 MaxGen",
+      "level": 1,
+      "text": "\u0013\n(27)\nε is then adjusted according to the current proportion of feasible solutions:\nε(t) =\n\u001a max (ε∗(t) − |ε∗(t) − p f (t)|, 0), if p f (t) ≤ ε∗(t)\nε∗(t) +|ε∗(t) − p f (t)|, if p f (t) > ε∗(t) (28)\nAs shown in Figure 1, p f is expected to decrease linearly and the adaptive ε works on\nbringing p f back to linearity. The second stage lasts for 0.5 × MaxGen generations, where ε\ndecreases linearly for the first 0.4 × MaxGen generations and is zero for the other 0.1 ×\nMaxGen generations.\nt\np f\nLinear decrease\nFigure 1. The actual proportion of feasible solutions does not change as expected.\nThe unconstrained search is then performed at the third stage. This lasts forMaxGen /6\ngenerations to help the population escape from possible local feasible regions. In the last\nstage, we adopts the CDP-based constraint search to force the individuals to satisfy all of\nthe constraints, where feasible solutions always have better ranks than infeasible ones. This\nstage lasts for the remaining MaxGen /6 generations.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4 Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.1 Experimental Settings",
+      "level": 2,
+      "text": "The test case for the microgrid is based on the work of Zhai et al. [ 26] with a time\ngranularity of one hour. The wind, solar, load, and electricity price data utilized in this study\nare sourced from the Global Energy Forecasting Competition 2014 [27]. The average power\nof critical loads is a fixed value of 300 kW. The maximum shedding ratio for switchable\nloads is 0.2. Shedding loads can affect the comfort of island residents, military personnel,\netc., so a penalty is set for shedding loads, which is five times the generation cost of the\nshed electricity. The maximum interaction power between the energy system and the main\ngrid is 100 kW. Tables 3–5 provide the relevant parameters for distributed controllable\ngeneration devices, energy storage units, and controllable loads.\nAppl. Sci. 2024, 14, 3253 13 of 24\nTable 3. Parameters for distributed controllable generation devices.\nDevice\nMaximum/Minimum\nOperating Power\n(kW)\nRamp-Up Power\n(kW)\nMinimum Opera-\ntion/Shutdown\nDuration (h)\nFuel Cost\nQuadratic, Linear,\nConstant\nCoefficients\nStartup/Shutdown\nCosts ($)\n1 600/10 500 2/1 0.00044/0.48/3.2 3.1/3.36\n2 760/20 550 2/1.5 0.00054/0.55/3.6 3.52/4.2\n3 40/0.5 40 0.5/0.5 0.0015/0.74/2.5 1.1/1.2\nTable 4. Parameters for controllable loads.\nControllable\nDevice\nMinimum/Maximum\nOperating Power\n(kW)\nEarliest Start Time\n(h)\nLatest End Time\n(h)\nOperating\nDuration (h)\nEnergy\nConsumption\n(kWh)\nDevice 1 35/105 5 21 6 420\nDevice 2 40/120 8 22 3 240\nDevice 3 50/150 9 18 4 400\nDevice 4 65/195 9 18 2 260\nDevice 5 55/180 8 20 5 300\nDevice 4 20/300 12 23 7 500\nTable 5. Parameters for energy storage units.\nParameter Name Value Parameter Name Value\nMaximum Capacity 300 kWh Operation and Maintenance\nCost 0.05\nMinimum Capacity 40 kWh Charge/Discharge Efficiency 0.95\nInitial Capacity 100 kWh Charge/Discharge Switching\nCost 0.15\nMaximum Charge/Discharge\nPower 100 kW Self-discharge Loss 0.02 kW",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4.2 Analysis and Discussion",
+      "level": 2,
+      "text": "The Hypervolume metric is used as an evaluation criterion for multi-objective opti-\nmization algorithms. The table below presents a comparison between the NSGA-II-MC algo-\nrithm designed in this paper and traditional multi-objective optimization algorithms. Nine\ndifferent constrained multi-objective optimization algorithms, namely AGEMOEA [28],\nANSGA-III [29], ARMOEA [30], CCMO [31], CTAEA [32], DCNSGA-III [33], NSGA-II [34],\nNSGA-III [35], and RVEA [36], which are considered to be the top performers in the field,\nare selected as benchmark algorithms. These algorithms were applied to solve the in-\ntroduced energy management problem using the standard PlatEMO platform [ 37]. The\ngeneral configurations of NSGA-II-MC and the compared algorithms are kept the same,\nand are the default set of parameters in PlatEMO:\n(1) The probability of crossover, the distribution index of simulated binary crossover,\nthe expectation of the number of mutated variables, and the distribution index of\npolynomial mutation are set to 1, 20, 1, and 20, respectively;\n(2) The maximum number of function evaluations was 100,000, i.e., the population size\nwas 100 and the maximum number of iterations was set to 1000.\nOther algorithm-specific configurations were chosen to be exactly the same as those\nin PlatEMO.\nNaN values represent cases where the algorithm could not find any feasible solutions.\nTable 6 provides the average Hypervolume values obtained by each algorithm over 21 runs\non various scales of energy management problems, as well as the variance in the metric\nvalues across the 21 runs for each algorithm. Moreover, we use the Wilcoxon rank-sum test\nAppl. Sci. 2024, 14, 3253 14 of 24\nwith p < 0.05 to compare each algorithm with NSGA-II-MC. In the last column of the table,\nthe symbols “+” and “ −\" indicate the number of test problems in which the compared\nalgorithm shows significantly better performance or worse performance, respectively, than\nNSGA-II-MC. In addition, the symbol “=” indicates the number of test problems in which\nthere is no significant difference between NSGA-II-MC and the compared algorithms.\nFrom the numerical comparison results, it can be observed that the algorithm designed\nin this work outperforms all benchmark algorithms on energy management problems of\nvarying scales. None of the compared algorithms shows significantly better performance\nthan NSGA-II-MC according to the Wilcoxon rank-sum test. Note that CTAEA failed to\nfind feasible solutions for most problems. In particular, the energy management problem\nwith six controllable loads involves more decision variables and stricter power constraints,\nmaking it more challenging to solve. Results show that many algorithms failed to find\nfeasible solutions for the six-scale problem, whereas the NSGA-II-MC algorithm proposed\nin this work consistently obtained feasible solutions. Additionally, it can be seen that the\nadvantage of the NSGA-II-MC algorithm is relatively small for small-scale controllable load\nproblems. However, as the number of controllable loads and problem constraints become\nmore complex, the performance advantage of the NSGA-II-MC algorithm becomes more\npronounced. Compared to the NSGA-II algorithm, the proposed NSGA-II-MC method\nachieved a 49.7% improvement in the Hypervolume metric on large-scale problems of\nsix controllable loads. This demonstrates the effectiveness of the proposed algorithm,\nwhich can significantly improve the convergence performance and constraint-handling\neffectiveness of multi-objective optimization algorithms.\nTable 6. The average Hypervolume values and variance obtained by the compared algorithm over\n21 runs on various scales of energy management problems. The best values are marked in bold.\nThe Number of Controllable Loads\nAlgorithms 3 4 5 6 +/ −/=\nAGEMOEA 4.6273 × 10−1 4.2289 × 10−1 4.0552 × 10−1 3.0880 × 10−1 0/2/2\n(2.49 × 10−2) (2.64 × 10−2) (6.18 × 10−2) (7.74 × 10−2)\nANSGA-III 4.3520 × 10−1 4.0843 × 10−1 3.6078 × 10−1 3.0284 × 10−1 0/3/1\n(2.81 × 10−2) (1.30 × 10−2) (4.98 × 10−2) (5.56 × 10−2)\nARMOEA 4.2162 × 10−1 4.2218 × 10−1 4.0862 × 10−1 NaN 0/2/1\n(9.96 × 10−2) (1.83 × 10−2) (6.00 × 10−2) (NaN)\nCCMO 4.4546 × 10−1 4.0787 × 10−1 3.9540 × 10−1 3.2897 × 10−1 0/4/0\n(1.32 × 10−2) (1.12 × 10−2) (2.67 × 10−2) (3.15 × 10−2)\nCTAEA NaN 1.5676 × 10−1 NaN NaN 0/0/1\n(NaN) (0.00 × 10 + 0) (NaN) (NaN)\nDCNSGA-III 3.3743 × 10−1 3.2180 × 10−1 3.7492 × 10−1 NaN 0/2/1\n(6.28 × 10−2) (2.38 × 10−2) (2.79 × 10−2) (NaN)\nNSGA-II 4.6170 × 10−1 3.8318 × 10−1 3.7344 × 10−1 2.2796 × 10−1 0/2/2\n(1.69 × 10−2) (8.70 × 10−2) (1.17 × 10−1) (1.51 × 10−1)\nNSGA-III 4.4267 × 10−1 3.8955 × 10−1 3.5744 × 10−1 3.1518 × 10−1 0/3/1\n(2.45 × 10−2) (3.67 × 10−2) (9.86 × 10−2) (5.02 × 10−2)\nRVEA 2.9612 × 10−1 2.6328 × 10−1 2.6302 × 10−1 1.4031 × 10−1 0/4/0\n(6.32 × 10−2) (5.89 × 10−2) (4.84 × 10−2) (5.64 × 10−2)\nNSGA-II-MC 4.6278 × 10−1 4.2553 × 10−1 4.1215 × 10−1 3.4081 × 10−1\n(1.04 × 10−2) (1.57 × 10−2) (9.11 × 10−2) (9.02 × 10−2)\nFurthermore, Figure 2 provides a comparison of the Pareto fronts between NSGA-II-\nMC and the traditional NSGA-II under different scenarios. The optimization objectives in\nthe problems are minimizing operating costs and reducing dependence on the power grid.\nEach point on the Pareto front represents a management solution, with the horizontal and\nvertical axes representing the values of the two objective functions. Therefore, points closer\nto the origin indicate better convergence (optimality) of the algorithm. Multi-objective\noptimization also considers the diversity of the Pareto front, which involves how well\na series of solutions can cover different objective preferences. This is reflected in the\ndistribution of the Pareto front formed by a series of solutions. A more evenly distributed",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t6"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The actual proportion of feasible solutions does not change as expected."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Mathematical Notations."
+    },
+    {
+      "id": "t2",
+      "caption": "Decision variables for energy management problem."
+    },
+    {
+      "id": "t3",
+      "caption": "Parameters for distributed controllable generation devices."
+    },
+    {
+      "id": "t4",
+      "caption": "Parameters for controllable loads."
+    },
+    {
+      "id": "t5",
+      "caption": "Parameters for energy storage units."
+    },
+    {
+      "id": "t6",
+      "caption": "provides the average Hypervolume values obtained by each algorithm over 21 runs"
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "presents the pseudocode of the proposed algorithm."
+    }
+  ],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 6,
+    "n_algorithms": 1,
+    "n_equations": 8
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2023__algorithmic_design_of_geometric_data_for_molecular_pote__c17b1ebbc1.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "A numerical molecular potential energy surface (PES) can be depicted by calculating total \nelectronic energies as a function of geometric parameters. These include molecular bond \nlengths, bond angles and dihedral angles defined in an internal coordinate or Z-matrix space. \nFor a nonlinear polyatomic molecule comprised of N atoms, the PES is determined by its \n3N-6 internal coordinates [1,2]. For large polyatomic systems there is no single established \neffective procedure by which geometries for PESs may be generated. The code presented \nhere, based on symbolic computation, enables the generation of comprehensive PESs based \non chosen incremental changes in internal coordinates, relative to a referenced geometrical \npoint. Applications of PES’s include the analysis of vibrational-rotational spectra, synthetic \nmechanistic pathways and chemical kinetics. This study elaborates on the application of \nPESs to vibrational-rotational spectra and presents such an analysis of the water and \nformaldehyde molecules.\nThe ultimate success of this multi-objective study relies on the automation and efficiency \nafforded by Mathematica while maintaining sound theoretical underpinnings [3]. There \nare two principal formal and algorithmic components that must be addressed in the \nanalysis of PESs. The first is that the manual solution of the requisite multidimensional \nintegrodifferential equations for intramolecular nuclear motion, using Rayleigh–Schrödinger \nperturbation theory (RSPT), is tedious and error prone. For example, a 4th-order \nperturbation treatment for a triatomic molecule results in ~500 of pages of equations [4]. In \naddition, the manual solution of the molecule results in ~500 of pages of equations. Second-\norder perturbation equations for transition intensities lead to ~100 pages of equations for just \ntriatomic molecules [5]. These algebraic solutions for the RSPT equations are found using \nsymbolic mathematics and automatically translated into FortranForm via Mathematica. The \nsubsequent calculation of molecular energies, intensities and properties scales linearly with \nthe order of RSPT [6].\nThe second is the analytical representation of numerical PESs, where scaling issues seen in \nfirst-principles quantum mechanical perturbation theory treatments of intramolecular motion \nare traced to analytical representations of PESs, accomplished here using singular value \ndecomposition (SVD) [7] For example, using SVD, a 6th-degree power series expansion \nof the PES for a 12-atom molecule, having 30 vibrational degrees of freedom, requires \nthe inversion of rank 2-million matrix [2]. However, inversions of high-rank matrices also \nscale linearly and are accomplished straightforwardly and efficiently using modern parallel \nsupercomputers [8].\nIn order to describe vibrational and rotational states, the Schrödinger equation for \nintramolecular nuclear motion is solved in the context of the Born–Oppenheimer \napproximation. The equation can be cast into a form involving analytic forms for the \npotential energy operator V in the Hamiltonian operator. This was accomplished for \nthe ground vibrational state of triatomic molecules by Kern and Matcha using variation \nperturbation theory [9]. It has been solved for any polyatomic molecule using RSPT for the \nI= 1, (3N-6) modes of vibration in terms of normal coordinates Qi, as follows (in atomic \nunits) [2]:\nCruz and Ermler Page 2\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nH = T + V\n(1)\nH = H0 + H1 + H2\n(2)\nH0 = 1\n2 ∑ ωipi\n2 + 1\n2 ∑ ωiqi\n2 = T + V 0\n(3)\nH1 = ∑ kijkqiqjqk = V 1\n(4)\nH2 = ∑ kijkl qi qj qk + 1\n8 ∑ Iα\n2 4Πα − 1 = V 2 + V 2′\n(5)\nIn Equations (1)–(5) T is the total kinetic energy operator defined in terms of the \nharmonic frequencies ωi, the mass-reduced normal coordinates qi = Qi/ ωi and the momenta \npI = − i ∂ / ∂qi. The second term in Equation (5) corresponds to the correction due to Coriolis \ninteractions. Iα are the moments of inertia relative to the principal moment of inertia axes \nα=A, B, and C, and Πα are the vibrational total angular momenta.\nNormal coordinates can be obtained using a finite differences procedure for calculating \nthe second derivatives of the total energy in terms of mass-weighted cartesian nuclear \ndisplacement coordinates, the Hessian matrix. The eigenvectors Lij of the Hessian matrix \ncomprise the linear transformation matrix that defines the normal coordinates in terms of the \nmass weighted cartesian displacement coordinates. The eigenvalues of the Hessian matrix \nare the harmonic frequencies [2]. The constants kijk, and kijkl are cubic and quartic force \nconstants that account for anharmonicity. These constants are calculated from an initial \npower series fit of the PES in terms of internal coordinates by means of SVD, using the \nnormal coordinate transformation matrix Lij [2]. The total potential energy operator to the \nsecond-order of RSPT is then\nV = V 0 + V 1 + V 2 + V 2′\n(6)\nSolution of the RSPT equations leads to the following expression for vibrational term \nenergies, the anharmonicity constants being algebraic formulae that only involve the ωi. kijk, \nCruz and Ermler Page 3\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nand kijkl constants, obtained as noted above. Any desired line in the vibrational spectrum can \nbe calculated from term energy differences.\nEav = G + ∑i ωi vi + 1\n2 + ∑ i ≤ j x ij vi + 1\n2 vj + 1\n2\n(7)\nEquation (7) defines the vibrational energy for any asymmetric top (a) molecule (moments \nof inertia Ae ≠ Be ≠ Ce) expressed in the terms of harmonic ωi and anharmonic ωij\nspectroscopic constants.\nAn analogous derivation, using RSPT the energy levels of a symmetric top (s) molecule \n(Ae = Be ≠ Ce or Ae ≠ Be = Ce), results in the term energy formula [2].\nEsv = G + ∑ ωr vr + 1\n2 + ∑ ωt vt + 1 + ∑ xrs vr + 1\n2 vr + 1\n2 + ∑ xrt vr + 1\n2\nvr + 1 + ∑ xtt′ vt + 1 vt + 1 ∑ gttIt2 + ∑ gtt′lllt′\n(8)\nIn Equation (8) the subscripts r and s refer to nondegenerate modes of vibration and t and \nt′ refer to degenerate ones. The so-called Dunham constant G in Equations (7) and (8) is an \nadditive constant, also defined algebraically in terms of the ωi. kijk, and kijkl constants, that \ndoes not depend on vibrational or rotational quantum numbers [2].\nEnergies EvJ for a rotational level JvB within vibrational level v are given by\nEvJ = BvJv\nB Jv\nB + 1\n(9)\nFor an asymmetric top molecule, the rotational constant along the principal axis B is \nBa\nv = Beq − ∑ r αr\nB\nvr + 1\n2 .\nFor a symmetric top molecule, the rotational constant along the principal axis B is\nBs\nv = Beq − ∑\nr\nαr\nB vr + 1\n2 − ∑\nt\nαt\nB vt + 1 ± ∑\nt\nqt lt\n(10)\nwhere the rotational constants Bv are defined in terms of vibration-rotation coupling \nconstants αB, the doubling constant qt and the vibrational angular momentum quantum \nnumber lt. [2] Equations defining rotational levels JvA and JvC with respect to the A and C\nprincipal moment of inertia axes are parallel to Equations (9) and (10).\nCruz and Ermler Page 4\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nFinally, the term energy T(v,J) for a state defined by vibrational quantum numbers vi, i= 1, \n(3N-6) and corresponding rotational quantum numbers Jv is given by\nT (v, J) = Ev + EvJ\n(11)\nThus, the frequency v of any spectral line corresponding to a change v′ to v in vibrational \nand J′ to J rotational sets of quantum numbers can be calculated as a term energy difference \nby using Equation (11), that is:\nv = T v′, J′ − T (v, J)\n(12)\nIt is noted that the constant G, also known the lead Dunham constant Y00, in Equations (7) \nand (8) cancels when Equation (12) is used to calculate a line frequency, since it does not \ndepend on vibrational or rotational quantum numbers.\nBased on the RSPT formalism",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Method",
+      "level": 1,
+      "text": "An accurate quantum mechanical analysis of intramolecular nuclear motion by means \nof PESs requires saturating the molecular geometry space in an efficient manner. The \nMolecGeom code presented here enables the generation of bond lengths, bond angles and \ndihedral angles for any polyatomic molecule. This code reduces the time necessary for the \ngeneration of extremely lengthy geometric output, while minimizing the error involved in \nthe requisite SVD analysis. This is accomplished through a Mathematica-based algorithm \nthat ensures an error-free process. The MolecGeom code for any polyatomic system is as \nfollows:\nInput 1:\nCruz and Ermler Page 6\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nMolecGeom = Flatten [Table [{BL 1, BL 2, BL 3 . . ., ANG 1, ANG 2, ANG 3...},\n{BL 1, RS, RE, INC}, {BL 2, RS, RE, INC}, {BL 3, RS, RE, INC},\n{ANG 1, RS, RE, INC}, {ANG 2, RS, RE, INC}, {ANG 3, RS, RE, INC}], 2]\nOutput 1:\n{BL 1+INC, BL 2+INC, ANG 1+INC, ANG 2+INC},\n{BL 1+INC+INC, BL 2+INC+INC, ANG 1+INC+INC, ANG 2+INC +INC}\nHere, MolecGeom is a variable that specifies the intramolecular nuclear positions of any \npolyatomic molecule. Furthermore, BL 1, BL 2, BL 3 . . ., are the terms used to describe \nreference geometry bond lengths, while ANG 1, ANG 2, ANG 3..., are the variables used \nto describe the reference geometry bond angles for any polyatomic molecule. The following \ninput, BL 1, RS, RE, INC, where BL 1, the reference geometry bond length 1 from \nthe polyatomic molecule in question, is placed in this slot. RS translates to range start, \nmeaning the value of the increment above the reference geometry bond length where the \niterations begin, while RE is defined as range end, meaning the value of the increment \nbelow the reference geometry bond length where the iterations end. Lastly, INC, is defined \nas increment, meaning the number of times the specified RS and RE should step up or \ndown and calculate the corresponding geometric parameters. Lastly, the output produced is \nformatted as shown above in Output 1.\nFollowing the calculation, another short series of steps is completed to ensure all points \nproduced are unique with respect to the molecular point group symmetry. This is \naccomplished by querying Mathematica for the dimensions of the geometric output. These \ndimensions are then multiplied and placed into a variable x. This variable is then used \nto reshape the array, and then any duplicate points are deleted. This finalized set is then \nexported into a text file for further implementation. Below are input examples used to \nfinalize and prepare the geometric output for further implementation.\nInput 2: MolecGeom//Dimensions\nThis will provide the dimensions of Output 1. Using formaldehyde as an example, the output \nwould be the following:\nOutput 2: {27,4,4,5,6}\nThese values 27, 4, 4, and 5 are the dimensions of the data set produced from Input 1, \ncorresponding to the 6 internal coordinates of formaldehyde\nCruz and Ermler Page 7\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n: two CH bond lengths, CO bond length, two HCO bond angles, and the H2C dihedral \nwagging angle.\nInput 3:\nx = 27 × 4 × 4 × 5\nOutput 3:\n2160\nAllowing the numbers to be stored as a single variable will allow for the array reshape to be \ncompleted.\nInput 4: Data = ArrayReshape[MolecGeom, x, 6 ]\nOutput 4:\n{2.2, 2., 2., 115, 115, 170}\n{2.2, 2., 2., 115, 115, 175}\n{2.2, 2., 2., 115, 115, 180}\n{2.2, 2., 2., 115, 115, 185}\n{2.2, 2., 2., 115, 115, 190}\n{2.2, 2., 2., 115, 120, 170}\n{2.2, 2., 2., 115, 120, 175}\n{2.2, 2., 2., 115, 120, 180}\n{2.2, 2., 2., 115, 120, 185}\nCruz and Ermler Page 8\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n{2.2, 2., 2., 115, 120, 190}\nThe new name “Data” will hold the MolecGeom dataset by reformatting the numbers in \n{x,6}; that is, {B1, B2, B3, A1, A2, A3}, etc.\nInput 5:\nData//DeleteDuplicates//Dimensions\nOutput 5:\n{2160,6}\nThe following input will allow for the formatted data set “Data” to be scanned \nvia Mathematica to remove any symmetry replicated points (DeleteDuplicates). When \ngenerating PESs, this is useful to avoid infinite loops and errors of non-convergence.\nInput 6:\nExport[“Data. Txt”, Data]\nOutput 6:\nData.txt\nLastly, in order to export data effectively, the “Export” command is used to move the \nformatted set “Data” out of the Mathematica Wolfram notebook. This file is then deposited \non the local computer. The final internal coordinate dataset is then ported to a compute \nengine to calculate energies that define PESs for vibrational rotational analysis [6].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Application",
+      "level": 1,
+      "text": "Example calculations have been performed by generating multiple internal coordinate \ngeometric data sets for four molecules, water (H2O) [12], formaldehyde (H2CO) [13,14], \nvinyl alcohol (C2H4O)[15,16] and vitamin C [ascorbic acid (C6H8O6)] [17,18]. By \nimplementing MolecGeom PES sizes ranging from as few as 200 to more than 20,000 \ngeometries have been defined. In order to generate molecule-specific geometric output, it is \nimperative to note that reference bond lengths and bond angles must be specified. In the case \nof water, these correspond to the equilibrium bond lengths (OH1 and OH2) of 1.81 atomic \nunits (au; 1 au = 0.529177 Å) and the equilibrium bond angle (HOH) of 104.5°. These are \nused as a starting point to select a range of geometric distortions of 0.005 au, above and \nbelow the range start of 1.80 au and the range end of 1.82 au. The angle of the range start \nis 103.5° and the range end is at 105.5°, and increments are calculated every 0.100° in the \nvicinity of equilibrium values. Applying these parameters for water, the MolecGeom code \ngenerates a 525-geometry surface.\nIn the case of formaldehyde, the equilibrium CO, CH1, and CH2 bond lengths are 2.30, \n2.10, and 2.10 au, along with two HCO and the H2C dihedral wagging bond angles of \n120.0°, 120.0° and 180.0°. These are then used as a starting point to select a range of \nCruz and Ermler Page 9\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nnumbers that lie around these equilibrium values. The range start for the CO calculation \nis 2.20 au and the range end is 2.40 au, with an incrementation of 0.09 au. The range \nstart for the first and second CH stretch is 2.00 au and the range end is set at 2.20 \nau, with the same 0.09 au incrementation. Next, the distortions of the two HCO angles \nwere calculated. Their range start begins at 115.0° and the range ends at 130.0°, with \n5.0° increments. The wagging angle range start begins at 170.0° and the range end is set \nto 190.0°, with 5.0° incrementations. The MolecGeom code calculated a new geometry \nwith every incrementation within each range start and end, thus creating a comprehensive \ngeometric list for formaldehyde containing 2160 geometries for follow-on implementation.\nAfter importing the respective data sets to a compute engine, calculations are carried out to \ngenerate the energies corresponding to these PESs of water and formaldehyde. That is, these \ncalculations produce energies for all the MolecGeom-generated geometric points for each of \nthese polyatomic molecules. These PESs are then ported into a modified version of Survibtm \n[6] to calculate the fundamental vibrational frequencies shown in Tables 1 and 2 below. For \nreference, the fundamental visual vibrations of water and formaldehyde are shown in Figures \n1 and 2, respectively.\nIn Table 1, the calculated value of 3654 cm−1 denotes the symmetric stretch of the water \nmolecule, meaning the O-H bonds are stretched equally. The following value of 1595 cm−1 \ncorresponds to the bending motion that occurs where the water molecule bond angle opens \nand closes. The last value of 3753 cm−1 describes the asymmetric stretching of the molecule, \nwhere one O-H bond is contracted and the other O-H bond is stretched and vice versa.\nFurthermore, Table 2 contains the six fundamental transition frequencies corresponding to \nthe motions depicted in Figure 2 for formaldehyde, as shown above. These are calculated \nusing a PES comprised of 2160 geometries generated using MolecGeom. In Table 2, the \ncalculated value of 2803 cm−1 corresponds to CH2 symmetric stretch, meaning the H-C-H \nbonds are stretched equally. The following value reported of 1749 cm−1 corresponds to \nC=O stretch, meaning the double bond is stretched upwards. In continuation, 1502 cm−1 \ncorresponds to the CH2 scissoring; this is the movement of two atoms toward and away \nfrom each other. Furthermore, the 2819 cm−1 value reported resembles the CH2 asymmetric \nstretching, where the C-H bond is contracted, and the other C-H bond is stretched and \nvice versa. Additionally, 1168 cm−1 relates to the CH2 wagging motion; this motion can be \ndescribed as a “v” shape moving side to side. Lastly, 1246 cm−1 corresponds to the CH2 \nrocking; this motion can be pictured as a “v” opening and closing.\nFollowing the analysis of the vibrational-rotational transitions, quantum mechanical \naverages (expectation values) of molecular properties, such as dipole moments and electric \nfield gradients, can also be calculated using Survibtm, as well as other codes such as \nSPECTRO [20]. These are based on surfaces for these properties analogous to the PESs. \nAdditionally, transition intensities among vibrational levels can be calculated using dipole \nmoment surfaces [21].\nLastly, in order to show the robustness of MolecGeom for larger molecules, vinyl alcohol \nand ascorbic acid (vitamin C) were selected as examples. In the case of vinyl alcohol, shown \nCruz and Ermler Page 10\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nin Figure 3, there are six equilibrium bond lengths (B), along with five bond angles(A) and \nthree dihedral angles (D) for this molecule. More specifically: B1 = 1.07 Å, B2 = 1.07 Å, B3 \n= 1.35 Å, B4 = 1.07 Å, B5 = 1.43 Å, B6 = 0.96 Å, A1 = 120.0°, A2 = 120.0°, A3 = 120.0°, \nA4 = 120°, A5 = 109.0°, D1 = 180.0°, D2 = 180.0°, and D3 = 150.0°. These equilibrium \nvalues were generated using Gaussview 16; the structure can be seen below [22].\nThe equilibrium values generated are used as a starting point to select a range of geometric \ndistortions of 0.20 Å above and below the range start of 1.00 Å and the range end of 1.10 Å, \nfor B1, B2 and B4. The range start for B3 is 1.34 Å and the range end is set at 1.37 Å with \nthe same 0.20 Å incrementation. Next, the distortions of the five angles were calculated. The \nrange start begins at 115.0° and the range ends at 120.0°, with 5.0° increments for A1, A2, \nA3 and A4. For the last distortion, A5, the range start begins at 106.0° and the range ends \nat 112.0°, with 5.0° increments. The MolecGeom code calculated a new geometry at every \nincrementation within each range start and end, thus creating a comprehensive geometric \nlist for vinyl alcohol, containing 1458 unique geometries for follow-on implementation into \nSurvibtm for the calculation of its vibrational-rotational spectrum.\nIn the final example, the ascorbic acid (C6H8O6) molecule is composed of 20 atoms with 19 \nbond lengths, 18 bond angles and 17 dihedral angles for a total of 54 internal coordinates. \nShown in Table 3 are the internal coordinates that were inputted to MolecGeom. A total \nof 1,899,776 geometric points were calculated, which define its PES. More specifically, the \nequilibrium values seen in Table 3 were generated using Gaussview 16. The structure is \nshown in Figure 4 [22].\nFile S1: The notebook (.nb) files for water, formaldehyde, vinyl alcohol and ascorbic \nacid have been provided. Additionally, File S2: The text (.txt) files containing the unique \ngeometric points for each molecule are also provided. These can be accessed through the \nlink in the Supplementary Materials section.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 Conclusions",
+      "level": 1,
+      "text": "The MolecGeom code reported here allows for the rapid and efficient generation of \ngeometric data for PESs. Mathematica provides an ideal programming environment \nfor addressing the algebraic manipulations required to define such PESs. Additionally, \ndepending on the required application of the PES generated, the parameters of MolecGeom \ncan be adjusted as needed. In this study, the code is applied to water, formaldehyde, vinyl \nalcohol and ascorbic acid molecules; however, it can be used to generate a PES for any \npolyatomic system, while also recognizing the molecular point group symmetry relations. \nBy applying the results of MolecGeom, accurate vibrational-rotational spectra are attainable. \nThe errors in the calculations of fundamental frequencies for water and formaldehyde are \nshown to be less than 1% in comparison with the published literature values for PESs, based \non accurate ab initio electronic energy and properties calculations. The MolecGeom code \nprovides an effective means by which accurate PESs for vibrational analyses of polyatomic \nmolecules may be realized.\nCruz and Ermler Page 11\nAlgorithms. Author manuscript; available in PMC 2025 August 28.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nSupplementary Material\nRefer to Web version on PubMed Central for supplementary material.\nAcknowledgments:\nThis work received computational support from UTSA’s HPC cluster Arc, operated by the university technology \nsolutions research computing support group. Lastly, we are grateful to Wolfram Technology Support Services for \ntheir troubleshooting help.\nFunding:\nThis work is supported by the RISE PhD program at UTSA funded by NIH/NIGMS RISE GM60655. Additionally, \nthis research was supported in part by the National Science Foundation under grant CHE-1853477.\nData Availability Statement:\nData available in a publicly accessible repository. The data presented in this study are openly \navailable at [https://www.mdpi.com/article/10.3390/a16010006/s1].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Visual vibrations of water (a) O-H symmetric stretch, (b) H-O-H bend and (c) O-H"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "(3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "(4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    },
+    {
+      "id": "e9",
+      "latex_or_text": "(9)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "(10)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 12
+  }
+}

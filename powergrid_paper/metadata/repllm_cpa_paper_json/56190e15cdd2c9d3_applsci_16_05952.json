@@ -1,0 +1,453 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-16-05952.pdf",
+  "n_pages": 27,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 State Grid Hubei Electric Power Research Institute, Wuhan 430000, China",
+      "level": 1,
+      "text": "2 College of Water Resources and Architectural Engineering, Northwest A&F University,\nYangling 712100, China\n* Correspondence: qinyuetan@nwsuaf.edu.cn\nAbstract\nIslanded renewable microgrids must balance power internally, so day-ahead dispatch is\naffected by wind and photovoltaic variability, battery state-of-charge (SOC) dynamics,\ndemand-response (DR) participation, and emissions from dispatchable generation. This\npaper proposes a low-carbon economic dispatch model for an islanded photovoltaic–wind-\nturbine–battery-energy-storage–dispatchable-generator–demand-response (PV-WT-BESS-\nDG-DR) microgrid. The objective includes fuel, operation and maintenance, BESS degra-\ndation, renewable curtailment, load shedding, DR compensation, and carbon-emission\ncosts. A repair-based constraint-handling strategy keeps the search space continuous while\nenforcing power balance, DG ramping, BESS operating and SOC limits, terminal SOC, and\nDR constraints. An improved whale optimization algorithm (WOA) is then developed\nwith three modules: diversity enhancement, exploration–exploitation balancing, and local\nescape and refinement. The method is assessed through base-case dispatch, benchmark\ncomparison, strategy comparison, ablation tests, and sensitivity analysis. In 30 independent\nruns, the proposed method achieves a mean cost of 2662.96 CNY/day, 4.07% lower than\nstandard WOA, and reduces the standard deviation by 79.72%. Wilcoxon and Friedman\ntests confirm significant differences from the benchmark algorithms. Sensitivity tests show\nthat higher BESS degradation coefficients and carbon prices increase the accounting cost\nbut do not change the qualitative feasibility of the deterministic dispatch framework.\nKeywords: islanded microgrid; low-carbon economic dispatch; battery energy storage;\ndemand response; whale optimization algorithm; parameter sensitivity",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1 Nomenclature",
+      "level": 1,
+      "text": "Table 1 defines the main parameters, variables, algorithm symbols, and abbreviations\nused in the model. Additional explanatory text is also provided when each equation\nis introduced.\nTable 1. Nomenclature.\nSymbol Description Unit\nT Number of scheduling periods -\n∆t Scheduling interval h\nAppl. Sci. 2026, 16, 5952 https://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 2 of 27\nTable 1. Cont.\nSymbol Description Unit\nt Time index -\nPV/WT Photovoltaic/wind-turbine generation -\nBESS/DG/DR Battery energy storage system/dispatchable generator/ -\ndemand response\nEMS/SOC Energy management system/state of charge -\nWOA/GWO/SMA Whale optimization algorithm/grey wolf optimizer/ -\nslime mould algorithm\nF Total daily dispatch objective value CNY/day\nPf\nPV,t Forecasted PV power at time t kW\nPf\nWT,t Forecasted wind power at time t kW\nPuse\nPV,t Utilized PV power at time t kW\nPuse\nWT,t Utilized wind power at time t kW\nPcurt\nPV,t Curtailed PV power at time t kW\nPcurt\nWT,t Curtailed wind power at time t kW\nPDG,t Dispatchable generator output at time t kW\nPch,t BESS charging power at time t kW\nPdis,t BESS discharging power at time t kW\nSOCt Battery state of charge at time t p.u.\nEBESS Rated BESS energy capacity kWh\nP0\nL,t Original load demand at time t kW\nPDR\nL,t Load demand after demand response kW\nPshift,t Shiftable-load adjustment at time t kW\nPcut,t Voluntary curtailable load in DR kW\nPloss,t Involuntary load shedding kW\nϵP ,t Power-balance residual at time t kW\nCfuel Fuel cost CNY/day\nCom Operation and maintenance cost CNY/day\nCbat BESS degradation cost CNY/day\nCcurt Renewable curtailment penalty CNY/day\nCloss Load shedding penalty CNY/day\nCDR DR compensation cost CNY/day\nCcarbon Carbon emission cost CNY/day\nλCO2 Carbon price CNY/kgCO 2\nγDG DG emission factor kgCO 2/kWh\nPmin\nDG /Pmax\nDG Minimum/maximum DG output kW\nPDG,0 Initial DG output kW\nRup/Rdown DG ramp-up/ramp-down limits kW/h\nPmax\nch /Pmax\ndis Maximum BESS charging/discharging power kW\nηch/ηdis BESS charging/discharging efficiency -\nSOC0/SOCT Initial/terminal BESS state of charge p.u.\nSOCmin/SOCmax Minimum/maximum BESS state of charge p.u.\nuch,t/udis,t BESS charging/discharging status indicators -\nρshift Maximum shiftable-load ratio -\nλcut Maximum curtailable-load ratio -\na, b, c Quadratic DG fuel-cost coefficients\nCNY/(kW2h),\nCNY/kWh,\nCNY/h\nkom\nDG DG operation and maintenance coefficient CNY/kWh\nkbat BESS throughput-based degradation coefficient CNY/kWh\nkPV ,curt/kWT,curt PV/WT curtailment penalty coefficients CNY/kWh\nkloss Involuntary load-shedding penalty coefficient CNY/kWh\nkshift/kcut DR shifting/curtailment compensation coefficients CNY/kWh\nϵP/ϵSOC Power-balance and terminal-SOC tolerances kW, p.u.\nXk",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Position vector of individual i at iteration k -",
+      "level": 1,
+      "text": "X∗,k Best solution found by iteration k -\nD Distance vector between an individual and the best solution\nin WOA -\nr1, r2 Random coefficient vectors in WOA -\nA, C WOA coefficient vectors -\naWOA(k) WOA convergence coefficient -\nanl(k) Nonlinear convergence coefficient in the proposed method -\nw(k), wmin, wmax Adaptive inertia weight and its lower/upper limits -\nbsp, l Spiral-shape constant and random spiral parameter -, -\nN, K, D Population size, maximum iterations, and decision dimension -, -, -\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 3 of 27\nTable 1. Cont.\nSymbol Description Unit\nLB/UB Lower/upper decision bounds -\npL/pC Levy-flight and Cauchy-mutation probabilities -\nαL/αC Levy-flight and Cauchy-mutation scale factors -\nβ, σ, ϵ Levy distribution parameter, local-refinement radius, and\nperturbation vector -, -, -",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "f /Crep Objective-evaluation cost and repair-operation cost -",
+      "level": 1,
+      "text": "Rp/Mp Local-refinement rounds/candidates -, -\nVi, θi\nVoltage magnitude and phase angle at bus i in\nnetwork-constrained operation p.u., rad\nGij /Bij Conductance/susceptance of the network admittance matrix p.u.\nPi/Qi Active/reactive power injection at bus i kW, kvar\nSij Apparent power flow on line i − j kVA\nVmin\ni /Vmax\ni Minimum/maximum allowable voltage magnitude at bus i p.u.\nSmax\nij Apparent-power capacity limit of line i − j kVA\nU Uncertainty set for robust dispatch formulation -\nξ Uncertain operating vector, such as PV , WT, and load deviations -\nω, πω Scenario index and scenario probability in stochastic dispatch -, -\nCCVaR Conditional-value-at-risk term in risk-aware stochastic dispatch CNY/day\nηrisk Weight of the risk term in stochastic dispatch -",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Background and Motivation",
+      "level": 2,
+      "text": "Islanded microgrids support remote islands, rural communities, emergency facilities,\nand weak-grid areas. The microgrid concept was proposed to coordinate distributed energy\nresources as a controllable local system [ 1], and later studies emphasized its value for\nreliability, flexibility, and renewable-energy integration [2,3]. In islanded operation, the\nupstream grid cannot absorb renewable surplus or cover deficits during low-renewable\nperiods. Dispatch must therefore coordinate photovoltaic (PV) generation, wind turbine\n(WT) generation, battery energy storage systems (BESS), dispatchable generation (DG), and\ndemand response (DR) within a closed power-balance boundary. The main difficulty is the\ncoupled effect of renewable variability, time-linked SOC dynamics, limited DR flexibility,\nDG ramping, and carbon-emission accounting.\nLow-carbon economic dispatch for such systems must represent both operating cost\nand engineering feasibility. Excessive BESS cycling can increase degradation cost or vio-\nlate terminal SOC requirements. Aggressive DR activation can reduce fuel consumption\nbut raise user compensation. Explicit carbon pricing can also increase the reported ac-\ncounting cost while improving emission-cost transparency. These coupled effects make\nislanded renewable microgrid dispatch a high-dimensional, nonlinear, and strongly con-\nstrained problem.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2.2 Literature Review",
+      "level": 2,
+      "text": "Microgrid economic dispatch. Microgrid economic dispatch has been studied with\ndeterministic optimization, model predictive control, mixed-integer programming, and\nheuristic energy-management methods. Early studies optimized microgrid operation\nby coordinating distributed generation, storage, and load [ 4,5]. Later work considered\ndemand-side bidding, critical-load continuity, rolling-horizon operation, and islanding-\naware scheduling [6–9]. Reviews also show that reliable renewable microgrid operation\nrequires coordinated scheduling of renewable generation, storage, dispatchable units, and\nflexible load [ 10,11]. Unit commitment and economic dispatch have been solved with\ngenetic algorithms and mixed-integer linear programming [12]. However, many models\nstill emphasize fuel or operating cost and do not jointly model renewable curtailment,\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 4 of 27\nemergency load shedding, DR compensation, BESS degradation, or carbon accounting in\nan islanded dispatch framework.\nBESS and demand response. BESS provides inter-temporal flexibility by storing\nrenewable energy and reducing DG output during peak-load periods. Storage selection\nand scheduling are central to renewable integration [13], especially for wind power with\nstrong output fluctuations [14]. DR can reshape the load curve through voluntary shifting\nor curtailment, and its market mechanisms have been widely reviewed [ 15,16]. Recent\nmicrogrid studies have included storage and DR in hierarchical energy management and\nisolated renewable microgrid dispatch [17–19]. Newer work has examined hybrid-source\nenergy management with DR in multi-objective microgrid settings [ 20]. Planning and\naggregator studies further show that DR interacts with renewable uncertainty and market\nrisk [21–23]. However, DR is not cost-free flexibility: compensation can offset fuel savings,\nand voluntary curtailment must be distinguished from involuntary load shedding.\nLow-carbon dispatch and uncertainty. Low-carbon dispatch introduces emission\naccounting, carbon tax, or carbon trading cost into the objective. Multi-energy microgrid\nstudies have considered integrated DR and carbon trading [24], and interconnected multi-\nenergy microgrid studies have examined carbon accounting and profit allocation [ 25].\nRenewable forecast errors and load deviations can also affect the feasibility of a day-\nahead schedule. Robust, stochastic, and uncertainty-aware scheduling has therefore been\nstudied for renewable generation and load uncertainty [26–29]. Recent smart-microgrid\nwork further emphasizes coordinated energy hubs and dynamic DR under renewable\nuncertainty [30]. These studies indicate a key extension beyond the deterministic typical-\nday formulation used here.\nMetaheuristic algorithms for microgrid scheduling. Population-based algorithms,\nincluding particle swarm optimization (PSO) [ 31], the grey wolf optimizer (GWO) [ 32],\ndifferential evolution (DE) [33], and the whale optimization algorithm (WOA) [ 34], are\nwidely used because they can handle nonlinear and nonconvex dispatch problems with-\nout gradient information. Other metaheuristics, such as Harris hawk optimization, the\nsalp swarm algorithm, the sine cosine algorithm, the arithmetic optimization algorithm,\nthe marine predator algorithm, and the slime mold algorithm (SMA), provide related\nexploration–exploitation designs for engineering optimization [35–40]. Recent microgrid\nstudies have also used improved WOA, whale-inspired algorithms, chaotic metaheuristics,\nand hybrid optimization designs [41–44]. However, many metaheuristic dispatch studies\nstill emphasize best-case results and provide limited repeated-run statistics, significance\ntesting, or ablation evidence. This makes it difficult to distinguish robust improvement\nfrom a favorable single run.\nTable 2 summarizes representative studies and positions this work.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 Research Gaps",
+      "level": 2,
+      "text": "Three gaps motivate this study. First, existing models do not always integrate re-\nnewable curtailment, load shedding, DR compensation, BESS degradation, and carbon\ncost in one islanded dispatch formulation. Second, many metaheuristic dispatch studies\nreport only best-case results and lack repeated-run statistics. Third, improved algorithms\noften combine several strategies without ablation, significance analysis, or parameter-\nsensitivity evidence.\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 5 of 27\nTable 2. Comparison with recent studies on microgrid dispatch.\nReference Microgrid Type Components Carbon Cost DR Uncertainty Algorithm Repeated-Run\nStatistics Ablation Main Limitation\nLasseter [1] Conceptual\nmicrogrid DER-load No No No Conceptual\nframework N/A N/A\nConceptual\narchitecture rather\nthan dispatch\noptimization\nOlivares et al. [3] Microgrid control\nreview DER-storage-load Discussed Discussed Discussed Review N/A N/A\nControl-focused\nreview rather than\ncase dispatch\nChen et al. [4] Microgrid EMS DG-storage-load No Limited Limited Optimization-\nbased EMS No No\nCarbon and\nrepeated-run\nanalysis not central\nKhodaei [9] Islandable\nmicrogrid DG-load-grid No Limited Multi-period\nislanding\nOptimization\nmodel No No\nRenewable-DR-\ncarbon coupling\nlimited\nGhasemi and Enayatzare [18] Isolated renewable\nmicrogrid RES-storage-DR No Yes Limited Optimization-\nbased EMS No No Low-carbon cost\nnot modeled\nNwulu and Xia [19] Renewable\nmicrogrid RES-DR No Yes No Optimization\ndispatch No No\nNo\nablation/statistical\nanalysis\nLong et al. [24] Multi-energy\nmicrogrid Multi-energy-DR Yes Yes Limited Optimization\nmodel No No\nNot focused on\nislanded\nPV-WT-BESS-DG\ndispatch\nGoh et al. [28] Grid-connected\nmicrogrid RES-DR-grid No Yes Yes Scheduling\noptimization No No\nGrid-connected\nrather than\nislanded operation\nLiu et al. [41] Microgrid planning Microgrid\nresources No Limited No Improved WOA Limited No\nAblation and\nsignificance\nanalysis limited\nZhong et al. [42] Grid-connected\nmicrogrid Bi-layer microgrid Limited Limited No Improved whale\nalgorithm Limited No Grid-connected\nfocus\nMoosavi et al. [20] Hybrid-source\nmicrogrid RES-storage-DR Limited Yes Limited\nMulti-objective\nenergy\nmanagement\nLimited No\nNot focused on\nrepair-based\nislanded dispatch\nWang et al. [30] Smart microgrid Energy\nhub-DR-RES No Yes Yes Multi-objective\nscheduling Limited No\nNot focused on\nlow-carbon\nPV-WT-BESS-DG\nrepair process\nThis study Islanded microgrid PV-WT-BESS-DG-\nDR Yes Yes Not modeled Repair-based\nimproved WOA Yes Yes\nDay-ahead model\nonly; no\nstochastic/robust\nuncertainty model\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 6 of 27",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.4 Contributions",
+      "level": 2,
+      "text": "This study makes four contributions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "1 A low-carbon economic dispatch model is formulated for an islanded PV-WT-BESS-",
+      "level": 1,
+      "text": "DG-DR microgrid, considering fuel cost, O&M cost, BESS degradation, renewable\ncurtailment, load shedding, DR compensation, and carbon cost.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2 A repair-based constraint-handling method is used to enforce power balance, DG",
+      "level": 1,
+      "text": "ramping, BESS SOC limits, charging/discharging complementarity, and DR conserva-\ntion while maintaining a continuous metaheuristic search space.\n3. A repair-based improved WOA is organized into three functional modules: diversity\nenhancement, exploration–exploitation balancing, and local escape and refinement,\neach linked to dispatch-specific difficulties.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4 The method is validated using repeated-run benchmark comparison, nonparametric",
+      "level": 1,
+      "text": "significance tests, strategy comparison, ablation study, and sensitivity analysis.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.5 Paper Organization",
+      "level": 2,
+      "text": "The remainder of this paper is organized around model construction, algorithm design,\ndeterministic validation, and sensitivity assessment. Section 3 formulates the islanded\nmicrogrid dispatch model and the repair-based constraint-handling process. Section 4\npresents the improved WOA and links its three modules to dispatch-specific difficulties.\nSection 5 describes the case-study data and algorithm settings. Section 6 discusses base-\ncase dispatch, benchmark comparison, statistical tests, strategy comparison, and ablation\nresults. Section 7 presents sensitivity analysis. Section 8 discusses practical implications,\nand Section 9 concludes the paper.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3 System Description and Problem Formulation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "3.1 Islanded Microgrid Structure",
+      "level": 2,
+      "text": "The studied microgrid includes PV units, WT units, BESS, a DG, and DR-enabled load.\nAfter parameter calibration, the DG can represent a diesel generator or a microturbine. The\nmicrogrid operates in islanded mode, with no power exchange with the main grid. Figure 1\nshows the system structure, where an energy management system (EMS) coordinates all\ncomponents through an islanded AC bus.\nFigure 1. Structure of the islanded PV-WT-BESS-DG-DR microgrid.\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 7 of 27",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "3.2 Objective Function",
+      "level": 2,
+      "text": "The daily dispatch objective is formulated as the sum of seven cost terms:\nmin F = Cfuel + Com + Cbat + Ccurt + Closs + CDR + Ccarbon. (1)\nThe objective uses the following simplifying assumptions. First, dispatch is a deter-\nministic day-ahead calculation for a representative 24 h profile; PV , WT, and load forecasts\nare treated as known inputs. Second, the cost terms are additive and separable over time;\nunit start-up cost, detailed network loss, and voltage constraints are not modeled. Third,\nDG fuel cost follows a static quadratic curve, and DG O&M cost is linear in output. Fourth,\nBESS degradation is approximated by a marginal throughput cost rather than a detailed\nelectrochemical aging or rainflow-cycle model. Finally, carbon cost is calculated only\nfrom DG energy using a fixed emission factor and carbon price, and DR is represented by\naggregate shifting and curtailment compensation.\nThe first term is the DG fuel cost. A quadratic fuel-cost curve is commonly used\nfor dispatchable thermal units because incremental fuel consumption varies with output.\nCoefficient a captures the increasing marginal fuel cost at high output, b is the linear\nfuel-cost coefficient, and c is the fixed or no-load hourly cost:\nCfuel =\nT\n∑\nt=1\n\u0010\naP2\nDG,t + bPDG,t + c\n\u0011\n∆t. (2)\nThe O&M term accounts for the output-dependent maintenance cost of the DG:\nCom =\nT\n∑\nt=1\nkom\nDGPDG,t∆t. (3)\nThe BESS degradation term uses a throughput-based marginal cost. It penalizes both\ncharging and discharging energy because both contribute to cycling:\nCbat =\nT\n∑\nt=1\nkbat(Pch,t + Pdis,t)∆t. (4)\nThe renewable curtailment penalty discourages unnecessary PV and WT curtailment:\nCcurt =\nT\n∑\nt=1\n\u0000\nkPV ,curtPcurt\nPV,t + kWT,curtPcurt\nWT,t\n\u0001\n∆t, (5)\nThe load-shedding term assigns a high cost to involuntary emergency loss of load:\nCloss =\nT\n∑\nt=1\nklossPloss,t∆t, (6)\nThe DR compensation term pays users for load shifting and voluntary curtailment:\nCDR =\nT\n∑\nt=1\n(kshift|Pshift,t| + kcutPcut,t)∆t, (7)\nThe carbon-emission cost internalizes DG emissions according to the carbon price and\nemission factor:\nCcarbon =\nT\n∑\nt=1\nλCO2 γDGPDG,t∆t. (8)\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 8 of 27\nHere, Pcut,t denotes voluntary curtailable load compensated through the DR mech-\nanism, whereas Ploss,t denotes involuntary emergency load shedding and is assigned a\nhigh penalty.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "3.3 Constraints",
+      "level": 2,
+      "text": "The constraints define the feasible operating region of the islanded microgrid. Because\nthere is no main–grid exchange, power balance is the central equality constraint. After\nrepair, the balance error is\nϵP ,t = Puse\nPV,t + Puse\nWT,t + PDG,t + Pdis,t + Ploss,t − PDR\nL,t − Pch,t. (9)\nThe balance error must remain within the numerical tolerance:\n|ϵP ,t| ≤ϵP, ϵP = 10−6 kW. (10)\nThe value 10−6 kW is a numerical feasibility tolerance for algebraic repair, not a field\nmeasurement or metering accuracy. It is several orders of magnitude smaller than the\nkW-scale device ratings in Table 4 and prevents round-off residuals from being misclassified\nas physical imbalance. In practice, dispatch set-points would still be affected by device\ncontrol accuracy, communication delay, and measurement uncertainty.\nThe PV and WT forecasts are decomposed into utilized power and curtailed power.\nThese equations ensure that the model cannot use more renewable energy than the fore-\ncasted availability:\nPuse\nPV,t + Pcurt\nPV,t = Pf\nPV,t, (11)\nPuse\nWT,t + Pcurt\nWT,t = Pf\nWT,t. (12)\nThe DR-adjusted load combines the original load, load shifting, and voluntary curtail-\nable load:\nPDR\nL,t = P0\nL,t + Pshift,t − Pcut,t. (13)\nLoad shifting is energy-conserving over the day: load is moved between hours rather\nthan removed. Its hourly magnitude is limited by the maximum shiftable-load ratio:\nT\n∑\nt=1\nPshift,t = 0, (14)\n−ρshiftP0\nL,t ≤ Pshift,t ≤ ρshiftP0\nL,t. (15)\nVoluntary curtailable load is non-negative and bounded by the curtailable-load ratio:\n0 ≤ Pcut,t ≤ λcutP0\nL,t. (16)\nThe DG output must remain within its minimum and maximum operating limits:\nPmin\nDG ≤ PDG,t ≤ Pmax\nDG , (17)\nand the difference between consecutive DG outputs must satisfy the ramp-rate limits:\n−Rdown ≤ PDG,t − PDG,t−1 ≤ Rup. (18)\nThe BESS charging and discharging powers are bounded by their rated power limits:\n0 ≤ Pch,t ≤ uch,tPmax\nch , (19)\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 9 of 27\n0 ≤ Pdis,t ≤ udis,tPmax\ndis , (20)\nand simultaneous charging and discharging are prohibited:\nuch,t + udis,t ≤ 1. (21)\nIn the continuous metaheuristic implementation, the binary variables uch,t and udis,t\nare not optimized explicitly. Charging/discharging complementarity is enforced by repair:\nif both charging and discharging are positive after decoding, the smaller value is set to zero,\nand the remaining value is clipped by the power and SOC limits.\nThe SOC dynamics update the stored energy after charging and discharging efficien-\ncies are considered:\nSOCt+1 = SOCt + ηchPch,t∆t − Pdis,t∆t/ηdis\nEBESS\n. (22)\nThe SOC bounds protect the BESS from overcharge and overdischarge:\nSOCmin ≤ SOCt ≤ SOCmax. (23)\nThe terminal SOC condition prevents the schedule from ending with an artificially\ndepleted or overcharged BESS. It is handled with an engineering tolerance:\n|SOCT − SOC0| ≤ϵSOC, ϵSOC = 0.02. (24)\nFinally, renewable curtailment and involuntary load shedding are constrained to be\nnon-negative because they represent physical quantities:\nPcurt\nPV,t ≥ 0, Pcurt\nWT,t ≥ 0, Ploss,t ≥ 0. (25)",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "3.4 Constraint Repair Process",
+      "level": 2,
+      "text": "Each candidate vector is decoded into hourly DG output, net BESS power, shiftable-\nload adjustment, curtailable load, and renewable curtailment variables. The repair process\nclips bounds, corrects DG ramp violations, enforces BESS charging/discharging com-\nplementarity, updates SOC, restores shiftable-load conservation, reconstructs renewable\nutilization and curtailment, and restores power balance through DG adjustment, BESS\nadjustment, renewable curtailment, or high-penalty load shedding. Any residual violations\nare penalized in the objective.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "4 Repair-Based Improved WOA",
+      "level": 1,
+      "text": "This section describes the optimization algorithm used to search the repaired continu-\nous decision space.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "4.1 Standard WOA",
+      "level": 2,
+      "text": "WOA mimics the encircling and bubble-net foraging behavior of humpback whales [34].\nLet Xk\ni be the position vector of individual i at iteration k, and let X∗,k be the best solution\nfound by that iteration. In this dispatch problem, each position vector is a continuous\ndecision vector containing hourly DG output, BESS power, DR variables, and renewable\ncurtailment variables. The encircling update is\nD = |CX∗,k − Xk\ni |, (26)\nXk+1\ni = X∗,k − AD, (27)\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 10 of 27\nwhere\nA = 2aWOA(k)r1 − aWOA(k), C = 2r2. (28)\nHere, r1 and r2 are random vectors in [0, 1]. A controls the encircling step length, C\nperturbs attraction toward the best solution, and aWOA(k) decreases from 2 to 0 to shift the\nsearch from exploration to exploitation. The spiral update is\nXk+1\ni = |X∗,k − Xk\ni |ebspl cos(2πl) +X∗,k. (29)\nIn the spiral equation, bsp (denoted as b in the original WOA formulation) controls\nthe logarithmic-spiral shape, and l ∈ [−1, 1] determines the spiral movement around the\ncurrent best solution. Standard WOA randomly chooses between encircling/search and\nspiral movement in each iteration.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "4.2 Challenges of Islanded Microgrid Dispatch for WOA",
+      "level": 2,
+      "text": "In this implementation, the dispatch vector has dimension 6T = 144. SOC coupling\nnarrows the feasible region, ramp constraints correlate adjacent hourly variables, DR\nconservation introduces equality constraints, and curtailment/load-shedding penalties\ncreate a rugged objective landscape. Standard WOA may therefore converge prematurely\nor produce unstable repeated-run results.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "4.3 Proposed Repair-Based Improved WOA",
+      "level": 2,
+      "text": "The improved WOA is organized into three functional modules. Table 3 lists the\nmodules and the dispatch difficulties they address.\nTable 3. Functional modules of the proposed algorithm.\nModule Included Strategies Dispatch Difficulty\nAddressed Expected Effect\nDiversity enhancement\nChaotic initialization;\nelite opposition-based\nlearning\nSOC coupling and DR\nequality constraints\nnarrow the feasible\nsearch region\nImprove initial coverage\nand reduce dependence\non random initialization\nExploration–\nexploitation balancing\nNonlinear convergence\nfactor; adaptive inertia\nweight\nDG ramp limits create\ncorrelated hourly\nvariables and require\nstable trajectory search\nMaintain exploration in\nearly iterations and\nstabilize late-stage\nexploitation\nLocal escape and\nrefinement\nLevy flight; Cauchy\nmutation; elite local\nrefinement\nCurtailment and\nload-shedding penalties\ncreate a rugged objective\nlandscape\nEscape local basins and\nrefine feasible dispatch\nschedules\nThe modules are integrated sequentially. Module 1 constructs and screens the initial\npopulation before the main iterations. Module 2 modifies the WOA control coefficient and\nposition update at each iteration. Module 3 is applied after the basic WOA movement:\nLevy and Cauchy perturbations are used probabilistically during the iterations, and elite\nlocal refinement is applied after the global search. In the ablation study, the repair process,\nobjective function, population size, and stopping criterion are fixed while selected modules\nare disabled to isolate their marginal contribution.\n4.4. Module 1: Diversity Enhancement\nChaotic initialization improves coverage of the normalized decision space through the\nlogistic map:\nzn+1 = 4zn(1 − zn), (30)\nwhere zn ∈ (0, 1). The chaotic sequence is then mapped to the decision bounds.\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 11 of 27\nThe coefficient 4 is the fully chaotic parameter of the logistic map on(0, 1). It generates\na non-repeating sequence with broad normalized-space coverage and is not tuned for this\ndispatch case.\nXi,d = LBd + zi,d(UBd − LBd). (31)\nHere, LBd and UBd are the lower and upper bounds of the d-th decision variable. Elite\nopposition-based learning then tests whether the opposite point of an elite candidate gives\na better repaired schedule:\nXopp = LB + UB − Xelite. (32)\nThe better solution between the elite candidate and its opposition candidate is retained.\nThis step explains the lower initial best value relative to a purely random WOA population.\n4.5. Module 2: Exploration–Exploitation Balancing\nThe nonlinear convergence factor is\nanl(k) =2\n \n1 −\n\u0012 k\nK\n\u00131.8!\n. (33)\nThe adaptive inertia weight is\nw(k) =wmax − (wmax − wmin) k\nK . (34)\nThe exponent 1.8 gives a moderately convex decay profile. Compared with the linear\ndecrease in standard WOA, it preserves a larger search radius in the early and middle\niterations and strengthens exploitation near the final iterations. The value is fixed in all\nexperiments and is not re-tuned for individual benchmark runs.\nThe nonlinear anl(k) replaces the linear WOA coefficient and slows the early decrease\nin the search radius. The adaptive inertia weight w(k) then blends the current position\nwith the WOA-generated candidate:\nXk+1\ni = (1 − w)Xk\ni + wXk+1\nWOA. (35)\n4.6. Module 3: Local Escape and Refinement\nLevy flight adds occasional long-distance perturbations to improve local escape:\nXk+1\nLevy = Xk+1\ni + αL Levy(β) ⊙ (UB − LB). (36)\nCauchy mutation around the elite solution is defined as\nXk+1\nCauchy = X∗,k + αC tan[π(r − 0.5)] ⊙ (UB − LB). (37)\nHere, αL and αC are scale factors, β is the Levy distribution parameter, r ∈ (0, 1), and\n⊙ denotes element-wise multiplication. After the global iterations, elite local refinement\nsamples candidate solutions according to\nXlocal = X∗ + σ(UB − LB) ⊙ ϵ, (38)\nwhere ϵ is a random perturbation vector and σ decreases across refinement rounds.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "4.7 Pseudocode",
+      "level": 2,
+      "text": "Algorithm 1 shows the full algorithm. Compared with the original WOA, the added op-\nerations are chaotic initialization, elite opposition-based screening, nonlinear/adaptive po-\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 12 of 27\nsition control, probabilistic Levy/Cauchy perturbation, mandatory decode–repair–evaluate\nsteps after each candidate update, and final elite local refinement. The repair step is placed\ninside the loop because feasibility depends on time-coupled SOC and ramping constraints,\nnot only on variable bounds.\nAlgorithm 1 Repair-based improved WOA for low-carbon economic dispatch.\nInput: objective function, bounds, population size N, maximum iteration K.\nOutput: best repaired dispatch schedule.\n1. Initialize population using chaotic mapping.\n2. Decode, repair, and evaluate all candidates.\n3. Apply elite opposition-based learning and retain the best N candidates.\n4. For k = 1 to K:\n4.1 Update nonlinear convergence factor and adaptive inertia weight.\n4.2 Generate WOA encircling, random-search, or spiral candidates.\n4.3 Apply Levy or Cauchy mutation according to preset probabilities.\n4.4 Clip bounds, decode candidates, and run the repair process.\n4.5 Evaluate penalized objective values.\n4.6 Preserve the best candidate and update the convergence record.\n5. Apply elite local refinement to the best candidate.\n6. Return the repaired best dispatch schedule and cost.\nThe convergence record stores the best repaired objective value at the end of each\niteration. Thus, the reported curves show best-so-far performance after repair, not the raw\nobjective value of an unrepaired candidate.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "4.8 Complexity Analysis",
+      "level": 2,
+      "text": "Let N be the population size, K the maximum number of iterations, D the decision\ndimension, and C f the cost of decoding and objective evaluation. Here, D = 6T. Repair\nis not cost-free: it clips bounds, checks DG ramping, enforces BESS charging/discharging\ncomplementarity, updates SOC, restores DR conservation, reconstructs renewable curtail-\nment, and checks power balance. These operations are linear in the scheduling horizon,\nso Crep = O(T). Because D = 6T, repair has the same order as decoding but increases the\nevaluation constant.\nFor standard WOA, the dominant complexity isO(KN (D + C f + Crep)). The proposed\nmethod adds chaotic initialization O(ND ), elite opposition-based learning O(ND ) at\ninitialization, and probabilistic Levy and Cauchy perturbations during the iterations. If pL\nand pC are the application probabilities of Levy flight and Cauchy mutation, their expected\nadditional perturbation cost is O(KN (pL + pC)D). The elite local-refinement stage uses fixed\nrefinement rounds and candidates, denoted byRp and Mp, and contributesO(RpMp(D +\nCf + Crep)). Thus, for fixed perturbation probabilities and local-refinement settings, the\nasymptotic order remainsO(KN(D + Cf + Crep)), but the constant factor is higher than that\nof standard WOA. This explains the runtime increase in the numerical experiments.\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 13 of 27",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "5 Case Study and Simulation Settings",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "5.1 Data and Parameters",
+      "level": 2,
+      "text": "The scheduling horizon is 24 h, with a 1 h time interval. Figure 2 shows the forecast\nPV , WT, and load profiles.\nFigure 2. Forecasted PV , WT, and load profiles.\nTable 4 lists the main system parameters. In the quadratic fuel-cost formulation, a is\nreported in CNY/(kW2 h), b in CNY/kWh, and c in CNY/h.\nTable 4. Main parameters of the islanded microgrid.\nParameter Value Unit Source/Remark\nT 24 - config/case_params.m\n∆t 1 h config/case_params.m\nPmin\nDG 60 kW config/case_params.m\nPmax\nDG 450 kW config/case_params.m\nPDG,0 170 kW config/case_params.m\nRup 120 kW/h config/case_params.m\nRdown 120 kW/h config/case_params.m\nEBESS 900 kWh config/case_params.m\nPmax\nch 220 kW config/case_params.m\nPmax\ndis 220 kW config/case_params.m\nSOCmin 0.20 p.u. config/case_params.m\nSOCmax 0.90 p.u. config/case_params.m\nSOC0 0.55 p.u. config/case_params.m\nηch/ηdis 0.95/0.95 - config/case_params.m\nρshift 0.15 - config/case_params.m\nλcut 0.10 - config/case_params.m\na 4.5 × 10−4 CNY/(kW2 h) config/case_params.m\nb 0.42 CNY/kWh config/case_params.m\nc 0 CNY/h config/case_params.m\nkom\nDG 0.06 CNY/kWh config/case_params.m\nkbat 0.035 CNY/kWh config/case_params.m\nkPV ,curt/kWT,curt 0.18/0.18 CNY/kWh PV and WT\nkloss 12.0 CNY/kWh Emergency variable\nkshift 0.18 CNY/kWh config/case_params.m\nkcut 0.35 CNY/kWh config/case_params.m\nλCO2 0.08 CNY/kgCO 2 config/case_params.m\nγDG 0.72 kgCO 2/kWh config/case_params.m\nϵP 1 × 10−6 kW Balance tolerance\nϵSOC 0.02 p.u. Terminal SOC tolerance\nThe BESS degradation coefficient in Table 4 is a marginal throughput-based proxy in\nthe dispatch objective, not a full life-cycle battery replacement cost. The base carbon price\nis a conservative China-oriented accounting parameter and does not represent the higher\nhttps://doi.org/10.3390/app16125952\nAppl. Sci. 2026, 16, 5952 14 of 27\nprices in the European carbon market. Because these coefficients can affect cost composition\nand dispatch preference, Section 6 adds sensitivity checks for both BESS degradation cost\nand carbon price.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "5.2 Algorithm Settings",
+      "level": 2,
+      "text": "All benchmark algorithms use the same objective function, repair process, population\nsize, iteration limit, and variable bounds. Table 5 lists the main algorithm parameters. To\navoid bias from unequal tuning effort, differential evolution is excluded from the main\nbenchmark set; the comparison focuses on PSO, GWO, standard WOA, and the proposed\nimproved WOA under a consistent protocol. This benchmark set is intended to evaluate the\nproposed repair-based WOA variant against common canonical baselines, not to exhaust\nall recent metaheuristic variants. Advanced GWO variants, SMA variants, and hybrid\noptimization models may provide stronger competitors, but they also require their own\ntuning budgets and implementation choices. They are therefore discussed as an important\nextension rather than added as unsupported numerical results in the present revision.\nTable 5. Algorithm parameter settings.\nPopulation\nAlgorithm Size Iterations Main Parameters Parameter Source\nPSO 25 60 w: 0.90 to 0.40; c1 = 1.80; c2 = 1.80;\nvmax ratio = 0.25 Config file\nGWO 25 60 aGWO decreases linearly from 2 to 0 GWO code\nWOA 25 60 aWOA decreases linearly from 2 to 0;\nbsp = 1.00; p ∼ U(0, 1) WOA code\nProposed 25 60 pL = 0.20; pC = 0.12; elite fraction = 0.24;\nopposition rate = 0.20; polish rounds = 12 Config file\nK = 60 was selected as the common stopping criterion after preliminary convergence\nscreening. With N = 25, this gives each baseline algorithm 1500 primary population\nupdates while keeping repeated-run statistics computationally light. The convergence\nbehavior reported in Section 6.2 shows that the mean best-so-far curves largely stabilize\nwithin 60 iterations for the tested case. The same N and K are used so that the population\nevolution length is identical across algorithms; auxiliary evaluations in the proposed\nmethod are reflected in runtime and discussed in Section 6.2.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "5.3 Evaluation Metrics",
+      "level": 2,
+      "text": "The metaheuristic comparison uses 30 independent runs of the deterministic dispatch\ncase. Metrics include best, worst, mean, median, standard deviation, runtime, convergence\nbehavior, Wilcoxon signed-rank test, and Friedman rank test. The strategy comparison\nreports cost and operational indicators, and the sensitivity analysis examines key technical\nand economic parameters.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "6 Results",
+      "level": 1,
+      "text": "This section verifies dispatch behavior and then evaluates algorithmic performance\nand strategy-level implications.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "6.1 Base-Case Dispatch",
+      "level": 2,
+      "text": "Figure 3 shows the base-case power dispatch. The upper panel presents PV , WT,\nDG, and the original and DR-adjusted load curves; the lower panel shows BESS power\nseparately. Positive BESS power denotes discharging, and negative power denotes charging.\nhttps://doi.org/10.3390/app16125952",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Structure of the islanded PV-WT-BESS-DG-DR microgrid."
+    },
+    {
+      "id": "f2",
+      "caption": "Forecasted PV , WT, and load profiles."
+    },
+    {
+      "id": "f3",
+      "caption": "shows the base-case power dispatch. The upper panel presents PV , WT,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "defines the main parameters, variables, algorithm symbols, and abbreviations"
+    },
+    {
+      "id": "t2",
+      "caption": "summarizes representative studies and positions this work."
+    },
+    {
+      "id": "t3",
+      "caption": "Functional modules of the proposed algorithm."
+    },
+    {
+      "id": "t4",
+      "caption": "lists the main system parameters. In the quadratic fuel-cost formulation, a is"
+    },
+    {
+      "id": "t5",
+      "caption": "Algorithm parameter settings."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "shows the full algorithm. Compared with the original WOA, the added op-"
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 3,
+    "n_tables": 5,
+    "n_algorithms": 1,
+    "n_equations": 0
+  }
+}

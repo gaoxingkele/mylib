@@ -1,0 +1,263 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__05__short_term_multi_energy_load_forecasting_method_based_on_t__03d8f76649.pdf",
+  "n_pages": 19,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Driven by the “two-carbon” strategy, Integrated Energy Systems (IES) have become\nthe core carrier to improve energy utilization efficiency and reduce carbon emissions\nthrough the collaborative optimization and flexible conversion of multiple energy sources\nsuch as electricity, heat, and gas [1–3]. However, the dynamic coupling characteristics of\nmulti-energy loads in IES (such as the time delay effect of cogeneration units, the spatio-\ntemporal interaction of distributed photovoltaics and heat pumps) make short-term load\nforecasting a great challenge [4]. High-precision forecasting, such as the next 6–24 h, is a\nkey technology supporting IES real-time scheduling, demand response, and fault warning.\nStudies have shown that every 1% reduction in load forecasting error can reduce the system\nbackup capacity demand by about 3–7%, and significantly reduce the wind and light\nabandonment rate [5,6]. Therefore, it is of great theoretical and application value to develop\nprediction models that can simultaneously model complex spatio-temporal dependence\nand cross-energy interactions.\nEnergies 2025, 18, 4466 https://doi.org/10.3390/en18174466\nEnergies 2025, 18, 4466 2 of 19\nUnder the operating environment of a modern power grid, the power load is affected\nby various external conditions such as holidays, environmental factors, and meteorological\nfactors and presents strong uncertainty and nonlinear characteristics [ 7,8]. Traditional\nload forecasting methods have some limitations in dealing with these complex scenar-\nios, and are being gradually replaced by deep learning-based methods. Among existing\ndeep learning models, Recurrent Neural Networks (RNN) have been widely used in load\nprediction because of their ability to remember time series features [ 9]. However, it is\ndifficult for traditional RNNS to capture multi-scale features, resulting in the model’s\nlimited performance when processing complex time series data. Therefore, Zhao et al. [10]\nproposed an RNN model based on residual structure for short-term power load prediction,\nwhich effectively improved the prediction accuracy. With the further development of deep\nlearning techniques, two important variants of RNN—Gated Recurrent Units (GRUs) and\nLong Short-Term Memory (LSTMS)—have also been successfully applied in the field of\npower load forecasting [3,11–13]. Chen et al. [14] proposed a combined prediction model\nbased on LSTM and XGBoost and verified the superiority of this model compared with\ntraditional methods through experiments. With the combination of a convolutional neural\nnetwork and bidirectional gated cycle unit (CNN-Bigru-NN), Zeng et al. [ 15] first used\nCNN to extract effective features in a historical load, meteorological factors, and date infor-\nmation and then input BiGRU to forecast the load, which finally significantly improved the\nprediction accuracy.\nMany methods [16–18] have been proposed to improve the accuracy and reliability of\nmultivariate load forecasting. These methods mainly focus on improving traditional neural\nnetwork models, introducing multi-task learning frameworks, and adopting advanced\ndeep learning techniques. For example, Tieyan et al. [19] proposed a comprehensive load\nprediction model of multi-energy system based on an improved Markov chain neural\nnetwork. Through the combination of a Markov chain and neural network, the ability to\ncapture load changes in a multi-energy system is enhanced, thus improving the prediction\naccuracy of the model. Tan et al. [ 20] proposed a joint load prediction model based on\nmulti-task learning and least squares support vector machine for the electric–hot–cold–gas\nintegrated energy system. The model uses the multi-task learning framework to fully\nconsider the coupling relationship between different energy loads and can realize the joint\nprediction of multiple energy loads, thus improving the generalization ability of the model.\nIn order to improve the prediction ability of the model for nonlinear and non-stationary\nload data, Jing et al. [ 21] proposed a multi-task learning model based on adaptive local\nmean decomposition and a long short-term memory network. By decomposing the load\ndata, features of different scales can be obtained. In addition, in order to effectively capture\nthe time series features in the load data, Wang et al. [22] proposed using the Transformer\nmodel to forecast the multi-energy load in the integrated energy system and take advantage\nof the Transformer model in processing sequence data to further improve the accuracy\nof the prediction. There are also some methods that first use the model to build the\nrelationship between multiple loads and then carry on the load prediction. For example,\nWu et al. [23] proposed an interpretable framework based on coupling features and multi-\ntask learning, which enables the model to provide high-precision prediction while revealing\nthe interaction between different energy loads, enhancing the transparency and credibility\nof the model. However, the aforementioned methods have difficulty monitoring the\nlong-term dependence in the time dimension and the nonlinear interaction in the feature\ndimension at the same time and cannot fully reflect the effect of real-time load changes on\nspatial dependence.\nRecent studies have shown that Graph Neural Networks (GNNs) and Transformers\noffer powerful capabilities for capturing complex spatio-temporal patterns. GNNs are\nEnergies 2025, 18, 4466 3 of 19\nadept at modeling spatial dependencies in graph-structured data and have been success-\nfully applied in traffic prediction and social networks [ 24,25]. Transformers, with their\nself-attention mechanism, are effective in learning long-range dependencies and have\nachieved state-of-the-art results in time series forecasting, language modeling, and energy\ndemand prediction [26–28]. Combining GNNs and Transformers enables joint modeling of\nspatial topology and temporal dynamics, showing great promise in various spatio-temporal\ntasks [29,30]. In particular, recent Transformer-based models such as Informer [31], Auto-\nformer [32], FEDformer [33], Reformer [34], and Pyraformer [35] have been proposed to\nenhance efficiency, improve the long-sequence modeling capability, and capture seasonal-\ntrend components for time series forecasting. Alongside these, MLP-based approaches\nincluding LightTS [ 36], TiDE [ 37], and TSMixer [ 38] have emerged as lightweight yet\ncompetitive alternatives for multivariate forecasting. These strengths make them highly\nsuitable for short-term multi-energy load forecasting, where spatial interactions and tem-\nporal evolution are deeply coupled.\nTherefore, a short-term multi-energy load prediction model based on a Transformer\nSpatio-Temporal Graph neural network (TSTG) is proposed. It can dig deep into the com-\nplex relationships among features and the multi-level and multi-dimensional relationships\nin the time dimension. Compared to traditional methods, this method is able to capture\ndiverse dependencies more precisely, especially modeling interactions over time periods\nand different energy types in spatio-temporal data. Through a multi-head attention mecha-\nnism, the model can focus on the relationship between different features and time steps in\nmultiple subspaces at the same time, so as to improve the prediction ability of short-term\nload fluctuations. In addition, the graph convolutional network is used to capture and\nintegrate the spatial dependencies between features and effectively transfer and aggregate\nthe relevant information between features, so that the model can rely on global information\nrather than single features when making predictions. Through this efficient information\ntransmission, more accurate feature representation is provided for the model, and the\noverall prediction accuracy is improved.\nThe main contributions of this paper can be summarized as follows:\n• We introduce a unified spatio-temporal prediction framework (TSTG) that leverages\nthe strengths of Tr",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Materials and Methods",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Overall Framework of TSTG",
+      "level": 2,
+      "text": "In this section, we propose a short-term multi-energy load forecasting frame-\nwork named Transformer Spatio-Temporal Graph neural network (TSTG), as illustrated\nin Figure 1. The model adopts an encoder–decoder architecture, enabling the joint extraction\nand fusion of spatio-temporal features.\nFigure 1. Overall framework of the proposed Transformer Spatio-Temporal Graph neural network\n(TSTG) for short-term multi-energy load forecasting. The model follows an encoder–decoder archi-\ntecture, where each encoder layer integrates a multi-head spatio-temporal attention module and a\ndynamic adaptive graph convolution module. The attention module captures long-range dependen-\ncies in both temporal and feature dimensions by combining scaled dot-product attention with mutual\ninformation. The graph module dynamically updates the spatial adjacency matrix by fusing physical\ntopology and feature similarity.\nGiven a historical input sequence X ∈ RThist×N×D, where Thist is the number of time\nsteps, N the number of nodes, and D the feature dimension, the data are first projected into\na latent space. Each encoder layer consists of two key modules:\n• Multi-head spatio-temporal attention, which captures long-term temporal depen-\ndencies and feature-level interactions in parallel.\n• Dynamic adaptive graph convolution, which builds an adaptive graph based on both\nphysical topology and real-time load similarities.\nResidual connections and layer normalization are used throughout to maintain sta-\nbility. The decoder utilizes encoder outputs as memory to generate predictions, enabling\neffective modeling of complex spatio-temporal patterns in multi-energy systems. The full\ninference pipeline of the TSTG is described in Algorithm 1.\nEnergies 2025, 18, 4466 5 of 19\nAlgorithm 1: TSTG-based Short-term Multi-energy Load Forecasting\nInput: Historical input X ∈ RThist×N×D;\nAuxiliary info Faux (weather, calendar);\nPhysical topology Astatic ∈ RN×N;\nModel parameters: {WQ, WK, WV, WMI, WGCN, WO}\nOutput: Predicted sequence ˆY ∈ RTpred×N×D\n// 1. Input Embedding\n1 Embed input and auxiliary features: H0 ← Linear(X ⊕ Faux);\n2 for l = 1 to L do\n// 2. Multi-head Spatio-Temporal Attention with MI\n3 For each head h, compute:\nQtime\nh = Hl−1Wh,time\nQ , Ktime\nh = Hl−1Wh,time\nK ,\nAtime\nh = Softmax\n \nQtime\nh (Ktime\nh )T\n√dk\n+ λtime · MI(Hti, Htj )\n!\nSimilarly compute Afeat\nh over feature dimension using mutual information;\n4 Combine multi-head outputs:\nHatt = ConcatH\nh=1\n\u0010\nAtime\nh Vtime\nh + Afeat\nh Vfeat\nh\n\u0011\nWO\n// 3. Dynamic Adaptive Graph Construction\n5 Compute node-wise similarity matrix:\nSij = MI\n\u0000\nϕ(Xi), ϕ(Xj)\n\u0001\n, where ϕ(X) =ReLU(XWa) · ReLU(XWb)T\nFuse with static graph:\nA = α · ˜Astatic + (1 − α) · ˜S\n// 4. Graph Convolution\n6 Update hidden features:\nHgcn = σ\n\u0010\n˜D−1/2 A ˜D−1/2 HattWGCN\n\u0011\n// 5. Residual & Normalization\n7 Hl ← LayerNorm(Hgcn + Hl−1)\n// 6. Decoder for Forecasting\n8 Obtain output: ˆY ← Decoder(HL) return ˆY",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [
+          "a1"
+        ],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 A Framework for Short-T erm Multi-Energy Load Forecasting in T ransformer",
+      "level": 2,
+      "text": "To solve the problem of the low accuracy of short-term multi-energy load prediction\nbased on a spatio-temporal graph neural network in an integrated energy system, a short-\nterm multi-energy load prediction model (TSTG) based on the Transformer spatio-temporal\ngraph neural network is constructed. The framework diagram is shown in Figure 1.\nThe overall framework of the method is based on an encoder–decoder structure.\nThe model adopts encoder–decoder architecture to achieve high precision prediction\nthrough multi-level spatio-temporal feature fusion. In each encoder and decoder layer,\nthe multi-head spatio-temporal attention module and the dynamic adaptive graph convo-\nlution module are connected by a residual connection and layer normalization. A second\nEnergies 2025, 18, 4466 6 of 19\nmulti-head spatio-temporal attention module in each decoder layer is designed to receive\nthe encoder output as a historical memory. The input to the model is the historical multi-\nenergy load series X ∈ RThist ×N×D, where Thist is the historical time step, N is the number\nof energy nodes (including physical nodes and virtual nodes), and D is the feature dimen-\nsion. The original input is mapped to a high-dimensional potential space through a linear\nprojection layer H ∈ RThist ×N×dmodel to enhance feature representation.\n2.3. Multi-Head Space–Time Attention Module\nThe core idea of this module is to extend the traditional single-mode attention to the\ntime-feature dual-channel parallel computing architecture and introduce Mutual Informa-\ntion (MI) as a quantitative index of nonlinear correlation, Its structure is shown in Figure 2.\nSpecifically, given the input hidden state H ∈ RThist ×N×dmodel of the encoder layer, where\nThist is the historical time step, N is the number of energy nodes, and dmodel is the hidden\nlayer dimension, it is first decomposed by linear projection into a time slice sequence\n{Ht|t = 1, ..., Thist } and a set of feature slices {Hd|d = 1, ..., D}, corresponding to the sub-\nspaces of the time and feature dimensions respectively. On this basis, the bidirectional atten-\ntion weight matrix is constructed, in which time attention matrix Atime ∈ RThist ×Thist is used\nto capture the dependence of time steps, and characteristic attention matrix A f eat ∈ RD×D\nquantifies the interaction intensity between different energy types.\nFigure 2. The structure of the multi-head spatio-temporal attention module. It performs dual-channel\nattention along temporal and feature dimensions in parallel, enhanced by mutual information to\ncapture nonlinear dependencies. Multiple attention heads extract diverse spatio-temporal patterns\nand are fused to form the final representation.\nFor time attention calculation, traditional methods usually measure the correlation\ndegree of time step ti and tj through dot product similarity, but such linear measurement\nhas difficulty describing the asymmetry and hysteresis effect of load fluctuation. To this\nEnergies 2025, 18, 4466 7 of 19\nend, this module introduces mutual information as a supplementary correlation measure,\nand the calculation process can be formalized as\nMI (Hti, Htj ) =Ep(Hti ,Htj )log\np(Hti, Htj )\np(Hti )p(Htj ) , (1)\nwhere p(Hti, Htj ) is the joint distribution of ti and tj time hidden states, and p(Hti ) and\np(Htj ) are edge distributions. In order to achieve efficient calculation, a mutual information\nestimator based on a neural network is used to approach the lower bound of KL divergence\nthrough adversarial training. Finally, the temporal attention weight is determined by a\nlinear combination of scaled dot products and mutual information:\nAtime\nti,tj = So f tmax(\nQtime\nti (Ktime\ntj )T\n√dk\n+ λtime × MI (Hti, Htj )), (2)\nwhere Qtime = HW time\nQ and Ktime = HW time\nK are the query matrix and key matrix of the time\ndimension, and Wtime\nQ , Wtime\nK ∈ Rdmodel ×dk are the learnable parameters. λtime is the adaptive\nadjustment coefficient. Similarly, the calculation of feature attention weights introduces\nmutual information between features:\nA f eat\ndm,dn\n= So f tmax(\nQ f eat\ndm\n(K f eat\ndn\n)T\n√dk\n+ λ f eat × MI (Hdm, Hdn )), (3)\nwhere Q f eat = HW f eat\nQ , K f eat = HW f eat\nK , and W f eat\nQ , W f eat\nK ∈ Rdmodel ×dk are projection\nmatrices independent of the time dimension. Through the above design, the model is\nable to simultaneously capture the nonlinear coupling of long-range patterns in the time\ndimension (such as interdiurnal periodicity) and the characteristic dimension (such as the\nasymmetric effect of abrupt temperature changes on the electrothermal load).\nIn order to further enhance the characterization ability of the model, multi-head\nparallelization mechanism is adopted in this module. Specifically, time and feature attention\nare split into h heads, each of which learns different levels of spatio-temporal dependence\npatterns. For the k-th head, the output can be expressed as\nhead k = Concat (Atime,kVtime, A f eat,kV f eat), (4)\nwhere Vtime = HW time\nV , V f eat = HW f eat",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "are the value matrix, and Wtime",
+      "level": 1,
+      "text": "V , W f eat\nV ∈ Rdmodel ×dv\nare the projection parameters. The output of all heads is spliced and linearly transformed\nto obtain the final attention representation:\nMI − MH A(H) =Concat (head 1, ..., head h)WO, (5)\nwhere WO ∈ Rhdv×dmodel represents the output matrix, which is used to ensure that the\ndimensions match. Through the multi-head mechanism, the model can focus on diversified\npatterns such as local fluctuations, global trends, and cross-energy interactions, thereby\nimproving the modeling ability of complex spatio-temporal dynamics.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 Dynamic Adaptive Graph Convolution Module",
+      "level": 2,
+      "text": "By combining physical topological priori and feature-driven similarity, the module\nconstructs a dual-modal graph structure to achieve a fine modeling of the spatial depen-\ndence relationship of multi-energy nodes. Its structure is shown in Figure 3. Assume that\nthe energy system consists of N nodes, including physical nodes (such as substation v1, gas\nstorage tank v2) and virtual nodes (such as electricity, heat, gas load vtype ). The adjacency\nEnergies 2025, 18, 4466 8 of 19\nmatrix A ∈ RN×N of the module is composed of static topological matrix Astatic and dy-\nnamic feature matrix Adynamic . The static topology matrix Astatic defines the static adjacency\nweight based on the physical connection of the energy network. If the nodes vi and vj are\ndirectly connected through the power grid bus or heat pipeline, the basic weight Astatic\ni,j is\nset to 1. If a device such as a transformer or valve is present, it is set to a continuous value\nbased on the impedance or pressure drop factor.\nFigure 3. Structure of the dynamic adaptive graph convolution module, which fuses physical\ntopology and feature similarity to model dynamic spatial dependencies.\nIn order to capture the spatial dependent changes caused by load fluctuations, the dy-\nnamic weights are calculated by mutual information similarity between node features.\nGiven the current time step of the node feature matrix N ∈ RN×D, where D represents the\nfeature dimension, the feature interaction is first enhanced by bilinear transformation of\nshared parameters:\nX′ = ReLU (XWa) · ReLU (XWb)T, (6)\nwhere Wa, Wb ∈ RD×dk is a learnable projection matrix, and · represents matrix multiplica-\ntion. Then, the mutual information score of the compute nodes for (vi, vj) is\nAi,j\ndynamic = MI (X\n′\ni, X\n′\nj) =Ep(X′\ni ,X′\nj )[log\np(X\n′\ni, X\n′\nj)\np(X\n′\ni )p(X\n′\nj) ]. (7)\nIn addition, to avoid negative interference, ReLU activation and symmetric normaliza-\ntion are performed on Adynamic . To ensure that each node adaptively attends to others with\nnormalized importance, a row-wise Softmax is applied to the similarity matrix to generate\na dense dynamic matrix, and the updated dynamic matrix A′\ndynamic is denoted as\nA′\ndynamic = So f tmax(ReLU (Adynamic )). (8)\nThen, the static matrix and dynamic matrix are weighted superimposed, and the\nnumerical stability is ensured by degree matrix normalization:\nA = α · eAstatic + (1 − α) · eAdynamic , (9)\nwhere eAstatic = D− 1\n2\nstatic Astatic D− 1\n2\nstatic and eAdynamic = D− 1\n2\ndynamic A′\ndynamic D− 1",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2 dynamic are the nor-",
+      "level": 1,
+      "text": "malized matrix. α ∈ [0, 1] is the adaptive fusion coefficient, which is dynamically adjusted\nby learnable parameters.\nBased on the fusion adjacency matrix A, the module performs multi-level spatial\ninformation aggregation. For layer l input node feature H(l) ∈ RN×dmodel , its update process\nis as follows:\nH(l+1) = σ( eD− 1\n2 eA eD− 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 H(l)W(l)), (10)",
+      "level": 1,
+      "text": "Energies 2025, 18, 4466 9 of 19\nwhere A = A + I indicates adding a self-joining adjacency matrix to avoid information loss.\neD represents the corresponding degree matrix, eDii = ∑j eAij. W(l) ∈ Rdmodel ×dmodel is the\ntrainable weight matrix, and σ(·) represents the GELU activation function. In order to en-\nhance the expressiveness of the model, the residual connection domain layer normalization\nis introduced:\nH(l+1)\nout = layernorm (H(l) + H(l+1)). (11)\n2.5. End-to-End Space–Time Joint Optimization Framework\nThis method achieves deep coupling and joint optimization of spatio-temporal features\nthrough encoder–decoder architecture. A multi-head spatio-temporal attention module and\ndynamic adaptive graph convolution module are embedded into the unified framework.\nIn the encoder, the time-feature dependent modeling and spatial information aggregation\nare carried out synchronously through the cascaded residual structure: the input features\nfirst pass through multi-head spatio-temporal attention modules, the cross-time step and\ncross-energy nonlinear correlation are quantified by mutual information, and diversified\nspatio-temporal patterns are extracted in parallel in the multi-head space. Then, the dy-\nnamic adaptive graph convolution module builds a dynamic graph structure based on\nphysical topology and real-time feature similarity and aggregates neighborhood node\ninformation through spectral graph convolution to realize the explicit modeling of energy\nnetwork space interaction. The output of the two modules is fused by a residual connection\nand layer normalization, which not only preserves the integrity of the original feature\nbut also avoids the problem of gradient disappearance. The decoder uses the higher-order\nspatio-temporal features of the encoder output as historical memory to interact with the de-\ncoder hidden state, thereby dynamically adjusting the spatio-temporal weight distribution\nduring the prediction process.\nThe core advantage of the framework is that it realizes the bidirectional collaborative\noptimization of spatio-temporal features. On the one hand, the multi-head spatio-temporal\nattention module provides node representation rich in temporal dynamic and feature\ninteraction information for the dynamic adaptive graph convolution module through the\nmutual information enhanced attention mechanism, so that the spatial aggregation can\nperceive the timing law of load evolution. On the other hand, the spatial enhancement\nfeatures of the output of the dynamic adaptive graph convolution module feed back\nthe attention calculation and guide the model to pay attention to the physically closely\nrelated energy nodes through the dynamic graph structure, so as to improve the physical\nrationality of the time dimension modeling. In addition, the end-to-end training strategy\nsynchronously optimizes the attention weight, graph structure parameters, and projection\nmatrix through joint backpropagation to avoid the accumulation of errors caused by\nphased training.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Experiment and Results",
+      "level": 1,
+      "text": "In Section 3, the training process of the prediction model is elaborated, and the case\nstudy and its related results are introduced and analyzed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 Dataset",
+      "level": 2,
+      "text": "The dataset used in this study is derived from the Campus Metabolism Project at\nArizona State University (ASU), Tempe campus—an initiative focused on the real-time\nmonitoring and optimization of energy and resource usage to support campus sustainability.\nThe dataset covers a continuous time span from 1 January 2017 to 28 January 2019, totaling\n1095 days of recorded data. It includes hourly measurements of electricity consumption (in\nEnergies 2025, 18, 4466 10 of 19\nkilowatts), cooling load (in ton-hours), and heating demand (in BTU/hour) across multiple\ncampus buildings and facilities.\nIn addition to multi-energy load data, the dataset also contains weather information\n(e.g., temperature, humidity, wind speed) and campus activity data (e.g., class schedules,\noccupancy patterns), enabling analysis of external factors influencing energy usage. All\ndata were collected via a network of smart meters, water meters, environmental sensors,\nand infrastructure management systems. The dataset represents a geographically localized\nyet functionally diverse energy system, making it suitable for testing models targeting\nintegrated multi-energy forecasting in real-world scenarios.\nAlthough the dataset is not publicly hosted in a standardized repository, it is available\nfor research purposes through the Campus Metabolism platform and can be accessed\nupon request.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2 Evaluation Index",
+      "level": 2,
+      "text": "The error measures include the root mean square error (RMSE), mean absolute error\n(MAE), mean absolute percentage error (MAPE), and determination coefficient (R ²) to\nmeasure the deviation between the predicted value and the actual value from different\nangles. The RMSE is the square root of the mean of the square of the difference between the\npredicted value and the actual value. The smaller the RMSE value, the higher the prediction\naccuracy. Due to the squared operation, the RMSE is sensitive to outliers and is suitable for\nscenarios where large errors need to be penalized, highlighting significant deviations in\npredictions. The MAE is the average of the absolute difference between the predicted value\nand the actual value, and the smaller the MAE value, the higher the prediction accuracy.\nDue to the use of absolute values, the MAE is insensitive to outliers and is suitable for\nscenarios where equalizing errors are required. The MAPE can provide a scale-independent\nevaluation of prediction accuracy, especially useful for interpreting performance across\ndifferent load magnitudes. The value of R² ranges from 0 to 1, with the closer to 1 meaning\nthe better the model interprets the data. The combination of the RMSE, MAE, MAPE, and\nR² can evaluate the model performance in multiple dimensions, thus providing a more\ncomprehensive, accurate, and reliable performance measurement method.\nMSE =\ns\n1\nn\nn\n∑\ni=1\n(yi − byi)2, (12)\nMAE =\nn\n∑\ni=1\n|yi − byi|, (13)\nMAPE = 1\nn\nn\n∑\ni=1\n| yi − byi\nyi\n| ×100%, (14)\nR2 = 1 − SSres\nSStot\n, (15)\nwhere yi representsi actual values,byi representsi predicted values, andn is the number of\nsamples. SSres = ∑n\ni=1(yi − byi)2 stands for sum of squares of residuals.SStot = ∑n\ni=1(yi − yi)2\nrepresents the total sum of squares, and yi is the mean of the actual observations.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3 Experimental Settings",
+      "level": 2,
+      "text": "In the experiment, precipitation and temperature were selected as the key auxiliary\nfeatures of meteorological factors to describe the influence of weather conditions on energy\ndemand. In addition, considering that holidays and weekends often lead to significant\nchanges in energy consumption patterns, holiday identifiers (1 for holidays and 0 for\nnon-holidays) and weekend identifiers (1 for weekends and 0 for non-weekends) were\nEnergies 2025, 18, 4466 11 of 19\nintroduced as additional auxiliary features. To further capture the impact of seasonal\nand daily cycle changes on the load, the month, day, and hour are also incorporated\ninto the input variables of the model. In order to effectively evaluate and optimize the\nmodel performance, the multi-energy load prediction dataset is divided into a training\nset, validation set, and testing set according to the ratio of 7:1:2. This partitioning method\ncan not only ensure that the model has good fitting ability on known data but also verify\nits generalization performance on unknown data, so as to comprehensively evaluate the\npracticality of the model.\nThe hyperparameters used in our model are as follows: the number of nodes N = 20,\ndetermined by the actual number of buildings in the dataset; the number of input modalities\nD = 3 (electricity, cooling, and heating), set according to the available energy types in the\ndataset; the historical input length Thist = 24, chosen to represent one full day of hourly\nmeasurements based on prior studies in short-term load forecasting; the model hidden\nsize dmodel = 64, selected through empirical tuning to balance prediction accuracy and\ncomputational efficiency; the temporal encoder depth is set to 3 following common practice\nin Transformer-based time series models; and the spatial GNN hidden dimension dn = 32,\ndetermined through preliminary experiments to effectively capture spatial dependencies\nwhile controlling model complexity.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "3.4 Contrast Experiment",
+      "level": 2,
+      "text": "In order to comprehensively evaluate the performance of the TSTG model in",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "6 h, 12 h, 24 h, and 96 h continuous time prediction tasks, the TSTG was compared",
+      "level": 1,
+      "text": "with eleven different benchmark methods, and the experimental results are shown in\nTable 1. These benchmark methods cover models based on the Transformer architecture,\nsuch as Transformer [39], Informer [31], Autoformer [32], FEDformer [33], Reformer [34],\nand Pyraformer [35]; MLP-based models such as LightTS [36], TiDE [37], and TSMixer [38];\nand classical statistical models such as ARIMA [40] and Prophet [41], which are still widely\nused in industry. Including ARIMA and Prophet allows us to assess the performance gap\nbetween traditional time-series approaches and modern deep learning methods in the\ncontext of multivariate and spatio-temporal energy load forecasting.\nAs can be seen from Table 1, the TSTG shows a significant performance advantage\nacross all four time spans of the prediction task. As shown in Figure 4, a comparison of the\npredicted 24 h electrical load demonstrates that the trajectory produced by TSTG is more\nconsistent with the real data. In particular, compared with Autoformer, the TSTG shows\nsubstantial improvements. In power load forecasting, the mean absolute error (MAE) and\nroot mean square error (RMSE) are reduced by 44.98% and 38.19%, respectively, and the\ncoefficient of determination (R2) increases by 8.77%. Meanwhile, the mean absolute percent-\nage error (MAPE) is reduced by 39.62%, indicating a substantial improvement in relative\nprediction accuracy. In the cooling load prediction, the MAE and RMSE decreased by\n51.20% and 47.94%, respectively, R2 increased by 3.45%, and the MAPE dropped by 51.35%,\nconfirming that the TSTG achieved higher stability and lower relative deviation. In the\nheating load forecast, the MAE and RMSE decreased by 49.19% and 45.97%, respectively,\nR2 increased by 8.09%, and the MAPE decreased by 49.19%, further demonstrating the\nrobustness of the TSTG across different types of loads.\nEnergies 2025, 18, 4466 12 of 19\nTable 1. The accuracy of multi-energy load forecasting using different methods.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "Method",
+      "level": 1,
+      "text": "Electric Load Cooling Load Heat Load\nMAE RMSE MAPE R2 MAE RMSE MAPE R2 MAE RMSE MAPE R2\nFEDformer\n6 0.210 0.269 0.105 0.895 0.166 0.217 0.111 0.958 0.175 0.251 0.097 0.907\n12 0.180 0.231 0.090 0.922 0.121 0.161 0.081 0.977 0.161 0.217 0.089 0.930\n24 0.223 0.284 0.112 0.882 0.173 0.223 0.115 0.955 0.186 0.263 0.103 0.896\n96 0.240 0.306 0.120 0.859 0.186 0.239 0.124 0.947 0.205 0.239 0.114 0.947\nLightTS\n6 0.224 0.288 0.112 0.081 0.879 0.121 0.164 0.976 0.142 0.206 0.079 0.938\n12 0.263 0.335 0.132 0.837 0.142 0.190 0.095 0.967 0.156 0.229 0.087 0.923\n24 0.232 0.295 0.116 0.873 0.125 0.168 0.083 0.975 0.136 0.197 0.109 0.942\n96 0.247 0.318 0.124 0.848 0.141 0.190 0.094 0.967 0.143 0.213 0.079 0.922\nPyraformer\n6 0.201 0.258 0.100 0.903 0.093 0.127 0.062 0.985 0.162 0.200 0.090 0.941\n12 0.231 0.292 0.116 0.875 0.111 0.149 0.074 0.980 0.145 0.187 0.081 0.949\n24 0.234 0.297 0.117 0.871 0.111 0.147 0.074 0.980 0.154 0.196 0.086 0.942\n96 0.304 0.379 0.152 0.785 0.145 0.196 0.097 0.965 0.168 0.221 0.093 0.916\nTiDE\n6 0.215 0.280 0.108 0.886 0.117 0.161 0.078 0.977 0.129 0.190 0.072 0.947\n12 0.205 0.265 0.102 0.897 0.111 0.152 0.074 0.979 0.124 0.183 0.069 0.951\n24 0.205 0.267 0.102 0.895 0.112 0.154 0.077 0.979 0.123 0.182 0.068 0.950\n96 0.210 0.272 0.105 0.889 0.116 0.157 0.077 0.977 0.124 0.182 0.069 0.943\nAutoformer\n6 0.213 0.277 0.106 0.889 0.156 0.204 0.104 0.962 0.173 0.249 0.096 0.908\n12 0.203 0.262 0.102 0.900 0.161 0.211 0.107 0.960 0.181 0.255 0.101 0.904\n24 0.221 0.288 0.110 0.879 0.166 0.219 0.111 0.956 0.185 0.261 0.103 0.897\n96 0.286 0.362 0.143 0.804 0.205 0.261 0.137 0.937 0.198 0.281 0.110 0.863\nARIMA\n6 0.149 0.216 0.093 0.880 0.089 0.134 0.081 0.960 0.111 0.172 0.085 0.920\n12 0.150 0.218 0.094 0.880 0.091 0.137 0.083 0.960 0.113 0.175 0.087 0.915\n24 0.164 0.238 0.103 0.870 0.101 0.152 0.092 0.950 0.118 0.183 0.091 0.905\n96 0.174 0.252 0.109 0.850 0.093 0.140 0.084 0.955 0.114 0.177 0.088 0.900\nProphet\n6 0.133 0.184 0.083 0.920 0.080 0.116 0.073 0.985 0.099 0.149 0.076 0.950\n12 0.134 0.185 0.084 0.920 0.082 0.119 0.074 0.985 0.101 0.152 0.078 0.947\n24 0.147 0.203 0.092 0.900 0.091 0.132 0.083 0.987 0.105 0.158 0.081 0.940\n96 0.156 0.215 0.098 0.890 0.083 0.120 0.075 0.990 0.102 0.153 0.079 0.935\nTSTG\n6 0.118 0.159 0.059 0.965 0.069 0.101 0.046 0.993 0.087 0.130 0.048 0.978\n12 0.120 0.163 0.060 0.963 0.073 0.106 0.049 0.991 0.090 0.131 0.050 0.975\n24 0.131 0.178 0.066 0.956 0.081 0.114 0.054 0.989 0.094 0.141 0.052 0.972\n96 0.139 0.192 0.070 0.945 0.074 0.105 0.049 0.992 0.091 0.138 0.051 0.969\nFigure 4. The comparison of the 24 h electric load forecast.\nWhen compared with TiDE, the TSTG also showed notable advantages: the MAE\nand RMSE decreased by 36.10% and 33.33% respectively, and R2 increased by 6.29% in\npower load forecasting. The MAPE decreased by 35.29%, reflecting improved proportional\nEnergies 2025, 18, 4466 13 of 19\naccuracy. In the cooling load prediction, the MAE and RMSE decreased by 29.82% and\n25.97%, respectively, R2 increased by 1.02%, and the MAPE decreased by 29.87%. In the\nheating load forecast, the MAE and RMSE decreased by 23.58% and 22.53%, respectively,\nR2 increased by 4.21%, and the MAPE decreased by 25.20%. Compared with the classical\nstatistical baselines, the performance gap is even more pronounced: relative to ARIMA, the\nTSTG achieves average reductions in the MAE, RMSE, and MAPE of over 40% across all\nloads and horizons, along with a consistent increase inR2; similar trends are observed when\ncompared with Prophet, with the TSTG surpassing it in both absolute error metrics and\nrelative accuracy. These results confirm the superior capability of the TSTG in capturing\ncomplex nonlinear dependencies and spatial–temporal interactions in multi-energy load\nforecasting tasks.\n(1) Computational efficiency analysis\nIn terms of the computational efficiency, Table 2 reports the training and inference\ntime. As expected for classical statistical models with small parameter spaces, ARIMA\nand Prophet exhibit the lowest wall-clock time. Among deep learning baselines, LightTS\nis the fastest, whereas FEDformer and Pyraformer incur higher costs due to their heavier\narchitectures. Our TSTG attains a balanced efficiency profile while consistently outper-\nforming all competitors on the MAE, RMSE, R2 and MAPE across horizons. Importantly,\nARIMA/Prophet must be re-fitted per series and frequently re-tuned under rolling multi-\nstep evaluation, which scales poorly in multi-load settings. In contrast, the TSTG trains once\nto jointly model multiple loads and horizons, supports batched GPU inference, and keeps\nsub-second latency, making it more suitable for real-time large-scale deployment where\nboth accuracy and throughput are required.\nTable 2. Training and inference time comparison using different methods.\nMethod Traning Time(s) Inference Time(s)\nFEDformer 3600 0.95\nLightTS 1800 0.65\nPyraformer 3200 0.85\nTiDE 2400 0.70\nAutoformer 3000 0.88\nARIMA 900 0.50\nProphet 1200 0.55\nTSTG 2700 0.72\n(2) Multi-energy load coupling analysis\nThere is a significant correlation between the power load, cooling load, and heating\nload. This correlation provides a more comprehensive perspective for models to better\nunderstand and simulate load characteristics in multi-energy systems. In order to explore\nthe influence of these complex interactions on the prediction accuracy, the effects of combi-\nnation prediction and single prediction were compared. Specifically, we conducted two\ndifferent case studies:\nCase 1: Ignoring the coupling between the power load, cooling load, and heating\nload, each type of load is independently predicted. In this case, the model uses weather\ninformation and date information as auxiliary variables.\nCase 2: Here, we fully consider the interaction of the three load types and implement\njoint forecasting.\nAs shown in Table 3, through the empirical analysis of the two cases, it can be found\nthat the performance of the joint forecasting method in case 2 is significantly better than\nthat of the independent forecasting method in case 1. Compared with case 1, the MAE and\nEnergies 2025, 18, 4466 14 of 19\nRMSE of the power load are reduced by 7.64% and 1.98%, respectively, and R² is increased\nby 0.37%. For the cooling load, the MAE and RMSE decreased by 18.18% and 6.78%,\nrespectively, and R² increased by 0.38%. The MAE and RMSE of the heat load decreased by\n15.22% and 3.91%, respectively, and the R² increased by 0.23%. These results fully show\nthat the combined multi-energy load forecasting method can not only effectively capture\nthe internal relationship between different energy loads but also significantly improve\nthe generalization ability of the forecasting model, so that it can reflect the actual energy\ndemand model more accurately.\nTable 3. The comparison between combined load forecasting and individual forecasting results.\nEvaluation Index Electric Load Cooling Load Heating Load\nMAE RMSE R2 MAE RMSE R2 MAE RMSE R2\nCase 1\n6 0.123 0.160 0.963 0.084 0.106 0.989 0.097 0.132 0.975\n12 0.126 0.163 0.960 0.089 0.110 0.988 0.103 0.139 0.973\n24 0.143 0.181 0.951 0.096 0.122 0.986 0.113 0.146 0.968\n96 0.158 0.202 0.941 0.094 0.119 0.987 0.114 0.145 0.969\nCase 2\n6 0.118 0.159 0.965 0.069 0.101 0.993 0.087 0.130 0.978\n12 0.120 0.163 0.963 0.073 0.106 0.991 0.090 0.131 0.975\n24 0.131 0.178 0.956 0.081 0.114 0.989 0.094 0.141 0.972\n96 0.139 0.192 0.945 0.074 0.105 0.992 0.091 0.138 0.969\n(3) Auxiliary information analysis\nThe power load, cooling load, and heating load are significantly correlated with the\nmeteorological conditions. To evaluate the value of meteorological and calendar data for\nmulti-energy load forecasting, we designed and implemented the following four different\nexperimental cases:\nCase 1: Only historical data for the electrical load, cooling load, and heating load are\nused for forecasting, without any external auxiliary information.\nCase 2: Based on Case 1, meteorological data are introduced as an additional feature\nof the forecast model.\n",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [
+          "t3",
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall framework of the proposed Transformer Spatio-Temporal Graph neural network"
+    },
+    {
+      "id": "f2",
+      "caption": "The structure of the multi-head spatio-temporal attention module. It performs dual-channel"
+    },
+    {
+      "id": "f3",
+      "caption": "Structure of the dynamic adaptive graph convolution module, which fuses physical"
+    },
+    {
+      "id": "f4",
+      "caption": "The comparison of the 24 h electric load forecast."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "These benchmark methods cover models based on the Transformer architecture,"
+    },
+    {
+      "id": "t2",
+      "caption": "Training and inference time comparison using different methods."
+    },
+    {
+      "id": "t3",
+      "caption": "The comparison between combined load forecasting and individual forecasting results."
+    }
+  ],
+  "algorithms": [
+    {
+      "id": "a1",
+      "caption": "TSTG-based Short-term Multi-energy Load Forecasting"
+    }
+  ],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 3,
+    "n_algorithms": 1,
+    "n_equations": 0
+  }
+}

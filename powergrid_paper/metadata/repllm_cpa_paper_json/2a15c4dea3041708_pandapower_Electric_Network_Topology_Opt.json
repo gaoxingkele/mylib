@@ -1,0 +1,113 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pandapower/pandapower__Electric_Network_Topology_Optimization_with_Distributed_Generation_using_Pandapower_Librar__d01112f167.pdf",
+  "n_pages": 6,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 INTRODUCTION",
+      "level": 1,
+      "text": "With the development of energy, the possibilities of extracting electricity are increasing. New \ntechnologies are used to reduce the harmful effects on the environment, increase efficiency, and reduce losses \nin the transmission of electricity. One of such innova tions includes systems with distributed generation based \non renewable energy sources. The principle of distributed generation consists in the close proximity of power \nsources to consumers, that is, relatively small long lines transmitting electricity  [1]–[4]. An important task in \nthe construction of such lines is to choose the optimal network topology at a certain load. Different optimization \nmethods are used, both deterministic and heuristic and metaheuristic [5]–[7]. If the electric power system \ncontains renewable energy sources, the high efficiency of their generation leads to the need for frequent change \nof the network topology [5], [8]–[10]. \nTo calculate line losses, there are many software development tools that include various libraries. \nEach network has its own properties: the number of nodes, the number of generation sources, the number of \nexternal sources, the load, the number and locatio n of switching devices (switches, disconnectors), line \nparameters (line length, linear active resistance, linear inductive resistance, capacitance, maximum permissible \ncurrent on the line, etc.).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 METHODOLOGY",
+      "level": 1,
+      "text": "The study of a distributed generation system was performed using the Newton -Raphson \nmethod [11], [12].  \n\nJMER   ISSN: 0000-0000 \n \n2 \n \nThe idea of the method is to linearize, replacing a nonlinear equation with a linear one to solve the \nequation 𝑓(𝑥) = 0. The equation is reduced to the form 𝑥 = 𝜑(𝑥).  \nThere are many nonlinear equations: \n \n𝑓𝑖(𝑥1, 𝑥2, … , 𝑥𝑛) = 𝑦𝑖, 𝑖 = 1, 2, … , 𝑛      (2.2) \n \nWith a set of initial approximations: 𝑥1\n(0), 𝑥2\n(0), … , 𝑥𝑛\n(0), we denote the set of corrections \n∆𝑥1\n(0), ∆𝑥2\n(0), … , ∆𝑥𝑛\n(0) . Then, using Taylor series and neglecting higher -order terms, we obtain a corrected \nsystem of equations \n \n(𝑥1\n(0) + ∆𝑥1, 𝑥2\n(0) + ∆𝑥2, … , 𝑥𝑛\n(0) + ∆𝑥𝑛) = 𝑦𝑖,   (2.3) \n  \nwhere ∆𝑥𝑖 are the corrections for 𝑥𝑖, 𝑖 = 1,2, … , 𝑛.  \n A set of linear equations that define the tangent hyperplane to the function 𝑓𝑖(𝑥) at a given \niteration point 𝑥𝑖\n(0), is obtained as \n \n∆𝑌 = 𝐽 ∗ ∆𝑋,     (2.4) \n \nгде ∆𝑌 – the column vector defined by 𝑦𝑖 − 𝑓𝑖(𝑥1\n(0), 𝑥2\n(0), … , 𝑥𝑛\n(0)) , ∆𝑋 – vector column of correction \nterms ∆𝑥𝑖, and 𝐽 – the Jacobi matrix for the function 𝑓, it has the form of the first order of partial derivatives, \ndefines 𝑥𝑖\n(0).  The corrected solution is obtained in the form: \n \n𝑥𝑖\n(1) = 𝑥𝑖\n(0) + ∆𝑥𝑖     (2.5) \n \n The Jacobi matrix is defined by \n \n𝐽𝑖𝑘 =\n𝜕𝑓𝑖\n𝜕𝑥𝑘\n      (2.6) \n \nThe above Newton-Raphson method is used to solve the problem of power flows. The matrix 𝐽 – is a \nsparse matrix and is particularly suitable for calculating flow distribution. Triangular decomposition and \nreverse substitution methods provide fast and efficient convergence to a flow distribution solution. This method \nhas quadratic convergence and therefore converges very quickly when the solution point is close.  \nAll the data necessary for calculations on nodes, lines, consumption and generation schedules are \ntabular data that can be easily loaded into software by reading XLS files through the Pandas library of the \nPython programming language [13], [14]. Then, based on the uploaded data, a network model is created using \nthe Pandapower library. It is also used to calculate the steady -state mode of the network and flow distribution \nusing the Newton-Raphson method. Due to the changing nature of generation and consumption, for each hour \nof the day, it is possible to determine its optimal network topology in terms of power losses.  \nThe encoding of the topology is performed as follows. The solution is encoded by a list of N values, \nwhere N is the number of all power lines in the network (let's take 20 lines as an example). The list items take \nthe values 0 (the line is disabled) or 1 (enabled). The total number of possible combinations is 220 = 1048576. \nAt the same time, it is obvious that m ost of the solutions do not require mode calculation, since they either \ncontain rings, or do not provide a balance of generation and consumption if any part of the network turns out \nto be isolated and its consumption is lower than its own generation.they contain rings, or do not provide a \nbalance of generation and consumption if any part of the network turns out to be isolated and its consumption \nis lower than its own generation. \nThe algorithm for finding the optimal configuration can be written as follows : \n1. The cycle of generating topologies – binary codes from [0, 0, …, 0] to [1, 1, … 1]. \n1.1. If the topology contains a ring, proceed to the next iteration of the loop . \n1.2.  If the topology does not provide a balance of c onsumption and generation, proceed to the next \niteration of the cycle. \n1.3.  Calculation of flow distribution and active power losses in network lines . \n1.4.  If the losses are lower than with the best topology found earlier, take the current topology as the best. \nJMER   ISSN: 0000-0000 \n \n3 \n \n1.5.  Go to the next iteration of the loop. \nThe best topology found in cycle 1 is the desired solution. \nThe algorithm must be executed for each moment in time. In the calculated examples, the time step \nwill be 1 hour. Due to the preliminary cutting off of obviously inoperable and inefficient topologies, the \nalgorithm is able to calculate the optimal topology on a personal computer not in real time, but with sufficient \nspeed to perform calculations in increments of 1 hour.  \nDepending on the mode of operation of renewable energy sources, the flow of power in the network \nmay change its direction, unlike centralized electric power systems, where the flow of power is predominantly \nunidirectional. As a result, the current network topology may not be optimal in terms of power losses in power \ntransmission lines and their insufficient/excessive load. \nThe radial configuration of a 15 -node electric power system with two solar power plants with an \ninstalled capacity of 1.8 MW and 2.5 MW is considered. The rated voltage of each bus is 10 kV. The network \ndiagram is shown in Figure 1. The normally switched on lines are shown in black, and the normally \ndisconnected lines are shown in red. Each line has its own parameters. \n \n \nFigure 1. The structure of the electrical network \n \nTo model the network, the parameters of electrical loads are used, which  correspond to their line. \nThen you need to connect to the Python library – \"Pandapower\".  \nPandapower is a library whose function is to model the parameters of an electrical network. The \nPandapower electrical network consists of tables for each type of network element. For example, a separate \ntable for transformers, a separate table for power li nes, etc. Each grid element table consists of a column for \neach parameter and a row for each network element. Various network elements can be generated using the \nprogram code.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 RESULTS AND DISCUSSION",
+      "level": 1,
+      "text": "The algorithm must be executed for each moment in time. In the calculated examples, the time step \nwill be 1 hour  (Figure 2 shows output) . Due to the preliminary cutting off of obviously inoperable and \n\nJMER   ISSN: 0000-0000 \n \n4 \n \ninefficient topologies, the algorithm is able to calculate the optimal topology on a personal computer not in real \ntime, but with sufficient speed to perform calculations in increments of 1 hour. \n \n \nFigure 2. Output data informing about the download of the \"Pandapower\" library \n \nThe next step is to refer to the network parameters and determine the optimal circuit configuration. \nHaving received data on the network load, we will determine by switching disconnectors which configuration \nhas less power loss. After specifying the system and all the input data, we receive info rmation about the built \nnetwork (Figure 3). \n \nFigure 3. Information about the network \n \n Next, we get information about the most preferred topology with the least losses for each hour. By \nswitching the disconnectors, we will determine which configuration has less power loss. For 0 hours, the least \namount of losses is achieved when all disconnectors are in the closed state (Table 1 and Figure 4). \n \nTable 1. Losses on the lines when all disconnectors are in the closed state \nline ql_mvar pl_mw \n1-2 0,7528 0,7361 \n2-3 0,1261 0,1228 \n3-4 0,0191 0,0186 \n4-5 0,0001 0,0000 \n2-9 0,0796 0,0522 \n9-10 0,0612 0,0411 \n2-6 0,1194 0,0805 \n6-7 0,0360 0,0243 \n6-8 0,0001 0,0000 \n3-11 0,0515 0,0348 \n11-12 0,0007 0,0005 \n12-13 0,0011 0,0007 \n4-14 0,0073 0,0049 \n4-15 0,0076 0,0031 \n10-14 0 0 \n13-15 0 0 \n7-11 0 0 \n\nJMER   ISSN: 0000-0000 \n \n5 \n \n \nFigure 4. Optimal network configuration for 0 hours \n \n \nThus, the optimal topology for each hour is selected for each hour based on the daily load schedule \nand the parameters of the electrical network. When modeling the network, the same length of lines was \nspecially set so that the active and inductive resistance had the same effect on flow distribution.",
+      "refs": {
+        "figures": [
+          "f2",
+          "f4",
+          "f3"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "4 CONCLUSION",
+      "level": 1,
+      "text": "The developed software allows you to download data about nodes and lines of the network, including \nactive and reactive load and generation capacities, to calculate the steady-state mode with the determination of \nlosses in the lines, while due to automation  of calculations it becomes possible to calculate the mode for all \npermissible network topologies and choose the optimal one for the specified conditions. Since the schedules \nof the load and generation of renewable energy are constantly changing, the appro ach used allows us to \ndetermine the optimal network configuration for the specified capacities of the load and  generation of \nrenewable energy. \nThe next steps of the study consist in the use of population -based optimization methods [15], [16] to \nsolve problems of higher dimension and the transition to predictive optimization on the basis of forecasting the \ngeneration from renewable energy sources [17], [18].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The structure of the electrical network"
+    },
+    {
+      "id": "f2",
+      "caption": "Output data informing about the download of the \"Pandapower\" library"
+    },
+    {
+      "id": "f3",
+      "caption": "Information about the network"
+    },
+    {
+      "id": "f4",
+      "caption": "Optimal network configuration for 0 hours"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Losses on the lines when all disconnectors are in the closed state"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2.6",
+      "latex_or_text": "(2.6)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": true,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 4,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

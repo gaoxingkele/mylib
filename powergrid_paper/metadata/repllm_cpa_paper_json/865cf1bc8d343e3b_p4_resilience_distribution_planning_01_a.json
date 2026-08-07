@@ -1,0 +1,423 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p4_resilience_distribution_planning/p4_resilience_distribution_planning__01__a_distributed_energy_storage_based_planning_method_for__b115741548.pdf",
+  "n_pages": 28,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Motivation",
+      "level": 2,
+      "text": "High penetration of distributed generation (DG) and flexible loads is transforming distri-\nbution networks from passive, unidirectional systems into active, bidirectional “generation-\nnetwork-load-storage” systems [1]. However, the resulting uncertainties and fluctuations\nEnergies 2026, 19, 574 https://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 2 of 28\non both generation and load sides challenge grid stability and efficiency . Traditional\nmethods—such as grid reinforcement, demand-side management, and conventional reac-\ntive compensation—lack the speed and adaptability to address real-time imbalances from\nrenewable intermittency . Insufficient resilience can lead to voltage and frequency deviations,\ncascading failures, and even large-scale blackouts with severe economic impacts [2,3].\nIn this context, Distributed Energy Storage Systems (DESS) have become crucial. With\ntheir dual “generation-load” capabilities and fast response times, DESS offer vital services\nlike dynamic power balancing, rapid frequency and voltage regulation, and post-fault\nrecovery—functions that traditional solutions cannot fully provide [4,5].\nAt the distribution level, the increasing penetration of renewable generation intro-\nduces strong uncertainty in both local operating conditions and load evolution, particularly\nin the early and intermediate stages of energy transition. Under such circumstances, plan-\nning decisions for distributed energy storage are increasingly oriented toward enhancing\nresilience, power quality, and operational adaptability within a given planning horizon and\ninvestment scale [6]. This perspective motivates the need for demand-aware and flexible\nplanning approaches for distributed energy storage deployment.\nThe rapid growth of China’s energy storage sector highlights the urgency of this\ntransition. In 2023, China added 21.5 GW of new energy storage capacity, nearly half of\nthe global total. By 2030, cumulative installed capacity is projected to exceed 200 GW [7].\nThis growth is driven by varying regional needs: urban grids, where supply reliability\nis essential despite limited DG penetration, and rural grids, where excess renewable\ngeneration often outpaces local consumption [ 8]. Deploying DESS is therefore a critical\nstrategy for enhancing distribution network resilience, facilitating renewable integration,\nand ensuring secure, efficient grid operation amidst high DG penetration.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Literature Review and Research Gaps",
+      "level": 2,
+      "text": "Distribution networks are facing challenges such as power imbalance and voltage\nviolations caused by renewable energy fluctuations, making the deployment of DESS for\ndynamic regulation an urgent need, as evidenced by existing research. Reference [ 9] in-\ntroduces a two-tier optimization framework utilizing cluster partitioning to develop an\nupper-level capacity planning model and a lower-level node scheduling model. Refer-\nence [10] describes a configuration approach that uses spectral clustering partitioning and\ntwo-tier optimization to promote power complementarity within clusters and improve\noverall system stability by optimizing the outer layer’s location and capacity determination\nas well as the inner layer’s output adjustments. References [ 11,12] propose DESS-based\ncoordinated voltage regulation strategies for distribution networks with high renewable\npenetration, where DESS are explicitly modeled and coordinated through hierarchical or\nmulti-level control frameworks to mitigate voltage violations. Reference [13] focuses on the\noptimal allocation of distributed modular energy storage systems for voltage regulation,\naiming to minimize voltage deviations by determining the optimal locations and capacities\nof DESS units in active low-voltage distribution networks. Nonetheless, while many exist-\ning centralized or cluster-based DESS architectures are effective in maintaining regional\npower equilibrium and voltage regulation, their reliance on simplified or deterministic\nrepresentations of load dynamics and renewable generation uncertainty may undermine\noperational resilience, leading to storage over-allocation, reduced utilization efficiency, and\nsuboptimal economic performance in practical applications.\nReference [14] establishes a bi-level coordinated siting and sizing planning model for\nDG and DESS, selecting interconnection points with the objective of minimizing line and\noperational investment costs, where system-level planning decisions are made without\nexplicitly evaluating node-level priority or sensitivity characteristics. In references [15,16],\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 3 of 28\nnode voltage sensitivity is utilized to assess the voltage regulation needs of various nodes,\nand the optimal placement of DESS is determined through sequential optimization. Sub-\nsequent studies have extended this voltage-sensitivity-based paradigm by constructing\nmore comprehensive node sensitivity indices to improve the effectiveness of sequential\nDESS siting and sizing under typical operating conditions [17]. References [18,19] focus\non optimizing the charging and discharging power as well as the capacity of DESS for\nunbalanced distribution networks with a significant penetration of DG, using node loss\nsensitivity variance as a key metric. More recent work has further refined loss-based sensi-\ntivity analysis by defining integrated power-flow sensitivity variance indices and adopting\nstaged siting–sizing procedures, while still relying on deterministic or representative op-\nerating scenarios [20]. Nevertheless, most existing DESS planning approaches based on\nnode prioritization and sequential deployment are developed under well-defined network\ntopology and load characteristics, often considering single or representative scenarios and\nlimited functional objectives. Such assumptions may lead to complex, redundant, and\neconomically inefficient configurations when applied to large-scale distribution networks\nwith heterogeneous source–load characteristics. Meanwhile, existing research largely fo-\ncuses on strategic expansion planning with detailed power-flow modeling, whereas tactical,\nplanning-oriented DESS deployment under incomplete network information—where prior-\nitization, deployment order, and multi-scale resilience assessment are critical—has received\nrelatively limited attention. To address this gap, this paper proposes a planning-oriented\nDESS deployment framework that integrates demand-driven prioritization, priority-guided\nsequential planning, and node–block–grid multi-scale resilience evaluation, aiming to enhance\nday-to-day operational resilience of distribution networks under uncertainty . It is empha-\nsized that the proposed framework does not aim to replace detailed capacity expansion or\noperational models; rather, it provides a complementary decision layer that can inform DESS\nsiting, sizing, and deployment order, and can be readily incorporated into more comprehensive\nplanning or operational formulations when detailed network models are available.\nWith the increasing penetration of photovoltaic and wind power in distribution net-\nworks, the modeling of renewable generation uncertainty has become an important issue\nfor planning-oriented studies. Existing review works generally classify scenario generation\nmethods into explicit statistical approaches and implicit deep generative approaches. Statis-\ntical methods are widely adopted in planning applications due to their interpretability and\ncompatibility with optimization models, whereas deep generative methods are capable of\ncapturing complex correlations but often require large datasets and lack transparency [21].\nIn this paper, a Gaussian Mixture Model (GMM) is employed to generate representative\nrenewable power output scenarios. GMM is selected because it can effectively describe\nmultimodal distributions and stochastic fluctuations of renewable generation, while main-\ntaining clear physical interpretability through explicit model parameters. Moreover, exist-\ning studies have shown that GMM-based clustering and modeling approaches can achieve\nsatisfactory performance in photovoltaic power characterization and typical scenario iden-\ntification, supporting its suitability for planning-oriented applications [22]. At the same\ntime, recent research has emphasized that the quality of generated scenarios should not\nbe evaluated solely based on basic statistical moments, but also in terms of randomness\nand diversity [ 23]. Accordingly, the adopted GMM-based framework aims to provide\nrepresentative and diverse scenarios that are well suited for long-term and medium-term\nDESS planning. The brief description of the literature are shown in Table 1.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1.3 Contributions and Paper Structure",
+      "level": 2,
+      "text": "This research provides a distributed energy storage optimization strategy to enhance\nthe operational performance of distribution grids by innovatively integrating priority in-\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 4 of 28\ndices with sequential allocation strategies. By conducting a thorough analysis of quality and\nefficiency demands, along with a multi-faceted evaluation, it directs the best distribution\nof energy storage to enhance the operational economy of distribution grids, facilitate the\nintegration of renewable energy sources, and improve system balancing performance. The\nspecific contributions are summarized as follows:\n(1) A priority index model is proposed to quantify the demand for energy storage\ndeployment at different nodes within a grid-based distribution network. Driven by multi-\ndimensional user demand characteristics, the model enables quantitative assessment of\nstorage configuration priorities across nodes and provides a demand-oriented basis for\nsubsequent DESS planning.\n(2) Based on the grid-based hierarchical structure of distribution networks, a priority-\nguided sequential planning strategy for distributed energy storage systems is proposed under\nrenewable uncertainty . Wind and photovoltaic output variability is characterized using a GMM.\nGuided by priority indices, the framework sequentially determines DESS siting and sizing to\nenhance distribution network resilience under multiple economic and operational objectives,\nthereby overcoming the limitations of one-shot planning methods.\n(3) A multi-level evaluation framework is established to assess the impacts of dis-\ntributed energy storage deployment on distribution network resilience from node-, block-,\nand grid-level perspectives. By jointly considering localized operational performance,\nregional coordination effects, and overall system behavior, the framework provides a\ncomprehensive evaluation of DESS planning outcomes.\nT able 1.A brief description of the literature.\nRef. Network\nScale/Structure\nNode Priority\nEvaluation Planning Strategy Considered\nObjectives\nRenewable\nUncertainty\nModeling\nSystem-Level\nEvaluation\n[8,9] Cluster-based DN No Bi-level/two-tier\nplanning\nCost, power\ncomplementarity No No\n[10,11] DN with high RES No\nDESS-based\ncoordinated voltage\nregulation",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "oltage",
+      "level": 1,
+      "text": "regulation No No\n[12] System-level DN\nwith DG–DESS No Bi-level coordinated\nexpansion planning\nInvestment and\noperation cost No Yes\n[13–15] Unbalanced DN Yes (voltage\nsensitivity) Sequential placement V oltage/loss No No\n[16–18] DN with high DG Yes (loss sensitivity\nvariance)\nSequential\noptimization Loss, capacity No No\n[19–22]\nWind/PV\nuncertainty\nmodeling\nNo Scenario generation\nand evaluation\nUncertainty\ncharacterization Yes No\nThis paper Grid–block–node\nDN\nYes\n(multi-dimensional\npriority index)\nPriority-guided\nsequential allocation\nEconomy ,\nresilience, RES\nintegration\nYes Yes\nTo clearly illustrate the overall research logic and the interaction among the proposed\npriority index model, multi-objective optimization, and the node–block–grid resilience\nevaluation framework, the overall methodological framework of this study is presented\nin Figure 1. As shown in the figure, uncertainty modeling and data-driven indicators are\nfirst used to quantify regional energy storage demand, followed by coordinated optimiza-\ntion of DESS configuration, and finally evaluated through a multi-dimensional resilience\nassessment across node, block, and grid levels.\nThe remaining sections of this work are organised as follows. Section 2 describes\nthe evaluation approach based on the vast distribution network prerequisites. Section 3\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 5 of 28\ncreates a priority index to guide differential energy storage distribution by assessing\nresilience requirements across multiple dimensions, such as power supply dependability\nand renewable energy integration. Section 4 describes the methodical planning technique\nfor DESS implementation. Section 5 introduces a systematic evaluation framework for\nstatistically assessing the effectiveness of distributed storage configurations in improving\ngrid resilience. Section 6 concludes the study.\nOverall Framework of the Proposed DESS Planning and Resilience Evaluation Method\nGMM-based \nscenario generation\nPriority index of \ncandidate nodes\nComprehensive \nresilience assessment\nHistorical wind/ \nPV data\nLoad category \ndata\nMulti-objective Optimization\nLifecycle cost\nOperational benefit\nTechnical constraints\nEfficiency indicators\nQuality indicators\nQuality indicators\nPriority Index Model\nGrid-Ievel \ncoordination\nBlock-level \nmatching & service\nNode-level \nResilience\nNode-Block-Grid \nEvaluation Framework\n \n$\n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 1. Overall famework of the proposed DESS planning and resilience evaluation method.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2 Evaluation Framework for Highly Resilient Active",
+      "level": 1,
+      "text": "Distribution Networks\nDistribution networks serve as the essential “last mile” of power systems, crucial\nfor guaranteeing a secure, dependable, and efficient electricity supply [ 24,25]. The ris-\ning prevalence of DG and renewable energy sources has led to significant alterations in\nmodern distribution networks, especially in highly resilient active distribution networks,\naffecting both physical and operational paradigms [26,27]. These sophisticated systems\nmust manage not only traditional load needs but also confront rising difficulties such\nas operational uncertainty, renewable energy intermittency, and the necessity for swift\nrestoration. This evolution requires a thorough assessment approach that includes three\nfundamental dimensions: (1) Security—preserving system stability through impact re-\nsistance and self-healing features for rapid power restoration; (2) Reliability and Power\nQuality—guaranteeing voltage stability while reducing power fluctuations to improve\nsupply quality; and (3) Efficiency—maximising energy storage utilisation, distributed gen-\neration integration, and dispatch coordination to enhance overall system performance.\nIn evaluating energy storage allocation requirements for highly resilient distribution\nnetworks, this study proposes a priority-index-based assessment framework guided by the\nfollowing principles:\n(1) Comprehensive demand consideration: The framework holistically addresses grid\nsecurity , reliability , power quality , and efficiency , incorporating both absolute and relative\nmetrics as well as actual versus projected values to meet complex operational demands.\n(2) Systematic yet concise methodology: Unlike traditional bulk power system evalua-\ntion approaches, this study focuses specifically on active distribution networks with high\nresilience requirements. It establishes a streamlined indicator system for demand analysis\nand priority ranking to guide rational energy storage allocation.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 6 of 28\n(3) demand-driven prioritization: Storage resources are allocated based on zonal\npriority indices, where areas with stronger demand receive higher rankings. This ensures\nflexible, needs-based configuration of resilient distribution networks.\nThis approach provides a scientific foundation for strategic planning and energy storage\nallocation in highly resilient active distribution networks, ensuring stable and reliable operation.\nBased on the overall methodological framework shown in Figure 1, this section further details\nthe DESS-based resilience enhancement planning process. Figure 2 illustrates the internal\nstructure of the planning framework, including objective functions, decision variables, and the\nsequential planning mechanism across grid, block, and node dimensions. To further clarify the\nconstruction and application of the priority index, Figure 3 provides a step-by-step illustration\nof the priority evaluation and decision-guidance process.\nFigure 2. DESS-based resilience enhancement planning framework for distribution networks.\nFigure 3. Block diagram illustrating the proposed overall evaluation framework.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 7 of 28",
+      "refs": {
+        "figures": [
+          "f3",
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 Methods for Grid Resilience Enhancement Using Distributed",
+      "level": 1,
+      "text": "Energy Storage\nDESS can significantly enhance the resilient operation of the distribution network. In\nterms of emergency response, it provides backup power to critical loads, ensuring supply\nreliability during emergencies. For self-healing, it quickly adjusts frequency and voltage,\nreducing fault recovery time. In load regulation, it smooths power fluctuations by utilizing\npeak shaving and valley filling, strengthening grid stability. Economically, it lowers opera-\ntional costs and increases profits through charging and discharging strategies. This paper\ncombines these functions with demand evaluation, establishing a set of indicators reflecting\nhigh-quality and efficient standards, and determining the weight of each indicator through\na comprehensive evaluation method. The weighted sum approach is then used to create a\npriority index for assessing user energy storage configuration needs. The logical structure\nof the proposed resilience enhancement method is outlined in Figure 4, which presents a\nhierarchical overview of the approaches and indicator system.\nGrid Resilience Enhancement (DESS-based)\nTarget \nLayer\nResilience Enhancement Methods Indicator System\nEfficiency indicators High-quality\nperformance indicators\nMethod Layer Indicator Layer\nEmergency backup& supply security\nFrequency & voltage regulation\nPeak shaving & valley filling\nEconomic operation& dispatch\nSource-load\nmatching \ndegree\nPower quality \nindicators (I4-I6)\nService quality\nindicator (I7)\nReliability\nindicators (I1-I3)\nFigure 4. Hierarchical structure of DESS methods and indicators for grid resilience.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.1 Construction of a Set of Demand Indicators",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.1.1 Efficiency Indicators",
+      "level": 3,
+      "text": "Efficiency requirements reflect the core objective of distribution networks in optimizing\nresource allocation and improving operational performance. With enhanced resilience, distri-\nbution networks can flexibly adapt to varying power demands and operating conditions to\nmaximize operational efficiency . Specifically , resilient distribution networks optimize power\nflow through intelligent dispatch systems to maintain supply-demand balance and avoid\nresource waste. By implementing efficient energy management strategies like “store when\ncheap, discharge when needed”, they reduce storage costs while enabling rapid response to\npeak loads or emergencies. In renewable energy integration, these networks flexibly adjust\nload demand and distributed generation connections based on generalized load profiles to\nmaximize renewable utilization and reduce dependence on upstream grids.\nGeneralized load refers to the aggregated net power curve formed by multiple load-\nrelated entities under normal operating conditions, including traditional demand, price-\nbased and incentive-based demand response resources, renewable generation outputs, and\nenergy storage operation, as illustrated in Figure 5. In this study, the generalized load\nconcept follows the widely adopted definition in high renewable penetration systems [28],\nand is mainly used to characterize planning- and evaluation-level source–load interaction,\nrather than detailed real-time operational control. Energy storage helps mitigate renewable\nfluctuations and enhance regional hosting capacity, strengthening transmission coordina-\nhttps://doi.org/10.3390/en19020574\nEnergies2026, 19, 574 8 of 28\ntion for self-organizing grid operation. The combination of regional load flexibility and\nstorage improves renewable integration while maintaining stability.\nFigure 5. Generalized load curve characteristic diagram.\nThe generalized load retrieval model is defined as follows:\nPEL\nt = Pbase\nt + PDR\nt + Pess\nt (1)\nwhere PEL\nt is the generalized load at timet considering multiple influencing factors;Pbase\nt is the\nconventional load demand at timet; PDR\nt is the aggregated controllable load participating in\ndemand response programs, which mainly reflects peak-shaving and load-shifting capabilities\nunder price-based or incentive-based mechanisms, rather than emergency or interruptible load\nshedding;Pess\nt represents the energy storage charging and discharging power at timet.\nThe efficiency requirements of the supply area are evaluated using a matching degree\nmetric. In the absence of energy storage systems and with demand response as the only\nflexibility resource, the total system load is lower than the conventional load due to the\npresence of reducible demand. Accordingly, this paper refines the definition of distribution\nnetwork matching introduced in [29] as follows:\nφ =\n\n\n\nR T",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "0 PEL",
+      "level": 1,
+      "text": "t\n\f\fdt\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt\n× 100%\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "0 PEL",
+      "level": 1,
+      "text": "t\n\f\fdt > R T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt\n−\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "0 Pbase",
+      "level": 1,
+      "text": "t\n\f\fdt\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt\n× 100%\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "0 PEL",
+      "level": 1,
+      "text": "t\n\f\fdt < R T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt\n(2)\nwhere φ is the distribution network type matching degree, used to measure the degree of\nsource-load matching; PDG\nt is the new energy output at time t; T is the number of time slots\nfor the operation scenario.\nWhen\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "0 PEL",
+      "level": 1,
+      "text": "t\n\f\fdt is greater than\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt, at that time, there is φ ∈ [1, +∞]. A\nhigher φ value indicates poorer DG-load matching, leading to greater grid dependence,\nelevated electricity procurement pressures, and increased supply-demand uncertainty.\nConsequently, regions exhibiting these load characteristics are identified as having high\nresilience enhancement requirements. When\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "0 PEL",
+      "level": 1,
+      "text": "t\n\f\fdt is less than\nR T",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "0 PDG",
+      "level": 1,
+      "text": "t\n\f\fdt, it can be\ndivided into two categories based on the matching degree φ. When φ ∈ [−1, 0], the closer\nthis value is to 0, the weaker the load’s DG accommodation capacity becomes, indicating\nhigher wind/solar curtailment risks and insufficient system coordination, thus defining\nsuch power-supply-characteristic regions as having high resilience enhancement potential\nthrough energy storage-enabled source-load interaction; When φ ∈ [−∞, 1], indicating the\nsystem possesses strong self-adaptive and flexible regulation capabilities, the resilience\nenhancement requirements are consequently reduced.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 9 of 28",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "3.1.2 High-Quality Performance Indicators",
+      "level": 3,
+      "text": "High-quality requirements can be divided into three main parts: power supply relia-\nbility requirements, electrical energy quality requirements, and high-quality service require-\nments [30,31]. This paper further categorizes them into parameter indicators as shown in\nTable 2. Energy storage systems enhance distribution network resilience through a tripartite\nsynergy: (1) For power supply reliability, they act as backup power sources to maintain\ncritical load supply and strengthen emergency response; (2) In power quality manage-\nment, they provide fast voltage/frequency regulation to boost system self-healing capacity;\n(3) For service quality optimization, they enable user-perception-based adaptive operation.\nThis integrated “reliability-quality-service” mechanism empowers DESS to systematically\nimprove grid resilience across three dimensions—emergency response, rapid restoration,\nand dynamic adaptation—resulting in comprehensive operational resilience enhancement.\nT able 2.System of quality demand indicators.\nQuality Demand Indicators Indicator Name Meaning of Indicators\nReliability of power\nsupply needs\nI1: Expectation of power supply\nreliability\nThe difference between the actual power supply\nreliability and the expected reliability within the\nstatistical time\nI2: Primary load share During the statistical period, the proportion of primary\nload in the supply area to the total load.\nI3: Value of loss per unit of\nelectricity shortage\nDuring the statistical period, the ratio of GDP to total\nelectricity consumption in the supply area\nElectricity quality needs\nI4: Frequency nonconformance\nrate\nThe ratio of time when the power supply frequency\nexceeds the allowable range to the total statistical time.\nI5: V oltage deviation The ratio of actual voltage to rated voltage within the\nspecified time period.\nI6: Peak-to-valley difference The ratio of the peak-to-valley difference to the\nmaximum load over the statistical time period\nQuality service needs I7: Number of complaints\nTotal number of reliability-related customer\ncomplaints in the supply area during the statistical\nperiod, including outage complaints, power\nquality complaints\nAll indicators in this study are calculated at the planning stage using standard dis-\ntribution network operation and planning data. The dataset consists of two components:\ntypical daily nodal load profiles and annual statistical performance indicators.\nThe typical daily load profile of each node contains 96 sampling points with a 15 min\nresolution. These profiles are obtained from long-term historical measurements and are\nused to characterize daily load variations at each node. Together with renewable generation\nscenarios produced by the GMM model, these data are used to evaluate renewable–load\nmatching and peak–valley mitigation performance, which form the basis of the efficiency\nindicator. Annual statistical indicators are used to quantify supply reliability, power quality,\nand service performance, including expected supply reliability, outage duration, frequency\nnoncompliance, voltage deviation, and customer complaint rates. These indicators are\nderived from routine utility operational statistics and service records and reflect long-term\noperating conditions at each node. Socioeconomic statistics and electricity consumption\ndata are used only for the interruption-cost-related indicator. Unless otherwise specified,\nindicators I1–I7 are calculated over an annual statistical period.\nThis representation combines aggregated annual indicators with typical daily oper-\nating patterns, which is suitable for planning-stage analysis and avoids dependence on\nhigh-resolution full-year time-series simulations. When node-level statistics are unavail-\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 10 of 28\nable, feeder- or area-level indicators are allocated to individual nodes in proportion to their\nload shares or customer numbers, following common planning practice.\n3.2. Calculation Extraction of Typical Scenic Output Scenes Based on Improved GMM Algorithm\n(a) GMM clustering model\nThis study employs an improved GMM algorithm to cluster representative renewable\ngeneration scenarios, aiming to characterize the uncertainty of DG outputs while effectively\npreserving certain extreme operating scenarios. The GMM is a probabilistic modeling\napproach that can effectively capture the multimodal distributions of wind and photovoltaic\npower outputs, which typically exhibit strong randomness as well as temporal and spatial\nvariability. By fitting the data with multiple Gaussian components, the GMM is able to\nautomatically identify and distinguish different uncertain generation patterns. The GMM\nalgorithm assumes that the observed data are generated from a mixture of several Gaussian\ndistributions [32], as expressed below:\nP(x) =\nK\n∑\nk=1\nπk pk(x) (3)\npk(x) = 1\n(2π)D/2|Σk|1/2 exp(− (x − µk)TΣ−1\nk (x − µk)\n2 ) (4)\nwhere x is the set of wind and solar data samples; K is the total number of clusters in the\nmultidimensional Gaussian distribution; D is the dimension of the data; P(x) and pk(x)\nare the probability densities of the multidimensional GMM and the k-th Gaussian cluster;\nπk and Σk and µk are the coefficients, covariance matrices, and mean vectors of the k-th\nGaussian cluster, respectively.\nThe GMM algorithm achieves optimal parameter estimation by maximizing the log-\nlikelihood function, as shown below:\nmax\nN\n∑\nn=1\nlog(\nK\n∑\nk=1\nπk pk(x)) (5)\nwhere N is the total number of sample groups; xn is the nth group of scenery samples; πk\nsatisfies 0 < πk ≤ 1 and\nK\n∑\nk=1\nπk = 1. The optimization problem is frequently addressed\nthrough the utilization of the expectation-maximization algorithm.\n(b) Parameter initialisation\nThe key to solving the GMM algorithm lies in determining the initial values of the\nsub-Gaussian models. This article uses the K-means clustering method based on the RV\ncoefficient [33] to initialize the Gaussian distribution parameters.\nThe RV coefficient, as a statistical measure of the degree of linear relationship in a\nmatrix, is applied to measure the distance between the sample matrix xn and cluster centers.\nBy iteratively updating the cluster centers, the matrix X can be partitioned into K clusters.\nThe formula for the RV coefficient is as follows:\nRV(Xn, Cm) = tr(XT\nnCm)q\ntr(XT\nnXn)tr(CTmCm)\n(6)\nwhere Xn is the nth sample matrix; Cm is the kth cluster center matrix; tr(·) is the trace of\nthe matrix.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 11 of 28\n(c) Optimal number of clusters determined\nThe optimal clustering outcome necessitates maximizing the similarity among sample\npoints within the same class, emphasizing minimal intra-class distances. Simultaneously, it\nrequires maximizing the dissimilarity between sample points belonging to different classes,\nemphasizing larger inter-class distances. This principle underscores the dual optimization\ngoals of cluster analysis, focusing on enhancing within-class homogeneity and promoting\nbetween-class heterogeneity. Therefore, the evaluation function for clustering effectiveness\nis defined as follows [34]:\nCH (K) = Dout(K)/(K − 1)\nDin(K)/(N − K) (7)\nDin(K) =\nK\n∑\nk=1\n∑\nx∈Ck\n∥x − µk∥2 (8)\nDout(K) =\nK\n∑\nk=1\n|Ck| · ∥µk − µ∥2 (9)\nwhere Din(K) is the intra-class sample distance; Dout(K) is the aggregate of sample dis-\ntances among categories; µ is the global mean of all samples; Ck is the kth cluster; |Ck| is the\nnumber of samples in the cluster. When CH (K) is at its peak, the associated K represents\nthe optimal number of clusters.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "3.3 Construction of Priority Indices",
+      "level": 2,
+      "text": "The priority index measures the intensity of energy storage demand in distribution\nnetworks, based on a multi-criteria assessment of demand indicators. The methodology for\ndetermining the priority index is articulated as follows:\nHpi =\n7\n∑\na=1\nωa I′\na + φ′ (10)\nwhere Hpi represents the priority index for supply areas, indicating that a higher priority\nindex corresponds to a greater demand for energy storage configuration. Consequently, it\nshould be given more consideration in DESS planning site selection; ωa(a = 1,2,. . .,7) is the\nweight of the quality index, which totals 1; I′\na and φ′ stand for the dimensionless quality\nand efficiency indexes after normalization.\nThe Critic approach, an objective weighting technique, allocates weights in a multi-\nindicator comprehensive evaluation by analysing the correlation and disparities among\nindicators, thus scientifically assessing the significance of each indicator [35]. The procedure\nis as follows:\n(1) Dimensionless processing\nConducting dimensionless on a set of b samples with p high-quality performance indi-\ncators to avoid the impact on evaluation caused by varying value ranges and dimensions.\n\n\n\nx′\nd,c+ = xd,c−min(xd)\nmin(xd)−min(xd)\nx′\nd,c−\nmax(xd)−xd,c\nmax(xd)−min(xd)\n(11)\nwhere xd,c and x′\nd,c are the raw and dimensionless values of the quality indicator for item d\nof the cth sample, respectively;. max(xd) are the min(xd) maximum and minimum values\nof the index d in all samples, respectively. In this paper, desired supply reliability is a\nreverse indicator, while the others are positive indicators.\n(2) Assessment of internal variability and interdependencies in quality indicators\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 12 of 28\nThe standard deviation quantifies the extent of internal variation in quality measures. The\nPearson correlation coefficient indicates the extent of association between twoquality metrics.\nSd =\nvuut 1\nb\nb\n∑\nc=1\n(x′\nd,c − x′\nd)2 (12)\nrde =\nb\n∑\nc=1\n(x′\nd,c − x′\nd)(x′\ne,c − x′\ne)\ns\nb\n∑\nc=1\n(x′\nd,c − x′\nd)2 b\n∑\nc=1\n(x′e,c − x′\ne)2\n(13)\nwhere Sd is the standard deviation of the dth quality indicator, the closer Sd is to 1 the\ngreater the variability within the indicator. rde is the correlation coefficient between the dth\nand eth quality indicators; x′\nd is the mean value of the dth evaluation indicator.\n(3) Obtain objective weights for each indicator\nThe weights are determined based on the magnitude of information provided by\nvarious quality indicators. \n\n\nMd = Sd\np\n∑\ne=1\n(1 − rde)\nωd = Md\np\n∑\nd=1\nMd\n(14)\nwhere Md is a measure of informativeness, with larger values indicating that the quality\nindicator d contains more information. The quality indication d becomes heavier as the\namount of information increases.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "3.4 Case Studies",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "3.4.1 Basic Overview",
+      "level": 3,
+      "text": "This study employs an actual power supply grid as a case study. In engineering\npractice, block partitioning is often guided by internal grid-planning guidelines. In this\nstudy, the partitioning results are adopted from existing planning outcomes and are con-\nsistent with publicly available standards such as DL/T 5729-2023 [36]. Zhejiang Province\nis selected as the case study region due to its representativeness of highly resilient active\ndistribution networks in China. The province features a high penetration of distributed pho-\ntovoltaic and wind generation, together with diversified load types including residential,\nindustrial, commercial, and public service sectors, resulting in complex and heteroge-\nneous source–load characteristics. In addition, Zhejiang has well-established grid-based\nplanning practices and comprehensive historical datasets for renewable generation and\nload categorization, which provide a solid foundation for priority index construction and\nscenario-based planning. The coexistence of load-dominant and generation-dominant\nblocks within the same distribution network further makes Zhejiang an appropriate testbed\nfor evaluating priority-guided and sequential DESS planning strategies under realistic\noperating conditions.\nBlock partitioning is performed by comprehensively considering feeder topology, geo-\ngraphical proximity, and end-user functional similarity. Each block aggregates loads with\nsimilar consumption characteristics and service attributes, ensuring internal homogeneity\nwhile preserving clear electrical and spatial boundaries between blocks. As a result, six\ntypes of end-user blocks are identified, including residential, industrial, commercial, admin-\nistrative, educational, and medical sectors, which collectively represent nine typical load\nprofiles. The specific block division results and the corresponding load curve characteristics\nare illustrated in Figures 6 and 7, respectively.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 13 of 28\nFigure 6. Grid block distribution schematic.\nFigure 7. Load typical daily output curve.\nChina implements a time-of-use electricity pricing system with differentiated rates\nfor residential and industrial/other consumers. Residential users face peak rates of\n0.563 yuan/kWhfrom 8:00 to 22:00and off-peak rates of0.291 yuan/kWhfrom 22:00 to 8:00.\nFor industrial and commercial consumers, pricing follows a three-tier structure: peak\nrates (1.092 yuan/kWh) apply during 19:00–21:00, standard rates (0.925 yuan/kWh) dur-\ning 8:00–11:00, 13:00–19:00, and 21:00–22:00, while off-peak rates (0.412 yuan/kWh) are\ncharged from 22:00 to 8:00 and 11:00–13:00. This pricing mechanism incentivizes load\nshifting to balance grid demand and optimize power resource utilization. The reducible\nload capacity is configured to 10–20% of the nodal load, excluding critical demand sectors\nsuch as administrative, medical, and educational facilities from participating in demand\nresponse programs [37]. The model assumes uniform power output characteristics among\nall DG units while considering variations in their installed capacities. DG deployment\nis restricted to industrial, commercial, and residential load nodes, with a surplus power\nfeed-in tariff rate of 0.4153 yuan/kWh.\nhttps://doi.org/10.3390/en19020574\nEnergies 2026, 19, 574 14 of 28",
+      "refs": {
+        "figures": [
+          "f7",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "3.4.2 Typical Scenario Generation for Wind and Solar Power Output",
+      "level": 3,
+      "text": "The improved GMM algorithm was applied to extract typical grid scenes of grid land-\nscapes as described earlier. The calculation results indicate that the clustering validity eval-\nuation function is maximized when the number of scenes is 5. The corresponding curves of\ntypical grid scenes and the probabilities of each scene can be found in Figures 8 and 9.\n \n(a) Typical photovoltaic output scenario  ( b) Typical wind power output scenario \n \n \nFigure 8. Representative scenarios of wind and solar power output.\nFigure 9. Probability of typical power output scenarios.\nThe results demonstrate that the typical output scenarios of photovoltaic and wind\npower systems, extracted using the improved GMM algorithm, display distinct clustering\ncharacteristics in their three-dimensional spatiotemporal distribution. PV output scenarios\nexhibit clear diurnal patterns with active generation during daylight hours and complete\nshutdown at night, while maintaining well-defined output gradient distributions across\ndifferent scenarios. In contrast, wind power output scenarios present more complex\nmultimodal characteristics, showing significant variations in both temporal distribution\nand output patterns among different scenarios.\nThe hierarchical differentiation observed in PV output scenarios and the diverse fluc-\ntuation patterns of wind power scenarios collectively validate the algorithm’s effectiveness\nin capturing the essential operational characteristics of distributed generation. By apply-\ning scenario probabilities as weighting factors, we can derive a comprehensive weighted\ngrid-based integrated output curve for PV and wind power systems.\nhttps://doi.org/10.3390/en19020574",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Overall famework of the proposed DESS planning and resilience evaluation method."
+    },
+    {
+      "id": "f2",
+      "caption": "DESS-based resilience enhancement planning framework for distribution networks."
+    },
+    {
+      "id": "f3",
+      "caption": "Block diagram illustrating the proposed overall evaluation framework."
+    },
+    {
+      "id": "f4",
+      "caption": "Hierarchical structure of DESS methods and indicators for grid resilience."
+    },
+    {
+      "id": "f5",
+      "caption": "Generalized load curve characteristic diagram."
+    },
+    {
+      "id": "f6",
+      "caption": "Grid block distribution schematic."
+    },
+    {
+      "id": "f7",
+      "caption": "Load typical daily output curve."
+    },
+    {
+      "id": "f8",
+      "caption": "Representative scenarios of wind and solar power output."
+    },
+    {
+      "id": "f9",
+      "caption": "Probability of typical power output scenarios."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t2",
+      "caption": "Energy storage systems enhance distribution network resilience through a tripartite"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    },
+    {
+      "id": "e14",
+      "latex_or_text": "(14)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 9,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

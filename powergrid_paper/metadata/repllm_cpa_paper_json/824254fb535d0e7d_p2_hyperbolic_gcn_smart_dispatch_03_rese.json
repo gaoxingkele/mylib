@@ -1,0 +1,209 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p2_hyperbolic_gcn_smart_dispatch/p2_hyperbolic_gcn_smart_dispatch__03__research_on_bilstm_transformer_power_load_forecasting_meth__4763935b50.pdf",
+  "n_pages": 21,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the acceleration of the energy transi tion and the development of smart grids, \npower load forecasting has emerged as a core technology for ensuring the safe and eco-\nnomic operation of power systems [1]. It s accuracy directly impacts dispatch e ﬃciency \nand energy utilization [2]. Under the “Dual Ca rbon” strategy, the large-scale integration \nof renewable energy has increased load volatility, exposing the insuﬃcient precision and \npoor adaptability of traditional forecasting methods [3]. Studies indicate that for every 1% \nreduction in forecasting error, reserve capacity requirements can be decreased by approx-\nimately 3%, potentially yielding economic bene ﬁts of over ten million for the grid [4]. \nTherefore, developing high-precision load forecasting models holds signi ﬁcant theoreti-\ncal and practical value. \nCurrent research on load forecasting primar ily focuses on the optimization of deep \nlearning models. Temporal models, represented by LSTM, e ﬀectively capture the tem-\nporal dependencies of load data but su ﬀer from gradient vanishing issues when dealing \nwith long-term dependencies. The Transformer model breaks through sequence length \nlimitations via its self-a ttention mechanism but exhibits de ﬁciencies in local feature ex-\ntraction [5]. Hybrid models like CNN-LSTM  combine spatiotemporal features, yet their \nAcademic Editor: José Matas \nReceived: 23 February 2026 \nRevised: 12 March 2026 \nAccepted: 14 March 2026 \nPublished: 15 March 2026 \nCopyright: © 2026 by the authors. \nLicensee MDPI, Basel, Switzerland. \nThis article is an open access article \ndistributed under the terms and con-\nditions of the Creative Commons At-\ntribution (CC BY) license. \nEnergies 2026, 19, 1473 2 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nfeature fusion methods are often coarse, making it diﬃcult to adaptively identify complex \ncorrelations between multi-source heterogeneous features. Recent studies suggest that the \nfeature selection capability of attention mechanisms can signiﬁcantly enhance forecasting \naccuracy; however, existing methods mostly employ static or single-dimensional fusion, \nfailing to achieve dynamic collaborative optimization between feature channels and time \nsteps [6]. \nTo address these issues, this paper proposes a BiLSTM–Transformer hybrid forecast-\ning method based on a Dynamic Adaptive Fu sion (DAF) module. The core innovations \nare as follows: (1) Constructing a Dynamic Adaptive Fusion (DAF) module that utilizes a \nmulti-dimensional adaptive weighting me chanism to dynamically measure the im-\nportance of diﬀerent feature channels and time nodes, achieving precise extraction of key \ninformation; (2) Designing a BiLSTM–Trans former cascaded architecture, where the \nBiLSTM extracts local bidirectional temporal features [7] and the Transformer captures \nglobal long-range dependencies; (3) Developing a multi-scale feature interaction enhance-\nment strategy to resolve prediction distorti ons in load mutation regions. Compared to \nexisting research, this method achieves dynamic modeling of feature importance through \nthe DAF module, eﬀectively eliminating redundant information and establishing a more \nrobust feature fusion system. \nThe remainder of this paper is organized as follows: Section 2 systematically analyzes \nthe technical bottlenecks of traditional load forecasting methods; Section 3 elaborates on \nthe theoretical architecture of the hybrid forecasting model based on Dynamic Adaptive \nFusion; Section 4 designs a multi-model comparative experimental scheme and presents \nthe results; ﬁnally, Section 5 summarizes the research ﬁndings.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Traditional Load Forecasting Model",
+      "level": 1,
+      "text": "As a core technology in smart grid operations, power load forecasting plays a critical \nrole, with its accuracy directly inﬂuencing the quality of dispatching decisions. However, \ncurrent mainstream forecasting methods face signiﬁcant technical limitations [8]. This sec-\ntion systematically analyzes the shortcomings  of four typical models, highlighting their \ninadequate adaptability in complex load scenarios. \nThe convolutional neural network model extracts local spatial features through con-\nvolution kernels, and its core calculation can be expressed as the convolution operation of \nfeature maps: \n𝐹\n௢௨௧ = 𝜎(𝑊∗𝐹 ௜௡ + 𝑏) (1)\nThis calculation process achieves local feature extraction through the sliding opera-\ntion of the convolution kernel on the input feature map. Here, 𝑊 represents the weight \nmatrix of the convolution kernel, 𝜎 is the activation function, and 𝑏 is the bias term [9]. \nThis spatial feature extraction mechanism is highly eﬀective when dealing with static cor-\nrelated features such as temperature ﬁeld distribution and humidity gradient, which are \ntwo-dimensional spatial data. However, this spatial-oriented design concept makes it dif-\nﬁcult to model the temporal dynamic characteristics of load [10]. Load data is essentially \na dynamic sequence with strong temporal dependence, and its change pa ttern not only \ndepends on the current state but is also closely related to historical states. \nThe Long Short-Term Memory (LSTM) network model addresses the problem of van-\nishing gradients through a gating mechanism, and its core computation involves cell state \nupdate: \n𝑐\n௧ = 𝑓௧ ⊙𝑐 ௧ିଵ + 𝑖⊙𝑐 ௧ ෦ (2)\nIn this formula, ft represents the forgetting gate that controls the degree of retaining \nhistorical information, it represents the input gate that controls the intensity of updating \nEnergies 2026, 19, 1473 3 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nnew information, and 𝑐௧ ෦ is the candidate cell state. Th is gating design enables it to eﬀec-\ntively capture the short-term dependencies of the load sequence [11], such as the daily \nload ﬂuctuation patterns. However, when it comes to long-term pattern learning, the per-\nformance of LSTM is still not satisfactory. This problem becomes particularly prominent \nwhen dealing with load pattern switching scenarios, such as during holidays. For example, \nbefore the Spring Festival, as factories gradually shut down and residents’ electricity con-\nsumption patterns change, the load curve exhibits a unique “stepwise decline” feature. \nThe traditional LSTM model, due to its lack of pattern recognition mechanism, often con-\ntinues the daily prediction mode in the three da ys before the festival [12], resulting in a \nprediction error that increases to 22.4%. Grid operation data shows that when the predic-\ntion period exceeds 24 h, the memory decay rate of LSTM is as high as 40%, which means \nthat the model has a blurry memory of key historical patterns from one week ago or even \nearlier. This prediction lag phenomenon may cause serious consequences in grid dispatch-\ning. \nThe Transformer model overcomes the limitation of sequence length through the self-\nattention mechanism, and its core calculation is scaled dot-product attention: \n𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛 = 𝑠𝑜𝑓𝑡 max( 𝑄𝐾்\nඥ𝑑௞\n)𝑉 (3)\nIn this formula, 𝑄 represents the query matrix, 𝐾 represents the key matrix, 𝑉 rep-\nresents the value matrix, and 𝑑௞  represents the dimension of the key vector. Figure 1 \nshows the structure of the Transformer encoder. This design enables the model to estab-\nlish global dependencies, demonstrating unique advantages when dealing with long-term \npatterns such as monthly load cycles [13]. However, this global perspective is achieved at \nthe cost of sacriﬁcing local details. In scenarios where load ﬂuctuations occur due to ﬂuc-\ntuations in photovoltaic output, the predict ion results of the Transformer model exhibit \nabnormal ﬂuctuations, exceeding ±15%. The reason for this is that the self-attention mech-\nanism is less sensitive to local mutation feat ures during the process of global feature ex-\ntraction. When a photovoltaic power station experiences a sudden drop in output due to \ncloud cover, the load in the associated area will increase sharply, and this mutation feature \nis diluted in the global a ttention weight distribution [14], resulting in a sluggish model \nresponse. More seriously, the computationa l complexity of the Transformer increases \nquadratically with the sequence length. When  processing long-term historical data, the \nconsumption of computing resources increases exponentially. \n \nFigure 1. Structure Diagram of Transformer. \n\nEnergies 2026, 19, 1473 4 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nTo overcome the shortcomings of a single model, researchers proposed a CNN-LSTM \nhybrid architecture. This model combines spatial feature extraction and temporal model-\ning: \n𝑦ො =L S T M ( C N N (𝑋)) (4)\nThis formula describes the cascaded computing process: The input data 𝑋 ﬁrst un-\ndergoes spatial feature extraction through the CNN module, and then is input into the \nLSTM module for temporal modeling [15]. Fi gure 2 shows the typical architecture of \nCNN-LSTM. Theoretically, this design should be able to simultaneously capture the spa-\ntiotemporal characteristics of the load. However, in practical applications, this mechanical \nconcatenation exposes a series of problems. The most fundamental defect lies in the overly \nsimplistic and crude feature fusion mechanism. Spatial features and temporal features \nhave essential diﬀerences in dimension and scale, and direct concatenation leads to severe \ndistortion in the information transmission process [16]. Experimental data show that the \ninformation loss rate during feature transmission is as high as 25%, especially when con-\nverting spatial features to temporal features, there is a serious dimension mismatch. For \nexample, the high-dimensional feature map ou tput by the convolution layer needs to be \nﬂattened into a one-dimensional vector before being input into the LSTM, which results \nin the loss of spatial structure information. In extreme weather scenarios such as typhoon \npassage, the prediction error of this hybrid model still increases by more than 30%. \n \nFigure 2. Architecture of CNN-LSTM Model. \nThrough a systematic analysis of th e above model, three common technical bo ttle-\nnecks can be summarized. Firstly, there is a fundamental defect in the feature fusion mech-\nanism [17]. Traditional methods mostly adopt feature concatenation or simple weighting \nmethods, and this rigid fusion leads to an increase of more than 50% in the prediction \ndistortion rate in the load sudden change area. Secondly, the dynamic adaptability is se-\nriously insu ﬃcient. Traditional models have di ﬃculty responding in real time to the \nchanges in load characteristics, and the prediction error increases by 22% when the holi-\nday mode is switched. Finally, the problem of decoupling of spatial and temporal features \nis prominent. The time-dependent and spatial features are processed separately. The tem-\nporal and spatial coupling characteristics of the load are ignored [18]. Studies have shown \nthat the correlation coeﬃcient between temperature and load is 0.83, and the correlation \ncoeﬃcient between humidity and load is 0.76, but traditional methods failed to eﬀectively \nutilize these strong correlated features. \nIn summary, traditional load forecasting models have systematic ﬂaws in complex \nscenarios: the CNN model shows a signiﬁcant increase in prediction deviation during load \n\nEnergies 2026, 19, 1473 5 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nﬂuctuations, the LSTM model experiences a noticeable increase in error during mode tran-\nsitions, and the Transformer model demonstrates severe instability when dealing with \nﬂuctuations in new energy sources [19]. These typical problems fully reveal the funda-\nmental limitations of traditional methods, such as insu ﬃcient adaptability and poor ro-\nbust",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 New Methods in Load Forecasting",
+      "level": 1,
+      "text": "To address the technical limitations of traditional load forecasting models in multi-\nsource feature fusion, dynamic temporal adap tation [21],and the c oordination of long- \nand short-term dependencies, this paper proposes a BiLSTM–Transformer hybrid model \nbased on Dynamic Adaptive Fusion (DAF),  denoted as DAF-BT. Through multi-level \nstructural innovations, this model aims to overcome the limitations of low feature utiliza-\ntion in complex grid environments and achieve highly accurate and robust load forecast-\ning. This chapter details the overall architecture of the proposed model and the theoretical \nprinciples underlying its core innovative components. \n3.1. BiLSTM–Transformer–DAF Hybrid Architecture \nThe DAF-BT model incorporates two primary architectural innovations: the \nBiLSTM–Transformer cascaded temporal modeler and the Dynamic Adaptive Fusion \n(DAF) module [22]. Adopting an end-to-end design, the architecture establishes a struc-\ntured workﬂow that progresses from multi-source feature input to cascaded temporal ex-\ntraction, dynamic adaptive fusion, and prediction output. As illustrated in Figure 3, the \nmodel’s workﬂow exhibits a clear hierarchical structure: input data is ﬁrst mapped into a \nhigh-dimensional space via an N-space transformer to uncover latent feature correlations; \nit is then fed into the cascaded temporal modeling module, where a Bidirectional Long \nShort-Term Memory (BiLSTM) network captures the bidirectional short-term dependen-\ncies of the load sequence, followed by a Transformer layer—optimized with a spatial \ntransformation network—to model global long-range pa tterns and periodic regularities \n[23]. Subsequently, temporal features from diﬀerent levels are aggregated in the core DAF \nmodule for adaptive weighting and coordination. By dynamically measuring the contri-\nbutions of various feature channels and time steps, this module achieves precise reinforce-\nment of key information while suppressing redundant noise. Finally, the model integrates \nall high-level features to generate the ﬁnal load forecasting values. This design, centered \non cascaded modeling and dynamic fusion, ensures eﬃcient synergy between feature ex-\ntraction and information integration, laying a solid structural foundation for the model’s \nhigh performance in handling complex load ﬂuctuations. \nEnergies 2026, 19, 1473 6 of 21 \n \nhttps://doi.org/10.3390/en19061473 \n \nFigure 3. BiLSTM–Transformer–DAF Flowchart. \n3.2. BiLSTM–Transformer Coupled Sequential Modeling \nThe temporal feature extraction adopts a BiLSTM–Transformer cascaded structure to \neﬀectively address the balance issue of long-term and short-term dependencies in the load \nsequence. This module ﬁrst uses BiLSTM to capture the bidirectional short-term depend-\nency relationships of the sequence: \n𝐻௟௦௧௠ =B i L S T M (𝐹௦) (5)\nIn this formula, 𝐹௦ represents the input from the spatial feature extraction module, \nand the BiLSTM () operation simultaneously  combines the outputs of the forward and \nbackward LSTM units [24]. Speci ﬁcally, the forward LSTM unit processes the sequence \nfrom front to back, capturing the dependency pa tterns from the past to the current mo-\nment; the backward LSTM unit processes the se quence from back to front, learning the \npotential correlations from the future to the current moment in an inverse manner [25]. \nThe hidden states of the two are concatenated at each step, thereby simultaneously utiliz-\ning the context information from the past and the future, e ﬀectively alleviating the \nmemory decay problem caused by the one-way information ﬂow in traditional unidirec-\ntional LSTM. Subsequently, the Transformer la yer is introduced to capture longer-term \npattern dependencies [26]. To avoid the proble m in the standard Transformer where the \nglobal self-attention mechanism has high computational cost on long sequences and may \nignore local correlations, this model introduces a local enhanced attention mechanism: \n𝐿𝑜𝑐𝑎𝑙𝐴𝑡𝑡𝑛 = 𝑠𝑜𝑓𝑡 𝑚𝑎𝑥( 𝑄𝐾\n் + 𝑀\nඥ𝑑௞\n)𝑉 (6)\nHere, 𝑄 represents the query matrix, 𝐾 represents the key matrix, 𝑉 represents the \nvalue matrix, and 𝑑௞ represents the dimension of the key vector [27]. This mechanism \nuses a local mask matrix 𝑀 to force the model to prioritize the consideration of feature \ncorrelations among neighboring time steps when calculating the attention weights [28]. It \nis worth noting that the window size of the local mask matrix 𝑀 is designed as a tunable \nhyperparameter correlated with the data samp ling rate. To ensure the model captures \nconsistent local physical patterns across datasets with diﬀerent resolutions, the dimension \n\nEnergies 2026, 19, 1473 7 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nof 𝑀 should be adjusted to cover an equivalent physical time horizon. This design allows \nthe model to explicitly focus on the most relevant recent history regardless of the sampling \nfrequency. This approach not only reduces computational complexity but also enhances \nthe model’s ability to capture local mutation pa tterns (such as rapid load climbing). In \npractical tests, this design signi ﬁcantly reduced the ﬂuctuation amplitude of the predic-\ntion results from ±15% in traditional models to ±6% in scenarios with drastic ﬂuctuations \nin photovoltaic output, demonstrating its ability to model temporal features.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.3 Dynamic Adaptive Fusion Module",
+      "level": 2,
+      "text": "The Dynamic Adaptive Fusion (DAF) module is designed to address the limitations \nof traditional fusion methods, such as simple concatenation or static weight allocation, \nwhich often struggle to e ﬃciently eliminate redundancy when processing multi-source \nheterogeneous data [29]. As illustrated in Fi gure 4, the DAF module adopts a dual-path \nparallel architecture, consisting of a Feature Channel Adaptive Unit and a Temporal Con-\ntribution Evaluation Unit. \n \nFigure 4. Principle Diagram of DAF Module. \nTo enhance model reproducibility and clarify the learning process, the detailed math-\nematical workﬂow is formulated as follows. The Feature Channel Adaptive Unit dynam-\nically evaluates the importance of diﬀerent feature channels (e.g., meteorological factors, \ndate a ttributes). It performs global statistical feature compression on the input using \nGlobal Average Pooling (GAP), followed by a multi-layer perceptron (MLP) to generate \nthe channel weight matrix 𝐴௖: \n𝐴௖ = 𝜎(𝑊௖ଶ𝛿(𝑊௖ଵ ⋅𝐺 𝐴 𝑃(𝐹௦))) (7)\nwhere 𝐹௦ denotes the channel features, 𝑊௖ଵ and 𝑊௖ଶ are learnable weight matrices for \ndimensionality reduction and restoration, δ represents the ReLU activation function, and \n𝜎 is the Sigmoid function. \nSimultaneously, the Temporal Contribution Evaluation Unit utilizes a lightweight \n1D convolutional network to pinpoint critical time nodes of load ﬂuctuations, generating \nthe temporal weight matrix 𝐴௧: \n𝐴௧ = 𝜎(𝐶𝑜𝑛𝑣1𝐷(𝐹௧)) (8)\nwhere 𝐹௧ represents the temporal features extracted by the BiLSTM–Transformer. \nCrucially, unlike existing attention mechanisms (e.g., CBAM or traditional self-atten-\ntion) that typically process spatial/channel and temporal features orthogonally through \n\nEnergies 2026, 19, 1473 8 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nsimple sequential addition or matrix multiplication, the DAF module introduces a deep-\nlevel synergistic fusion mechanism [30]. To achieve this, we design the following dynamic \nweighted fusion equation: \n𝐹ௗ௖௙ = 𝐴௖ ⊗𝐹௦ + 𝐴௧ ⊗𝐹 ௧ + 𝜆⋅𝐹 ௦ ⊙𝐹 ௧ (9)\nIn this formula, ⊗ denotes element-wise multiplication with broadcasting, and ⊙ \nrepresents the Hadamard product. The distinct innovation lies in the nonlinear interaction \nterm 𝜆⋅ (𝐹௦ ⊙𝐹 ௧). Instead of being a static hyperparameter, the interaction coe ﬃcient 𝜆 \nis dynamically learned from the concatenated context of both feature spaces. \nThis speciﬁc architectural advantage allows the model to capture the deep cross-di-\nmensional coupling between environmental shifts and temporal load behaviors. For ex-\nample, rather than merely identifying that “temperature is important” or “a speciﬁc morn-\ning load trend is important,” the interaction te rm explicitly learns “which historical load \npatterns are most valuable under speciﬁc external environmental proﬁles.” Experimental \nresults demonstrate that this dynamic adaptive design increases the information retention \nrate in load mutation regions to 92%. Compared to traditional static fusion methods, the \nfeature utilization eﬃciency is improved by approximately 37%, signiﬁcantly enhancing \nthe model’s forecasting robustness and precision under complex operating conditions.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "4 Experimental Design and Results Analysis",
+      "level": 1,
+      "text": "Following the theoretical formulation and design of the BiLSTM–Transformer–DAF \nhybrid architecture, this section presents a systematic experimental study based on a real-\nworld power load dataset to comprehensively evaluate its practical performance. Speciﬁ-\ncally, this section details the data sources, preprocessing methods, evaluation metrics, and \nexperimental settings. Through quantitative comparisons with multiple baseline models \nand qualitative analysis of the prediction curves, we evaluate the e ﬀectiveness and com-\npetitive performance of the proposed model.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "4.1 Experimental Data and Preprocessing",
+      "level": 2,
+      "text": "The experimental data are sourced from full -year historical power load records of a \ntypical non-residential commercial complex (comprising oﬃce buildings and retail spaces) \nin a temperate climate zone. The dataset covers 1 January to 31 December 2016, with 0.5 h \nsampling intervals, yielding a total of 17,516 samples. While sourced from a single site, \nthe selected complex features typical load proﬁles shaped by standard business schedules \nand seasonal retail activities, making it representative of a wide range of urban commer-\ncial infrastructure. Thus, while the model’s speciﬁc parameters are tuned to this dataset, \nthe proposed architecture is designed to capture the universal temporal dependencies and \nnonlinear characteristics inherent in commercial power consumption. This endows the \nmethodology with potential transferability to other non-residential fa cilities or regions, \nprovided local historical data is available for model retraining or ﬁne-tuning. Future work \nwill further validate the model’s robustne ss across diverse climate zones and building \ntypes. In addition to load values, the original dataset includes key environmental param-\neters such as temperature and wind speed. To  ensure data quality, a rigorous prepro-\ncessing pipeline was implemented: ﬁrst, erroneous observations signi ﬁcantly deviating \nfrom the normal range were eliminated; se cond, sliding average smoothing was applied \nexclusively to temperature data to suppress measurement noise, while raw power load \ndata remained unprocessed to preserve high-frequency ﬂuctuations; third, continuous \nfeatures were normalized using the Z-score method, while temporal features were cosine-\nencoded to capture periodic pa tterns; ﬁnally, missing data were ﬁlled using linear inter-\npolation. \nEnergies 2026, 19, 1473 9 of 21 \n \nhttps://doi.org/10.3390/en19061473",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "4.2 Experimental Setup and Evaluation Metrics",
+      "level": 2,
+      "text": "The experimental setup closely adhered to time series forecasting standards, parti-\ntioning the full dataset into training, validation,  and testing sets in a 7:1:2 ratio based on \nchronological order. This setup simulates the progressive forecasting requirements of \nmodels on future data in real-world scenarios. To ensure the fairness and reproducibility \nof the comparative experiments, all models were implemented on the same hardware \nplatform and deep learning framework. A uniﬁed training strategy was applied across all \nbaseline and proposed models to minimize performance di ﬀerences caused by environ-\nmental factors. The detailed experimental environment and common hyperparameter set-\ntings, including learning rate and training epochs, are listed in Table 1. \nTable 1. Experimental Environment and Common Parameter Settings. \nParameter Category Con ﬁguration/Value \nDeep Learning Framework PyTorch 1.12 (Python 3.8) \nHardware Platform Intel Core i9 CPU/NVIDIA RTX 3090 GPU \nOptimizer Adam ( 𝛽ଵ = 0.9, 𝛽ଶ = 0.999) \nInitial Learning Rate 0.001 \nBatch Size 64 \nTraining Epochs 150 \nHidden Units 64 \nLayers 2 \nTo ensure a fair and rigorous evaluation , while the foundational training environ-\nment (hardware, framework, and base optimizer) was uni ﬁed across all models as listed \nin Table 1, the model-speciﬁc hyperparameters for all baseline models were systematically \noptimized rather than relying on arbitrary default values. Speci ﬁcally, we employed a \nGrid Search strategy on the validation set to determine the optimal conﬁguration for each \nindividual architecture. For instance, the kernel sizes and dilation rates for CNN and TCN \nmodels, the number of attention heads for the Transformer baseline, and the exact hidden \nstate dimensions for the RNN-based models (LSTM and GRU) were individually tuned \nto maximize their respective representation capabilities. \nFurthermore, to address the varying convergence speeds of diﬀerent model architec-\ntures and prevent overﬁtting, an Early Stopping mechanism was implemented uniformly \nacross all training procedures. Training was halted if the validation loss did not improve \nfor 15 consecutive epochs, ensuring that the ﬁnal evaluated weights reﬂected the optimal \ngeneralization state of each model. Additi onally, a dynamic learni ng rate optimization \nstrategy (ReduceLROnPlateau) was applied to all models. The learning rate was halved \nwhen validation metric improvements stagnated for 5 epochs. These rigorous tuning and \noptimization procedures help ensure that the performance gaps observed in the compar-\native experiments are fundamentally derived fr om architectural innovations rather than \ninadequate baseline training. \nTo comprehensively evaluate the model performance from multiple dimensions, the \nexperiment selected Mean Absolute Percentage Error ( 𝑀𝐴𝑃𝐸 ) ,  M e a n  A b s o l u t e  E r r o r  \n(𝑀𝐴𝐸), Root Mean Square Error (𝑅𝑀𝑆𝐸), and the Coeﬃcient of Determination (𝑅ଶ) as per-\nformance metrics. The speciﬁc calculation formulas are as follows: \n𝑀𝐴𝐸 =\nଵ\n௡ ∑ ∣௡\n௜ୀଵ 𝑦௜ −𝑦 పෝ∣   (10)\nwhere 𝑀𝐴𝐸 represents the mean absolute error, which re ﬂects the average deviation be-\ntween the predicted value and the actual value. The unit is MW, and the smaller the value, \nthe higher the prediction accuracy. \nEnergies 2026, 19, 1473 10 of 21 \n \nhttps://doi.org/10.3390/en19061473 \n𝑅𝑀𝑆𝐸 = ටଵ\n௡ ∑ (௡\n௜ୀଵ 𝑦௜ −𝑦 పෝ)ଶ  (11)\n𝑅𝑀𝑆𝐸  represents the root mean square error, which measures the dispersion be-\ntween the predicted values and the actual values. It is more sensitive to larger errors and \nis expressed in units of MW. \n𝑀𝐴𝑃𝐸 =\nଵ଴଴%\n௡ ∑ |௡\n௜ୀଵ\n௬೔ି௬ഢෝ\n௬೔\n|  (12)\n𝑀𝐴𝑃𝐸 stands for Mean Absolute Percentage E rror. It is used to assess the level of \nrelative error and eliminate the in ﬂuence of units. The lower the percentage value, the \nbetter. \n𝑅ଶ =1 −\n∑ (௡\n௜ୀଵ 𝑦௜ −𝑦ො௜)ଶ\n∑ (௡\n௜ୀଵ 𝑦௜ −𝑦 )ଶ\n \n(13)\n𝑅ଶ  is the coe ﬃcient of determination, which is used to indicate the explanatory \npower of the model. Its value ranges from 0 to 1, and the closer it is to 1, the be tter the \nﬁtting eﬀect.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4.3 Analysis of Experimental Results",
+      "level": 2,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.3.1 Comparative Analysis of Integrated Forecasting Performance",
+      "level": 3,
+      "text": "To systematically assess the e ﬀectiveness and competitive performance of the pro-\nposed BiLSTM–Transformer–DAF model in power load forecasting tasks, this section se-\nlects eight mainstream methods as benchmarks, including single deep learning models \n(CNN, LSTM, GRU, TC N, Transformer) and hybrid models (CNN-LSTM, TCN–GRU, \nTCN–LSTM–Attention). We conduct an in-depth analysis from multiple dimensions. \nCombined with quantitative evaluation metrics, a systematic comparative assessment of \nthe integrated forecasting performance of each model is performed. \nTo visually assess the capability of di ﬀerent models in capturing the temporal fea-\ntures of power loads, Figure 5 illustrates the ﬁtting comparison between the single-step \nprediction results of nine models and the actual load curves on the test set. By observing \nthe individual ﬁtting curves of each model, it can be found that basic single deep learning \nmodels, such as CNN and LSTM, although capable of outlining the overall proﬁle of load \nvariations, tend to show some deviations at the peaks and valleys of load ﬂuctuations. \nSpeciﬁcally, the CNN model exhibits certain lo cal oscillations, while the LSTM model \nshows a certain phase lag, which presents challenges in strictly tracking instantaneous \nchanges in load. \nIn contrast, with the introduction of architectures like TCN and GRU and the appli-\ncation of hybrid models, the smoothness and alignment of the prediction curves gradually \nimprove. Notably, the BiLSTM–Transformer–DAF model proposed in this paper shows a \nprediction curve that closely aligns with the actual load curve. Even at turning points \nwhere load data undergoes rapid transitions, it maintains stable tracking capabilities \nwithout the noise typically caused by over ﬁtting. This provides preliminary veri ﬁcation \nof the model’s eﬀectiveness in extracting complex temporal features. \nTo provide a more intuitive demonstration of relative performance between the pro-\nposed method and other mainstream models, Figure 6 presents a direct comparison in a \nsingle coordinate system, featuring the BiLSTM–Transformer–DAF model alongside rep-\nresentative models such as CNN, Transformer, CNN-LSTM, and TCN–LSTM–Attention. \nBy overlaying multiple curves, the degree of  alignment between each model and the ac-\ntual load curve can be visually compared. \nEnergies 2026, 19, 1473 11 of 21 \n \nhttps://doi.org/10.3390/en19061473 \n \nFigure 5. Fitting Performance of Diﬀerent Models Against Actual Load Proﬁles. \n \nFigure 6. Comparison of Representative Forecasting Models Against Actual Load Proﬁles. \nAs observed, the CNN model exhibits noticeable deviation from the other curves and \ndisplays a distinctly oscillatory pa ttern. While baseline models like the Transformer im-\nprove trend-following capabilities, visible ga ps still exist between their predictions and \nthe actual values at peaks and valleys. In contrast, the prediction trajectory of the pro-\nposed model shows improved robustness, more closely aligning with the actual load \ncurve across most of the duration. This vi sual comparison indicates that the proposed \nmethod oﬀers enhanced overall ﬁtting accuracy and trend-tracking capability relative to \nthe selected baselines. \nThe quantitative evaluation metrics for each model, detailed in Table 2, further sup-\nport the aforementioned analytical observations from a statistical perspective. Data shows \nthat the standalone CNN model exhibits th e highest prediction error among the tested \nmodels, with a MAPE of 4.23%, due to its inherent di ﬃculty in capturing long-distance \ntemporal dependencies. \n\nEnergies 2026, 19, 1473 12 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nTable 2. Comparative Analysis of Model Predictive Accuracy Metrics. \nModel MAE (MW) RMSE (M W) MAPE (%) R 2 \nCNN 12.24 15.72 4.23 0.879 \nLSTM 8.711 11.55 2.98 0.935 \nGRU 8.481 11.41 2.88 0.936 \nTCN 8.338 11.02 3.02 0.940 \nCNN-LSTM 7.362 9.486 2.62 0.956 \nTransformer 6.768 8.851 2.34 0.962 \nTCN–GRU 6.384 8.582 2.20 0.964 \nTCN–LSTM–Attention 5.112 6.658 1.81 0.978 \nOurs 4.560 5.925 1.58 0.983 \nWith the integration of Recurrent Neural Network (RNN) components—such as \nLSTM and GRU—and TCN structures, the error metrics for hybrid models exhibit various \ndegrees of decline; for instance, the MAPE of the TCN–GRU model decreases to 2.20%. \nAmong all competing models, the proposed BiLSTM–Transformer–DAF model demon-\nstrates the most competitive forecasting pe rformance, with its MAE, RMSE, and MAPE \nreduced to 4.560 MW, 5.925 MW, and 1.58%, respectively, while the R\n2 improves to 0.983. \nCompared to the best-performing baseline, the TCN–LSTM–A ttention model, our \nmethod further reduces the MAPE by approximately 12.7%. These results indicate that by \nincorporating BiLSTM to capture bidirectional dependencies, combining it with Trans-\nformer for global feature extraction, and op timizing with the DAF module, the model’s \ncapability to characterize complex nonlinear power load patterns is eﬀectively improved. \n4.3.2. Load Forecasting Performance Across Diﬀerent Time Scales \nThe comprehensive comparative analysis in  the previous section demonstrated the \nimproved statistical performance of the BiLSTM–Transformer–DAF model across the en-\ntire test set. However, power load exhibits multi-periodicity, encompassing both daily \npatterns based on a 24 h cycle and weekly patterns inﬂuenced by the distinction between \nworkdays and weekends. To further verify the model’s generalization capability and ro-\nbustness across diﬀerent time scales, this section selects typical daily and weekly load se-\nquences from the test set. A detailed comparison is conducted between the proposed \nmethod and the most competitive baselines, speci ﬁcally the TCN–LSTM–A ttention and \nTCN–GRU models. \nThe comparative performance illustrated in Figure 7 highlights observable di ﬀer-\nences in how di ﬀerent deep learning architectures handle the nonlinear dynamics of \nshort-term power load. The BiLSTM–Transformer–DAF model demonstrates the capabil-\nity to closely track the “ground truth”, particularly during the initial volatility phase and \nthe peak plateau. Unlike its counterparts, this model helps mitigate the “lag e ﬀect” com-\nmon in time series forecasting. By integrating the DAF mechanism with the BiLSTM–\nTransformer backbone, the model captures bo th the long-range temporal dependencies \nand the local mutational features of the load curve. This results in a trajectory that main-\ntains a close alignment with the actual values even during the rapid ascent between time \nsteps 4 and 8, where traditional recursive models often encounter challenges with gradi-\nent vanishing or insuﬃcient feature extraction. \nFurthermore, the stability of the models during the “post-peak” transition reveals the \nrobustness of the proposed approach against stochastic noise. While the TCN–LSTM–At-\ntention model exhibits some ﬂuctuations and over-corrections during the gradual descent, \nthe BiLSTM–Transformer–DAF maintains a relatively smooth and precise ﬁt. The TCN–\nGRU model tends to yield lower predictions, often underestimating the peak and lagging \nbehind the trend, which suggests that its simpli ﬁed gating mechanism may have limited \nEnergies 2026, 19, 1473 13 of 21 \n \nhttps://doi.org/10.3390/en19061473 \nrepresentational power to handle the high-f requency components of 30 min resolution \ndata. The proposed model’s improved tracking of both the peak magnitude and the sub-\nsequent “valleys” indicates its eﬃcacy in high-ﬁdelity forecasting, providing reliable data \nsupport for real-time grid dispatching and energy management. \n \nFigure 7. Comparison of Daily Load Forecasting Curves for Representative Models. \nTo validate the aforementioned visual observations from a rigorous quantitative per-\nspective, Figure 8 provides a comparative analysis of the error evaluation metrics for this \ntypical daily forecasting task. The data intuitively demonstrates that the proposed \nBiLSTM–Transformer–DAF mod",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Structure Diagram of Transformer."
+    },
+    {
+      "id": "f2",
+      "caption": "Architecture of CNN-LSTM Model."
+    },
+    {
+      "id": "f3",
+      "caption": "BiLSTM–Transformer–DAF Flowchart."
+    },
+    {
+      "id": "f4",
+      "caption": "Principle Diagram of DAF Module."
+    },
+    {
+      "id": "f5",
+      "caption": "Fitting Performance of Diﬀerent Models Against Actual Load Proﬁles."
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of Representative Forecasting Models Against Actual Load Proﬁles."
+    },
+    {
+      "id": "f7",
+      "caption": "Comparison of Daily Load Forecasting Curves for Representative Models."
+    },
+    {
+      "id": "f8",
+      "caption": "Quantitative Error Metrics for Representative Models on the Daily Load Proﬁle."
+    },
+    {
+      "id": "f9",
+      "caption": "Comparison of Weekly Load Forecasting Curves for Representative Models."
+    },
+    {
+      "id": "f10",
+      "caption": "illustrates the quantitative error metrics for the weekly forecasting task,"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Experimental Environment and Common Parameter Settings."
+    },
+    {
+      "id": "t2",
+      "caption": "Comparative Analysis of Model Predictive Accuracy Metrics."
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e13",
+      "latex_or_text": "(13)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 10,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

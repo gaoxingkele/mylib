@@ -1,0 +1,372 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/pdfs/p3_self_adaptive_mode_distribution_planning/p3_self_adaptive_mode_distribution_planning__01__multi_objective_collaborative_optimization_of_d__14c0d4d209.pdf",
+  "n_pages": 17,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "With the increasing popularity of energy storage (ES), electric vehicles (EVs), and\nrenewable energy generation equipment such as wind turbines and photovoltaic systems,\nthe current distribution network is rapidly transitioning into a multi-attribute composite\nsystem [1,2]. As the penetration of distributed energy sources increases, modern active\ndistribution networks are adopting a networked layout, forming several autonomous\nunit groups through topology reconfiguration [3]. This decoupled architecture effectively\nachieves the hierarchical utilization and dynamic allocation of regional energy, significantly\nenhancing system resilience while improving asset utilization [ 4]. Each grid group has\nEnergies 2025, 18, 5232 https://doi.org/10.3390/en18195232\nEnergies 2025, 18, 5232 2 of 17\nrelatively independent operational characteristics, but the groups are interconnected and\ninfluence each other, requiring an efficient collaborative optimization scheduling mecha-\nnism to coordinate their operation [5,6]. The integration of devices introduces a series of\nimpacts on the distribution network, including changes in system power flow and effects\non grid frequency and voltage [7]. Therefore, analyzing the characteristics of these devices\nand establishing mathematical models to study the operation of the distribution network\nhas important economic and safety benefits.\nIn recent years, the multi-objective scheduling and configuration optimization of\ndistribution networks have been widely studied. For example, reference [ 7] proposed a\nhierarchical electric vehicle charging scheduling strategy based on NSGA-II, which can\nreduce user electricity costs while improving the balance of system operation. Reference [8]\nused the improved particle swarm optimization method to carry out multi-objective col-\nlaborative optimization of active distribution networks, showing strong advantages in\nvoltage stability and load peak reduction. In addition, reference [9] introduced distributed\nrobust optimization into the multi-objective planning of distribution networks, signifi-\ncantly reducing the uncertainty risk of the scheme and improving the economic efficiency.\nReference [10] studied the energy storage capacity optimization problem in the microgrid\nscenario, and comprehensively considered the coordinated scheduling of combined heat\nand power and electric vehicles, proving the important role of multi-energy coupling in\nimproving operational flexibility. Reference [11] analyzed the impact of electric vehicle ac-\ncess mode on the static voltage stability margin of the distribution network and found that\ndifferent access methods will significantly affect the load absorption capacity of the system.\nReference [12] systematically reviewed the multi-objective optimization research of multi-\nenergy systems and electric vehicle charging stations, pointing out that existing research\nstill has deficiencies in user behavior modeling and grid–transportation network coupling.\nReference [13] used the NSGA-II method to model the energy storage site selection and\ncapacity configuration in active distribution networks, and verified the applicability of\nintelligent algorithms in solving non-convex multi-objective problems. Reference [ 14]\nproposed a safe energy strategy optimization method for multi-energy microgrid control,\nwhich effectively addressed the uncertainty problem caused by wind and solar output\nfluctuations. Reference [15] established a multi-objective optimization model for the short-\nterm scheduling problem of a cascaded hydropower–wind power–photovoltaic-thermal\npower and pumped storage system, providing a reference for the coordinated operation of\ncross-energy systems. Reference [16] systematically analyzed the computational complexity\nof NSGA-II and other multi-objective evolutionary algorithms, laying the foundation for\nthe selection of algorithms in subsequent power system optimization problems. These\nstudies show that multi-objective intelligent optimization methods have good performance\nin terms of convergence and diversity, but most of the results are still at the simulation\nlevel and lack verification in actual engineering scenarios.\nIn summary, existing research has achieved considerable results in the optimization\nof energy storage, electric vehicles, and distributed generation (DG). This paper aims\nto improve the operational efficiency and performance of the distribution network by\nfully utilizing the adjustment capabilities of ES, EV , and DG to optimize the operation of\nthe distribution network [ 17,18]. Simulation tests based on the standard IEEE 33-node\nsystem show that the proposed modeling method has significant advantages in solution\naccuracy. Engineering verification from a regional grid renovation project further confirms\nits superiority in computational efficiency. The results demonstrate strong engineering\napplication value. This study highlights the incremental contribution of the improved\nNSGA-II by demonstrating faster convergence and better Pareto diversity than standard\nNSGA-II, PSO, and distributed robust optimization methods.\nEnergies 2025, 18, 5232 3 of 17",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Basic Equipment Models",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Distributed Generation Output Models",
+      "level": 2,
+      "text": "The wind-turbine output model is given in Equation (1), while the photovoltaic output\nmodel is shown in Equation (2) [14,19].\nPWT =\n\n\n\n0 0 ≤ v < vci, vco < v\nPr − WT\n\u0012\nv3−v3\nci\nv3r −v3\nci\n\u0013\nvci ≤ v < vr\nPr−PV − WT v r ≤ v ≤ vco\n(1)\nPPV = nPV Pr−PV (Rc/Rr)[1 + k(Tc − Tr)] (2)\nwhere PWT is the output power of the wind turbine; Pr−WT is the wind turbine’s rated\npower; vci, vco, and vr denote the cut-in, cut-out, and rated wind speeds, respectively; PPV\nis the photovoltaic array output power; nPV is the number of photovoltaic cells; Pr−PV\nis the rated output power of the photovoltaic cells; Rc and Rr are the actual and rated\nirradiance; k is the power temperature coefficient; and Tc and Tr are the actual and standard\ntemperatures, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 Non-Dispatchable Electric Vehicles Load Model",
+      "level": 2,
+      "text": "Electric vehicles can be connected to the grid in two different ways. The first is the\ndispatchable mode, in which the electric vehicle can both charge and discharge, functioning\nlike an energy storage device. The second is the non-dispatchable mode, in which the\nelectric vehicle only draws power from the grid for charging [20]. For non-dispatchable\nelectric vehicles, their daily energy consumption depends on the daily driving distance\nand follows the normal distribution given by Equation (3) [11]. By sampling Equation (3)\nfor each electric vehicle, the daily driving distance can be obtained, and the daily energy\nconsumption can be calculated as shown in Equation (4). Based on the driving distance,\nthe remaining charge (SOC) of the electric vehicle can be determined using Equation (5).\nFinally, the resulting daily energy demand, that is, the required charging time per day, can\nbe determined using Equation (6).\nf (DEV ) = 1√\n2πσ\nexp\n \n− (DEV − µ)2\n2σ2\n!\n(3)\nEEV−consumption = DEV CEV/DEVmax (4)\nSOCEV =\n\u0000\nCEV − EEV−consumption\n\u0001\n/CEV × 100% (5)\nTEV−charge = EEV−consumption /PEV−charging (6)\nwhere DEV represents the daily driving distance of new energy vehicles; σ and µ are the\nstandard deviation and mean of the normal distribution; EEV−consumption is the electric\nvehicle’s daily energy consumption; DEVmax is the maximum driving distance; CEV is the\nbattery capacity of the electric vehicle; SOCEV is the remaining state of charge after the\nelectric vehicle has driven is the state of charge remaining after the vehicle has travelled\nDEV; TEV−charge is the total charging time required by the electric vehicle per day; and\nPEV−charging is the charging power of the electric vehicle.\nWhile the above formulation describes the daily energy demand and load profile\nfor non-dispatchable EVs, both EV types in this study are modeled under a set of com-\nmon default behavioral assumptions to ensure consistency and generality across different\noperating scenarios, as outlined below.\nEnergies 2025, 18, 5232 4 of 17\nFor non-dispatchable EVs, it is assumed that they operate solely as charging loads\nwithout any discharging capability. Their daily charging demand is derived from historical\ndriving distance distributions, with arrival and departure times implicitly reflected in the\naggregated load profile. For dispatchable EVs, it is assumed that they can both charge and\ndischarge, subject to the following constraints:\n(1) SOC limits (SOCmin ≤ SOC(t) ≤ SOCmax);\n(2) Maximum charging/discharging power limits (Pc,max, Pd,max);\n(3) Availability windows aligned with typical residential/workplace charging behavior.\nThese assumptions are consistent with widely adopted EV modeling approaches\nin the literature while enabling the proposed framework to remain generalizable to\ndifferent scenarios.\n2.3. Energy Storage and Schedulable Electric Vehicles Charging–Discharging Model\nThe dispatchable EVs and ES have the same function and can be considered larger-\ncapacity batteries; so, they can be described using the same model. The energy balance\nequations for charging/discharging are shown in Equations (7) and (8). The constraints on\nSOC and charging/discharging power are shown in Equations (9)–(11).\nEes(t) = Ees(t − ∆t) + ηPes−c∆t (7)\nEes(t) = Ees(t − ∆t) − Pes− f ∆t/η (8)\nSOCmin ≤ SOC ≤ SOCmax (9)\nPes−cmin ≤ Pes−c ≤ Pes−cmax (10)\nPes− f min ≤ Pes− f ≤ Pes− f max (11)\nwhere Ees(t) is the energy stored in the ES at time t; η is the charge/discharge loss coefficient\nof the ES; and Pes−c and Pes−f are the charging and discharging power of the ES, respectively.\nSOCmax and SOCmin define the upper and lower bounds of the state of charge. Pes−cmin and\nPes−cmax set the lower and upper limits for charging power, while Pes−fmin and Pes−fmax are\nthe lower and upper limits of discharging power.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Coordinated Response Model and Algorithm for Energy Storage and",
+      "level": 1,
+      "text": "Electric Vehicles",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Objective Function",
+      "level": 2,
+      "text": "The key to collaborative optimization lies in the reasonable allocation of DG, load,\nand energy storage devices both within and outside the distribution network. From the\nperspective of the power supply company, this paper models this complex issue as a\nmulti-objective collaborative optimization problem, aiming to meet various constraints and\nseek efficient solutions. In the planning and construction of distributed power sources,\nthe main differences lie in the power supply methods and investment costs. This makes\nthe optimization model not only focus on economy but also consider the reliability of\npower supply. Through this comprehensive consideration, the optimization model in this\nmanuscript strives to achieve the best balance between economy and reliability, providing\nscientific basis and guidance for the planning of grid-based distribution networks.\n(1) Investment cost Fm\nThe mathematical expression for the investment cost is:\nminFm = min[\nNes\n∑\np=1\nCES × PES·P+\nNpv\n∑\ni=1\nCpv × Ppv·i +\nNwind\n∑\nj=1\nCwind × Pwind·j + CG] (12)\nEnergies 2025, 18, 5232 5 of 17\nwhere Nes denotes the number of energy-storage sites, Npv the number of photovoltaic\ngroups, Nwind the number of wind-turbine groups, and Nl the number of load groups.\nThe capacity of the j-th wind group is Pwind·j with a per-unit investment cost Cwind; the\nper-unit investment cost of storage is CES, and the capacity of the p-th storage group is\nPES·p. Likewise, the capacity of the i-th PV group is Ppv·i with a unit-capacity investment\ncost CPV. The distribution-network construction cost is expressed as CG = ASG + b, where\nSG denotes the capacity scale of the distribution network, A represents the proportionality\nbetween the construction capacity and cost, and b represents the fixed cost of distribution\nnetwork construction\n(2) Expected Grid Energy Shortage Em\nThe objective function is designed to quantify the reliability of user experience under\ndifferent power supply modes. This paper not only quantifies power supply reliability\nbut also provides a basis for optimization decisions. The method helps power companies\nidentify potential risk points and take corresponding measures to improve the reliability of\nthe distribution network system, ensuring that users always receive a stable power supply\nunder different operating modes. In summary, focusing on the expected power shortage in\nthe grid not only helps improve the overall performance of the power supply system but\nalso provides users with a higher level of electricity security.\nAssuming the failure rate of the energy storage devices in the distribution network is\npes, the internal line probability is pLine·in, and the probability of the distribution network\nbeing in an islanding state is pisland, the probability of load loss within the distribution\nnetwork can be expressed as follows:\npin = pLine·in + pes × pisland (13)\nThe failure probability of external lines and the main grid fault probability are pLine·out\nand psystem, respectively. The probability of load loss in the external area is:\npon = pLine·out + pes × psystem (14)\nTherefore, the objective function for the expected load-loss value is:\nminE m = min{pin × pL·MG + pout × (pTL − pL·MG }\n= min\n(\npin ×\nxL·N1\n∑\nxL·i≥xES\nPL·i + pout × (PTL −\nxL·N1\n∑\nxL·i≥xES\nPL·i)\n)\n(15)\nwhere the total system load and the total load within the distribution network region are\ndefined as pTL and pL·MG, respectively; the node locations for the i-th group of load and\nenergy storage are defined as xL·i and xES; the load value at the xL·i node is defined as pL·i;\nxES~N represents the distribution network region, where the number of nodes is defined as\nN; and xL·i × xES ∈ [2, N] [10].\n(3) Network Loss Floss\nIn the optimization process, the impact of different access locations on network losses\nis first analyzed. By combining load characteristics and the generation characteristics of\nDG, the optimal access scheme is developed. By reasonably configuring the locations of\nDG, load, and energy storage devices, more efficient power transmission can be achieved,\nreducing the operational costs of the grid.\nminFloss = min ∑\n(i,j)∈[1·N]\nGij (V2\ni + V2\nj − 2ViVj cos θij ) (16)\nEnergies 2025, 18, 5232 6 of 17\nwhere the admittance of branch ij is defined as Gij; Vi and Vj are the voltages at nodes i and\nj, respectively; and the voltage phase difference is defined as θij.\n(4) Operation and Maintenance Cost Fom\nIn addition to the investment cost, the operation and maintenance (O&M) cost is also\nconsidered to reflect the long-term economic impact of equipment deployment. The total\nplanning cost is thus revised as follows:\nFm= Finv + Fom (17)\nwhere Finv is the investment cost defined in Equation (17), and Fom is the operation and\nmaintenance cost, calculated as follows:\nFom =\nNwind\n∑\nj=1\nCom\nwind · Pwind,j +\nNpv\n∑\ni=1\nCom\npv · Ppv,i +\nNes\n∑\np=1\nCom\nes · Pes,p (18)\nHere, Com\nwind, Com\npv , Com\nes represent the annual O&M cost coefficients for wind turbines,\nphotovoltaic panels, and energy storage systems, respectively.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 Constraints",
+      "level": 2,
+      "text": "(1) Equality constraints:\n1⃝ Power-flow equations:\nPi = Vi\nn\n∑\nj=1\nVj\n\u0000\nGij cos θij + Bij sin θij\n\u0001\nQi = Vi\nn\n∑\nj=1\nVj\n\u0000\nGij sin θij − Bij cos θij\n\u0001 (19)\nwhere Pi and Qi are the active and reactive power injected at node i; Vi and Vj are the\nvoltage magnitudes at nodes i and j; and Gij and Bij are the real and imaginary parts of the\nline admittance, respectively [10].\n2⃝ Capacity constraints for DG and loads:\nNpv\n∑\ni=1\nPpv·i = PTPV\nNwind\n∑\nj=1\nPwind·j = PTW\n(20)\nLoad design capacity:\nNL\n∑\nd=1\nPL·d = PTL (21)\nwhere PTPV and PTW represent the total design capacity of photovoltaic and wind power,\nrespectively; PL·d is the load capacity of the d-th group, and PTL is the total design capacity\nof the load.\n(2) Inequality constraints\n1⃝ Branch-power limits:\nSk ≤ Smax\nk (22)\nwhere Sk is the apparent power on branch k; Sk\nmax is the branch-capacity limit; k ∈ [1, Nb]\nwith Nb denoting the total number of branches.\nEnergies 2025, 18, 5232 7 of 17\n2⃝ Output limits for distributed generators (DGs):\n(\nPmin\nDG·i ≤ PDG·i ≤ Pmax\nDG·i\nQmin\nDG·i ≤ QDG·i ≤ Qmax\nDG·i\n(23)\nwhere the active and reactive power output of distributed generation i are defined as PDG·i\nand QDG·i, respectively; the upper and lower limits of the active power output and reactive\npower output of the DG are defined as Pmax\nDG·i, Pmin\nDG·i, Qmax\nDG·i and Qmin\nDG·iQmin\nDG·i.\n3⃝ Practical Constraints of Siting Distributed Energy Resources (DERs):\nIn addition to power-flow and capacity constraints, practical deployment constraints\nfor DERs are considered to improve the engineering feasibility of the planning scheme.\nThese include:\nSpatial availability constraints: Only buses with sufficient installation area and low\ncongestion are considered for DER deployment.\nShort-circuit capacity limits of existing switchgear: The maximum allowable injection\nfrom DERs at each bus is limited to avoid exceeding short-circuit ratings.\nGrid connection feasibility: DERs can only be installed at buses with pre-existing\nconnection interfaces or low-cost upgrade potential.\nTo reflect these considerations, a binary feasibility indicator δ f eas\ni ∈ {0, 1} is introduced\nfor each candidate node i, where δ f eas\ni = 1 means the site is eligible for DER installation.\nThe allocation variable at each bus is thus constrained as follows:\nPDER\ni ≤ δ f eas\ni · Pmax\ni (24)\nwhere Pmax\ni is the upper limit considering electrical and physical constraints.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Solution Procedure for the Configuration Scheme Based on the",
+      "level": 1,
+      "text": "NSGA-II Algorithm",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "4.1 Planning Model and Control-Variable Encoding Strategy",
+      "level": 2,
+      "text": "Unlike the conventional NSGA-II, our improved version incorporates a hybrid-\nencoding scheme for siting and sizing variables, a feasibility-based constraint-handling\napproach to maintain solution validity, and a fuzzy-membership decision-making process\nfor selecting the final compromise solution. The configuration problem of DG, load, and\nenergy storage is transformed into an optimization model. The objective of the model is to\nachieve the minimum value of the objective function while satisfying both equality and\ninequality constraints. Through this transformation, the configuration of various resources\ncan be systematically analyzed and optimized, thereby enabling the efficient operation of\nthe power system. Specifically, the mathematical formulation of the optimization model is\nas follows: \n\n\nmin f (xc, xs) = min{ f1(xc, xs), f2(xc, xs), f3(xc, xs)}\ns·t hi(xc, xs) = 0, i = 1, 2\ngi(xc, xs) ≤ 0, i = 1, 2, . . . , 7\n(25)\nwhere the state variables and independent control decision variables are defined as xs and\nxc, respectively; f (xc, xs) is the optimization objective function; sub-objective functions such\nas investment cost, expected power shortage in the grid, and network loss are defined as\nPmax\nDG·i and Pmin\nDG·i, Qmax\nDG·i and Qmin\nDG·i; the equality constraint is hi(xc, xs), and the inequality\nconstraint is gi(xc, xs).\nThe mixed-encoding scheme for the control variables can be written as follows:\nx =\n\u0002\nTN1, LN1, PN1, TN2, LN2, PN2, · · ·, TNALL , LNALL , PNALL\n\u0003\n(26)\nEnergies 2025, 18, 5232 8 of 17",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4.2 Multi-Objective Handling and Optimal-Solution Selection",
+      "level": 2,
+      "text": "In this study, an improved NSGA-II is developed to better handle the collaborative op-\ntimization problem involving both discrete siting and continuous sizing variables. The im-\nprovements include the following: (1) a hybrid-integer encoding scheme for mixed variable\ntypes; (2) a feasibility-priority constraint-handling mechanism; (3) a fuzzy-membership-\nbased decision-making process for compromise solution selection; and (4) adaptive control\nof crossover and mutation rates. These modifications enhance convergence speed, feasible-\nsolution ratio, and decision-making interpretability compared to the standard NSGA-II.\nThe flowchart shows the NSGA-II process. It starts by initializing the population\nand sorting individuals by non-domination. Offspring are generated through selection,\ncrossover, and mutation. Parent and offspring populations are merged, sorted again,\nand evaluated using crowding distance. The best individuals are selected for the next\ngeneration. This repeats until the maximum generation is reached, yielding a Pareto-\noptimal solution set.\nBy using the NSGA-II algorithm, the optimized Pareto solution set can be effectively\nobtained [16,21]. To select the optimal solution from the high-quality solutions, this paper\nintroduces the fuzzy membership function, which reflects the decision-maker’s satisfaction\nwith each optimization objective and is used to find the optimal solution [ 22]. In this\nprocess, based on Equation (24), the membership function value of the k-th non-dominated\nsolution in the Pareto solution set in the i-th objective direction is quantified and solved.\nThis method not only provides decision-makers with more intuitive optimization results\nbut also offers a scientific basis for selecting the optimal solution. Through the evaluation\nof fuzzy membership, it better meets the needs of decision-makers, thereby achieving more\nreasonable and effective resource allocation [16].\nWithin this framework, the NSGA-II algorithm is highly regarded for its outstanding\ncapability to handle multiple variables. The flowchart of the NSGA-II procedure is shown\nin Figure 1.\nuk\ni =\n\n\n\n1, Fi = Fmin",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "Fmax",
+      "level": 1,
+      "text": "i −Fi\nFmax\ni −Fmin\ni\n, Fmin\ni ≤ Fi ≤ Fmax\ni\n0, Fi = Fmin\ni\n(27)\nwhere the lower and upper bounds of the objective function are defined as Fmin",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "and Fmax",
+      "level": 1,
+      "text": "i ,\nrespectively; the value of objective function i is defined as Fi. A hierarchical weighting\nstrategy is established based on decision preference information, and a weighted fuzzy\nmembership aggregation operation is applied to the Pareto front solution set, achieving the\noptimal solution selection in a multi-dimensional decision space. This paper uses an equal\nweighting method, which simplifies the complexity of weight setting and ensures that each\nobjective function receives equal attention during the optimization process. The specific\ncalculation is formulated as follows:\nuk =\nNobj\n∑\ni=1\nλiuk\ni\nNp\n∑\nk=1\nNobj\n∑\ni=1\nλiuk\ni\n, k = 1, 2,· · ·, N p (28)\nwhere Np is the population size, λi is the weight assigned to the i-th objective function, Nobj\nis the total number of objectives, and uk\ni is the corresponding membership-degree value.\nEnergies 2025, 18, 5232 9 of 17\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nStart\nInitializing populations\nnon-dominated order\nSelection for cross \nmutation to generate a \ngeneration of \nsubpopulations\nEvolutionary algebra \ngen+1\nSelection, crossover, \nmutation\nParent-child generation \nmerger\nFast Undominated Sorting\nCongestion calculations\nSelection of suitable \nindividuals to form a new \nparent\nGen<maxGen\nStop\nYes\nNo\nFigure 1. Flowchart of the NSGA-II Algorithm.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5 Case Study Analysis",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "5.1 Case Parameters",
+      "level": 2,
+      "text": "This paper validates the model through the IEEE 33-node distribution network test\nsystem, as shown in Figure 2, focusing on the longest feeder area, which covers 5 to\n17 nodes, and conducts a grouping analysis of DG and the grid. The designed DG includes\nwind power with a capacity of 0.50 MW, photovoltaic with 1.10 MW, and load with2.00 MW.\nSpecific data can be found in Table 1.\n0\n1\n3456789 1 0 1 1 1 2 1 3 1 4 1 5 1 6 1 7\n19 20 21\n22 23 24\n25 27 28 29 30 31 3226\nContact switch\nSegment switch\n2",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "18 Transformer station",
+      "level": 1,
+      "text": "Figure 2. IEEE 33-Bus Distribution Network.\nTable 1. Selected Parameter Values Used in the Calculations.\nParameter Name Retrieve a Value Parameter Name Retrieve a Value\nCES ¥130 million/MW ε 0\nCPV ¥100 million/MW λ 0.25\nCwind ¥100 million/MW λ′ 0.33\na ¥46.5 million/MW Nl,max 3\nb ¥5 million Npv,max, Nwind,max 3\npin 0.0013 pout 0.01\nEnergies 2025, 18, 5232 10 of 17",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5.2 Comparison and Analysis of Computational Results",
+      "level": 2,
+      "text": "(1) Optimization Results and Discussion\nThe crossover and mutation factors are both set to 0.8, the population size and max-\nimum number of evolutionary generations are set to 250 and 100, respectively, and the\npenalty factors w1, w2, w3 = 6.0 × 10−3; w4, w5 = 1.0 × 10−3; w6, w7 = 7.0 × 10−3; and\nw8 = 1.0 × 10−3. According to the optimization calculation, non-dominated sorting is per-\nformed, and the optimization results at the first level are selected as Pareto solutions. The\nsurface formed by the Pareto solution set in space is shown in Figure 3. It can be seen from\nthe figure that the Pareto solution set is relatively evenly and continuously distributed in\nthe target space and can better cover the trade-off relationship between different objectives,\nindicating that the improved NSGA-II algorithm adopted has a strong ability to maintain\nsolution set diversity and certain convergence performance.\n \n \n \n \n \n \n \n \n \n \nFigure 3. Pareto solution set.\nThe optimization results are selected as Pareto solutions, and the membership weight\nvalues are calculated using Equation (24) to evaluate the quality of each solution. A\nsuitable compromise solution is then selected from these Pareto solutions to form the\noptimal configuration scheme. In this process, particular attention is given to the specific\nlayout and capacity configuration of DG, load, and energy storage systems, with detailed\ninformation provided in Table 2. Through precise configuration, the system can ensure\nthat load demands are met while optimizing resource utilization efficiency, thus enhancing\nthe overall operational economy and reliability. Ultimately, this configuration scheme not\nonly lays the foundation for the system’s sustainable development but also provides strong\nsupport for future practical applications [15,23–26].\nTable 2. Optimized Configuration Results.\nTypology Access Point Location Quantitative/MW\nWind power 9 0.0159\nWind power 16 0.2299\nPhotovoltaic 6 0.4201\nPhotovoltaic 16 0.1496\nLoad 6 0.4121\nLoad 11 0.2201\nLoad 16 0.3610\nEnergy storage 10 0.1998\nFor comparison, a PSO algorithm was also applied to the same test system. Figure 4\nshows that the improved NSGA-II converges much faster and stabilizes within about\n40 generations, while PSO requires about 75 generations. As shown in Table 3, the improved\nNSGA-II also achieves a lower investment cost (167 × 10−4 yuan vs. 190 × 10−4 yuan),\nEnergies 2025, 18, 5232 11 of 17\nlower expected load loss (51 × 10−4 yuan vs. 65 × 10−4 yuan), and reduced network loss\n(2.5 × 10−4 yuan vs. 3.1 × 10−4 yuan). Moreover, the IGD and spread values confirm that\nthe proposed method produces more diverse and higher-quality Pareto solutions. These\nresults highlight the advantage of the improved NSGA-II over PSO in both convergence\nspeed and solution quality.\nFigure 4. Comparison results with PSO.\nTable 3. Performance comparison between improved NSGA-II and PSO.\nMethod Convergence Generations Fm (10 −4 Yuan) Em (10 −4 Yuan) Floss (10 −4 Yuan)\nImproved NSGA-II 40 167 51 2.5\nPSO 75 190 65 3.1\nIn addition to the comparison with PSO, the improved NSGA-II was also compared\nwith the standard NSGA-II under the same conditions. The results show that the improved\nNSGA-II achieves convergence within 40 generations, while the standard NSGA-II re-\nquires about 60 generations to reach a similar level of stability. Furthermore, the improved\nversion provides a lower investment cost, lower expected loss, and reduced network\nloss compared with the standard NSGA-II. These improvements confirm that the pro-\nposed modifications enhance convergence speed and solution quality without increasing\ncomputational complexity.\n(2) Comparison of Power-Supply Schemes\nScheme 1: DG is connected directly to the grid.\nScheme 2: Power is supplied solely by energy-storage units and schedulable EVs.\nScheme 3: The objective function Em is clearly prioritized over the other two objectives,\nand the weighting vector is set to [0.3, 0.4, 0.3].\nScheme 4: A multi-objective coordinated-optimization mechanism is built, achieving\nglobally optimal decisions via Pareto-front analysis.\nAccording to the test data in Table 4, Scheme 1—using a DG-to-grid architecture and\nomitting any energy-storage system—reduces the initial investment by more than 50%\ncompared with the other schemes.\nEnergies 2025, 18, 5232 12 of 17\nTable 4. Comparison of Different Power-Supply Schemes.\nProgram Distribution Network Capacity\n/MW\nFm/\n(10−4 Million Yuan)\nEm/\n(10−4 Million Yuan)\nFloss/\n(10−4 Million Yuan)\n1 — 80 100 2.7\n2 1.8000 215 27 27\n3 1.6613 196 33 12\n4 1.1501 167 51 2.5\nIn Scheme 3, relative to Scheme 2, placing greater emphasis on supply reliability raises\nthe ratio of the reliability index Fm to the expected load-loss value Floss. This means that\nlowering the expected load-loss requires additional capital outlays and may simultaneously\nincrease network losses.\nThe data from Table 5 shows that energy storage costs have a significant impact on the\noptimization results. The sensitivity test based on a 10% increase in energy storage costs\nindicates that the system configuration capacity and planning scale exhibit a synchronized\ncontraction, forming a bidirectional coupling relationship. This phenomenon validates\nthat the planning scheme is highly sensitive in terms of economic constraints. Therefore, a\nstrengthened lifecycle cost management mechanism is required during the planning design\nphase. This will ensure the economic feasibility of the scheme (Figures 5 and 6).\nTable 5. Comparison of Optimization Results under Different Energy-Storage Costs.\nEnergy Storage/(Million\nYuan/MW)\nEnergy Storage Configuration On-Net Load and DG Off-Net Loads and DG\nPlacement Quantitative/MW Load/MW DG/MW Load/MW DG/MW\n110 9 0.2468 0.7901 0.5702 0.2097 0.2339\n120 13 0.2311 0.7184 0.4811 0.2796 0.3236\n130 10 0.1998 0.5812 0.3698 0.4197 0.4323\n \n \n \n \n \n \n \n \n \n \n \n \n \n110 120 130\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9Domestic load capacity(MW)\nCost of energy storage ((¥  million/MW)\n Domestic load capacity\n DG Capacity\n \n \nFigure 5. Comparison of In-Network Load and DG Capacity under Different Energy-Storage Costs.\nEnergies 2025, 18, 5232 13 of 17\n \n \n \n \n \n \n \n \n \n \n \n \n \n110 120 130\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5Foreign load capacity (MW)\nCost of energy storage (¥  million/MW)\n Domestic load capacity\n DG Capacity\nFigure 6. Comparison of Out-of-Network Load and DG Capacity under Different Energy-Storage Costs.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [
+          "t5",
+          "t2",
+          "t3",
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5.3 Sensitivity Analysis",
+      "level": 2,
+      "text": "To verify the robustness of the proposed framework under different operating points\nand access locations, this paper conducts two complementary sensitivity studies:\n(i) Post-evaluation sensitivity: The optimal configuration in Table 2 is fixed (the capacity\nand nodes of PV , WT, and ES remain unchanged), and only the operating point\n(daytime/nighttime, irradiation intensity, wind speed, and ES operation strategy) is\nchanged, and the operability indicators are recalculated.\n(ii) Re-optimization sensitivity: When the ES access location (trunk/terminal) is changed,\nit is re-optimized as a planning variable, and the migration of the compromise solution\nand the change in indicators are compared.\nReference and setting instructions: PV output is linearly scaled with irradiation Rc\naccording to Equation (2) and linearly corrected with temperature Tc; wind power responds\nnonlinearly with wind speedv through the power curve according toEquation (1); ES charg-\ning and discharging are constrained by SoC and power limit according toEquations (7)–(11).\nPost-evaluation sensitivity maintains the investment cost Finv constant, reporting only\nchanges in expected power outage Em and network loss Floss (operating point changes do\nnot change capital expenditures). Reoptimization sensitivity changes involve rerunning the\nimproved NSGA-II after ES is connected to the busbar, allowing for capacity and location\nchanges [26,27]. The same network and load as in Table 1 are used; “Baseline” corre-\nsponds to the operating point of the compromise solution in Table 2 (sunny day sunshine,\nrated near-rated wind speed, ES real-time strategy). Table 6 presents the results of the\npost-optimization sensitivity analysis.\nS1/S2 reflects the primary effect of PPV ∝ Rc and the secondary correction of the\ntemperature coefficient in Equation (2); S3/S4 reflects the nonlinear power response caused\nby wind speed changes in Equation (1); S5/S6 corresponds to the impact of the two\ntypes of scheduling strategies on power flow distribution and voltage margin under\nEquations (7)–(11). Compared with the baseline, the cloudy and low wind speed sce-\nnarios cause Em and Floss to increase by approximately 5–20% and 6–28%, respectively,\nwhich is consistent with power flow physics; the real-time strategy reduces Em by approxi-\nEnergies 2025, 18, 5232 14 of 17\nmately 5–6% and Floss by approximately 8% relative to the fixed strategy, which is in line\nwith the expectation of “on-demand compensation”.\nTable 6. Post-optimization sensitivity.\nScenario Operating Setting Finv (104 CNY) Em (104 CNY) Floss (104 CNY) Rationale\nS0 Baseline\nPV: Rc = Rr,\nTc = 25 ◦C;\nWT: v ≈ 0.8vr;\nES: real-time\n1175 51.0 2.50\nOptimal configuration at\ntypical daily\noperating point\nS1 PV-cloudy\nPV: Rc = 0.6Rr\n(cloudy sky), other\nparameters are the\nsame as S0\n1175 58.5 2.85\nPV output\ndecreases → grid-side\ncompensation is\nrequired → power\noutages and grid\nlosses increase\nS2 PV-winter\nPV: Rc =\n0.75Rr, Tc = 5 ◦C,\nother parameters\nare the same as S0\n1175 54.0 2.65\nThe radiation is\nweakened but the\ntemperature is reduced to\nsuppress the temperature\nrise loss, and the impact\nis moderate\nS3 WT-high\nWT: v = 0.9vr (high\nwind), other\nparameters are the\nsame as S0\n1175 48.0 2.30\nIncreased wind\npower → Enhanced local\nsupply → Reduced\npower outages and\ngrid losses\nS4 WT-low\nWT: v = 0.6vr (low\nwind), other\nparameters are the\nsame as S0\n1175 61.0 3.20\nWind power\nweakens → tidal\nbackflow\nincreases → network\nlosses rise significantly\nS5 ES-ND\nES strategy: night\ncharge (0–6 h)/day\ndischarge\n(10–16 h), other\nsimilarities to S0\n1175 52.5 2.55\nFixed-period strategies\nare slightly weaker than\nreal-time strategies, and\npeak-valley alignment\nis insufficient.\nS6 ES-RT\nES real-time\n(voltage/marginal\nloss trigger),\nothers are the\nsame as S0\n1175 49.5 2.35\nOn-demand\nscheduling → better\nvoltage and\nloss characteristics\nTable 7 presents the results of the re-optimization sensitivity analysis. Access at the\nend (Bus 16) is more expensive in terms of power flow. To meet voltage and reliability\nconstraints, optimization tends to slightly increase ES capacity and slightly reduce PV/WT\ncapacity to alleviate local voltage and short-circuit margin pressures. This results in an\nincrease in Finv and a slight increase in Floss and Em in the same direction. The trunk (Bus 10)\nmaintains minimal losses and good reliability, while the middle section (Bus 6) performs\nin the middle. This trend is consistent with the power flow patterns of the feeder voltage\nprofile and branch resistance distribution.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t6",
+          "t7",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Flowchart of the NSGA-II Algorithm."
+    },
+    {
+      "id": "f2",
+      "caption": "IEEE 33-Bus Distribution Network."
+    },
+    {
+      "id": "f3",
+      "caption": "Pareto solution set."
+    },
+    {
+      "id": "f4",
+      "caption": "Comparison results with PSO."
+    },
+    {
+      "id": "f5",
+      "caption": "Comparison of In-Network Load and DG Capacity under Different Energy-Storage Costs."
+    },
+    {
+      "id": "f6",
+      "caption": "Comparison of Out-of-Network Load and DG Capacity under Different Energy-Storage Costs."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Selected Parameter Values Used in the Calculations."
+    },
+    {
+      "id": "t2",
+      "caption": "Optimized Configuration Results."
+    },
+    {
+      "id": "t3",
+      "caption": "Performance comparison between improved NSGA-II and PSO."
+    },
+    {
+      "id": "t4",
+      "caption": "Comparison of Different Power-Supply Schemes."
+    },
+    {
+      "id": "t5",
+      "caption": "Comparison of Optimization Results under Different Energy-Storage Costs."
+    },
+    {
+      "id": "t6",
+      "caption": "Post-optimization sensitivity."
+    },
+    {
+      "id": "t7",
+      "caption": "presents the results of the re-optimization sensitivity analysis. Access at the"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "Equation (2)"
+    },
+    {
+      "id": "e3",
+      "latex_or_text": "Equation (3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Equation (4)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "Equation (5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e15",
+      "latex_or_text": "(15)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "Equation (17)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e23",
+      "latex_or_text": "(23)"
+    },
+    {
+      "id": "e25",
+      "latex_or_text": "(25)"
+    },
+    {
+      "id": "e26",
+      "latex_or_text": "(26)"
+    },
+    {
+      "id": "e24",
+      "latex_or_text": "Equation (24)"
+    },
+    {
+      "id": "e27",
+      "latex_or_text": "(27)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 7,
+    "n_algorithms": 0,
+    "n_equations": 14
+  }
+}

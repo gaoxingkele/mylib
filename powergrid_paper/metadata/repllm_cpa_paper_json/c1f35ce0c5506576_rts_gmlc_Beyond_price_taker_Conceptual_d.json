@@ -1,0 +1,212 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/rts_gmlc/rts_gmlc__Beyond_price_taker_Conceptual_design_and_optimization_of_integrated_energy_systems_using_m__d1128c6ab7.pdf",
+  "n_pages": 58,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Integrated Energy Systems (IES) combine diverse energy sources (e.g., renewables, fossil, nu-\nclear) in hybrid configurations to provide a mix of energy services (e.g., electricity, heat, steam,\nchemicals) while enabling the dynamic flexibility needed to incorporate non-dispatchable variable\nrenewable energy sources into the electric grid and other energy infrastructure. This dynamic\nflexibility is critical for curtailing emissions, reducing costs, and ultimately meeting global deep-\ndecarbonization goals while maintaining grid reliability and resiliency. However, IES design, oper-\nation, and control are inherently interrelated, multiscale engineering optimization problems. Glob-\nally, the economics of electricity generators are determined by interactions with wholesale energy\nmarkets, which span minutes (real-time markets), hours to days (day-ahead markets), and months\nto years (capacity markets). The current state-of-the-art is to formulate multiscale multiperiod op-\ntimization problems using time-series price forecasts for energy and other products (e.g., ancillary\nservices) from historical data or other models. Per the price taker assumption, these prices are\ntreated as fixed parameters and not impacted by the IES optimization decisions. Recent studies\nsuggest the price taker assumption is invalid for flexible IESs in modern electricity markets with\nmodest renewable penetration.\nThis paper proposes a novel multiscale IES optimization framework that explicitly incorporates\nexogenous uncertainty from market interactions as an alternative to the ubiquitous price taker as-\nsumption. From a library of over 64,000 annual market simulations, we train algebraic basis function\nand neural network surrogate models to accurately predict the revenue and dispatch of an IES as\n2\na function of its design and market bid characteristics. We then formulate the conceptual design\nand operation of the IES as a two-stage stochastic program using the surrogate models to explicitly\nincorporate IES market interactions (i.e., exogenous uncertainty). Thus, our proposed formulation\nis a tractable representation of an otherwise multiscale, non-convex, and high-dimensional optimiza-\ntion problem. Using a thermal generator example built in the IDAES computational environment\nwith rigorous nonlinear thermodynamics models, we show that our approach overcomes the price\ntaker assumptions’ limitations using annual market operation simulation for validation. Compared\nto the literature, the key contributions of this work are the surrogate models and companion IES\noptimization formulations that go beyond the price taker and self-schedule assumptions and their\ninherent limitations.\nThe manuscript is organized as follows: Section 2 presents detailed literature to contextual-\nize the elements of the modeling framework. Section 3 discusses the underlying methods of the\nframework, which are divided into several key steps, including production cost modeling, training\nmarket surrogates, and formulating design optimization problems with the market surrogates em-\nbedded. Section 4 presents a comprehensive case study that replaces a thermal generator within a\nrepresentative test power grid and benchmarks the price taker and our proposed market-surrogate\napproach. Section 5 summarizes the paper’s key contributions and presents a future outlook on\napproaching IES design.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Literature Review",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Wholesale energy markets set the time-varying value of electricity",
+      "level": 2,
+      "text": "Decarbonizing the electric grid and other energy infrastructure is critical to meet urgent and\nambitious goals (e.g., the Paris Climate Accords) to protect the environment and mitigate climate\nchange. In 2019, wind and photovoltaic (PV) solar accounted for 80% of the global energy supply\ngrowth [1]. However, to realize the massive adoption of non-dispatchable variable renewable energy\nsources (VREs) challenges such as high capital investment costs, the inability to accurately predict\npower output, and the inability to match periods of high power output to periods of high demand\n[2] still need to be addressed. In addition, increased renewable generation adoption has coincided\nwith high curtailment rates, with some countries reaching up to 10% of their generation being\ncurtailed or limited when supply outweighs demand [3]. In many countries, wholesale electricity\n3\nmarkets coordinate the generation and consumption of electricity and set prices in a two-settlement\nsystem: a day-ahead market to meet forecasted demand and a balancing real-time market for\nfast adjustments [4]. In the U.S., energy generation is scheduled by independent service operators\n(ISOs) who accept bids from market participants and then clear the market, often from lowest to\nhigher cost, constrained by transmission limitations and spatiotemporal demands [5]. These market\nclearing processes set the locational marginal prices (LMPs), which determine the payments made\nand received by electricity consumers and producers, respectively. The benefits of VREs include\nzero dependence on fossil fuels and low or even zero production costs, which may decrease LMPs\nover time. Moreover, the stochastic nature of non-dispatchable VRE production also adds more\nuncertainty to market operations creating higher LMP volatility. The electric grid (and other energy\ninfrastructure) need more dynamic flexibility to mitigate this volatility and incorporate more VREs\nwhile maintaining reliability and resiliency and reducing emissions [6, 7].\nIntegrated energy systems (IES) couple multiple energy technologies such as renewables, nuclear,\nfossil with carbon capture, energy storage, and flexible industrial systems to exploit the synergies\namong the processes and produce energy and (chemical) products more efficiently [8, 9]. Prior\nwork has shown that integrating multiple energy technologies, such as energy storage, can increase\nthe VRE capacity added to the grid while maintaining reliability [10]. Also, by better utilizing\n(waste) thermal energy, IESs have increased energy efficiency, decreased emissions, and help meet\ncarbon emissions targets [11, 12, 13]. Due to the high value placed on the flexibility of these\nsystems, models that capture the inherently dynamic nature of the modern electricity market are\nneeded to conduct techno-economic analysis (TEA) on IES concepts properly [14, 15, 16, 9]. As\nan alternative to directly participating in wholesale energy markets, IES or prosumers can provide\nflexibility through demand response programs.[17]. Nevertheless, because wholesale energy markets\nset the underlying time-varying value of electricity, we focus on participation in these markets and\nleave consideration of demand response as future work.\n2.2. Uncertain and time-varying prices necessitate optimization-based techno-economic analysis\nThe current state-of-the-art to evaluate the economic viability of IES concepts is to solve (mul-\ntiscale) multiperiod optimization problems that model IES-grid interactions using the self-schedule\nand price taker assumptions, which go beyond the conventional TEA analysis that assumes a fixed\nprice for electricity and a constant capacity factor to estimate a levelized cost of electricity (LCOE)\n4\n[18]. When an energy resource self-schedules, it submits a fixed schedule to the market operator and\nagrees to accept the final settled LMPs. Likewise, the price taker assumption is that the market\nparticipant is sufficiently small such that its actions will not influence market outcomes such as\nLMPs or dispatch schedules. These assumptions make it easy to use historical LMPs to estimate\nthe maximum obtainable revenue from an IES optimally participating in one or more markets, as\npioneered by Walawalkar et al. [19].\nOptimization-based TEA using the price taker and self-schedule assumptions has become the\nde facto standard for IESs. As a recent example, Zantye and colleagues [13] utilized a multi-\nstage stochastic programming approach to optimally self-schedule a power generator with a flexible\ncarbon capture unit. Flexible operation of the carbon capture unit allows the generator to increase\npower output during periods with high electricity prices and devote more energy to carbon capture\nduring periods with lower electricity prices. In comparison to a deterministic model, their proposed\napproach yielded a value of the stochastic solution (VSS) of $41,145, or a 40% improvement of the\nprofit, indicating the value of accounting for uncertainty in next-day market clearing prices in the\ndecision-making process. Jabari et al. [20] self-scheduled a combined water and power producer\nusing a robust mixed-integer nonlinear programming (MINLP) model. Uncertain electricity price\nforecasts are first used to solve a deterministic optimization problem, then a set of stochastic price\nscenarios are used to solve a risk-averse robust problem. They also utilized a budget-of-uncertainty-\nparameter between 0 and 1 to represent the fraction of uncertain electricity prices in the time\nhorizon. Their case studies showed that the robust approach allowed decision-makers to adjust\nmodel conservatism and generate risk-averse schedules. Attarha et al. [21] investigated the self-\nscheduling of a wind power producer with integrated compressed air energy storage. Specifically,\nthey compared a deterministic and robust mixed-integer linear programming (MILP) model where\nthe robust model considered uncertainty in wind power production and electricity price. They\nwere able to conduct an after-the-fact analysis to quantify the long-term benefits of considering\nrobustness in their model. Their results also highlighted that pairing compressed air energy storage\nwith wind power production provided flexibility benefits over operating a wind farm alone. Bischi\net al. [22] used a rolling-horizon algorithm to solve a MILP scheduling model for a cogeneration\nsystem. The rolling horizon algorithm allowed the model to consider yearly-basis energy-saving\nindexes to capture economic incentives in the optimization properly. Their formulation found an\nimproved objective function versus standard weekly scheduling models and reduced operating costs\n5\nof up to 10% with proper incentives.\nThere is a growing consensus in the literature that energy storage systems must do more than just\nenergy arbitrage in the wholesale electricity market to be profitable. For example, Fares and Webber\n[23] utilized self-schedule optimization models to demonstrate that battery technologies cannot\nmake up their cost purely by participating in traditional energy arbitrage. They used a nonlinear\nprogramming problem to model lithium-ion batteries buying and selling in 15-minute increments.\nA related study considers dynamic self-schedule optimization of vanadium redox flow batteries for\nfrequency regulation, resulting in similar findings about the importance of faster timescales [24].\nSubsequent studies by Dowling and colleagues verified this finding — IESs such as batteries [15,\n25, 26], cogeneration [15], concentrated solar power [18, 27], and energy-intensive industries [28, 29]\nshould transact multiple market products at multiple timescales, and the fastest timescales are\nthe most profitable when using the self-schedule and price taker assumptions. Likewise, a 2016\nNational Renewable Energy Technology Laboratory report [30] presents the application of a price\ntaker optimization to assess the economic viability of hydrogen energy storage systems to participate",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.3 Price taker optimization neglects how participants influence market outcomes",
+      "level": 2,
+      "text": "IES design, operation, and control decisions are inherently coupled and thus require simulta-\nneous multiscale optimization [16, 25] while considering interactions with the electric grid, other\nenergy infrastructures and supply chains, the economy, and the environment [9]. Recent exam-\nples of IES process synthesis and design optimization include biorefineries with power generation\n[31, 32]; water treatment with power generation [33]; heating, cooling, and power systems for res-\nidential complexes [34]; and processes to convert poultry litter to fertilizers, fuels, and power [35].\nMany of these and similar studies use multi-objective optimization to analyze the trade-offs among\ncompeting goals such as economics, environmental impact, water usage, and energy consumption.\nBecause of the diversity of technology options and the variety of timescales, it is challenging to cre-\n6\nate a generalized modeling framework to quantify IES and grid interactions rigorously. Technology\nand timescale-specific assumptions and model reduction techniques are often applied to expedite a\nspecific analysis. For instance, representative days are often used to optimize the design of variable\nrenewables such as wind and solar. However, a different approach is needed to model the seasonal\nfeedstock variability for a biomass IES. Many IES conceptual design studies use superstructure\noptimization [36, 37] to systematically select between technology alternatives while considering dy-\nnamic operations such as time-varying energy prices, dispatch signals, or energy and mass holdups.\nFor example, Li and Zhang [38] proposed a basic IES structure containing an energy production\nsystem, an energy conversion system, and an energy storage system, as well as connections to the\nend user to optimize three objectives: annualized total cost, primary energy consumption, and\ncarbon emissions. Demirhan et al. [39] proposed an alternative generalized IES superstructure\nencoding multiple chemical and fuel synthesis routes and power generation routes. They consid-\nered process design, operation, and supply chain management in their optimization strategy. The\nresulting MILP model incorporates hourly, daily, and seasonal fluctuations in renewable availabil-\nity via a hierarchical clustering technique. Some studies also optimize subsystem capacities such\nas energy storage size [40, 41], equipment sizing and control decisions for polygeneration genera-\ntors [42], and inputs and outputs for different configurations of a hybrid feedstock to liquids and\nelectricity process [43]. Zhang et al. [44] optimize a process network for the production of fuels\nand power using solely renewable energy sources. The work considers both design decisions and\nscheduling based on time-varying renewable availability. Their results emphasize that for systems\nusing time-varying resources (e.g., renewable energy sources), not considering operational decisions\nduring the design phase can lead to sub-optimal process synthesis. Gabrielli and colleagues [45]\nproposed a novel MILP approach to optimize the selected technologies and operation schedule of\na multi-energy system that allows an hourly resolution (refined enough to consider the operation\nof seasonal energy storage) while maintaining a small number of binary variables. Their approach\nproduced results in good agreement with the full-scale optimization model and found that seasonal\noperation cycles can reduce CO 2 emissions. Kasivisvanathan et al. [46] used a robust MILP model\nto compute design decisions for multifunctional energy systems such as poylgeneration generators\nand biorefineries with power production. Process units are black-box or scale-invariant models,\nwhich can be operated at a baseline state or adjusted to meet new demands/adjust for uncertainty\nin different predefined operating scenarios. Guo et al. [47] optimized the size and operation of a\n7\nregionally integrated energy system (RIES) while considering user-side demand response, modeled\nas an MINLP. The RIES model includes demand response for electric load, heat load, and cold load,\ninputs energy output and on/off status of technical equipment, demand response details (amount\navailable, timing, economic compensation), and state variables including economic equipment tech-\nnical parameters and energy demand. The model is optimized via a performance index that includes\neconomic benefits of supply and user side, peak-to-valley ratios, and carbon emissions, and out-\nputs optimal demand response schemes, installed capacity, and hourly energy output of technical\nequipment. The study found that implementing demand response increases energy efficiency and\ncontributes to peak-shaving and valley-filling. In these studies, IES market interactions are modeled\nas time-varying prices or demands using the price taker and self-schedule assumptions, if at all.\nFigure 1: The multiscale optimization workflow from Gao et al. [16] captures complex interactions from IES and\ngrid decision-making processes. In the day-ahead market loop, an IES uses market forecasts (a) to compute an\noptimal bidding strategy, (b) which constitutes a bid curve that reflects product costs. This information is input\nfor Prescient, the production cost model, which (c) clears the market and sets the day-ahead dispatch schedule.\nIn the real-time market loop, Prescient (i) updates the dispatch schedule, which is then communicated to all\nmarket participants. The IES then solves a (ii) tracking optimization problem to meet the requested dispatch while\nminimizing its costs and maximizing system health. Finally, Prescient (iii) calculates settlement payments.\nA few recent studies have more explicitly modeled the complex interactions between IESs and\nthe electric grid. Gao et al. [16] proposed a multiscale optimization framework, shown in Figure\n1, that integrates optimized bidding, unit commitment (day-ahead market clearing), economic\ndispatch (real-time market clearing), model predictive control (MPC) to track market dispatch,\n8\nand market settlement calculations to simulate the performance of an IES interacting in an electric\ngrid. Their results highlight the importance of detailed market simulations, demonstrating that\na single IES optimal bidding into the market affects prices and dispatch signals throughout the\nnetwork. They also show that hybridizing a thermal generator with energy storage reduces wear-\nand-tear (e.g., ramping, startups, mileage) for the thermal generators. As described above, the\nself-schedule and price taker assumptions are the current state-of-the-art, with a few exceptions.\nWhile optimal self-schedule performs better than heuristic scheduling, these methods can reduce\nrevenue compared to submitting economic bids to a market operator [2]. A large body of prior\nwork details the limits of generators choosing to self-schedule in this modern two-settlement system\n[48, 49, 50]. Orvis and Aggarwal (2018) [49] point out that operational flexibility already exists\nin the current system and that by removing the option for participants to self-schedule, the grid\ncould operate more efficiently. Martinek et al. (2018) [50] compare self-scheduling (price taker) and\nsystem-scheduling (production cost modeling) solutions to optimize the dispatch of a concentrated\nsolar power (CSP) plant in a regional system derived from the Western Electricity Coordinating\nCouncil’s (WECC) 2024 Common Case database [51]. Their results show that self-schedule methods\nover-estimate net annual revenue by up to 13% versus PCM due to price suppression caused by the\nCSP generator, and they suggest that the discrepancy may not warrant the computational effort\nrequired to perform large-scale PCM simulation studies for the purpose of design optimization. They\ncaution, however, that small perturbations to their PCM dataset can drastically shift LMPs if such\nchanges result in the dispatch of high-cost generators. Consequently, the authors conclude that\nPCM simulation should",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3 Methods",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.1 Problem Statement and Overview",
+      "level": 2,
+      "text": "Given a transmission network and electricity market, we seek to co-optimize the design and\noperation of an IES to replace a specified generator while explicitly considering IES market inter-\nactions.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "1 Run Market Simulations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 Fit Market Surrogates",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 Optimize IES",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 Verify IES Design",
+      "level": 1,
+      "text": "IES Parameters\nDay-Ahead \nMarket\nReal-Time \nMarket\nCapacity\nOp Limits\nOp Costs\nVeriﬁed Results\nOptimized IES\nCapacity*\nOp Limits*\nOp Costs*\nMarket Results\nRevenue\nDispatch\n# Startups\nTrain\nEncode Optimize\nInfer\nSummarizeSimulate\nRevenue\nDispatch\n# Startups\nVerify Evaluate\nDay-Ahead \nMarket\nReal-Time \nMarket\nFigure 2: Summary of the proposed IES conceptual design workflow, including four main steps: (1) assemble the\nmarket simulation datasets, (2) train market surrogates, (3) optimize IES design using surrogates, and (4) verify\ncandidate solutions with simulation.\nFigure 2 shows the key steps of the proposed computational framework:\n10\n1. Run market simulations using a production cost model (PCM) to systematically characterize\nhow varying generator attributes (e.g., Pmin, Pmax, and ramp-rate) changes market outcomes,\nincluding annual revenue, capacity factor, and startup events. (Section 3.2)\n2. Using the simulation dataset from Step 1, train neural network (NN) and algebraic surrogates\nmodels to predict market outcomes as a function of IES design decisions and other market\ninputs. (Section 3.3)\n3. Co-optimize IES design and operations decisions using the surrogate models from Step 2 to\ndirectly embed complex IES market interactions. Alternatively, the IES can be co-optimized\nusing only time-varying price data from Step 1 using the price taker assumption, which serves\nas a benchmark for the proposed method. (Section 3.4)\n4. Perform a PCM simulation for the optimal solution from Step 3 to verify the results and\nquantify the error in actual market outcomes as predicted by either the surrogates or price\ntaker assumption. (Section 3.5)\nSection 3.6 summarizes the energy system models used in the case study. Table 1 defines the\nnomenclature.\n3.2. Step 1: Prescient Production Cost Model and RTS-GMLC Network\nWithout loss of generality, we design an energy system to replace a single coal-powered generator,\nnamed 123-STEAM-3, in the RTS-GMLC test system. For each replacement scenario, we system-\natically modify the design parameters of 123-STEAM-3, including Pmax, ramp-rate, and marginal\ncost, and simulate the entire electricity market over a year to obtain economic outputs (e.g., revenue\nand capacity factor). We use RTS-GMLC, which is a publicly available, open-source test network\nthat qualitatively mimics the Southwest United States power system [57, 58]. This study and many\nsimilar analyses in power systems engineering rely on test networks such as RTS-GMLC because\nreal transmission network topology data is often protected. Other modern publicly-available test\nsystems include the TAMU networks [59], ReEDS [60], and the high-resolution US test system [61].\nGao et al.[16] provides a comprehensive overview of the RTMS-GLMC test system.\nWe use PCM simulations to train surrogate models that learn electricity market outcomes. A\nPCM emulates the sequence of decisions made by grid operators to economically commit and dis-\npatch generators within the bulk electric grid to meet total demand. The problems solved in PCM",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "11 Index and Set Description",
+      "level": 1,
+      "text": "s ∈ S:= {1, ..., Ns} Price taker scenarios in Eq. (3)\nz ∈ Z:= {zoff, z1, ..., z10} Dispatch zones, scenarios in Eq. (4)\nVariable or Parameter Description\nNB, βj Number of terms in basis function surrogate, coefficient for term j\nWk, bk Neural network weights for layer k, neural network bias for layer k",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "Inputs of market clearing, IES submits to market, see Table 2",
+      "level": 1,
+      "text": "xL, xU Lower bounds on market inputs, upper bounds on market inputs\ny1, y2, yz Outputs of market clearing, IES receives from market, see Table 2\nd Plant design variables (e.g. Pmax, Pmin, Rrate, U T, DT )\nu, us, uz Plant operational variables, for scenario s, for zone z\nws Weight for scenario s\nπs Price for scenario s, [ $\nMWh ]\nδ, δs, δz Power output variables, for scenario s, for zone z, [MW]\nys Binary variables indicating plant is on/off for scenario s\nPmax, Pmin Maximum plant capacity, minimum plant output, [MW]\nRrate Maximum plant ramp rate, [ MW\nhr ]\nU T, DT Minimum plant up time, minimum plant down time, [hr]\ncop\nPmin\n, cop\nPmax Operating cost at Pmin, operating cost at Pmax, [ $\nhr ]\ncop\nf ixed,cop\nstartup Fixed operating cost [ $\nhr ], startup cost [ $]\nϵ2 Small number (10 −6)\nFunctions Description\nˆyalamo(·), f basis\nj (·) ALAMO basis function surrogate, basis function term j\nˆ ynn(·), fk(·), σ(·) Neural network surrogate, layer k function, layer activation function\nysurrogate\n1 (·), ysurrogate\n2 (·), ysurrogate\nz (·) Surrogate functions to calculate: y1, y2, and yz\nR(·), N (·), wz(·) Functions to calculate: revenue, number of startups, weight for zone z\nCOP EX(·), CCAP EX(·), Cstartup(·) Functions to calculate: operating expense, capital expense, startup cost\ngprocess(·) Plant process constraints (e.g. equipment constraints, control limits)\ngpower(·) Plant power output constraint\ngbid(·) Constraint that links plant variables with market variables\nTable 1: Nomeclature\ninclude load forecasting, unit commitment, unit dispatch, and calculation of financial settlements.\nPCM can be used to simulate both day-ahead and real-time markets and can consider transac-\ntions for both energy and ancillary services. PCM simulations determine how often a generator is\ndispatched and what electricity price it receives as payment.\n12\nFor our study, we use the open-source Prescient [62] PCM to simulate the annual performance\nof our generator within the RTS-GMLC network. Prescient simulates real-time and day-ahead\nenergy markets as depicted by the inner and outer cycles in Figure 1. The outer cycle solves a\nUnit-Commitment (UC) optimization problem, which schedules changes in the online status of each\ngenerator. In this cycle, Prescient forecasts non-dispatchable renewable generation and total load\nat each network bus, receives bids from generators and load-serving entities, and clears the market\nby committing generation to cover demand at the lowest possible cost. The inner, more frequent\ncycle solves a Security-Constrained-Economic-Dispatch (SCED) problem every hour to adjust the\ndispatch (output) for each committed generator from the previous UC problem. Generators track\nthe demand signal from the dispatch and settle payments based on their delivery. Prescient has\nbeen used to simulate the operation of general wholesale electricity markets in the United States\n[63].\nWe perturb generator parameters for the energy system that replaces 123-STEAM-3 in the\nPrescient simulations as denoted in Table 2. These inputs (or values derived from them) are\ntypical parameters communicated to ISOs for commitment and dispatch. The key design inputs\ninclude the maximum operating capacity x1 (Pmax), the minimum power output multiplier x2\n(which corresponds to the lower operating level Pmin), the ramp-rate multiplier x3 (which informs\nthe true generator ramp-rate), the minimum uptime x4, and the downtime multiplier x5 (downtime\nas a percentage of minimum up-time). These inputs are assumed fixed in day-to-day operation,\nreflecting the generator has been built. The more variable inputs include the marginal cost x6, the\nno-load cost x7, and a representative startup cost profile x8.\nThe marginal cost is communicated to ISOs as hourly step-wise bid curves of power-price pairs.\nThese pairs represent the minimum price a generator needs to receive to dispatch the associated\npower output each hour. For our study, we use a single marginal cost representing the minimum\nprice the generator must receive to operate at its minimum output or higher. The no-load cost is\nthe cost of keeping a generator “spinning,” but not generating output. No-load cost is the fixed\ncost of operation that is independent of the amount of energy generated. For instance, a thermal\ngenerator’s no-load cost could be the cost to keep the turbine spinning at synchronous speed but\nnot generating any output. The startup cost is the cost incurred to bring a generator online. A\nstartup cost profile quantifies the incremental fuel costs associated with hot, warm, and cold starts.\nTable 2 also lists the primary simulation outputs of interest, including the annual revenue y1,\n13\nthe total number of startup events y2, and the number of hours spent at each of 11 different power\noutput zones yz where z ∈ Z:= {zoff, z1, ..., z10}. Zone zoff corresponds to a shutdown state,\nand the other ten zones represent intermediate generator output levels (i.e., z1 is 0-10% output,\nand z10 is 90-100% output). A full factorial design over Table 2 results in 64,800 Prescient\nsimulations requiring over 10,000 CPU days to complete. Each simulation is independent, however,\nwhich facilitates parallel execution. We performed our simulations on the Sandia SkyBridge cluster\nconsisting of 1848 compute nodes each containing 16 cores (2.6 GHz Intel Sandy BridgeE5-2670 2S\nx 8C) and 64 GB of memory.\nInput/Output Description Units Simulation Levels Base RTS-GMLC\nx1 Maximum Designed Capacity ( Pmax) MW 177, 266, 355, 443 350\nx2 Minimum Operating Multiplier − 0, 0.15, 0.3, 0.45 0.4\nx3 Ramp Rate Multiplier − 0.5, 0.75, 1.0 1.15\nx4 Minimum Up Time hr 1, 2, 4, 8, 16 24\nx5 Minimum Down Multiplier − 0.5, 1, 2 2\nx6 Marginal Cost $\nMWh 5, 10, 15, 20, 25, 30 24.42\nx7 No Load Cost $\nMWh 0, 1.0, 2.5 1.0\nx8 Startup Profile − 0, 1, 2, 3, 4 2\ny1 Annual Revenue $MM - 38.9\ny2 Annual Number of Startups # - 40\nyz Annual Hours Dispatched in Zone z hr - -\nTable 2: Description of Prescient simulation input parameters and output variables. Data was adapted from RTS-\nGMLC[64].\nThe startup profile x8 is a categorical variable described in Table 3. For our study, a startup\ncost profile value of 0 corresponds to a theoretical fast start unit with no startup cost, and each\ninteger from 1 to 4 corresponds to a different thermal generator. The startup cost has units of $\nM W\nand is the cost per capacity to bring the generator online. The lag ratio corresponds to the time\nrequired after a shutdown for a generator to enter a ’Warm’ or ’Cold’ state and is calculated as the\nrequired time to elapse as a ratio of the minimum downtime. For example, a large coal unit (profile\n2) with a minimum downtime of 8 hours becomes ’Cold’ if it is shut down for more than 16 hours.\nOur optimization formulations do not account for time-dependent startup costs, so we instead use\nthe representative cost in Table 3 as an approximation in our optimization formulation in Section\n3.4.2. Future work includes incorporating the lag ratios and multiple startup costs.\n14",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "The multiscale optimization workflow from Gao et al. [16] captures complex interactions from IES and"
+    },
+    {
+      "id": "f2",
+      "caption": "Summary of the proposed IES conceptual design workflow, including four main steps: (1) assemble the"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Nomeclature"
+    },
+    {
+      "id": "t2",
+      "caption": "also lists the primary simulation outputs of interest, including the annual revenue y1,"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e3",
+      "latex_or_text": "Eq. (3)"
+    },
+    {
+      "id": "e4",
+      "latex_or_text": "Eq. (4)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 2,
+    "n_tables": 2,
+    "n_algorithms": 0,
+    "n_equations": 2
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-machines/mdpi-machines__2025__speed_independent_health_indicator_for_outer_raceway_be__a5305a2936.pdf",
+  "n_pages": 22,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Induction machines (IMs) are widely used in industrial and domestic systems because\nof their high efficiency, power density, and durability, making condition monitoring essen-\ntial to avoid unexpected failures and the associated costs. Early detection is particularly\nimportant, as undiagnosed faults can propagate and cause secondary damage.\nIMs can experience various faults—stator winding defects, broken rotor bars, shaft\nmisalignment, and housing cracks—with bearing faults being the most common, represent-\ning nearly 40% of total failures, as reported by Alsaedi [1]. These faults belong to the class\nMachines 2025, 13, 1095 https://doi.org/10.3390/machines13121095\nMachines 2025, 13, 1095 2 of 22\nof eccentricity-related issues, where localized defects introduce periodic air-gap variations\nthat distort magnetic flux and manifest in measurable quantities such as stator current,\ntorque, and flux. Analyzing these signals can give an estimate for fault severity assessment\nand remaining useful life (RUL) estimation. Other eccentricity-related faults include shaft\nmisalignment and rotor imbalance.\nConventional bearing diagnostics rely primarily on vibration captured by accelerome-\nters, as considered by Spirto et al. [2], Marticorena and Peyrano [3], and Wen et al. [4], and,\nin some cases, torque sensors, microphones or external flux probes; however, these methods\nrequire additional hardware and frequently encounter installation constraints and signal\nattenuation issues, as reviewed by Nandi and Toliyat [5]. In contrast, Guo et al. [6] showed\nthat Motor Current Signature Analysis (MCSA) provides a cost-effective alternative in\nwhich the machine effectively serves as its own sensor, allowing fault-induced disturbances\nto appear directly in the current spectrum. As it only requires a high-resolution DAQ\nsystem, MCSA eliminates the limitations of external sensors and offers an efficient, scalable\ndiagnostic approach.\nEfficient diagnostics further depend on computationally lightweight algorithms ca-\npable of processing large datasets rapidly, which is critical for online monitoring and\ndigital-twin applications. Higher computational demand increases hardware cost and\nlatency, as discussed by Amitabh et al. [7]. Thus, method selection must balance accuracy\nwith practical feasibility.\nBarbieri et al. [8] noted that prognostics of rotating machinery typically encompasses\nthree major tasks: fault detection, fault severity assessment, and remaining useful life\n(RUL) estimation. A substantial body of literature, including the review by Nandi and\nToliyat [5], demonstrates that bearing defects generate characteristic signatures in the stator\ncurrent. These signatures commonly manifest at ball-pass-related frequencies and can be\nreadily identified using frequency-domain approaches such as the Fast Fourier Transform\n(FFT). To improve feature extraction beyond classical spectral analysis, numerous advanced\nsignal-processing techniques have been developed. Methods based on the Hilbert–Huang\nTransform and Park Vector Transform have been investigated by Bórnea et al. [9], while\nSong et al. [10] employed EEMD and CEEMDAN. Statistical learning-based approaches\nwere explored by Yuvaraj et al. [11], and wavelet and time–frequency representations were\nused by Blodt et al. [ 12]. Furthermore, Li et al. [ 13] proposed dimensionality reduction\ntechniques such as Principal Component Analysis (PCA) to enhance the isolation of fault-\nrelated components.\nWith recent advancements in computational power, data-driven approaches have\ngained substantial momentum in bearing fault diagnostics. A wide range of neural network\narchitectures, support vector machines (SVM), and regression-based models have been\ninvestigated in the literature by various authors, including Filippetti et al. [14], Hu et al. [15],\nRan et al. [16], Chen et al. [17], ElSayed [18], and Xie et al. [19]. These techniques extract\npatterns directly from measurement data and assess deviations from healthy operating\nconditions to identify emerging faults. Data-driven methods currently constitute the state of\nthe art, particularly in vibration-based condition monitoring. However, despite their strong\nperformance, these approaches do not inherently capture the physical causality of the\nsystem. As a result, their reliability can degrade when faced with operating conditions or\nmeasurement scenarios that fall outside the distribution of the training data. This raises the\nrisk that a purely data-driven model may fail to generalize to previously unseen conditions.\nComplementing these data-driven developments, detailed model-based studies incor-\nporate explicit representations of bearing defects into machine electromechanical models\nto improve physical understanding and provide validation frameworks for diagnostic\nMachines 2025, 13, 1095 3 of 22\nalgorithms. Examples include the work of Amitabh et al. [20], Blodt et al. [21], Kripakaran\nand Reddy [22], Koti et al. [23], Ojaghi and Sabouri [24], and Kaikaa and Kecita [25].\nHowever, most existing studies (mentioned above) do not adequately address the\nimpact of varying operating conditions. While many works are limited to merely identi-\nfying the presence of bearing fault frequencies in the current spectrum, others estimate\nthe machine’s health only at a fixed operating speed. In real-world applications, however,\nmachines rarely operate under constant speed or load conditions. Consequently, health\nindicators derived under fixed conditions may become ineffective, as operating variations\ncan introduce coupling effects that obscure the true relationship between the health indica-\ntor and bearing degradation. Ideally, a robust health indicator should vary solely with the\ndegradation state of the bearing and remain insensitive to changes in operating parameters.\nIn practice, however, completely isolating this effect is challenging, since tracing the entire\nsignal propagation path through multiple machine components is inherently complex.\nTherefore, such influences can only be minimized rather than being eliminated.\nTo overcome this problem, several studies in the past have attempted to construct\nhealth indicators (HIs) that remain robust under variable operating conditions. Zimroz\net al. [26] proposed a linear model between the feature value (RMS) of vibration and the\nturbine’s power output to mitigate variations in the HI for bearing fault diagnosis, assuming\nthat such variations follow a linear trend. Li et al. [27] employed a two-factor state-space\nmodel to predict the remaining useful life (RUL) of bearings, using vibration data collected\nfrom accelerated degradation tests conducted at two discrete speeds. The study by Luo\net al. [28] introduced an improved phase-space warping (IPSW) method and applied it\nto three bearings with seeded faults, where different rotational speeds were imposed to\nsimulate stepwise degradation. Kim et al. [ 29] constructed a robust HI using Spearman\ncorrelation and Mahalanobis distance for run-to-failure vibration data obtained under two\noperating conditions with varying speeds. Singh et al. [30] decomposed vibration signals\nusing Ensemble Empirical Mode Decomposition (EEMD) to suppress the influence of\nvariable conditions on the HI. Meanwhile, studies by Koutroulis et al. [31], Li et al. [32], and\nHe et al. [33] adopted predominantly data-driven approaches to assess health degradation\nand fault severity under time-varying operating conditions.\nAlthough numerous other works have attempted to develop HIs that are independent\nof operating conditions, they exhibit several major limitations with respect to the objectives\nof this study. First, most state-of-the-art methods are developed and validated using\nvibration measurements. This is fundamentally different from motor current signature\nanalysis (MCSA) because vibration signals generally have a higher signal-to-noise (S/N)\nratio, which makes degradation trends more apparent and relatively easier to model.\nSecond,",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "3 Experiment and Validation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3.1 T est Setup and Experiments",
+      "level": 2,
+      "text": "For the experimental analysis, two bearings with different outer-race fault severities\nwere tested using a squirrel-cage induction machine (model 3SIE100L4A, 2.2 kW, Cantoni\nGroup, Cieszyn, Poland), as shown in Figure 1. The test bench consists of two coupled\nmotors, where one machine operates as the test motor while the other provides the mechan-\nical load. The test motor was disassembled to identify the bearing type installed on the\nshaft and to measure the air-gap clearance. The original bearings (6206 C3, SKF, Shanghai,\nChina) , equipped with riveted steel cages, were not suitable for the introduction of artificial\ndefects due to the difficulty of disassembly. Consequently, an alternative bearing type (6206\nTN9, SKF, Shanghai, China) , featuring a nylon cage, was selected because it allows easier\ndisassembly and facilitates the controlled introduction of outer-raceway faults.\nArtificial defects were introduced on the outer raceway using carbide drill bits, which\nare among the hardest commercially available tools. Since the hardness of carbide is com-\nparable to that of the bearing outer ring, significant tool wear occurred, necessitating the\nuse of multiple drill bits throughout the process. The defects were machined radially, pro-\nducing semicircular cross-sectional cavities extending across the entire raceway. Coherent\nholes were created to represent more severe fault conditions. Although such extensive\ndamage is unlikely to occur in practical applications, these defects emulate scenarios in\nwhich multiple rolling elements simultaneously interact with a large eroded region of the\nouter raceway. The notation 3R1 refers to three coherent holes of 1 mm radius, whereas\n2R3 designates two coherent holes of 3 mm radius, as illustrated in Figure 2. The tested\nmachine exhibits steep torque–slip characteristics, implying that even small variations in\nslip are sufficient to produce substantial changes in torque.\nFigure 1. Test Setup [7].\nMachines 2025, 13, 1095 7 of 22\nFigure 2. Bearing with outer raceway faults [7].\nThe test bearings were mounted at the driving end of the motor and examined across\n33 discrete rotational speeds, spanning from 500 to 1500 rpm. At each operating point,\nmeasurements were acquired for a duration of 5 min at a sampling frequency of 25.6 kHz\nusing a National Instruments data acquisition system (25.6 kHz, 24-bit,±5 V). Stator current\nsignals were captured using three in-house-developed current sensors positioned on the\nphase conductors.\nThe rationale behind this measurement setup was to eliminate any preprocessing\nstages involving semiconductor-based electronics, which can introduce additional noise\ninto the acquired signals [37]. For this reason, the current probes were designed to be fully\ninductive and non-invasive, ensuring that the data acquisition system recorded raw analog\nsignals without intermediate electronic conditioning.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.2 Signal Processing and Validation",
+      "level": 2,
+      "text": "The corresponding fault-related signatures in the current spectrum were then identi-\nfied and quantified to assess their progression. Following the methodology in [7], analysis\nfocused on the sensitive frequency band surrounding the theoretically derived bearing fault\nfrequencies and their harmonics (outer race, inner race, and ball defect), using the extracted\nsupply and rotational frequencies from each measurement. A schematic representation of\nthe quantification process for the sensitive frequency band is provided in Figure 3.\nFigure 3. Graphical representation of the signal processing [7].\nThe first observation concerns the variation in the amplitude of the fundamental\ncomponent. As shown in Figure 4, the amplitude of the fundamental component tends to\ndecrease with increasing supply frequency. This behavior can be attributed to the combined\neffects of the skin effect and eddy currents, which increase the overall impedance and\nconsequently reduce the current amplitude for a fixed supply voltage. However, the overall\nMachines 2025, 13, 1095 8 of 22\nimpact remains modest, with a variation of approximately 200 mA. In contrast, the variation\nis more pronounced for the bearing fault signatures observed in the current spectrum.\nFigure 4. Fundamental current component vs. supply frequency. (Blue - 3R1, Red - 2R3)\nThe acquired current signals were processed using the signal processing methodol-\nogy described in [7]. The sensitive frequency bands were then quantified, and Figure 5\npresents the mean values up to the 4th harmonic. According to Equation (1), each value\nof n corresponds to two distinct frequencies associated with the bearing fault signature.\nConsequently, each n produces two values of k in Figure 5, denoted as k = 2n − 1 and\nk = 2n.\nFigure 5. Mean of the SFB for k = [1, 8] for tested bearing 3R1.\nIt can be observed that the overall magnitude of the bearing fault signatures decreases\nwith increasing supply frequency. For k = 1, this trend is more pronounced compared\nto higher-order values such as k = 8, since most of the signal energy is concentrated in\nthe lower harmonics rather than the higher ones. This is evident in Figure 5, where the\nmean values of the data points are consistently larger for lower values of k. Conversely,\nfor higher-order terms, particularly k = 7 and k = 8, the trend becomes less distinct due to\nthe reduced signal-to-noise ratio at higher frequencies, where noise contributions become\nmore dominant.\nAdditionally, for k = 7 and k = 8, a localized rising trend is visible around the supply\nfrequency of 40 Hz. This behavior can be attributed to interference effects arising from\nthe supply frequency or its harmonics, as well as from the rotational frequency. A similar\nMachines 2025, 13, 1095 9 of 22\ntrend is observed when evaluating the standard deviation of the data points within each\nsensitive frequency band, as illustrated in Figure 6.\nFigure 6. Standard Deviation of the SFB for k = [1, 8] for tested bearing 3R1.\nThe trend is more prominent for lower values of k but diminishes progressively at\nhigher values. An additional observation is the re-emergence of an increasing trend near\nthe supply frequency of 50 Hz, particularly for higher-order values of k. This behavior can\nbe attributed to spectral spreading (also referred to as frequency smearing in the literature\n[66]).\nSpectral spreading occurs in the Fourier transform when a given frequency component\nis not strictly constant within the signal but exhibits small variations during the measure-\nment period [67]. In inverter-fed machines, the supply frequency is not perfectly stable\nand undergoes slight fluctuations over time. These variations also affect the rotational\nfrequency, which prevents the bearing fault frequencies from appearing as sharp peaks.\nInstead, the spectral energy is distributed over a small band, producing a “smeared” patch\nrather than a distinct line.\nHowever, as the machine supply frequency approaches the nominal inverter supply\nfrequency (50 Hz), the inverter delivers a cleaner voltage signal. This reduces the frequency\nsmearing effect, allowing the bearing fault signatures to appear as sharper peaks, which is\nreflected in the increased standard deviation observed around 50 Hz. While this effect is\nnegligible for dominant components with a high signal-to-noise ratio, it becomes signifi-\ncant for weaker components with low signal-to-noise ratios. Consequently, this trend is\nparticularly evident at higher harmonics associated with the bearing fault frequencies and\ncan be observed in both the mean and standard deviation plots.\nHence, it can be concluded that the observed decreasing trend in amplitude supports\nthe formulated theory presented in Section 2. However, a direct validation for each element\ndiscussed in Section 2 through experimental measurements would require an extensive\ncampaign with a more complex test setup, which lies beyond the scope of this work\nand may be considered for future investigations. Consequently, relying solely on the\namplitude of the current signature as a health indicator may result in false diagnoses and\ninaccurate severity estimation in the presence of speed variations. This highlights the need\nfor additional efforts to develop a speed-independent health indicator.\nMachines 2025, 13, 1095 10 of 22",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3",
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "4 Supply Frequency Compensation",
+      "level": 1,
+      "text": "In industrial applications, machines are generally not expected to operate at a single\noperating speed but often vary operation between different steady-state speed settings. As\ndiscussed in the previous section, the health indicator (HI) exhibits significant variation\nunder different operating speeds. Consequently, relying directly on the HI to estimate\nthe remaining useful life (RUL) introduces considerable uncertainty. This highlights the\nnecessity of developing a methodology capable of minimizing or eliminating the influence\nof operating speed on the signal amplitude. In this paper, the goal is to ensure an HI which\nis independent of speed variations.\nIn this study, a data-driven approach is adopted because estimating the underlying\nphysical parameters is highly complex, involves multiple degrees of freedom, and is\ntherefore beyond the scope of this work. Although several regression-based machine\nlearning techniques—such as neural networks, LSTMs, and CNNs—could be employed to\ncompensate for the influence of supply frequency, a simple regression model is chosen to\nensure computational efficiency [68,69]. While neural network architectures have greater\ncapacity to capture complex nonlinear relationships, the experimentally observed trend\nin this case is relatively straightforward and does not exhibit the level of nonlinearity or\ninteraction that would justify the use of more advanced models. Selecting a lightweight\nregression model is also advantageous for real-time condition-monitoring applications,\nwhere minimizing computational burden is essential.\nSeveral studies in the literature have reported that the bearing fault signature in the\ncurrent spectrum exhibits nonlinear variation with increasing eccentricity values [20,70].\nIn [71], the authors proposed a quadratic functional relationship, supported by analytical\nreasoning, to describe how the signature amplitude is affected. However, their model\nassumes that eccentricity is independent of the operating condition.\nIn the present case, it was observed that eccentricity is also a function of the supply\nfrequency. This dependency necessitates the use of a higher-order functional representation\nto accurately capture the variation in the signal. Accordingly, a fifth-order polynomial is\nassumed to compensate for the effect of changes in supply frequency. The rationale for\nselecting a fifth-order expression is discussed in detail later in this section.\nThe health indicator (HI) is derived as a weighted combination of the mean and\nstandard deviation, following the formulation presented in [7] and is given by Equation (6).\nHI = ∑k\nk=1 wt1(k).STD (k)\n∑k\nk=1 wt1(k)\n+ 10. ∑k\nk=1 wt2(k).Mean (k)\n∑k\nk=1 wt2(k)\n(6)\nwhere the weights wt1 and wt2 are calculated using Equation (7)\nwt1(k) =a1e− |k−c1|\nb1 and wt2(k) =a2e− k\nb2 (7)\nThe weights has decreasing trend for mean and increasing trend for standard deviation.\nThis is based on the observed trend reported in [7]. The values of a1, a2, b1, b2 and c1 are\nchosen such that the values of wt1 and wt2 have a sufficient decay trend with respect to k,\nwhich is neither too flat nor too steep.\nIdeally, the HI should exhibit invariance under varying operating conditions. To\nachieve this, a compensating function (c( f )) is introduced such that the product of the HI\nand (c( f )) results in a constant valuekc. In other words, c( f ) serves as an fs-dependent gain\nfactor applied to the health indicator, ensuring that the overall outcome remains constant\nMachines 2025, 13, 1095 11 of 22\nacross all operating supply frequencies. This ensures that the HI becomes independent of\nthe supply frequency fs for a given faulty bearing (Equation (8)).\nH I.c( f ) =kc OR H I .c( f ) − kc = 0 (8)\nwhere\nc( f ) =c0 + c1 f + c2 f 2 + c3 f 3 + c4 f 4 + c5 f 5 (9)\nIt is important to note that the constant kc is also unknown. What is known, however, is\nthat kc remains constant for a given bearing and its magnitude is expected to correlate with\nthe severity of the damage; i.e., being higher for bearings with more severe faults and lower\nfor those with less significant damage.\nThis formulation naturally leads to a regression problem, where the objective is to de-\ntermine the optimal parameters by minimizing a cost function, as defined in Equation (10).\nmin\n{cm}, {kc} ∑\nj\n \nH Ij\n5\n∑\nm=0\ncm f m\nj − kc\n!2\n(10)\nHere, H Ij denotes the health indicator calculated at the jth supply frequency. The reference\nfrequency is chosen as f0 = 34 Hz, which approximately corresponds to the midpoint of\nthe frequency range used in the measurements (18–50 Hz). For this reference condition,\nthe compensating function is normalized such that c( f0) =1. This normalization ensures\nthat the scale of the polynomial is fixed, thereby yielding a unique solution during model\nestimation. After performing the regression using the measurement data from bearing 3R1,\nthe resulting polynomial coefficients are presented in Table 1.\nTable 1. Polynomial coefficients of the frequency (per unit) correction function c( f ) =∑5\nm=0 cm f m.\nCoefficient Value\nc0 2.44265716 × 10−5\nc1 2.89367176 × 10−4\nc2 2.21345019 × 10−3\nc3 −3.04032787 × 10−5\nc4 −7.42508463 × 10−7\nc5 1.36149258 × 10−8\nThe obtained coefficients are of relatively small magnitude, making it challenging to\ndirectly assess the relative dominance or contribution of each term in the polynomial. To\nfacilitate a clearer comparison and improve interpretability, a per-unit (p.u.) normalization\nis applied to the frequency variable. Specifically, the frequency f is expressed in per-unit\nform by substituting f = f /50, where 50 Hz represents the nominal supply frequency. This\nnormalization scales the frequency variable to a dimensionless range, thereby adjusting the\nnumerical magnitude of the polynomial coefficients to a comparable level. The resulting\nnormalized coefficients are presented in Table 2.\nMachines 2025, 13, 1095 12 of 22\nTable 2. Polynomial coefficients of the frequency correction function c( f ) =∑5\nm=0 cm f m.\nCoefficient Value\nc0 2.44265716 × 10−5\nc1 1.446835 × 10−2\nc2 5.5336\nc3 −3.8004\nc4 −4.6407\nc5 4.2547\nUsing these coefficients and the health indicator calculated for each speed, we get\nk3R1 = mean(H I3R1( f ) · c( f )) =2.4143 × 10−4 (11)\nSimilarly, for bearing 2R3\nk2R3 = mean(H I2R3( f ) · c( f )) =2.0869 × 10−4 (12)\nThe overall regression response is illustrated in Figure 7. It can be observed that\nk3R1 > k2R3, indicating that the frequency-independent health indicator has a higher value\nfor the more severely damaged bearing. This trend is consistent with findings reported in\nthe literature [7].\nAt lower operating frequencies, the contributions of the third-, fourth-, and fifth-\norder terms are minimal, making the second-order term the dominant component of the\ncompensating function c( f ) such that it can be reasonably approximated as a quadratic\nfunction, sufficiently capturing the variation in the signal. However, as the supply frequency\napproaches the rated value of 50 Hz, the influence of the higher-order terms becomes\nincreasingly significant. This shift in dominance indicates that c( f ) deviates from a purely\nquadratic form and instead exhibits higher-order nonlinear characteristics. This behavior is\nparticularly relevant for practical applications, since electrical machines typically operate\nin the vicinity of their rated frequency, where such nonlinear effects are most pronounced.\nFurthermore, the zeroth- and first-order coefficients remain negligible across the entire\nfrequency range, confirming that the overall response cannot be considered linear.\nFigure 7. Supply frequency compensation using measurement from bearing 3R1 as training data.\nMachines 2025, 13, 1095 13 of 22\nA common practice in training data-driven models is to use a mixed dataset that\ncaptures all possible operating scenarios and to divide it into training and testing subsets,\ntypically in a 70:30 ratio, where 70% is used for training and 30% for validation and testing\n[72,73]. In the pre",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Test Setup [7]."
+    },
+    {
+      "id": "f2",
+      "caption": "Bearing with outer raceway faults [7]."
+    },
+    {
+      "id": "f3",
+      "caption": "Graphical representation of the signal processing [7]."
+    },
+    {
+      "id": "f4",
+      "caption": "Fundamental current component vs. supply frequency. (Blue - 3R1, Red - 2R3)"
+    },
+    {
+      "id": "f5",
+      "caption": "Mean of the SFB for k = [1, 8] for tested bearing 3R1."
+    },
+    {
+      "id": "f6",
+      "caption": "Standard Deviation of the SFB for k = [1, 8] for tested bearing 3R1."
+    },
+    {
+      "id": "f7",
+      "caption": "Supply frequency compensation using measurement from bearing 3R1 as training data."
+    },
+    {
+      "id": "f8",
+      "caption": "Supply frequency compensation using measurement from bearing 2R3 as training data."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Polynomial coefficients of the frequency (per unit) correction function c( f ) =∑5"
+    },
+    {
+      "id": "t2",
+      "caption": "Polynomial coefficients of the frequency correction function c( f ) =∑5"
+    },
+    {
+      "id": "t3",
+      "caption": "Comparison of 5th-order polynomial coefficients and constants between the original and"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Equation (1)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "Equation (6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "Equation (8)"
+    },
+    {
+      "id": "e10",
+      "latex_or_text": "Equation (10)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 5
+  }
+}

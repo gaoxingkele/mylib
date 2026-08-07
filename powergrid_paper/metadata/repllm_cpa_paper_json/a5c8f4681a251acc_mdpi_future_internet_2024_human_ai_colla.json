@@ -1,0 +1,219 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-future-internet/mdpi-future-internet__2024__human_ai_collaboration_for_remote_sighted_assistance_pe__8bd2c05fe2.pdf",
+  "n_pages": 45,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Remote sighted assistance (RSA) has emerged as a conversational assistive technology \nfor people with visual impairments (PVI) [1]. In RSA paradigms, a user with a visual \nimpairment uses their smartphone to establish a video connection with a remote sighted \nassistant, referred to as an RSA agent or simply an agent. The agent interprets the video feed \nfrom the user’s smartphone camera while conversing with the user to provide necessary or \nrequested assistance. Recently, several RSA services have been developed both in academia, \ne.g., VizWiz [2], BeSpecular [3], and Crowdviz [4], and in the industry, e.g., TapTapSee [5], \nBeMyEyes [6], and Aira [7].\nHistorically, RSA services have been refined based on users’ needs and feedback from \nmultiple trials [8-12]. Early RSA services featured unidirectional communication, i.e., from \nagents to users, with a narrow focus (e.g., agents describing objects in static images). \nAs these services matured and gained popularity, both agents and users adopted new \ntechnologies such as smartphones, two-way audio/text conversation, real-time camera feed, \nGPS, and Google Maps. Consequently, current RSA services now support more complex \ntasks, such as assisting PVI in navigating airports and crossing noisy intersections without \nveering.\nWith the increased task complexity, researchers [1,13] have identified that reliance on \nsmartphones’ camera feeds can be a limiting factor for agents, affecting their performance \nand mental workload, which can subsequently degrade the user experience of PVI. To \nelaborate, Kamikubo et al. [13] and Lee et al. [1], who studied RSA services, reported \nseveral challenges for agents, such as lack of confidence due to unfamiliarity with PVI’s \nphysical surroundings, lack of detailed indoor maps, inability to continuously track PVI on \nstatic maps, difficulty in estimating objects’ distances in the camera feed, and describing \nrelevant objects or obstacles in real time. However, these challenges are derived from the \nagents’ perspective, largely overlooking the user experience of PVI, who are the true users \nof RSA services. As such, the findings in prior works are likely to be incomplete. This paper \ndraws on prior works to holistically understand the technical and navigational challenges \nin RSA from both the agents’ and users’ perspectives. Specifically, we aim to address two \nresearch questions: What makes remote sighted assistance challenging? and When does this \nassistance become challenging to use?\nTo that end, we employed two methodologies. First, we conducted a literature review \nto identify technical challenges in RSA services, mostly derived from agents’ point of \nview. Second, we conducted an interview study with 12 visually impaired RSA users \nto understand navigational challenges from their standpoint. Based on these two studies, \nwe then constructed an exhaustive list of technical and navigational challenges to expand \nupon prior works and outline how these challenges occur in different real-world navigation \nscenarios. We organized technical challenges into four broad categories: agents’ difficulty \nin orienting and localizing the users, acquiring the users’ surrounding information and \ndetecting obstacles, delivering information and understanding user-specific situations, and \nYu et al. Page 2\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ncoping with poor network connection and external issues. Additionally, we produced a list of \n15 real-world scenarios (8 outdoor, 7 indoor) that are challenging for PVI to navigate.\nThis article is an extended version of our work presented at the 2022 International \nConference on Intelligent User Interfaces (IUI 2022) [14]. Compared with the conference \npaper, this extended article includes the following significant revisions:\nFirst, in our conference paper, we initially explored how to use computer vision (CV) to \naddress some identified challenges in RSA, but we mainly focused on how 3D maps can \nsolve the first type of challenge (agents’ difficulty in orienting and localizing the users). In \nthis extended article, we thoroughly analyze and outline the CV problems associated with \neach identified challenge, providing a detailed list of the challenges and corresponding CV \nproblems. Additionally, we add a new section (Section 5), where we offer a detailed analysis \nof the relationships between each RSA challenge and CV problems. This new content is \nbeneficial not only for HCI researchers considering how AI can improve RSA but also for \nCV researchers discovering new CV problems inspired by RSA.\nSecond, we analyze that some RSA challenges cannot be resolved with current CV \ntechnologies, opening up research opportunities for human–AI collaboration approaches. \nIn our conference paper, we proposed five emerging problems in human–AI collaboration \nin RSA. Through a systematic review of CV problems in RSA, we now expand this list to \n10 emerging problems: (1) making object detection and obstacle avoidance algorithms blind \naware, (2) localizing users under poor network conditions, (3) recognizing digital content \non displays, (4) recognizing text on irregular surfaces, (5) predicting the trajectories of \nout-of-frame pedestrians or objects, (6) expanding the field of view of live camera feeds, \n(7) stabilizing live camera feeds for task-specific needs, (8) reconstructing high-resolution \nlive video feeds, (9) relighting and removing unwanted artifacts in live video, and (10) \ndescribing hierarchical information from live camera feeds. Section 6 provides a detailed \ndiscussion of each problem, supplemented with illustrative figures.\nThird, the past two years have witnessed a revolution in AI technology, particularly with \nthe rise of large language models (LLMs) [15] like GPT-4 [16], which have fundamentally \nchanged how people perceive and utilize AI. In the realm of assisting PVI, the BeMyEyes \n[6] app has integrated GPT-4, introducing a BeMyAI [17] feature that delivers precise \nscene descriptions without needing remote sighted volunteers. In this transformative LLM \nera, we believe it is crucial to update our perspectives on human–AI collaboration in \nRSA. This extended article explores the potential of integrating RSA with LLMs and the \nnew opportunities for human–AI collaboration, attempting to depict the future of visual \nprosthetics. These new insights are detailed in Section 7.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Background and Related Works",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Navigational Aids for People with VI",
+      "level": 2,
+      "text": "Navigation is the ability to plan and execute a route to a desired destination. It is essential to \nhave a spatial representation of users’ surroundings (i.e., digital maps, cognitive maps [18], \nbuilding layouts), direction information, and continuous updates of their location in that \nYu et al. Page 3\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nrepresentation (localization) [19]. Over the last 70 years, researchers have proposed many \nprototypes to aid PVI in both outdoor and indoor navigation. In this section, we only review \na subset of such prototypes that are widely used and run on smartphones (for a chronological \nreview, see Real and Araujo [20]).\nSmartphone apps for outdoor navigation rely on GPS sensors for localization and \ncommercial map services (e.g., Google Maps, OpenStreetMap [21]) for wayfinding. \nExamples include BlindSquare [22], SeeingEyeGPS [23], Soundscape [24], and Autour \n[25]. These apps are feasible for navigating large distances for PVI by providing spatial \ndescriptions and turn-by-turn directions through audio. However, they are not reliable in the \nlast few meters [26] due to a wide margin of error in GPS accuracy (±5m [27]).\nThe weaker GPS signal strength indoors is also a barrier to indoor navigation. To overcome \nthis limitation, researchers have fused available smartphone sensors as alternatives for \nindoor navigation, such as motion sensors, Bluetooth [28], Infrared [29], NFC [30], RFID \n[31], sonar [32], beacon [33], and camera. The lack of sufficiently detailed indoor map \ndata is the other challenge [34,35]. To mitigate this challenge, researchers have proposed \nconstructing indoor maps by understanding the semantic features of the environment (for \na complete list, see Elmannai and Elleithy [36]). Unfortunately, these solutions require \nadditional deployment and maintenance effort to augment the physical environment [37], \nas well as a significant bootstrapping cost for setting up databases of floor plans [38] and \nstructural landmarks [39,40]. Some solutions also require users to carry specialized devices \n(e.g., an IR tag reader [29]). For these reasons, no single indoor navigation system is widely \ndeployed.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2.2 RSA Services for People with VI",
+      "level": 2,
+      "text": "RSA service is an emerging navigational aid for PVI [41]. The implementation of various \nRSA services differs in three key areas. (i) The communication medium between users and \nremote sighted assistants. Earlier prototypes used audio [8], images [2,12], one-way video \nusing wearable digital cameras [9,42], or webcams [9], whereas recent ones use two-way \nvideo chat using smartphones [6,7,10,43]. (ii) The instruction form. RSA services are based \non texts [44], synthetic speech [8], natural conversation [6,7,10], or vibrotactile feedback \n[11,45]). (iii) Localization techniques, for example, via GPS sensor, crowdsourcing images \nor videos [2,19,46,47], fusing sensors [19], or using CV as discussed in the next subsection.\nResearchers have studied crowdsourced and paid RSA services. For crowdsourced RSA \nservices (e.g., TapTapSee [5], BeMyEyes [6]), researchers concluded that they are feasible \nto tackle navigation challenges for PVI [48,49]. However, potential issues in crowdsourced \nRSA services include the following: (i) users trust too much in subjective information \nprovided by crowdworkers, and (ii) crowdworkers are not available at times [50]. Compared \nwith crowdsourced RSA services, Nguyen et al. [51] and Lee et al. [1] reported that \nassistants of paid RSA services (e.g., Aira [7]) are trained in communication terminology \nand etiquette, ensuring that they do not provide subjective information. Furthermore, they \nare always available.\nYu et al. Page 4\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.3 Use of CV in Navigation for People with VI",
+      "level": 2,
+      "text": "Budrionis et al. [52] reported that CV-based navigation apps on smartphones are a cost-\neffective solution. Researchers have proposed several CV-based positioning and navigation \nsystems by recognizing landmarks (e.g., storefronts [26]) or processing tags (e.g., barcodes \n[29,53], QR codes [54,55], color markers [56], and RFID [57]). CV techniques have also \nbeen applied to obstacle avoidance [58,59], which ensures that users can move safely during \nthe navigation without running into objects. However, Saha et al. [26], who studied the \nlast-few-meters wayfinding challenge for PVI, concluded that, for a deployable level of \naccuracy, using CV techniques alone is not sufficient yet.\nAnother line of work is to develop autonomous location-aware pedestrian navigation \nsystems. These systems combine CV with specialized hardware (e.g., wearable CV device \n[60] and suitcase [61]) and support collision avoidance. While these systems have expanded \nopportunities to receive navigation and wayfinding information, their real-world adaptability \nis still questionable, as Banovic et al. [62] commented that navigation environments in the \nreal world are dynamic and ever-changing.\nLately, researchers are exploring the feasibility of an augmented reality (AR) toolkit in \nindoor navigation, which is built into modern smartphones (e.g., ARKit [63] in iOS \ndevices, ARCore [64] in Android devices). Yoon et al. [65] demonstrated the potential \nof constructing indoor 3D maps using ARKit and localizing users with VI on 3D maps \nwith acceptable accuracy. Troncoso Aldas et al. [66] proposed an ARKit-based mobile \napplication to help PVI recognize and localize objects. Researchers found that AR-based \nnavigation systems have the advantage of (i) having widespread deployment [67], (ii) \nproviding better user experience than traditional 2D maps [68], and (iii) freeing users’ hands \nwithout the need to point the camera towards an object or a sign for recognition [69].\nMore recently, we explored the opportunity of utilizing CV technologies to assist sighted \nagents instead of users with VI [70]. We designed several use scenarios and low-fidelity \nprototypes and had them reviewed by professional RSA agents. Our findings suggest that a \nCV-mediated RSA service can augment and extend agents’ vision in different dimensions, \nenabling them to see farther spatially and predictably and keeping them ahead of users \nto manage possible risks. This paper complements those findings by identifying situations \nwhere leveraging CV alone is not feasible to assist sighted assistants.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.4 Collaboration between Human and AI",
+      "level": 2,
+      "text": "Despite recent advancements in CV , automatic scene understanding from video streams and \n3D reconstruction remains challenging [71]. Factors such as motion blur, image resolution, \nnoise, illumination variations, scale, and orientation impact the performance and accuracy \nof existing systems [71,72]. To overcome these challenges, researchers have proposed \ninteractive, hybrid approaches that involve human–AI collaboration [73]. One representative \nof this approach is the human-in-the-loop framework. Branson et al. [74] incorporated \nhuman responses to increase the visual recognition accuracy. Meanwhile, they found \nthat CV reduces the amount of human effort required. Similarly, researchers developed \ninteractive 3D modeling in which humans draw simple outlines [75] or scribbles [76] to \nYu et al. Page 5\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nguide the process. They increased the accuracy of 3D reconstructions while considerably \nreducing human effort.\nCollaborative 2D map construction and annotation is another example of human–AI \ncollaboration, where AI integrates and verifies human inputs. Systems have been developed \nfor collaborative outdoor (e.g., OpenStreetMap [21]) and indoor (e.g., CrowdInside [77], \nSAMS [78], and CrowdMap [79]) map construction. Researchers also investigated the use of \ncollaborative 2D map construction and annotation in supporting navigational tasks for PVI, \nfor example, improving public transit [80] and sidewalk [81,82] accessibility and providing \nrich information about intersection geometry [83]. Guy and Truong [83] indicated that \ncollaborative annotations represent information requested by users with VI and compensate \nfor information not available in current open databases.\nAlthough prior works support the technological feasibility of collaborative mapping and \nannotation, the motivation and incentives of volunteers have been a concern surrounding \ncollaborative map construction. Budhathoki and Haythornthwaite [84] indicated that \nvolunteers can be motivated by intrinsic (e.g., self-efficacy and altruism) or extrinsic (e.g., \nmonetary return and social relations) factors. In contrast, all volunteers are equally motivated \nin terms of a personal need for map data.\n3. Identifying Challenges in RSA: Literature Review\nWe aimed to understand the challenges in RSA from two different perspectives, namely, the \nagents’ and users’ perspectives. This section presents a literature review that produces a list \nof such challenges from the agents’ perspective. Please refer to our IUI conference paper \n[14] for the detailed steps of our literature review methodology. The left part of Table 1 \nsummarizes the identified challenges. Subsequently, we elaborate on the pertinent literature \nsources from which each individual challenge is derived.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.1 Challenges in Localization and Orientation",
+      "level": 2,
+      "text": "One of the biggest challenges identified for RSA agents is accurately localizing users \nand orienting themselves. For this task, the agent mainly depends on the two sources of \ninformation—users’ live video feed and GPS location. The agents put them together to \nlocalize the users on a digital map on their dashboard [1,10]. However, the agents frequently \nget confused perceiving which direction the user is facing from the user’s camera feed \nand GPS location [9,13,42]. The trained agents who participated in a prior study [13] also \nreported that losing track of users’ current location is a challenging problem. RSA agents’ \nlack of environmental knowledge and their unfamiliarity with the area, the scarcity and \nlimitations of the map, and the inaccuracy of GPS are found to be the main causes of \nlocation- and orientation-related challenges.\n3.1.1. Unfamiliarity with the Environment— In a previous study [101], the RSA \nagents expressed their frustrations with the users’ expectations of the agents’ quick start of \nassistance, which is usually not possible because most places are new to the agents, and thus, \nthey need some time to process information to orient themselves. The fact that RSA agents \nYu et al. Page 6\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nhave never been in the place physically and depend only on the limited map and the video \nfeed is reported as a cause for the challenge in the research work [13,42,43].\n3.1.2. Scarcity and Limitation of Maps— Lee et al. [1] reported that RSA agents \nprimarily use Google Maps for outdoor spaces, and they perform Google searches to find \nmaps for indoor places. RSA agents who participated in Lee et al.’s study [1] reported \nthat coarse or poor maps of malls or buildings limit their ability to assist users. They also \nstated that many public places either have no maps or have maps with insufficient details, \nwhich forces them to rely on another sighted individual in close proximity of the user \nfor assistance. Sometimes, agents must orient users using their camera feeds only [1,42], \nwhich makes the challenges worse. Navigating complex indoor layouts is a well-established \nchallenge in pedestrian navigation, as reported by many researchers [13,19,33,85].\n3.1.3. Inaccurate GPS— In addition to the insufficient map problem, inaccurate GPS \nwas recognized as another major cause. Field trials of RSA systems [10] revealed that the \nlargest orientation and localization errors occurred in the vicinity of a tall university building \nwhere GPS was inaccurate. Researchers [42] indicated that GPS signal reception was \ndegraded or even blocked around tall buildings. In terms of the last-few-meters navigation \n[26], they illustrated that GPS was not accurate enough to determine whether the user was \nwalking on the pavement or the adjacent road in some situations. The well-known last 10 \nmeters and yard problem [26] in blind navigation is also caused by GPS inaccuracy.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "3.2 Challenges in Obstacle and Surrounding Information Acquirement and Detection",
+      "level": 2,
+      "text": "The second notable challenge that agents face is obtaining information about obstacles and \nsurroundings. RSA agents need to detect obstacles vertically at ground level to head height \nand horizontally along the body width [8,42,94]. They also need to provide information \nabout dynamic obstacles (e.g., moving cars and pedestrians) and stationary ones (e.g., \nparked cars and tree branches) [10,94]. However, agents found these tasks daunting due to \nthe difficulties in estimating the distance and depth [13], reading signages and texts [43], \nand detecting/tracking moving objects [43,94] from the users’ camera feed. A number of \nresearch studies have also found that it is almost impossible for agents to project or estimate \nout-of-frame potential obstacles, whether moving or static [8-11,13,42,94]. Researchers [62] \ndescribe that navigation environments in the real world are dynamic and ever-changing. \nThus, it is easier for agents to detect obstacles and provide details when users are stationary \nor moving slowly [43]. Two main causes are linked with the aforementioned problems: (1) \nlimited field of view (FOV) of the camera and (2) limitation of using video feed.\n3.2.1. Narrow View of the Camera— Prior research found that the camera in use had \na relatively limited viewing angle of around 50°, compared with the angle of human vision, \nwhich is up to 180° [9]. Researchers [11,94] mentioned that the camera should be located \nappropriately to maximize vision stability along the path. A limited field of camera view \naffects RSA agents negatively in their guiding performance [13,108].\n3.2.2. Limitation of Using Video Feed— The quality of the video feed that matters to \nthe RSA is the steadiness and clearness. The video stream is easily affected by the motion \nYu et al. Page 7\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nof the camera (e.g., handheld mobile device or glasses) and becomes unstable. It is reported \nthat agents are more likely to experience motion sickness when users are not holding the \ncamera (e.g., smartphone hanging around the user’s neck) [43]. To mitigate the challenges \nof reading signages and texts in the user’s camera feed, researchers [9] demonstrated the \nnecessity of enhancing the quality of the video stream. A smooth frame rate and high \nresolution are essential when agents read signs, numbers, or names. The quality of the \nvideo stream can affect the performance of RSA in hazard recognition [109,110], and thus, \nit is considered as one of the main factors determining the safety of blind users [10]. \nThis explains why the task of an intersection crossing was recognized as one of the most \nchallenging situations for agents in a navigation aid. RSA agents find it very challenging \nbecause it is difficult to identify traffic flow through the narrow camera view, poor video \nquality, and the high speed of vehicles [9,13,43].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3.3 Challenges in Delivering Information and Interacting with Users",
+      "level": 2,
+      "text": "In addition to the challenges in the task of obtaining the necessary information, agents report \nthe next set of challenges occurring in delivering the obtained information and interacting \nwith users. In previous studies [1,101], agents revealed the difficulties in providing various \npieces required of information (e.g., direction, obstacle, and surroundings) in a timely \nmanner and prioritizing them, which requires understanding and communicating with users, \nwhich creates further challenges. The agents could also become stressed if users move faster \nthan they could describe the environment [1]. These suggest that, in the navigation task, \nthe need to deliver a large volume of information and, simultaneously, the need to quickly \nunderstand each user’s different situation, need, and preference are the main causes for \nthe challenges. Prior research found that RSA agents deal with these challenges through \ncollaborative interaction/communication with users [1,43].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.4 Network and External Issues",
+      "level": 2,
+      "text": "Early implementations of RSA services suffered from the network connection and limited \ncellular bandwidth [42]. Although cellular connection has improved over the years, the \nproblem remains for indoor navigation [43], which could lead to large delays or breakdowns \nof video transmissions [13,94,111]. Additionally, an external factor such as low ambient \nlight conditions at night causes the poor quality of the video feed.\n4. Identifying Challenges in RSA: User Interview Study\nNext, we conducted a semi-structured interview study with 12 visually impaired RSA users \nto understand the challenges from the perspective of RSA users’ experience. In this section, \nwe report the findings of the users’ experienced challenges, their perceptions of RSA agents’ \nchallenges, and how the challenges on each side of the RSA provider and users are related \nand affect the RSA experience. Please refer to our IUI conference paper [14] for specific \ninformation regarding participants, procedures, data analysis, and other details of this user \nstudy.\nFrom the interview study, we identified challenging indoor and outdoor navigational \nscenarios from the blind users’ experience (Table 2). Further, we saw that major problems \nYu et al. Page 8\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nrecognized from the literature review (e.g., the limitations of maps, RSA’s environmental \nknowledge, and the camera view and feed) reappear as the main causes for challenges for \nblind users and found how those problems affect users’ navigation experience and how they \nperceive and help address the problems on the users’ end.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "4.1 Common Navigation Scenarios",
+      "level": 2,
+      "text": "The most common types of navigation scenarios that our participants asked RSA agents \nfor help with are traveling and navigating unfamiliar indoor or outdoor places. Navigating \nunfamiliar areas where a blind user might utilize the RSA service came up often in our \nstudy, which is consistent with the literature [1,101]. For outdoor navigation, common \nscenarios include checking and confirming the location after Uber or Lyft drop-offs; finding \nan entrance from a parking lot; taking a walk to a park, coffee shop, or mailbox; navigating \nin a big college campus; and crossing the street.\nThe common indoor places they called RSA agents for help with were airports and large \nbuildings (e.g., malls, hotels, grocery stores, and theaters). In an airport, they usually asked \nRSA agents to find a gate and baggage claim area. Inside large establishments or buildings, \nthey asked for finding a certain point of interest (e.g., shops, customer service desk); \nentrances and exits, stairs, escalator, and elevator; and objects, e.g., vending machines and \ntrash cans. Our data suggest that blind users repeatedly use RSA services to navigate the \nsame place if its layout is complex (e.g., airports), or their destination within the place is \ndifferent (e.g., different stores in a shopping mall), or the place is crowded and busy (e.g., \nrestaurants).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "4.2 Challenging Outdoor Navigation Experiences",
+      "level": 2,
+      "text": "It was a recurrent theme that if the agents experienced challenges, the users also experienced \nchallenges. The interviewees were mostly content with their outdoor navigation experience \nwith the agent, compared with that in indoor navigation, even though they realized \nthat some scenarios were challenging to agents. Examples of such scenarios include \ncrossing intersections and finding certain places and locations (e.g., building entrances, and \nrestrooms) in open outdoor spaces (e.g., parking lots, campuses).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4.3 Challenging Indoor Navigation Experiences",
+      "level": 2,
+      "text": "All our interviewees commonly mentioned that indoor navigation was more challenging for \nthem, as well as for the agents. Interviewees’ indoor experiences with RSA indicate that it \nusually took much longer for the agent to locate and find targets in indoor spaces. Christi \nshared her challenging experience of spending about 20 minutes with an RSA agent only to \nfind a store (“Bath and Body Works”) from another store in a big mall. Another interviewee, \nRachel, recounted the longest and the most challenging time she had with an agent when \ntrying to find the luggage section in a department store, Kohl’s.\nFinding the entrance (or exit) of a building and navigating to a pick-up point from the \ninterior of a building to meet the ride-sharing driver are examples of other challenging \nexperiences that our interviewees shared with the RSA agents.\nYu et al. Page 9\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n4.4. Users’ Understanding of Problems: Insufficient Maps, RSA’s Unfamiliarity of Area, \nand Limited Camera View\nAll interviewees mentioned that the absence of maps or floor plans and the inaccuracy and \nscarcity of the map were the primary reasons why RSA agents struggled to assist them in \nboth indoor and outdoor places. Most interviewees also mentioned that the RSA agent’s \nunfamiliarity with a place and its location is a significant challenge.\nSeveral interviewees’ accounts also suggested that poor and limited visibility caused by the \nnarrow camera view creates challenges for the agents. Karen talked about using stairs in her \nschool and showed her understanding of the agent’s visual challenge caused by the limited \ndistance that the camera feed can show. She also introduced another visual challenge that the \ncurrent camera’s capability cannot solve, and Calvin’s comment implies the same issue.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.5 Users Helping and Collaborating with RSA",
+      "level": 2,
+      "text": "The participants seem to understand the difficulties and situations that the agents face on \ntheir end, and they want to assist the agents and are willing to work with them to mitigate \nthe challenges and complete the navigation task together. Karen and Grace shared what they \nusually did to help the agent get a better view of the video feed for the direction and distance \non their end. Karen said that she paid careful attention to positioning the phone correctly \nso that the agent could see what they needed to see. The participants also mentioned that a \ncommon workaround that RSA agents use in challenging scenarios is to find a dependable \nsighted person, such as an employee with a uniform or someone at the help desk, who could \nhelp them quickly. Lee et al. [1] also reported a similar finding.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "5 Identified Computer Vision Problems in RSA",
+      "level": 1,
+      "text": "Since the identified challenges are mostly related to visual understanding and spatial \nperception, we relate one or more CV problems to each challenge in Table 1. The related CV \nproblems include object detection, visual SLAM, camera localization, landmark recognition, \nvisual navigation, scene text recognition, depth estimation, scale estimation, multiple object \ntracking, human trajectory prediction, field-of-view extrapolation, video stabilization, visual \nsearch, video captioning, video super-resolution, and video relighting. These problems are \nwell formulated in the CV literature. Researchers have developed various methods to address \nthese problems and have mostly evaluated them on standard benchmark datasets. In this \nsection, we will analyze the applicability of each of these CV problem settings and solutions \nwhen dealing with the identified RSA challenges so as to find out the unique requirements \nof RSA services for CV research.\nObject detection [102]\naims to detect instances of objects of predefined categories (e.g., humans, cars) in images or \nvideos. Object detection techniques can answer a basic CV question: what objects exist in \nthe image and where are they? It can be used to help address the RSA challenge of difficulty \nin proving various information, i.e., problem G3.(1) in Table 1. For example, if the user \nwants to find a trash can, the object detection algorithm can continuously detect objects in \nthe live video feed. When a trash can is detected, it will notify the agent and user.\nYu et al. Page 10\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nVisual SLAM [86]\nmethods are used for mapping an unknown environment and simultaneously localizing the \ncamera through the video captured in this environment. It can directly address the RSA \nchallenges of scarcity of indoor maps and inability to localize the user, i.e., problem G1.(1)\n(2)(3) in Table 1. The benefit of visual SLAM for RSA services has been demonstrated in \nour prior work [112] using Apple’s ARKit.\nCamera localization [87]\naims to estimate the 6-DOF camera pose (position and orientation) in a known environment. \nHere, the camera is a general term and could include an RGB camera, RGB-D camera, or \n3D LiDAR. Camera localization can address the RSA challenges of inability to localize the \nuser and difficulty in orienting the user, i.e., problem G1.(2)(3) in Table 1. Similar to visual \nSLAM, our prior work [112] has shown that real-time camera localization can effectively \nsupport RSA in indoor navigation.\nLandmark recognition [88]\nfinds the images of a landmark from a database given a query image of the landmark. \nIt is a subtask of content-based image retrieval and has the potential to address the RSA \nchallenges of lack of landmarks on the map, i.e., problem G1.(4)(5) in Table 1. Instead \nof annotating landmark locations on the map, we can crawl and save the pictures of \nthe landmark in a database. Then, when the user explores the environment, the landmark \nrecognition algorithm can search the database and automatically annotate the landmark on \nthe map if it matches. However, it may be only valid for well-known landmarks. For subtle \nlandmarks, the challenge is open for exploration.\nVisual navigation [89]\nrequires a robot to move, locate itself, and plan paths based on the camera observations \nuntil reaching the destination. It may help address the RSA challenges of last-few-meters \nnavigation [26], i.e., problem G1.(7) in Table 1.\nScene text recognition [90]\naims to recognize text in wild scenes from a camera and can be regarded as camera-based \noptical character recognition (OCR). It is still a challenging CV problem due to factors such \nas poor imaging conditions. The scene text recognition technique could be used to overcome \nthe RSA challenge of difficulty in reading signages and texts from the camera feed, i.e., \nproblem G2.(1) in Table 1.\nDepth estimation\nis a task of estimating the depth of a scene. In particular, monocular depth estimation [91] \naims to estimate depth from a single image. It could be used to address the RSA challenge \nof difficulty in estimating the depth from the user’s camera feed and in conveying distance \ninformation, i.e., problem G2.(2) in Table 1.\nYu et al. Page 11\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nScale estimation [92,93,113]\nnot only determines the distance between the camera and an object (e.g., an obstacle) but \nalso provides an estimate of the object’s real size, leading to a more accurate understanding \nof the environment. However, due to the inherent problem of scale ambiguity in monocular \nSLAM, it is often necessary to combine the camera with other sensors, such as an inertial \nmeasurement unit (IMU) or depth sensor, or use multiple cameras to achieve precise \nscale estimation with a smartphone. Once the 3D environment with scale information is \nreconstructed, it can be leveraged to better address the RSA challenge of difficulty in \nestimating the depth from the user’s camera feed and in conveying distance information, i.e., \nproblem G2.(2) in Table 1.\nMultiple object tracking [95]\naims to identify and track objects of certain categories (e.g., pedestrians, vehicles) in videos. \nIt is the basis of downstream tasks such as human trajectory prediction and could help \naddress the RSA challenge of difficulty in detecting and tracking moving objects, i.e., \nproblem G2.(3) in Table 1.\nHuman trajectory prediction [96,97,114]\naims to understand human motions and forecast future trajectories considering interactions \nbetween humans and constraints of the environment. It could be used to solve the RSA \nchallenge of difficulty in tracking moving objects and inability to project or estimate out-of-\nframe people from the camera feed, i.e., problem G2.(3)(4) in Table 1.\nField-of-view extrapolation [98,99]\nis a task of generating larger FOV images from small FOV images using the information \nfrom relevant video sequences. It has the potential to address the RSA challenge of inability \nto estimate out-of-frame objects or obstacles from the user’s camera feed, i.e., problem \nG2.(4) in Table 1.\nVideo stabilization [100]\ncan remove the serious jitters in videos captured by handheld cameras and make the videos \nlook pleasantly stable. Video stabilization techniques can reduce the RSA challenge of \nmotion sickness due to an unstable camera feed, i.e., problem G2.(5) in Table 1.\nVisual search\ndeals with the problem of searching images with the same content as the query image from \na database. In particular, person search [103,104,115-117] aims to find the same person as \nthe query image from a database of scene images. It needs to identify both which image \nand where on the image, and has the potential to address the RSA challenge of difficulty \nin proving various information, i.e., problem G3.(1) in Table 1. Similar to object detection, \nperson search algorithms can continuously detect people on the live video feed. When the \nspecific person is found, it will alert the agent and user.\nYu et al. Page 12\nFuture Internet. Author manuscript; available in PMC 2025 March 06.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nVideo captioning [105]\nis a task of describing the content of videos with natural language, which combines CV and \nnatural language processing (NLP). It might help address the RSA challenge of adjusting \nthe level of detail in description provision through communication, i.e., problem G3.(2) in \nTable 1. When the RSA agent is processing information (e.g., reading the map) or misses \nsome information in the description, video captioning techniques can help describe the \nenvironment for the user.\nVideo super-resolution [106]\nis a classic CV and image processing problem, aiming to recover a video from low \nresolution to",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "When the RSA agent is processing information (e.g., reading the map) or misses"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

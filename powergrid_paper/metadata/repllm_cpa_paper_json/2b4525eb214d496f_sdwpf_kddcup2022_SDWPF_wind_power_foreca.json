@@ -1,0 +1,241 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/sdwpf_kddcup2022/sdwpf_kddcup2022__SDWPF_wind_power_forecasting_dataset_paper__5b6d31542c.pdf",
+  "n_pages": 7,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "8 Additionally, numerous studies have investigated",
+      "level": 1,
+      "text": "wind power forecasting problems in recent years9–15.\nMost datasets that underlie WPF research are not publicly accessible due to confidentiality agreements, \nas noted by 16. Publicly available wind power datasets are typically aggregated over spatial regions, lack -\ning turbine-level measurements and turbine-specific power output 17. The Supervisory Control And Data \nAcquisition (SCADA) system is responsible for collecting turbine-level measurements, which reflect dynamic \ncontextual factors for each turbine, such as temperature, weather, and turbine internal status. Previous stud\n-\nies16,18 have demonstrated that these turbine-level dynamic context factors, along with turbine locations, can \nhelp increase the accuracy of WPF models. Although SCADA data can be easily utilized by deployed WPF sys-\ntems in the real world, non-confidential datasets with such information remain scarce. For instance, the popular \nKaggle datasets\n19,20 only provide the information of one turbine, whose location and data origins are unknown. \nTo the best of our knowledge, the dataset with the largest number of turbines is shown in 21, which consists of \n1Business intelligence Lab, Baidu Research, Beijing, china. 2china Longyuan Power Group corp. Ltd., Beijing, china. \n3tsinghua University, Beijing, china. 4Baidu i nc., Beijing, china. 5BeDi cloud, Beijing, china. 6fudan University, \nShanghai, china. 7these authors contributed equally: Jingbo Zhou, Xinjiang Lu, Yixiong Xiao, Jian tang, Jiantao Su. \n✉e-mail: zhoujingbo@baidu.com\nDATA DeSCri PTor\nOPEN\n\n2Scientific  Data |          (2024) 11:649  | https://doi.org/10.1038/s41597-024-03427-5\nwww.nature.com/scientificdatawww.nature.com/scientificdata/\nonly 32 turbines. However, a typical wind farm may have hundreds of turbines. A discussion about the related \nwork of wind power forecasting data can be found in Supplementary Section A.\nThe absence of a large-scale, real-world public benchmark dataset may impede progress in WPF research. A \nreal-world benchmark dataset plays a vital role in assessing the limits of existing methodologies, fostering tech-\nnological advancements, and enhancing educational efforts in this domain. The significance of such a dataset can \nbe detailed through three main aspects: (1) Model Verification: Public benchmark datasets establish evaluation \nstandards for forecasting models, offering definitive guidelines for model selection and deployment. This stand\n-\nardization is essential for ensuring the accuracy and comparability of WPF methods. (2) Research Advancement: \nBenchmark datasets act as a proving ground for identifying and evaluating promising new technologies and \nmodels dedicated to WPF . By encouraging a competitive environment, these datasets drive research innova\n-\ntion and spotlight areas ripe for breakthroughs. (3) Educational Value: Benchmark datasets are also educational \nresources that equip new researchers and students with a deeper understanding of wind power forecasting and \nthe complexities of model development. Thus, the availability of a WPF benchmark dataset is instrumental in \nadvancing wind power forecasting, contributing to a sustainable energy future.\nIn this paper, we introduce a novel dataset for Spatial Dynamic Wind Power Forecasting, denoted as SDWPF . \nThis dataset includes the spatial distribution of wind turbines, along with dynamic contextual factors derived \nfrom the SCADA system. SDWPF is constructed based on the data of a real-world wind power farm belonging \nto China Longyuan Power Group Corp. Ltd., the largest wind power producer in China and Asia. Compared \nto the previously available datasets, SDWPF has two distinct features: (1) Spatial distribution: it includes the \nrelative location and elevation of all wind turbines in a wind farm to model the spatial correlation among them. \n(2) Dynamic context: The dataset provides weather information and the internal status of each wind turbine, as \ndetected by the SCADA system, to facilitate the forecasting task.\nIn the SDWPF dataset, the wind farm’s turbine array consists of 134 wind turbines, representing a notable \nenlargement in array size compared to the existing largest dataset, which contains merely 32 wind turbines. The \nSDWPF dataset encompasses wind power production records sourced from the wind farm’s SCADA system. The \ndataset covers 24 months and contains more than 11.4 million historical entries detailing wind, temperature, \nand the internal status of each turbine. These records are collected at a 10-minute resolution from each turbine \nwithin the turbine array of the wind farm. We also detail the data collection process, explore the characteristics \nin-depth, and discuss potential caveats associated with using this data. Additionally, we conducted an ablation \nstudy to demonstrate the effectiveness of several data features.\nTo explore the performance limits of existing WPF methods and to promote research in wind power tech\n-\nnology using machine learning techniques, we utilize the SDWPF dataset to launch the ACM KDD Cup 2022 \nChallenge, which has been the most prestigious annual data mining competition held in conjunction with the \nACM SIGKDD conference. The information about the challenge is briefly introduced in Supplementary Section \nC.4 and is also available on the official website of the Baidu KDD Cup 2022",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "22 The Baidu KDD Cup attracted over",
+      "level": 1,
+      "text": "2400 registration teams from around the world, some of which submitted cutting-edge models that produced \nsignificant improvements over our official baseline. It is our hope that the SDWPF dataset will foster the devel\n-\nopment of wind power forecasting research, contributing to a sustainable energy future.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Methods",
+      "level": 1,
+      "text": "The SDWPF dataset is collected from the Supervisory Control and Data Acquisition (SCADA) system of a wind \nfarm. Each wind turbine can generate wind power Patv",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "separately, and the outcome power of the wind farm is",
+      "level": 1,
+      "text": "the sum of all the wind turbines. In other words, at time t, the output power of the wind farm is P Patvi\ni= ∑ . \nAn illustration of a wind farm’s turbine array is shown in Fig. 1(a).\nHere we describe the turbine characteristics used to generate the SDWPF dataset. The data is derived from \nthe SL1500/82 turbine type, produced by Sinovel Wind Group Co., Ltd. This turbine type utilizes reliable \nFig. 1 Illustration of a turbine array and its spatial distribution. (a) An illustration of a wind farm’s turbine array \nand its output power. (b) Spatial distribution of wind turbines (x and y are with the meter unit) in the SDWPF \ndataset.\n3Scientific  Data |          (2024) 11:649  | https://doi.org/10.1038/s41597-024-03427-5\nwww.nature.com/scientificdatawww.nature.com/scientificdata/\ndoubly-fed power generation technology, with a rotor diameter of 82 meters and a hub height of 70 meters. It \nfeatures three blades, each measuring 40.25 meters in length. For further information on the SL1500 series tur-\nbines, please refer to the manufacturer’s official website23. More information about the turbine is also presented \nin Supplementary Section B.1 with Table S1.\nAside from the SCADA data, we also included the weather data such as relative humidity, wind speed, wind \ndirection, etc. collected from the fifth generation of the European Centre for Medium-Range Weather Forecasts \n(ECMWF) Atmospheric Reanalyses of the global climate (ERA5)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "24 The decision to utilize meteorological data",
+      "level": 1,
+      "text": "from ERA5 is driven by the need to isolate errors stemming from Numerical Weather Prediction (NWP) from \nthose inherent to the WPF challenge. ERA5 seamlessly integrates past observations with contemporary numer\n-\nical models, yielding a consistent dataset spanning extensive temporal horizons. Its objective is to emulate real \natmospheric conditions for each respective time step to the fullest extent feasible. In contrast, in practical appli\n-\ncations, the accessible data primarily originates from NWP models, which anticipate the atmospheric state \nfor a specific location and future time, leveraging both current and historical observational data. Although \ncontemporary NWP models exhibit increasing precision, they inherently carry uncertainties, which become \nmore pronounced for extended forecast durations. Using a reanalysis dataset such as ERA5 helps to mitigate the \ncumulative error inherent in NWP models, effectively decoupling the wind power forecasting problem from the \nchallenges of weather prediction.\nThe relative position of all wind turbines in the wind turbine array is released to characterize the spatial cor\n-\nrelation among wind turbines. An illustration of the spatial distribution of the total 134 wind turbines is shown \nin Fig. 1(b). All turbines are of the same type and have identical hub heights (defined as the distance from the \nturbine platform to the rotor, excluding the length of the blades25). The units of x and y are meters. In addition \nto the relative position, the elevation of each wind turbine is also provided in the dataset based on the Terra \nAdvanced Spaceborne Thermal Emission and Reflection Radiometer (ASTER) Global Digital Elevation Model \n(GDEM) Version 3 (ASTGTM)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "26 Data records",
+      "level": 1,
+      "text": "The SDWPF dataset spans from January 2020 to December 2021. It comprises SCADA data collected every \n10 minutes from each of the 134 wind turbines in the wind farm. The 10-minute record data represents average \nvalues over each 10-minute interval, derived from high-frequency (1 Hz) sampling by the SCADA system. The \nSDWPF dataset can be accessed through the Figshare repository",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "27 The key statistics and details of the SDWPF",
+      "level": 1,
+      "text": "dataset are provided in Table 1.\nAn introduction to the main attributes of the data in Table 2. The dataset includes critical external features, \ne.g., wind speed, wind direction, and external temperature, as well as essential internal features, e.g., the inside \ntemperature, nacelle direction, and pitch angle of blades. The external features influence the wind power gener\n-\nation, while the internal features can indicate the operating status of each wind turbine.\nWe have released the dataset on the Figshare repository 27. For easier utilization, we have divided the data -\nset into two parts: sdwpf_kddcup  and sdwpf_full. The sdwpf_kddcup comprises the original dataset used for \nthe Baidu KDD Cup 2022, including both training and test datasets. The sdwpf_full provides a more extensive \ncollection, featuring additional data not previously available during the KDD Cup, such as weather conditions, \ndates, and elevation. The sdwpf_full dataset contains three files, where sdwpf_turb_location_elevation.csv details \nthe relative positions and elevations of all wind turbines within the dataset; sdwpf_2001_2112_full.csv includes \ndata collected two years from the wind farm containing 134 wind turbines, spanning from Jan. 2020 to Dec. \n2021; and sdwpf_2001_2112_full.parquet is identical to sdwpf_2001_2112_full.csv, but in a different data format. \nsdwpf_full offers comprehensive enhancements over the sdwpf_kddcup including extend time span, enriched \nweather information, and expanded temporal details. A detailed comparison between sdwpf_full  and sdwpf_\nkddcup can be found in Supplementary Section B.2.\ntechnical Validation\nIn this section, we begin with an ablation study to examine the features of the SDWPF dataset. Additionally, we \ndiscuss some of the results from the KDD Cup 2022, which is recognized as one of the most prestigious competi\n-\ntions in data science. More information about the experimental setting and evaluation experiment on the dataset \ncan be found in Supplementary Section C.\nablation study of features. We conducted an ablation study to show the effectiveness of the additional \nfeatures of SDWPF which is shown in Fig. 2. Here we use the Informer model to demonstrate this ablation study. \nW/Weather means to include the weather forecast features (in the future 48 days) that relate to the surrounding \nenvironment of the wind farm collected from ERA5 into the prediction model. W/o Wind means to remove the \nhistorical features of Wspd and Wdir from the input, W/o Temp means to remove the historical features of Etmp \nand Itmp from the input, and W/o Pos means to remove the historical features of Ndir, Pab1, Pab2, and Pab3 \nfrom the input.\nAt first, this study showcases the effectiveness of weather forecast information for WPF . As we can see from \nFig. 2, if putting the weather forecast data into the model, the RMSE of the Informer can significantly decline \nTime range Interval # of columns # of turbines # of records\nJan. 2020 to Dec. 2021 10 mins 19 134 11,361,191\nTable 1. Statistics of the SDWPF data.\n4Scientific  Data |          (2024) 11:649  | https://doi.org/10.1038/s41597-024-03427-5\nwww.nature.com/scientificdatawww.nature.com/scientificdata/\nfrom 49.368 to 19.828; and its MAE decline from 31.862 to 13.268. This assessment reveals that weather forecast \ndata can substantially enhance the accuracy of WPF predictions.\nSecond, the ablation study also verifies that the dynamic context features are helpful for WPF . The MAE of \nInformer based on historical dynamic context features is 31.862. If removing the Temp context features, the \nMAE becomes 35.004; if removing the Wind context feature, the MAE becomes 37.562; and if removing the Pos \ncontext features, the MAE becomes 34.684. This demonstrates shows the effectiveness of adding the dynamic \ncontext features into the model for accuracy improvement.\nevaluation on KDD Cup 2022. In the KDD Cup 2022 challenge, an evaluation score that considers both \nMAE and RMSE has been adopted to assess the performance of all participating teams. The specific evaluation \nsetting details are in Supplementary Section C.4. It should be noted that the selection of an evaluation metric can \ndifferentially affect the rank of the competing methods utilized by the teams. For instance, the RMSE places more \nemphasis on large errors, resulting in a substantial penalty in situations where such errors are undesirable. To \nstrike a balance between penalizing large errors and minimizing errors, we utilize the average of MAE and RMSE \nto assess the participating teams in the challenge.\nFigure 3 presents the evaluation scores of the top ten teams that participated in the KDD Cup 2022 chal -\nlenge. Additionally, we compared all teams to a native baseline, namely the GRU. Note that the setting of Baidu \nKDD Cup 2022 is to forecast wind power solely based on historical information. Notably, we observed a sub -\nstantial difference in prediction performance between the participating teams and the GRU baseline. The best \nevaluation score obtained by a team (HIK) was 44.917, where the baseline GRU score was 47.850 (as shown in \nFig. 2 Ablation study of variables (weather forecast and dynamic context features) in the SDWPF dataset w.r.t. \nthe wind power forecasting performance of the Informer model.\nColumn Column Name Specification Note",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2",
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "1 TurbID Wind turbine ID",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2 Day Day of the record",
+      "level": 1,
+      "text": "3 Tmstamp Created time of the record Time zone UTC + 08:00\n4 Wspd (m/s) The wind speed at the top of the turbine Recorded by mechanical anemometer\n5 Wdir(°) Relative wind direction, which is the angle between the \nwind direction and the the turbine nacelle direction\nWind direction and nacelle direction are in degrees \nfrom true north\n6 Etmp (°C) Temperature of the surrounding environment Measured outer surface of the nacelle\n7 Itmp (°C) Temperature inside the turbine nacelle\n8 Ndir (°) Nacelle direction, the yaw angle of the nacelle In degree from true north\n9 Pab1 (°) Pitch angle of blade 1 The angle between the chord line and the rotation \nplane of the blade\n10 Pab2 (°) Pitch angle of blade 2 Same as above\n11 Pab3 (°) Pitch angle of blade 3 Same as above",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "12 Prtv (kW) Reactive power",
+      "level": 1,
+      "text": "13 T2m (°C) Temperature at 2 m above surface (ERA5)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "14 Sp (Pa) Surface pressure from ERA5",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "15 RelH Relative humidity Derived based on 2 m dew point temperature and",
+      "level": 1,
+      "text": "2m temperature using Python Package metpy\n16 Wspd_w (m/s) Wind speed from ERA5 At height of 10 m\n17 Wdir_w (°) Wind direction from ERA5 At height of 10 m",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "18 Tp (m) Total precipitation from ERA5",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "19 Patv (kW) Active power, the wind power produced by a wind turbine",
+      "level": 1,
+      "text": "at a time stamp.\nTable 2. Column names and their specifications of the SDWPF data.\n5Scientific  Data |          (2024) 11:649  | https://doi.org/10.1038/s41597-024-03427-5\nwww.nature.com/scientificdatawww.nature.com/scientificdata/\nFig. 3). Therefore, the top-performing team reduced the prediction error (in terms of score in this setting) from \nthe baseline GRU by 6.130%. It is worth noting that the improvement in evaluation score from the 10th team \n(SlienceGTeam) to the 1st team (HIK) was only 0.906% (SlienceGTeam vs. HIK: 45.327 vs. 44.917). This result \nhighlights the high level of competitiveness in the KDD Cup challenge. Most of the top-performing teams have \nmade their code open-source and published their technical reports on the official challenge website",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "22 Thus, we",
+      "level": 1,
+      "text": "expect to be able to evaluate future methods against these top-performing methods that deposited predictions \nin the Baidu KDD Cup 2022 challenge and therefore monitor the progress of wind power forecasting over time.\nUsage Notes\nWe introduce a few caveats about when to use this data to train and evaluate the models. Attention needs to be \npaid to these caveats since there are always some outliers and missing values in the data due to data collection, \nsystem maintenance, and equipment failures. It is important to note that we did not apply any of the following \ndescribed corrections to the released dataset. The processing method introduced is only a suggestion, and the \nactual application of these methods is up to the dataset users.\nZero values. For a wind turbine, some active and reactive power readings might be noted as slightly negative \nvalues. This phenomenon is often associated with specific components like the control system and sensors, which \ndraw power even when the turbine is not producing electricity. We can treat all the values which are smaller than \n0 as 0, i.e., if Patv < 0, then Patv = 0.\nMissing values. Note that due to some reasons, such as system maintenance and equipment failures, some \nsensor values at some time of a turbine are not collected from the SCADA system. These missing values will not \nbe used for evaluating the prediction model. In other word, when Patvtj0+  is a missing value, we set \n−=++Patv Patv 0tj tj00\n/parallelto/parallelto regardless of the actual predicted value of Patvtj0+ .\nUnknown values. Sometimes, the wind turbines are stopped from generating power by external reasons \nsuch as wind turbine renovation and/or actively scheduling the powering to avoid overloading the grid. In these \ncases, the actual generated power of the wind turbine is unknown. These unknown values should also not be used \nfor evaluating the prediction model. Similarly with the missing values, if Patvtj0+  is an unknown value, we always \nset −=++/parallelto/paralleltoPatv Patv 0tj tj00\n. Here we introduce two conditions to determine whether the target variable is \nunknown:\n•\t When Patv≤0, and Wspd  > 2.5 at time t , the actual active power Patv  of this wind turbine at time t  is \nunknown (since the wind speed is large enough to generate the power, the only reason that Patv ≤0 is this \nturbine is stopped);\n•\t When Pab1 > 89° or Pab2 > 89° or Pab3 > 89° (Pab1, Pab2, and Pab3 always have the same values) at time t, \nthe actual active power Patv of this wind turbine at time t should be unknown (since no matter at then how \nlarge the wind speed is, the wind turbine is at rest in this situation).\nabnormal values. There are some abnormal values collected from the SCADA system. If a data record has \nan abnormal value in any column, these values also should not be used for evaluating the model. Formally, if a \nFig. 3 Performance evaluation on KDD Cup 2022. The X-axis shows the top ten participating teams in KDD \nCup 2022 as well as the GRU baseline method. The evaluation score is a negatively oriented metric, signifying \nthat lower values indicate better performance.\n6Scientific  Data |          (2024) 11:649  | https://doi.org/10.1038/s41597-024-03427-5\nwww.nature.com/scientificdatawww.nature.com/scientificdata/\nwind turbine has an abnormal value at time t0 + j in any column, we always set /parallelto/parallelto−=++Patv Patv 0tj tj00\n. Here \nwe define two rules to identify abnormal values:\n•\t The reasonable range for Ndir is [−720°, 720°], as the turbine system allows the nacelle to turn at most two \nrounds in one direction and would force the nacelle to return to the original position otherwise. Therefore, \nrecords beyond the range can be seen as outliers caused by the recording system. Thus, if at time t, there are \nNidir > 720° or Nidir < −720°, then the recorded values of this wind turbine at time t is abnormal.\n•\t The reasonable range for Wdir is [−180°, 180°]. Records beyond this range can be seen as outliers caused by \nthe recording system. When there are Widr > 180° or Widr < −180° at time t, then the recorded values of this \nwind turbine at time t is abnormal.\nIn Table 3, we present statistics regarding the number of zero values, missing values, unknown values, and \nabnormal values (in the sdwpf_full  data file). It is important to note that there is a significant overlap between \nzero values and unknown values. This overlap often arises because both can result from intentional adjustments, \nsuch as power scheduling to prevent grid overloading.\nCode availability\nThe code to process the data and run baselines can be found in: https://github.com/PaddlePaddle/PaddleSpatial/\ntree/main/apps/wpf_baseline_gru.\nReceived: 14 December 2023; Accepted: 28 May 2024;\nPublished: xx xx xxxx",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f3",
+      "caption": "presents the evaluation scores of the top ten teams that participated in the KDD Cup 2022 chal -"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Statistics of the SDWPF data."
+    },
+    {
+      "id": "t2",
+      "caption": "Column names and their specifications of the SDWPF data."
+    },
+    {
+      "id": "t3",
+      "caption": "The statistics of zero values, missing values, unknown values, and abnormal values in the sdwpf_full"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": true,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

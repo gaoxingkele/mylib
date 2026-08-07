@@ -1,0 +1,603 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/secures_energy/secures_energy__Spatio-temporal_wind_power_forecasting_review__e47c3855fc.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Motivation",
+      "level": 1,
+      "text": "Uncertainty quantiﬁcation via machine learning methods is a vibrant area of research, and many methods for uncertainty\nestimation via artiﬁcial neural networks have been proposed [ 1]. To date, the majority of studies have focused on\nuncertainty quantiﬁcation for classiﬁcation. However, problems in the geosciences are often framed in terms of\nregression tasks (i.e. estimating continuous values). For example, geoscientists might wish to estimate how much it will\nrain tomorrow, the peak discharge of a river next year, or the thickness of an aquifer at a set of locations. Estimates of\nthe uncertainty associated with the predicted values are necessary to formulate policy, make decisions, and assess risk.\nHere, we describe and demonstrate a simple method for adding uncertainty to most any neural network regression\narchitecture. The method works by tasking the network to locally predict the parameters of a user-speciﬁed probability\ndistribution, rather than just predict the value alone. Although the approach is a standard in the computer science\nliterature [2], it is much less known in the geoscience community. A few exceptions include [ 3], [4] and [5], who\npresent discussions of this approach with additional complexities due to their speciﬁc applications. This method for\nincorporating uncertainty is understandable, surprisingly general, and simple to implement with conﬁdence. We believe\nthat this method will become a powerful go-to approach moving forward.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Background",
+      "level": 1,
+      "text": "In this note we attempt to explain and implement multivariate nonlinear heteroscedastic parametric regression using a\ndeep neural network [2, 6, 7, 8]. That many syllables is far too big a mouthful to swallow in one go so, like eating an\nelephant2, we are going to tackle this one bite at a time.\nWe will demonstrate the concepts using synthetic data sets. The code fragments used to generate these synthetic data\nsets are given in Appendix A.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.1 Regression",
+      "level": 2,
+      "text": "Consider the synthetic data set shown in Figure 1, which contains 25, 000 sample (x,y ) pairs. The cloud of data is so\ndense that only a small fraction of the samples on the outer edges are distinguishable as individual points. Nonetheless,\na rising trend is clearly visible: on average, asx increasesy increases.\nFigure 1: A synthetic data set containing 25, 000 sample (x,y ) pairs. The vertical black line indicates the location of\nx = 0.3. A rising trend is clearly visible: on average, as x increasesy increases.\nThe usual stated goal of regression is to predict y as a function of x. Consider y atx = 0.3, which is indicated by\nthe vertical black line in Figure 1. Aroundx = 0.3 there is a wide distribution ofy values. Which value ofy are we\nattempting to predict atx = 0.3? The mean? The median?\nIn this note, our goal for regression is not to predict y, but to predict the conditional distribution of y as a function\nofx. With the conditional distribution we can compute the associated conditional mean, the conditional median, the\nconditional 90’th percentile, or the ... as needed for the current question at hand.\n2To borrow a quote by Desmond Tutu.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2.2 Parametric",
+      "level": 2,
+      "text": "With parametric regression, we select the form of the conditional distribution before training. This is a modeling choice.\nThe parameters deﬁning the distribution as a function ofx are determined during training. As discussed in Section 4,\nwe will use the form of the conditional distribution when deﬁning our loss function.\nThe most common choice is the normal distribution, where the mean and standard deviation are the deﬁning parameters.\nFigure 2 displays the same data given in Figure 1. The data subset in the range 0.29<x< 0.31 are highlighted. The\ninset shows the histogram for they values in this subset along with the computed best-ﬁt normal probability density\nfunction.\nFigure 2: A synthetic data set containing 25, 000 sample (x,y ) pairs. These are the same data given shown Figure 1.\nThe data in the subset, range 0.29<x< 0.31, are highlighted. The inset shows the histogram for they values in this\nsubset along with the computed best-ﬁt normal probability density function. The thin black line shows the conditional\nexpected value ofy givenx.\nIn almost all applications of curve-ﬁtting software, the conditional distributions of they values are modeled using the\nnormal distribution. When we use a simple least squares (or root-mean-square error) loss function, we implicitly model\nthe conditional distributions of they values as a normal distribution3. However, the normal distribution is not always\nthe best choice.\nThe normal distribution is symmetric about the mean and its tail extends below 0. As such, a normal distribution\nmay not be appropriate when we model strictly positive quantities like length, mass, concentration, and rates (e.g.\nprecipitation).\nFigure 3 shows a synthetic data set containing 25, 000 sample (x,y ) pairs. Unlike the data in Figures 1 and 2, the\ny values in this data set are strictly positive. The histogram of the y values for the subset deﬁned by the range\n0.29<x< 0.31 is not symmetric and would not be well modeled by a normal distribution. An asymmetric, strictly\npositive, distribution like the lognormal or gamma distribution could be a more appropriate choice.\nThe choice of the form for the conditional distribution is an important modeling decision that employs domain-speciﬁc\nknowledge and requires diagnostic checks after training. This topic will be explored more thoroughly in Section 3.",
+      "refs": {
+        "figures": [
+          "f1",
+          "f3",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.3 Heteroscedastic",
+      "level": 2,
+      "text": "Compare the data set shown in Figures 2 and 4. The mean trends of the two data sets are identical. The conditional\ndistributions ofy aroundx = 0.3 are both reasonably well modeled by normal distributions. The two data sets are,\nhowever, fundamentally different.\nThe data in Figure 2 are homoscedastic (same variance, not a function ofx). The data in Figure 4 are heteroscedastic\n(changing variance as a function ofx). The spread of they values in Figure 4 is a function of thex values.\n3Minimizing the sum of the squared residuals is optimal if the conditional distribution is normal and homoscedastic. See, for\nexample, [2, Section 4.3].",
+      "refs": {
+        "figures": [
+          "f4",
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 3: A synthetic data set containing 25, 000 sample (x,y ) pairs. Unlike the data in Figures 1 and 2, they values\nin this data set are strictly positive. The data in the range 0.29 < x <0.31 are highlighted. The inset shows the\nasymmetric histogram for they values in this subset along with the computed best-ﬁt lognormal probability density\nfunction. The thin black line shows the conditional expected value ofy givenx.\nFigure 4: A synthetic data set containing 25, 000 sample (x,y ) pairs. These data are heteroscedastic. The data in the\nsubset, range 0.29<x< 0.31, are highlighted. The inset shows the histogram for the y values in this subset along\nwith the computed best-ﬁt normal probability density function. The thin black line shows the conditional expected\nvalue ofy givenx.\nIn almost all applications of curve-ﬁtting software they data are modeled as homoscedastic. When we use a simple\nleast squares (or root-mean-square error) loss function, we implicitly model the y data as homoscedastic. However,\nthere are many circumstances where a heteroscedastic model could be a better choice: for example, the data in Figure 4.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.4 Nonlinear",
+      "level": 2,
+      "text": "The mean trends of the data sets shown in Figures 1 through 4 are identical. The conditional expected value of y is\na simple linear function of x. By contrast, the conditional expected value of y for the data shown in Figure 5 is a\nnonlinear function ofx. Nonetheless, the conditional distribution of the y values in Figure 5 is well modeled by a\nnormal distribution, as shown in the inset for 0.29<x< 0.31.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.5 Multivariate",
+      "level": 2,
+      "text": "We are interested in use cases wherex is a vector and not a scalar: multivariate data. The vector x could be bivariate\n(e.g. eastings and northings) or highly multivariate (e.g. the vectorization of the 180× 360 one-degree cells in a",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "4 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 5: A synthetic data set containing 25, 000 sample (x,y ) pairs. These data are heteroscedastic and nonlinear.\nThe data in the subset, range 0.29<x< 0.31, are highlighted. The inset shows the histogram for they values in this\nsubset along with the computed best-ﬁt normal probability density function. The thin black line shows the conditional\nexpected value ofy givenx.\nglobal circulation model). The nonlinear heteroscedastic parametric regression outlined above applies equally well to\nmultivariate data sets.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Selecting the Form of the Conditional Distribution",
+      "level": 1,
+      "text": "The choice of the form for the conditional distribution is an important modeling decision that employs domain-speciﬁc\nknowledge.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.1 Should not be based on the histogram",
+      "level": 2,
+      "text": "Reconsider the synthetic data set shown in Figure 4. The histogram for all of they values in this data set is shown in\nFigure 6. This histogram is bimodal and asymmetric, with a longer tail to the left than to the right. This histogram is not\nwell modeled as a normal distribution. Nonetheless, the conditional distribution ofy givenx is a normal distribution.\nThis example demonstrates why we cannot simply select the form of the conditional distribution fory by looking at the\nfull distribution ofy (i.e. the apparent marginal distribution ofy).\nFigure 6: The histogram for all of the y values in the data set shown in Figure 4. This histogram is not well modeled as\na normal distribution. The inset shows the Figure 4 data.",
+      "refs": {
+        "figures": [
+          "f6",
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "5 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "3.2 The valid range of y",
+      "level": 2,
+      "text": "To choose the form of the conditional distribution, we ask: what is the valid range ofy? Our answer may be partially\ninformed by the data at hand 4, but it must also incorporate our knowledge of the data: the data source, measuring\ndevices, recording techniques, and representation.\nIf we anticipate thaty spans a range of positive and negative values, then a conditional probability distribution with\nsupport from−∞ to∞ may be appropriate. The normal is an example of such a distribution (a ﬂexible alternative is\npresented in Section 4.1.).\nIf oury values are strictly positive, than a conditional probability distribution with support from 0 to∞ may be more\nappropriate. The lognormal and gamma are common examples of such distributions used in the geosciences (e.g.\n[9, 10]).\nIf oury variable denotes a percentage or proportion, then a distribution with ﬁnite support from 0 to 1 may be more\nappropriate. The beta and Kumaraswamy are two such distributions that have been used to model hydrological variables\nsuch as daily rainfall (e.g. [11, 12]).\nIf oury values denote orientation and are constrained to the interval 0 to 2π, then a circular conditional probability\ndistribution may be more appropriate. A circular distribution properly wraps around at 2π. The von Mises is an example\nof such a distribution that has been used to model wind direction (e.g. [13, 14]).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4 Neural Networks for Parameter Estimation",
+      "level": 1,
+      "text": "In this note, we train a neural network to predict thelocal uncertainty ofy by predicting the parameters of the conditional\ndistribution ofy as a function of multivariate inputs x. As discussed in Section 3, we must choose the form of the\nconditional distribution.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "4.1 Predicting parameters of the sinh-arcsinh normal distribution",
+      "level": 2,
+      "text": "Here, we demonstrate the use of the sinh-arcsinh normal distribution [15, 16, 2], which takes four parameters in\nTensorflow Probability 5: location (µ), scale (σ), skewness (γ), and tailweight (τ). Examples of this distribution\nare shown in Figure 7, where we set the tailweight τ = 1 for simplicity and to reduce the number of predicted\nparameters.\nFigure 7: Example probability distributions for the family of sinh-arcsinh normal distributions for different parameter\nvalues. In all cases, the tailweightτ = 1.\nThe sinh-arcsinh normal distribution provides a basis for representing heteroscedastic and asymmetric uncertainties\n(Section 2) in an intuitive manner [2], of which the normal distribution is a special case (skewnessγ = 0, tailweight\nτ = 1; orange curve in Figure 7).\nThe neural network is tasked with predicting the four parameters of the sinh-arcsinh normal distribution (Figure 8).\nThat is, the output of the network contains four units capturingµ,σ ,γ andτ.\n4See Section 6.4 for one approach.\n5The Tensorflow Probability documentation for the sinh-arcsinh normal distribution lists functions for mean, standard\ndeviation, and variance, but they are not yet implemented in the library (v. 0.13.0). Appendix E gives code to ﬁll this gap.",
+      "refs": {
+        "figures": [
+          "f7",
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "6 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 8: A generic schematic showing a neural network setup with an input layer and hidden layers that ultimately\npredict four parameters of the sinh-arcsinh normal distribution.\nThe parametersσ (scale) andτ (tailweight) must be strictly positive. To accomplish this, we follow a common trick in\ncomputer science [2] to ensure thatσ andτ are always strictly positive by tasking the network to predict the logσ and\nthe logτ rather thanσ andτ themselves (Figure 8). This trick is discussed further in Appendix B.\nIn the examples shown here, we predict the four parameters of the sinh-arcsinh normal distribution using fully connected\nneural networks. However, a beneﬁt of this general approach for including uncertainty is that it can be easily applied to\nmost any neural network architecture, as it only requires modiﬁcation of the output layer and the loss function (see next\nsection).",
+      "refs": {
+        "figures": [
+          "f8"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "4.2 The loss function",
+      "level": 2,
+      "text": "The neural network architecture shown in Figure 8 trains using the negative log-likelihood loss deﬁned for theith input\nsample,xi, as\nL(xi) =− logpi. (1)\nwherepi is the value of the sinh-arcsinh normal probability density function (P) with predicted parameters (µ,σ,γ,τ )\nevaluated at the true labelyi. That is,\npi =P(yi|µ,σ,γ,τ ) (2)\nExample Tensorflow code is provided in Appendix C.\nFigure 9: Schematic showing how the loss function probabilitypi is dependent on the predicted probability distribution.\nFigure 9 shows schematically how the probabilitypi depends on the speciﬁc parameters of the distribution predicted by\nthe network. For example, if the predicted distribution is overconﬁdent (the distribution’s width is too small),pi will be\nsmall and the lossL will be large (Figure 9a). If the network is underconﬁdent (the distribution’s width is too large),pi\nwill also be small and the lossL will once again be large (Figure 9b). Like Goldilocks, the network needs to get things\njust right, by properly estimating its uncertainty to obtain its best guess. Better predictions are associated with larger\npi, and thus smaller lossL (Figure 9c). Note that this approach is directly tied to the standard method of parameter\nestimation in statistics known as Maximum Likelihood Estimation [2].\nIt is important to stress that while the following examples use the sinh-arcsinh normal probability density function,\nthe loss function in Eq. 1 can be used for any distribution. The trick to training the neural network is that the loss for\nobservationi is just the predicted probability density function evaluated at the observeyi.",
+      "refs": {
+        "figures": [
+          "f8",
+          "f9"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "7 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "5 Demonstration with Simple 1D Data",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "5.1 Heteroscedastic, symmetric uncertainties",
+      "level": 2,
+      "text": "We ﬁrst demonstrate the utility of this method by introducing the data set shown in Figure 10a. The uncertainty inyi for\neach value ofxi is deﬁned by symmetric, normally distributed noise that is a function ofx itself. That is, the noise is\nheteroscedastic, but locally symmetric. We train a fully connected neural network to predictµ,σ,γ of the sinh-arcsinh\nnormal distribution, settingτ = 1 for simplicity. The network has three hidden layers of 50 units each using the ReLU\nactivation, a learning rate of 0.0001, and the Keras SGD optimizer. We train the model on 20,000 training samples,\nusing early stopping based on the loss of 2,500 validation samples to optimize the number of training epochs. We then\nanalyze an additional 2,500 samples as testing data. Example Tensorflow code is provided in Appendix D.\nFigure 10: Predictions by the neural network with heteroscedastic, normal uncertainties.\nOnce training is complete, we evaluate the success of the neural network based on 2,500 samples included in a separate\ntesting set. For each sample in the testing set, the neural network predicts the three free parameters of the sinh-arcsinh\nnormal distribution. We plot the 80% prediction interval bounds of each of those predicted distributions as a function of\nx in Figure 10b. The neural network’s predicted uncertainty bounds appear to align well with the true bounds of the\ndata (orange shading), becoming larger for certain values ofx and smaller for others. Furthermore, the network learns\nthat the residuals are locally symmetric and thus predicts near-zero skewness (i.e.γ <0.03; not shown).",
+      "refs": {
+        "figures": [
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "5.2 Heteroscedastic, asymmetric uncertainties",
+      "level": 2,
+      "text": "The sinh-arcsinh normal distribution permits the consideration of uncertainties with both heteroscedastic and asymmetric\nuncertainties, e.g. rainfall rates that are constrained to be non-negative. Figure 11 shows a similar example to Figure 10,\nbut this time the uncertainties are skewed in either the positive or negative direction as a function ofx. In this case, the\nneural network predicts non-zero skewness values and, once again, is able to capture the true 80% conﬁdence interval\nof the data (Figure 11b).",
+      "refs": {
+        "figures": [
+          "f11",
+          "f10"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "6 Some Model Diagnostics",
+      "level": 1,
+      "text": "After we have trained our network, what evidence do we have that our model is any good? On the one hand, one could\njust compare the true y value with the mean or median of the predicted conditional distribution. But which do you\nchoose — the median or the mean? Furthermore, this type of residual diagnostic does not address whether the predicted\nuncertainties (i.e. distributions) are useful. Any neural network can spew out estimations of parameters — it is up to the\nuser to determine whether they hold any meaning. So how do we do that?",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "8 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 11: Predictions by the neural network with heteroscedastic, asymmetric uncertainties.",
+      "refs": {
+        "figures": [
+          "f11"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "6.1 Visual inspection",
+      "level": 2,
+      "text": "In the case of 1D data, like the data analyzed in Section 5, we graph the testing data on an (x,y ) plot and overlay the\nassociated prediction intervals (see Figures 10 and 11). If the 80% prediction interval envelope captures about 80% of\nthe data, then our conﬁdence in the model increases.\nUnfortunately, this visual approach does not translate to multivariate cases. We cannot plot hyper-dimensional data on a\ncomputer screen.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "6.2 Standardized residuals",
+      "level": 2,
+      "text": "Figures 12 and 13 show another way to visualize the predicted uncertainty; this works for multivariate data. We compute\nthe standardized residual for each prediction of the testing set, deﬁned as:\nzi = yi− mean(y|xi)\nstd(y|xi) (3)\nwhere mean(y|xi) and std(y|xi) are the mean and standard deviation of the conditional distribution atxi predicted6\nby the network. If the mean and standard deviation of the modeled conditional distributions are approximately correct,\nthe mean and standard deviations of thez’s should be approximately0 and 1. See, for example, [17, Section 19.3].\nThe distribution of standardized residuals in Figures 12 and 13 have means of about 0 and standard deviations of about\n1. These observations further support our assertion that the network’s predictions can be interpreted as approximate\nconditional probability distributions.\nWe observe the difference in shapes for the two histograms. Figure 12 appears to be normal (a bell curve), and Figure 13\nis decidedly not normal. This difference is a consequence of how we created the data. We cannot conclude that the ﬁrst\nmodel is better than the second, because its histogram of standardized residuals is “more normal.\"",
+      "refs": {
+        "figures": [
+          "f13",
+          "f12"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "6.3 Sign test",
+      "level": 2,
+      "text": "The sign test checks how well the model predicts the middle of the conditional distribution. Let med(y|xi) denote the\nmedian of the of the predicted7 conditional distribution for samplei. Let\n6If the normal distribution is chosen as the modeled conditional distribution, then mean(y|xi) and std(y|xi) are the two\npredicted parameters from the network for sample i. For some conditional distributions, the predicted parameters are not the mean\nand standard deviation (e.g. the lognormal distribution is usually parameterized by the log-mean and log-standard deviation). In\nsuch cases, the mean and standard deviation must be computed from the predicted parameters before one computes the standardized\nresiduals.\n7For most conditional distributions, the median will need to be computed from the predicted parameters.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "9 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 12: Histogram of standardized residuals of the testing set from the case of heteroscedastic, symmetric uncertain-\nties examined in Section 5.1. The mean is about 0, the standard deviation is about 1, and the distribution is normal (a\nbell curve).\nFigure 13: Histogram of standardized residuals of the testing set from the case of heteroscedastic, asymmetric\nuncertainties examined in Section 5.2. The mean is about 0, the standard deviation is about 1, and the distribution is\ndecidedly not normal.\n• np denote the number of times thatyi > med(y|xi), and\n• nn denote the number of times thatyi < med(y|xi).\nThe trained model for the heteroscedastic, symmetric data set discussed in Section 5.1 yieldsnp = 1215 andnn = 1285\nfor the 2, 500 test samples. Since the probability of randomly falling above, or below, the median is 50%, our results\nare equivalent to ﬂipping a fair coin 2, 500 times and counting 1215 heads and 1285 tails. Using a binomial distribution\ncalculator8 (withp = 0.5,n = 2500, andx = 1215), we compute the probability of getting 1215 or fewer heads out of\n2500 ﬂips to be about 8%. This is not a low-probability event.\nComparable calculations for the heteroscedastic, asymmetric data set discussed in Section 5.2 yields np = 1252\nandnn = 1248 for the 2500 test samples. Using a binomial distribution calculator (with p = 0.5,n = 2500 , and\nx = 1252), we compute the probability of getting 1252 or more heads out of 2500 ﬂips to be about 48%. This, too, is\nnot a low-probability event.\nThese observations further support our assertion that the network’s predictions can be interpreted as approximate\nconditional probability distributions. This diagnostic is called a sign test [18, page 64]. The sign test formally requires\nan assumption of independence, which is typically untestable and often false. Nonetheless, this diagnostic is exceedingly\nrobust and surprisingly useful. See, for example, [19, Section 3.4].\n8See, for example, https://stattrek.com/online-calculator/binomial.aspx.",
+      "refs": {
+        "figures": [
+          "f13",
+          "f12"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "10 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "6.4 PIT histogram",
+      "level": 2,
+      "text": "Dawid [20] introduced the probability integral transform (PIT) in 1984 as a calibration check for probabilistic forecasts.\nConsider samplei. Our trained neural network gives us a conditional probability distribution fory as a function ofxi.\nDenote the cumulative distribution function (CDF) for this conditional distributionF (y|xi). The probability integral\ntransform (PIT) value for samplei, which we denotepi, is\npi =F (yi|xi) (4)\n“In a nutshell, the PIT is the value that the predictive CDF attains at the observation” [21]. The histogram of all such\nvalue from a data set is called the PIT histogram. If the predictive model is ideal, then the PIT histogram follows a\nuniform distribution [22].\nFigure 14 shows the PIT histogram for the test data using a trained model from the heteroscedastic, symmetric data set\ndiscussed in Section 5.1. This histogram is almost uniform, but for the slight over representation in the ﬁrst two bars.\nOur model is not capturing the behavior in the lower tail perfectly.\nFigure 15 shows the PIT histogram for the test data using a trained model for the heteroscedastic, asymmetric data\nset discussed in Section 5.2. This histogram shows a distinct mound; the middle bars are taller than the ends. A\nPIT histogram with this pathology, mild though it is, suggests that the network may tend to be under-conﬁdent in its\npredictions (i.e. on average, the conditional distributions are too wide).\nAs discussed in Section 3, domain-speciﬁc knowledge and the data should both inﬂuence the selection of the form of\nthe conditional distribution. The PIT histogram is a tool that we can use to combine both. Scheuerer and Möller [23]\nuse the PIT histogram to compare different predictive distribution models in an effort to identify the distribution type\nthat yields the best calibration.\nFigure 14: Probability integral transform (PIT) histogram of the testing set from the case of heteroscedastic, symmetric\nuncertainties examined in Section 5.1. The horizontal dashed line denotes an equal probability of 0.1 across all bins.\nFigure 15: Probability integral transform (PIT) histogram of the testing set from the case of heteroscedastic, asymmetric\nuncertainties examined in Section 5.2. The horizontal dashed line denotes an equal probability of 0.1 across all bins.",
+      "refs": {
+        "figures": [
+          "f15",
+          "f14"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "11 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 16: Performance of the neural network for the synthetic climate data. The blue vertical curve denotes the 80th\npercentile of the predicted distribution (i.e. 10th to 90th percentile of the distribution). Purple and red dots depict the\nmedians of the distributions, where purple denotes that the truey falls within the 80th percentile range (“hit”) and red\ndenotes that it does not (“miss”). The inset shows the originaly labels and those adjusted by adding lognormal noise.\nFigure 17: Schematic showing the neural network setup for the synthetic climate data. The network ingests a map of\nsynthetic sea-surface temperature anomalies and is tasked with predicting the conditional distribution of the labely in\nterms of the four parameters of the sinh-arcsinh normal distribution.",
+      "refs": {
+        "figures": [
+          "f16",
+          "f17"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "7 Demonstration with Synthetic Climate Data",
+      "level": 1,
+      "text": "Our examples thus far involve relatively simple 1D data sets. Therefore you may not be convinced it works in more\nrealistic situations. Next, we move a step up in complexity and analyze the synthetic climate data set originally created\nby [24] and later used by [4]. In a nutshell, the data set consists of latitude-longitude maps (x) of synthetic sea-surface\ntemperature (SST) anomalies and their associated labels ˆy. Theith label ˆyi is a continuous variable that is computed as\nthe nonlinear sum of all of the SST anomalies in theith map xi. The exact form of the nonlinear function is explained\nin detail in [24], but the most important thing is that it is known and exact.\nThe synthetic data has a perfect, known nonlinear relationship between its input (maps of SST anomalies) and output\nˆy. That is, there is no inherent uncertainty connecting the inputs to the outputs. We add uncertainty to the output by\nmodifying the label ˆy for particular samples. Speciﬁcally, for any sample with ˆy >0, we add lognormal noise such that\n96% of the adjustedy values9 are skewed in the positive direction and the other 4% are skewed in the negative direction.\nAlly labels less than 0 remain untouched. The inset in Figure 16 depicts the original ˆy labels on the x-axis and the\nadjustedy labels on the y-axis.\nWe task a neural network with ingesting the maps of SST anomalies and predicting the conditional distribution of\nadjustedy labels, as depicted in Figure 17. Speciﬁcally, we ﬁt all four parameters ( µ,σ,γ,τ ) of the sinh-arcsinh\nnormal distribution. We train a fully connected neural network with ﬁve hidden layers of 100 units each using the\n9We remove the hat symbol to denote the adjusted y labels.",
+      "refs": {
+        "figures": [
+          "f16",
+          "f17"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "12 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "ReLU activation, a learning rate of 0.00005, and the Keras SGD optimizer (see code for details). We train the model on\n30,000 training samples, using early stopping based on the loss of 5,000 validation samples to optimize the number of\ntraining epochs. We then analyze an additional 5,000 samples as testing data.\nFigure 16 depicts the truey label on the x-axis and the predicted distribution ofy on the y-axis, where the 80th percentile\nof the predicted distribution (i.e. 10th to 90th percentile of the distribution) is shown as a vertical blue bar. Purple and\nred dots depict the medians of the distributions, where purple denotes that the truey falls within the 80th percentile\nrange (“hit”) and red denotes that it does not (“miss”). Thus, for a perfect model, one would expect 80% hits and 20%\nmisses. Instead, this neural network has 73% hits and 27% misses, suggesting that it tends to be slightly overconﬁdent\n(i.e. the distribution is not wide enough). Either way, the network appears to do a relatively good job ﬁtting the noisy\ndata, and correctly identiﬁes the inputs associated with positivey labels as being noisier. It is worth noting that in the\noriginal paper, [24] required a much more complex network10 to predict the non-noisy data with high accuracy.\nFigure 18: Predictedσ andγ for the synthetic climate data.\nIt is difﬁcult to visualize the skewness of the predicted conditional sinh-arcsinh normal distributions in Figure 16, and\nso the predicted parametersσ andγ for the testing set are shown in Figure 18. From this we see that the network most\noften predicts aσ of about 0.2 and aγ (skewness) that is most often positive, reﬂective of the positively skewed noise\nwe added to the data.\nFigure 19: Histogram of standardized residuals of the testing set from the case of the synthetic climate data.\nAs discussed in Section 6, there are many diagnostics worth running to assess whether the neural network’s probabilistic\npredictions are of any use. Figure 19 shows the standardized residuals for the testing set of the synthetic climate. As in\nour previous example, the mean is close to 0 and the standard deviation is close to 1, suggesting that the network is\ngenerally producing meaningful results.\nWe have additionally evaluated the sign test as a check for how well the model predicts the middle of the conditional\ndistribution. With a testing set of 5,000 samples, we ﬁnd that np = 2320 andnn = 2680. These values suggest that the\nnetwork is preferentially slightly underestimating the median of the testing set.\n10In fact, they required a network with six hidden layers with 512, 256, 128, 63, 32, and 16 neurons, respectively!",
+      "refs": {
+        "figures": [
+          "f18",
+          "f19",
+          "f16"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "13 ADDING UNCERTAINTY TO NEURAL NETWORK REGRESSION TASKS",
+      "level": 1,
+      "text": "Figure 20: Probability integral transform (PIT) histogram of the testing set from the synthetic climate data. The\nhorizontal dashed line denotes an equal probability of 0.1 across all bins.\nIn Figure 20, we show the PIT histogram for the synthetic climate data. This histogram shows more frequent PIT\nvalues at the two ends, suggesting that the network may tend to be over-conﬁdent in its predictions (i.e. on average,\nthe conditional distributions are too narrow). The frequency of the other bins are generally similar and slightly below\n10%. This blemish in the PIT histogram does not demand that we discard the model. Nonetheless, we must keep this\noverconﬁdence in mind as we apply the model, and we could consider alternate forms for the conditional distribution\n[23].",
+      "refs": {
+        "figures": [
+          "f20"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "8 Concluding Thoughts",
+      "level": 1,
+      "text": "This simple method for incorporating uncertainty into neural network regression architectures has been previously\npresented as a standard approach in [2], the Tensorflow Probability manual, and many data science blogs. Even\nso, it appears relatively unknown in the geoscience community (a few exceptions include [3], [4] and [5]). The approach\nis simple, can be applied to most any network architecture, and can be adapted to different uncertainty distributions\nvia the choice of the underlying distribution. Here, we explore the family of sinh-arcsinh normal distributions [ 15]\nas a general set that can capture location, spread, and skewness in an intuitive manner. However, we note that other\ndistributions (e.g. the lognormal distribution) may be better choices for speciﬁc applications.\nIt is worth contrasting the simple approach discussed here with that of Bayesian neural networks, which have become a\ngo-to method for incorporating uncertainty into artiﬁcial neural networks (e.g. [25, 3]). While incredibly powerful, the\nsuite of Bayesian approaches is typically applicable when one has already deﬁned a prior and wishes to update it with\nadditional information. The simple approach described here is, instead, applicable when no such prior exists and one\njust wishes to parameterize the output and its uncertainty according to some previously deﬁned family of distributions.\nThe authors believe it will become a powerful, go-to method moving forward.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "9 Acknowledgements",
+      "level": 1,
+      "text": "This work was funded, in part, by the NSF AI Institute for Research on Trustworthy AI in Weather, Climate, and Coastal\nOceanography (AI2ES) under NSF grant ICER-2019758.\n14",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "A synthetic data set containing 25, 000 sample (x,y ) pairs. The vertical black line indicates the location of"
+    },
+    {
+      "id": "f2",
+      "caption": "displays the same data given in Figure 1. The data subset in the range 0.29<x< 0.31 are highlighted. The"
+    },
+    {
+      "id": "f3",
+      "caption": "shows a synthetic data set containing 25, 000 sample (x,y ) pairs. Unlike the data in Figures 1 and 2, the"
+    },
+    {
+      "id": "f4",
+      "caption": "A synthetic data set containing 25, 000 sample (x,y ) pairs. These data are heteroscedastic. The data in the"
+    },
+    {
+      "id": "f5",
+      "caption": "A synthetic data set containing 25, 000 sample (x,y ) pairs. These data are heteroscedastic and nonlinear."
+    },
+    {
+      "id": "f6",
+      "caption": "This histogram is bimodal and asymmetric, with a longer tail to the left than to the right. This histogram is not"
+    },
+    {
+      "id": "f7",
+      "caption": "Example probability distributions for the family of sinh-arcsinh normal distributions for different parameter"
+    },
+    {
+      "id": "f8",
+      "caption": "A generic schematic showing a neural network setup with an input layer and hidden layers that ultimately"
+    },
+    {
+      "id": "f9",
+      "caption": "Schematic showing how the loss function probabilitypi is dependent on the predicted probability distribution."
+    },
+    {
+      "id": "f10",
+      "caption": "Predictions by the neural network with heteroscedastic, normal uncertainties."
+    },
+    {
+      "id": "f11",
+      "caption": "Predictions by the neural network with heteroscedastic, asymmetric uncertainties."
+    },
+    {
+      "id": "f12",
+      "caption": "Histogram of standardized residuals of the testing set from the case of heteroscedastic, symmetric uncertain-"
+    },
+    {
+      "id": "f13",
+      "caption": "Histogram of standardized residuals of the testing set from the case of heteroscedastic, asymmetric"
+    },
+    {
+      "id": "f14",
+      "caption": "shows the PIT histogram for the test data using a trained model from the heteroscedastic, symmetric data set"
+    },
+    {
+      "id": "f15",
+      "caption": "shows the PIT histogram for the test data using a trained model for the heteroscedastic, asymmetric data"
+    },
+    {
+      "id": "f16",
+      "caption": "Performance of the neural network for the synthetic climate data. The blue vertical curve denotes the 80th"
+    },
+    {
+      "id": "f17",
+      "caption": "Schematic showing the neural network setup for the synthetic climate data. The network ingests a map of"
+    },
+    {
+      "id": "f18",
+      "caption": "Predictedσ andγ for the synthetic climate data."
+    },
+    {
+      "id": "f19",
+      "caption": "Histogram of standardized residuals of the testing set from the case of the synthetic climate data."
+    },
+    {
+      "id": "f20",
+      "caption": "Probability integral transform (PIT) histogram of the testing set from the synthetic climate data. The"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "Eq. 1"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 20,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 1
+  }
+}

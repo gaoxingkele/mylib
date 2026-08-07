@@ -1,0 +1,257 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/cmc_pdfs/cmc_2025_load_forecasting_bigru.pdf",
+  "n_pages": 14,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "2 IntroductiontoClusteringAlgorithmsandTheirOptimization",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.1 PeakDensityFastSearchAlgorithm",
+      "level": 2,
+      "text": "In2014,RodriguezandLaioproposedClusteringbyFastSearchandFindofDensityPeaks[ 18].Unlike\nother density-based clustering algorithms, CFSFDP uses local density for fast and efficient sample point\nclassification and outlier removal [19]. It doesn’t need pre-specifying the number of clusters or complex\nparametersettings,makingitmoreuser-friendlythanmanytraditionalclusteringmethods.Thisiscrucialfor\nshort-termloadforecastingdata,asdatadistributionandthenumberofpotentialclustersareoftenunknown\nbeforeforecasting.Thealgorithmisbasedontwoassumptions:clustercentersareinhighly-densedataareas,\nandtheirdistancetootherclustercentersislargerelativetolocaldatapoints.Thus,densityanddistanceare\nkeyparametersinCFSFDP.Foreachdatapoint x,therelevantformulasarecalculatedasfollows:\n⎧⎪⎪⎪⎨⎪⎪⎪⎩\nρ\nu=\nN\n∑\nv=1,v≠i\nexp(−g2\nuv\ng2\nk\n)\nδu=minv∶ρv>ρu(duv)\n(1)\nwhere guv isthedistancebetweendatapoints uandv, gk isthecutoffdistance, ρu isthelocaldensityofdata\npointu,and δu istheminimumdistancefrompoint uto ρu ahigherpo in t.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2.2 Time-SeriesWeightedDensityPeaksClusteringAlgorithm",
+      "level": 2,
+      "text": "TheCFSFDPalgorithm,amachine-learning-basedgroupingmethod,haslimitationsinhistoricalload\ndata cluster analysis. When calculating the Euclidean distance between data points, it often misclassifies\npointswithdistinctpeaks,resultingininaccurateclust ering.Moreover,sinceitignoresthetime-seriesorder\nof input data, it cannot handle time-series data well.Time-series changes don’t affect its final clustering\nresults.Thus,thealgorithmrequiresfurtheroptimizationtofitthecharacteristicsoftime-seriesdatabetter.\nTo address the density peak clustering algorithm’s neglect of data input temporal nature, this article\nenhances CFSFDP. It introduces time-dimension information and adds a time-weighting factort",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "during",
+      "level": 1,
+      "text": "topological-relationshipcalculation.Thetimeweightingfactor ti servestoweightandadjustthecalculation\nofthedistancebetweendatapointsaccordingtotheirtimestamps.Specifically,fortwodatapoints xi andxj,\ntheoriginalEuclideandistance d(xi,xj)willbeadjustedto d(xi,xj)= d(xi,xj)× ti×tj incalculatingthe\ndistance between them, whereti and tj are the time weighting factors corresponding to data pointsxi and\nxj,r e s p e c t i v e l y .ti’ sv a l u ei su s u a l l yb a s e do nt h ed a t ap o i n t s ’d i s t a n c ef r o mt h ec u r r e n tt i m e .Th ev a l u eo f\nti is usually determined according to the distance of the data point from the current time, the closer to the\ncurrenttime,thelargerthevalueof ti,andviceversa,thesmaller,thusstrengtheningthedynamicprocessing\ncapabilityoftimeseriesdata.\nThrough a large number of experiments, in order to prevent problems such as excessive computation\nor degradation of clustering quality due to improper setting of the time decay factor, it is determined that\ntheoptimalclusteringperformancecanbeachievedbysettingthebandwidthofthetimedecayfactorto50,\nandtheclusteringaccuracyis0.6709.ItspseudocodeisinAlgorithm1,andthespecificprocessisillustrated\ninFig.1.\n1192 ComputMaterContin. 2025;84(1)\nAlgorithm1: Timeclusteringbyfastsearchandfindofdensitypeaks\nInput:datasetD,standar ddevia tio nσ,numberofclustercenters NC,deca yfacto rK\nOutput:Clustering results includinglabels andmetrics\n1Initialize n←∣ D∣,dandδ←0n, labels ←−1n, t← e−({0,1,2,..., n−1} mod k)/50.\n2Calcula tedforeachpointin D:\n3fori=1to ndo\n4 distances ←{∥Dj−Di∥2∶ j=1,2,..., n};\n5 d[i]← Σ(exp(−(∥distances∥2)/(2σ2)))⋅ t[i];\n6Calcula teδ fo reachda tapo in t:\n7fori=1to ndo\n8 dh←{ j∈{1,2,..., n}∶ dj> di};",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "9 if dh isnotempty then",
+      "level": 1,
+      "text": "10 δi←minj∈dh ∥Di−Dj∥2;",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "11 else",
+      "level": 1,
+      "text": "12 δi←max1≤j≤n,j≠i∥Di−Dj∥2;\n13Computegammaandselectclustercenters:\n14 γ←( d1δ1t1,d2δ2t2,..., dnδntn);\n15 C←{ i1,i2,..., iNC};\n16foreachcenter toC do\n17 labels[center]← index of center inC ;\n18Assignlabelstoalldatapoints:\n19fori=1to ndo",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "20 if dh isnotempty then",
+      "level": 1,
+      "text": "21 distances ←∥ D[i]− D[C]∥2;\n22 labels[i]← labels[Cmin];\n23Return labels,d,δ,γ,C.\nFigure1: Flowchartfortime-weighteddensitypeakclustering",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2.3 ClusteringPerformanceAnalysis",
+      "level": 2,
+      "text": "Inthisstudy,thetwocoreparametersoftheT-CFSFDPalgorithmweresetasfollows:Gaussiankernel\nfunction standard deviationσ=1.5, and time spank=24. In order to accurately determine the number\nComputMaterContin. 2025;84(1) 1193\nof cluster centers in the T-CFSFDP algorithm, a decision graph was drawn and the cluster centers were\nidentified through manual observation. The decision diagram is shown inFig.2. In the upper right corner,\nthereisapointwithahighlocaldensity.Between[10000,16000],thereisasignificantdifferenceindecision\nvalues between the two points. The remaining data points are located in the lower right corner. Therefore,\nthisarticlesetsthenumberofclustercentersto4andassignstheremainingdatapointstothesecenters.\nFigure2: Decision-makingmapsproducedbyT-CFSFDP\nAfterpreprocessingthedata,theoriginaldailyloadprofilesampleswereclusteredusingtheT-CFSFDP\nclustering algorithm, and four classes of typical load profile samples were obtained. As shown inFig.3,t h e\nfigure demonstrates these four classes of clustered load profile samples and the clustering over time, where\nthereddashedlineisthecenterofeachcluster.\nFigure3: T-CFSFDPclustersloaddataintofourcategories\nToverifytheeffectivenessoftheclusteringmethodinthispaper,threemetricsareusedtoevaluatethe\nperformanceofclustering:\n(1)Davies-BouldinIndex(DBI,Davidson-BouldinIndex)isameasureoftheeffectivenessofclustering,\nwhichreflectsthequalityofclusteringbyevaluatingthecompactnesswithinclustersaswellastheseparation\nbetweenclusters.Thelowervalueof DBImeansthebettertheclusteringresult.Theformulaof DBIisdefined\nasfollows:\nDBI= 1\nN\nN\n∑\ni=1\nmax\nj≠i\nFi+Fj\n∥wi−wj∥2\n(2)\n1194 ComputMaterContin. 2025;84(1)\nwhereFi istheaverageEuclideandistancefromthesampleofclass itoitsclasscenter,and ∥wi−wj∥2 isthe\nclasscenterEuclideandistanceforclasses iandj.\n(2) Dunn’s Validity Index (DVI, Dunn’s Index) evaluates clustering quality. It’s derived from the ratio\nof intra-cluster closeness to inter-cluster distance. A higherDVI value indicates superior clustering. The\nformulaforcalculating DVIisasfollows:\nDVI= max\n1≤i≤k\n(min\ni≠j\ndinter, ij\ndintra, i\n) (3)\nwheredinter, ij denotestheshortestdistancebetweencluster iandcluster j,and dintra, i isthemaximumvalue\no fthedistancefr o mallpo in tsinsidethei thcl ustertothecen tero ftha tcl uster .\n(3) Silhouette Coefficient (SC, Silhouette Index) is a measure of clustering effectiveness that evaluates\nthe consistency of a data point with the cluster to which it belongs and its separation from other clusters.\nAh i g h e rv a l u eo fSC implies that the data point belongs more to the current cluster and is more clearly\ndelineatedfromtheotherclusters,thusreflectingabetterclusteringquality.\nSC= 1\nn\nn\n∑\ni=1\nu(xi)− v(xi)\nmax{v(xi),u(xi)} (4)\nwherev(xi)denotes the average distance fromxi to each data point in the same cluster andu(xi)denotes\ntheaveragedistancefrom xi toeachda tapo in tintheclosestcl uster .\nCompare the T-CFSFDP clustering algorithm with K-Means and CFSFDP clustering algorithms by\ncalculating the values of theDBI,DVI,a n dSC metrics. The various indicators are presented inTable 1,a n d\nitcanbeseenthattheT-CFSFDPalgorithmachievedthebestclusteringperformance.\nTable 1:Comparisonofclusteringeffects\nClusteringmethod Clusternumber DBI DVI SC\nK-Means 4 0.5322 0.1421 0.5441\nCFSFDP 4 0.5068 0.1569 0.5474\nT-CFSFDP 4 0.5065 0.1615 0.5545",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "3 ModelStructureandMethodDescription",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "3.1 BiGRUNetwork",
+      "level": 2,
+      "text": "In unidirectional neural networks, information propagates in a sequential front-to-back manner.\nHowever, electricity load depends on both historical and future periods, and a single GRU neural network\nhas difficulty fully extracting the deep features of relevant data [20]. To overcome the shortcoming of\nunidirectional information flow, this article uses the BiGRU model to improve the performance of power\nloadforecasting[ 21].I tsspecificdetailsar esho wninFig.4.\nWhere Z\n1 and Z2 represent the initial positions of the two propagation directions, respectively.\nx1,x2,x3,..., xt denotethecorrespondinginputtimingsignalsateachmoment,and y1,y2,y3,..., yt denote\nthe corresponding outputs.\nComputMaterContin. 2025;84(1) 1195\nFigure4: BiGRUnetworkstructure",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3.2 ConvolutionalBlockAttentionMechanism",
+      "level": 2,
+      "text": "CBAM is an effective end-to-end attention mechanism. It contains two interconnected modules:\nchannel attention and spatial attention. CBAM calculates weights for feature maps in the channel and\nspatial dimensions. After that, it multiplies these weights by the original feature maps, thereby adaptively\nstrengthening features. When the CBAM module is integrated into the network, the network can better\nidentify and use prominent features. This optimizes the overall performance of the model and significantly\nimprovestheaccuracyofpredictiontasks.\nThe CBAM network architecture is shown inFig.5. The channel attention module effectively filters\nimportant information from the inputdata,and the calculationformula is as follows:\nM\nc(F)= σ(MLP(Av gPool(F))+ MLP(MaxPool (F)))= σ(W1(W0(Fc\navg))+ W1(W0(Fc\nmax))) (5)\nwhereσ isthesigmoidfunction, W0∈ RC/r×C andW1∈ RC/r×C,andtheMLPweights W0 andW1 areshared\nfor both inputs.\nFigure5: CBAMattentionmechanismstructure\nThe spatial attention module mainly focuses on which position information is meaningful, which is a\nsupplementtochannelattention.Itscalculationformulaisasfollows:\nMs(F)= σ(f7×7([Av gPool(F),MaxPool(F)]))= σ(f7×7([Fs\navg ,Fs\nmax])) (6)\nwhereaisthesigmoidfunctionand f7×7 deno testheco n vol u tio no pera tio nwi thafil tersizeo f7×7.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.3 OverallProcessDescription",
+      "level": 2,
+      "text": "ThisarticleproposesaT-CFSFDPalgorithmandastackedBiGRU-CBAMmethodforshort-termpower\nloadforecasting.T-CFSFDPclusteringpreprocessesdatatoidentifyintrinsicclustersandprovidesstructured\ninput to the BiGRU-CBAM model, enabling it to more effectively handle datasets with complex temporal\nandfeaturecorrelations.Thebasicstructuraldesignisshowninthe Fig.6.\n1196 ComputMaterContin. 2025;84(1)\nFigure6: FlowchartofthepredictionmethodbasedonT-CFSFDPclusteringandBiGRU-CBAMmodels\n(1) Data preprocessing: Due to power outages and equipment issues, the historical load time series\ndataset contains bias values and noise. In order to ensure reliable data for subsequent analysis, the original\ndataset was preprocessed. The preprocessing rules are as follows: replace outliers<400 with the average of\nadjacent values; When the adjacent values fluctuate greatly (∣ current – previous∣>300), replace with the\nsumo fthep r evio usval ues.M o r eo ver ,tor emo vetheim pacto fn umericaluni tsamo ngdiffer en tfacto rsand\nsimplifythetrainingofnetworkmodels,theoriginaldataisnormalizedtotheintervalof[0,1].Meanwhile,\nforthepurposeofbetteraligningwiththeactualphysicalsignificanceofthepredictedoutcomesandenabling\neasiercomparisonandanalysiswiththeinitialdata,thepredicteddataundergoesinversenormalization.The\ncalculationformulasfornormalizationandantinormalizationareasfollows:\n⎧⎪⎪⎪⎨\n⎪⎪⎪⎩\nM\n′= M−Mmin\nMmax−Mmin\nA′= M′(Mmax−Mmin)+ Mmin\n(7)\nwhereM is the original load data,M′ and A′ are the normalized and denormalized load data, respectively,\nandMmin andMmax aretheminimumandmaximumvaluesintheoriginalloadsequence,respectively.\n(2)Clusteranalysis:AfterclusteringhistoricalloaddatausingT-CFSFDP,theclustercentersofthefour\nclustersweredeterminedtobe34441,43417,39457,and37904,respectively.Subsequently,thedatapointsare\nassignedtothecorrespondingclustersbasedontheirproximitytothesecentroids.\n(3) Model building: For each cluster, a BiGRU model with the CBAM module is trained. CBAM,\ncomposedofchannelandspatialattentionmodules,adaptivelyadjustsfeaturemaps.Inthechannelattention\nmodule,theglobalaverageandmaxpoolingofinputfeaturemapsaredone.TheresultsareprocessedbyMLP,\nsummed,andSigmoid-activatedtogetweightsforchanneladjustment.Thespatialattentionmoduleaverages\nand max-pools processed feature maps in the channel dimension and spliced them. They used convolution\nand Sigmoid to get weights for spatial adjustment and CBAM feature extraction. Then, CBAM-processed\nfeature maps are input into BiGRU which processes sequence data from both directions to capture context\nandbuildthemodel.\n(4) Integrated model prediction: For each cluster, the relevant sub-models are trained independently,\nusing the mean square error as the loss function and the Adam optimizer to improve the training results.\nThe training period is set to 120 times, the batch size is set to 64, and the number of GRU units is set to 64,\ntoo.Thetrainingsetdataisusedforiterativetraining,andthemodelparametersarecontinuouslyfine-tuned\nto reduce the loss value to gradually achieve the best model performance. After the sub-model training is\ncompleted, the prediction results of the sub-models are collected by overlaying. The XGBoost meta-model\nComputMaterContin. 2025;84(1) 1197\nparametersareautomaticallyoptimizedbycombiningthemwithBayesianoptimization.Finally,theadjusted\nmeta-modelisusedtocompletetheprediction.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "4 ExampleAnalysisandPerformanceEvaluation",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "4.1 DataSetDescriptionandEvaluationCriteria",
+      "level": 2,
+      "text": "The dataset in this paper is taken from the literature [22], and all load data is obtained from the local\ngridoperatorinPanama.Therearenomissingvaluesonthedataset,butonlyafewlowvaluesontheloads\nwere detected, probably due to problems such as hourly outages and grid damage, in addition all records\nwerekept.Inthispaper,thehistoricalloaddataofwhichisselectedfrom4January2015,00:00to4January\n2020,23:00,atotalof5years,thesamplingintervalofthedatais1h,thecumulativeloadvaluebetween00:00\nand 01:00 is the first sampling data, and 24 points are collected every day, a total of 43,848 valid load data.\nThetime-seriesdataisslicedintheratioof3:1:1,thefirst60%ofthedatasetisusedasatrainingsettotrain\nthepredictionmodel,andthelast40%isdividedequallyintovalidationsetandtestset.\nInordertobetteranalyzetheresearchdata,theloaddatafrom2015to2020wereplottedasaloadsample\ncurve,asshownin Fig.7.Thegreenareainthefigurerepresentstheaverageloadlevel,whilethegrayshaded\narea reflects the fluctuation range of the load. It can be seen that the changes in load are relatively periodic,\nand the fluctuations in peak and valley values indicate significant changes in power load within a certain\ntimeinterval.\nFigure7: Trendchart ofdatasetloadsituation\nThis article selects seven evaluation metrics to assess predictive performance, namely MSE, MAE,\nMAPE,RMSE,and R2.Themetriccalculationformulaisasfollows:\n⎧⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨\n⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪\n⎪⎩\nF\nMSE = 1\nn\nn\n∑\ni=1\n(ki− ˆki)2, FMAE = 1\nn\nn\n∑\ni=1\n∣ˆki−ki∣, FMAPE = 100%\nn\nn\n∑\ni=1\n∣\nˆki−ki\nki\n∣\nFRMSE =\n√1\nn\nn\n∑\ni=1\n(ki− ¯ki)\n2\n, FR2 =1−\nn\n∑\ni=1\n(ˆki−ki)\n2\nn\n∑\ni=1\n(ki− 1\nn∑n\ni=1 ki)\n2\n(8)\nwhere ˆki and ki a r et h ep r e d i c t e dl o a dv a l u ea n dl o a dt r u ed a t av a l u eo ft h eith load point in the test set,\nrespectively;nisthenumberofpredictionpoints.\n1198 ComputMaterContin. 2025;84(1)",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "4.2 ExperimentalAnalysisandModelEvaluation",
+      "level": 2,
+      "text": "4.2.1AnalysisofMultidimensionalRequirementsforModelImplementation\nIn terms of hardware, the CPU needs to handle a large number of matrix operations, such as XGBoost\ntraining, T-CFSFDP function distance calculation, etc. To efficiently complete intensive numerical opera-\ntions,itisrecommendedtousemulti-coreprocessors.ForthebidirectionalGRUlayercomputationofdeep\nlearning model training in sub models, a GPU that supports CUDA acceleration and has video memory\nshould be equipped. In terms of memory, due to the need to store large amounts of data and intermediate\nresults in the code, at least 16 GB of memory is required to ensure smooth operation. At the software level,\nPython 3.10, Keras 2.12, Xgboost 2.0.3, Pandas 1.4.3, Scikit-learn 1.4.1. post1, and NumPy 1.23.5 are used for\ndataprocessing,modeldevelopment,andevaluation.\nIn the comprehensive evaluation of the overall prediction process, this article first focuses on the\nrunning time of clustering algorithms. The T-CFSFDP algorithm takes 15.9433 s, slightly higher than the\nCFSFDPalgorithm’s15.6106s.DuetothehightimecomplexityofT-CFSFDP,itsrunningtimeissignificantly\nhigher than traditional clustering methods such as DBSCAN (0.2034 s) and K-Means (0.1953 s). Secondly,\nintermsofmodelrunningtime,BiGRU-CBAMtakes1259.35msperbatchoftraining,whichislongerthan\nGRU’s871.71msandLSTM’s1199.87ms,mainlyduetoitsmorecomplexstructure.\nIn summary, the method proposed in this paper is longer than the conventional prediction method\nin terms of running time, although its prediction accuracy is significantly improved, which is a strategy of\ntradingtimeforaccuracy.Moreover,theadditionalincreaseinelapsedtimeiswithintheacceptablerange.\n4.2.2BayesianOptimizationofXGBoostHyperparameters\nIn this paper, model integration is achieved via the meta-model XGBoost, which utilizes the historical\ntraining information of each sub-model for final prediction. Thus, choosing a reasonable set of hyper-\nparameters is crucial for enhancing model accuracy. Therefore, the Bayesian optimization algorithm is\nadopted to optimize the model parameters. After 20 iterations of the Bayesian optimization algorithm, an\noptimal set of parameter combinations was determined. Specifically, the learning rate was set at 0.05, the\nmaximumdepthwas3.061,andthenumberofestimatorswas106.5.\n4.2.3Co m pa riso no fPr ed ict io nA ccu r acy\nIn this article, we divide the dataset into small time periods with the aim of accurately predicting the\nloadforthenext48h.Toverifytheeffectivenessoftheproposedmethod,thispapercomparedGRU,BPNN,\nLSTM, XGBoost, and LightGBM. Meanwhile, in order to ensure the rigor of the experiment, the internal\nparameters of all models are kept consistent. As shown inTable 2, the proposed method shows the highest\nprediction accuracy under the five different evaluation criteria. Its MSE is only 1433.59, which is 21.967%,\n28.127%,16.927%,22.986%,and18.586%higherthantheothermodels,anditsMAPEisonly2.33%,whichis\n7.171%,11.403%,2.511%,5.672%,and2.917%higherthanthefivecounterpartmodels.ItsMAEis26.75,which\nis 8.924%, 16.084%, 3.949%, 7.996%, and 4.703% higher than the five corresponding models, and its RMSE\nis 11.713%, 15.209%, 8.845%, 12.279%, and 9.752% higher than the five corresponding models. The RMSE is\n11.713%,15.209%,8.845%,12.279%and9.713%,respectively.Underthe R\n2 criterion,itis1.14%,1.58%,0.82%,\n1.21%and0.92%betterthantheotherpredictionmodels,respectively.\nComputMaterContin. 2025;84(1) 1199\nTable 2:Comparisonof five evaluationmetricsacrossmodels\nModel MSE MAPE% MAE RMSE R2 %\nGRU 1838.44 2.51 29.37 42.88 94.85\nBPNN 1995.09 2.63 31.87 44.67 94.41\nLSTM 1724.88 2.39 27.85 41.53 95.17\nXGBoost 1863.02 2.47 29.08 43.16 94.78\nLightGBM 1760.69 2.40 28.07 41.96 95.07\nProposedmethod 1433.59 2.33 26.75 37.86 95.99\nTo further illustrate the advantages of our proposed model in short-term power load forecasting, we\ncomparedourmethodwiththeGRU-CNNmodelinreference[ 23]andtheCNN-GRU-Attentionprediction\nmodelinreference[ 24].Asshownin Fig.8,ourproposedmethodhasthehighestpredictionaccuracyunder\nthree different evaluation indicators, with RMSE improving by about 10.31% and 7.91%, MAE improving\nby about 4.16% and 4.40%,R\n2 improving by about 2.14% and 1.74%, and MAPE improving by only 2.33%,\ncomparedtotheothertwomodelsby4.12%and4.90%,respectively.\nFigure8: ComparisonoffourtypesofevaluationmetricsRMSE,MAE,R 2,MAPE\nToevaluatethegeneralization,stability,androbustnessofthemodel,thispaperusescrossvalidationto\ncomprehensivelyexamineitsperformance.TheaverageMSE,RMSE,MAE,MAPE,and R2 valuesobtained\nf r o mt h ec r o s sv a l i d a t i o ne x p e r i m e n tw e r e0 . 0 0 0 4 9 ,0 . 0 2 1 9 5 ,0 . 0 1 5 7 7 ,0 . 0 2 4 0 0 ,a n d0 . 9 3 9 2 7 ,r e s p e c t i v e l y .\nThe results show that the model possesses a great degree of accuracy, good fitting effect, and reliable\ndataprediction.\n4.2.4AblationExperiment\nTo verify the effectiveness of each component of the method proposed in this article, ablation experi-\nments were conducted. Meanwhile, in order to ensure the validity of the experiment, only a portion of the\nentire method was deleted or modified, while the rest remained unchanged. The following is a description\noftheablationexperiment:\n1200 ComputMaterContin. 2025;84(1)\n(1) T-CFSFDP+BiGRU-CBAM represents a processing method that does not use a meta model to\nintegrate XGBoost models, but instead uses the conventional weighted average to integrate sub models. At\nthesametime,fo rco n venience,thenamewillbechangedtoTBC;\n(2) T-CFSFDP+BiGRU+XGBoost indicates a method that does not introduce the CBAM attention\nmechanism.Atthesametime,tosimplifythenamechangedtoTBX;\n(3)BiGRU-CBAM+XGBoostmeansthatT-CFSFDPclusteringisnotused.ChangeittoBCXwiththe\nsimplifiednameabove;\n(4)T-CFSFDP+BiGRU+NoBOrepresentsanexperimentthatdoesnotuseBayesianoptimization,and\nissimplifiedandnamedNBOtohighlightitscharacteristics.\nFromthecomparativeresultsoftheablationexperimentsin Table 3,itcanbeseenthatunderdifferent\nevaluationindicators,theaverageRMSEimprovementofthemethodproposedinthispaperisabout11.66%,\nMAEisabout12.26%,andMAPEisabout10.34%,whichprovestheeffectivenessofeachmodule.\nTable 3:Comparativeresultsofablationexperiments\nModel RMSE MAE MAPE%\nTBC 47.21 33.75 2.86\nTBX 40.07 28.36 2.40\nBCX 44.82 31.88 2.72\nNBO 39.33 27.77 2.37\nProposedmethod 37.86 26.75 2.32\n4.2.5Model Performance Analysis\nIn this paper, we compare the load prediction curves of the proposed method with those of GRU,\nGRU-CNN, and CNN-GRU-Attention to visualize the higher agreement between their prediction curves\nand the actual load. As can be seen fromFig.9a, the prediction performance of the baseline GRU model\nis inferior to that of this paper’s method during periods of high power load fluctuations. FromFig.9b,t h e\nintroductionofconvolutionalneuralnetworkimprovesthesmoothnessofthepredictioncurve.Compared\nwith unidirectional GRU, BiGRU is more capable of capturing the changing trend of load data, which also\nmakesthepredictioneffectofthispaper’smethodbetter. Fig.9c showsthatthecombinedmodelcontaining\ntheattentionmechanismhashighpredictionaccuracyintheregionofsharpfluctuations,butintheinterval\nwhere the load is relatively smooth but has a weak trend change, the prediction error accumulates because\nthe attention mechanism pays too much attention to the significant fluctuations and ignores the potential\ntrend in the smooth section. In contrast, the method in this paper presents stable and excellent prediction\nperformance in all kinds of load change scenarios by virtue of its comprehensive and balanced feature\nextractionandanalysiscapabilities,whichprovidesamorereliablesolutionforaccurateloadforecastingin\npowersystems.\nComputMaterContin. 2025;84(1) 1201\nFigure9: (a)Baselinemodelpredictioncurvecomparison;( b)Combinedmodelspredictcurvecontrast;( c)Compar-\nisonofpredictioncurves of the influenceofAttentionmechanismonmodeleffect",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t3",
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "5 Conclusion",
+      "level": 1,
+      "text": "Short-term load forecasting is crucial for grid operation. This paper presents a power load forecasting\nmethod using T-CFSFDP clustering and BiGRU-CBAM, where T-CFSFDP clusters historical data first to\nunderpin subsequent forecasts, CBAM heightens BiGRU’s focus on important data, and model integration\nimproves adaptability to different data categories. Analysis reveals that compared with most mainstream\nmodels, it performs outstandingly in all metrics, with MSE, MAPE, MAE, and RMSE averaging improve-\nmentsofabout21.72%,5.94%,8.33%,and11.53%,respectively,demonstratingbetteraccuracy.However,the\ncurrent study has limitations such as the need to optimize model efficiency for real-time forecasting and\nthelackofconsiderationforshort-termfactorslikeweat herandelectricitypricesthatcancauseshort-term\nloadfluctuationsandaffectpredictionaccuracy.Thus,futureresearchcanoptimizethealgorithmstructure\nand use parallel computing to enhance model efficiency, incorporate more short-term influencing factors\nand multi-source heterogeneous data along with in-depth data fusion study, and integrate other advanced\nmachineordeeplearningmethodstobetterhandlecomplexloadforecastingscenarios.\nAcknowledgement: The editors and anonymous referees whose comments and recommendations have helped to\ni m p r o v et h i sw o r ka r eg r e a t l ya p p r e c i a t e db yt h ea u t h o r s .Th ea u t h o r sw o u l dl i k et oe x p r e s st h e i rg r a t i t u d ef o rt h e\nguidanceandsupportprovidedbytheresearchgroup.\nFunding Statement:This work was supported in part by the Fundamental Research Funds for the Liaoning Univer-\nsities (LJ212410146025), and the Graduate Science and Technology Innovation Project of University of Science and\nTechnologyLiaoning(LKDYC202310).\nAuthor Contributions: Mingliang Deng: Writing—original draft, Methodology, Formal analysis, Data curation.\nZhao Zhang: Review and editing, Conceptualization, Supervision. Hongyan Zhou: Investigation, Writing—editing.\nXuebo Chen: Project administration, Reviewing. All authors reviewed the results and approved the final version of\nthemanuscript.\nAvailabilityofDataandMaterials: Dataandmaterialsareavailable uponrequest.\nEthicsApproval: Not applicable.\nConflictsofInterest: The authors declare no conflicts of interest to report regarding the present study.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Comparisonofclusteringeffects"
+    },
+    {
+      "id": "t2",
+      "caption": "Comparisonof five evaluationmetricsacrossmodels"
+    },
+    {
+      "id": "t3",
+      "caption": "Comparativeresultsofablationexperiments"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "(7)"
+    },
+    {
+      "id": "e8",
+      "latex_or_text": "(8)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": true,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 3,
+    "n_algorithms": 0,
+    "n_equations": 4
+  }
+}

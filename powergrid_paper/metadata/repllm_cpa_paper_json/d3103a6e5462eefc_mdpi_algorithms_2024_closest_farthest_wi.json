@@ -1,0 +1,174 @@
+{
+  "source_pdf": "papers/literature/target_journal_related/fulltext_by_journal/mdpi-algorithms/mdpi-algorithms__2024__closest_farthest_widest__e9545634e1.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Let S be a compact convex set and p any external or internal point. This paper \ninvestigates algorithms for computing the two functions farS p = max x ∈ S x − p  and \ndiam S = max x, y ∈ S × S x − y . The first is the farthest distance from p to x∈S, and the \nsecond is the diameter of S. Both objective functions are convex and Lipschitz under the \nEuclidean norm, the first with constant 1 and the second with constant 2. Furthermore, if \nS is merely bounded, and convS denotes its closed convex hull, and extS denotes the \nextreme points of convS, then\nThis article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license \n(https://creativecommons.org/licenses/by/4.0/).\nklange@ucla.edu . \nConflicts of Interest: The authors declare no conflict of interest.\nHHS Public Access\nAuthor manuscript\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nPublished in final edited form as:\nAlgorithms. 2024 March ; 17(3): . doi:10.3390/a17030095.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nfarS p = far conv S p = far ext S p\ndiam S = diam conv S = diam ext S × ext S .\nThe fact that convS is compact is crucial in the reaching these conclusions. Thus, without \nloss of generality, we can assume that S is a compact convex set. All boundary points S are \nextreme points when S is strictly convex [1,2].\nIf S is the convex hull of a finite cloud of points x1, …, xm , then farSp can be found by \nidentifying the point xi that maximizes xi−p. For a ball S and a point y∉S, farSp is \nfound by projecting y onto S and then extending the line through y and its projection z\nto the antipodal point of z. If the set S is a Cartesian product, then calculation of farSp\nand diamS reduce to easy lower-dimensional problems. Many diameters are known. For \na ball, ellipsoid x: 1\n2 x⊤Ax ≤ r , rectangle a,b, probability simplex, and ℓ1 unit ball, the \ndiameter is, respectively, twice its radius, 8rλmin\n−1\n, ‖ a − b‖, 2, and 2 , where λmin is the \nsmallest eigenvalue of the positive definite matrix A [3].\nThe distance function dist p, S = min x ∈ S x − p  is extremely well studied [4–7]. The \nunique point where the minimum is attained is the projection PSp of p onto S. Many \nprojection operators are known [4,6–9]. The web sites [10,11] provide Julia, Python, \nand Matlab implementations of the most commonly encountered projection operators. \nProjection onto a convex sublevel set S = x : g x ≤ 0  is often more computationally \ndemanding than other projection problems. For the special case when the proximal operator \nproxλg(y) = argmin x λg(x) + 1\n2 ‖y − x‖2  is known for all λ > 0, one can solve the projection \nproblem by bisection [12]. Bisection also turns out to be an attractive strategy for computing \nfarSp and diamS for sublevel sets.\nThe corresponding operators for farSp and diamS can be multi-valued. Finding them is \nmore challenging because the underlying optimization problem is no longer convex. The \ncurrent paper proposes two algorithms for each problem. These algorithms are not infallible. \nThey are ascent algorithms, so they tend to find local maxima. Convex hull algorithms \ncan be harnessed to solve the farthest and diameter problems for finite point clouds in \ndimensions greater than 3 [13,14]. To our knowledge, these are the only competitive \nalgorithms in common use in higher dimensions. Hence, any progress in solving these two \nfundamental geometric problems should be welcome.\nUnfortunately, convex hull algorithms scale poorly in high dimensions. For n points in \nℝp, an n-vertex polytope can have as many as O(np2) facets [15]. This translates into a \nworst-case computational computational complexity of O(np2) for traditional convex hull \nalgorithms. It is true that once the m extreme points are extracted from the convex hull, \nthe farthest and diameter problems require computing just m and m2 distances, respectively. \nIn contrast, we circumvent the convex hull problem entirely and attack the farthest and \ndiameter problems directly. Thus, we easily handle problems in dimension p = 1000.\nLange Page 2\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nGiven the naturalness of the farthest and diameter problems, a few comments should suffice \nto motivate each. The minimum enclosing ball problem reduces to find\nargmin\nc ∈ S\nmax\nx ∈ S\n‖x − c‖ = argmin\nc ∈ S\nfar\nS\n(c) .\nThe solution point c is called the Chebyshev center. Article [16] explains the pertinence \nto statistics. As for the diameter problem, convergence estimates for the Frank–Wolfe \nmethod of optimization depend on the squared diameter of the underlying set [17,18]. In \ngeneral for an L-Lipschitz function f(x), the inequality f x ≤ f y + L diam(S) bounds \nobjective values. Bounding objective values is crucial in deriving complexity estimates for \noptimization algorithms such as projected gradient descent. If instead ∇f(x) possesses an \nL-Lipschitz gradient, then the bound\n∇f x − ∇ f y ≤ L diam(S)\nis available for proving convergence to a stationary point. The diameter of a set also plays a \ncrucial role in estimating the concentration of probability measures [19]. Finally, let us draw \nattention to a theorem of Jung to the effect that the radius r of the minimum enclosing ball \nproblem satisfies r ≤ diam(S) p\n2 p + 1  for S⊂ ℝp [20].\nOur algorithms are minorization–maximization (MM) algorithms [7,21]. Such algorithms \ndepend on a surrogate function that minorizes the original objective f(x) around the \ncurrent iterate xn in the sense of satisfying the tangency condition g xn ∣ xn = f xn  and the \ndomination condition g x ∣ xn ≤ f(x) for all x. The surrogate balances two goals, hugging the \nobjective tightly and simplifying maximization. Maximizing the surrogate produces the next \niterate xn+ 1 and drives the objective uphill because\nf xn + 1 ≥ g xn + 1 ∣ xn ≥ g xn ∣ xn = f xn .\nIn minimization, the surrogate majorizes the objective and is instead minimized. The \ntangency condition remains the same, but now the domination condition g x ∣ xn ≥ f(x) is \nreversed. The acronym MM also applies to majorization-minimization.\nThe celebrated EM (expectation–maximization) principle for maximum likelihood \nestimation with missing data [22] is a special case of minorization–maximization. In the \nEM setting, Jensen’s inequality supplies the surrogate as the expectation of the complete \ndata log-likelihood conditional on the observed data. Projected gradient descent, proximal \ngradient descent, and the convex–concave procedure [23] can also be viewed as MM \nalgorithms.\nThe convexity of 1\n2 ‖x − p‖2 yields the supporting hyperplane minorization\nLange Page 3\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n1\n2 ‖x − p‖2 ≥ 1\n2 xn − p 2 + xn − p ⊤ x − xn .\nTo improve ‖x − p‖2, we take\nxn + 1 ∈ argmax\nx ∈ S\nv⊤x\nfor v = xn − p. This is the (naive) Frank-Wolfe algorithm [17,24] with full steps operating \non the support function σS v = sup x ∈ Sv⊤x defined by S. The collection of points \nsuppS v = argmin x ∈ Sv⊤x at which the maximum is attained constitute the support map. \nLet us emphasize that the Frank–Wolfe algorithm is pertinent to the maximization of any \ndifferentiable convex function f(x) over a compact convex set S because the supporting \nhyperplane minorization\nf(x) ≥ f xn + df xn x − xn\ngeneralizes to this context. The ascent property follows immediately from this minorization \nand the MM principle.\nThe Frank–Wolfe method applies to a host of problems. For example, suppose g(x)\nmaps ℝp into itself. Consider the problem of minimizing the loss f(x) = 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 g(x) 2 over a",
+      "level": 1,
+      "text": "compact convex set S. The function f(x) has differential df(x) = g x ⊤dg(x) and gradient \n∇f(x) = dg x ⊤g(x). At iteration n, Frank–Wolfe decreases the linear approximation\nf(y) ≈ f xn + g xn\n⊤dg xn y − xn\nto f(y). If the support function of S is simple to compute, then Frank–Wolfe additionally \nneeds to compute just a single matrix times vector product dg x ⊤g(x) per iteration. The \nprojection operator PS(x) is never invoked in updating x. In this minimization example, \nthe MM principle is no longer operative, so a more sophisticated choice of step length is \nadvisable. The problem of finding a root of g(x) =0 on S also succumbs to a conjugate \ngradient method [25].\nThere are many known examples of support functions. All are closed, convex, positively \nhomogeneous, and satisfy σS 0 = 0. The support function σS(y) is by definition the Fenchel \nconjugate supx y⊤x − iS(x)  of the 0/∞ indicator iS(y) of S. It is worth mentioning a few \nknown support functions. The support function of a closed convex cone is the convex \nindicator of its polar cone. The support function of a polyhedral set can be found by linear \nprogramming. The support function of a union of two sets is the maximum of the two \nsupport functions. The support function of a Minkowski sum is the sum of the two support \nLange Page 4\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nfunctions. The support function of the unit ball of a norm is the dual norm. The support \nfunction of a Cartesian product is the sum of the support functions of the two product sets.\nThe Frank–Wolfe version of the diameter problem exploits the two supporting hyperplane \nminorizations\nx − y 2 ≥ xn − yn\n2 + 2 xn − yn\n⊤ x − xn\nx − y 2 ≥ xn − yn\n2 + 2 yn − xn\n⊤ y − yn .\nAdding these and dividing by 2 yields the minorization\nx − y 2 ≥ 1\n2 xn − yn\n2 + xn − yn\n⊤ x − xn\n+ 1\n2 xn − yn\n2 + yn − xn\n⊤ y − yn\n= xn − yn\n2 + xn − yn\n⊤ x − y − xn + yn .\nTo improve x − y 2, we take\nxn + 1, yn + 1 ∈ argmax\nx, y ∈ S × S\nxn − yn\nyn − xn\n⊤ x\ny\n= argmax\nx ∈ S\nxn − yn\n⊤x × argmax\ny ∈ S\nyn − xn\n⊤y,\nwhich is a Frank–Wolfe update for the function f(x, y) = 1\n2 ‖x − y‖2 on the Cartesian product \nS×S.\nFor the sake of completeness, the Julia functions for our two Frank–Wolfe algorithms \nfollow. The maximum number of iterations, 100, and the convergence tolerances, 10−8 and 2 \n× 10−8, can be reset by the user.\nfunction farthest(Supp::Function, x, p)\ntol = 1.0e-8\nfor iter = 1:100\nxnew = Supp(x - p)\nconv = norm(xnew - x)\nx .= xnew\nif conv < tol\nbreak\nend\nend\nreturn (norm(x - p), x)\nend\nfunction widest(Supp::Function, x, y)\nLange Page 5\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ntol = 2.0e-8\nfor iter = 1:100\n(xnew, ynew) = (Supp(x - y), Supp (y - x))\nconv = norm(xnew - x) + norm(ynew - y)\nx .= xnew\ny .= ynew\nif conv < tol\nbreak\nend\nend\nreturn (norm(x - y), x, y)\nend\nProjected gradient ascent offers another avenue for solving the farthest and diameter \nproblems. The two algorithms we later derive and apply are\nxn + 1 = P S 2xn − p for; far\nS\np\nxn + 1\nyn + 1\n=\nP S( 3\n2 xn − 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 yn)",
+      "level": 1,
+      "text": "P S( 3\n2 yn − 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "2 xn)",
+      "level": 1,
+      "text": "for; diam(S) .\nAs MM algorithms, these two algorithms are guaranteed to increase the objective function. \nFortunately, projected gradient ascent does not require the objective function to be convex. \nOnce again the Julia code is straightforward.\nfunction farthest(Proj::Function, x, p)\ntol = 1.0e-8\nfor iter = 1:100\nxnew = Proj(2x - p)\nconv = norm(xnew - x)\nx .= xnew\nif conv < tol\nbreak\nend\nend\nreturn (norm(x - p), x)\nend\nfunction widest(Proj::Function, x, y)\ntol = 2.0e-8\nfor iter = 1:100\n(xnew, ynew) = (Proj(3x / 2 - y / 2), Proj(3y / 2 - x / 2))\nconv = norm(xnew - x) + norm(ynew - y)\nx .= xnew\nLange Page 6\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ny .= ynew\nif conv < tol\nbreak\nend\nend\nreturn (norm(x - y), x, y)\nend\nThe contributions of this article include (a) deriving and testing these algorithms, (b) \ninvestigating simplifications arising from symmetry, (c) describing a homotopy method for \navoiding local maxima, (d) finding the support function of the intersection of a convex \ncone and a ball centered at the origin, and (e) elaborating a known bisection algorithm \nfor calculating the support function of a convex sublevel set. The next section derives the \nprojected gradient ascent algorithm and lays out our contributions to items (b) through (e). \nSection 3 briefly tackles convergence of the various algorithms. Section 4 describes a few \nnumerical experiments, and Section 5 discusses overall conclusions, limitations, and new \ndirections for research. The author’s earlier article [26] applies similar techniques to the \nproblem of computing the Hausdorff distance between two compact convex sets\nHere are the notational conventions used throughout this article. All vectors appear in \nboldface. All entries of the vector 0 equal 0. The ⊤ superscript indicates a vector transpose. \nThe Euclidean norm of a vector x is denoted by x. For a smooth real-valued function f(x), \nI write its gradient (column vector of partial derivatives) as ∇f(x) and its first differential \n(row vector of partial derivatives) as df(x) = ∇ f x ⊤. Finally, I denote the directional \nderivative of f(x) in the direction v by dvf(x). When f(x) is differentiable, dvf(x) = df(x)v.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "2 Derivations",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "2.1 Projected Gradient Ascent and Homotopy",
+      "level": 2,
+      "text": "Let us first tackle the closest, farthest, and diameter problems when the projection operator \nPSp is available. These three problems are equivalent to minimizing the functions\nc(x) = 1\n2 ‖x − p‖2\nf(x) = − 1\n2 ‖x − p‖2\nw(x, y) = − 1\n2 ‖x − y‖2\nwith gradients\n∇c(x) = x − p\nLange Page 7\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\n∇f(x) = − x − p\n∇w(x, y) = y − x\nx − y\nover the sets S and S×S. One possibility for this task is projected gradient descent.\nBecause the Lipschitz constants of ∇c(x) and ∇f(x) are both 1, the projected gradient steps \nfor the closest and farthest problems are\nxn + 1 = P S xn − L−1 ∇c xn\n= P S xn − xn + p\n= P S p\nxn + 1 = P S xn − L−1 ∇f xn\n= P S xn − p + xn\n= P S 2xn − p .\nAs expected, the closest algorithm xn + 1 = P S p  reduces to ordinary projection. The Lipschitz \nconstant for ∇w x, y  is determined by\ny − x\nx − y − v − u\nu − v = 2 y − x − v + u 2\n≤ 2 x − u + y − v 2\n≤ 4( x − u 2 + y − v 2)\n= 2 x − u\ny − v\nas 2. Consequently, the projected gradient step for the diameter problem is\nxn + 1\nyn + 1\n= P S × S\nxn\nyn\n− 1\n2 ∇w xn, yn\n= P S × S\nxn\nyn\n− 1\n2\nyn − xn\nxn − yn\n=\nP S( 3\n2 xn − 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2 yn)",
+      "level": 1,
+      "text": "P S( 3\n2 yn − 1",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "2 xn)",
+      "level": 1,
+      "text": ".\nThis diameter update relies on the facts that minimization of a Euclidean distance is \nequivalent to minimization of a squared Euclidean distance and that the squared objective \nsplits over the x and y parameters.\nThe chief problem with all of the proposed algorithms is their propensity to veer toward \nlocal maxima. One remedy is good initialization. Given a point p∉S, a general tactic for \nLange Page 8\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\ninitialization in the farthest problem is to start with the projection PSp. This defines the line \nsegment p, P S p , which can be extended until it hits the boundary of S at a second point \nx0. Replacing PSp by x0 produces a more distant point of S and a better starting value in the \nfarthest problem. If S is an even set in the sense that S = − S, then as discussed in Section \n2.3, the second point reduces to PS−p.\nBeyond good initialization, it is worth considering the expensive alternative of homotopy \n[27] for the diameter problem. The idea is to gradually deform the unit ball B, where the \ndiameter problem is trivial to solve, into the target set S. Thus, we follow the solution \npath along the family of sets tS + 1 − t B from t= 0 to t= 1. For the Frank–Wolfe method, \nI exploit the fact that the Minkowski convex combination tS + 1 − t B has support map \nt suppS z + 1 − t suppB z .\nFor projected gradient ascent, one can project points onto the Minkowski convex \ncombination tS + 1 − t B by two devices. First, it is well known that P tS z = tP S t−1z  for \nany t> 0. Second, there is an effective algorithm for projecting onto a Minkowski sum A+B\n[28]. The idea is to alternate minimization of z − a − b  with respect to a∈A and b∈B. \nThe iterative scheme an + 1 = P A z − bn  and bn + 1 = P B z − an + 1  is guaranteed to converge at a \nlinear rate when either set is strongly convex. In particular, 1 −tB is strongly convex. The \nhomotopy method is motivated by the intuition that the early sets are more rounded and that \nthe objective possesses fewer local maxima. The price for better performance is iterations \nwithin iterations and an overall slower algorithm.\nThe following Julia code implements the homotopy method for the diameter problem under \nFrank-Wolfe. The map suppS(y) is passed to each of the functions. The code for projected \ngradient ascent is similar.\nfunction MinkowskiSupp(Supp::Function, z, t)\nreturn t × Supp(z)+(1 - t) × (1 / norm(z)) × z\nend\nfunction widest_homotopy(Supp::Function, n)\nx = randn(n)\nx = x /norm(x) # random point on unit sphere\ny = −x # point on opposite side of unit sphere\n(homotopy_points, tol) = (10, 2.0e-8)\nfor iter = 0:homotopy_points\nt = iter / homotopy_points\nfor i = 1:100\nxnew = MinkowskiSupp(Supp, x - y, t)\nynew = MinkowskiSupp(Supp, y - x, t)\nconv = norm(x - xnew) + norm(y - ynew)\nx .= xnew\ny .= ynew\nLange Page 9\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nif conv < tol\nbreak\nend\nend\nend\nreturn (norm(x - y), x, y)\nend",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "2.2 Supporting Points and Sublevel Sets",
+      "level": 2,
+      "text": "The set of supporting points suppS v = argmax x ∈ Sv⊤x determines the support function σSv. \nOur numerical tests require knowing suppSv in some specific examples. For instance, the \nℓ1 unit ball has suppSv equal to the convex hull of the vertices ±ei where vi is largest. \nHere, ei is included when vi> 0, and −ei is included when vi< 0. For the unit simplex, \nsuppSv equals the convex hull of the vertices ei where vi is largest. The rectangle a,b is a \nCartesian product. Hence, suppSv is also a Cartesian product. In the one-dimensional case, \nsuppSv is a when vi< 0,b when vi> 0, and all of a,b when vi= 0. For a Minkowski sum \nA + B, supp A + B v = supp A v + suppB v . This fact plus the identity supptA v = t suppA v  for \nt≥ 0 makes it easy to carry out the homotopy method with our Frank-Wolfe algorithms.\nIf suppSv is a singleton, then σSv is differentiable at v by Danskin’s theorem [7]. \nConversely, if σSv is differentiable, then suppSv is a singleton by Corollary 25.3.1 of \nRockafellar [29]. Because σSv is convex, finite, and locally Lipschits, Rademacher’s \ntheorem [30,31] implies that it is differentiable almost everywhere. Hence, σSv is a \nsingleton almost everywhere.\nLater, we will need suppAv for the intersection of the non-negative orthant and the \nball Br of radius r around the origin. This is a special case of projection onto \nthe intersection of an arbitrary closed convex cone K and the ball. In this general \nsetting, w = supp K ∩ Br(v) = r\nP K(v) P K(v) when P K(v) ≠ 0 , and w= 0, otherwise. To prove this \nassertion, it suffices to show that\ndu − wσS(v) = v⊤ u − w ≤ 0\nfor any point u ∈ K ∩ Br. When P K(v) ≠ 0 , the Moreau decomposition and the Cauchy-\nSchwarz inequality imply that\nv⊤ w − u = P K(v) + P K∘(v) ⊤(w − u)\n= r\nP K(v) P K(v) 2 − P K(v) + P K∘(v) ⊤u\n≥ r\nP K(v) P K(v) 2 − P K v ⊤u\n≥ r P K(v) − r P K(v)\n= 0,\nLange Page 10\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nwhere K∘ is the polar cone of K. Otherwise, P K(v) = 0 , and\nv⊤(w − u) = − P K(v) + P K∘(v) ⊤u = − P K∘ v ⊤u ≥ 0\nby definition.\nThe polar cone of the non-negative orthant consists of those vectors v with v≤ 0. The \ncurrent intersection support map can also be deduced less directly from Proposition 2.2 of \npaper [32]. The corresponding problem of projecting onto the intersection of a ball and cone \nis treated by Lange [7] and Bauschke et al. [33].\nAs already mentioned, the support function of a sublevel set is generally challenging to \ncompute. As a supplement to the brief discussion in Section 6.4.2 of the survey [12], \nconsider the Lagrangian −v⊤x + μ g(x) − c . If g(x) is differentiable, then the Lagrangian \nsatisfies the KKT stationary conditions\n0 = − v + μ ∇g(x)\n0 = g(x) − c .\nSlater’s condition postulates the existence of a point y with g(y) <c. Under this condition, \nthere is μ≥ 0 satisfying the KKT conditions. The solution is unique and can be found by \nbisection when v≠ 0 and g(x) is not just convex but also strongly convex. If ℎu is the \ninverse function of ∇g(x), then one seeks a root of the equation ϕ μ = g ℎ μ−1v = c by \nbisection. Recall that the equation ∇g(x) = y is uniquely solvable for all y when g(x) is \nstrongly convex and differentiable. The function ϕμ is strictly decreasing in μ because\nϕ′(μ) = dg ℎ μ−1v dℎ μ−1v −μ−2v\n= μ−1v⊤dℎ μ−1v −μ−2v\n= − μ−3v⊤d2g ℎ μ−1v −1v\n< 0\nwhen g(x) is also twice differentiable. Finally, under strong convexity, ϕ′μ tends to −∞ as \nμ0, so ϕ μ ∞ as μ0.\nAs an example, consider the sublevel set x : g(x) ≤ c  determined by the elastic net function \ng(x) = ‖ x‖1 + ρ\n2 ‖x‖2, which is separable but not fully differentiable. There is at least a partial \ninverse. Because the partial derivative ∂\n∂xi\ng(x) = sgn xi + ρxi, the i th component of the \ninverse function ℎu should satisfy\nui = ∇ g ℎ u i = sgn ℎ u i + ρℎ u i .\nLange Page 11\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nHence, the function ℎu with i th component ℎ(u)i = sgn ui\nρ ui − 1 + serves as a partial \ninverse. For v≠ 0 and c> 0, the function ϕ μ = g ℎ μ−1v  is continuous, tends to 0 as \nμ∞ and to ∞ as μ0. Hence, the equation ϕμ=c is solvable by the intermediate value \ntheorem.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.3 Symmetry",
+      "level": 2,
+      "text": "Let us first consider a permutationally invariant set S. In S, we can swap coordinates and \nremain within S. For a support function x = supp S(y), the swap criterion dictates that\nyixj + yjxi ≤ yixi + yjxj\n0 ≤ yi − yj xi − xj .\nThus, the components of the map x = supp S(y) should satisfy the inequality\nyi − yj xi − xj ≥ 0\nfor all i and j. In other words, the components of the output x = supp S(y) should be \nconsistently ordered with the components of the input y of suppS(y).\nFor the distance function, the swap criterion is\nyi − xj\n2 + yj − xi\n2 ≥ yi − xi\n2 + yj − xj\n2\n0 ≤ yi − yj xi − xj .\nHence, the components of the output x = P S(y) should also be consistently ordered with the \ncomponents of the input y of PS(y).\nFor the farthest function, the swap criterion is\nyi − xj\n2 + yj − xi\n2 ≤ yi − xi\n2 + yj − xj\n2\n0 ≥ yi − yj xi − xj .\nHence, the components of the map x = far S(y) should satisfy the inequality\nyi − yj xi − xj ≤ 0\nfor all i and j. In other words, the components should be reverse consistently ordered.\nWith each of these three functions, permutational invariance should inform our choice of \nalgorithm initial points. Alternatively, if one opts to test the extreme points of a set S to \nfind farS(y), then most of these can be eliminated from contention by incompatibility with \npermutational invariance. A sublevel set x : g(x) ≤ c  is permutationally invariant when g(x)\nis permutationally invariant.\nLange Page 12\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nFinally, let us turn to the diameter problem for even sets S = − S. Choose x∈S farthest \nfrom the origin. The Cauchy-Schwarz inequality −y⊤x ≤ x 2 for y∈S implies that\ny 2 − 2y⊤x ≤ 3 x 2\ny − x 2 ≤ 4 x 2 = ( − x) − x 2 .\nThus, the diameter 2x is achieved when x is maximal. For instance, the diameter of the \nelastic net sublevel set {x : ‖x‖1 + 1\n2 ‖x‖2 ≤ 1} is 2 3 − 1 , regardless of the dimension. The \nmaximum value 3 − 1 = 0.73205  of x is achieved when all but one component of x is 0. \nSometimes a translate S+b of S is even when S itself is not even. If this is the case, the \ndiameter can be found by maximizing x+b over S. A sublevel set x : g x ≤ c  is even \nwhen g(x) is an even function.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "3 Convergence",
+      "level": 1,
+      "text": "Zangwill’s [34] theorem offers the quickest route to proving convergence of both projected \ngradient ascent and our simplified Frank-Wolfe algorithm. Unfortunately, Zangwill’s \ntheorem says nothing about the rate of convergence. The theorem involves a solution set \nΓ ⊂S, a descent function f(x), and an algorithm map M(x). In our case, Γ consists of the \nstationary points x∈S where dvf(x) ≥ 0  for all tangent vectors v. Note that this condition is \nnecessary but not sufficient for x to be a local minimum of f(x). The algorithm map M(x) is \nsaid to be closed at x if whenever xn∈S converges to x and yn ∈ M xn  converges to y, then \ny ∈ M(x). If Mz is single-valued and continuous at x, then Mz is certainly closed at x. \nHere is Zangwill’s theorem.\nProposition 1.\nSuppose that\n1. All iterates xn + 1 ∈ M xn  fall in the compact set S.\n2. The map M is closed at x when x∉ Γ.\n3. The function f(x) is continuous on S and satisfies f M(x) ≤ f(x), with strict \ninequality for x∉ Γ.\nThen, the limit of any convergent sub-sequence xnm of xn belongs to Γ.\nZangwill’s theorem also applies to maximization provided that the progress condition \nf M(x) ≤ f(x) is replaced by f M(x) ≥ f(x), and the stationary condition dvf(x) ≥ 0  is \nreplaced by dvf(x) ≤ 0 .\n3.1. Convergence of Frank–Wolfe\nTo prove that the algorithm map is closed for our version of Frank–Wolfe, suppose that \ndf xn yn ≥ df xn y for every y∈S and that xn and yn converge to x∞ and y∞. Then assuming \ndf(x) is continuous, df x∞ y∞ ≥ df x∞ y for every y∈S. The ascent property is baked into \nLange Page 13\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript\nFrank-Wolfe because it is a minorization-maximization algorithm. Finally, a stationary point \nx satisfies df(x)v ≤ 0 for all tangent vectors v. The set of tangent vectors v is the closure \nof the set of points cy−x with y∈S and c> 0. This is where the convexity of S comes \ninto play. Hence, x is a stationary point if and only if df(x)x ≥ df(x)y for all y∈S, which \nis equivalent to x ∈ M(x). If x ∉ M(x), then the objective strictly increases. Thus, Zangwill’s \ntheorem applies to Frank-Wolfe.\nThese arguments shed light on the rate of convergence as measured by closeness to \nstationarity [24,35]. Indeed, adding the inequality\nf xn + 1 − f xn ≥ df xn xn + 1 − xn ≥ df xn y − xn\nfor arbitrary y∈S leads by telescoping to\n(n + 1) min\n0 ≤ k ≤ n\nmax\ny ∈ S\ndf xk y − xk ≤ f xn + 1 − f x0 .\nThis in turn implies\nmin\n0 ≤ k ≤ n\nmax\ny ∈ S\ndf xk y − xk ≤ 1\nn + 1 max\nx ∈ S\nf(x) − f x0 .\nThus, the stationary condition maxy ∈ S df(x) y − x ≤ 0 is reasonable to expect at a limit point \nx of Frank–Wolfe.\nMangasarian [36] demonstrates that Frank–Wolfe converges in a finite number of iterations \nwhen the objective f(x) is differentiable, convex, and bounded from above on a polyhedral \nset S. This result is more or less obvious given that the number of extreme points of S is \nfinite. Yurtsever and Sra [37] show that the well-known convex–concave procedure (СССР) \n[23] and its generalization are special cases of the Frank–Wolfe method with step-size \nselection. This insight quantifies the convergence rate of the CCCP.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "3.2 Convergence of Projected Gradient Descent",
+      "level": 2,
+      "text": "In this scenario, let f(x) be the function to be minimized. Furthermore, let L be the \nLipschitz constant of ∇f(x) on S. Projected gradient descent minimizes the surrogate \nfunction g x ∣ xn = f xn + df xn x − xn + L\n2 x − xn\n2 over S. The algorithm map\nxn + 1 = M xn = P S xn − L−1 ∇f xn\nis single-valued and continuous. The descent condition is again automatic. Proposition 7.3.2 \nof [7] now shows that Zangwill’s theorem applies provided that we identify stationary \npoints as satisfying either of the equivalent conditions M(x) = x or f M(x) = f(x). These \nconditions are also equivalent to our postulated stationary condition because\nLange Page 14\nAlgorithms. Author manuscript; available in PMC 2025 August 29.\nAuthor Manuscript Author Manuscript Author Manuscript Author Manuscript",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [],
+  "tables": [],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 0,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

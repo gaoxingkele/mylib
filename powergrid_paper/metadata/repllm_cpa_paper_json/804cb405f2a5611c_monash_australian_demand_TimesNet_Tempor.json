@@ -1,0 +1,875 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/monash_australian_demand/monash_australian_demand__TimesNet_Temporal_2D-Variation_Modeling__10d5c78d0a.pdf",
+  "n_pages": 23,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 I NTRODUCTION",
+      "level": 1,
+      "text": "Time series analysis is widely used in extensive real-world applications, such as the forecasting of\nmeteorological factors for weather prediction (Wu et al., 2021), imputation of missing data for data\nmining (Friedman, 1962), anomaly detection of monitoring data for industrial maintenance (Xu et al.,\n2021) and classiﬁcation of trajectories for action recognition (Franceschi et al., 2019). Because of its\nimmense practical value, time series analysis has received great interest (Lim & Zohren, 2021).\nDifferent from other types of sequential data, such as language or video, time series is recorded\ncontinuously and each time point only saves some scalars. Since one single time point usually cannot\nprovide sufﬁcient semantic information for analysis, many works focus on the temporal variation,\nwhich is more informative and can reﬂect the inherent properties of time series, such as the continuity,\nperiodicity, trend and etc. However, the variations of real-world time series always involve intricate\ntemporal patterns, where multiple variations (e.g. rising, falling, ﬂuctuation and etc.) mix and overlap\nwith each other, making the temporal variation modeling extremely challenging.\nEspecially in the deep learning communities, beneﬁting from the powerful non-linear modeling\ncapacity of deep models, many works have been proposed to capture the complex temporal variations\nin real-world time series. One category of methods adopts recurrent neural networks (RNN) to\nmodel the successive time points based on the Markov assumption (Hochreiter & Schmidhuber,\n1997; Lai et al., 2018; Shen et al., 2020). However, these methods usually fail in capturing the long-\nterm dependencies and their efﬁciencies suffer from the sequential computation paradigm. Another\ncategory of methods utilizes the convolutional neural network along the temporal dimension (TCN)\n∗Equal Contribution\n1\narXiv:2210.02186v3  [cs.LG]  12 Apr 2023\nPublished as a conference paper at ICLR 2023\nPeriod 3\nTime\nFrequency\nValue\nAmplitude\nPeriod 1\nPeriod 2…\nReshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape to 2D Structure\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nIntraperiodInterperiod\nPeriodicity\nContinuity\nTime\nValue\nPeriod 2\nPeriod 1\nŏ\nIntraperiod-\nvariation\nInterperiod-variation\nPeriod 1\nPeriod 2\nPeriod 3\nInterperiod-variation\nIntraperiod-variation\nPeriod 3\nTime\nValue\nPeriod 2\nPeriod 1\nŏ\nIntraperiod-\nvariation\nInterperiod-variation\nPeriod 1\nPeriod 2\nPeriod 3\nInterperiod-variation\nIntraperiod-variation\nTime points at the same \nphase of different periods\nŏ\nŏ\nFigure 1: Multi-periodicity and temporal 2D-variation of time series. Each period involves the\nintraperiod-variation and interperiod-variation. We transform the original 1D time series into a set of\n2D tensors based on multiple periods, which can unify the intraperiod- and interperiod-variations.\nto extract the variation information (Franceschi et al., 2019; He & Zhao, 2019). Also, because of the\nlocality property of the one-dimension convolution kernels, they can only model the variations among\nadjacent time points, thereby still failing in long-term dependencies. Recently, Transformers with\nattention mechanism have been widely used in sequential modeling (Brown et al., 2020; Dosovitskiy\net al., 2021; Liu et al., 2021b). In time series analysis, many Transformer-based models adopt the\nattention mechanism or its variants to capture the pair-wise temporal dependencies among time points\n(Li et al., 2019; Kitaev et al., 2020; Zhou et al., 2021; 2022). But it is hard for attention mechanism\nto ﬁnd out reliable dependencies directly from scattered time points, since the temporal dependencies\ncan be obscured deeply in intricate temporal patterns (Wu et al., 2021).\nIn this paper, to tackle the intricate temporal variations, we analyze the time series from a new\ndimension of multi-periodicity. Firstly, we observe that real-world time series usually present\nmulti-periodicity, such as daily and yearly variations for weather observations, weekly and quarterly\nvariations for electricity consumption. These multiple periods overlap and interact with each other,\nmaking the variation modeling intractable. Secondly, for each period, we ﬁnd out that the variation of\neach time point is not only affected by the temporal pattern of its adjacent area but also highly related\nto the variations of its adjacent periods. For clearness, we name these two types of temporal variations\nas intraperiod-variation and interperiod-variation respectively. The former indicates short-term\ntemporal patterns within a period. The latter can reﬂect long-term trends of consecutive different\nperiods. Note that for the time series without clear periodicity, the variations will be dominated by\nthe intraperiod-variation and is equivalent to the ones with inﬁnite period length.\nSince different periods will lead to different intraperiod- and interperiod-variations, the multi-\nperiodicity can naturally derive a modular architecture for temporal variation modeling, where\nwe can capture the variations derived by a certain period in one module. Besides, this design makes\nthe intricate temporal patterns disentangled, beneﬁting the temporal variation modeling. However,\nit is notable that the 1D time series is hard to explicitly present two different types of variations\nsimultaneously. To tackle this obstacle, we extend the analysis of temporal variations into the 2D\nspace. Concretely, as shown in Figure 1, we can reshape the 1D time series into a 2D tensor, where\neach column contains the time points within a period and each row involves the time points at the\nsame phase among different periods. Thus, by transforming 1D time series into a set of 2D tensors,\nwe can break the bottleneck of representation capability in the original 1D space and successfully\nunify the intraperiod- and interperiod-variations in 2D space, obtaining the temporal 2D-variations.\nTechnically, based on above motivations, we go beyond previous backbones and propose theTimesNet\nas a new task-general model for time series analysis. Empowering by TimesBlock, TimesNet can\ndiscover the multi-periodicity of time series and capture the corresponding temporal variations in a\nmodular architecture. Concretely, TimesBlock can adaptively transform the 1D time series into a set\nof 2D tensors based on learned periods and further capture intraperiod- and interperiod-variations\nin the 2D space by a parameter-efﬁcient inception block. Experimentally, TimesNet achieves the\nconsistent state-of-the-art in ﬁve mainstream analysis tasks, including short- and long-term forecasting,\nimputation, classiﬁcation and anomaly detection. Our contributions are summarized in three folds:\n• Motivated by multi-periodicity and complex interactions within and between periods, we\nﬁnd out a modular way for temporal variation modeling. By transforming the 1D time series\ninto 2D space, we can present the intraperiod- and interperiod-variations simultaneously.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "• We propose the TimesNet with TimesBlock to discover multiple periods and capture tempo-\nral 2D-variations from transformed 2D tensors by a parameter-efﬁcient inception block.\n• As a task-general foundation model, TimesNet achieves the consistent state-of-the-art in ﬁve\nmainstream time series analysis tasks. Detailed and insightful visualizations are included.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "2 R ELATED WORK",
+      "level": 1,
+      "text": "As a key problem of time series analysis, temporal variation modeling has been well explored.\nMany classical methods assume that the temporal variations follow the pre-deﬁned patterns, such as\nARIMA (Anderson & Kendall, 1976), Holt-Winter (Hyndman & Athanasopoulos, 2018) and Prophet\n(Taylor & Letham, 2018). However, the variations of real-world time series are usually too complex\nto be covered by pre-deﬁned patterns, limiting the practical applicability of these classical methods.\nIn recent years, many deep models have been proposed for temporal modeling, such as MLP, TCN,\nRNN-based models (Hochreiter & Schmidhuber, 1997; Lai et al., 2018; Franceschi et al., 2019).\nTechnically, MLP-based methods (Oreshkin et al., 2019; Challu et al., 2022; Zeng et al., 2023; Zhang\net al., 2022) adopt the MLP along the temporal dimension and encode the temporal dependencies\ninto the ﬁxed parameter of MLP layers. The TCN-based (2019) methods capture the temporal\nvariations by convolutional kernels that slide along the temporal dimension. The RNN-based methods\n(Hochreiter & Schmidhuber, 1997; Lai et al., 2018; Gu et al., 2022) utilize the recurrent structure and\ncapture temporal variations implicitly by state transitions among time steps. Note that none of these\nmethods consider the temporal 2D-variations derived by periodicity, which is proposed in this paper.\nBesides, Transformers have shown great performance in time series forecasting (Zhou et al., 2021;\nLiu et al., 2021a; Wu et al., 2021; Zhou et al., 2022). With attention mechanism, they can discover the\ntemporal dependencies among time points. Especially, Wu et al. present the Autoformer with Auto-\nCorrelation mechanism to capture the series-wise temporal dependencies based on the learned periods.\nIn addition, to tackle the intricate temporal patterns, Autoformer also presents a deep decomposition\narchitecture to obtain the seasonal and trend parts of input series. Afterward, FEDformer (Zhou\net al., 2022) employs the mixture-of-expert design to enhance the seasonal-trend decomposition and\npresents a sparse attention within the frequency domain. Unlike previous methods, we ravel out the\nintricate temporal patterns by exploring the multi-periodicity of time series and capture the temporal\n2D-variations in 2D space by well-acknowledged computer vision backbones for the ﬁrst time.\nIt is also notable that, different from previous methods, we no longer limit to a speciﬁc analysis task\nand attempt to propose a task-general foundation model for time series analysis.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3 T IMES NET",
+      "level": 1,
+      "text": "As aforementioned, based on the multi-periodicity of time series, we propose the TimesNet with a\nmodular architecture to capture the temporal patterns derived from different periods. For each period,\nto capture the corresponding intraperiod- and interperiod-variations, we design a TimesBlock within\nthe TimesNet, which can transform the 1D time series into 2D space and simultaneously model the\ntwo types of variations by a parameter-efﬁcient inception block.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.1 T RANSFORM 1D- VARIATIONS INTO 2D- VARIATIONS",
+      "level": 2,
+      "text": "As shown in Figure 1, each time point involves two types of temporal variations with its adjacent area\nand with the same phase among different periods simultaneously, namelyintraperiod- and interperiod-\nvariations. However, this original 1D structure of time series can only present the variations among\nadjacent time points. To tackle this limitation, we explore the two-dimension structure for temporal\nvariations, which can explicitly present variations within and between periods, thereby with more\nadvantages in representation capability and beneﬁting the subsequent representation learning.\nConcretely, for the length-T time series withC recorded variates, the original 1D organization is\nX1D∈ RT×C. To represent the interperiod-variation, we need to discover periods ﬁrst. Technically,\nwe analyze the time series in the frequency domain by Fast Fourier Transform (FFT) as follows:\nA = Avg\n(\nAmp\n(\nFFT(X1D)\n))\n,{f1,··· ,f k} = arg Topk\nf∗∈{1,··· ,[ T\n2 ]}\n(A), pi =\n⌈T\nfi\n⌉\n,i∈{ 1,··· ,k}.\n(1)",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Time\nValue\nTime\nFrequency\nValue Amplitude\nPeriod 1\nPeriod 2…\nReshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape to 2D Structure\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nContinuityPeriodicity\nPeriodicity\nCapture Temporal 2D-variations\nby 2D Kernels\n…\nInterperiod-variation\nContinuity\nIntraperiod-variation\nFrequency\nAmplitude\nFrequency 1\nFrequency 2\nFrequency 3…\nReshaped\nTime\nSeries\nҁ\u0014҂\nReshaped\nTime\nSeries\nҁ\u0015҂\nReshaped Time Seriesҁ\u0016҂\nReshape to 2D SpaceFFT for Periods\nFrequency 2\nPeriod 2\nTime\nValue\nFrequency\nAmplitude\nFrequency 1\nFrequency 2\nFrequency 3…\n1D-variations\nŏ\nFrequency 2\nPeriod 2\nFrequency 1\nPeriod 1\nFrequency 3\n…\nTemporal 2D-variations\nPeriod 3\nReshape\nReshape\nReshape Reshape…\n…\nFigure 2: A univariate example to illustrate 2D structure in time series. By discovering the periodicity,\nwe can transform the original 1D time series into structured 2D tensors, which can be processed by\n2D kernels conveniently. By conducting the same reshape operation to all variates of time series, we\ncan extend the above process to multivariate time series.\nHere, FFT(·) and Amp(·) denote the FFT and the calculation of amplitude values. A ∈ RT\nrepresents the calculated amplitude of each frequency, which is averaged from C dimensions by\nAvg(·). Note that thej-th value Aj represents the intensity of the frequency-j periodic basis function,\ncorresponding to the period length⌈ T\nj⌉. Considering the sparsity of frequency domain and to avoid\nthe noises brought by meaningless high frequencies (Chatﬁeld, 1981; Zhou et al., 2022), we only\nselect the top-k amplitude values and obtain the most signiﬁcant frequencies {f1,··· ,f k} with\nthe unnormalized amplitudes {Af1,··· , Afk}, where k is the hyper-parameter. These selected\nfrequencies also correspond tok period lengths{p1,··· ,p k}. Due to the conjugacy of frequency\ndomain, we only consider the frequencies within{1,··· , [ T\n2 ]}. We summarize Equation 1 as follows:\nA,{f1,··· ,f k},{p1,··· ,p k} = Period(X1D). (2)\nBased on the selected frequencies{f1,··· ,f k} and corresponding period lengths{p1,··· ,p k}, we\ncan reshape the 1D time series X1D∈ RT×C into multiple 2D tensors by the following equations:\nXi\n2D = Reshape pi,fi (Padding(X1D)), i∈{ 1,··· ,k}, (3)\nwhere Padding(·) is to extend the time series by zeros along temporal dimension to make it compati-\nble for Reshapepi,fi (·), wherepi andfi represent the number of rows and columns of the transformed\n2D tensors respectively. Note that Xi\n2D∈ Rpi×fi×C denotes thei-th reshaped time series based on\nfrequency-fi, whose columns and rows represent the intraperiod-variation and interperiod-variation\nunder the corresponding period lengthpi respectively. Eventually, as shown in Figure 2, based on the\nselected frequencies and estimated periods, we obtain a set of 2D tensors{X1\n2D,··· , Xk\n2D}, which\nindicatesk different temporal 2D-variations derived by different periods.\nIt is also notable that, this transformation brings two types of localities to the transformed 2D tensors,\nthat is localities among adjacent time points (columns, intraperiod-variation) and adjacent periods\n(rows, interperiod-variation). Thus, the temporal 2D-variations can be easily processed by 2D kernels.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "3.2 T IMES BLOCK",
+      "level": 2,
+      "text": "As shown in Figure 3, we organize the TimesBlock in a residual way (He et al., 2016). Concretely,\nfor the length-T 1D input time series X1D∈ RT×C, we project the raw inputs into the deep features\nX0\n1D∈ RT×dmodel by the embedding layer X0\n1D = Embed( X1D) at the very beginning. For the l-th\nlayer of TimesNet, the input is Xl−1\n1D ∈ RT×dmodel and the process can be formalized as:\nXl\n1D = TimesBlock\n(\nXl−1\n1D\n)\n+ Xl−1\n1D . (4)\nAs shown in Figure 3, for the l-th TimesBlock, the whole process involves two successive parts:\ncapturing temporal 2D-variations and adaptively aggregating representations from different periods.\nCapturing temporal 2D-variations Similar to Equation 1, we can estimate period lengths for deep\nfeatures Xl−1\n1D by Period(·). Based on estimated period lengths, we can transform the 1D time series",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "4 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Reshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResize Resize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2…\nReshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for Periods Softmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for Periods Softmax\nReshape Reshape\nBack\nk\n+TimesBlock\nMSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n…MSUnit\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for Periods Softmax\nReshape Reshape\nBack\nk\n+\nTimesBlock\nParameter-efﬁcient \nInception block\n1D Space\n2D Space\n1D Space\n…\nTime\nInception Block\nAdaptive Aggregation\nUnder review as a conference paper at ICLR 2023\nŏ\nReshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResizeResize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2… Reshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\n+TimesBlock MSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n, ŏ,\n…MSUnit\nFigure 3: Overall architecture of TimesNet. The TimesBlock (left part) can extract the various\ninformative features from the k different reshaped time series by a shared MSUnit with multi-scale\n2D kernels (right part) and fuse them based on the normalized amplitude values.\ncan conducted representation learning by parameter-efﬁcient inception block conveniently.\nA\nl\u0000 1\n,{f1,··· ,f k },{p1,··· ,p k } =P e r i o d\n\u0000\nX\nl\u0000 1\n1D\n\u0000\n,",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n= Reshape fi⇥ pi\n\u0000\nPadding( X\nl\u0000 1\n1D\n)\n\u0000\n,i 2 {1,··· ,k }\nbX\nl,i\n2D\n= Inception\n⇣",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n⌘\n,i 2 {1,··· ,k }\nbX\nl,i\n1D\n=T r u n c\n⇣\nReshape 1⇥ (fi⇥ pi)\n⇣\nbX\nl,i\n2D\n⌘⌘\n,i 2 {1,··· ,k }\n(5)\nwhere X\nl,i\n2D\n2 R\n(fi⇥ pi)⇥ dmodel\nis the transformed 2D tensor. After the transformation, we process the\n2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015), which involves multi-scale\n2D kernels and is one of the most well-acknowledged vision backbone. Then we transform the\nprocessed 2D feature into bX\nl,i\n2D\nback to 1D tensor bX\nl,i\n1D\n2 R\nT ⇥ dmodel\nfor aggregation by Trunc( ·) to\ntruncate the padding series into original length. Note that beneﬁting from the transformation of 1D\ntime series, the 2D kernels in inception block can aggregate the multi-scale intraperiod-variation\n(columns) and interperiod-variation (rows) simultaneously. Besides, the parameter sharing deign\nmakes the model size invariant to the selection of the number of periods k.\n{X\nl,1\n2D\n,··· ,X\nl,k\n2D\n}\n{ bX\nl,1\n2D\n,··· , bX\nl,k\n2D\n}\n{ bX\nl,1\n1D\n,··· , bX\nl,k\n1D\n}\nAdaptive aggregation Finally, we fuse the k different processed features w.r.t their corresponding\namplitudes of the estimated periods as follows:\nbA\nl\u0000 1\nf1\n,··· , bA\nl\u0000 1\nfk\n= SoftMax\n⇣\nA\nl\u0000 1\nf1\n,··· ,A\nl\u0000 1\nfk\n⌘\nX\nl\n1D\n=\nk\nX\ni=1\nbA\nl\u0000 1\nfi\n⇥ bX\nl,i\n1D\n.\n(6)\nSince the temporal variations are involved in the multiple highly-structured 2D tensors, the de-\nsign of TimesBlock can fully capture the multi-scale temporal 2D-variations from multiple views\nsimultaneously, making the representatin learning more effective.\nGenerality in 2D vision backbones Since we transform the 1D time series into 2D space, we can\nalso choose various vision backbones to replace the inception module for representation learning,\nsuch as the widely-used ResNet (He et al., 2016) and ResNext (Xie et al., 2017), advanced ConvNext\n(Liu et al., 2022b) and attention-based models (Liu et al., 2021b). Thus, our temporal 2D-variation\ndesign also bridges the 1D time series and the booming 2D vision backbones, making the time series\nanalysis take advantage of the development of vision community. For efﬁciency, we conduct the main\nexperiments based on the parameter-efﬁcient inception block as Equation 5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "5 Under review as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "ŏ\nReshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResizeResize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s19",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2… Reshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s20",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\n+TimesBlock MSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n, ŏ,\n…MSUnit\nFigure 3: Overall architecture of TimesNet. The TimesBlock (left part) can extract the various\ninformative features from the k different reshaped time series by a shared MSUnit with multi-scale\n2D kernels (right part) and fuse them based on the normalized amplitude values.\ncan conducted representation learning by parameter-efﬁcient inception block conveniently.\nA\nl\u0000 1\n,{f1,··· ,f k },{p1,··· ,p k } =P e r i o d\n\u0000\nX\nl\u0000 1\n1D\n\u0000\n,",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s21",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n= Reshape fi ⇥ pi\n\u0000\nPadding( X\nl\u0000 1\n1D\n)\n\u0000\n,i 2 {1,··· ,k }\nbX\nl,i\n2D\n= Inception\n⇣",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s22",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n⌘\n,i 2 {1,··· ,k }\nbX\nl,i\n1D\n=T r u n c\n⇣\nReshape 1⇥ (fi ⇥ pi )\n⇣\nbX\nl,i\n2D\n⌘⌘\n,i 2 {1,··· ,k }\n(5)\nwhere X\nl,i\n2D\n2 R\n(fi ⇥ pi )⇥ dmodel\nis the transformed 2D tensor. After the transformation, we process the\n2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015), which involves multi-scale\n2D kernels and is one of the most well-acknowledged vision backbone. Then we transform the\nprocessed 2D feature into bX\nl,i\n2D\nback to 1D tensor bX\nl,i\n1D\n2 R\nT ⇥ dmodel\nfor aggregation by Trunc( ·) to\ntruncate the padding series into original length. Note that beneﬁting from the transformation of 1D\ntime series, the 2D kernels in inception block can aggregate the multi-scale intraperiod-variation\n(columns) and interperiod-variation (rows) simultaneously. Besides, the parameter sharing deign\nmakes the model size invariant to the selection of the number of periods k.\n{X\nl, 1\n2D\n,··· ,X\nl,k\n2D\n}\n{ bX\nl, 1\n2D\n,··· , bX\nl,k\n2D\n}\n{ bX\nl, 1\n1D\n,··· , bX\nl,k\n1D\n}\nAdaptive aggregation Finally, we fuse the k different processed features w.r.t their corresponding\namplitudes of the estimated periods as follows:\nbA\nl\u0000 1\nf1\n,··· , bA\nl\u0000 1\nfk\n= SoftMax\n⇣\nA\nl\u0000 1\nf1\n,··· ,A\nl\u0000 1\nfk\n⌘\nX\nl\n1D\n=\nk\nX\ni=1\nbA\nl\u0000 1\nfi\n⇥ bX\nl,i\n1D\n.\n(6)\nSince the temporal variations are involved in the multiple highly-structured 2D tensors, the de-\nsign of TimesBlock can fully capture the multi-scale temporal 2D-variations from multiple views\nsimultaneously, making the representatin learning more effective.\nGenerality in 2D vision backbones Since we transform the 1D time series into 2D space, we can\nalso choose various vision backbones to replace the inception module for representation learning,\nsuch as the widely-used ResNet (He et al., 2016) and ResNext (Xie et al., 2017), advanced ConvNext\n(Liu et al., 2022b) and attention-based models (Liu et al., 2021b). Thus, our temporal 2D-variation\ndesign also bridges the 1D time series and the booming 2D vision backbones, making the time series\nanalysis take advantage of the development of vision community. For efﬁciency, we conduct the main\nexperiments based on the parameter-efﬁcient inception block as Equation 5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s23",
+      "title": "5 Under review as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "ŏ\nReshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s24",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResizeResize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s25",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2… Reshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s26",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\n+TimesBlock MSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n, ŏ,\n…MSUnit\nFigure 3: Overall architecture of TimesNet. The TimesBlock (left part) can extract the various\ninformative features from the k different reshaped time series by a shared MSUnit with multi-scale\n2D kernels (right part) and fuse them based on the normalized amplitude values.\ncan conducted representation learning by parameter-efﬁcient inception block conveniently.\nA\nl\u0000 1\n,{f1,··· ,f k },{p1,··· ,p k } =P e r i o d\n\u0000\nX\nl\u0000 1\n1D\n\u0000\n,",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s27",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n= Reshape fi⇥ pi\n\u0000\nPadding( X\nl\u0000 1\n1D\n)\n\u0000\n,i 2 {1,··· ,k }\nbX\nl,i\n2D\n= Inception\n⇣",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s28",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n⌘\n,i 2 {1,··· ,k }\nbX\nl,i\n1D\n=T r u n c\n⇣\nReshape 1⇥ (fi⇥ pi)\n⇣\nbX\nl,i\n2D\n⌘⌘\n,i 2 {1,··· ,k }\n(5)\nwhere X\nl,i\n2D\n2 R\n(fi⇥ pi)⇥ dmodel\nis the transformed 2D tensor. After the transformation, we process the\n2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015), which involves multi-scale\n2D kernels and is one of the most well-acknowledged vision backbone. Then we transform the\nprocessed 2D feature into bX\nl,i\n2D\nback to 1D tensor bX\nl,i\n1D\n2 R\nT ⇥ dmodel\nfor aggregation by Trunc( ·) to\ntruncate the padding series into original length. Note that beneﬁting from the transformation of 1D\ntime series, the 2D kernels in inception block can aggregate the multi-scale intraperiod-variation\n(columns) and interperiod-variation (rows) simultaneously. Besides, the parameter sharing deign\nmakes the model size invariant to the selection of the number of periods k.\n{X\nl, 1\n2D\n,··· ,X\nl,k\n2D\n}\n{ bX\nl, 1\n2D\n,··· , bX\nl,k\n2D\n}\n{ bX\nl, 1\n1D\n,··· , bX\nl,k\n1D\n}\nAdaptive aggregation Finally, we fuse the k different processed features w.r.t their corresponding\namplitudes of the estimated periods as follows:\nbA\nl\u0000 1\nf1\n,··· , bA\nl\u0000 1\nfk\n= SoftMax\n⇣\nA\nl\u0000 1\nf1\n,··· ,A\nl\u0000 1\nfk\n⌘\nX\nl\n1D\n=\nk\nX\ni=1\nbA\nl\u0000 1\nfi\n⇥ bX\nl,i\n1D\n.\n(6)\nSince the temporal variations are involved in the multiple highly-structured 2D tensors, the de-\nsign of TimesBlock can fully capture the multi-scale temporal 2D-variations from multiple views\nsimultaneously, making the representatin learning more effective.\nGenerality in 2D vision backbones Since we transform the 1D time series into 2D space, we can\nalso choose various vision backbones to replace the inception module for representation learning,\nsuch as the widely-used ResNet (He et al., 2016) and ResNext (Xie et al., 2017), advanced ConvNext\n(Liu et al., 2022b) and attention-based models (Liu et al., 2021b). Thus, our temporal 2D-variation\ndesign also bridges the 1D time series and the booming 2D vision backbones, making the time series\nanalysis take advantage of the development of vision community. For efﬁciency, we conduct the main\nexperiments based on the parameter-efﬁcient inception block as Equation 5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s29",
+      "title": "5 Under review as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "ŏ\nReshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s30",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResizeResize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s31",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2… Reshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s32",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\n+TimesBlock MSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n, ŏ,\n…MSUnit\nFigure 3: Overall architecture of TimesNet. The TimesBlock (left part) can extract the various\ninformative features from the k different reshaped time series by a shared MSUnit with multi-scale\n2D kernels (right part) and fuse them based on the normalized amplitude values.\ncan conducted representation learning by parameter-efﬁcient inception block conveniently.\nA\nl\u0000 1\n,{f1,··· ,f k },{p1,··· ,p k } =P e r i o d\n\u0000\nX\nl\u0000 1\n1D\n\u0000\n,",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s33",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n= Reshape fi⇥ pi\n\u0000\nPadding( X\nl\u0000 1\n1D\n)\n\u0000\n,i 2 {1,··· ,k }\nbX\nl,i\n2D\n= Inception\n⇣",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s34",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n⌘\n,i 2 {1,··· ,k }\nbX\nl,i\n1D\n=T r u n c\n⇣\nReshape 1⇥ (fi⇥ pi)\n⇣\nbX\nl,i\n2D\n⌘⌘\n,i 2 {1,··· ,k }\n(5)\nwhere X\nl,i\n2D\n2 R\n(fi⇥ pi)⇥ dmodel\nis the transformed 2D tensor. After the transformation, we process the\n2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015), which involves multi-scale\n2D kernels and is one of the most well-acknowledged vision backbone. Then we transform the\nprocessed 2D feature into bX\nl,i\n2D\nback to 1D tensor bX\nl,i\n1D\n2 R\nT ⇥ dmodel\nfor aggregation by Trunc( ·) to\ntruncate the padding series into original length. Note that beneﬁting from the transformation of 1D\ntime series, the 2D kernels in inception block can aggregate the multi-scale intraperiod-variation\n(columns) and interperiod-variation (rows) simultaneously. Besides, the parameter sharing deign\nmakes the model size invariant to the selection of the number of periods k.\n{X\nl, 1\n2D\n,··· ,X\nl,k\n2D\n}\n{ bX\nl, 1\n2D\n,··· , bX\nl,k\n2D\n}\n{ bX\nl, 1\n1D\n,··· , bX\nl,k\n1D\n}\nAdaptive aggregation Finally, we fuse the k different processed features w.r.t their corresponding\namplitudes of the estimated periods as follows:\nbA\nl\u0000 1\nf1\n,··· , bA\nl\u0000 1\nfk\n= SoftMax\n⇣\nA\nl\u0000 1\nf1\n,··· ,A\nl\u0000 1\nfk\n⌘\nX\nl\n1D\n=\nk\nX\ni=1\nbA\nl\u0000 1\nfi\n⇥ bX\nl,i\n1D\n.\n(6)\nSince the temporal variations are involved in the multiple highly-structured 2D tensors, the de-\nsign of TimesBlock can fully capture the multi-scale temporal 2D-variations from multiple views\nsimultaneously, making the representatin learning more effective.\nGenerality in 2D vision backbones Since we transform the 1D time series into 2D space, we can\nalso choose various vision backbones to replace the inception module for representation learning,\nsuch as the widely-used ResNet (He et al., 2016) and ResNext (Xie et al., 2017), advanced ConvNext\n(Liu et al., 2022b) and attention-based models (Liu et al., 2021b). Thus, our temporal 2D-variation\ndesign also bridges the 1D time series and the booming 2D vision backbones, making the time series\nanalysis take advantage of the development of vision community. For efﬁciency, we conduct the main\nexperiments based on the parameter-efﬁcient inception block as Equation 5.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s35",
+      "title": "5 Under review as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "ŏ\nReshape Back\nQ K V\nFFT",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s36",
+      "title": "FFT",
+      "level": 1,
+      "text": "Inverse FFT\nTime Delay Agg\nLinear Linear Linear\nLinear\nConcat\nConjugate\nResizeResize\nT op k\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s37",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nTime Domain\nFrequency Domain\nValue Amplitude\nPeriod 1\nPeriod 2…\nReshaped\nTime\nSeries\nҁ\u0014҂\nFFT for Periods Reshape\nPeriod 1\nPeriod 2\nPeriod 1\nLength\nPeriod 2\nLength\nKernel 1\nKernel 2\nKernel M\nConv2D\n…\n*\n*\n*\n+\n…\nReshaped\nTime\nSeries\nҁ\u0015҂\nҁ\u0014҂\nҁ\u0015҂\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nReshape\nFFT for Periods",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s38",
+      "title": "Process for Period i",
+      "level": 1,
+      "text": "Kernel 1\nKernel 2\n…\nKernel M\nDynamic \nKernel Bank\nConv & \nPooling\nReshape\nBack\n…\n+\n+\nN\nSoftmax\nX’\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\nDynamic Model\n+TimesBlock Dynamic Model\nBlock mBlock 2Block 1\nConv2D & \nAvgPool\n*\n*\n* +\n…\nBlock \nChoices\nConv2D\nResNet\nConvNext\n…\nAttention\nTimesBlock\nTimesBlock\nTimesBlock\n+\n+\n+\nFFT for PeriodsSoftmax\nReshape Reshape\nBack\nk\n+TimesBlock MSUnit\n3x3 Conv\n+\n5x5 Conv7x7 Conv1x1 Conv\nReshaped Time Series\n, ŏ,\n…MSUnit\nFigure 3: Overall architecture of TimesNet. The TimesBlock (left part) can extract the various\ninformative features from the k different reshaped time series by a shared MSUnit with multi-scale\n2D kernels (right part) and fuse them based on the normalized amplitude values.\ncan conducted representation learning by parameter-efﬁcient inception block conveniently.\nA\nl\u0000 1\n,{f1 ,··· ,f k },{p1 ,··· ,p k } =P e r i o d\n\u0000\nX\nl\u0000 1\n1D\n\u0000\n,",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s39",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n= Reshape fi ⇥ pi\n\u0000\nPadding( X\nl\u0000 1\n1D\n)\n\u0000\n,i 2 {1,··· ,k }\nbX\nl,i\n2D\n= Inception\n⇣",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s40",
+      "title": "l,i",
+      "level": 1,
+      "text": "2D\n⌘\n,i 2 {1,··· ,k }\nbX\nl,i\n1D\n=T r u n c\n⇣\nReshape 1⇥ (fi ⇥ pi )\n⇣\nbX\nl,i\n2D\n⌘⌘\n,i 2 {1,··· ,k }\n(5)\nwhere X\nl,i\n2D\n2 R\n(fi ⇥ pi )⇥ d model\nis the transformed 2D tensor. After the transformation, we process the\n2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015), which involves multi-scale\n2D kernels and is one of the most well-acknowledged vision backbone. Then we transform the\nprocessed 2D feature into bX\nl,i\n2D\nback to 1D tensor bX\nl,i\n1D\n2 R\nT ⇥ d model\nfor aggregation by Trunc( ·) to\ntruncate the padding series into original length. Note that beneﬁting from the transformation of 1D\ntime series, the 2D kernels in inception block can aggregate the multi-scale intraperiod-variation\n(columns) and interperiod-variation (rows) simultaneously. Besides, the parameter sharing deign\nmakes the model size invariant to the selection of the number of periods k.\n{X\nl, 1\n2D\n,··· ,X\nl,k\n2D\n}\n{ bX\nl, 1\n2D\n,··· , bX\nl,k\n2D\n}\n{ bX\nl, 1\n1D\n,··· , bX\nl,k\n1D\n}\nAdaptive aggregation Finally, we fuse the k different processed features w.r.t their corresponding\namplitudes of the estimated periods as follows:\nbA\nl\u0000 1\nf1\n,··· , bA\nl\u0000 1\nfk\n= SoftMax\n⇣\nA\nl\u0000 1\nf1\n,··· ,A\nl\u0000 1\nfk\n⌘\nX\nl\n1D\n=\nk\nX\ni=1\nbA\nl\u0000 1\nfi\n⇥ bX\nl,i\n1D\n.\n(6)\nSince the temporal variations are involved in the multiple highly-structured 2D tensors, the de-\nsign of TimesBlock can fully capture the multi-scale temporal 2D-variations from multiple views\nsimultaneously, making the representatin learning more effective.\nGenerality in 2D vision backbones Since we transform the 1D time series into 2D space, we can\nalso choose various vision backbones to replace the inception module for representation learning,\nsuch as the widely-used ResNet (He et al., 2016) and ResNext (Xie et al., 2017), advanced ConvNext\n(Liu et al., 2022b) and attention-based models (Liu et al., 2021b). Thus, our temporal 2D-variation\ndesign also bridges the 1D time series and the booming 2D vision backbones, making the time series\nanalysis take advantage of the development of vision community. For efﬁciency, we conduct the main\nexperiments based on the parameter-efﬁcient inception block as Equation 5.\n5\nFigure 3: Overall architecture of TimesNet. TimesNet is stacked by TimesBlocks in a residual way.\nTimesBlocks can capture various temporal 2D-variations from k different reshaped tensors by a\nparameter-efﬁcient inception block in 2D space and fuse them based on normalized amplitude values.\ninto 2D space and obtain a set of 2D tensors, from which we can obtain informative representations\nby parameter-efﬁcient inception block conveniently. The process is formalized as follows:\nAl−1,{f1,··· ,f k},{p1,··· ,p k} = Period\n(\nXl−1\n1D\n)\n,\nXl,i\n2D = Reshape pi,fi\n(\nPadding(Xl−1\n1D )\n)\n, i∈{ 1,··· ,k}\nˆXl,i\n2D = Inception\n(\nXl,i\n2D\n)\n, i∈{ 1,··· ,k}\nˆXl,i\n1D = Trunc\n(\nReshape1,(pi×fi)\n(\nˆXl,i\n2D\n))\n, i∈{ 1,··· ,k},\n(5)\nwhere Xl,i\n2D∈ Rpi×fi×dmodel is thei-th transformed 2D tensor. After the transformation, we process\nthe 2D tensor by a parameter-efﬁcient inception block (Szegedy et al., 2015) as Inception(·), which\ninvolves multi-scale 2D kernels and is one of the most well-acknowledged vision backbones. Then\nwe transform the learned 2D representations ˆXl,i\n2D back to 1D space ˆXl,i\n1D∈ RT×dmodel for aggregation,\nwhere we employ Trunc(·) to truncate the padded series with length (pi×fi) into original lengthT .\nNote that beneﬁting from the transformation of 1D time series, the 2D kernels in the inception\nblock can aggregate the multi-scale intraperiod-variation (columns) and interperiod-variation (rows)\nsimultaneously, covering both adjacent time points and adjacent periods. Besides, we adopt a shared\ninception block for different reshaped 2D tensors{Xl,1\n2D,··· , Xl,k\n2D} to improve parameter efﬁciency,\nwhich can make the model size invariant to the selection of hyper-parameterk.\nAdaptive aggregation Finally, we need to fusek different 1D-representations{ˆXl,1\n1D,··· ,ˆXl,k\n1D}\nfor the next layer. Inspired by Auto-Correlation (Wu et al., 2021), the amplitudes A can reﬂect the\nrelative importance of selected frequencies and periods, thereby corresponding to the importance of\neach transformed 2D tensor. Thus, we aggregate the 1D-representations based on the amplitudes:\nˆAl−1\nf1\n,··· ,ˆAl−1\nfk\n= Softmax\n(\nAl−1\nf1\n,··· , Al−1\nfk\n)\nXl\n1D =\nk∑\ni=1\nˆAl−1\nfi\n×ˆXl,i\n1D.\n(6)\nSince the variations within and between periods are already involved in multiple highly-structured\n2D tensors, TimesBlock can fully capture multi-scale temporal 2D-variations simultaneously. Thus,\nTimesNet can achieve a more effective representation learning than directly from 1D time series.\nGenerality in 2D vision backbones Beneﬁting from the transformation of 1D time series into\ntemporal 2D-variations, we can choose various computer vision backbones to replace the inception\nblock for representation learning, such as the widely-used ResNet (He et al., 2016) and ResNeXt\n(Xie et al., 2017), advanced ConvNeXt (Liu et al., 2022b) and attention-based models (Liu et al.,\n2021b). Thus, our temporal 2D-variation design also bridges the 1D time series to the booming 2D\nvision backbones, making the time series analysis take advantage of the development of computer\nvision community. In general, more powerful 2D backbones for representation learning will bring\nbetter performance. Considering both performance and efﬁciency (Figure 4 right), we conduct the\nmain experiments based on the parameter-efﬁcient inception block as shown in Equation 5.",
+      "refs": {
+        "figures": [
+          "f4",
+          "f3"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s41",
+      "title": "5 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s42",
+      "title": "4 E XPERIMENTS",
+      "level": 1,
+      "text": "To verify the generality of TimesNet, we extensively experiment on ﬁve mainstream analysis tasks,\nincluding short- and long-term forecasting, imputation, classiﬁcation and anomaly detection.\nImplementation Table 1 is a summary of benchmarks. More details about the dataset, experiment\nimplementation and model conﬁguration can be found in Appendix A.\nTable 1: Summary of experiment benchmarks.\nTasks Benchmarks Metrics Series Length\nForecasting\nLong-term: ETT (4 subsets), Electricity, MSE, MAE 96∼720\nTrafﬁc, Weather, Exchange, ILI (ILI: 24∼60)\nShort-term: M4 (6 subsets) SMAPE, MASE, OW A 6∼48\nImputation ETT (4 subsets), Electricity, Weather MSE, MAE 96\nClassiﬁcation UEA (10 subsets) Accuracy 29∼1751\nAnomaly Detection SMD, MSL, SMAP, SWaT, PSM Precision, Recall, F1-Socre 100\nBaselines Since we attempt to propose a foundation model for time series analysis, we extensively\ncompare the well-acknowledged and advanced models in all ﬁve tasks, including the RNN-based mod-\nels: LSTM (1997), LSTNet (2018) and LSSL (2022); CNN-based Model: TCN (2019); MLP-based\nmodels: LightTS (2022) and DLinear (2023); Transformer-based models: Reformer (2020), Informer\n(2021), Pyraformer (2021a), Autoformer (2021), FEDformer (2022), Non-stationary Transformer\n(2022a) and ETSformer (2022). Besides, we also compare the state-of-the-art models for each\nspeciﬁc task, such as N-HiTS (2022) and N-BEATS (2019) for short-term forecasting, Anomaly\nTransformer (2021) for anomaly detection, Rocket (2020) and Flowformer (2022) for classiﬁcation\nand etc. Overall, more than 15 baselines are included for a comprehensive comparison.\n0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1084.5\n85.0\n85.5\n86.0\n86.5\n87.0\n30 40 50 60 70 80 90 100\n84.5\n85\u00110\n85\u00115\n86.0\n86.5",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s43",
+      "title": "87.0 F1-Score",
+      "level": 2,
+      "text": "Training Time (iter/ms)\nConvNext\n2.196MB, 39.2ms \nInception (sharing)\n0.067MB, 43.2ms \nResNet\n0.024MB, 30.5ms \nInception (independent)\n0.331MB, 60.2ms \nResNext\n0.103MB, 103.9ms \nSwinBlock\n0.052MB, 103.6ms \n0.25MB1\u001100MB4.00MB0.63MB\nParams Count\nLong-term Forecasting\n (MSE)\nShort-term Forecasting\n(SMAPE)\nAnomaly Detection\n (F1-Score)\nImputation\n (MSE)\nClassiﬁcation\n(Accuracy)\n0.50\n1.10\n1.7011.00\n17.40\n14.20\n86.00\n83.00\n79.00\n0.05\n0.11\n75.00\n69.00\n63.00",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s44",
+      "title": "0.17 TimesNet (Ours)",
+      "level": 2,
+      "text": "Stationary (2022)\nFEDformer (2022)\nLightTS (2022)\nDLinear (2022)\nAutoformer (2021)\nInformer (2021)\nReformer (2020)\nAnomaly Detection\nETSformer (2022)\nFigure 4: Model performance comparison (left) and generality in different vision backbones (right).",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s45",
+      "title": "4.1 M AIN RESULTS",
+      "level": 2,
+      "text": "As a foundation model, TimesNet achieves consistent state-of-the-art performance on ﬁve mainstream\nanalysis tasks compared with other customized models (Figure 4 left). The full efﬁciency comparison\nis provided in Table 11 of Appendix. Besides, by replacing the inception block with more powerful\nvision backbones, we can further promote the performance of TimesNet (Figure 4 right), conﬁrming\nthat our design can make time series analysis take advantage of booming vision backbones.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s46",
+      "title": "4.2 S HORT- AND LONG -TERM FORECASTING",
+      "level": 2,
+      "text": "Setups Time series forecasting is essential in weather forecasting, trafﬁc and energy consumption\nplanning. To fully evaluate the model performance in forecasting, we adopt two types of benchmarks,\nincluding long-term and short-term forecasting. Especially for the long-term setting, we follow the\nbenchmarks used in Autoformer (2021), including ETT (Zhou et al., 2021), Electricity (UCI), Trafﬁc\n(PeMS), Weather (Wetterstation), Exchange (Lai et al., 2018) and ILI (CDC), covering ﬁve real-world\napplications. For the short-term dataset, we adopt the M4 (Spyros Makridakis, 2018), which contains\nthe yearly, quarterly and monthly collected univariate marketing data. Note that each dataset in the\nlong-term setting only contains one continuous time series, where we obtain samples by sliding\nwindow, while M4 involves 100,000 different time series collected in different frequencies.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s47",
+      "title": "6 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Table 2: Long-term forecasting task. The past sequence length is set as 36 for ILI and 96 for the\nothers. All the results are averaged from 4 different prediction lengths, that is{24, 36, 48, 60} for ILI\nand{96, 192, 336, 720} for the others. See Table 13 in Appendix for the full results.\nModels TimesNetETSformerLightTS DLinearFEDformerStationaryAutoformerPyraformerInformerLogTransReformer\n(Ours) (2022) (2022) (2023) (2022) (2022a) (2021) (2021a) (2021) (2019) (2020)\nMetric MSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAE\nETTm10.4000.4060.4290.4250.4350.4370.4030.4070.4480.4520.4810.4560.5880.5170.6910.6070.9610.7340.9290.7250.7990.671\nETTm20.2910.3330.2930.3420.4090.4360.3500.4010.3050.3490.3060.3470.3270.3711.4980.8691.4100.8101.5350.9001.4790.915\nETTh10.4580.4500.5420.5100.4910.4790.4560.4520.4400.4600.5700.5370.4960.4870.8270.7031.0400.7951.0720.8371.0290.805\nETTh20.4140.4270.4390.4520.6020.5430.5590.5150.4370.4490.5260.5160.4500.4590.8260.7034.4311.7292.6861.4946.7362.191\nElectricity0.1920.2950.2080.3230.2290.3290.2120.3000.2140.3270.1930.2960.2270.3380.3790.4450.3110.3970.2720.3700.3380.422\nTrafﬁc0.6200.3360.6210.3960.6220.3920.6250.3830.6100.3760.6240.3400.6280.3790.8780.4690.7640.4160.7050.3950.7410.422\nWeather0.2590.2870.2710.3340.2610.3120.2650.3170.3090.3600.2880.3140.3380.3820.9460.7170.6340.5480.6960.6020.8030.656\nExchange0.4160.4430.4100.4270.3850.4470.3540.4140.5190.5000.4610.4540.6130.5391.9131.1591.5500.9981.4020.9681.2800.932\nILI 2.1390.9312.4971.0047.3822.0032.6161.0902.8471.1442.0770.9143.0061.1617.6352.0505.1371.5444.8391.4854.7241.445\nTable 3: Short-term forecasting task on M4. The prediction lengths are in [6, 48] and results are\nweighted averaged from several datasets under different sample intervals. See Table 14 for full results.\nModels TimesNetN-HiTSN-BEATSETSformerLightTSDLinearFEDformerStationaryAutoformerPyraformerInformerLogTransReformer\n(Ours) (2022) (2019) (2022) (2022)(2023) (2022) (2022a) (2021) (2021a) (2021) (2019) (2020)\nSMAPE 11.829 11.927 11.851 14.718 13.52513.639 12.840 12.780 12.909 16.987 14.086 16.018 18.200\nMASE 1.585 1.613 1.599 2.408 2.111 2.095 1.701 1.756 1.771 3.265 2.718 3.010 4.223\nOW A 0.851 0.861 0.855 1.172 1.051 1.051 0.918 0.930 0.939 1.480 1.230 1.378 1.775\nResults TimesNet shows great performance in both long-term and short-term settings (Table 2–3).\nConcretely, TimesNet achieves state-of-the-art in more than 80% of cases in long-term forecasting\n(Table 13). For the M4 dataset, since the time series are collected from different sources, the temporal\nvariations can be quite diverse, making forecasting much more challenging. Our model still performs\nbest in this task, surpassing extensive advanced MLP-based and Transformer-based models.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t2",
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s48",
+      "title": "4.3 I MPUTATION",
+      "level": 2,
+      "text": "Setups Real-world systems always work continuously and are monitored by automatic observation\nequipment. However, due to malfunctions, the collected time series can be partially missing, making\nthe downstream analysis difﬁcult. Thus, imputation is widely-used in practical applications. In this\npaper, we select the datasets from the electricity and weather scenarios as our benchmarks, including\nETT (Zhou et al., 2021), Electricity (UCI) and Weather (Wetterstation), where the data-missing\nproblem happens commonly. To compare the model capacity under different proportions of missing\ndata, we randomly mask the time points in the ratio of{12.5%, 25%, 37.5%, 50%}.\nResults Due to the missing time points, the imputation task requires the model to discover underly-\ning temporal patterns from the irregular and partially observed time series. As shown in Table 4, our\nproposed TimesNet still achieves the consistent state-of-the-art in this difﬁcult task, verifying the\nmodel capacity in capturing temporal variation from extremely complicated time series.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s49",
+      "title": "4.4 C LASSIFICATION",
+      "level": 2,
+      "text": "Setups Time series classiﬁcation can be used in recognition and medical diagnosis (Moody et al.,\n2011). We adopt the sequence-level classiﬁcation to verify the model capacity in high-level represen-\ntation learning. Concretely, we select 10 multivariate datasets from UEA Time Series Classiﬁcation\nArchive (Bagnall et al., 2018), covering the gesture, action and audio recognition, medical diagnosis\nby heartbeat monitoring and other practical tasks. Then, we pre-process the datasets following the\ndescriptions in (Zerveas et al., 2021), where different subsets have different sequence lengths.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s50",
+      "title": "7 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Table 4: Imputation task. We randomly mask{12.5%, 25%, 37.5%, 50%} time points in length-96\ntime series. The results are averaged from 4 different mask ratios. See Table 16 for full results.\nModels TimesNetETSformerLightTS DLinearFEDformerStationaryAutoformerPyraformerInformerLogTransReformer\n(Ours) (2022) (2022) (2023) (2022) (2022a) (2021) (2021a) (2021) (2019) (2020)\nMask RatioMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAEMSEMAE\nETTm10.0270.1070.1200.2530.1040.2180.0930.2060.0620.1770.0360.1260.0510.1500.7170.5700.0710.1880.0500.1540.0550.166\nETTm20.0220.0880.2080.3270.0460.1510.0960.2080.1010.2150.0260.0990.0290.1050.4650.5080.1560.2920.1190.2460.1570.280\nETTh1 0.0780.1870.2020.3290.2840.3730.2010.3060.1170.2460.0940.2010.1030.2140.8420.6820.1610.2790.2190.3320.1220.245\nETTh2 0.0490.1460.3670.4360.1190.2500.1420.2590.1630.2790.0530.1520.0550.1561.0790.7920.3370.4520.1860.3180.2340.352\nElectricity0.0920.2100.2140.3390.1310.2620.1320.2600.1300.2590.1000.2180.1010.2250.2970.3820.2220.3280.1750.3030.2000.313\nWeather0.0300.0540.0760.1710.0550.1170.0520.1100.0990.2030.0320.0590.0310.0570.1520.2350.0450.1040.0390.0760.0380.087\nAverage Accuracy (%)\n67.0\n66.0\n72.5\n73.6\n48.6\n70.3\n71.971.572.1\n70.871.1\n73.0\n67.5\n70.4\nDTWXGBoostRocketLSTM TCNTrans.Re.In.Pyra.Auto.Station.FED.ETS.\n72.7",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s51",
+      "title": "70.7 DLinearLightTSTimesNet",
+      "level": 2,
+      "text": "Classical Methods\nRNN-Based\nTCN-Based\nTransformer-Based\nMLP-Based\nOurs\nLSTNetLSSL\n71.8\n70.9\nFlow.\n71.0\nFigure 5: Model comparison in classiﬁcation. “∗.” in the Transform-\ners indicates the name of∗former. The results are averaged from 10\nsubsets of UEA. See Table 17 in Appendix for full results.\nResults As shown in Figure 5,\nTimesNet achieves the best perfor-\nmance with an average accuracy\nof 73.6%, surpassing the previous\nstate-of-the-art classical method\nRocket (72.5%) and deep model\nFlowformer (73.0%). It is also no-\ntable that the MLP-based model\nDLinear fails in this classiﬁcation\ntask (67.5%), which performs well\nin some time series forecasting\ndatasets. This is because DLinear\nonly adopts a one-layer MLP model\non the temporal dimension, which\nmight be suitable for some autore-\ngressive tasks with ﬁxed temporal\ndependencies but will degenerate a lot in learning high-level representations. In contrast, TimesNet\nuniﬁes the temporal 2D-variation in 2D space, which is convenient to learn informative representation\nby 2D kernels, thereby beneﬁting the classiﬁcation task that requires hierarchical representations.",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s52",
+      "title": "4.5 A NOMALY DETECTION",
+      "level": 2,
+      "text": "Setups Detecting anomalies from monitoring data is vital to industrial maintenance. Since the\nanomalies are usually hidden in the large-scale data, making the data labeling hard, we focus on\nunsupervised time series anomaly detection, which is to detect the abnormal time points. We compare\nmodels on ﬁve widely-used anomaly detection benchmarks: SMD (Su et al., 2019), MSL (Hundman\net al., 2018), SMAP (Hundman et al., 2018), SWaT (Mathur & Tippenhauer, 2016), PSM (Abdulaal\net al., 2021), covering service monitoring, space & earth exploration, and water treatment applications.\nFollowing the pre-processing methods in Anomaly Transformer (2021), we split the dataset into\nconsecutive non-overlapping segments by sliding window. In previous works, the reconstruction is a\nclassical task for unsupervised point-wise representation learning, where the reconstruction error is a\nnatural anomaly criterion. For a fair comparison, we only change the base models for reconstruction\nand use the classical reconstruction error as the shared anomaly criterion for all experiments.\nResults Table 5 demonstrates that TimesNet still achieves the best performance in anomaly detec-\ntion, outperforming the advanced Transformer-based models FEDformer (2022) and Autoformer\n(2021). The canonical Transformer performs worse in this task (averaged F1-score 76.88%). This\nmay come from that anomaly detection requires the model to ﬁnd out the rare abnormal temporal\npatterns (Lai et al., 2021), while the vanilla attention mechanism calculates the similarity between\neach pair of time points, which can be distracted by the dominant normal time points. Besides, by\ntaking the periodicity into consideration, TimesNet, FEDformer and Autoformer all achieve great\nperformance. Thus, these results also demonstrate the importance of periodicity analysis, which can\nhighlight variations that violate the periodicity implicitly, further beneﬁting the anomaly detection.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s53",
+      "title": "8 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "Table 5: Anomaly detection task. We calculate the F1-score (as %) for each dataset. *. means the\n*former. A higher value of F1-score indicates a better performance. See Table 15 for full results.\nModels TimesNetTimesNetETS. FED.LightTSDLinearStationaryAuto. Pyra. Anomaly*In. Re. LogTransTrans.\n(ResNeXt) (Inception) (2022)(2022)(2022) (2023) (2022a)(2021)(2021a) (2021) (2021)(2020) (2019) (2017)\nSMD 85.81 85.12 83.13 85.08 82.53 77.10 84.72 85.11 83.04 85.49 81.65 75.32 76.21 79.56\nMSL 85.15 84.18 85.03 78.57 78.95 84.88 77.50 79.05 84.86 83.31 84.06 84.40 79.57 78.68\nSMAP 71.52 70.85 69.50 70.76 69.21 69.26 71.09 71.12 71.09 71.18 69.92 70.40 69.97 69.70\nSWaT 91.74 92.10 84.91 93.19 93.33 87.52 79.88 92.74 91.78 83.10 81.43 82.80 80.52 80.37\nPSM 97.47 95.21 91.76 97.23 97.15 93.55 97.29 93.29 82.08 79.40 77.10 73.61 76.74 76.07\nAvg F1 86.34 85.49 82.87 84.97 84.23 82.46 82.08 84.26 82.57 80.50 78.83 77.31 76.60 76.88\n∗ We replace the joint criterion in Anomaly Transformer (2021) with reconstruction error for fair comparison.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t5"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s54",
+      "title": "4.6 M ODEL ANALYSIS",
+      "level": 2,
+      "text": "Representation analysis We attempt to explain model performance from the representation learn-\ning aspect. From Figure 6, we can ﬁnd that the better performance in forecasting and anomaly\ndetection corresponds to the higher CKA similarity (2019), which is opposite to the imputation and\nclassiﬁcation tasks. Note that the lower CKA similarity means that the representations are distin-\nguishing among different layers, namely hierarchical representations. Thus, these results also indicate\nthe property of representations that each task requires. As shown in Figure 6, TimesNet can learn\nappropriate representations for different tasks, such as low-level representations for forecasting and\nreconstruction in anomaly detection, and hierarchical representations for imputation and classiﬁcation.\nIn contrast, FEDformer (2022) performs well in forecasting and anomaly detection tasks but fails in\nlearning hierarchical representations, resulting in poor performance in imputation and classiﬁcation.\nThese results also verify the task-generality of our proposed TimesNet as a foundation model.\n0.86 0.88 0.90 0.92 0.94 0.96 0.98 1.00\nCKA Similarity\n76\n78\n80\n82\n84\n86F1 / % r=0.92\nAnomaly Detection\nAutoformer\nFEDformer\nInformer\nStationary\nPyraformer\nLogTrans\nReformer\nAnomaly\nTransformer\nOurs\n0.76 0.78 0.80 0.82 0.84 0.86 0.88 0.90 0.92\nCKA Similarity\n81\n82\n83\n84\n85\n86\n87Acc / %\nr=°0.82\nTime Series Classiﬁcation\nAutoformer\nFEDformer\nInformer\nFlowformer\nPyraformer\nTransformer\nReformer\nStationary\nOurs\n0.6 0.7 0.8 0.9 1.0 1.1\nCKA Similarity\n0.05\n0.10\n0.15\n0.20\n0.25",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s55",
+      "title": "0.30 MSE",
+      "level": 2,
+      "text": "r=0.66\nTime Series Imputation\nAutoformer\nFEDformer\nInformer\nStationary\nPyraformer\nLogTrans\nReformer\nOurs\n0.84 0.86 0.88 0.90 0.92 0.94 0.96 0.98 1.00\nCKA Similarity\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s56",
+      "title": "1.0 MSE",
+      "level": 2,
+      "text": "r=°0.83\nTime Series Forecast\nAutoformer\nFEDformer\nInformer\nStationary\nPyraformer\nLogTrans\nReformer\nOurs\n0.840.860.880.900.920.940.960.981.00 0.6 0.7 0.8 0.9 1.0 1.1 0.760.780.800.820.840.860.880.900.920.860.880.900.920.940.960.981.00\n0.2\n0.3\n0.4\n0.5\n0.6\n0.7\n0.8\n0.9\n1.0\n0.05\n0.10\n0.15\n0.20\n0.25\n0.30\n81\n83\n82\n84\n85\n86\n87\n76\n78\n80\n82\n84",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s57",
+      "title": "86 MSE",
+      "level": 1,
+      "text": "MSE\nAccuracy \u000b\b\f\nF1-Score (%)\nCKA Similarity CKA Similarity CKA Similarity CKA Similarity\n(a) Forecasting (Weather input-96-predict-336) (b) Imputation (Electricity Mask 37.5%) (c) Classiﬁcation (PEMS-SF) (d) Anomaly Detection (SMD) \nFigure 6: Representation analysis in four tasks. For each model, we calculate the centered kernel\nalignment (CKA) similarity (2019) between representations from the ﬁrst and the last layers. A\nhigher CKA similarity indicates more similar representations. TimesNet is marked by red stars.\n0 5 10\n0\n5\n10\n15\n20\n0.8\n°1.0\n0 5\n0\n5\n10\n15\n20\n25\n30\n35\n0.8\n°1.0\n0 3\n0\n10\n20\n30\n40\n50\n60\n70\n0.8\n°1.0\n05101520\n0\n2\n4\n6\n8\n10\n12\n14\n1\n°1\nValue\nBar\n-1.0 1.0Frequency=5\nFrequency=9\nFrequency=15Period\n=72 Period\n=40 Period\n=24\n05101520\n0\n2\n4\n6\n8\n10\n12\n14\n1\n°1\n0 50 100 150 200 250 300 350\n°4\n°3\n°2\n°1\n0\n1\n0 50 100 150 200 250 300 350\n1.6\n1.8\n2.0\n2.2\n2.4\n2.6\n2.8\n3.0\n3.2\n0 50 100 150 200 250 300 350\n°1.0\n°0.8\n°0.6\n°0.4\n°0.2\n0.0\n0.2\n0.4\n0.6\n0 5 10 15 20 25 30 35\n0\n3\n5\n7\n1\n°1\nID Series 2D-variations\nETTh1 ElectrictyExchangeWeather\n0 20 40 60 80 100\n0\n2\n1\n°1\n0 5 10 15 20 25 30 35 40\n0\n5\n1\n°1\n0 10 20 30 40 50\n0\n5\n1\n°1\n0 5 10 15 20\n0\n2\n4\n6\n8\n10\n12\n14\n1\n°1\n0 10 20 30 40 50 60 70 80\n0\n3\n1\n°1\n0 10 20 30 40 50 60 70\n0\n3\n0.5\n°1.0\n0 5 10 15 20 25 30 35 40\n0\n5\n1\n°1\n0 10 20 30 40 50\n0\n5\n1\n°1\n0 50 100 150 200 250 300 350\n°1.0\n°0.5\n0.0\n0.5\n1.0\n1.5\n2.0\n0 5 10 15 20\n0\n2\n4\n6\n8\n10\n12\n14\n1\n°1\n0 5 10 15\n0\n3\n5\n7\n10\n13\n15\n18\n20\n1\n°1\n0 5\n0\n5\n10\n15\n20\n25\n30\n35\n1\n°1\n0 5 10 15 20\n0\n2\n4\n6\n8\n10\n12\n14\n0.8\n°1.0\n0 5 10 15 20 25\n0\n2\n4\n6\n8\n10\n0.8\n°1.0\n0 5 10 15 20 25 30 35 40\n0\n5\n0.8\n°1.0\nPeriod\nFrequency\nWeight\n0 50 100 150 200 250 300 350\n°1.0\n°0.5\n0.0\n0.5\n1.0\n1.5\n2.0\n05101520\n0\n2\n4\n6\n8\n10\n12\n14\n1\n°1\n051015\n0\n3\n5\n7\n10\n13\n15\n18\n20\n1\n°1\n05\n0\n5\n10\n15\n20\n25\n30\n35\n1\n°1\n0 50 100150200250300350\nTime\n24x15 16x13 10x36\nFrequency 1=15\nFrequency 2=13\nFrequency 3=36\nValue Bar\n-1.0\n-0.5\n0.0\n0.5\n1.0\n1.5\n(a) 1D time series (b) Temporal 2D-variations\n-1.0 1.0\n0 50 100 150 200 250 300 350\n°1\n0\n1\n2\n0 20 40 60 80 100 120 140 160 180\n0\n10\n20\n30\n40\ntop_3 freq=5,9,15\nTime domain\nFrequency domain\n0 50 100 150 200 250 300 350\n°1\n0\n1\n2\n20 40 60 80 100 120 140 160 180\n0\n10\n20\n30\n40\n0\n40\n020406080100120140160180\n0 50 100 150 200 250 300 350°1.0\n°0.5\n0.0\n0.5\n1.0\n1.5\n2.0\n0 50 100 150 200 250 300 350\n-1.0",
+      "refs": {
+        "figures": [
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s58",
+      "title": "1.5 Electricity",
+      "level": 2,
+      "text": "Figure 7: A case of temporal 2D-variations.\nTemporal 2D-variations We provide a case study\nof temporal 2D-variations in Figure 7. We can ﬁnd\nthat TimesNet can capture the multi-periodicities pre-\ncisely. Besides, the transformed 2D tensor is highly\nstructured and informative, where the columns and\nrows can reﬂect the localities between time points\nand periods respectively, supporting our motivation\nin adopting 2D kernels for representation learning.\nSee Appendix D for more visualizations.",
+      "refs": {
+        "figures": [
+          "f7"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s59",
+      "title": "5 C ONCLUSION AND FUTURE WORK",
+      "level": 1,
+      "text": "This paper presents the TimesNet as a task-general foundation model for time series analysis. Mo-\ntivated by the multi-periodicity, TimesNet can ravel out intricate temporal variations by a modular\narchitecture and capture intraperiod- and interperiod-variations in 2D space by a parameter-efﬁcient\ninception block. Experimentally, TimesNet shows great generality and performance in ﬁve main-\nstream analysis tasks. In the future, we will further explore large-scale pre-training methods in time\nseries, which utilize TimesNet as the backbone and can generally beneﬁt extensive downstream tasks.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s60",
+      "title": "9 Published as a conference paper at ICLR 2023",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Multi-periodicity and temporal 2D-variation of time series. Each period involves the"
+    },
+    {
+      "id": "f2",
+      "caption": "A univariate example to illustrate 2D structure in time series. By discovering the periodicity,"
+    },
+    {
+      "id": "f3",
+      "caption": "Overall architecture of TimesNet. The TimesBlock (left part) can extract the various"
+    },
+    {
+      "id": "f4",
+      "caption": "Model performance comparison (left) and generality in different vision backbones (right)."
+    },
+    {
+      "id": "f5",
+      "caption": "Model comparison in classiﬁcation. “∗.” in the Transform-"
+    },
+    {
+      "id": "f6",
+      "caption": "Representation analysis in four tasks. For each model, we calculate the centered kernel"
+    },
+    {
+      "id": "f7",
+      "caption": "A case of temporal 2D-variations."
+    },
+    {
+      "id": "f8",
+      "caption": "Sensitivity analysis of hyper-parameters k in imputation and anomaly detection task."
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "Summary of experiment benchmarks."
+    },
+    {
+      "id": "t2",
+      "caption": "Long-term forecasting task. The past sequence length is set as 36 for ILI and 96 for the"
+    },
+    {
+      "id": "t3",
+      "caption": "Short-term forecasting task on M4. The prediction lengths are in [6, 48] and results are"
+    },
+    {
+      "id": "t4",
+      "caption": "Imputation task. We randomly mask{12.5%, 25%, 37.5%, 50%} time points in length-96"
+    },
+    {
+      "id": "t5",
+      "caption": "Anomaly detection task. We calculate the F1-score (as %) for each dataset. *. means the"
+    },
+    {
+      "id": "t6",
+      "caption": "Dataset descriptions. The dataset size is organized in (Train, Validation, Test)."
+    },
+    {
+      "id": "t7",
+      "caption": "Experiment conﬁguration of TimesNet. All the experiments use the ADAM (2015) optimizer"
+    }
+  ],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e1",
+      "latex_or_text": "(1)"
+    },
+    {
+      "id": "e5",
+      "latex_or_text": "(5)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e7",
+      "latex_or_text": "Equation (7)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": true,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": true,
+    "section_roles": {
+      "intro": false,
+      "related": false,
+      "method": false,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 8,
+    "n_tables": 7,
+    "n_algorithms": 0,
+    "n_equations": 4
+  }
+}

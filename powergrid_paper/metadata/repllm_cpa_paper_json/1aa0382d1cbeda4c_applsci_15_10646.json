@@ -1,0 +1,304 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_grid_recent/pdf/applsci-15-10646.pdf",
+  "n_pages": 30,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "1.1 Context and Issues in Non-Interconnected Zones (NIZs)",
+      "level": 2,
+      "text": "Rural electrification continues to be a structural challenge due to geographical disper-\nsion, low load density, and the high costs of extending conventional networks to remote\nareas [1]. Globally, about 13% of the population lacks reliable access to electricity, and ap-\nproximately 2.3 billion people depend on traditional fossil fuels, which negatively impacts\nhealth, education, productivity, and quality of life in isolated communities [2]. In Colombia,\nthis situation is concentrated in non-interconnected zones (NIZs), where dependence on\ndiesel fuel implies high operating costs, exposure to fuel volatility, and emissions that are\nincompatible with the country’s climate objectives [3].\nAppl. Sci. 2025, 15, 10646 https://doi.org/10.3390/app151910646\nAppl. Sci. 2025, 15, 10646 2 of 30\nGiven this scenario, hybrid microgrids that combine photovoltaics (PV), biomass, and\nelectrochemical storage (BESS) are being promoted as an alternative to improve service\ncontinuity, reduce costs, and decarbonise rural electricity supply [ 4]. These solutions\nhave shown potential to overcome the technical and economic limitations of conventional\ndiesel-based schemes [5]. However, their implementation and operation pose technical,\nenvironmental, and economic challenges related to resource optimisation, supply stability,\nand the financial viability of projects in low-scale and high-uncertainty contexts [6].\nPV offers wide availability and low environmental impact, making it particularly\nsuitable for rural areas [ 6]. Biomass allows agricultural and forestry waste to be trans-\nformed into dispatchable energy, strengthening the local circular economy and reducing\ndependence on fossil fuels [ 7]. The quantification of its potential has been addressed\nthrough thermodynamic approaches such as gasification [ 8], techno-economic sustain-\nability assessments [9], computational simulation platforms to refine processes [10], and\nspecific mathematical models to simulate and control the use of agricultural biomass in gas\nturbines [11]. Additionally, PV–biomass–BESS integration leverages synergies to mitigate\nsolar intermittency and improve operational stability [12]. PV provides local generation\nwith decreasing costs [13]. Biomass adds controllability and firm backup [14]. BESS modu-\nlates peaks and valleys, provides reserve capacity, and facilitates demand management in\nsmall-scale microgrids [15].\nThe sustainability and scalability of these solutions also require detailed modelling,\nadaptive energy management, optimal sizing, and financing and governance mechanisms\nappropriate to the rural reality [16,17].\nWithin this framework, this study develops a simulation analysis of a PV–biomass–\nBESS microgrid for a rural household in the village of Argelia (Viotá, Cundinamarca,\nColombia), integrating mathematical models of each component and local profiles of\nirradiance, temperature, load, and availability of agricultural waste [1–3]. The case study\npursues replicable guidelines for NIZs with similar indigenous resources [4].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "1.2 Specific Reference Literature Consulted",
+      "level": 2,
+      "text": "The recent literature reports that PV microgrids with BESS increase self-consumption,\nimprove resilience, and enable tariff arbitrage through flexible battery dispatch [ 4]. In\nthe building sector, 3E (energy–environment–economy) analyses show trade-offs between\nCO2 reduction, LCOE, and payback when comparing PV with batteries, thermal storage,\nand integration with EV/V2G; they also highlight diminishing returns when capacity is\noversized due to curtailment and embodied carbon [18]. Methodological reviews using the\n3E approach recommend homogeneous metrics and sensitivity analyses to avoid biases in\nsizing and facilitate informed decisions [19]. However, these contributions focus mainly on\nurban contexts and do not sufficiently address PV–biomass co-management with agro-local\nparameters and seasonal validations in rural NIZs [18,19].\nIn rural grid operation, cooperative ‘no communication’ strategies have been pro-\nposed that use DC bus voltage as an implicit consensus variable and apply AC/DC\nmargins to activate regulation only in the event of voltage violations, thereby mitigat-\ning over/undervoltages and reducing losses compared to voltage consistency approaches,\nwhich increases the capacity to accommodate DG [20]. These strategies are relevant when\ncommunications infrastructure is limited, as is often the case in NIZs [20].\nComplementarily, the massive integration of power electronics in microgrids requires\nconsideration of converter stability. The literature on virtual synchronous generators\n(VSGs) warns that inertia emulation can introduce low-frequency oscillations (LFOs) if\ninertia and damping are not properly tuned or if couplings occur between control loops\nAppl. Sci. 2025, 15, 10646 3 of 30\n(active–reactive, voltage–current, PLL, Vdc) [21]. This suggests prudent operating limits\nand robust controls when integrating multiple sources and storage into weak networks [21].\nBeyond the electrical realm, the literature on thermal systems and infrastructure shows\nthat non-ideal parameters—for example, the heat transfer coefficient at the concrete–soil\ninterface, which varies depending on the mode (heating/cooling)—alter actual capacity\nand require calibrations and sensitivity analyses in the design [ 22]. By methodological\nanalogy, studies of rural microgrids should parameterise biomass with lower heating value\n(LHV) and local humidity and report homogeneous seasonal metrics (energy per source,\nrenewable fraction, biomass/day, SoC) to inform sizing and operation [8,9].\nThree gaps are identified: (i) the integration of local biomass as dispatchable backup\nwith comparable metrics in NIZs remains limited [ 8]; (ii) the absence of multi-month\nevaluations at hourly resolution that capture daily and seasonal variability [ 13]; and\n(iii) the limited use of rule-based EMS explicitly linked to SoC and conditioned to agro-local\nparameters for biomass [13]. These gaps justify the approach of this work [4].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "1.3 Theoretical Foundations of Modelling and Simulation",
+      "level": 2,
+      "text": "Biomass generation is as follows: the biomass unit is modelled as a dispatchable\nsource with minimum start-up power, thermal–mechanical constraints, and performance\ndependent on the PCI and moisture content of the resource. The conceptual basis in-\ncludes the integration of gas turbines in hybrid microgrids and their interaction with other\nsources [23]. The mathematical models and control strategies described for CHP cycles\nand combined cycles guide parameterisation and operation [24]. The microturbine in the\nmicrogrid relies on advanced controls to enhance stability and efficiency [ 25]. Dynamic\nvalidation by simulation supports the consistency of the representation under changing\nconditions [26]. Neuro-fuzzy control provides robustness against uncertainties in torque\nand power [27].\nThe photovoltaic (PV) generator is as follows: the PV model is based on the I–V\ncurve with thermal coefficients, parasitic resistances, and orientation and inclination effects,\nallowing power and energy to be predicted with local irradiance and temperature on an\nhourly basis and in representative months (January, March, June, October) [28]. Accuracy\nis improved by incorporating thermal dependencies of the cell [ 29] and simulating elec-\ntrical events and losses in specialised tools to compare grid-connected and stand-alone\nscenarios [30].\nThe storage system (BESS) is as follows: the BESS is represented by Thévenin or\nPNGV equivalents, which capture internal resistances, capacitances, charge/discharge\nefficiencies, SoC, and power limits, enabling the analysis of autonomy, hysteresis, and\ncycles under different operating policies [31]. It is complemented by control strategies to\nimprove stability and dynamic response (e.g., current/voltage control considering SoC\nlimits) [32]. Charge and discharge optimisation is used to reduce costs and maximise the\nuse of renewables [33].\nThe simulation is carried out as follows: dispatch algorithms allow for the manage-\nment of peaks and troughs in demand [34]. The simulation of variable scenarios allows\nfor the validation of performance and the adjustment of parameters prior to implemen-\ntation [35]. The comparison of results in different contexts strengthens the transferability\nof the model [36]. Simulation platforms provide a controlled environment for evaluating\nconfigurations and strategies with reproducible criteria [37].\nThe energy management strategy (EMS) is as follows: a rule-based EMS linked to\nSoC is adopted with charge/discharge thresholds and inhibitions that activate biomass\ndispatch when demand deficits or peaks are detected, prioritising solar energy and the\nstrategic use of BESS [ 13]. This approach is traceable, implementable in contexts with\nAppl. Sci. 2025, 15, 10646 4 of 30\nlimited communications, and consistent with ‘communicationless’ AC/DC approaches\nthat use margins to reduce losses and improve voltage quality in rural networks with high\nPV [20]. In terms of stability, prudent operating limits are established to avoid LFOs and\nmultiloop couplings in converters, in accordance with VSG guidelines [21].\nThe metrics and validation are as follows: to compare scenarios and inform decisions,\nhomogeneous metrics are used: energy per source, renewable fraction, biomass/day (kg/day),\nself-consumption, self-sufficiency , and SoC profiles (minimums, start/end) [28]. These metrics\ninteract with 3E frameworks that balance environmental benefits and design costs [18]. Valida-\ntion includes sensitivity tests (SoC thresholds and minimum biomass power) and verification\nof energy balance consistency (EPV + Ebiomass + EBESS ≈ Eload ± losses) [29]. The approach\nrecognises the importance of non-ideal parameters in actual performance and promotes\nspecific calibrations where appropriate [22].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "1.4 Scientific Novelty and Contributions",
+      "level": 2,
+      "text": "In terms of technological integration of underutilised local resources, local agricultural\nwaste (e.g., coffee, plantain, banana) is incorporated as a traceable energy input, parame-\nterising PCI, moisture for dispatch, and planning, with potential benefits for the circular\neconomy and reduced dependence on imported fuels [8].\nIn terms of dynamic temporal modelling, hourly simulation is performed with seasonal\nevaluation (January, March, June, October) and comparable metrics (energy per source,\nrenewable fraction, biomass/day, SoC), avoiding oversizing and capturing daily and\nseasonal variability [28].\nRegarding adaptive energy management logic, an EMS is implemented by SoC thresh-\nolds and prioritises PV , followed by biomass, and uses BESS strategically. Based on the\nresults, replicable design guidelines are formulated for NIZs, including PV expansion\n(~20%) and minimum BESS capacity (≥2.5 kWh), as well as adjustments to SoC thresholds\nand minimum power of the biomass unit [13].\nIn terms of compatibility with operation in weak grids, the approach is compatible\nwith ‘communication-free’ AC/DC strategies to improve voltage profile and losses in\nrural grids with high PV . It also addresses stability recommendations to mitigate LFO and\ncoupling in grid-forming converters [21].\nRegarding a link to 3E criteria, the selection of metrics and sensitivities are in line with\n3E frameworks, facilitating decisions that balance decarbonisation, LCOE, and payback in\nthe rural context [18].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "1.5 Organisation of the Article",
+      "level": 2,
+      "text": "Section 2 presents Materials and Methods: study area, data and parameters, PV , biomass\nand BESS models, EMS, numerical configuration/validation, and metrics [ 13,23,28,31].\nSection 3 reports Results by representative month and a seasonal summary with the de-\nfined homogeneous metrics [28]. Section 4 develops the Discussion, contrasting with the 3E\nliterature [18], with 3E methodological recommendations [19], with AC/DC ‘no communica-\ntion’ strategies, and with VSG/LFO stability guidelines [20], providing physical–operational\ninterpretation and scaling criteria. Section 5 presents Conclusions and recommendations\naimed at design, implementation, and replicability in NIZs [1–3].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s7",
+      "title": "2 Materials and Methods",
+      "level": 1,
+      "text": "The methodology established for the development of the study is based on a procedure\nfor modelling and simulating a hybrid microgrid composed of photovoltaic generation, a\nbiomass-based system, and a battery energy storage system. This approach seeks to ensure\nenergy autonomy in non-interconnected rural communities, integrating real climate data,\nAppl. Sci. 2025, 15, 10646 5 of 30\nload profiles, and specific technical parameters for each component of the system. The\nmethodology ranges from the collection of reference information to the implementation of\nmathematical models and their simulation in MATLAB/Simulink. The stages developed\nare summarised in Figure 1, which presents the general flowchart of the methodology used.\nTechnical characterisation of the components\nMathematical models of each subsystem\nModelling and Implementing Simulation in MatLab/Simuink\nHOME\nQuerying climate data and load requirements\nSelection of monthly scenarios - daily\nMicrogrid Architecture Criteria and Definition\nSolar PV resource\nENDS\nPerformance Metrics Analysis:\nUsing the Generator\nMinimum SOC\nEnergy autonomy\nRenewable coverage",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s8",
+      "title": "Results",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s9",
+      "title": "Conclusions",
+      "level": 1,
+      "text": "Figure 1. Flowchart of the methodology developed. Authors’ own work.",
+      "refs": {
+        "figures": [
+          "f1"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s10",
+      "title": "2.1 Input Profile Consultation",
+      "level": 2,
+      "text": "An energy analysis is performed on the microgrid located in the rural area of\nArgelia-Viotá-Cundinamarca-Colombia, whose geographical coordinates are: 4.455266◦,\n−74.466019◦ (04◦27′19′′, −074◦27′58′′). Various meteorological and energy databases have\nbeen integrated to provide a detailed profile of local load, irradiance, and temperature\nconditions. The report was generated on 5 November 2024 with the support of the Global\nSolar Atlas, which provides crucial irradiance data for the study.\nThe sources of information include the following:\n• Energy demand: provided by the XM portal, [38], which details official energy con-\nsumption forecasts. This data allows for the analysis of hourly demand and its\nadaptation to the generation capacity of the microgrid.\n• Solar irradiance: consulted through the Global Solar Atlas ) [ 39], which provides\na detailed profile of irradiation in the area, essential for evaluating the potential\ngeneration of photovoltaic solar energy in the microgrid at different times of the day\nand year.\nAppl. Sci. 2025, 15, 10646 6 of 30\n• Temperature: hourly temperature data is obtained from the Clima.com website, ) [40],\nwhich allows for the evaluation of the impact of thermal conditions on the efficiency\nof photovoltaic panels and the behaviour of the energy storage system.\n• Combined irradiance and temperature: for a comprehensive analysis, daily reso-\nlution irradiance and temperature data provided by NASA/POWER through the\nCERES/MERRA2 system, [41] are used.\nThis combination of data is essential for more accurately modelling the performance\nof energy systems under real weather conditions. Together, these databases enable a\ncontextualised assessment of the energy resources available in the area. In addition, the\nquantity and availability of biomass (kg/day) were determined from studies on the energy\npotential of agricultural waste in the region [42], taking into account an average humidity\nof 15–20% and a calorific value ranging from 3600 to 4200 kcal/kg. To assess renewable\ngeneration conditions, combined daily resolution irradiation and temperature data were\nused [41], which made it possible to characterise the environmental conditions that affect\nthe overall performance of the hybrid microgrid. This information is essential for designing\nand optimising the operation of the microgrid, maximising the use of renewable resources\nand adapting to local energy demands with greater precision and efficiency.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s11",
+      "title": "2.2 Selection of Seasonal Scenarios",
+      "level": 2,
+      "text": "The months of January, March, June, and October were selected as representative of\nthe different seasonal conditions characteristic of the study area. January corresponds to\nthe dry season, characterised by high levels of irradiance and high temperatures. March\nrepresents a transition period, with moderate variability, and coincides with the start of\nthe first annual coffee harvest. June is associated with the rainy season, during which\nsolar irradiance decreases significantly due to increased cloud cover. Finally, October\nmarks a return to more stable climatic conditions, with average irradiation and the second\nannual coffee harvest. The selection of these months allows the performance of the system\nto be evaluated in various climatic and seasonal scenarios, providing a comprehensive\nunderstanding of the behaviour of the microgrid throughout the year.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s12",
+      "title": "2.3 Selection of Seasonal Scenarios",
+      "level": 2,
+      "text": "Geographical and Climatic Characteristics of the Study Area\nTo model the performance of the microgrid in Viotá, Cundinamarca (Colombia),\ndetailed data on irradiance, temperature, and biomass availability throughout the year\nwere used, selecting the months of January, March, June, and October to represent different\nclimatic conditions and agricultural cycles. These months reflect significant variations\nin irradiance and temperature, as well as coinciding with the harvest cycles of coffee,\nplantains, and bananas, which are important agricultural products for the area and whose\nresidues have a high lower heating value (LHV) [42].\nJanuary, with the highest irradiance (2785 kWh/m2), represents the best scenario for\nsolar generation, while March, with the lowest irradiance (1684 kWh/m2), coincides with\nthe start of the first coffee harvest of the year, which represents a particular challenge\nin energy management. June and October experience medium-high irradiance. October\ncoincides with the second coffee harvest and allows both solar energy and biomass to\nbe exploited.\nThe temperature data for each month allows us to understand the thermal impact on\nsystem efficiency. In general, the average temperature in these months ranges between 16\nand 17 ◦C, with highs between 22 and 24 ◦C and lows of 11–12 ◦C, conditions that favour\nboth solar generation and storage efficiency.\nAppl. Sci. 2025, 15, 10646 7 of 30",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s13",
+      "title": "2.4 Choice of Microgrid Type, Resources, and Storage",
+      "level": 2,
+      "text": "The study considered the design and implementation of an isolated (off-grid) micro-\ngrid, representative of a rural community without access to the national electricity grid. The\nproposed system integrates three main energy resources: a photovoltaic generation system\nto harness available solar resources, a biomass-based generator that acts as a backup source\nduring periods of low solar irradiation or high energy demand, and a battery-based energy\nstorage system to ensure load management, energy balance, and reliability of nighttime\nsupply. The design process was guided by specific technical and operational criteria, includ-\ning the characterisation of a typical daily load profile, a minimum energy autonomy of one\nday, and a defined operating state of charge range for the battery system between 20% and\n100%. In addition, the design aims to cover at least 50% of the annual energy demand with\nsolar generation, complemented by the efficiency and availability of the biomass generator\nto ensure the reliability and stability of the system under different operating conditions.\nTechnical, Electrical, and Functional Parameters Considered\nTable 1 summarises the essential parameters for the sizing and dynamic modelling of\na hybrid PV–biomass–battery microgrid, including DC-AC conversion elements and the\nload profile. For each subsystem, only the variables with the greatest effect on operational\nbehaviour and the quality of the simulation results were selected: nominal powers, operat-\ning voltages and currents, efficiencies, SoC/DoD ranges, and electrical output conditions.\nEach parameter is accompanied by a bibliographic reference supporting its typical value or\nrange of application in order to ensure traceability, reproducibility, and consistency with\nthe technical literature and engineering best practices.\nTable 1. Technical, electrical, and functional parameters of the devices.\nComponent Parameter Unit/Typical Value Description Source\nPhotovoltaic (PV)\nsolar panel\nNominal power (peak) ≈250 W\n(per module)\nMaximum power output of a module under\nstandard conditions (STC), used to size the\nphotovoltaic array (number of panels required).\n[43,44]\nConversion efficiency ~15–20%\nPercentage of solar radiation that the panel\nconverts into electricity; influences energy\nproduction and the sizing of the required\nPV area.\nOperating voltage (VMP) ~30 V DC\n(per module)\nVoltage at the maximum power point of a\ntypical panel (VMP); defines the series\narrangement of panels required to achieve the\nsystem DC bus voltage.\nOperating current (IMP) ~8 A DC\n(per module)\nCurrent delivered at the maximum power\npoint (IMP) under STC; used to size conductors\nand MPPT controllers and to estimate the total\ncurrent of the PV field.\nBiomass generator\nNominal electrical power ≈10 kW AC\nNominal output power of the generator\n(usually a synchronous motor coupled to a\nbiomass gasifier); chosen according to the\nexpected peak demand of the microgrid.\n[45–47]\nConversion efficiency 20–35%\nThermal–electrical efficiency of the generator\n(ratio of electrical energy to chemical energy in\nthe biomass). Most gasification systems plus\ninternal combustion engines have ~20–35%\nelectrical efficiency.\nOutput voltage/frequency 120 V AC, 60 Hz\nStandard alternating output voltage of the\nbiomass generator, compatible with the local\ngrid (single-phase 120 V at 60 Hz or\nthree-phase 400/230 V , depending on design);\nallows direct feeding of the microgrid’s AC bus.\nAppl. Sci. 2025, 15, 10646 8 of 30\nTable 1. Cont.\nComponent Parameter Unit/Typical Value Description Source\nBattery bank\nNominal storage capacity ≈72 kWh\n(e.g., 1500 Ah at 48 V)\nTotal storable energy capacity. Determines\nautonomy: in a ~48 V system, 1500 Ah equals\n~72 kWh usable to cover nighttime demand or\nperiods without sunlight.\n[48,49]\nNominal bank voltage 48 V DC\nNominal voltage of the connected battery pack\n(example: 24 cells of 2 V = 48 V). This is\nstandard in isolated microgrids to balance\nefficiency and safety and matches the input\nvoltage of the inverter/regulator.\nSoC operating range 20–80%\nTypical state of charge range used (minimum\nSoC ~20%, maximum SoC ~80%) to extend\nbattery life. Avoid deep discharges below 20%\nand overcharges above 80%, reducing stress on\nthe accumulators.\nCycle efficiency\n(round trip)\n~90%\n(Li-ion; ~70% in lead-acid)\nPercentage of energy recovered when\ndischarging the battery relative to the charged\nbattery. Lithium-ion batteries have ~90% full\ncycle efficiency, while lead–acid batteries have\naround 70% full cycle efficiency, affecting the\nsystem’s energy losses.\nMaximum discharge current peaks ≈10–12 C\n(e.g., ~960 A for 5 s)\nMaximum instantaneous current that the bank\ncan supply in short intervals. It can reach\nmultiple times the capacity (C) of the battery\n(e.g., an 80 Ah battery can deliver ~960 A for\n5 s), useful for covering high load transients.\nDC–AC inverter\nNominal output power ≈12 kW AC\n(typical example)\nContinuous AC power that the inverter can\nsupply to loads. It must be sized above the\npeak demand of the microgrid (e.g., ~10–15 kW\ninverters in rural systems).\n[50]\nDC input voltage 48 V DC\nNominal direct current input voltage from the\nbattery bank (or PV array via controller).\nCommercial off-grid inverters typically operate\nwith ~48 V banks, as this is standard in isolated\nstorage systems.\nAC output\nvoltage/frequency 120 V AC, 60 Hz\nSinusoidal alternating current output to power\nloads. Typically 1200 V at 60 Hz in single-phase\n(or 400/230 V three-phase), equivalent to\npublic grid standards, allowing conventional\nequipment to be used in the microgrid.\nConversion efficiency ~95–98%\nInverter efficiency in converting DC\n(battery/PV) to AC. Modern inverters achieve\n≥95% efficiency (2–5% losses as heat),\nespecially near their rated load, an important\nfactor for the energy balance of the microgrid.\nLoads (demand)\nDaily energy demand ~70–180 kWh/day\n(depending on population)\nTotal expected daily electricity consumption in\nthe community. Used to determine generation\nand storage capacity. Example: an isolated\nvillage of ~60 families may require\n~74 kWh/day, while larger communities may\nexceed 150 kWh/day.\n[51]Maximum power demand ≈20 kW (peak)\nAggregate peak load that simultaneous loads\nmay require. Determines the minimum\ncapacity required for the inverter and\ngenerators. In small rural microgrids, peaks of\naround ~20 kW are reported.\nLoad power factor ~0.85–0.9 dimensionless\nRatio between active and apparent power\nconsumed by aggregate loads. Typical\nresidential loads (lighting, appliances) have a\ncosφ of around 0.9 under normal operation,\nwhich influences circulating currents and the\nsizing of generators and inverters.\nPrepared by the authors.\nAppl. Sci. 2025, 15, 10646 9 of 30\nThese parameters were explicitly incorporated into the integrated microgrid simula-\ntion in the modelling environment, serving as boundary conditions and constants/settings\nfor photovoltaic generation, conversion, and storage models, as well as for the biomass\nmodule and the aggregate load block. In particular, the powers and efficiencies conditioned\nthe energy balances, the voltages/currents defined the compatibility between buses and\nequipment, the SoC limits and peak currents in batteries restricted dispatch and autonomy,\nand the demand profile determined the power peaks for inverter sizing and EMS logic. In\nthis way, the simulation accurately reflects the expected performance of the system under\ncoordinated operation and allows for the derivation of design guidelines and operating\ncriteria that can be transferred to similar contexts.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s14",
+      "title": "2.5 Mathematical Models of Each Subsystem",
+      "level": 2,
+      "text": "The modelling of the hybrid microgrid components was carried out using validated\nmethodologies that guarantee an accurate representation of their electrical and dynamic\nbehaviour under variable operating conditions. The process followed a sequential approach,\nbeginning with the biomass generation unit, followed by the photovoltaic (PV) system, and\nconcluding with the energy storage system, all of which were subsequently integrated into\na centralised energy management system (EMS).",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s15",
+      "title": "2.5.1 Biomass Plant Modelling",
+      "level": 3,
+      "text": "This section presents the modelling of a power plant based on a gas turbine fuelled\nby agricultural biomass. Figure 2 illustrates the general layout of an open-loop gas tur-\nbine power plant, highlighting the fuel system, the compressor, the combustion chamber,\nthe turbine, and the electric generator. Each of these subsystems is described using spe-\ncific mathematical models which allow for detailed thermodynamic dynamics, energy\nbalances, flow and pressure relationships, and electricity generation, thus facilitating the\nanalysis, design, and simulation of the overall behaviour of the plant to be integrated into\nthe microgrid.\nFigure 2. Gas turbine power plant—GTG. Authors’ own work.\nTable 2 presents the detailed mathematical model of the gas turbine power plant\ndesigned to operate with agricultural biomass waste as its main fuel. This model covers\nthe main subsystems of the generation cycle, including the compressor, the combustion\nchamber, the turbine, and the electric generator, with a description of the types of pro-\ncesses involved (dynamic, thermodynamic, and equilibrium), the associated equations,\nand the physical and functional interpretation of each variable. This model aims to rep-\nresent the thermal and mechanical behaviour of the plant, which is implemented in the\nMATLAB/Simulink simulation, allowing its energy performance to be evaluated based on\noperating conditions and available biomass resources.\nAppl. Sci. 2025, 15, 10646 10 of 30\nTable 2. Mathematical model of a biomass power plant.\nSubsystem Type of Process Equation Description Description Process\nCompressor\nAir dynamics\nand compression wa = A0\nr\n2 ma ηc∞ (ma −1) (pcin ρi) (rc )2\nma −rc (ma +1)\nA0: compressor outlet area\nThe compressor draws in air\nand compresses it by raising its\npressure, modelled as a nozzle\nwith one-dimensional\npolytropic flow.\nma: polytropic ratio\npcin: inlet pressure\nρi: air density\nηc∞: polytropic efficiency\nrc: compression ratio\nThermodynamic\nrelations Tcout = Tcin (rc)\n(γa −1)\nγa ηc\nTin: inlet temperature Estimates the air outlet\ntemperature after polytropic\ncompression, relating it to\ncompression ratio and\nefficiency.\nrc: compression ratio\nγa: air heat ratio\nηc: isentropic efficiency\nPower consumption Pc =\nwain ∆hI\nηc ηtrant\nwain: air flow Calculates the power that the\ncompressor draws from the\nshaft to compress the air,\ntaking into account\nmechanical losses\n∆hI: isentropic enthalpy\nηc: compressor efficiency\nηtrant : transmission\nefficiency\nCombustion chamber\nMass balance wG = wa + w f + wis\nwG: total gas flow\nCombines air and fuel (and\noptionally steam) to obtain\ntotal flow entering the turbine.\nwa: air flow\nw f : fuel flow\nwis: injected steam flow\n(optional)\nEnergy balance\nwGcpg\n\u0000\nTTin − Tre f\n\u0001\n+ wa cpa\n\u0000\nTre f − Tcout\n\u0001\n+w f ∆h25 + wis cps\n\u0000\nTre f − Tis\n\u0001\n= 0\ncpg, cpa, cps: specific heats\nBalances the input and\noutput enthalpy in\ncombustion, determining\nturbine inlet temperature.\nTTin: combustion\noutlet temp.\nTcout : compressor\noutlet temp.\n∆h25: enthalpy of\ncombustion\nTis: steam temp.\nGas turbine\nExpansion ratio Tout = TTin (rT )\n(γg −1)\n(γg ηT )\nTTin: inlet temp\nCalculates the outlet\ntemperature of the expanded\ngas, crucial for evaluating the\nwork extracted by the turbine.\nγg: heat ratio\nηT: polytropic efficiency\nrT: expansion ratio\nGas mass flow wG = AT0\ns\n2 mcg ηT∞ (mcg −1) (pTin ρTin ) (rT )2\nmcg −rT (mcg +1)\nAT0: turbine outlet area\nDetermines the gas flow\nthrough the turbine, modelled\nas an expanding nozzle.\nmcg: polytropic index gases\npTin, ρTin: pressure and\ndensity inlet\nηT∞: polytropic efficiency\nExtracted work PT = ηTwG∆hI\nηT: turbine efficiency\nGross power generated by\nthe turbine from the high\nenthalpy gas.\nwG: gas flow\n∆hI: isentropic enthalpy of\nexpansion\nNet shaft power Pmech = PT − Pc\nPT: turbine power Net power delivery available\nto the generator after\nsubtracting compressor\nconsumption.\nPc: power consumed\nby compressor\nElectrical generator\nShaft dynamic\nequation\ndω\ndt = 1\n2H (Tm(t) − Te(t)) − Kd∆ω(t)\nH: inertia of the system\nDescribes the angular\nacceleration of the\ngenerator-turbine shaft by\ntorque difference, used in\nfrequency control.\nTm: mechanical torque\nTe: electrical torque\nKd: damping\n∆ω: speed deviation\nElectrical power\ndelivered Pe = VE\nX sinδ\nV: terminal voltage\nPower delivered to the grid by\nthe synchronous generator,\nclassically modelled for\nstability studies.\nE: internal fem\nX: synchronous reactance\nδ: rotor angle\nPrepared by the authors.\nAppl. Sci. 2025, 15, 10646 11 of 30\nThe models presented in this table capture the dynamics of energy conversion in a\nbiomass-fuelled gas turbine, including air treatment, combustion, gas expansion, and power\ngeneration. The incorporation of parameters such as isentropic efficiencies, compression\nand expansion ratios, and mass and energy flows, as well as the dynamic shaft equation,\nallows for a detailed analysis of losses and net system efficiency.",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [
+          "t2"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s16",
+      "title": "2.5.2 Photovoltaic System Modelling",
+      "level": 3,
+      "text": "Figure 3 illustrates the most commonly used equivalent electrical models to represent\nthe behaviour of a photovoltaic (PV) panel: the single-diode model (Figure 3a) and the\ndouble-diode model (Figure 3b). Both schemes aim to emulate the non-linear characteristics\nof the solar cell under different irradiance and temperature conditions. These representa-\ntions are fundamental for the simulation, sizing, and optimisation of photovoltaic systems\nin environments such as MATLAB/Simulink, where a precise mathematical description\nis required to estimate the panel’s I-V curve, maximum power, and performance under\nvariable conditions.\n(a) ( b) \n \n \n \n \n \n \n \n \nFigure 3. (a) Equivalent circuit of one diode; ( b) equivalent circuit of two diodes. Adapted\nfrom Ref. [52].\nTable 3 presents the mathematical models used to characterise the behaviour of photo-\nvoltaic solar panels, based on the models in the references consulted. These models describe\nthe relationship between current and voltage at the cell level (using one- and two-diode\nmodels), as well as the influence of external variables, such as irradiance and temperature,\non the power generated. Formulas are also included to calculate the energy efficiency of\nthe panel, the effects of tilt and orientation, system losses, and estimated annual generation.\nThese elements made it possible to perform simulations, properly size the photovoltaic\nsystem, and analyse its efficiency under different climatic conditions.\nThe models provide a basis for technical and energy analysis of solar photovoltaic\nsystems, enabling their performance to be evaluated. By taking into account factors such\nas operating temperature, incident irradiation, losses due to external factors, and instal-\nlation geometry, the ability to predict system performance is improved. These equations\nintegrate the photovoltaic component implemented in the MATLAB/Simulink simulation\nenvironment, ensuring a representation of its interaction with other energy resources.\nAppl. Sci. 2025, 15, 10646 12 of 30\nTable 3. Characteristic mathematical models of photovoltaic solar panels.\nModel Type Model Equation Parameters Description Process\nDiode model Cell electrical model\nI =\nIL − Id\n\u0014\ne( V+I Rs\nn VT\n) − 1\n\u0015\n− V+I Rs\nRsh\nIL : photogenerated\ncurrent\nBasic model\nrepresenting the\ncurrent–voltage\nrelationship in a solar\ncell considering\nresistive losses.\nId : diode\nsaturation current\nRs: series resistor\nRsh: shunt resistor\nn: diode ideality\nVT: thermal voltage\nTwo-diode model\nAdvanced cell\nelectrical model\nI = IL −\nId1\nh\ne( V+I Rs\nn1 VT ) − 1\ni\n−\nId2\nh\ne( V+I Rs\nn2 VT ) − 1\ni\n−\nV+I Rs\nRsh\nId1, Id2: saturation currents\nExtends the previous\nmodel by adding a\nsecond diode for higher\naccuracy, especially\nuseful at\nlow voltage.\nn1, n2: ideality factors\nRs: series resistor,\nRsh: shunt\nIL : photocurrent\nPower as a function\nof irradiance\nIrradiance-to-\npower ratio\nPmpp (G) ≈\nPmpp ,STC x\n\u0000\nG/1000 W/m2\u0001\nG: solar irradiance\n(W/m2)\nDescribes how\nirradiance directly\naffects the photocurrent\ngenerated and thus the\npower output.Pmpp : maximum power\nPower as a function\nof temperature\nTemperature-to-\npower ratio\nPmpp (T) ≈\nPmpp ,STC [1 + γ(Tc − 25 ◦C)]\nTc: cell temperature Describes the loss of\nefficiency as the cell\ntemperature rises.γ: thermal coefficient\nPanel efficiency Energy efficiency η = Pout /(G × A)\nPout: power output Allows calculation of the\npercentage conversion\nof solar energy into\nelectrical energy.\nG: irradiance\nA: panel area\nTilt angle and orientation Geometrical solar gain Gmdulo = Gsol \\cos(Θ)\nGsol : direct\nsolar irradiance\nCalculates the effective\nirradiance on the panel\ndepending on its\norientation with respect\nto the sun.Θ: angle of incidence\nSystem losses Effective power\nreduction Preal = Π · Pideal\nΠ: performance ratio\n(0.85–0.95), including\nlosses due to dirt, cables,\ninverter, etc.\nDescribes how losses\naffect the actual energy\nproduction versus the\ntheoretical ideal.\nAnnual energy estimation Energy generation\ncalculation Eanual ≈ PSTC × Hsol × Π\nPSTC : installed power Allows estimation of\ntotal annual energy\ngenerated considering\nirradiance and system\nlosses.\nHsol : annual irradiance\nΠ: performance factor\nPrepared by the authors.",
+      "refs": {
+        "figures": [
+          "f3"
+        ],
+        "tables": [
+          "t3"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s17",
+      "title": "2.5.3 Storage System Modelling",
+      "level": 3,
+      "text": "Figure 4 illustrates three representations of equivalent electrical circuits commonly\nused to model the dynamic behaviour of a battery. These models made it possible to\nsimulate its electrical response under variable charging and discharging conditions, which\nis particularly useful in environments such as MATLAB/Simulink for the integration of\nbattery banks into microgrids.\nTable 4 presents the mathematical models used for the electrical, energy, and degra-\ndation characterization of batteries. The table is based on references and ranges from\nbasic internal resistance models to more advanced models such as first- and second-order\nThévenin equivalent circuits, the PNGV (Partnership for a New Generation of Vehicles)\nmodel, and expressions for calculating state of charge (SoC), energy efficiency, internal\nlosses, and aging due to cycles or temperature.\nAppl. Sci. 2025, 15, 10646 13 of 30\nFigure 4. (a) Equivalent first-order Thévenin model; (b) PNGV (Partnership for a New Generation of\nVehicles) model with double-layer capacitance; (c) second-order Thévenin model (two R-C pairs).\nAdapted from Ref. [53].\nTable 4. Characteristic mathematical battery models.\nModel Type Model Equation Parameters Description Process\nRint (internal resistance) Basic electrical\nbattery model Vterminal = E(SoC) − IR 0\nE(SoC): open\ncircuit voltage\nRepresents the battery\nas a voltage source in\nseries with a resistor,\ncapturing the internal\nvoltage drop.\nI: current\nR0: internal resistance\nFirst-order Thévenin Polarised electrical\nmodel\nτ1\ndVRC (t)\ndt + VRC (t) = R1 I(t)\nVterminal (t) = E(SoC(t)) −\nI(t)R0 −\nVRC (t)\nR1, C1: bias resistance\nand capacitance\nIncludes transient\ndynamics and\npolarisation voltage\ndrop; simulates\ndynamic behaviour of\nthe battery.\nVRC: voltage on RC\nτ1 = R1C1\nSecond-order Thévenin\nAdvanced electrical\nmodel with\ndouble polarisation\nτ1\ndVRC1\ndt + VRC1(t) = R1 I(t)\nτ2\ndVRC2\ndt + VRC2(t) = R2 I(t)\nVterm (t) = E(SoC(t)) −\nI(t)R0 −\nVRC1(t) − VRC2(t)\nTwo R-C pairs, with time\nconstants τ1 y τ2\nIncreased simulation\naccuracy, considers\ndifferent polarisation\nresponse times and\nionic diffusion.\nPNGV (simplified\nRandles)\nElectrical model with\ndouble layer capacity\nCircuito con\nR0 + (CSOC || (RC))\nCSOC: capacity dependent\non SoC\nModels open-circuit\nvoltage variation with\nSoC, including dynamic\nresponse and\ncharge storage.\nState of charge (SoC) Stored energy model\nSOC(t) =\nSOC(0) − 1\nQmax\nR t\n0 I(τ)dτ\nd(SOC)\ndt = − I(t)\nQmax\nQmax : maximum capacity\nCalculates the\npercentage of stored\ncharge to total charge.\nIndicates the current\nstate of the battery.I(t): current at time t\nEnergy efficiency Energy evaluation ηE =\nR\nPdescarga dtR\nPcarga dt\nCharging and\ndischarging power\nP = V I\nRelates useful energy\nextracted versus energy\nrequired to recharge,\nconsidering thermal and\nelectrical losses.\nInternal losses Thermal analysis Pperdida (t) = I(t)2Rint\nI: current Calculates the thermal\nlosses in the battery,\nessential for the thermal\ndesign and efficiency of\nthe system.\nRint: total internal\nresistance\nAppl. Sci. 2025, 15, 10646 14 of 30\nTable 4. Cont.\nModel Type Model Equation Parameters Description Process\nCyclic degradation Aging model\nλAH (N) = 1 − k1N\nλR0(N) = 1 + k2N\nλV1(N) = 1 − k3N\nk1, k2, k3: degradation\ncoefficients per cycle N\nReduces the usable\ncapacity and increases\nthe internal resistance\nas the number of\ncycles increases.\nTemperature effect\n(Arrhenius)\nTemperature accelerated\ndegradation L ∼ e\n(− Ea\nRg T )\nEa: activation energy Models the reduction in\nservice life due to\ntemperature increase\nbased on chemical\nreaction theory.\nRg: universal constant\nT: temperature\nPrepared by the authors.\nThe models presented provide a basis for analysing battery performance in real environ-\nments and are used in the corresponding simulation. Their integration allows the evaluation\nnot only of the electrical response but also of the evolution of the state of charge, internal\nlosses, and system lifetime as a function of operating cycles and environmental conditions.",
+      "refs": {
+        "figures": [
+          "f4"
+        ],
+        "tables": [
+          "t4"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s18",
+      "title": "2.6 Models Implemented in MATLAB/Simulink",
+      "level": 2,
+      "text": "The hybrid microgrid was modelled in MATLAB/Simulink using Simscape Electrical\nlibraries, which provided a detailed representation of each subsystem. The photovoltaic\npanels were parameterised with dynamic irradiation and temperature data from the geo-\ngraphical location under study, while the energy storage system was represented using a\nparameterised RC battery model. Energy conversion was implemented with bidirectional\nDC-AC inverters controlled by pulse width modulation (PWM). The biomass generation\nunit was modelled as a gas turbine integrating the fuel system, combustion chamber, com-\npressor, turbine, plant control, and synchronous generator, represented as an AC source\ncontrolled with constraints on power increase, voltage, frequency, and start-up time. This\napproach allowed for a realistic simulation of its operating dynamics and interaction with\nthe rest of the microgrid.\nFigure 5 shows a Matlab/Simulink simulation of the autonomous microgrid consisting\nof a biomass generator, a photovoltaic system, an energy storage system, and a residential\nload. The 24 h simulation monitors how energy is distributed among these components,\nhighlighting the use of the biomass generator, solar panel generation, and battery to\nmeet load demand. The analysis focuses on simulating the operation of a microgrid in\nautonomous mode for 24 h, taking into account load, irradiation, and temperature profiles.\nBelow is a detailed interpretation of the elements that make up the image:\nThe microgrid system comprises several integrated components that, together, guaran-\ntee the supply of energy to a rural home under variable conditions of resource availability.\nThe biomass generator serves as the main backup source, providing energy during periods\nof low photovoltaic generation or high demand. The photovoltaic system provides renew-\nable energy whose production is determined by the irradiation and temperature profiles of\nthe region studied. The battery-based energy storage system works to meet demand when\ngeneration is insufficient, such as during nighttime hours or when renewable generation is\nlimited. The load represents the energy needs of a typical rural home, including lighting,\nheating, cooling, irrigation, and security, with a demand profile distributed throughout\nthe day.\nThe interconnection infrastructure allows for bidirectional energy transfer between\nthe biomass generator, the photovoltaic system, the storage units, and the domestic load,\nensuring operational flexibility and energy balance. To analyse system performance, an\nenergy–time graph is used, where the X-axis represents time in a 24 h cycle, and the Y-axis",
+      "refs": {
+        "figures": [
+          "f5"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Flowchart of the methodology developed. Authors’ own work."
+    },
+    {
+      "id": "f2",
+      "caption": "Gas turbine power plant—GTG. Authors’ own work."
+    },
+    {
+      "id": "f3",
+      "caption": "illustrates the most commonly used equivalent electrical models to represent"
+    },
+    {
+      "id": "f4",
+      "caption": "illustrates three representations of equivalent electrical circuits commonly"
+    },
+    {
+      "id": "f5",
+      "caption": "shows a Matlab/Simulink simulation of the autonomous microgrid consisting"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "summarises the essential parameters for the sizing and dynamic modelling of"
+    },
+    {
+      "id": "t2",
+      "caption": "presents the detailed mathematical model of the gas turbine power plant"
+    },
+    {
+      "id": "t3",
+      "caption": "presents the mathematical models used to characterise the behaviour of photo-"
+    },
+    {
+      "id": "t4",
+      "caption": "presents the mathematical models used for the electrical, energy, and degra-"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": true,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 5,
+    "n_tables": 4,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

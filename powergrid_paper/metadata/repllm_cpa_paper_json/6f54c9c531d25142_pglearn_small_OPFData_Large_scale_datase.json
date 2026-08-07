@@ -1,0 +1,78 @@
+{
+  "source_pdf": "papers/literature/dataset_benchmark_papers/pdfs/pglearn_small/pglearn_small__OPFData_Large-scale_datasets_for_AC_OPF__8a31660a74.pdf",
+  "n_pages": 11,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Power grids are among the largest, most com-\nplex, and most critical pieces of infrastructure.\nThey are also major contributors to greenhouse\ngas emissions, with the global power sector ac-\ncounting for almost 40% of all energy-related CO2\nemissions [1]. Operating power grids efficiently\nand securely requires solving variants of the al-\nternating current optimal power flow (AC-OPF)\nproblem to determine optimal unit commitment,\npower dispatch, and related quantities, subject to\nphysical constraints, and often subject to preven-\ntative security constraints [ 2]. In its general form\nthis is a non-linear , non-convex, mixed-integer\nconstrained optimisation problem. Typical meth-\nods for solving such problems are too computa-\ntionally expensive or lack sufficient robustness for\nreal-time application on large grids, necessitating\nthe use of approximate formulations such as the\nlinearised DC-OPF [ 3, 4]. Approximate formula-\ntions are robust and fast to solve but can introduce\nsubstantial inefficiencies, both economic [ 5] and\nemissions-related [ 6], and typically violate the\ntrue constraints of the power network [ 7], requir-\ning further post-processing which can degrade\noptimality of the solution. Higher penetration\nof renewable generation is expected to increase\nthe difficulty of these problems, as it leads to\nlower-inertia grids and a higher reliance on un-\ncertain intermittent generation [ 8, 9, 10], as well\nas increased grid congestion requiring balancing\nactions [11].\nThere is therefore the potential for substan-\ntial economic, security , and emissions benefits\nfrom solving true AC-OPF formulations rather\nthan approximations. This is also a particularly\nhigh-leverage area for applying machine learning\nto tackle climate change [ 12]. Machine learn-\ning (ML)-based approaches for solving OPF have\nattracted interest due to their potential for im-\nportant speed improvements on a variety of OPF-\nrelated problems; a recent review can be found\nin Khaloie et al. [\n13]. However , for ML-based\nOPF solutions to be applied in real power grid\noperations, they must be reliable and robust. A\ncommon shortcoming in this regard is infeasi-\nbility with respect to constraints of the original\nproblem formulation. This can be tackled in a\nnumber of ways, for example by post-processing\nmodel outputs [ 14] or directly during learning\n© 2024 Google DeepMind. All rights reserved\nOPFData: Large-scale datasets for AC optimal power flow with topological perturbations\n[15]. Another basic requirement for operations\nis robustness to grid topology variation, either\nfor contingency analysis [ 16], due to planned ad-\ndition or removal of grid components, network\ntopology switching, or unplanned outages [ 17].\nGraph-based models are naturally suited to this\nrequirement, since their structure reflects the re-\nlational structure of the data [ 18, 19, 20].\nDespite the interest in the field, there are few\nstandardised datasets available. As a result, the\ntypical approach is for researchers to generate\ntheir own; due to computational complexity this\ncan involve substantial investments of compute\ntime for large grids or where discrete decision\nvariables are present. One exception known to the\nauthors is the freely-available OPF-Learn dataset\n[21], which is generated using a method designed\nto maximise the variety of active constraint sets\nin the solutions; pre-generated datasets are avail-\nable online for small grid sizes (up to 118 buses).\nOPF-Learn and other recent research into efficient\nsampling of the feasible set [e.g. 22, 23] shows\npromise for improving model results for a given\ndataset size. However , it is an open question how\nbest to extend these techniques to more general\nsettings such as datasets with topological varia-\ntion, where each example in the dataset could\nhave a different feasible set. A second freely-\navailable dataset is the T AS-97 dataset, which\ncontains realistic load patterns on a realistic grid\nmodelling Tasmania’s electricity network [ 24].\nThis dataset captures realistic correlations be-\ntween loads; however , the number of samples\n(7284) and grid size (97 buses) are both small.\nOur findings, and those of the review by Khaloie\net al. [ 13], are that adaptability to network varia-\ntion, scalability to large grids and large datasets,\nand the lack of standardized datasets and bench-\nmarking platforms remain key challenges in the\nfield.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2 The OPFData dataset",
+      "level": 1,
+      "text": "In this paper we introduce OPFData, a collection\nof open datasets for research into ML methods for\nsolving AC-OPF, aiming to assist with addressing\nsome of the challenges identified above. Each\nexample within the datasets is a self-contained\nOPF problem with solution, allowing for complete\nflexibility to represent different grid structures\nand properties between examples. It is our view\nthat models for operational application must be\nable to gracefully handle and learn from vari-\nable grid topology specifications. This is true\nfrom both from a pragmatic standpoint—because\nthe grid constantly varies—and an application-\nspecific one, for example for contingency screen-\ning. Hence we include datasets with topological\nperturbations.\nOPFData consists of 300k solved AC-OPF prob-\nlems for each of a range of grids, making it the\nlargest of such datasets openly available. Grid\nsizes range up to 13659 buses. Problems are\nbased on the base test cases from the widely-used\nPGLib-OPF library [ 31]. We select a number of\ncommonly-used grids spanning a range of sizes,\nand for each grid we present two datasets:\n• FullTop: This is a simple model for a fixed\ngrid with variable load conditions. We mul-\ntiply each active and reactive load value in-\ndependently by a random number drawn\nuniformly from\n[0.8, 1.2], similar to e.g.\nFioretto, Mak, and Van Hentenryck [ 15].\n• N-1: This is a simple model for a variable\ngrid with variable load conditions. We per-\nturb load as above, and additionally (with\nprobability 0.5) choose a single generator\nuniformly at random to drop, or (with prob-\nability 0.5) choose a single line/transformer\nuniformly at random to drop. Components\nwhich are dropped are removed entirely from\nthe network specification. We do not drop\ngenerators connected to reference buses, and\nwe do not drop a component if doing so\nwould result in a disconnected graph.\nSome of the perturbations above lead to infeasible\nproblems, which are discarded. Out of the five\ncore variability factors identified in Popli et al.\n[17] for building ML-OPF datasets (load distribu-\ntion, load power factor , generator outages, line\noutages, generator costs), the above covers all but\ngenerator costs, which we leave to future itera-\ntions. The datasets are summarised in table 1; a\ndetailed description is given in appendix A.\nThe OPFData datasets are distributed as JSON\n2\nOPFData: Large-scale datasets for AC optimal power flow with topological perturbations\nTable 1 | Summary of the OPFData datasets, detailing in each case the base scenario from PGLib-OPF\nwith original source citation, and number of buses |N |, generators |G| , loads |D |, shunts |S| , and\nedges |E 𝑙 | (AC lines), |E 𝑡 | (transformers). Each dataset consists of 300k examples and has FullTop\nand N-1 variants (so there are 20 datasets in total).\nScenario |N | |G| |D | |S| |E 𝑙 | |E 𝑡 |\npglib_opf_case14_ieee [25] 14 5 11 1 17 3\npglib_opf_case30_ieee [25] 30 6 21 2 34 7\npglib_opf_case57_ieee [25] 57 7 42 3 63 17\npglib_opf_case118_ieee [25] 118 54 99 14 175 11\npglib_opf_case500_goc [26, 27] 500 171 281 31 536 192\npglib_opf_case2000_goc [26, 27] 2000 238 1010 124 2737 896\npglib_opf_case4661_sdet [28] 4661 724 2683 696 4668 1329\npglib_opf_case6470_rte [29] 6470 761 3670 73 7426 1579\npglib_opf_case10000_goc [26, 27] 10000 2016 3984 510 10819 2374\npglib_opf_case13659_pegase [29, 30] 13659 4092 5544 8754 13792 6675\nfiles, available in a public Google Cloud bucket\n(gs://gridopt-dataset/), and are agnostic\nto ML frameworks or model architectures. For\nconvenience we additionally supply utilities for\nworking with OPFData in PyTorch Geometric\n[32], a popular ML framework for graph learning.\nListing 1 shows an example of training a sim-\nple graph neural network on a batched OPFData\ndataset in a few lines of code; for more details see\nthe PyG documentation. In Piloto et al. [ 33] we\napply a graph-based model written in JAX [34]\nand jraph [35] to equivalent datasets, including\ndetailed consideration of constraint satisfaction\nmetrics1.",
+      "refs": {
+        "figures": [],
+        "tables": [
+          "t1"
+        ],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Summary and future work",
+      "level": 1,
+      "text": "We have presented OPFData, an openly-available\ncollection of datasets of solved AC-OPF problems\nin a format amenable to common ML workflows.\nTaken together ,OPFData is the largest of such\nsolved and openly-available datasets in terms of\nnumber of examples, number of grids, and grid\nsizes. We hope to encourage researchers to ex-\nplore this fascinating and important field, and\nparticularly to scale methods to large grids with\ntopological variations.\nWhile we believe these datasets are useful as-\n1Note that the TopDrop dataset from Piloto et al. [ 33]\ncan be imitated with a 50-50 mix of the OPFData FullTop\nand N-1 datasets.\nis, there are several dimensions of improvement\npossible:\n• A more efficient or representative explo-\nration of the feasible space. One example\ncould be a more sophisticated distribution of\nload perturbations, for example a truncated\nnormal [14, 36]. Another could be a scheme\nsuch as the one presented by Joswig-Jones,\nBaker, and Zamzam [ 21], aiming to explore\nthe space of active constraint sets more thor-\noughly than a simple perturbation.\n• Further non-topological perturbations; for\nexample perturbing generator capacities or\nline properties, or generator costs to gener-\nalise to different fuel prices.\n• Further topological perturbations; for ex-\nample dropping more than one component,\nadding additional lines, or re-configuring ex-\nisting lines.\n• Further output features. For example active\nconstraint sets of the OPF solution could be\nused by classification models [13], or dual so-\nlutions could be used to learn models which\noutput locational marginal prices [ 19].",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "These correspond to a subset of features"
+    }
+  ],
+  "tables": [
+    {
+      "id": "t1",
+      "caption": "| Summary of the OPFData datasets, detailing in each case the base scenario from PGLib-OPF"
+    }
+  ],
+  "algorithms": [],
+  "equations": [],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": true,
+    "has_data_availability": false,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": false,
+      "experiments": false,
+      "discussion": false,
+      "conclusion": true,
+      "data_avail": false
+    },
+    "n_figures": 1,
+    "n_tables": 1,
+    "n_algorithms": 0,
+    "n_equations": 0
+  }
+}

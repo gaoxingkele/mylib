@@ -1,0 +1,165 @@
+{
+  "source_pdf": "papers/literature/applied_sciences_power_ai_10/pdf/applsci-16-00466.pdf",
+  "n_pages": 24,
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1 Introduction",
+      "level": 1,
+      "text": "Driven by the global transition toward low-carbon energy and the large-scale integra-\ntion of renewable resources, wind power has gradually become one of the main power\nsources in future energy systems [1]. In recent years, the installed capacity of wind power\nworldwide has continued to increase, and its share in the power generation mix has risen\nsignificantly, providing strong support for carbon emission reduction and energy security.\nHowever, wind power output was affected by multiple factors such as wind speed, tur-\nbulence intensity, meteorological disturbances, and terrain effects, exhibiting pronounced\nnonlinearity, non-stationarity, and randomness [2]. These characteristics often resulted\nin frequency fluctuations, increased reserve capacity, and higher wind curtailment rates,\nthereby threatening the security and economic efficiency of power system operations. Con-\nsequently, accurate wind power forecasting was of great importance for power dispatch\noptimization, renewable energy integration, and system operational security [3].\nThe development of wind power forecasting techniques has evolved from linear\nstatistical models to machine learning and then to deep learning models [4]. Early statistical\napproaches—such as the ARIMA model, exponential smoothing, and multiple linear\nAppl. Sci. 2026, 16, 466 https://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 2 of 24\nregression—were based on assumptions of stationarity and linearity [5]. They provided\nreasonable forecasts under short-term and stable conditions but struggled to capture the\nnonlinear mapping between wind speed and power output, remaining highly sensitive\nto noise disturbances [6]. With the advancement of computational capabilities, machine\nlearning models such as SVM, RF, and GBDT [7,8] introduced nonlinear feature fitting and\nhigh-dimensional feature fusion, leading to notable improvements in prediction accuracy.\nNevertheless, these models generally relied on manual feature engineering and failed to\nautomatically extract multi-scale dynamic patterns from wind power sequences. Moreover,\nthey provided a limited characterization of the time-varying coupling relationships among\nmeteorological variables [9].\nIn recent years, the widespread application of deep learning in time-series modeling\nhas further enhanced the accuracy of wind power forecasting. RNN, LSTM, and GRU mod-\nels captured temporal dependencies through hidden state transmission, showing strong\ncapability in nonlinear feature extraction [10,11]. Subsequently, CNNs were introduced to\nenhance local feature learning, while Transformer architectures demonstrated powerful per-\nformance in modeling long-term dependencies via self-attention mechanisms [12]. Despite\nthese advances, conventional deep learning models still exhibited three major limitations\nin wind power forecasting:\nInsufficient frequency-domain feature extraction: Wind power signals typically contain\nmulti-scale periodic components and high-frequency noise. Direct time-domain modeling\ncould not explicitly separate primary periodic patterns from disturbance components, lead-\ning to incomplete learning of periodic behaviors [13]. Limited cross-variable dependency\nmodeling: In multi-meteorological-input scenarios, traditional models usually concatenated\nmultiple variables as a single input sequence, failing to effectively capture the dynamic\ncorrelations and physical couplings among factors such as wind speed, temperature, and\nair pressure [14]. Inadequate balance between local fluctuations and global trends: Wind\npower sequences often exhibited both short-term volatility and long-term variations. Al-\nthough deep networks possessed strong expressive capacity, they faced trade-offs between\nfine-grained detail capture and global trend representation [15].\nTo address these challenges, recent studies have proposed combining meteorolog-\nical information with deep learning networks [ 16] or combining signal decomposition\nwith hybrid deep modeling to improve the robustness and multi-scale representation of\nmodels. Methods such as EMD, EEMD, and VMD have been applied for denoising and\nfeature extraction [17]. Hybrid models integrating deep learning, such as VMD-LSTM [18],\nCEEMDAN-GRU [19], and WT-CNN-LSTM [ 20], significantly enhanced prediction ac-\ncuracy across different temporal scales. In addition to decomposition–sequence hybrid\napproaches, deep composite architectures combining CNN with recurrent or attention\nmechanisms—such as CNN-LSTM and LSTM-Transformer—have become popular for\nwind power forecasting by leveraging the strengths of different networks [21]. However,\ntraditional decomposition–deep learning frameworks were often cascaded structures with\nweak coupling between the decomposition and forecasting modules, limiting the inte-\ngration of signal decomposition, noise suppression, and dynamic modeling. Meanwhile,\nmultivariate forecasting models mostly relied on temporal attention mechanisms and\nlacked explicit representation of graph-based dependencies among input variables.\nTo address the above challenges, this study develops a unified wind power forecasting\nframework (VMD–ALIF–GraphBlock–MLLA–Transformer) that integrates frequency–time\nanalysis with cross-variable feature learning, aiming to enhance multi-scale representation,\ndynamic dependency modeling, and overall forecasting robustness.\nIn this study, the forecasting architecture is organized from a hierarchical multi-scale\nperspective, spanning micro-scale and meso-scale modeling layers, to address the intrinsic\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 3 of 24\ncomplexity of wind power time series. At the micro-scale, the framework focuses on fine-\ngrained temporal fluctuations and high-frequency variations in wind power signals, which\nare critical for ultra-short-term forecasting accuracy. Without explicit decomposition and\nlocal temporal modeling, these rapid variations are easily obscured by noise or averaged\nout by global models. This level is primarily addressed through the VMD–ALIF dual\ndecomposition, which separates local oscillatory components and suppresses noise, as well\nas through the Attention_Block that captures short-term temporal dependencies and abrupt\ndynamics. At the meso-scale, the model emphasizes structured inter-variable interactions\nand medium- to long-range temporal evolution, which cannot be effectively represented\nby simple variable concatenation or shallow temporal models. The GraphBlock explicitly\nmodels cross-variable dependencies among meteorological factors, while the MLLA and\nTransformer modules capture medium- and long-term temporal patterns with efficient\nglobal sequence modeling.\nBy explicitly organizing the model into micro-scale and meso-scale components,\nthe proposed framework forms a problem-driven and hierarchical multi-scale learning\nparadigm, in which each module addresses a distinct and non-overlapping modeling\nchallenge. This design integrates time–frequency decomposition, dynamic dependency\nmodeling, and hierarchical temporal representation, rather than constituting a simple or\nredundant combination of independent algorithms.\n2. VMD–ALIF–GraphBlock–MLLA–Transformer\nForecasting Architecture\nTo enhance robustness and interpretability, the proposed forecasting architecture is\ndesigned as a hierarchical multi-scale framework, in which different modules operate\nat distinct temporal and structural scales, ranging from micro-scale local dynamics to\nmeso-scale global evolution patterns. First, the original wind power signal is processed\nthrough Variational Mode Decomposition (VMD) to obtain modal components across\ndistinct frequency bands. For modes with strong non-stationarity, Adaptive Local Iterative\nFiltering (ALIF) is further applied for secondary decomposition, yielding refined time–\nfrequency representations and effectively suppressing high-frequency noise. This dual\nVMD–ALIF structure preserves signal integrity while enhancing feature dis",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s2",
+      "title": "2.2 Forecasting Model",
+      "level": 2,
+      "text": "To simultaneously capture the intrinsic structure among multiple variables, short-term\nlocal variations, and long-term trends, this study proposes a novel multi-scale temporal\nforecasting framework. The architecture sequentially integrates a GraphBlock, MLLA, and\nTransformer module, enabling comprehensive modeling of inter-variable relationships\nand temporal dependencies in multivariate time series data. This design aims to enhance\nforecasting accuracy, particularly in complex, dynamic energy systems.\nThe ordering of GraphBlock, MLLA, and Transformer is deliberately designed based\non their functional roles in representation learning, rather than arbitrarily selected. Specif-\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 6 of 24\nically, the proposed architecture follows a progressive refinement strategy from inter-\nvariable dependency modeling to hierarchical temporal representation.\nGraphBlock is placed first to explicitly model dynamic dependencies among meteoro-\nlogical variables, enabling the network to construct structured variable-level representations\nbefore temporal aggregation. MLLA is then employed to efficiently capture medium- to\nlong-range temporal dependencies over extended input sequences with reduced compu-\ntational complexity. Finally, the Transformer module is applied to further refine global\ntemporal representations and capture fine-grained long-term interactions.\nThis ordering ensures that temporal modeling is conducted on dependency-aware\nrepresentations, thereby improving both modeling efficiency and forecasting accuracy.\n2.2.1. GraphBlock: Adaptive Graph Convolution Module\nIn multivariate time series forecasting, complex and dynamic dependencies often\nexist among variables—particularly in applications such as integrated energy systems and\nwind-solar power forecasting. Operational states at different locations, devices, or regions\nfrequently influence one another. To effectively model such non-stationary structural\ncorrelations, we introduce an Adaptive Graph Learning mechanism that dynamically\nconstructs a time-varying graph structure to represent inter-variable relationships [24].\nBased on the learned graph, we apply MixHop Graph Convolution, which aggregates\nmulti-hop neighbor information for feature extraction [25]. This enables deep, multi-scale,\nand cross-variable interaction modeling. By incorporating higher-order neighborhood\nfeatures, the module not only enhances the model’s capacity to capture complex inter-\nvariable dependencies but also supports the identification of both local and global dynamic\nbehaviors in the system.\nThis design provides both theoretical and structural foundations for robust and accu-\nrate forecasting, offering strong adaptability to evolving system conditions. The architecture\nand operational principles of this module are illustrated in Figure 2.\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \nFigure 2. Architecture and Principle of the GraphBlock.\n(1) Adaptive Graph Learning\nIn conventional GNNs [26], the adjacency matrix is typically predefined. However, in\ntime series forecasting, dependencies among variables are often dynamic and time-varying.\nTo address this, we employ an adaptive adjacency matrix learning mechanism that allows\nthe model to automatically learn and update inter-variable dependencies during training.\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 7 of 24\nLet E1 ∈ RN×h and E2 ∈ RN×h be trainable embedding parameters, where N denotes\nthe number of variables and h denotes the embedding dimension. The adaptive adjacency\nmatrix is defined as:\nA = Softmax\n\u0010\nReLU\n\u0010\nE1ET\n2\n\u0011\u0011\n(6)\nwhere E1, E2 ∈ RN×h are trainable node embeddings, h is the embedding dimension.\nThe matrix product E1ET\n2 computes pairwise similarity scores between variables. The\nReLU activation removes negative values to ensure stability and interpretability. The\nSoftmax function normalizes each row to ensure that the resulting weights form a valid\nprobability distribution.\nThis formulation ensures that each row of A represents the learned correlation weights\namong variables, allowing the model to dynamically capture evolving interactions and\noptimize the graph structure during training.\n(2) MixHop Graph Convolution\n1) Basic Graph Convolution\nOnce the adjacency matrix A is obtained, we perform Graph Convolution to propagate\ninformation among correlated variables [27]. The standard GCN operation is defined as:\nH(1) = σ(AXW (1)) (7)\nwhere H(1) is the output of the first graph convolution layer. W(1) is a trainable weight\nmatrix. σ(·) is a nonlinear activation function. A is the information of each variable that\ncan interact with its neighboring nodes.\nWhile standard GCNs capture only first-order neighbor information, they struggle to\nmodel long-range dependencies across variables. To address this limitation, we adopt the\nMixHop mechanism for multi-order feature aggregation.\n2) MixHop Mechanism\nTo simultaneously capture multiple levels of variable dependencies, we raise the\nadjacency matrix to different powers to represent higher-order interactions:\nH(j) = σ(AjXW (j)), j ∈ P (8)\nwhere P is the set of adjacency matrix powers, for example, P = {1,2} represents first-order\nand second-order adjacency propagation. Aj represents the j-th power of the adjacency\nmatrix, corresponding to j-hop neighborhood information.W(j) values are trainable weights\nfor each propagation level.\nFinally, we concatenated the information of all orders together:\nHgraph = Concat(H(1), H(2), . . . ,H(P))Wmix (9)\nwhere Wmix is the trainable weight matrix after fusion.\nBy aggregating features across multiple propagation depths, MixHop enables the\nmodel to simultaneously capture both short-range and long-range dependencies. This en-\nhances the representation of inter-variable structures and provides rich global information\nfor downstream forecasting modules.\nUnlike traditional GNNs that rely on manually defined graph structures, the GraphBlock\nlearns inter-variable dependencies adaptively from the data. This makes it well-suited for time\nseries forecasting tasks where the relationships among variables are implicit or dynamically\nevolving. In power prediction scenarios, this structure effectively models interactions among\nmeteorological variables, thereby improving the overall forecasting performance.\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 8 of 24\n2.2.2. Attention_Block: Multi-Head Self-Attention Module\nThe Attention_Block adopts a self-attention mechanism similar to that of the Trans-\nformer to capture local temporal dependencies and enhance the model’s ability to represent\nshort-term dynamic variations. In multivariate time series forecasting tasks, the future\nstate of a single variable is influenced not only by its own historical values but also by the\nshort-term dynamics of other variables. Therefore, we employ a Multi-Head Self-Attention\nmechanism to learn these complex interaction patterns [28].\n(1) Query-Key-Value (QKV) Computation\nGiven an input sequence X ∈ RB×L×d, where B is the batch size, L is the sequence\nlength, and d is the model dimension, the Q, K, and V matrices are obtained through\nlinear projections:\nQ = XWq, K = XWk, V = XWv (10)\n(2) Attention Weight Calculation\nThe attention weights measure the relevance between different time steps and are\ncomputed as follows:\nA = Softmax\n\u0012 QKT\n√dk\n\u0013\n(11)\nThe scaling factor √dk prevents excessively large dot-product values, ensuring stable\ngradients. The softmax function normalizes the attention scores so that their sum equals 1,\nallowing the model to assign greater weight to more relevant temporal features.\n(3) Triangular Causal Mask\nSince time series forecasting is an autoregressive task in which future information\nmust not be used to predict the current time step, a causal mask M is introduced to enforce\nthis constraint:\nA = Softmax\n\u0012 QKT\n√dk\n+ M\n\u0013\n(12)\nMi,j =\n(\n0, if i ≥ j\n−∞, if i < j (13)\nThis upper triangular masking matrix ensures that each",
+      "refs": {
+        "figures": [
+          "f2"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s3",
+      "title": "3 Case Study",
+      "level": 1,
+      "text": "",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s4",
+      "title": "3.1 Data Source",
+      "level": 2,
+      "text": "Given that the integrated energy system investigated in this paper incorporates a wind\npower generation module, we select wind power forecasting as a representative task to\nempirically validate the proposed hierarchical multi-module prediction model. This case\nstudy aims to evaluate the model’s effectiveness and practical applicability in handling\ncomplex temporal data.\nThe experimental data are obtained from operational monitoring records of wind\nturbines at a real-world wind farm. The dataset spans from 00:00 on 15 January 2024 to\n23:50 on 31 December 2024, with a sampling interval of 10 min, resulting in a total of 50,688\ncomplete data samples. Each sample consists of six key features: wind direction, wind\nspeed, air density, turbulence intensity, wind shear below hub height, and actual power\noutput of the wind turbine. All measurements are collected using high-precision sensors\ninstalled on on-site meteorological masts.\nIn the experimental setup, the input sequence length is set to 144, corresponding to\n24 h of historical data used as input to the model. The prediction horizons are set to 1,\n4, and 8 steps, corresponding to 10-min, 40-min, and 80-min ultra-short-term forecasting\ntasks, respectively. A rolling forecasting strategy is employed, where the model iteratively\noutputs the prediction for the next target time step, which is then used as part of the input\nfor the subsequent prediction. This strategy simulates the continual update requirements\ntypical in real-world operational forecasting scenarios.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s5",
+      "title": "3.2 Data Preprocessing",
+      "level": 2,
+      "text": "In addition to standard statistical preprocessing, domain-specific characteristics of\nwind energy conversion and practical constraints of wind farm measurement systems are\nexplicitly considered to enhance data quality and physical consistency.\nFrom a wind energy perspective, wind power output is inherently bound by turbine\noperational limits, including cut-in, rated, and cut-out wind speed regions. Consequently,\nabnormal power values that violate physical constraints—such as non-zero power under\nnear-zero wind speeds or power exceeding rated capacity—are treated as potential measure-\nment artifacts and removed. Moreover, due to the highly nonlinear relationship between\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 13 of 24\nwind speed and power, short-term turbulence may induce abrupt fluctuations that are not\nrepresentative of the underlying energy conversion process. These effects motivate the\nadoption of robust statistical outlier detection rather than fixed threshold-based filtering.\nFrom the measurement system perspective, the dataset is derived from SCADA records\nwith a 10-min sampling interval, where each data point represents an averaged measure-\nment. Such systems are susceptible to sensor noise, temporary communication interrup-\ntions, and synchronization delays among meteorological sensors and power meters. As a\nresult, missing values and isolated abnormal samples occur intermittently, but they account\nfor a relatively small proportion of the total dataset.\nBased on these considerations, a statistical outlier detection method based on the mean\nand standard deviation is adopted:\nµ = 1\nN ∑\nN\ni=1 xi (27)\nσ =\nr\n1\nN ∑\nN\ni=1 (xi − µ)2 (28)\nAny data point satisfying | xi − µ |> 3σ is identified as an outlier. This criterion is\nselected to balance robustness and sensitivity, and empirical tests indicate that moderate\nvariations around this threshold do not significantly affect forecasting performance.\nDetected outliers and missing values are imputed using forward or backward filling,\ndepending on data availability at neighboring time steps. Forward filling is applied when\nsubsequent valid observations are unavailable, while backward filling is used otherwise.\nThis strategy preserves temporal continuity while avoiding the introduction of artificial\ndynamics, which is particularly important for ultra-short-term forecasting.\nBy combining physically informed screening with statistically robust preprocessing,\nthe resulting dataset maintains consistency with wind energy conversion mechanisms\nand SCADA measurement characteristics, thereby improving both reproducibility and\nreliability for subsequent model training and evaluation.",
+      "refs": {
+        "figures": [],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    },
+    {
+      "id": "s6",
+      "title": "3.3 Effectiveness of VMD-ALIF Decomposition",
+      "level": 2,
+      "text": "The original wind speed signal exhibits strong fluctuations and complex multi-scale\nvariation patterns, including both long-term trends and short-term volatility. This reflects\nthe typical non-stationary nature of wind speed time series, which poses challenges for\ndirect modeling and prediction. To address this, a dual-stage decomposition strategy\ncombining VMD and ALIF is applied prior to forecasting.\nTo optimize the key parameters of VMD, namely the mode number K and the penalty\nfactor α, this study employs a grid search strategy combined with validation set evaluation\nto enhance the prediction accuracy of the downstream forecasting model. The search space\nis defined as K ∈ [2, 8 ] (integers) and α ∈ [500, 5000 ] with a step size of 500. Using\nthe RMSE on the validation set as the optimization objective, all (K, α) combinations are\nevaluated in terms of their impact on forecasting performance.\nThe results, summarized in Figure 5, indicate that the configuration K = 3 and\nα = 2000 yields the lowest validation RMSE (17.526). This configuration decomposes\nthe wind power series into three physically interpretable sub-modes, corresponding to\nlow-frequency trend components, mid-frequency periodic variations, and high-frequency\nstochastic disturbances. Compared with smaller values of K, this setting avoids under-\ndecomposition that mixes heterogeneous frequency contents, while larger values of K tend\nto introduce redundant or spurious modes, leading to marginal performance degradation.\nThese observations suggest that the forecasting performance is moderately sensitive to the\nchoice of K, but remains stable within a reasonable range.\nhttps://doi.org/10.3390/app16010466\nAppl. Sci. 2026, 16, 466 14 of 24\nFigure 5. Heatmap of grid search results.\nFor the ALIF stage, the window size is adaptively determined based on the local extrema\ndistribution of each VMD mode, following the standard ALIF formulation. As a result, no fixed\nwindow length needs to be manually specified. This adaptive mechanism allows the filtering\nprocess to automatically adjust to local signal characteristics, reducing sensitivity to parameter\ntuning and enhancing robustness across different operating conditions. Empirically , the\nforecasting results remain stable under small variations in the ALIF scaling factor, indicating\nlow sensitivity of the model performance to ALIF-related parameters.\nOverall, the adopted VMD–ALIF parameter settings achieve a balance between decom-\nposition fidelity and robustness, providing stable multi-scale representations for subsequent\nforecasting while avoiding excessive sensitivity to hyperparameter selection.\nFigure 6 illustrates the layer-by-layer processing effect during the VMD-ALIF de-\ncomposition. Starting from the original signal, VMD first separates it into three distinct\nmodes, each corresponding to a specific frequency band. Mode 1 represents low-frequency\ncomponents with smooth variations, highlighting the long-term trend of wind speed.\nMode 2 captures mid-frequency oscillations, effectively expressing medium-term distur-\nbances. Mode 3 extracts high-frequency information, including sharp local fluctuations\nand noise. The bandwidth constraint imposed by VMD reduces frequency overlap across\nmodes, thereby mitigating mode mixing and laying a reliable foundation for subsequent\nALIF decomposition.\nALIF is then applied to each VMD mode to extract trend and detail components. For\nMode 1, the trend displays low-frequency periodic oscillations that reflect the dominant\ncyclic behavior, while the detail captures localized variations with small amplitudes. In\nMode 2, the trend retains periodicity with a slightly higher frequency than Mode 1, while\nthe detail exhibits larger amplitude fluctuations that capture medium-scale variability. In\nMode 3, the trend still maintains certain periodic characteristics but shows reduced stability,\nand the detail reveals intense short-term oscillations, reflecting strong local dynamics in\nthe high-frequency domain.\nThe adaptive windowing of ALIF enables effective extraction of localized structural\nfeatures, enhancing the interpretability of the decomposition. The combined VMD–ALIF\nprocess constructs a dual-scale hierarchical representation that separates the complex\nwind power signal into frequency-specific and trend–detail components. This structure\nhighlights essential features, reduces non-stationarity, and facilitates more stable and\naccurate model training.\nhttps://doi.org/10.3390/app16010466",
+      "refs": {
+        "figures": [
+          "f5",
+          "f6"
+        ],
+        "tables": [],
+        "algorithms": [],
+        "equations": []
+      }
+    }
+  ],
+  "figures": [
+    {
+      "id": "f1",
+      "caption": "Forecasting Workflow."
+    },
+    {
+      "id": "f2",
+      "caption": "Architecture and Principle of the GraphBlock."
+    },
+    {
+      "id": "f3",
+      "caption": "Architecture and Principle of the MLLA."
+    },
+    {
+      "id": "f4",
+      "caption": "Architecture and Principle of the Transformer."
+    },
+    {
+      "id": "f5",
+      "caption": "Heatmap of grid search results."
+    },
+    {
+      "id": "f6",
+      "caption": "illustrates the layer-by-layer processing effect during the VMD-ALIF de-"
+    }
+  ],
+  "tables": [],
+  "algorithms": [],
+  "equations": [
+    {
+      "id": "e2",
+      "latex_or_text": "(2)"
+    },
+    {
+      "id": "e6",
+      "latex_or_text": "(6)"
+    },
+    {
+      "id": "e11",
+      "latex_or_text": "(11)"
+    },
+    {
+      "id": "e12",
+      "latex_or_text": "(12)"
+    },
+    {
+      "id": "e17",
+      "latex_or_text": "(17)"
+    },
+    {
+      "id": "e19",
+      "latex_or_text": "(19)"
+    },
+    {
+      "id": "e20",
+      "latex_or_text": "(20)"
+    },
+    {
+      "id": "e21",
+      "latex_or_text": "(21)"
+    }
+  ],
+  "signals": {
+    "has_baseline_table": false,
+    "has_ablation": false,
+    "has_dataset_name": false,
+    "has_data_availability": true,
+    "has_code_availability": false,
+    "section_roles": {
+      "intro": true,
+      "related": false,
+      "method": true,
+      "experiments": true,
+      "discussion": false,
+      "conclusion": false,
+      "data_avail": false
+    },
+    "n_figures": 6,
+    "n_tables": 0,
+    "n_algorithms": 0,
+    "n_equations": 8
+  }
+}
