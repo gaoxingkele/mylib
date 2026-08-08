@@ -40,6 +40,14 @@
   - `48` 降 AIGC
   - `67` 终稿流水线（可选）
 
+### `academic-research-suite` (ARS-Codex)
+- 源码：`D:/aicoding/lib/Academic-Research-Skills-Codex/skills/academic-research-suite`
+- Digest：`D:/aicoding/lib/Codex-Academic-Research/`
+- 安装：`~/.codex/skills/academic-research-suite`、`~/.claude/skills/academic-research-suite`
+- Bridge：`skills/codex-ars-powergrid`
+- 作用：研究→写作→审稿→pipeline（单 skill router；内部 5 个 WORKFLOW）
+- 验证：技能列表里只应出现 **一个** ARS 条目
+
 ## Project mirror Layer
 
 ### `powergrid_paper`

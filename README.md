@@ -45,3 +45,10 @@ Useful absorbed modules for paper writing:
 - `powergrid_paper/` — literature scripts, distill metadata, CMC style, journal templates
 - Details: `powergrid_paper/README.md`
 - Note: PDF corpora remain in `D:/aicoding/powergrid_benchmark/papers/literature/` (not mirrored)
+
+## Codex + Academic Research Skills (ARS)
+- Digest: `Codex-Academic-Research/` (姿势 + ARS 用法 + 电网 playbooks)
+- Upstream suite: `Academic-Research-Skills-Codex/` → skill `academic-research-suite` (v0.1.24)
+- Installed: `~/.codex/skills/academic-research-suite` and `~/.claude/skills/academic-research-suite`
+- Bridge: `skills/codex-ars-powergrid/SKILL.md`
+- Verify: new chat should list **one** ARS entry named `academic-research-suite`

@@ -62,3 +62,9 @@ Use only high-ROI modules for our power-grid manuscript flow:
 - `../LLM_Wiki/graph.md`
 - `../LLM_Wiki/nodes.md`
 - `../LLM_Wiki/playbooks.md`
+
+## Codex + ARS
+
+- Digest: `../Codex-Academic-Research/`
+- Suite junction: `academic-research-suite` → `../Academic-Research-Skills-Codex/skills/academic-research-suite`
+- Powergrid bridge: `codex-ars-powergrid`

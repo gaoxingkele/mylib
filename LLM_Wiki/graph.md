@@ -8,6 +8,8 @@ graph TD
     P0 --> RC[RepLLM-CPA]
     P0 --> PC[Paper_CCF Skills]
     P0 --> AB[AERS Powergrid Bridge]
+    P0 --> ARS[academic-research-suite ARS]
+    P0 --> CX[Codex-ARS Digest]
 
     RS --> RS1[IdeaSpark Pattern Tags]
     RS --> RS2[Lit Table / Pattern Cards]
@@ -22,8 +24,16 @@ graph TD
     PC --> PC1[Journal Router]
     PC --> PC2[Per-journal writing policy]
     PC --> PC3[Acceptance patterns sections]
-    PC1 --> O1[~/.claude/skills/Paper_CCF/SKILL.md]
-    PC2 --> O2[~/.claude/skills/Paper_CCF/journals/*/SKILL.md]
+    PC1 --> O1[Paper_CCF/SKILL.md]
+    PC2 --> O2[Paper_CCF/journals/*/SKILL.md]
+
+    ARS --> W1[deep-research]
+    ARS --> W2[academic-paper]
+    ARS --> W3[academic-paper-reviewer]
+    ARS --> W4[academic-pipeline]
+    ARS --> W5[experiment-agent]
+    CX --> ARS
+    CX --> PC
 
     AB --> A1[literature-review-tools]
     AB --> A2[citation-checker]
@@ -37,7 +47,9 @@ graph TD
     A4 --> Q4[中英文学术降AIGC]
     A5 --> Q5[终稿流水线编排]
 
-    M1 --> S[Submission Readiness]
+    W2 --> S[Submission Readiness]
+    W3 --> S
+    M1 --> S
     M4 --> S
     O2 --> S
     Q2 --> S
@@ -51,5 +63,6 @@ graph TD
 - `ResearchStudio-Idea` 负责“方法/创新模式蒸馏”。
 - `RepLLM-CPA` 负责“结构化证据蒸馏（章节-图表-实验信号）”。
 - `Paper_CCF` 负责“目标期刊决策与写作约束”。
+- `academic-research-suite` 负责“研究→写作→审稿流程（ARS）”。
+- `Codex-ARS Digest` 负责“姿势手册 + 电网 playbook”。
 - `AERS-Bridge` 负责“投稿前质量闸门工具链”。
-
