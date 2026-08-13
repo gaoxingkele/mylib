@@ -20,6 +20,16 @@ Powergrid reuse: **Content Parsing only** → structured `paper.json` evidence
 geometry for journal distill (`repllm_cpa_journal_distill.py`). Do **not** mass-run
 Architecture/Code/Audit agents on the OA journal corpus.
 
+## HarnessBank (arXiv:2607.13683, EverMind)
+- Paper PDF: `papers/HarnessBank_2607.13683.pdf`
+- Library entry: `HarnessBank/` (skill + powergrid adapt note; **upstream code not released yet**)
+- Skill junction: `skills/HarnessBank` → `HarnessBank/`
+- Agent skill: `~/.claude/skills/harnessbank-gated-evolution` (junction)
+
+Powergrid reuse: **gated credit + WHERE×WHY gene bank** for evolving research-agent
+harnesses (prompts/tools/runtime/recovery), not as a paper-drafting engine. See
+`HarnessBank/powergrid_adapt_note.md`.
+
 ## Auto-Empirical-Research-Skills (AERS)
 - Repo: `Auto-Empirical-Research-Skills/` (cloned from `brycewang-stanford/Auto-Empirical-Research-Skills`)
 - Scope: very large catalog (skills + tools + workflows) for empirical research.

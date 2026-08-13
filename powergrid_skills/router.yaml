@@ -1,0 +1,259 @@
+# powergrid_skills 路由表
+# 按任务描述关键词匹配，命中关键词越多排名越前。
+# 注意：期刊适配与多智能体审稿不在本包，走 D:/aicoding/paper_reviews/（9 期刊画像）。
+default_note: "期刊适配与多智能体审稿模拟走 D:/aicoding/paper_reviews/（9 期刊画像），不在本包；本包只补引用核查/一致性/claim 证据/写作质量/模板/统计缺口。"
+categories:
+  - id: citation-check
+    name: 投稿前引用核查 / citation check
+    match:
+      - 引用核查
+      - 引用核验
+      - 引用真实性
+      - 参考文献核查
+      - 参考文献检查
+      - 参考文献验证
+      - 幻觉引用
+      - 引用验证
+      - 引用格式
+      - bib
+      - citation check
+      - citation verification
+      - reference check
+      - verify citations
+      - bibliography
+    components:
+      - citation_verification/verify.py
+      - citation_verification/verify-citations.py
+      - citation_verification/format-checker.py
+      - citation_verification/api-clients.py
+      - citation_verification/SKILL.md
+      - citation_verification/common-patterns.md
+      - citation_verification/citation-workflow.md
+      - citation_verification/semantic_scholar_api_protocol.md
+      - citation_verification/crossref_api_protocol.md
+      - citation_verification/openalex_api_protocol.md
+      - citation_verification/arxiv_api_protocol.md
+      - citation_verification/MANIFEST.md
+    note: "纯 stdlib 可用 verify.py 起步；在线比对用 claude-scholar 三脚本；逐字段交叉验证协议看 nature-ref-verifier 的 SKILL.md。"
+  - id: consistency-lint
+    name: 全文一致性 / LaTeX 静态检查
+    match:
+      - 全文一致性
+      - 一致性检查
+      - 一致性扫描
+      - LaTeX 检查
+      - LaTeX 静态检查
+      - LaTeX 检查
+      - latex lint
+      - 静态检查
+      - 术语一致
+      - consistency check
+      - consistency lint
+      - consistency sweep
+      - latex guard
+    components:
+      - consistency_lint/check_consistency.py
+      - consistency_lint/consistency-sweep.md
+      - consistency_lint/latex_guard.py
+      - consistency_lint/latex-rules.md
+      - consistency_lint/grammar-rules.md
+      - consistency_lint/MANIFEST.md
+    note: "机械性一致性风险先用 check_consistency.py 扫，LaTeX 隐患用 latex_guard.py；数字与表格语义核对归 claim-evidence 类。"
+  - id: claim-evidence
+    name: claim / 数字 / 证据核查
+    match:
+      - claim
+      - 证据绑定
+      - 证据核查
+      - 数字核查
+      - 数字核对
+      - 数字与表格
+      - 表格一致性
+      - 结果核对
+      - 结果核查
+      - 正文数字
+      - 数据核对
+      - claim audit
+      - evidence
+      - results validation
+      - 论文数字
+    components:
+      - claim_evidence/scientific-writing/SKILL.md
+      - claim_evidence/scientific-writing/scripts/audit_claims.py
+      - claim_evidence/scientific-writing/scripts/check_consistency.py
+      - claim_evidence/scientific-writing/scripts/lint_manuscript.py
+      - claim_evidence/scientific-writing/assets/claim_evidence_template.csv
+      - claim_evidence/paper-claim-audit/SKILL.md
+      - claim_evidence/citation-audit/SKILL.md
+      - claim_evidence/claim_verification_protocol.md
+      - claim_evidence/ai_research_failure_modes.md
+      - claim_evidence/PAPER_PLAN_TEMPLATE.md
+      - claim_evidence/EXPERIMENT_LOG_TEMPLATE.md
+      - claim_evidence/contribution.md
+      - claim_evidence/reviewer-audit.md
+      - claim_evidence/results_validation_check.py
+      - claim_evidence/MANIFEST.md
+    note: "核心打法：填 claim_evidence_template.csv 把每条 claim 绑到结果文件，再用 paper-claim-audit 零上下文协议复核数字。"
+  - id: writing-quality
+    name: 去 AI 味 / 降 AIGC / 润色
+    match:
+      - 去 AI 味
+      - 去AI味
+      - 去 AI 腔
+      - 去AI腔
+      - AI 腔
+      - AI腔
+      - 降 AIGC
+      - 降AIGC
+      - AIGC
+      - 润色
+      - 写作质量
+      - 学术写作
+      - humanize
+      - polish
+      - anti-ai
+      - AI 检测
+      - AI检测
+      - writing quality
+    components:
+      - writing_quality/writing_quality_check.md
+      - writing_quality/forbidden-patterns.md
+      - writing_quality/phrases-to-cut.md
+      - writing_quality/patterns-english.md
+      - writing_quality/humanize_check.py
+      - writing_quality/ai-tone-guardrails.md
+      - writing_quality/MANIFEST.md
+    note: "先用 phrases-to-cut + patterns-english 全文检索替换，再用 humanize_check.py 扫残留 AI 模式。"
+  - id: benchmark-paper
+    name: 写基准论文 / benchmark
+    match:
+      - 基准论文
+      - 基准构建
+      - 基准设计
+      - 数据集论文
+      - benchmark 论文
+      - benchmark论文
+      - benchmark paper
+      - benchmark
+      - 评测论文
+      - 评测框架
+      - MA-SQLGrid
+    components:
+      - paper_templates/benchmark-paper-template/SKILL.md
+      - paper_templates/benchmark-paper-template/references/benchmark-design.md
+      - paper_templates/benchmark-paper-template/references/checklist.md
+      - paper_templates/benchmark-paper-template/references/construction-pipeline.md
+      - paper_templates/benchmark-paper-template/references/experiments.md
+      - paper_templates/benchmark-paper-template/references/gap-analysis.md
+      - paper_templates/benchmark-paper-template/references/instantiation-template.md
+      - paper_templates/benchmark-paper-template/references/orchestrator-notes.md
+      - paper_templates/benchmark-paper-template/references/paper-structure.md
+      - paper_templates/MANIFEST.md
+    note: "五支柱框架直接对口 MA-SQLGrid 类基准论文：先读 SKILL.md，再按 references 逐章节展开。"
+  - id: experiments-writing
+    name: 写实验章节 / 表格规范
+    match:
+      - 实验章节
+      - 实验部分
+      - 实验设计章节
+      - 实验表格
+      - 表格规范
+      - 实验设置
+      - 实验写作
+      - experiments section
+      - experiment tables
+      - experimental setup
+    components:
+      - paper_templates/experiments.md
+      - paper_templates/benchmark-paper-template/references/experiments.md
+      - paper_templates/benchmark-paper-template/references/construction-pipeline.md
+      - paper_templates/introduction.md
+      - paper_templates/MANIFEST.md
+    note: "实验章节结构与表格呈现规范看 experiments.md 两份；基准类实验优先 benchmark-paper-template 版本。"
+  - id: pre-submission-review
+    name: 审稿前自查 / 模拟拒稿
+    match:
+      - 审稿前自查
+      - 投稿前自查
+      - 投稿前检查
+      - 模拟拒稿
+      - 拒稿
+      - 对抗评审
+      - 审稿自查
+      - kill argument
+      - adversarial review
+      - pre-submission
+      - reviewer audit
+      - structured review
+    components:
+      - paper_templates/kill-argument/SKILL.md
+      - paper_templates/structured_review.py
+      - paper_templates/benchmark-paper-template/references/checklist.md
+      - claim_evidence/reviewer-audit.md
+      - claim_evidence/ai_research_failure_modes.md
+      - consistency_lint/grammar-rules.md
+      - paper_templates/MANIFEST.md
+    note: "kill-argument 双线程对抗评审暴露致命弱点；structured_review.py 做结构化自评。深度多智能体审稿走 paper_reviews。"
+  - id: rebuttal
+    name: 返修回复 / response to reviewers
+    match:
+      - 返修
+      - 返修回复
+      - 审稿意见回复
+      - 审稿回复
+      - 逐点回复
+      - response to reviewers
+      - rebuttal
+      - cover letter
+      - 返修包
+      - revision
+    components:
+      - paper_templates/response-to-reviewers.tex
+      - paper_templates/cover-letter.tex
+      - paper_templates/respond_check.py
+      - paper_templates/check_package_consistency.py
+      - paper_templates/paper-review.md
+      - paper_templates/MANIFEST.md
+    note: "套用两个 .tex 模板逐点回复；respond_check.py 校验回复与意见一一对应，check_package_consistency.py 查返修包机械一致性。"
+  - id: statistics
+    name: 统计显著性报告
+    match:
+      - 统计显著性
+      - 显著性检验
+      - 统计报告
+      - 假设检验
+      - 统计分析
+      - 效应量
+      - p 值
+      - p值
+      - statistical reporting
+      - statistical analysis
+      - statistics
+      - significance test
+    components:
+      - statistics/SKILL.md
+      - statistics/assumption_checks.py
+      - statistics/test_selection_guide.md
+      - statistics/reviewer-checklist.md
+      - statistics/statistical-reporting.md
+      - statistics/statistical_reporting_standards.md
+      - statistics/MANIFEST.md
+    note: "选检验看 test_selection_guide.md；报告格式按 Nature 系 statistical-reporting.md + reviewer-checklist.md 双对照。"
+  - id: rigor-review
+    name: ARA / 论文语义审稿（rigor review）
+    match:
+      - ARA
+      - 语义审稿
+      - 语义评审
+      - 严谨性审查
+      - rigor review
+      - rigor
+      - 可证伪
+      - review dimensions
+      - agent-native research artifact
+    components:
+      - paper_templates/rigor-reviewer/SKILL.md
+      - paper_templates/rigor-reviewer/references/review-dimensions.md
+      - claim_evidence/claim_verification_protocol.md
+      - paper_templates/MANIFEST.md
+    note: "ARA Seal Level 2 六维度语义评审；需先通过结构校验（Level 1）再做此认知层评审。"

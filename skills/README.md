@@ -40,6 +40,23 @@ Journal acceptance distill reuses IdeaSpark's **pattern vocabulary + lit_table +
 - Notes: `../RepLLM/journal_adapt_note.md`
 - Index: `Paper_CCF/resources/repllm-cpa-journal-distill.md`
 
+## HarnessBank (EverMind, arXiv:2607.13683)
+
+- **Paper:** [arXiv:2607.13683](https://arxiv.org/abs/2607.13683) — *HarnessBank: Semantic Gene-Bank Search with Gated Verification for Agent-Harness Self-Evolution*
+- **PDF:** `../papers/HarnessBank_2607.13683.pdf`
+- **This folder:** `HarnessBank` → `../HarnessBank` (methodology skill; upstream code **not released yet**)
+- **Agent junction:** `~/.claude/skills/harnessbank-gated-evolution`
+
+### What we reuse for powergrid research automation
+
+**Gated credit + semantic gene bank** for evolving agent harnesses (not manuscript drafting):
+
+- WHERE×WHY archive of reusable patches (anti search-collapse / anti task-overfit)
+- Validity → activation → paired significance → gain screening before promoting edits
+- LLM diagnoses/proposes; deterministic code owns credit (sealed held-out)
+
+- Notes: `../HarnessBank/powergrid_adapt_note.md`
+
 ## Auto-Empirical-Research-Skills (AERS)
 
 - **Repo:** `../Auto-Empirical-Research-Skills`

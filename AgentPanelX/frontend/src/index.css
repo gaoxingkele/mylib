@@ -1,0 +1,358 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --background: 224 18% 7%;
+    --foreground: 214 22% 91%;
+    --card: 224 16% 10%;
+    --muted: 222 14% 15%;
+    --muted-foreground: 216 12% 57%;
+    --border: 222 14% 18%;
+    --input: 224 16% 12%;
+    --primary: 213 94% 68%;
+    --destructive: 0 72% 58%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    @apply m-0 h-full min-h-full bg-background;
+  }
+
+  body {
+    @apply text-foreground antialiased;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    font-size: 14px;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  select {
+    color-scheme: dark;
+  }
+
+  select option {
+    background: #111318;
+    color: #e6e9ef;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-slate-950 hover:bg-primary/90;
+  }
+
+  .btn-secondary {
+    @apply border border-border bg-card text-foreground hover:bg-muted;
+  }
+
+  .btn-danger {
+    @apply bg-destructive text-white hover:bg-destructive/90;
+  }
+
+  .btn-ghost {
+    @apply text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+
+  .field {
+    @apply w-full rounded-md border border-border bg-input px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:ring-1 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .panel-surface {
+    @apply rounded-lg border border-border bg-card;
+  }
+
+  .status-badge-triage {
+    @apply border border-amber-500/30 bg-amber-500/10 text-amber-400;
+  }
+
+  .status-badge-todo {
+    @apply border border-slate-500/30 bg-slate-500/10 text-slate-400;
+  }
+
+  .status-badge-ready {
+    @apply border border-blue-500/30 bg-blue-500/10 text-blue-400;
+  }
+
+  .status-badge-in-progress,
+  .status-badge-done {
+    @apply border border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
+  }
+
+  .status-badge-blocked {
+    @apply border border-red-500/30 bg-red-500/10 text-red-400;
+  }
+
+  .plan-document-dialog {
+    @apply m-auto h-[min(880px,90vh)] w-[min(1120px,94vw)] max-h-none max-w-none overflow-hidden rounded-xl border border-border bg-card p-0 shadow-2xl;
+  }
+
+  .plan-document-dialog::backdrop {
+    @apply bg-black/75 backdrop-blur-sm;
+  }
+
+  .chat-markdown {
+    @apply whitespace-pre-wrap break-words;
+  }
+
+  .chat-markdown > :first-child {
+    @apply mt-0;
+  }
+
+  .chat-markdown > :last-child {
+    @apply mb-0;
+  }
+
+  .chat-markdown p {
+    @apply my-2;
+  }
+
+  .chat-markdown h1,
+  .chat-markdown h2,
+  .chat-markdown h3,
+  .chat-markdown h4,
+  .chat-markdown h5,
+  .chat-markdown h6 {
+    @apply my-3 font-semibold tracking-tight text-foreground;
+  }
+
+  .chat-markdown h1 {
+    @apply text-lg;
+  }
+
+  .chat-markdown h2 {
+    @apply text-base;
+  }
+
+  .chat-markdown h3,
+  .chat-markdown h4,
+  .chat-markdown h5,
+  .chat-markdown h6 {
+    @apply text-sm;
+  }
+
+  .chat-markdown strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .chat-markdown em {
+    @apply italic;
+  }
+
+  .chat-markdown del {
+    @apply text-muted-foreground line-through;
+  }
+
+  .chat-markdown a {
+    @apply text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary;
+  }
+
+  .chat-markdown ul {
+    @apply my-2 list-disc space-y-1 pl-5;
+  }
+
+  .chat-markdown ol {
+    @apply my-2 list-decimal space-y-1 pl-5;
+  }
+
+  .chat-markdown li > ul,
+  .chat-markdown li > ol {
+    @apply my-1;
+  }
+
+  .chat-markdown blockquote {
+    @apply my-2 border-l-2 border-primary/40 pl-3 text-muted-foreground;
+  }
+
+  .chat-markdown code {
+    @apply rounded bg-muted px-1 py-0.5 font-mono text-[0.85em] text-blue-200;
+  }
+
+  .chat-markdown pre {
+    @apply my-2 max-w-full overflow-x-auto whitespace-pre rounded-md border border-border bg-background p-3 text-xs leading-5;
+  }
+
+  .chat-markdown pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .chat-markdown hr {
+    @apply my-3 border-border;
+  }
+
+  .chat-markdown table {
+    @apply my-3 block max-w-full overflow-x-auto border-collapse text-xs;
+  }
+
+  .chat-markdown th {
+    @apply border border-border bg-muted px-2 py-1.5 text-left font-semibold text-foreground;
+  }
+
+  .chat-markdown td {
+    @apply border border-border px-2 py-1.5 align-top;
+  }
+
+  .chat-markdown img {
+    @apply my-3 max-w-full rounded-md border border-border;
+  }
+
+  .chat-markdown input[type='checkbox'] {
+    @apply mr-1.5 align-middle accent-primary;
+  }
+
+  .markdown-document {
+    @apply text-sm leading-7 text-foreground/90;
+  }
+
+  .markdown-document > :first-child {
+    @apply mt-0;
+  }
+
+  .markdown-document > :last-child {
+    @apply mb-0;
+  }
+
+  .markdown-document h1 {
+    @apply mb-5 mt-9 border-b border-border pb-3 text-2xl font-semibold tracking-tight text-foreground;
+  }
+
+  .markdown-document h2 {
+    @apply mb-4 mt-8 border-b border-border/70 pb-2 text-xl font-semibold tracking-tight text-foreground;
+  }
+
+  .markdown-document h3 {
+    @apply mb-3 mt-7 text-base font-semibold text-foreground;
+  }
+
+  .markdown-document h4,
+  .markdown-document h5,
+  .markdown-document h6 {
+    @apply mb-2 mt-6 font-semibold text-foreground;
+  }
+
+  .markdown-document p {
+    @apply my-4;
+  }
+
+  .markdown-document a {
+    @apply text-primary underline decoration-primary/40 underline-offset-4 hover:decoration-primary;
+  }
+
+  .markdown-document strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .markdown-document ul {
+    @apply my-4 list-disc space-y-1 pl-6;
+  }
+
+  .markdown-document ol {
+    @apply my-4 list-decimal space-y-1 pl-6;
+  }
+
+  .markdown-document li > ul,
+  .markdown-document li > ol {
+    @apply my-1;
+  }
+
+  .markdown-document blockquote {
+    @apply my-5 border-l-4 border-primary/40 bg-primary/5 px-4 py-1 italic text-muted-foreground;
+  }
+
+  .markdown-document hr {
+    @apply my-8 border-border;
+  }
+
+  .markdown-document table {
+    @apply my-5 block w-full overflow-x-auto border-collapse text-left text-xs;
+  }
+
+  .markdown-document th {
+    @apply border border-border bg-muted px-3 py-2 font-semibold text-foreground;
+  }
+
+  .markdown-document td {
+    @apply border border-border px-3 py-2 align-top;
+  }
+
+  .markdown-document code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-blue-200;
+  }
+
+  .markdown-document pre {
+    @apply my-5 overflow-x-auto rounded-lg border border-border bg-background p-4 text-xs leading-6;
+  }
+
+  .markdown-document pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .markdown-document img {
+    @apply my-5 max-w-full rounded-lg border border-border;
+  }
+
+  .markdown-document input[type='checkbox'] {
+    @apply mr-2 align-middle accent-primary;
+  }
+
+  .mermaid-diagram {
+    @apply my-6 overflow-x-auto rounded-lg border border-border bg-background/60 p-4 text-center;
+  }
+
+  .mermaid-diagram svg {
+    @apply mx-auto h-auto max-w-full;
+  }
+
+  .mermaid-loading {
+    @apply my-6 rounded-lg border border-border bg-background/60 p-8 text-center text-xs text-muted-foreground;
+  }
+
+  .mermaid-fallback {
+    @apply my-6 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-200;
+  }
+
+  .mermaid-fallback p {
+    @apply m-0;
+  }
+
+  .mermaid-fallback pre {
+    @apply mb-0 mt-3 border-red-500/20 bg-background/70 text-foreground;
+  }
+}
