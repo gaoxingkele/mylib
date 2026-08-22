@@ -1,0 +1,126 @@
+# PAA Exploration Graph — P05-1
+artifact: P05-1
+schema_version: "1.0"
+root_questions:
+  - id: R01
+    text: 如何把知识图谱统一驱动查询检索与生成生成闭环，绕开现有技术的覆盖？
+    support_level: explicit
+    source_ref: trace/email-discussion-2026-08-22.md (内部讨论)
+
+nodes:
+  - id: CV-01
+    type: claim-version
+    text: v1 事实注入版本 — 独权重心"知识图谱三层增强的多引擎并行检索"
+    claim_file: application/claims.md
+    claim_no: 1
+    preamble_quote: "并行执行关键词检索、向量检索和知识图谱多跳遍历...通过倒数排名融合算法..."
+    characterizing_quote: "...将结构化事实三元组以强制约束规则注入大语言模型的系统提示..."
+    mechanism_summary: "图谱作为三层增强源（查询扩展+图谱扩召回+事实注入生成端）"
+    support_level: explicit
+    source_ref: git commit 70630b1 (P05-1 第一稿)
+    parents: []
+    evidence: [EC-01, EC-02, EC-04]
+
+  - id: CV-02
+    type: claim-version
+    text: v2 冲突标记注入版本 — 注入检索层冲突标记而非事实三元组
+    claim_file: application/claims.md
+    claim_no: 1
+    preamble_quote: "（同 v1）"
+    characterizing_quote: "...将检索层校验器的惩罚结果整理为冲突标记信息，作为排除性约束指令注入系统提示..."
+    mechanism_summary: "图谱作为检索层校验器输出冲突标记，生成端消费标记"
+    support_level: explicit
+    source_ref: git commit eb34454e (P05-1 v2 改动)
+    parents: [CV-01]
+    evidence: [EC-01, EC-02, EC-03]
+
+  - id: CV-03
+    type: claim-version
+    text: v3 封箱+元适配版本 — 完全废弃注入动作，约束由结构隔离+元门控承载
+    claim_file: application/claims.md
+    claim_no: 1
+    preamble_quote: "（同 v1）"
+    characterizing_quote: "...封箱裁决分流（可用态/隔离态）...仅可用态装配进模型输入...提示词不承载注入的约束..."
+    mechanism_summary: "图谱作为封箱可用性裁决 +元策略对象生成；零注入"
+    support_level: explicit
+    source_ref: git commit eefdc0f (P05-1 v3 终稿)
+    parents: [CV-02]
+    evidence: [EC-01, EC-02, EC-03, EC-04]
+
+  - id: PA-01
+    type: prior-art
+    pn: CN121636664A
+    relationship: conflicts
+    discovered_in_round: CV-01
+    source: incopat-search (回归评估发现)
+    relevance: X
+    evidence_file: evidence/prior_art_claims/CN121636664A.md
+    contested_features: [D01, D02, D03]
+    notes: 覆盖三路检索+RRF融合。已在前序承认；特征部分需动态权重+路径惩罚+封箱三层分工方能区别。
+    support_level: explicit
+    source_ref: evidence/prior_art_search/CN121636664A.json (incoPat claim 接口 2026-08-22)
+
+  - id: PA-02
+    type: prior-art
+    pn: CN121659916A
+    relationship: conflicts
+    discovered_in_round: CV-02
+    source: incopat-search (第二轮独立查新发现)
+    relevance: X
+    evidence_file: evidence/prior_art_claims/CN121659916A.md
+    contested_features: [D05, D06, D07, D08, D09]
+    notes: 覆盖事实注入约束。v2 以为换内容即可避开，实测其圈走的是"注入"动词本身——v3 必须换机制（封箱+元门控，零注入）。
+    support_level: explicit
+    source_ref: evidence/prior_art_search/CN121659916A.json (incoPat claim 接口 2026-08-22)
+
+  - id: DA-01
+    type: design-around
+    text: "v1→v2: 把事实三元组换成冲突标记——**不构成机制级绕行**，因'注入'动词仍是对方独占"
+    target_prior_art: PA-01
+    from_version: CV-01
+    to_version: CV-02
+    mechanism_before: "事实三元组 → 注入 → 系统提示"
+    mechanism_after: "冲突标记 → 注入 → 系统提示"
+    rationale: "只换内容不换机制，仍在 CN121659916A 的'注入'动词射程内"
+    evidence: [EC-03]
+    support_level: explicit
+    source_ref: evidence/design_around/round_1_facts_to_contrast.md
+
+  - id: DA-02
+    type: design-around
+    text: "v2→v3: 废弃注入动作，改为封箱裁决+元门控——**构成机制级绕行**"
+    target_prior_art: PA-02
+    from_version: CV-02
+    to_version: CV-03
+    mechanism_before: "标记 → 注入 → 系统提示"
+    mechanism_after: "封箱 → 裁决分流 → 仅可用态装配 → 元门控生成（零注入）"
+    rationale: "替换的不是内容，而是机制本身。隔离态封箱根本不入模型输入，与'提示词注入式约束'是不同方向。"
+    evidence: [EC-03]
+    support_level: explicit
+    source_ref: evidence/design_around/round_3_injection_to_sealing.md
+
+  - id: DE-01
+    type: dead-end
+    text: "曾考虑'在冲突标记中保留少量事实三元组作补充'，最终放弃"
+    support_level: explicit
+    source_ref: evidence/design_around/round_1_facts_to_contrast.md (决策记录于 v2 阶段)
+    rejected_at: CV-02
+    reason: "任何'补充事实'进入提示词都落入 CN121659916A 的'结构化事实注入'机制；机制级回避要求提示词不出现任何结构化事实。"
+
+  - id: DE-02
+    type: dead-end
+    text: "曾考虑'完全删除图谱生成层约束'，退回'检索+LLM'标准RAG"
+    support_level: explicit
+    source_ref: evidence/design_around/round_1_facts_to_contrast.md (决策记录于 v2 阶段)
+    rejected_at: CV-02
+    reason: "失去了图谱三层增强的'生成端约束'支点，独权与 CN121636664A（标准多路检索）的区别只剩'动态权重+路径惩罚'两点——创造性风险升高。"
+
+edges:
+  - {from: CV-01, to: CV-02, kind: revision}
+  - {from: CV-02, to: CV-03, kind: revision}
+  - {from: CV-01, to: DA-01, kind: triggers}
+  - {from: PA-02, to: DA-01, kind: target}
+  - {from: CV-02, to: DA-02, kind: triggers}
+  - {from: PA-02, to: DA-02, kind: target}
+  - {from: CV-02, to: DE-01, kind: rejected-from}
+  - {from: CV-02, to: DE-02, kind: rejected-from}
