@@ -110,7 +110,15 @@ Non-negotiable evidence rules:
 {stage['objective']}
 
 ## Acceptance checks
-""" + "\n".join(f"- {item}" for item in stage.get("acceptance", []))
+""" + "\n".join(f"- {item}" for item in stage.get("acceptance", [])) + """
+
+The Harness itself will run the acceptance checks after you exit. Your final message is not evidence of completion.
+Before exiting, verify that every file explicitly required by the objective exists in the worktree. If the objective
+requires `manuscript/DEEP_REVISION_EVIDENCE.md`, create it with these exact headings:
+`Title-to-Evidence Map`, `Primary Estimand and Analysis Unit`, `Comparison Budget and Data Visibility`,
+`Negative and Null Results`, `Shared Assets and Independent Contribution`, `New or Rerun Experiments`, and
+`Unresolved Human Blockers`. Do not claim that a command ran if the environment prevented it.
+"""
     code, out = transport.codex_exec(prompt, cwd=workdir, sandbox="workspace-write", model=model, command=command)
     log_path.write_text(f"exit_code={code}\n\n{out}", encoding="utf-8")
     return code == 0

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import shlex
 import shutil
@@ -318,10 +319,21 @@ def check_custom(script: str, workdir: str | Path, config: dict) -> dict:
     if not path.exists():
         return _result(name, "fail", f"custom script not found: {path}")
     argv = ([sys.executable, str(path)] if path.suffix.lower() == ".py" else [str(path)]) + parts[1:]
+    # Custom evidence checks may import repository-local packages.  An
+    # isolated stage must resolve those imports from its own worktree, not
+    # from the caller's main checkout (and not from an unrelated global
+    # installation).  Prepend an existing worktree ``src`` directory while
+    # preserving any explicitly supplied PYTHONPATH entries.
+    env = os.environ.copy()
+    worktree_src = workdir / "src"
+    if worktree_src.is_dir():
+        prior = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = str(worktree_src) + (os.pathsep + prior if prior else "")
     try:
         proc = subprocess.run(
             argv,
             cwd=str(workdir),
+            env=env,
             capture_output=True,
             text=True,
             encoding="utf-8",

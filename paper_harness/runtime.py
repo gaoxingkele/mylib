@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
+import ctypes
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -49,7 +51,7 @@ def ts_compact() -> str:
 
 
 class Runtime:
-    """一个论文项目的 harness 状态。打开时自动把遗留 RUNNING 标记 FAILED。"""
+    """一个论文项目的 harness 状态。"""
 
     def __init__(self, paper_dir: str | Path):
         self.paper_dir = Path(paper_dir).resolve()
@@ -64,13 +66,46 @@ class Runtime:
         self.db.row_factory = sqlite3.Row
         self.db.executescript(_SCHEMA)
         self.db.commit()
-        self._recover_running()
 
     # ---------- 崩溃恢复 ----------
 
-    def _recover_running(self) -> None:
+    @staticmethod
+    def _pid_alive(pid: int) -> bool:
+        if os.name == "nt":
+            # ``os.kill(pid, 0)`` is not a portable existence probe on
+            # Windows. Query a handle without delivering a signal.
+            process_query_limited_information = 0x1000
+            handle = ctypes.windll.kernel32.OpenProcess(process_query_limited_information, False, pid)
+            if not handle:
+                return False
+            ctypes.windll.kernel32.CloseHandle(handle)
+            return True
+        try:
+            os.kill(pid, 0)
+        except (OSError, ProcessLookupError, ValueError):
+            return False
+        return True
+
+    def recover_stale_running(self) -> list[str]:
+        """Mark RUNNING stages without a live run lease as FAILED.
+
+        Read-only status/review connections never mutate stage state. Recovery
+        is invoked explicitly by ``run``.
+        """
         rows = self.db.execute("SELECT stage_id, plan_version FROM stages WHERE status='RUNNING'").fetchall()
+        recovered: list[str] = []
         for row in rows:
+            run_dir = self.root / "runs" / f"v{row['plan_version']}_{row['stage_id']}"
+            lease_path = run_dir / "lease.json"
+            lease: dict = {}
+            if lease_path.exists():
+                try:
+                    lease = json.loads(lease_path.read_text(encoding="utf-8"))
+                except (json.JSONDecodeError, OSError):
+                    lease = {}
+            pid = lease.get("pid")
+            if isinstance(pid, int) and self._pid_alive(pid):
+                continue
             self.db.execute(
                 "UPDATE stages SET status='FAILED', updated_at=? WHERE stage_id=? AND plan_version=?",
                 (now_iso(), row["stage_id"], row["plan_version"]),
@@ -79,9 +114,11 @@ class Runtime:
                 "stage_failed",
                 stage_id=row["stage_id"],
                 plan_version=row["plan_version"],
-                reason="harness 重启时发现遗留 RUNNING，无法证明其完成，标记 FAILED",
+                reason="harness 检测到无存活 lease 的 RUNNING，无法证明其完成，标记 FAILED",
             )
+            recovered.append(row["stage_id"])
         self.db.commit()
+        return recovered
 
     # ---------- 事件 ----------
 

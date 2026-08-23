@@ -10,10 +10,12 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 from pathlib import Path
 
@@ -84,6 +86,41 @@ def git(paper_dir: Path, *args: str) -> subprocess.CompletedProcess:
         ["git", "-C", str(paper_dir), *args], capture_output=True, text=True,
         encoding="utf-8", errors="replace",
     )
+
+
+class _RepoAcceptLock:
+    """A small cross-process lock that serializes merges into one repository."""
+
+    def __init__(self, repo_root: Path, timeout: float = 120.0) -> None:
+        git_dir_proc = git(repo_root, "rev-parse", "--absolute-git-dir")
+        if git_dir_proc.returncode != 0:
+            raise RuntimeError("cannot resolve repository git directory for accept lock")
+        token = hashlib.sha256(str(repo_root.resolve()).encode("utf-8")).hexdigest()[:16]
+        self.path = Path(tempfile.gettempdir()) / "paper_harness_accept_locks" / f"{token}.lock"
+        self.timeout = timeout
+        self.fd: int | None = None
+
+    def __enter__(self):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        deadline = time.monotonic() + self.timeout
+        while True:
+            try:
+                self.fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.write(self.fd, json.dumps({"pid": os.getpid(), "repo": str(self.path)}).encode("utf-8"))
+                return self
+            except FileExistsError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f"repository accept lock timed out: {self.path}")
+                time.sleep(0.1)
+
+    def __exit__(self, exc_type, exc, tb):
+        if self.fd is not None:
+            os.close(self.fd)
+            self.fd = None
+        try:
+            self.path.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def sanitize_branch_part(s: str) -> str:
@@ -359,7 +396,14 @@ def _stage_branch(paper_dir: Path, stage_id: str, plan_version: int) -> str:
 def _worktree_target(rt: Runtime, paper_dir: Path, stage_id: str, plan_version: int) -> Path:
     """Use a short Windows path so unrelated long repository paths can be checked out safely."""
     if os.name == "nt":
-        identity = f"{paper_dir.resolve()}|{plan_version}|{stage_id}".encode("utf-8")
+        retry_nonce_path = (
+            rt.root / "runs" / f"v{plan_version}_{sanitize_branch_part(stage_id)}"
+            / "retry_worktree_nonce.txt"
+        )
+        retry_nonce = ""
+        if retry_nonce_path.exists():
+            retry_nonce = retry_nonce_path.read_text(encoding="utf-8", errors="replace").strip()
+        identity = f"{paper_dir.resolve()}|{plan_version}|{stage_id}|{retry_nonce}".encode("utf-8")
         token = hashlib.sha256(identity).hexdigest()[:16]
         return Path(tempfile.gettempdir()) / "paper_harness_worktrees" / token
     return rt.root / "runs" / f"v{plan_version}_{sanitize_branch_part(stage_id)}" / "worktree"
@@ -383,7 +427,57 @@ def _safe_remove_worktree_target(repo_root: Path, target: Path, rt_root: Path) -
     git(repo_root, "worktree", "prune")
 
 
-def _prepare_workdir(rt: Runtime, paper_dir: Path, stage_id: str, plan_version: int) -> tuple[Path, str | None, str | None]:
+def _repo_relative_paths_for_sparse(paper_dir: Path, config: dict) -> list[str]:
+    """Return only paper/evidence/build paths needed by the approved stage."""
+    context = git_context(paper_dir)
+    if context is None:
+        return []
+    repo_root, paper_prefix = context
+    paths: list[Path] = [paper_prefix]
+    # Read dependencies belong in the sparse checkout but must not widen the
+    # write/clean-baseline scope used by execution_preflight().  Keeping these
+    # contracts separate prevents a shared read-only evidence tree from making
+    # unrelated user files part of a paper stage's merge gate.
+    configured = (
+        list(config.get("allowed_write_paths", []))
+        + list(config.get("required_tracked_files", []))
+        + list(config.get("read_only_paths", []))
+    )
+    configured.extend(["../../paper_projects/target_journal_templates", "../../AGENTS.md"])
+    for item in configured:
+        candidate = Path(str(item))
+        absolute = candidate.resolve() if candidate.is_absolute() else (paper_dir / candidate).resolve()
+        try:
+            paths.append(absolute.relative_to(repo_root))
+        except ValueError:
+            continue
+    return [path.as_posix().rstrip("/") for path in dict.fromkeys(paths) if str(path) not in ("", ".")]
+
+
+def _configure_sparse_worktree(wt: Path, sparse_paths: list[str]) -> tuple[bool, str]:
+    init = git(wt, "sparse-checkout", "init", "--no-cone")
+    if init.returncode != 0:
+        return False, init.stderr.strip() or "sparse-checkout init failed"
+    patterns = "\n".join(f"/{path}/" if not Path(path).suffix else f"/{path}" for path in sparse_paths) + "\n"
+    set_proc = subprocess.run(
+        ["git", "-C", str(wt), "sparse-checkout", "set", "--no-cone", "--stdin"],
+        input=patterns,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if set_proc.returncode != 0:
+        return False, set_proc.stderr.strip() or "sparse-checkout set failed"
+    checkout = git(wt, "-c", "core.longpaths=true", "checkout", "HEAD")
+    if checkout.returncode != 0:
+        return False, checkout.stderr.strip() or "sparse checkout failed"
+    return True, "sparse checkout configured"
+
+
+def _prepare_workdir(
+    rt: Runtime, paper_dir: Path, stage_id: str, plan_version: int, config: dict,
+) -> tuple[Path, str | None, str | None]:
     """Return (paper workdir, branch, worktree root), including monorepo prefixes."""
     run_dir = rt.root / "runs" / f"v{plan_version}_{sanitize_branch_part(stage_id)}"
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -398,7 +492,9 @@ def _prepare_workdir(rt: Runtime, paper_dir: Path, stage_id: str, plan_version: 
     if git(repo_root, "rev-parse", "--verify", branch).returncode == 0:
         git(repo_root, "branch", "-D", branch)
     wt.parent.mkdir(parents=True, exist_ok=True)
-    proc = git(repo_root, "-c", "core.longpaths=true", "worktree", "add", str(wt), "-b", branch, "HEAD")
+    proc = git(
+        repo_root, "-c", "core.longpaths=true", "worktree", "add", "--no-checkout", str(wt), "-b", branch, "HEAD"
+    )
     if proc.returncode != 0:
         try:
             _safe_remove_worktree_target(repo_root, wt, rt.root)
@@ -407,6 +503,20 @@ def _prepare_workdir(rt: Runtime, paper_dir: Path, stage_id: str, plan_version: 
         if git(repo_root, "rev-parse", "--verify", branch).returncode == 0:
             git(repo_root, "branch", "-D", branch)
         raise RuntimeError(f"git worktree 创建失败: {proc.stderr.strip()}")
+    sparse_paths = _repo_relative_paths_for_sparse(paper_dir, config)
+    if sparse_paths:
+        sparse_ok, sparse_detail = _configure_sparse_worktree(wt, sparse_paths)
+    else:
+        checkout = git(wt, "-c", "core.longpaths=true", "checkout", "HEAD")
+        sparse_ok = checkout.returncode == 0
+        sparse_detail = checkout.stderr.strip() or "full checkout failed"
+    if not sparse_ok:
+        try:
+            _safe_remove_worktree_target(repo_root, wt, rt.root)
+        finally:
+            if git(repo_root, "rev-parse", "--verify", branch).returncode == 0:
+                git(repo_root, "branch", "-D", branch)
+        raise RuntimeError(f"git sparse worktree 创建失败: {sparse_detail}")
     paper_workdir = (wt / paper_prefix).resolve()
     if not paper_workdir.is_dir():
         git(repo_root, "worktree", "remove", "--force", str(wt))
@@ -441,17 +551,33 @@ def cmd_retry(args) -> int:
             print("无法解析 Git 仓库根目录。", file=sys.stderr)
             return 1
         repo_root, _ = context
-        targets = []
-        if st["worktree"]:
-            targets.append(Path(st["worktree"]))
-        targets.extend(
-            [
-                _worktree_target(rt, paper_dir, args.stage_id, plan["version"]),
-                rt.root / "runs" / f"v{plan['version']}_{sanitize_branch_part(args.stage_id)}" / "worktree",
-            ]
-        )
-        for target in dict.fromkeys(str(path.resolve()) for path in targets):
-            _safe_remove_worktree_target(repo_root, Path(target), rt.root)
+        run_dir = rt.root / "runs" / f"v{plan['version']}_{sanitize_branch_part(args.stage_id)}"
+        if args.preserve_locked_worktree:
+            # Preserve a legacy locked incident directory exactly and rotate
+            # the retry onto a nonce-derived target. The preserved directory
+            # is never registered as a candidate or merged into the paper.
+            run_dir.mkdir(parents=True, exist_ok=True)
+            nonce = f"{ts_compact()}-{secrets.token_hex(4)}"
+            (run_dir / "retry_worktree_nonce.txt").write_text(nonce + "\n", encoding="utf-8")
+            rt.event(
+                "locked_worktree_preserved",
+                stage_id=args.stage_id,
+                plan_version=plan["version"],
+                worktree=st["worktree"],
+                retry_nonce=nonce,
+            )
+        else:
+            targets = []
+            if st["worktree"]:
+                targets.append(Path(st["worktree"]))
+            targets.extend(
+                [
+                    _worktree_target(rt, paper_dir, args.stage_id, plan["version"]),
+                    run_dir / "worktree",
+                ]
+            )
+            for target in dict.fromkeys(str(path.resolve()) for path in targets):
+                _safe_remove_worktree_target(repo_root, Path(target), rt.root)
         branch = st["branch"] or _stage_branch(paper_dir, args.stage_id, plan["version"])
         if git(repo_root, "rev-parse", "--verify", branch).returncode == 0:
             proc = git(repo_root, "branch", "-D", branch)
@@ -476,6 +602,9 @@ def cmd_run(args) -> int:
     rt = Runtime(paper_dir)
     cfg = load_config(paper_dir)
     try:
+        recovered = rt.recover_stale_running()
+        if recovered:
+            print("恢复无存活 lease 的 stage: " + ", ".join(recovered), file=sys.stderr)
         plan = rt.latest_plan()
         if plan is None:
             print("尚无 plan，请先运行 plan。", file=sys.stderr)
@@ -548,10 +677,18 @@ def _run_one_stage(rt: Runtime, paper_dir: Path, cfg: dict, st, plan_version: in
     }
     rt.set_stage_status(stage_id, plan_version, "RUNNING")
     rt.event("stage_started", stage_id=stage_id, plan_version=plan_version)
+    run_dir = rt.root / "runs" / f"v{plan_version}_{sanitize_branch_part(stage_id)}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    lease_path = run_dir / "lease.json"
+    lease_path.write_text(
+        json.dumps({"pid": os.getpid(), "started_at": now_iso(), "stage_id": stage_id}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
     print(f"[{stage_id}] RUNNING — {st['title']}")
     try:
-        workdir, branch, wt = _prepare_workdir(rt, paper_dir, stage_id, plan_version)
+        workdir, branch, wt = _prepare_workdir(rt, paper_dir, stage_id, plan_version, cfg)
     except RuntimeError as e:
+        lease_path.unlink(missing_ok=True)
         rt.set_stage_status(stage_id, plan_version, "BLOCKED")
         rt.event("stage_blocked", stage_id=stage_id, reason=str(e))
         print(f"[{stage_id}] BLOCKED: {e}", file=sys.stderr)
@@ -563,7 +700,6 @@ def _run_one_stage(rt: Runtime, paper_dir: Path, cfg: dict, st, plan_version: in
     else:
         print(f"[{stage_id}] 非 git 目录，原地执行（见 runs/{stage_id}/NOTE.txt）")
 
-    run_dir = rt.root / "runs" / f"v{plan_version}_{sanitize_branch_part(stage_id)}"
     log_path = run_dir / "executor.log"
     try:
         ok = roles.execute_stage(stage, workdir, model, cfg.get("transport_command", "codex exec"), log_path)
@@ -571,6 +707,7 @@ def _run_one_stage(rt: Runtime, paper_dir: Path, cfg: dict, st, plan_version: in
         ok = False
         log_path.write_text(f"executor 异常: {e}\n", encoding="utf-8")
     if not ok:
+        lease_path.unlink(missing_ok=True)
         rt.set_stage_status(stage_id, plan_version, "BLOCKED")
         rt.event("stage_blocked", stage_id=stage_id, reason="executor 未成功完成", log=str(log_path))
         print(f"[{stage_id}] BLOCKED: executor 失败，现场保留于 {run_dir}", file=sys.stderr)
@@ -586,17 +723,20 @@ def _run_one_stage(rt: Runtime, paper_dir: Path, cfg: dict, st, plan_version: in
     for r in results:
         print(f"[{stage_id}] check {r['name']}: {r['status']}" + (f" — {r['detail'].splitlines()[0]}" if r["detail"] else ""))
     if results and not checks.all_ok(results):
+        lease_path.unlink(missing_ok=True)
         rt.set_stage_status(stage_id, plan_version, "BLOCKED")
         rt.event("stage_blocked", stage_id=stage_id, reason="验收检查未通过", acceptance=str(acc_path))
         print(f"[{stage_id}] BLOCKED: 验收未通过，现场保留于 {run_dir}", file=sys.stderr)
         return 1
     committed, commit_detail = commit_candidate(workdir, stage_id, plan_version, cfg)
     if not committed:
+        lease_path.unlink(missing_ok=True)
         rt.set_stage_status(stage_id, plan_version, "BLOCKED")
         rt.event("stage_blocked", stage_id=stage_id, reason="candidate commit failed", detail=commit_detail)
         print(f"[{stage_id}] BLOCKED: 候选提交失败：{commit_detail}", file=sys.stderr)
         return 1
     rt.event("candidate_committed", stage_id=stage_id, detail=commit_detail)
+    lease_path.unlink(missing_ok=True)
     rt.set_stage_status(stage_id, plan_version, "CANDIDATE")
     rt.event("candidate_ready", stage_id=stage_id, acceptance=str(acc_path))
     print(f"[{stage_id}] CANDIDATE — 等待人工 accept/reject。")
@@ -658,13 +798,23 @@ def cmd_accept(args) -> int:
                 print("无法解析 Git 仓库根目录。", file=sys.stderr)
                 return 1
             repo_root, _ = context
-            ok, detail = execution_preflight(paper_dir, load_config(paper_dir))
-            if not ok:
-                rt.set_stage_status(args.stage_id, st["plan_version"], "BLOCKED")
-                rt.event("accept_blocked", stage_id=args.stage_id, reason="main baseline changed", detail=detail)
-                print(f"accept 前主工作区不再是候选生成时的干净基线：\n{detail}", file=sys.stderr)
+            try:
+                lock = _RepoAcceptLock(repo_root)
+                lock.__enter__()
+            except (RuntimeError, TimeoutError) as exc:
+                rt.event("accept_wait_failed", stage_id=args.stage_id, reason=str(exc))
+                print(str(exc), file=sys.stderr)
                 return 1
-            proc = git(repo_root, "merge", "--no-ff", branch, "-m", f"paper-harness: accept {args.stage_id} (plan v{st['plan_version']})")
+            try:
+                ok, detail = execution_preflight(paper_dir, load_config(paper_dir))
+                if not ok:
+                    rt.set_stage_status(args.stage_id, st["plan_version"], "BLOCKED")
+                    rt.event("accept_blocked", stage_id=args.stage_id, reason="main baseline changed", detail=detail)
+                    print(f"accept 前主工作区不再是候选生成时的干净基线：\n{detail}", file=sys.stderr)
+                    return 1
+                proc = git(repo_root, "merge", "--no-ff", branch, "-m", f"paper-harness: accept {args.stage_id} (plan v{st['plan_version']})")
+            finally:
+                lock.__exit__(None, None, None)
             if proc.returncode != 0:
                 rt.set_stage_status(args.stage_id, st["plan_version"], "BLOCKED")
                 rt.event("accept_blocked", stage_id=args.stage_id, reason="merge 冲突", branch=branch)
@@ -808,6 +958,11 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("paper_dir")
     sp.add_argument("stage_id")
     sp.add_argument("--reason", required=True, help="可审计的重试原因")
+    sp.add_argument(
+        "--preserve-locked-worktree",
+        action="store_true",
+        help="preserve a locked incident worktree and rotate to a fresh target",
+    )
     sp.set_defaults(func=cmd_retry)
 
     sp = sub.add_parser("status", help="看板投影：stage 状态 + 最近事件")
