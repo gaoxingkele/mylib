@@ -126,11 +126,15 @@ difference_feature: "对违背图谱关系路径的候选结果施加惩罚因�
 
 ## Integration with existing tools
 
+- `cn-patent-application-cluster` skill → orchestrates intake, patent-point tree, prior-art preparation, drafting, examiner review, and packaging; companion role prompts live in `./agents/`
 - `incopat-search` skill → feeds `evidence/prior_art_search/` (real pn + search expressions + semantics scores)
 - `patent-grant-scorer` skill → feeds `evidence/scoring/` (AHP weights, SEM scores, indicator scores)
 - `cnipa-drafting-workflow` skill → produces `application/` layer content
 - `patent-disclosure-skill` → produces `logic/invention.md` from project docs
 - 探索图(`trace/`)is) is the connective tissue across drafting rounds that current scattered git commits lose
+
+Portable copies are under `./skills/`; Codex role prompts are under
+`./agents/`. See `./PATENT_TOOLKIT.md` for installation and provenance.
 
 ## Tool adapters
 

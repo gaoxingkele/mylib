@@ -1,5 +1,21 @@
 ﻿# aicoding/lib — shared skill & paper library
 
+## Patent application toolkit
+
+- Entry: `paa/README.md` and `paa/SKILL.md`
+- Portable skills: `paa/skills/`
+  - `cn-patent-application-cluster` — Codex-native CNIPA mining, drafting, review, and packaging workflow
+  - `incopat-search` — real incoPat prior-art retrieval
+  - `patent-grant-scorer` — AHP+SEM grant-readiness scoring
+  - `cnipa-drafting-workflow` — CNIPA drafting and examiner-loop workflow
+  - `patent-disclosure-skill` — project material to technical-disclosure workflow
+- Companion Codex agents: `paa/agents/cn-patent-*.toml`
+- Inventory, installation paths, provenance, and secret-handling rules: `paa/PATENT_TOOLKIT.md`
+- Patent-specific plugin scan: `paa/plugins/README.md`
+
+The library contains templates and code only. Runtime credentials, `.env`
+files, incoPat token caches, and local account files are intentionally excluded.
+
 ## ResearchStudio-Idea (arXiv:2607.04439)
 - Code: `ResearchStudio/` (sparse/full clone of microsoft/ResearchStudio)
 - Skill junction: `skills/ResearchStudio-Idea` → `ResearchStudio/ResearchStudio-Idea`
