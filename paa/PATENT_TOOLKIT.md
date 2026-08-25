@@ -17,6 +17,7 @@
 | Claude-compatible skill | cnipa-drafting-workflow | `paa/skills/cnipa-drafting-workflow/` | CNIPA drafting rules and examiner loop |
 | Claude-compatible skill | patent-disclosure-skill | `paa/skills/patent-disclosure-skill/` | Project documents/code to technical disclosure |
 | Codex role set | cn-patent-* | `paa/agents/` | Orchestrator, disclosure, prior-art, claim, specification, examiner, packager roles |
+| Slash commands | patent, evolve-patent-system | `paa/commands/` | One-shot full-pipeline entry; system-evolution outer loop (`.claude/commands/`) |
 
 The four pre-existing skills were compared to the source project on
 2026-08-25. Their `SKILL.md` files and all safe source files were identical, so

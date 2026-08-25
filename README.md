@@ -78,3 +78,18 @@ Useful absorbed modules for paper writing:
 - Installed: `~/.codex/skills/academic-research-suite` and `~/.claude/skills/academic-research-suite`
 - Bridge: `skills/codex-ars-powergrid/SKILL.md`
 - Verify: new chat should list **one** ARS entry named `academic-research-suite`
+
+## Claude user-level skills backup
+- `claude-user-skills/` — mirror of `~/.claude/skills/` (9 skills: ARA/paper ×4,
+  proposal ×3, anysearch, codex-review-loop), synced 2026-08-25
+- Credentials excluded: `anysearch/.env` intentionally not mirrored
+
+## Codex user-level backup
+- `codex-user-skills/` — mirror of `~/.codex/skills/` (42 skills), synced 2026-08-25
+- `codex-user-agents/` — mirror of `~/.codex/agents/` (18 role prompts), synced 2026-08-25
+- Credentials excluded: `~/.codex/{auth.json,secrets/,cap_sid}` never mirrored
+
+## Claude plugins backup
+- `claude-plugins/` — `superpowers/` plugin + `marketplaces/`
+  (claude-plugins-official, ralph-loop-setup) + install index JSONs, synced 2026-08-25
+- Runtime cache (`plugins/cache/`) excluded
