@@ -22,6 +22,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # 直接运行时�
 from paper_harness import checks, cli, roles, transport  # noqa: E402
 from paper_harness.runtime import Runtime  # noqa: E402
 
+REAL_RUN_CODEX = transport._run_codex
+
 MINIMAL_TEX = r"""\documentclass{article}
 \begin{document}
 \title{Smoke Test Paper}
@@ -195,6 +197,37 @@ class PaperHarnessSmokeTest(unittest.TestCase):
         self.assertIn("MOCK", out)
         self.codex_guard.assert_not_called()
 
+    def test_transport_timeout_can_be_extended_by_environment(self):
+        os.environ["PAPER_HARNESS_CODEX_TIMEOUT"] = "2700"
+        previous_transport = os.environ.pop(transport.MOCK_ENV, None)
+        try:
+            with mock.patch("paper_harness.transport._run_codex", return_value=(0, "ok")) as runner:
+                code, out = transport.codex_exec("hello", cwd=self.tmp)
+            self.assertEqual((code, out), (0, "ok"))
+            self.assertEqual(runner.call_args.args[-1], 2700)
+        finally:
+            os.environ.pop("PAPER_HARNESS_CODEX_TIMEOUT", None)
+            if previous_transport is not None:
+                os.environ[transport.MOCK_ENV] = previous_transport
+
+    def test_transport_timeout_terminates_controlled_process_tree(self):
+        previous_transport = os.environ.pop(transport.MOCK_ENV, None)
+        fake_proc = mock.Mock()
+        fake_proc.communicate.side_effect = subprocess.TimeoutExpired(cmd="codex", timeout=1)
+        try:
+            with (
+                mock.patch("paper_harness.transport._command_argv", return_value=["codex", "exec"]),
+                mock.patch("paper_harness.transport.subprocess.Popen", return_value=fake_proc),
+                mock.patch("paper_harness.transport._terminate_process_tree") as terminate,
+            ):
+                code, out = REAL_RUN_CODEX("prompt", self.tmp, "read-only", None, "codex exec", 1)
+            self.assertEqual(code, 124)
+            self.assertIn("process tree terminated", out)
+            terminate.assert_called_once_with(fake_proc)
+        finally:
+            if previous_transport is not None:
+                os.environ[transport.MOCK_ENV] = previous_transport
+
     def test_two_stage_plan_requires_accept_between_stages(self):
         paper = make_paper_project(self.tmp / "sequential")
         plan_file = self.tmp / "two_stage.md"
@@ -230,6 +263,47 @@ class PaperHarnessSmokeTest(unittest.TestCase):
         self.assertEqual(rt.get_stage("s1")["status"], "PENDING")
         rt.close()
         self.assertIn("stage_retry_requested", timeline_types(paper))
+
+    def test_retry_can_preserve_locked_worktree_and_rotate_target(self):
+        paper = make_paper_project(self.tmp / "retry_locked")
+        self._init_plan(paper)
+        self.assertEqual(cli.main(["approve", str(paper), "--by", "Tester"]), 0)
+        rt = Runtime(paper)
+        old_target = cli._worktree_target(rt, paper, "s1", 1)
+        old_target.mkdir(parents=True, exist_ok=True)
+        (old_target / "incident.txt").write_text("preserve", encoding="utf-8")
+        rt.set_stage_status("s1", 1, "BLOCKED", worktree=str(old_target))
+        rt.close()
+        self.assertEqual(
+            cli.main([
+                "retry", str(paper), "s1", "--reason", "legacy lock",
+                "--preserve-locked-worktree",
+            ]),
+            0,
+        )
+        rt = Runtime(paper)
+        new_target = cli._worktree_target(rt, paper, "s1", 1)
+        self.assertNotEqual(old_target, new_target)
+        self.assertTrue((old_target / "incident.txt").exists())
+        self.assertEqual(rt.get_stage("s1")["status"], "PENDING")
+        rt.close()
+        self.assertIn("locked_worktree_preserved", timeline_types(paper))
+
+    def test_status_does_not_fail_live_running_stage(self):
+        paper = make_paper_project(self.tmp / "live_lease")
+        self._init_plan(paper)
+        rt = Runtime(paper)
+        rt.set_stage_status("s1", 1, "RUNNING")
+        run_dir = paper / ".paper_harness" / "runs" / "v1_s1"
+        run_dir.mkdir(parents=True, exist_ok=True)
+        (run_dir / "lease.json").write_text(json.dumps({"pid": os.getpid()}), encoding="utf-8")
+        rt.close()
+        self.assertEqual(cli.main(["status", str(paper)]), 0)
+        rt = Runtime(paper)
+        self.assertEqual(rt.get_stage("s1")["status"], "RUNNING")
+        self.assertEqual(rt.recover_stale_running(), [])
+        self.assertEqual(rt.get_stage("s1")["status"], "RUNNING")
+        rt.close()
 
     def test_monorepo_subdirectory_worktree_uses_paper_prefix(self):
         repo = self.tmp / "monorepo"
@@ -271,6 +345,40 @@ class PaperHarnessSmokeTest(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("not tracked", detail)
 
+    def test_read_only_sparse_paths_do_not_widen_write_scope(self):
+        repo = self.tmp / "read_only_scope"
+        paper = repo / "paper_projects" / "p1"
+        shared = repo / "shared" / "evidence"
+        paper.mkdir(parents=True)
+        shared.mkdir(parents=True)
+        (paper / "main.tex").write_text(MINIMAL_TEX, encoding="utf-8")
+        (shared / "tracked.txt").write_text("evidence", encoding="utf-8")
+        subprocess.run(["git", "init"], cwd=repo, capture_output=True, check=True)
+        subprocess.run(["git", "add", "."], cwd=repo, capture_output=True, check=True)
+        subprocess.run(
+            ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-m", "init"],
+            cwd=repo, capture_output=True, check=True,
+        )
+        (shared / "user-note.txt").write_text("untracked and unrelated", encoding="utf-8")
+        cfg = {"manuscript": "main.tex", "read_only_paths": ["../../shared/evidence"]}
+        ok, detail = cli.execution_preflight(paper, cfg)
+        self.assertTrue(ok, detail)
+        sparse = cli._repo_relative_paths_for_sparse(paper, cfg)
+        self.assertIn("shared/evidence", sparse)
+        self.assertNotIn("shared/evidence", cli.allowed_scope_prefixes(paper, cfg))
+
+    def test_repository_accept_lock_serializes_merges(self):
+        repo = self.tmp / "accept_lock"
+        repo.mkdir()
+        subprocess.run(["git", "init"], cwd=repo, capture_output=True, check=True)
+        first = cli._RepoAcceptLock(repo, timeout=1.0)
+        second = cli._RepoAcceptLock(repo, timeout=0.2)
+        with first:
+            with self.assertRaises(TimeoutError):
+                second.__enter__()
+        with second:
+            self.assertTrue(second.path.exists())
+
     def test_mock_review_records_full_manuscript_coverage(self):
         paper = make_paper_project(self.tmp / "review")
         out = roles.review(paper, "mdpi_applied_sciences", "main.tex", None, "codex exec")
@@ -286,6 +394,22 @@ class PaperHarnessSmokeTest(unittest.TestCase):
         result = checks.check_artifact_consistency(paper, {"manuscript": "main.tex"})
         self.assertEqual(result["status"], "fail")
         self.assertIn("missing", result["detail"])
+
+    def test_custom_check_imports_from_isolated_worktree_src(self):
+        worktree = self.tmp / "custom_src"
+        package = worktree / "src" / "stage_local_package"
+        package.mkdir(parents=True)
+        (package / "__init__.py").write_text("VALUE = 'worktree'\n", encoding="utf-8")
+        script = worktree / "verify.py"
+        script.write_text(
+            "from stage_local_package import VALUE\n"
+            "assert VALUE == 'worktree'\n"
+            "print('isolated import ok')\n",
+            encoding="utf-8",
+        )
+        result = checks.check_custom("verify.py", worktree, {})
+        self.assertEqual(result["status"], "pass", result["detail"])
+        self.assertIn("isolated import ok", result["detail"])
 
 
 if __name__ == "__main__":

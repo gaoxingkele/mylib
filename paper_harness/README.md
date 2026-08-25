@@ -1,4 +1,18 @@
-# paper_harness 0.2.0
+# paper_harness 0.2.5
+
+## 0.2.5 preserved locked-worktree retry
+
+`retry --preserve-locked-worktree` records and excludes a locked legacy
+incident directory, rotates the retry to a nonce-derived target, and never
+deletes or merges the preserved site. The full smoke suite contains 18 passing
+tests.
+
+## 0.2.4 isolated-source acceptance
+
+Custom Python acceptance checks prepend the isolated worktree's `src`
+directory to `PYTHONPATH`. Scientific gates therefore import the candidate
+implementation instead of depending on the caller's checkout or global
+environment. The full smoke suite contains 17 passing tests.
 
 面向论文写作、实验补强和投稿核验的本地 Harness。流程是：
 
@@ -7,7 +21,14 @@
          -> 自动验收 -> CANDIDATE -> 人工 accept/reject -> 下一阶段
 ```
 
-## 0.2.0 的核心边界
+## 0.2.3 timeout containment
+
+Each real transport call starts in its own process group/session. If the
+configured timeout is reached, the harness terminates that call's controlled
+process tree before returning exit code 124. This prevents orphan descendants
+from holding an isolated worktree open; pre-existing processes are never targeted.
+
+## 0.2.2 的核心边界
 
 - 计划全文由 SHA-256 绑定人工批准；计划在创建或批准后发生任何修改均拒绝执行。
 - 每次只执行一个 stage。前一 stage 未 `ACCEPTED` 时，后续 stage 不能启动。
@@ -50,6 +71,16 @@ Harness 不代替作者批准自己的计划。
 ```powershell
 $env:PAPER_HARNESS_TRANSPORT='mock'
 ```
+
+长阶段可在不改变已批准计划的前提下显式延长 Codex CLI 执行上限：
+
+```powershell
+$env:PAPER_HARNESS_CODEX_TIMEOUT='3600'
+```
+
+配置中的 `read_only_paths` 会把共享测试或证据树加入 sparse worktree，但不会扩大
+`allowed_write_paths` 或主工作区干净基线的检查范围。超时工作树应先导出并哈希
+WIP patch，再通过 `retry` 从干净基线执行；WIP patch 不是候选或科学证据。
 
 Mock 不调用 Codex CLI，但仍真实运行 Git、LaTeX 和验收检查。
 
