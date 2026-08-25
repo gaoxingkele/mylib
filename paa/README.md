@@ -168,7 +168,10 @@ A fully-built PAA example based on the P05-1 case lives in `./example/`. It incl
 parse patent text → claim decomposition → Incopat search → LLM element
 evaluation → CNIPA three-step evaluation → four gates → AHP-SEM scoring →
 `export_paa()` emits the PAA directory defined above. Pure stdlib;
-see `./engine/patent_ara/README.md`.
+see `./engine/patent_ara/README.md`. Spec layer and engine layer are
+intentionally kept separate — see `./engine/PROVENANCE.md` for the
+sync policy (e.g., gate rules must change in both `scripts/validate.py`
+and `engine/patent_ara/patent_ara/gates.py` together).
 
 ## License
 
