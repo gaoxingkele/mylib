@@ -162,6 +162,14 @@ A fully-built PAA example based on the P05-1 case lives in `./example/`. It incl
 - `./scripts/scaffold.py` — creates empty PAA directory structure
 - `./scripts/validate.py` — runs Seal Level 1 + four gates on an existing PAA
 
+## Engine
+
+`./engine/patent_ara/` — PatentARA, the Python implementation of this spec:
+parse patent text → claim decomposition → Incopat search → LLM element
+evaluation → CNIPA three-step evaluation → four gates → AHP-SEM scoring →
+`export_paa()` emits the PAA directory defined above. Pure stdlib;
+see `./engine/patent_ara/README.md`.
+
 ## License
 
 MIT — make it yours, please cite upstream (ARA / GPA / PAA) when redistributing.
