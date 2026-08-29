@@ -10,13 +10,15 @@ description: |
   staged first and crystallize into typed layers ONLY when closure signals appear — topic
   abandonment, verbal affirmation, empirical resolution, or artifact commitment. NEVER mid-turn.
   All entries carry provenance tags (user / ai-suggested / ai-executed / user-revised).
+  Also supports optional, user-triggered taste comments — free-form evaluative reactions to a
+  claim, heuristic, or trace node — independent of the crystallization pipeline.
 user-invocable: true
 argument-hint: "[optional: hint about what happened this turn]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 metadata:
   author: ara-commons
-  version: "2.4.0"
-  tags: [research, process-recording, provenance, progressive-crystallization, knowledge-management]
+  version: "2.6.0"
+  tags: [research, process-recording, provenance, progressive-crystallization, knowledge-management, taste-comments]
 ---
 
 # Live Research Project Manager (Live PM)
@@ -78,6 +80,10 @@ previous epilogue). Identify research-significant activity in two categories:
   literature searches, benchmark numbers.
 - **Researcher directions** expressed or confirmed: hypotheses, design choices, abandoned
   approaches, questions, affirmations, revisions.
+- **Reader reports** (cross-agent feedback): structured `contradiction_report`s produced against
+  this ARA by a reader engine (e.g. `research-foresight` PREDICT §7) and supplied as input this
+  turn — open `reader-report` issues on the ARA's repository, or report files handed to this run
+  (shape: `templates/reader-report.md`). Each is a candidate event, NEVER an edit to apply.
 
 Output a flat list of candidate events with raw context.
 
@@ -166,6 +172,41 @@ When a new event contradicts something already staged or crystallized:
 - Append an `unresolved` `decision` node to the exploration tree referencing both, with
   provenance reflecting who introduced the contradiction.
 - Stop. Adjudication is the researcher's job at a future turn.
+
+#### Reader reports (cross-agent feedback)
+
+Reader reports are **adjudicated by this manager in the turn they arrive** — every report leaves
+the turn with a verdict. This is the one sanctioned exception to the contradiction trigger's defer
+rule, scoped to reader reports only (the manager's own mid-research contradictions still defer as
+above). A report targeting nothing in `logic/` is simply staged as an ordinary observation
+(`provenance: ai-suggested`, report ref recorded in `context`). For a report targeting a
+crystallized entry:
+
+1. **Verify.** Resolve the report's `basis` refs and re-read the targeted entry. The report is
+   **upheld** only when evidence resolvable *inside the ARA* (trace nodes, evidence files, session
+   records) corroborates the observation and genuinely contradicts the cited clause. Reader-side
+   pointers the manager cannot resolve are recorded but do not count toward upholding.
+2. **Upheld** → fold the correction in as a Stage 4 content revision: edit the entry (provenance
+   `ai-suggested`, report ref recorded), record full before/after under `logic_revisions:`, and
+   append a `decision` node (`status: resolved`) referencing both the entry and the report. Status
+   changes follow the ordinary transition rules — an upheld report counts as empirical resolution.
+3. **Rejected** — resolvable evidence positively shows the report wrong (does not support the
+   observation, or does not contradict the clause) → the entry is untouched; append a `decision`
+   node (`status: resolved`) recording the verdict and its specific reason.
+4. **Unverifiable** — the ARA contains nothing that can corroborate *or* refute the observation
+   (a report resting only on reader-side pointers) → do NOT close it as rejected: this one case
+   falls back to the defer rule above. Flag the entry (`<!-- CONFLICT: see reader-report <ref>
+   -->`) and append an `unresolved` `decision` node referencing both, carrying the report's
+   `repro` for a future run to execute. A possibly-true dispute stays visible on the entry rather
+   than dying in the session record.
+5. **Notify, don't wait.** In every case the human receives an after-the-fact summary: the verdict
+   and its grounds go into the session record and the turn's `[PM]` summary line (e.g.
+   `reader-report on C02 upheld → Conditions revised`; `reader-report on C04 rejected:
+   evidence does not contradict clause`; `reader-report on C07 unverifiable → CONFLICT flagged,
+   repro preserved`). The manager reaches a verdict every time.
+
+The single-writer rule is unchanged: readers never write the ARA — this manager is the only
+writer, and a report is INPUT to it, not an edit.
 
 #### Stale-flagging
 
@@ -326,6 +367,7 @@ ara/
   trace/                            # APPEND-ONLY — the journey, never rewritten
     exploration_tree.yaml           #   Research DAG: decisions, experiments, dead_ends, pivots, questions
     pm_reasoning_log.yaml           #   Manager's own organizational decisions per turn
+    taste_log.yaml                  #   OPTIONAL — researcher's taste comments on trace nodes (pointer-only, never edits the node)
     sessions/
       session_index.yaml            #   Master session index (one entry per calendar day)
       YYYY-MM-DD_NNN.yaml           #   Per-day session record, incl. logic_revisions
@@ -389,6 +431,8 @@ tree:
 - **Dependencies**: [C{YY}, ...]
 - **Tags**: {comma-separated}
 - **Last revised**: YYYY-MM-DD (turn-id)   # pointer back to the trace; absent until first revision
+- **Taste** (optional):   # researcher's own reactions; see references/taste-comments.md — absent until the first one
+  - [YYYY-MM-DD] `endorse | uncertain | reject` on `claim | evidence | framing | priority` — {free-text comment}
 ```
 
 **The Statement is the generalized conclusion the evidence supports — a mechanism or relationship,
@@ -423,6 +467,8 @@ marker, not a resting state — see Stage 4.
 - **Sensitivity**: low | medium | high | unknown   # "unknown" until the turn establishes it — never guess
 - **Code ref**: [{file paths, or "pending"}]
 - **Last revised**: YYYY-MM-DD (turn-id)   # absent until first revision
+- **Taste** (optional):   # researcher's own reactions; see references/taste-comments.md — absent until the first one
+  - [YYYY-MM-DD] `endorse | uncertain | reject` on `claim | evidence | framing | priority` — {free-text comment}
 ```
 
 Current-state snapshot only (same as claims); history lives in the trace.
@@ -530,6 +576,23 @@ entries:
       - "Routed N12 as dead_end rather than experiment — code was abandoned mid-run."
 ```
 
+### Taste Log (`trace/taste_log.yaml`) — optional, append-only
+
+Researcher's taste comments on trace nodes. Never edits `exploration_tree.yaml` — points at
+it instead, the same way a promoted observation points at its logic-layer destination
+without rewriting itself. See `references/taste-comments.md` for trigger detection, target
+resolution, and the confirm-before-write procedure. File does not exist until the first entry.
+
+```yaml
+entries:
+  - id: T{XX}
+    timestamp: "YYYY-MM-DDTHH:MM"
+    target: N{XX}                         # trace node this comments on; never edited
+    tag: endorse | uncertain | reject
+    object: claim | evidence | framing | priority
+    comment: "{free-text comment}"
+```
+
 ## Initialization (if `ara/` does not exist)
 
 Create the structure on the first turn that contains research-significant activity. Do not
@@ -564,6 +627,23 @@ Surface relevant pieces only when they bear on the user's first task — never l
 formal briefing the researcher did not ask for. If the user asks "where did we leave off",
 deliver the full briefing.
 
+## Taste Comments (optional, user-triggered)
+
+Separate from the four-stage pipeline above. When the user reacts evaluatively to a specific
+claim, heuristic, or trace node this turn, record it as a taste comment: always
+`provenance: user`, never staged, never affects `Status` or crystallization. Every taste
+comment carries both an attitude (`endorse | uncertain | reject`) and an object of judgment
+(`claim | evidence | framing | priority`) — the two are independent axes, not one label. →
+Use `references/taste-comments.md` for trigger detection, target resolution, the
+confirm-before-write procedure, and the tag rules; schemas above.
+
+Taste is additive, never a substitute for the normal pipeline: if the same utterance also
+introduces new research content, that content is routed through Stage 1–4 as its own event
+regardless of the taste comment (see `references/taste-comments.md`).
+
+Runs inline within the normal epilogue when triggered — not a separate interactive prompt, and
+not asked about on turns where it doesn't come up.
+
 ## Rules
 
 1. **End-of-turn only; never mid-turn.** Skip empty turns (greetings, ack, formatting).
@@ -574,3 +654,4 @@ deliver the full briefing.
 6. **Respect layer mutability** (see top): `logic/` overwrites in place; `trace/` and `staging/` are append-only except forward-reference pointers. Every logic edit gets a `logic_revisions:` before/after in the session record — the only place pre-edit content is kept.
 7. **Never silently overwrite contradictions** — flag both, append an `unresolved` decision node, defer.
 8. **Read target files first** (correct IDs, no dupes); establish forensic bindings (claim→proof, heuristic→code, decision→evidence), `[pending]`+TODO if not yet bindable. Keep YAML valid; summary line terse.
+9. **Taste comments never guess.** Confirm the target before writing (see references/taste-comments.md); claim/heuristic taste is inline, trace-node taste goes to `taste_log.yaml` and never edits the node.

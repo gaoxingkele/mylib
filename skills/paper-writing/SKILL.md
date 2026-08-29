@@ -38,7 +38,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 ## 已装清单（事实源 `D:/aicoding/mylib`，各工具端 junction 引用）
 
-- 写作族：`ARA`（mylib/ARA）、`academic-research-suite`（Academic-Research-Skills-Codex）、`academic-humanizer`、`thesis-writing-skill`（素材库，按需启用）
+- 写作族：`ARA`（mylib/ARA，8 子技能：manager/compiler/rigor-reviewer/visualizer/foresight/context-drop/research-fuzzer/submit）、`academic-research-suite`（Academic-Research-Skills-Codex）、`academic-humanizer`、`thesis-writing-skill`（素材库，按需启用）
 - 评估族：`rigor-reviewer`（在 ARA 内）、`scoop_check`、`idea_spark`、`literature-review`
 - 逆向/复现族：`repllm-content-parse`（PDF→paper.json）、`paper-to-code`（Paper2Code 三阶段）、`experiment-code`、`experiment-design`、`paper-compilation`（LaTeX 编译）
 - 投稿族：`Paper_CCF`；领域专项：`aers-powergrid-bridge`、`codex-ars-powergrid`、管理世界 `mw-*` 套件

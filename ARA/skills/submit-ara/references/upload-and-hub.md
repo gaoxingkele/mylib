@@ -1,11 +1,96 @@
 # Upload & Hub mechanics
 
-Detailed, copy-paste-safe procedures for `submit-ara` Steps 4–6. All commands use `git -C` /
-absolute paths and never `cd` into the user's tree.
+Copy-paste-safe procedures for `submit-ara` Steps 4–5. All commands use `git -C` / absolute paths
+and never `cd` into the user's tree.
+
+The Hub's canonical base is `https://www.agenticresearch.sh` (`https://www.evolvinglab.ai` serves
+the same app). `ARA_HUB_API` overrides it, and exists for local and staging Hubs only — the user
+never needs to set it.
 
 ---
 
-## Slug derivation
+## `.ara_env` — the file that decides identity
+
+Written into the ARA directory by whichever path published it, and read on every later run. Its
+presence means *this artifact already exists somewhere*; creating a second one for the same
+directory is a bug unless the user passed `--new`.
+
+```ini
+# hosted
+ARA_SLUG=Xk3n2Qv8
+ARA_TOKEN=<24 random bytes, base64url>
+ARA_URL=https://www.agenticresearch.sh/ara/hosted/Xk3n2Qv8
+
+# GitHub-backed
+ARA_GITHUB=AmberLJC/ara-andes-defining-and-enhancing-qoe
+ARA_URL=https://www.agenticresearch.sh/ara/AmberLJC/ara-andes-defining-and-enhancing-qoe
+```
+
+`ARA_TOKEN` is stored hashed server-side and is **not recoverable**. It must never be committed:
+the uploader appends `.ara_env` to the ARA's `.gitignore`, and the GitHub path must not stage it
+into the repo it pushes.
+
+---
+
+## Hosted path
+
+One command does the whole thing — bundle, upload or update, write `.ara_env`, gitignore it:
+
+```bash
+python3 "${CLAUDE_SKILL_DIR}/scripts/submit.py" "$ARA_DIR" --title "$TITLE"
+```
+
+No-install mirror, for a machine without the skill:
+
+```bash
+curl -fsSL https://www.agenticresearch.sh/s/submit-ara.py | python3 - "$ARA_DIR" --title "$TITLE"
+```
+
+Flags: `--author` (repeatable), `--domain`, `--headline`, `--abstract`, `--steps`, `--dead-ends`,
+`--trajectory` (default `trajectory.html`), `--include-hidden`, `--new`, `--dry-run`, `--json`.
+
+### The API underneath
+
+`POST /api/ara` — create. Body is the whole artifact in one JSON request: text files as `text`,
+everything else base64 in `b64`.
+
+```json
+{
+  "title": "Andes: Defining and Enhancing QoE in LLM-Based Text Streaming",
+  "files": [
+    { "path": "trajectory.html", "text": "<!doctype html>…" },
+    { "path": "evidence/figures/fig1.png", "b64": "iVBORw0KG…" }
+  ],
+  "authors": ["Jiachen Liu", "…"],
+  "domain": "Systems / LLM Serving",
+  "headline": "one-sentence finding",
+  "abstract": "2–3 sentences",
+  "steps": 24,
+  "deadEnds": 5,
+  "trajectory": "trajectory.html"
+}
+```
+
+`201` returns `{ ok, slug, url, raw_url, manifest_url, update_token, file_count, total_bytes,
+revision }`. **`update_token` is shown once.** The bundle is rejected if it has no
+`trajectory.html` — the Hub renders that file, and an artifact whose viewer is blank is worse than
+a refused submission.
+
+`PUT /api/ara/<slug>` with header `x-ara-token: <token>` — replace the artifact wholesale (not a
+merge: files the author deleted actually disappear). Same body, same validation. Returns the new
+`revision`.
+
+`GET /api/ara/<slug>` — the manifest: title, revision, and every file with its `raw` URL. Public.
+
+`DELETE /api/ara/<slug>` with the same header — withdraw the artifact and its registry row.
+
+Caps: 800 files, 12 MB per binary, 6 MB per text file, 40 MB total, 50 submissions per IP per day.
+
+---
+
+## GitHub path
+
+### Slug derivation
 
 ```bash
 # title from PAPER.md frontmatter (between the first --- pair)
@@ -32,26 +117,17 @@ PY
 )
 ```
 
-`--name <repo>` overrides `$SLUG`. `--owner <login>` overrides the resolved owner.
-
----
-
-## Preflight (Step 4)
+### Preflight
 
 ```bash
-gh auth status                       # must succeed; else tell user to: ! gh auth login
+gh auth status                       # failure is not an error: it means the hosted path
 OWNER="${OWNER_OVERRIDE:-$(gh api user -q .login)}"
-# existence check — non-zero exit means it does not exist
-if gh repo view "$OWNER/$SLUG" >/dev/null 2>&1; then
-  echo "EXISTS"                      # require --update, or pick a new --name
-else
-  echo "NEW"
-fi
+if gh repo view "$OWNER/$SLUG" >/dev/null 2>&1; then echo EXISTS; else echo NEW; fi
 ```
 
----
+An existing repo with no `.ara_env` pointing at it is ambiguous — ask before pushing into it.
 
-## Publish (Step 5)
+### Publish
 
 Stage a **clean copy** — never `git init` inside the user's working tree or `ara-output/`.
 
@@ -60,10 +136,9 @@ STAGE="$SCRATCH/$SLUG"               # $SCRATCH = the session scratchpad dir
 rm -rf "$STAGE"; mkdir -p "$STAGE"
 cp -R "$ARA_DIR/." "$STAGE/"
 
-# strip any nested git metadata that may have been copied in
-rm -rf "$STAGE/.git"
+# strip anything that must not be published
+rm -rf "$STAGE/.git" "$STAGE/.ara_env"
 
-# README for the repo (GitHub landing page)
 cat > "$STAGE/README.md" <<EOF
 # $TITLE
 
@@ -71,7 +146,7 @@ Agent-Native Research Artifact (ARA).
 
 - 🎞️ **Interactive visualization:** open \`trajectory.html\`, or view it rendered at
   https://cdn.jsdelivr.net/gh/$OWNER/$SLUG@main/trajectory.html
-- 🌐 **ARA Hub:** ${ARA_HUB_URL:-https://www.evolvinglab.ai}/ara?repo=$OWNER/$SLUG
+- 🌐 **ARA Hub:** https://www.agenticresearch.sh/ara/$OWNER/$SLUG
 
 Compiled with the [ARA toolchain](https://github.com/ARA-Labs/Agent-Native-Research-Artifact).
 EOF
@@ -82,6 +157,7 @@ cat > "$STAGE/.gitignore" <<'EOF'
 __pycache__/
 *.pyc
 node_modules/
+.ara_env
 EOF
 
 git -C "$STAGE" init -q
@@ -89,7 +165,6 @@ git -C "$STAGE" add -A
 git -C "$STAGE" commit -q -m "Publish ARA: $TITLE"
 git -C "$STAGE" branch -M main
 
-# create + push in one shot (public by default; --private flips this)
 gh repo create "$OWNER/$SLUG" \
   --public \
   --source "$STAGE" \
@@ -98,27 +173,21 @@ gh repo create "$OWNER/$SLUG" \
   --description "$TITLE — Agent-Native Research Artifact"
 ```
 
-**Update path** (`--update`, repo already exists):
+**Update path** (`.ara_env` carries `ARA_GITHUB`):
 
 ```bash
 git -C "$STAGE" remote add origin "https://github.com/$OWNER/$SLUG.git"
 git -C "$STAGE" push -u origin main --force-with-lease   # tell the user before force-pushing
 ```
 
-**jsDelivr note:** the CDN caches aggressively. A freshly pushed or updated `trajectory.html` may
-take a few minutes to appear, or can be purged via
-`https://purge.jsdelivr.net/gh/<owner>/<slug>@main/trajectory.html`. Mention this if the user reports
-a stale view right after publishing.
+**jsDelivr note:** the CDN caches aggressively. A freshly pushed `trajectory.html` may take a few
+minutes to appear, or can be purged via
+`https://purge.jsdelivr.net/gh/<owner>/<slug>@main/trajectory.html`. Mention this if the user
+reports a stale view right after publishing.
 
----
+### Register with the Hub
 
-## Register with the Hub (Step 6)
-
-### Registry entry schema
-
-One shared entry shape is used by both `POST /api/submit` (the primary path) and the
-`docs/ara-hub/data/registry.json` fallback (shape `{ "artifacts": [ <entry>, ... ] }`). Build one
-entry:
+Pushing to GitHub does **not** put the artifact on the Hub; this POST does.
 
 ```json
 {
@@ -134,19 +203,11 @@ entry:
 }
 ```
 
-Pull `title`, `domain`, `authors` from `PAPER.md` frontmatter. `repo` == `$SLUG` unless `--name`
-overrode it. Set `submittedAt` from the date the user provides / today's date in context — do not
-fabricate a clock (scripts here have no live `date` need; use the date already in the session).
-
-### Registering (zero setup — POST to the live Hub by default)
-
-`ARA_HUB_API` **defaults to the deployed Hub** (`https://www.evolvinglab.ai`), so publishing needs no
-configuration from the user. This POST is what makes the ARA appear on the Hub — it is required, not
-optional. Write the entry to `entry.json` (use the Write tool or `cat`), then POST it and capture both
-the body and the HTTP status so you can verify the Hub accepted it:
+Pull `title`, `domain`, `authors` from `PAPER.md` frontmatter. Set `submittedAt` from the date
+already in the session — do not fabricate a clock.
 
 ```bash
-ARA_HUB_API="${ARA_HUB_API:-https://www.evolvinglab.ai}"
+ARA_HUB_API="${ARA_HUB_API:-https://www.agenticresearch.sh}"
 # -w prints the status on its own line; do NOT use -f (it hides the response body on errors)
 curl -sS -X POST "$ARA_HUB_API/api/submit" \
   -H 'Content-Type: application/json' \
@@ -154,22 +215,30 @@ curl -sS -X POST "$ARA_HUB_API/api/submit" \
   -w '\n--- HTTP %{http_code} ---\n'
 ```
 
-A success looks like `{"ok":true,"backend":"supabase",...}` with `HTTP 201`. Treat anything else
-(non-2xx, `ok:false`, connection error) as a failure and use the fallback below. The Hub's
-`POST /api/submit` route (see `docs/ara-hub/app/api/submit/route.js`) is the contract: same JSON body,
-same fields. Override `ARA_HUB_API` only to target a local/staging Hub.
+Success is `HTTP 201` with `{"ok":true,"backend":"supabase",…}`. Anything else is a failure: say
+the artifact is on GitHub but **not** on the Hub, and print the retry command.
 
-**Fallback — only if that POST fails** (Hub unreachable or non-2xx): fall back to the local registry
-so the submission isn't lost.
-- If the hub repo is checked out and `docs/ara-hub/data/registry.json` exists and is writable, read
-  it, append the entry to `artifacts` (dedupe by `owner/repo`), write it back.
-- Otherwise, print the entry JSON and tell the user to retry, or paste it into that file.
+Then write `.ara_env`:
 
-### URL contract
+```bash
+printf '# ARA Hub submission — written by the submit-ara skill.\nARA_GITHUB=%s/%s\nARA_URL=%s\n' \
+  "$OWNER" "$SLUG" "$ARA_HUB_API/ara/$OWNER/$SLUG" > "$ARA_DIR/.ara_env"
+grep -qxF '.ara_env' "$ARA_DIR/.gitignore" 2>/dev/null || echo '.ara_env' >> "$ARA_DIR/.gitignore"
+```
 
-- **GitHub repo:** `https://github.com/<owner>/<slug>`
-- **Visualization (CDN, direct):** `https://cdn.jsdelivr.net/gh/<owner>/<slug>@<branch>/trajectory.html`
-- **Hub viewer:** `${ARA_HUB_URL:-https://www.evolvinglab.ai}/ara?repo=<owner>/<slug>` (`ARA_HUB_URL`
-  defaults to the live Hub `https://www.evolvinglab.ai`). The Hub's `/ara` page resolves `repo` → the
-  jsDelivr URL above and embeds it. Keep these three consistent: the Hub viewer is just a framed
-  wrapper around the CDN URL plus links back to the repo.
+---
+
+## URL contract
+
+Both paths land on the same route; only the file source differs.
+
+| | GitHub-backed | Hosted |
+|---|---|---|
+| Hub page | `/ara/<owner>/<repo>` | `/ara/hosted/<slug>` |
+| Full-screen viewer | `/raw/<owner>/<repo>/trajectory.html` | `/raw/hosted/<slug>/trajectory.html` |
+| Source of the bytes | `raw.githubusercontent.com` (via jsDelivr in-page) | the Hub's own storage |
+| Canonical source | the GitHub repo | the artifact itself |
+
+Identity in the registry is `(owner, repo, subdir)`. Hosted artifacts reserve the owner `hosted`
+and use the slug as the repo, which is why every route above works for both without a special
+case in the viewer.

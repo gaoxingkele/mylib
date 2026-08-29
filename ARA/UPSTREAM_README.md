@@ -1,8 +1,18 @@
-# 🔬 ARA (Agent-Native Research Artifact)
+# 上游 README 快照（Agent-Native Research Artifact）
+
+> **Provenance**：同步自 `https://github.com/AmberLJC/Agent-Native-Research-Artifact`，commit `e52a925`，同步日期 2026-08-29。
+> 论文：《The Last Human-Written Paper: Agent-Native Research Artifacts》，arXiv:2604.24658（本地 PDF：`D:/aicoding/ARA/ARA_paper_2604.24658.pdf`）。
+> 本次同步内容：`skills/`（8 个子技能，含新增 context-drop、research-fuzzer）、`packages/`（ara-skills + ara-viewer 参考代码）、`docs/figures/` + `docs/conference-guide.md`、`examples/the-ara-of-ara/`、`examples/resnet-ara-example/trajectory.html`。
+> 未同步（体积/用途考虑）：`docs/ara-skills-demo.gif`、`docs/poster.pdf`、`examples/resnet-paper.pdf`、`.github/`、`CONTRIBUTING.md`。需要时可从上库单独取。
+> 上游 README 全文如下（188 行）：
+
+---
+
+# 🔬 Agent-Native Research Lab
 ### The Essential Toolkit to Supercharge Your Autoresearch
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-6%20skills-green)](skills/)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-8%20skills-green)](skills/)
 [![arXiv](https://img.shields.io/badge/arXiv-2604.24658-b31b1b.svg)](https://arxiv.org/abs/2604.24658)
 [![Poster](https://img.shields.io/badge/Poster-PDF-orange.svg)](docs/poster.pdf)
 [![Demo](https://img.shields.io/badge/Demo-ARA--Demo-purple.svg)](https://github.com/ARA-Labs/ARA-Demo)
@@ -37,10 +47,29 @@ Research is rarely a straight line; it is a messy graph of pivots and dead ends.
 
 Supervising AI scientists shouldn't require reading endless terminal outputs. The system translates complex agent behaviors and exploration graphs into a clean, minimalist interface. It lets human researchers maintain high-level oversight, seamlessly stepping in to course-correct or guide the AI's behavior with zero friction.
 
-<a id="quickstart"></a>
-## 🛠️ The Toolkit: Six Core Skills
+AI agents require precise constraint boundaries to prevent hallucinated conclusions. The system acts as a strict **epistemic anchor**, automatically applying formal verification principles to ensure every scientific claim is directly wired to ground-truth execution and falsifiable results.
 
-To operationalize these design principles, ARA provides a suite of six specialized agent skills. You can install the toolkit via:
+</details>
+
+<details>
+<summary><b>🧠 Crystallizing Insights</b> — messy trajectories become structured knowledge</summary>
+<br/>
+
+Research is rarely a straight line; it is a messy graph of pivots and dead ends. The system forces AI scientists to systematically document their trajectory, crystallizing fleeting, unstructured logs into highly structured, reliable research knowledge that builds compounding value over time.
+
+</details>
+
+<details>
+<summary><b>👁️ Total Observability</b> — high-level oversight without reading terminal output</summary>
+<br/>
+
+Supervising AI scientists shouldn't require reading endless terminal outputs. The system translates complex agent behaviors and exploration graphs into a clean, minimalist interface. It lets human researchers maintain high-level oversight, seamlessly stepping in to course-correct or guide the AI's behavior with zero friction.
+
+</details>
+
+## 🛠️ The Toolkit: Seven Core Skills
+
+To operationalize these design principles, ARA provides a suite of seven specialized agent skills. The one-liner above installs all seven automatically; to install manually or pick individual skills:
 
 ```bash
 npx @ara-commons/ara-skills
@@ -55,17 +84,10 @@ Then reach for a skill by what you need:
 | **Capture** research faithfully as you work — decisions, ablations, dead ends, configs | **research-manager** | `/research-manager` (or wire it to run automatically) |
 | **Compile** an existing paper, repo, or notes into a structured ARA | **compiler** | `/compiler <path>` |
 | **Verify** an artifact's epistemic rigor before you trust, publish, or submit it | **rigor-reviewer** | `/rigor-reviewer <dir>` |
-| **Observe** the full research trajectory in an interactive process map | **research-visualizer** | `/research-visualizer <ara-dir>` |
+| **Observe** the full research trajectory in an interactive process map — a portable narrated HTML export, or a live local viewer with validation/linting via the official [`ara` CLI](https://github.com/ARA-Labs/ara-cli) | **research-visualizer** | `/research-visualizer <ara-dir>` (add `--serve` or `--check` for the live/lint path) |
 | **Ask** an ARA anything — grounded, falsifiable answers to "what should I try next / why did this work / what if I change X" ([demo](https://www.agenticresearch.sh/blog/research-world-model)) | **research-foresight** | `/research-foresight <ara-dir> "<question>"` |
-| **Submit** an ARA — validate/compile it, visualize it, publish it to your GitHub, and list it on the ARA Hub | **submit-ara** | `/submit-ara <dir>` |
-
-**Make capture automatic.** Append this to your agent's system-prompt file (`CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or `GEMINI.md`) so the record fills itself in every session:
-
-```markdown
-## ARA: end-of-session research capture
-At the END of every coding session, invoke the `/research-manager` skill to
-record decisions, experiments, dead ends, and claims into the `ara/` artifact.
-```
+| **Share** a file or folder with someone else's agent — one URL they paste, no repo, no zip | **context-drop** | `/context-drop <path>` |
+| **Steer** any open-ended investigation the way a fuzzer steers inputs — predict before every action, track untried leads and unexplained results, alarm on going-in-circles, gate every conclusion behind a self-refutation attempt ([repo](https://github.com/ARA-Labs/research-fuzzer)) | **research-fuzzer** | `/research-fuzzer` (fire at investigation start, after each batch of results, before any conclusion) |
 
 See each skill's `SKILL.md` for the full specification:
 [research-manager](skills/research-manager/SKILL.md) ·
@@ -73,7 +95,8 @@ See each skill's `SKILL.md` for the full specification:
 [rigor-reviewer](skills/rigor-reviewer/SKILL.md) ·
 [research-visualizer](skills/research-visualizer/SKILL.md) ·
 [research-foresight](skills/research-foresight/SKILL.md) ·
-[submit-ara](skills/submit-ara/SKILL.md)
+[context-drop](skills/context-drop/SKILL.md) ·
+[research-fuzzer](skills/research-fuzzer/SKILL.md)
 
 ---
 
@@ -123,7 +146,7 @@ The supervision gap is not hand-waving — it shows up as measurable cost. Acros
 
 **→ [The Last Human-Written Paper: Agent-Native Research Artifacts](https://amberljc.github.io/blog/2026-04-24-the-last-human-written-paper.html)**
 
-This paper practices what it proposes — its own ARA lives at [`docs/the-ara-of-ara`](docs/the-ara-of-ara).
+This paper practices what it proposes — its own ARA lives at [`examples/the-ara-of-ara`](examples/the-ara-of-ara).
 
 ---
 

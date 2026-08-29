@@ -2,23 +2,25 @@
 name: ARA
 description: >
   Unified entry to the Agent-Native Research Artifact (ARA) toolkit — turn messy autoresearch into a
-  structured, verifiable, traceable artifact. Routes by intent to six bundled sub-skills: CAPTURE
+  structured, verifiable, traceable artifact. Routes by intent to eight bundled sub-skills: CAPTURE
   research as you work (research-manager), COMPILE a paper/repo/notes into an ARA (compiler), VERIFY
   epistemic rigor before you trust/publish (rigor-reviewer), VISUALIZE the exploration trajectory as
   interactive HTML (research-visualizer), ASK an ARA grounded/falsifiable questions (research-foresight),
-  and SUBMIT/publish an ARA to GitHub + the ARA Hub (submit-ara). TRIGGERS: ARA, agent-native research
-  artifact, compile ARA, create ARA, ARA from PDF/repo/code, structure research, capture research process,
-  record decisions/experiments/dead ends, verify artifact, rigor review, seal level 2, visualize research
-  trajectory, exploration graph, research world model, what should I try next, why did this work, publish ARA.
+  SHARE files with another agent via one URL (context-drop), STEER open-ended investigation like a fuzzer
+  (research-fuzzer), and SUBMIT/publish an ARA to GitHub + the ARA Hub (submit-ara). TRIGGERS: ARA,
+  agent-native research artifact, compile ARA, create ARA, ARA from PDF/repo/code, structure research,
+  capture research process, record decisions/experiments/dead ends, verify artifact, rigor review,
+  seal level 2, visualize research trajectory, exploration graph, research world model, what should I
+  try next, why did this work, publish ARA, context drop, fuzzer investigation.
 ---
 
 # ARA — Agent-Native Research Artifact（统一 skill）
 
-复刻自论文 **《The Last Human-Written Paper: Agent-Native Research Artifacts》**(arXiv:2604.24658) 的开源工具箱
-(`ARA-Labs/Agent-Native-Research-Artifact`, MIT)。把 AI 科研过程中"被覆盖的代码、散落的日志、无人记录的死路"强制变成
+复刻自论文 **《The Last Human-Written Paper: Agent-Native Research Artifacts》**(arXiv:2604.24658，本地 PDF：`D:/aicoding/ARA/ARA_paper_2604.24658.pdf`) 的开源工具箱
+(`AmberLJC/Agent-Native-Research-Artifact`, MIT，同步 commit e52a925 / 2026-08-29)。把 AI 科研过程中"被覆盖的代码、散落的日志、无人记录的死路"强制变成
 **结构化、可验证、可追溯**的研究产物(ARA),让人类无需逆向数千行终端输出就能信任 AI 产出的科学。
 
-本文件是**统一入口**:按意图路由到 `skills/<name>/SKILL.md` 里的 6 个专用子技能(原库逐字保留)。
+本文件是**统一入口**:按意图路由到 `skills/<name>/SKILL.md` 里的 8 个专用子技能(原库逐字保留)。参考代码在 `packages/`（ara-skills CLI + ara-viewer）。
 
 ## 三条核心设计原则
 
@@ -34,9 +36,11 @@ description: >
 |---|---|---|
 | **记录** 研究过程(决策/实验/消融/死路/配置),边做边写进 `ara/` | **research-manager** | `skills/research-manager/SKILL.md` |
 | **编译** 已有论文/仓库/代码/笔记 → 完整 ARA | **compiler** | `skills/compiler/SKILL.md` |
-| **验证** 一个 artifact 的认知严谨性(信任/发表前) | **rigor-reviewer** | `skills/rigor-reviewer/SKILL.md` |
+| **验证** 一个 artifact 的认知严谨性(信任/发表前；即 Seal Level 2) | **rigor-reviewer** | `skills/rigor-reviewer/SKILL.md` |
 | **可视化** 整个研究轨迹为交互式 HTML 过程图 | **research-visualizer** | `skills/research-visualizer/SKILL.md` |
 | **提问** 对某个 ARA 给出有根据、可证伪的回答("下一步试什么/为何有效/若改 X 会怎样") | **research-foresight** | `skills/research-foresight/SKILL.md` |
+| **分享** 文件/文件夹给另一个 agent(一个 URL,免仓库免压缩包) | **context-drop** | `skills/context-drop/SKILL.md` |
+| **驾驭** 开放式调查(像 fuzzer 一样:每次行动前预测、跟踪未尝试线索、防原地打转、结论先自驳) | **research-fuzzer** | `skills/research-fuzzer/SKILL.md` |
 | **提交/发布** 一个 ARA(校验/编译→可视化→发到 GitHub→上架 ARA Hub) | **submit-ara** | `skills/submit-ara/SKILL.md` |
 
 路由步骤:①确定意图 → ②打开对应 `skills/<name>/SKILL.md` → ③严格按其规范执行,按需加载它的 `references/`。
@@ -79,10 +83,10 @@ example_artifact/
 ## 全局使用 & 说明
 
 - 本 skill 装在用户级 `~/.claude/skills/ARA/`,**所有项目**的 Claude Code 会话都能用 `/ARA`(新建 skills 目录需重启一次热加载)。
-- 官方也提供 npx 安装器把 6 个技能**分别**装成独立 skill(`npx @ara-commons/ara-skills`,自动识别 Claude Code/Cursor/Gemini/Codex,可选全局/本地)。本统一 skill 是把它们**收敛成一个 `/ARA` 入口**的等价封装,内容逐字保留。
+- 官方也提供 npx 安装器把技能**分别**装成独立 skill(`npx @ara-commons/ara-skills`,自动识别 Claude Code/Cursor/Gemini/Codex,可选全局/本地)。本统一 skill 是把它们**收敛成一个 `/ARA` 入口**的等价封装,内容逐字保留。
 - 遵循 [Agent Skills 开放标准](https://agentskills.io/specification),跨 Claude Code / Codex / Cursor 等通用。
 
 ## 归属与许可
 
-来源:`ARA-Labs/Agent-Native-Research-Artifact`(MIT © 2026 Orchestra Research);论文 arXiv:2604.24658。
-6 个子技能与其 `references/`、示例、`LICENSE` 均逐字保留于本目录(见 `UPSTREAM_README.md`)。工具本身以官方仓库为准,规范更新时以上游为准。
+来源:`AmberLJC/Agent-Native-Research-Artifact`(MIT © 2026 Orchestra Research);论文 arXiv:2604.24658。
+8 个子技能与其 `references/`、`packages/` 参考代码、示例、`LICENSE` 均逐字保留于本目录(见 `UPSTREAM_README.md`,内含 provenance 与同步清单)。工具本身以官方仓库为准,规范更新时以上游为准。
