@@ -1,5 +1,5 @@
 ---
-name: international-symposium-on-empirical-software-engineering-and-measurement
+name: esem
 description: Use when targeting International Symposium on Empirical Software Engineering and Measurement (ESEM) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for empirical software engineering.
 ---
 

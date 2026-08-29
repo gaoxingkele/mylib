@@ -1,5 +1,5 @@
 ---
-name: acm-sigsoft-international-symposium-on-software-testing-and-analysis
+name: acm-issta
 description: Use when targeting ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for software testing.
 ---
 

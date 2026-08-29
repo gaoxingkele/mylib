@@ -1,5 +1,5 @@
 ---
-name: north-american-chapter-of-the-association-for-computational-linguistics
+name: naacl
 description: Use when targeting Annual Conference of the North American Chapter of the Association for Computational Linguistics (NAACL) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for NLP regional flagship.
 ---
 

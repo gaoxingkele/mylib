@@ -2,11 +2,11 @@
 
 Scanned `D:\aicoding\powergrid_benchmark\papers\literature` — 500 PDFs, 312 unique, 290 tagged into journals, 22 unmapped.
 
-Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
+Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/mylib`.
 
 ## elsevier-journal-of-energy-storage
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~25.4 pages extracted).
 - **Dominant IdeaSpark move:** `architectural_operator_substitution` — *Substitute the Operator or Representation*.
 - **Dominant journal-house move:** `storage_or_energy_device_review` — *Energy Storage / Device Technology*.
@@ -19,7 +19,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## ieee-internet-of-things-journal
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~10.4 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `systems_security_or_iot_stack` — *Systems / IoT / Security Stack*.
@@ -32,7 +32,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## ijacsa
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~7.6 pages extracted).
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -45,7 +45,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-algorithms
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=34** mapped local PDFs (mean ~19.3 pages extracted).
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -58,7 +58,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-applied-sciences
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=37** mapped local PDFs (mean ~21.9 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `power_system_planning_ops` — *Power-System Planning / Operations Case*.
@@ -71,7 +71,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-atmosphere
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=12** mapped local PDFs (mean ~24.5 pages extracted).
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -84,7 +84,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-electronics
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=16** mapped local PDFs (mean ~21.6 pages extracted).
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `power_system_planning_ops` — *Power-System Planning / Operations Case*.
@@ -97,7 +97,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-energies
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=36** mapped local PDFs (mean ~24.9 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `power_system_planning_ops` — *Power-System Planning / Operations Case*.
@@ -110,7 +110,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-future-internet
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~27.4 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `systems_security_or_iot_stack` — *Systems / IoT / Security Stack*.
@@ -123,7 +123,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-information
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=30** mapped local PDFs (mean ~18.0 pages extracted).
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -136,7 +136,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-machines
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=8** mapped local PDFs (mean ~28.0 pages extracted).
 - **Dominant IdeaSpark move:** `architectural_operator_substitution` — *Substitute the Operator or Representation*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -149,7 +149,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-mathematics
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=4** mapped local PDFs (mean ~14.0 pages extracted).
 - **Dominant IdeaSpark move:** `algebraic_equivalence_unification` — *Prove Equivalence to Unify*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -162,7 +162,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-remote-sensing
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~27.8 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -175,7 +175,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-sensors
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=1** mapped local PDFs (mean ~17.0 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `hardware_or_field_validation` — *Hardware / Field Validation First*.
@@ -188,7 +188,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## mdpi-symmetry
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=12** mapped local PDFs (mean ~27.3 pages extracted).
 - **Dominant IdeaSpark move:** `structural_prior_encoding` — *Encode Structure by Construction*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -201,7 +201,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## nature-scientific-reports
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~12.7 pages extracted).
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -214,7 +214,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## peerj-computer-science
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~23.4 pages extracted).
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -227,7 +227,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## springer-discover-computing
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~24.1 pages extracted).
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -240,7 +240,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## tsp-cmc
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~20.0 pages extracted).
 - **Dominant IdeaSpark move:** `structural_prior_encoding` — *Encode Structure by Construction*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -253,7 +253,7 @@ Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.
 
 ## wiley-ccpe
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~17.7 pages extracted).
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.

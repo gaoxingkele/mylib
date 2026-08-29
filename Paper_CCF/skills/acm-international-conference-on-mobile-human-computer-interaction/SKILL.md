@@ -1,5 +1,5 @@
 ---
-name: acm-international-conference-on-mobile-human-computer-interaction
+name: acm-mobilehci
 description: Use when targeting ACM International Conference on Mobile Human-Computer Interaction (MobileHCI) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for mobile HCI.
 ---
 

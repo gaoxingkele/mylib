@@ -1,5 +1,5 @@
 ---
-name: acm-international-conference-on-the-foundations-of-software-engineering
+name: acm-fse
 description: Use when targeting ACM International Conference on the Foundations of Software Engineering (FSE) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for software engineering flagship.
 ---
 

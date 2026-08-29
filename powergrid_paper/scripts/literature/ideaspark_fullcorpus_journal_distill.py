@@ -5,7 +5,7 @@ Discovers PDFs under papers/literature/, maps each to a Paper_CCF journal slug
 (path heuristics + text/DOI cues), then induces IdeaSpark-style acceptance
 pattern cards and patches matching skills.
 
-Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ D:/aicoding/lib
+Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ D:/aicoding/mylib
 """
 from __future__ import annotations
 
@@ -549,7 +549,7 @@ def skill_block(slug: str, summary: dict) -> str:
     return "\n".join(
         [
             f"- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass "
-            f"over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.",
+            f"over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.",
             f"- Sample: **n={summary['n']}** mapped local PDFs (mean ~{summary['pages_mean']} pages extracted).",
             f"- **Dominant IdeaSpark move:** `{di}` — *{IDEA_PATTERNS.get(di, {}).get('name', di)}*.",
             f"- **Dominant journal-house move:** `{dj or 'n/a'}` — "
@@ -692,7 +692,7 @@ def main():
         "# IdeaSpark full-corpus journal distill (2026-08)\n",
         f"Scanned `{LIT}` — {len(pdfs)} PDFs, {len(seen_hash)} unique, "
         f"{sum(len(v) for v in by_slug.values())} tagged into journals, {unmapped} unmapped.\n",
-        "Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/lib`.\n",
+        "Method: ResearchStudio-Idea / IdeaSpark (arXiv:2607.04439) @ `D:/aicoding/mylib`.\n",
     ]
     batch = [
         "# IdeaSpark full-corpus journal distill\n",

@@ -1,5 +1,5 @@
 ---
-name: acm-international-conference-on-information-and-knowledge-management
+name: acm-cikm
 description: Use when targeting ACM International Conference on Information and Knowledge Management (CIKM) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for information and knowledge management.
 ---
 

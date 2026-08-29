@@ -7,7 +7,7 @@ description: 选择并调用 Auto-Empirical-Research-Skills(AERS) 中对电网/A
 
 ## Purpose
 
-Bridge skill for integrating `D:/aicoding/lib/Auto-Empirical-Research-Skills` into
+Bridge skill for integrating `D:/aicoding/mylib/Auto-Empirical-Research-Skills` into
 the existing power-grid paper workflow with **selective routing**.
 
 This bridge is intentionally narrow: it excludes most econ-specific causal pipeline

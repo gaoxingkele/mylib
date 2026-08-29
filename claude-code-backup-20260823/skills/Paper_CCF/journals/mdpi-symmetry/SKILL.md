@@ -73,7 +73,7 @@ Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/mdpi-
 
 ### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=12** mapped local PDFs (mean ~27.3 pages extracted).
 - **Dominant IdeaSpark move:** `structural_prior_encoding` — *Encode Structure by Construction*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -88,7 +88,7 @@ Corpus: all discoverable PDFs under `papers/literature/` mapped to `mdpi-symmetr
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **40%**, experiments/results **40%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **0.9**, tables **0.5**, algorithms **0.0**, equation markers **6.4**.

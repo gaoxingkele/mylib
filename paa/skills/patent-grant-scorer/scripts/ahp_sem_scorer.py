@@ -49,6 +49,10 @@ INDICATORS = {
     },
 }
 
+ALL_INDICATORS = tuple(
+    code for latent_indicators in INDICATORS.values() for code in latent_indicators
+)
+
 EXPERT_MATRICES = {
     "examiner": [
         [1, 1 / 3, 1, 2], [3, 1, 3, 4], [1, 1 / 3, 1, 2], [1 / 2, 1 / 4, 1 / 2, 1]

@@ -23,7 +23,7 @@ Mathematics (est. 2013, SCIE-indexed since 2018, ISSN 2227-7390, semimonthly, go
 
 ### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=4** mapped local PDFs (mean ~14.0 pages extracted).
 - **Dominant IdeaSpark move:** `algebraic_equivalence_unification` — *Prove Equivalence to Unify*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -38,7 +38,7 @@ Corpus: all discoverable PDFs under `papers/literature/` mapped to `mdpi-mathema
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=5** mapped local PDFs.
 - Section presence rates: intro **80%**, method **60%**, experiments/results **100%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **2.4**, tables **1.4**, algorithms **0.0**, equation markers **5.2**.

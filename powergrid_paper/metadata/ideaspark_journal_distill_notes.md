@@ -1,12 +1,12 @@
 # IdeaSpark-adapted journal acceptance distill (2026-08)
 
-Source method: ResearchStudio-Idea (arXiv:2607.04439) installed at `D:/aicoding/lib`.
+Source method: ResearchStudio-Idea (arXiv:2607.04439) installed at `D:/aicoding/mylib`.
 
 Pipeline: local PDF full-text → strategy/bottleneck cues → tag with 15 IdeaSpark patterns + journal-house patterns → lit_table + operational cards → Paper_CCF skill sections.
 
 ## elsevier-journal-of-energy-storage
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `architectural_operator_substitution` — *Substitute the Operator or Representation*.
 - **Dominant journal-house move:** `storage_or_energy_device_review` — *Energy Storage / Device Technology Review*.
@@ -23,7 +23,7 @@ Pipeline: local PDF full-text → strategy/bottleneck cues → tag with 15 IdeaS
 
 ## ieee-internet-of-things-journal
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `systems_security_or_iot_stack` — *Systems / IoT / Security Stack*.
@@ -40,7 +40,7 @@ Pipeline: local PDF full-text → strategy/bottleneck cues → tag with 15 IdeaS
 
 ## ijacsa
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -57,11 +57,11 @@ Pipeline: local PDF full-text → strategy/bottleneck cues → tag with 15 IdeaS
 
 ## keai-unconventional-resources
 
-_No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicoding/lib` ResearchStudio-Idea skill suite for the method; retry after OA mirrors for this venue are available._
+_No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicoding/mylib` ResearchStudio-Idea skill suite for the method; retry after OA mirrors for this venue are available._
 
 ## mdpi-algorithms
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -78,7 +78,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-atmosphere
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -95,7 +95,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-future-internet
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `systems_security_or_iot_stack` — *Systems / IoT / Security Stack*.
@@ -112,7 +112,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-information
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -129,7 +129,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-machines
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=8** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `architectural_operator_substitution` — *Substitute the Operator or Representation*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -146,7 +146,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-remote-sensing
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -163,7 +163,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## mdpi-symmetry
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `structural_prior_encoding` — *Encode Structure by Construction*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -180,7 +180,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## nature-scientific-reports
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -197,7 +197,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## peerj-computer-science
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -214,7 +214,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## springer-discover-computing
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `outside_taxonomy` — *outside_taxonomy*.
 - **Dominant journal-house move:** `survey_or_review_synthesis` — *Survey / Taxonomy Synthesis*.
@@ -231,7 +231,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## tsp-cmc
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `structural_prior_encoding` — *Encode Structure by Construction*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.
@@ -248,7 +248,7 @@ _No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicod
 
 ## wiley-ccpe
 
-- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).
+- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).
 - Sample: **n=10** local PDFs → lit_table + pattern cards under `papers/literature/target_journal_related/metadata/ideaspark_journal_*`.
 - **Dominant IdeaSpark move:** `heterogeneous_decomposition` — *Decompose for Differentiated Treatment*.
 - **Dominant journal-house move:** `named_stack_plus_case` — *Named Method Stack + Utility/IEEE Case*.

@@ -2,7 +2,7 @@
 
 This folder provides a slim bridge skill to absorb useful capabilities from:
 
-- `D:/aicoding/lib/Auto-Empirical-Research-Skills`
+- `D:/aicoding/mylib/Auto-Empirical-Research-Skills`
 
 without importing its full 1k+ skill surface into daily context.
 

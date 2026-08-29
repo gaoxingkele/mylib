@@ -1,6 +1,10 @@
 ---
-name: Paper_CCF
-description: Use when writing, targeting, or choosing the venue for a computer-science / engineering paper — CONFERENCES (155 CS venues) AND selected JOURNALS (29 profiles: IEEE Access/IoT-J, MDPI Energies/Electronics/Information/Algorithms/Remote Sensing/…, CMC, Discover Computing, PeerJ CS, Journal of Energy Storage, Scientific Reports, …). Give a venue name or acronym and it loads that venue's fit / evidence-bar / APC & review model / submission-cycle / desk-reject / re-routing profile.
+name: paper-ccf
+description: >-
+  Route computer-science and engineering manuscripts to a conference or journal profile. Use when
+  choosing a venue, checking venue fit, evidence expectations, review model, submission cycle,
+  desk-reject risks, or fallback venues. Load only the selected profile and verify current rules
+  against the official venue site.
 ---
 
 # Paper_CCF — 计算机会议投稿路由器 (CS / CCF conferences)
@@ -12,7 +16,7 @@ description: Use when writing, targeting, or choosing the venue for a computer-s
 
 先判断用户目标是**会议**还是**期刊**，再进对应模块路由。
 
-> **代码级调用（其他项目可用）**：会议+期刊的结构化数据导出在 `data/venues.json`，配零依赖读取器 `data/paper_ccf.py`（`find()/get()/fastest()/to_paper_reviews()`）。其他项目（如 paper_reviews）可按全局路径 `~/.claude/skills/Paper_CCF/data/` 读取；改了画像后跑 `py data/build_venues.py` 重新导出。详见 `data/README.md`。
+> **代码级调用（其他项目可用）**：会议+期刊的结构化数据导出在 `data/venues.json`，配零依赖读取器 `data/paper_ccf.py`（`find()/get()/fastest()/to_paper_reviews()`）。其他项目（如 paper_reviews）从事实源 `D:/aicoding/mylib/Paper_CCF/data/` 读取；改了画像后跑 `py data/build_venues.py` 重新导出。详见 `data/README.md`。
 
 > 会议 vs 期刊的“内核”不同：**会议**没有常任主编、逐年轮换 Program/General Chairs、无 APC（成本＝注册费+开放论文集）、按 DDL 成批评审、看重 novelty。**期刊**有主编/编委与 Guest Editor、滚动投稿、收 APC、按 soundness（尤其 IEEE Access/MDPI）评审、有 IF/分区/Special Issue。别把两套规则混用。
 
@@ -34,7 +38,7 @@ description: Use when writing, targeting, or choosing the venue for a computer-s
 4. **电力系统公开数据集 × OA 投稿经验**（本地 90 篇去重 PDF 蒸馏）→ `resources/powergrid-open-data-corpus-distill.md`；各刊 `journals/<slug>/SKILL.md` 内已有对应 “Supplement / Distilled patterns” 小节。
 5. **2026-08 目标刊扩展批次**（CMC 等 14 本新画像 + CMC 本地 10 篇全文蒸馏）→ `resources/target-journals-2026-batch-distill.md`。
 6. **IdeaSpark 全量本地语料蒸馏**（`papers/literature/**` ≈480 PDF → 按刊 acceptance pattern）→ **先读** `resources/ideaspark-fullcorpus-journal-distill.md`；各命中刊 `journals/<slug>/SKILL.md` 内有 `### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)`。细表/卡片在仓库 `papers/literature/target_journal_related/metadata/ideaspark_fullcorpus_*`。
-7. **RepLLM-CPA 结构化证据蒸馏**（Content Parsing → `paper.json`，**非**全量代码复现）→ `resources/repllm-cpa-journal-distill.md`；各刊 `### RepLLM-CPA structured evidence`。库：`D:/aicoding/lib/RepLLM/`。
+7. **RepLLM-CPA 结构化证据蒸馏**（Content Parsing → `paper.json`，**非**全量代码复现）→ `resources/repllm-cpa-journal-distill.md`；各刊 `### RepLLM-CPA structured evidence`。库：`D:/aicoding/mylib/RepLLM/`。
 8. **所有 IF / 分区 / APC / 审稿时长均为快照，逐年变动——务必以官网/Clarivate 当年数据为准**；官网与本 skill 冲突以官网为准。总索引见 `resources/journal-roster.md`。
 
 ### 期刊索引（29）

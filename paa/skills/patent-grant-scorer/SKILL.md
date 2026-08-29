@@ -137,5 +137,5 @@ python paa/skills/patent-grant-scorer/scripts/ahp_sem_scorer.py input.json --agg
 
 ```powershell
 python -m unittest discover -s paa/skills/patent-grant-scorer/tests -v
-python C:/Users/10175/.codex/skills/.system/skill-creator/scripts/quick_validate.py paa/skills/patent-grant-scorer
+python ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py paa/skills/patent-grant-scorer
 ```

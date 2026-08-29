@@ -1,5 +1,5 @@
 ---
-name: international-conference-on-theory-and-applications-of-satisfiability-testing
+name: sat-conference
 description: Use when targeting International Conference on Theory and Applications of Satisfiability Testing (SAT) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for satisfiability.
 ---
 

@@ -9,13 +9,13 @@ description: |
   and an overall epistemic-quality tier (Exemplary to Unsound).
 
   TRIGGERS: level2, seal level 2, verify level 2, epistemic audit, review ara, audit claims
-argument-hint: "<artifact_dir>"
 allowed-tools: Read, Write, Glob, Grep
 metadata:
   category: research-tooling
   version: "3.1.0"
   last_updated: "2026-07-20"
-user-invocable: true
+  user-invocable: "true"
+  argument-hint: "[artifact-dir]"
 ---
 
 # ARA Seal Level 2: Semantic Epistemic Review

@@ -1,5 +1,5 @@
 ---
-name: acm-sigir-conference-on-human-information-interaction-and-retrieval
+name: acm-chiir
 description: Use when targeting ACM SIGIR Conference on Human Information Interaction and Retrieval (CHIIR) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for interactive IR.
 ---
 

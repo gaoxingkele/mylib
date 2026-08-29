@@ -1,5 +1,5 @@
 ---
-name: international-conference-on-principles-and-practice-of-constraint-programming
+name: constraint-programming-cp
 description: Use when targeting International Conference on Principles and Practice of Constraint Programming (CP) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for constraints.
 ---
 

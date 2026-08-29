@@ -6,19 +6,19 @@
 
 本库无需安装，可通过 Python 路径直接导入。
 
-### 方式 1：临时将 `D:\aicoding\Lib` 加入 `PYTHONPATH`
+### 方式 1：临时将 `D:\aicoding\mylib` 加入 `PYTHONPATH`
 
 ```powershell
-$env:PYTHONPATH = "D:\aicoding\Lib;$env:PYTHONPATH"
+$env:PYTHONPATH = "D:\aicoding\mylib;$env:PYTHONPATH"
 python -c "from download_tools import download; download('https://example.com/file.zip', 'data/file.zip')"
 ```
 
-### 方式 2：在项目中把 `D:\aicoding\Lib` 加入 `sys.path`
+### 方式 2：在项目中把 `D:\aicoding\mylib` 加入 `sys.path`
 
 ```python
 import sys
 from pathlib import Path
-sys.path.insert(0, r"D:\aicoding\Lib")
+sys.path.insert(0, r"D:\aicoding\mylib")
 
 from download_tools import download
 
@@ -32,7 +32,7 @@ download(
 ### 方式 3：命令行直接调用
 
 ```powershell
-python D:\aicoding\Lib\download_tools\download.py https://example.com/file.zip data/file.zip
+python D:\aicoding\mylib\download_tools\download.py https://example.com/file.zip data/file.zip
 ```
 
 ## API

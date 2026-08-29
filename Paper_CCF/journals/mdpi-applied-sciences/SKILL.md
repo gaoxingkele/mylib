@@ -30,7 +30,7 @@ Applied Sciences (*Appl. Sci.*, est. 2011, ISSN 2076-3417, gold OA, continuous p
 
 ### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=37** mapped local PDFs (mean ~21.9 pages extracted).
 - **Dominant IdeaSpark move:** `generative_process_redesign` — *Liberate a Fixed Generative Component*.
 - **Dominant journal-house move:** `power_system_planning_ops` — *Power-System Planning / Operations Case*.
@@ -46,7 +46,7 @@ Near-3y grid supplement (2023–2026, +20 OA PDFs): `papers/literature/applied_s
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=43** mapped local PDFs.
 - Section presence rates: intro **100%**, method **95%**, experiments/results **81%**, conclusion **21%**.
 - Multimodal density (mean/paper): figures **5.6**, tables **3.1**, algorithms **0.2**, equation markers **9.0**.

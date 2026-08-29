@@ -1,7 +1,8 @@
 ---
 name: experiment-design
 description: Design experiment plans with progressive stages — initial implementation, baseline tuning, creative research, and ablation studies. Plan baselines, datasets, hyperparameter sweeps, and evaluation metrics. Use when planning experiments for a research paper.
-argument-hint: [idea-or-plan]
+metadata:
+  argument-hint: "[idea-or-plan]"
 ---
 
 # Experiment Design
@@ -14,14 +15,14 @@ Design structured, progressive experiment plans for research papers.
 
 ## References
 
-- 4-stage progressive experiment prompts: `~/.claude/skills/experiment-design/references/stage-prompts.md`
+- 4-stage progressive experiment prompts: `~/.codex/skills/experiment-design/references/stage-prompts.md`
 
 ## Scripts
 
 ### Generate experiment design
 ```bash
-python ~/.claude/skills/experiment-design/scripts/design_experiments.py --plan research_plan.json --output experiment_design.json
-python ~/.claude/skills/experiment-design/scripts/design_experiments.py --method "contrastive learning" --task classification --format markdown
+python ~/.codex/skills/experiment-design/scripts/design_experiments.py --plan research_plan.json --output experiment_design.json
+python ~/.codex/skills/experiment-design/scripts/design_experiments.py --method "contrastive learning" --task classification --format markdown
 ```
 
 Generates baselines, ablation matrix, hyperparameter grid, metric selection. Stdlib-only.
@@ -85,6 +86,6 @@ Generates baselines, ablation matrix, hyperparameter grid, metric selection. Std
 - Generate figures for training curves and comparisons
 
 ## Related Skills
-- Upstream: [research-planning](../research-planning/), [idea-generation](../idea-generation/)
-- Downstream: [experiment-code](../experiment-code/), [data-analysis](../data-analysis/)
-- See also: [paper-assembly](../paper-assembly/)
+- Optional upstream capabilities when installed: research planning and idea generation.
+- Downstream: [experiment-code](../experiment-code/); optional data-analysis capability when installed.
+- Optional related capability: paper assembly.

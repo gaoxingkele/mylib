@@ -1,6 +1,6 @@
 ---
 name: robotics-science-and-systems
-description: Use when targeting Robotics: Science and Systems (RSS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for robotics flagship.
+description: "Use when targeting Robotics: Science and Systems (RSS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for robotics flagship."
 ---
 
 # Robotics: Science and Systems (RSS)

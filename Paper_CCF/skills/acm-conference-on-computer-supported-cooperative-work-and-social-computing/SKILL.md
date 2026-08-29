@@ -1,5 +1,5 @@
 ---
-name: acm-conference-on-computer-supported-cooperative-work-and-social-computing
+name: acm-cscw
 description: Use when targeting ACM Conference on Computer-Supported Cooperative Work and Social Computing (CSCW) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for social computing.
 ---
 

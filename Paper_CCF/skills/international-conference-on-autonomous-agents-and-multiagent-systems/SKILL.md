@@ -1,5 +1,5 @@
 ---
-name: international-conference-on-autonomous-agents-and-multiagent-systems
+name: aamas
 description: Use when targeting International Conference on Autonomous Agents and Multiagent Systems (AAMAS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for agents and multiagent systems.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: ieee-acm-international-conference-on-automated-software-engineering
+name: ieee-acm-ase
 description: Use when targeting IEEE/ACM International Conference on Automated Software Engineering (ASE) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for automated software engineering.
 ---
 

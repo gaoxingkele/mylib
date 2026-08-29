@@ -1,7 +1,7 @@
 # AgentPanelX 研究报告：能否提炼为论文写作 Harness
 
 **日期：** 2026-08-07
-**对象：** https://aowo-1345.github.io/AgentPanelX/ ，源码已克隆至 `D:/aicoding/Lib/AgentPanelX/`（91 个 Python 文件 + React 前端，8.8 MB，MIT 系许可证见 LICENSE）
+**对象：** https://aowo-1345.github.io/AgentPanelX/ ，源码已克隆至 `D:/aicoding/mylib/AgentPanelX/`（91 个 Python 文件 + React 前端，8.8 MB，MIT 系许可证见 LICENSE）
 **结论先行：** **可以，且映射度异常高。** AgentPanelX 的七个核心原语几乎是论文写作治理流程的同构物——我们 2026-08-05～07 在两篇 Applied Sciences 稿件上手工执行的协议冻结、作者授权、账本、事件记录、协议演化，正是它产品化的东西。建议采用"轻量提炼"而非整体引入。
 
 ---
@@ -34,7 +34,7 @@
 
 **路线 A：直接用 AgentPanelX 跑论文项目。** 可行（Runtime 本身是领域无关的 Feature/Plan/Milestone/Stage），但代价是引入 Codex CLI 依赖、Node 前端和整套 web 运行时，且 Stage Executor 的编码语义仍需改造。重。
 
-**路线 B：轻量提炼（推荐）。** 抽取其模式为 `D:/aicoding/Lib/paper_harness/`（约几百行）：
+**路线 B：轻量提炼（推荐）。** 抽取其模式为 `D:/aicoding/mylib/paper_harness/`（约几百行）：
 - `PaperOwner`：维护目标期刊、主张清单、证据边界、滚动待办（接 PROJECT_MEMORY 模式）
 - **Hard Gate**：任何实验/修改提案先冻结 digest，作者批准绑定哈希后才执行（直接复用我们已验证的授权 JSON 模式）
 - **Stage Runner**：durable 状态机 + 每 Stage 独立分支 + 完成后跑"论文验收脚本"（编译/引用/声明/数字一致性）
@@ -54,9 +54,9 @@
 
 ## 6. 建议的下一步
 
-1. 在 `D:/aicoding/Lib/paper_harness/` 建最小骨架：Hard Gate + Stage Runner + Evidence Timeline 三件（最能解决我们当前的痛点：授权-执行-账本的一致性）
+1. 在 `D:/aicoding/mylib/paper_harness/` 建最小骨架：Hard Gate + Stage Runner + Evidence Timeline 三件（最能解决我们当前的痛点：授权-执行-账本的一致性）
 2. 以两篇 Applied Sciences 稿件的"三轮评审 + 投稿前清单"为第一个驱动用例
 3. Reviewer 角色接 `paper_reviews/config/journals/` 的 9 份期刊 YAML
 4. 验证后再决定是否引入看板前端
 
-**参考实现位置**：`D:/aicoding/Lib/AgentPanelX/`（docs/architecture.md 是最佳入口；skills 在 .codex/skills/；Owner 工具在 src/agentplanex/project_owner_agent/tools/）
+**参考实现位置**：`D:/aicoding/mylib/AgentPanelX/`（docs/architecture.md 是最佳入口；skills 在 .codex/skills/；Owner 工具在 src/agentplanex/project_owner_agent/tools/）

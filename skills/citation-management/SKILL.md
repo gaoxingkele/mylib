@@ -1,7 +1,8 @@
 ---
 name: citation-management
 description: Manage BibTeX citations for LaTeX papers. Harvest missing citations from a draft using Semantic Scholar, validate cite keys against .bib files, deduplicate entries, and format bibliography. Use when working with references, BibTeX, or citations.
-argument-hint: [tex-or-bib-file]
+metadata:
+  argument-hint: "[tex-or-bib-file]"
 ---
 
 # Citation Management
@@ -17,7 +18,7 @@ Manage the full lifecycle of citations in a LaTeX paper.
 
 ### Validate citations (check all cite keys resolve)
 ```bash
-python ~/.claude/skills/citation-management/scripts/validate_citations.py \
+python ~/.codex/skills/citation-management/scripts/validate_citations.py \
   --tex paper/main.tex --bib paper/references.bib --check-figures --figures-dir paper/figures/
 ```
 
@@ -25,20 +26,19 @@ Reports: missing citations, unused bib entries, duplicate keys, duplicate sectio
 
 ### Generate BibTeX from paper database
 ```bash
-python ~/.claude/skills/deep-research/scripts/bibtex_manager.py \
+python ~/.codex/skills/deep-research/scripts/bibtex_manager.py \
   --jsonl paper_db.jsonl --output references.bib
 ```
 
 ### Search for a specific paper to add
 ```bash
-python ~/.claude/skills/deep-research/scripts/search_semantic_scholar.py \
-  --query "attention is all you need" --max-results 5 \
-  --api-key "$(grep S2_API_Key /Users/lingzhi/Code/keys.md 2>/dev/null | cut -d: -f2 | tr -d ' ')"
+python ~/.codex/skills/deep-research/scripts/search_semantic_scholar.py \
+  --query "attention is all you need" --max-results 5
 ```
 
 ### Harvest missing citations automatically
 ```bash
-python ~/.claude/skills/citation-management/scripts/harvest_citations.py \
+python ~/.codex/skills/citation-management/scripts/harvest_citations.py \
   --tex paper/main.tex --bib paper/references.bib --output candidates.bib --max-rounds 10
 ```
 
@@ -47,7 +47,7 @@ Key flags: `--dry-run` (preview only), `--verbose`, `--api-key`
 
 ### Auto-fix missing citation placeholders
 ```bash
-python ~/.claude/skills/citation-management/scripts/validate_citations.py \
+python ~/.codex/skills/citation-management/scripts/validate_citations.py \
   --tex paper/main.tex --bib paper/references.bib --fix
 ```
 
@@ -92,5 +92,5 @@ BibTeX key format: `firstAuthorLastNameYearFirstContentWord` (e.g., `vaswani2017
 
 ## Related Skills
 - Upstream: [literature-search](../literature-search/), [deep-research](../deep-research/)
-- Downstream: [paper-compilation](../paper-compilation/), [latex-formatting](../latex-formatting/)
-- See also: [related-work-writing](../related-work-writing/)
+- Downstream: [paper-compilation](../paper-compilation/); optional latex-formatting capability when installed.
+- Optional related capability: related-work writing.

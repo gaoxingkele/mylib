@@ -1,6 +1,5 @@
 ---
 name: academic-humanizer
-version: 0.3.3
 description: |
   Improve the clarity and voice of AI-assisted academic writing (papers, theses, rebuttals) and
   funding proposals (NSF Project Summary/Description, NIH Specific Aims): preserve scholarly
@@ -8,8 +7,10 @@ description: |
   author's own voice. It never changes a number, result, or citation, and it is not for evading
   AI-use disclosure. Use when editing AI-assisted academic prose or grant proposals.
 license: MIT
-compatibility: claude-code codex morphmind opencode
 allowed-tools: [Read, Write, Edit, Grep, Glob, AskUserQuestion]
+metadata:
+  version: "0.3.3"
+  compatibility: "claude-code codex morphmind opencode"
 ---
 
 # Academic Humanizer

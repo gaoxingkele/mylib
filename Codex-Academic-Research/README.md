@@ -1,7 +1,7 @@
 # Codex + Academic Research Skills (ARS) — Powergrid Digest
 
 把「Codex 官方最佳实践」+「Academic Research Skills for Codex」消化成可执行知识包，
-供 `D:/aicoding/lib` 与 `powergrid_benchmark` 共用。
+供 `D:/aicoding/mylib` 与 `powergrid_benchmark` 共用。
 
 ## 入口
 

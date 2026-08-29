@@ -40,6 +40,16 @@ Copy-Item paa/agents/cn-patent-*.toml <repo>/.codex/agents/
 The `cn-patent-application-cluster` skill references the role prompts in the
 project `.codex/agents/` directory, so install both parts.
 
+For the maintained user-level runtime, run:
+
+```powershell
+& D:/aicoding/mylib/skill-runtime/repair_codex_skills.ps1
+python D:/aicoding/mylib/skill-runtime/audit_skill_paths.py
+```
+
+The runtime installs a lightweight `paa` router and independent leaf skills; it never junctions the
+whole `paa/` directory into the user skill root.
+
 ## Claude-compatible installation
 
 Copy the desired skill directory into `<repo>/.claude/skills/` or the user's

@@ -35,7 +35,7 @@ Each `journals/<slug>/SKILL.md` has **Distilled deep structure & style** (pages/
 
 ## ResearchStudio-Idea / IdeaSpark acceptance-pattern distill
 
-Method borrowed from `D:/aicoding/lib/skills/ResearchStudio-Idea` (arXiv:2607.04439).
+Method borrowed from `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea` (arXiv:2607.04439).
 
 | slug | n | dominant_idea | dominant_journal_house | baseline% |
 |---|---:|---|---|---:|

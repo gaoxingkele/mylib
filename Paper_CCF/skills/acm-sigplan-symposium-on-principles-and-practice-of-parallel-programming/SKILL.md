@@ -1,5 +1,5 @@
 ---
-name: acm-sigplan-symposium-on-principles-and-practice-of-parallel-programming
+name: acm-ppopp
 description: Use when targeting ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for parallel programming.
 ---
 

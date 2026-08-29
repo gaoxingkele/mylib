@@ -1,8 +1,8 @@
 """paper_harness smoke 测试（mock 模式，绝不调用 codex CLI）。
 
 运行方式：
-    python -m pytest D:/aicoding/Lib/paper_harness/tests/test_smoke.py
-    python D:/aicoding/Lib/paper_harness/tests/test_smoke.py
+    python -m pytest D:/aicoding/mylib/paper_harness/tests/test_smoke.py
+    python D:/aicoding/mylib/paper_harness/tests/test_smoke.py
 """
 
 from __future__ import annotations

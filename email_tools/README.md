@@ -1,6 +1,6 @@
 # XMU Mail Global Config
 
-Config file: `D:\aicoding\Lib\email_tools\xmu_mail_global_config.json`
+Config file: `D:\aicoding\mylib\email_tools\xmu_mail_global_config.json`
 
 - From: `iamafan@xmu.edu.cn`
 - **Default Cc: `iamafan@126.com`** (always applied by `xmu_send.py`)
@@ -14,5 +14,5 @@ Send helper:
 
 ```bash
 python -c "from xmu_send import send_utf8_mail; ..."
-# or import from D:\aicoding\Lib\email_tools\xmu_send.py
+# or import from D:\aicoding\mylib\email_tools\xmu_send.py
 ```

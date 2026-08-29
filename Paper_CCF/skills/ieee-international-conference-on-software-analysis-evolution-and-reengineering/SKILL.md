@@ -1,5 +1,5 @@
 ---
-name: ieee-international-conference-on-software-analysis-evolution-and-reengineering
+name: ieee-saner
 description: Use when targeting IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for software analysis.
 ---
 

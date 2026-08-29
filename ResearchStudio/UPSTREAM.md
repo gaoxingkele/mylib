@@ -1,6 +1,6 @@
-﻿# Upstream clone metadata (vendored into mylib)
+# Upstream clone metadata (vendored into mylib)
 
-- path: `D:\aicoding\lib\ResearchStudio`
+- path: `D:\aicoding\mylib\ResearchStudio`
 - HEAD: `88c08f176d945fa33dad21957d3c1cd6d6443051`
 - branch: `main`
 

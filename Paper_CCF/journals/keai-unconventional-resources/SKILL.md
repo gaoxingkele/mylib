@@ -40,7 +40,7 @@ Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/keai-
 
 ### ResearchStudio-Idea acceptance patterns (local corpus, 2026-08)
 
-_No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicoding/lib` ResearchStudio-Idea skill suite for the method; retry after OA mirrors for this venue are available._
+_No local PDFs — cannot induce IdeaSpark-style acceptance cards. See `D:/aicoding/mylib` ResearchStudio-Idea skill suite for the method; retry after OA mirrors for this venue are available._
 
 Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/keai-unconventional-resources/`.
 

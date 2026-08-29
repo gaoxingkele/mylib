@@ -1,5 +1,5 @@
 ---
-name: architectural-support-for-programming-languages-and-operating-systems
+name: acm-asplos
 description: Use when targeting ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for architecture/systems/PL.
 ---
 

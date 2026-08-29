@@ -1,5 +1,5 @@
 ---
-name: international-conference-for-high-performance-computing-networking-storage-and-analysis
+name: sc-conference
 description: Use when targeting International Conference for High Performance Computing, Networking, Storage and Analysis (SC) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for HPC flagship.
 ---
 

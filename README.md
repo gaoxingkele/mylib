@@ -1,4 +1,10 @@
-﻿# aicoding/lib — shared skill & paper library
+# aicoding/mylib — shared skill & paper library
+
+## Canonical library root
+
+- The only maintained source root is `D:/aicoding/mylib`.
+- The legacy sibling directory named `Lib` is retired and must not be used by runtime links, scripts, or documentation.
+- User-level Codex skills are installed as junctions into curated sources under this repository.
 
 ## Patent application toolkit
 
@@ -18,7 +24,7 @@ files, incoPat token caches, and local account files are intentionally excluded.
 
 ## ResearchStudio-Idea (arXiv:2607.04439)
 - Code: `ResearchStudio/` (sparse/full clone of microsoft/ResearchStudio)
-- Skill junction: `skills/ResearchStudio-Idea` → `ResearchStudio/ResearchStudio-Idea`
+- Skill source: `ResearchStudio/ResearchStudio-Idea`; Codex installs only the three selected leaf skills.
 - Paper PDF: `papers/ResearchStudio-Idea_2607.04439.pdf`
 - Agent skill junctions: `~/.claude/skills/{idea_spark,paper_search,scoop_check}`
 
@@ -29,7 +35,7 @@ failure modes), paper tagging, and journal-level composition profiles.
 ## RepLLM (arXiv:2509.21074, SIGCOMM 2026)
 - Paper PDF: `papers/RepLLM_2509.21074.pdf`
 - Library entry: `RepLLM/` (skill + CPA schema; **upstream code not public**)
-- Skill junction: `skills/RepLLM` → `RepLLM/`
+- Skill source: `RepLLM/`.
 - Agent skill: `~/.claude/skills/repllm-content-parse` (junction)
 
 Powergrid reuse: **Content Parsing only** → structured `paper.json` evidence
@@ -39,7 +45,7 @@ Architecture/Code/Audit agents on the OA journal corpus.
 ## HarnessBank (arXiv:2607.13683, EverMind)
 - Paper PDF: `papers/HarnessBank_2607.13683.pdf`
 - Library entry: `HarnessBank/` (skill + powergrid adapt note; **upstream code not released yet**)
-- Skill junction: `skills/HarnessBank` → `HarnessBank/`
+- Skill source: `HarnessBank/`.
 - Agent skill: `~/.claude/skills/harnessbank-gated-evolution` (junction)
 
 Powergrid reuse: **gated credit + WHERE×WHY gene bank** for evolving research-agent

@@ -1,36 +1,17 @@
 ---
 name: research-visualizer
 description: |
-  Research Visualizer. Renders an existing Agent-Native Research Artifact (ARA) into ONE
-  self-contained, interactive HTML file showing the AI scientist's step-by-step research process:
-  a clickable process map of the exploration tree (branches and dead ends included) on the left,
-  and a per-step drill-down on the right — what the step did (its narrative written in plain language a
-  person can follow), why (the linked claim), the real result (verbatim grounded numbers + inline figures
-  + tables), and the code/artifact pointer.
-  Read-only consumer of the artifact — it never changes how research is done.
-  When the ARA carries them, it also surfaces (each optional, only when present) the related-work
-  dependency graph, the problem framing, a concepts glossary with in-text term popovers, and the
-  solution recipes — reached from header disclosures without leaving the process map.
-  Accepts either an existing ARA or raw research input (a paper, repo, run logs, or notes); when the
-  input is not yet an ARA it is compiled into one first, then visualized.
-  Also fronts the official `ara` Rust CLI (github.com/ARA-Labs/ara-cli) as a second, live mode:
-  `ara check` validates/lints the artifact deterministically, and `ara serve` renders it as a
-  local live-reloading viewer with zero LLM calls at view time — for the edit loop and CI gating,
-  while the portable HTML export remains the shareable/publishable output.
-
-  TRIGGERS: visualize, visualizer, trajectory view, render the ARA, see the steps, step-by-step view,
-  process map, replay the trajectory, watch the agent work, drill into steps,
-  visualize a paper, visualize a repo, visualize a run,
-  ara serve, live view, local viewer, watch the ara, live-reload, serve the artifact locally,
-  validate the ara, lint the ara, ara check, check my ara, is this a valid ara, does this ara pass ci,
-  view without an llm, deterministic view, browse ara examples, ara hub mode
-argument-hint: "[ara-dir] [--output <path>] | [--serve [--port <n>] [--hub --ara-root <dir>]] [--check [--fix] [--strict]]"
+  Render an Agent-Native Research Artifact as a self-contained interactive HTML process map or a
+  live local viewer. Use to inspect steps, branches, dead ends, claims, evidence, figures, and code
+  pointers; to run deterministic `ara check`; or to serve an ARA with live reload. This is a
+  read-only consumer and does not change the research artifact.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(python3 *|base64 *|find *|ls *|open *|ara *|which *|curl *|lsof *|pkill *|brew *|cargo *|sleep *)
 metadata:
   author: ara-commons
   category: research-tooling
   version: "1.1.0"
   tags: [research, visualization, trajectory, exploration-tree, html, ara-cli, validation, live-reload]
+  argument-hint: "[ara-dir] [--output path] | [--serve] [--check]"
 ---
 
 # Research Visualizer

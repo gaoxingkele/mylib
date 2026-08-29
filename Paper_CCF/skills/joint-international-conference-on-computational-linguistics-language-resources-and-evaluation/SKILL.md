@@ -1,5 +1,5 @@
 ---
-name: joint-international-conference-on-computational-linguistics-language-resources-and-evaluation
+name: lrec-coling
 description: Use when targeting Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for language resources.
 ---
 

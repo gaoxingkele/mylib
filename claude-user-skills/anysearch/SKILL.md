@@ -1,14 +1,10 @@
 ---
 name: anysearch
 description: Real-time search engine supporting web search, vertical domain search, parallel batch search, and URL content extraction.
-version: 2.1.0
-authors:
-  - AnySearch Team
-credentials:
-  - name: ANYSEARCH_API_KEY
-    required: false
-    description: "API key for higher rate limits. Anonymous access available with lower rate limits."
-    storage: ".env file, environment variable, or --api_key CLI flag"
+metadata:
+  version: "2.1.0"
+  authors: "AnySearch Team"
+  credentials: "ANYSEARCH_API_KEY is optional; use an environment variable, .env file, or --api_key."
 ---
 
 ## Overview

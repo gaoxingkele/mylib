@@ -3,7 +3,7 @@
 ## Core Layer
 
 ### `ResearchStudio-Idea`
-- 位置：`D:/aicoding/lib/ResearchStudio/ResearchStudio-Idea`
+- 位置：`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`
 - 作用：IdeaSpark 模式词表、pattern cards、创新招数归纳
 - 本地集成：`~/.claude/skills/{idea_spark,paper_search,scoop_check}`
 - 关键脚本：
@@ -11,7 +11,7 @@
   - `scripts/literature/ideaspark_fullcorpus_journal_distill.py`
 
 ### `RepLLM-CPA`
-- 位置：`D:/aicoding/lib/RepLLM`
+- 位置：`D:/aicoding/mylib/RepLLM`
 - 作用：借鉴 RepLLM 的 Content Parsing，把 PDF 解析为 `paper.json`
 - 本地集成：`~/.claude/skills/repllm-content-parse`
 - 关键脚本：`scripts/literature/repllm_cpa_journal_distill.py`
@@ -20,7 +20,7 @@
   - `.../repllm_cpa_journal_distill.json`
 
 ### `Paper_CCF`
-- 位置：`D:/aicoding/lib/Paper_CCF`（镜像自 `~/.claude/skills/Paper_CCF`）
+- 位置：`D:/aicoding/mylib/Paper_CCF`（镜像自 `~/.claude/skills/Paper_CCF`）
 - 作用：期刊路由、写作规范、投稿策略
 - 关键入口：
   - `resources/ideaspark-fullcorpus-journal-distill.md`
@@ -30,7 +30,7 @@
 ## Bridge Layer
 
 ### `AERS-powergrid-bridge`
-- 位置：`D:/aicoding/lib/skills/AERS-powergrid-bridge`
+- 位置：`D:/aicoding/mylib/skills/AERS-powergrid-bridge`
 - 本地集成：`~/.claude/skills/aers-powergrid-bridge`
 - 作用：从 AERS 选择性路由高 ROI 模块
 - 路由模块：
@@ -41,8 +41,8 @@
   - `67` 终稿流水线（可选）
 
 ### `academic-research-suite` (ARS-Codex)
-- 源码：`D:/aicoding/lib/Academic-Research-Skills-Codex/skills/academic-research-suite`
-- Digest：`D:/aicoding/lib/Codex-Academic-Research/`
+- 源码：`D:/aicoding/mylib/Academic-Research-Skills-Codex/skills/academic-research-suite`
+- Digest：`D:/aicoding/mylib/Codex-Academic-Research/`
 - 安装：`~/.codex/skills/academic-research-suite`、`~/.claude/skills/academic-research-suite`
 - Bridge：`skills/codex-ars-powergrid`
 - 作用：研究→写作→审稿→pipeline（单 skill router；内部 5 个 WORKFLOW）
@@ -51,7 +51,7 @@
 ## Project mirror Layer
 
 ### `powergrid_paper`
-- 位置：`D:/aicoding/lib/powergrid_paper`
+- 位置：`D:/aicoding/mylib/powergrid_paper`
 - 内容：`scripts/literature`、蒸馏 `metadata`、期刊模板、CMC 文风、Appl. Sci. 样本分析
 - 说明：`powergrid_paper/README.md`（不含全文 PDF）
 

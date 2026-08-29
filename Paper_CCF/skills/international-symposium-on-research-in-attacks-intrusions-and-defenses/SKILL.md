@@ -1,5 +1,5 @@
 ---
-name: international-symposium-on-research-in-attacks-intrusions-and-defenses
+name: raid
 description: Use when targeting International Symposium on Research in Attacks, Intrusions and Defenses (RAID) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for attacks and defenses.
 ---
 

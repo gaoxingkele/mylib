@@ -1,5 +1,5 @@
 ---
-name: european-conference-on-machine-learning-and-principles-and-practice-of-knowledge-discovery
+name: ecml-pkdd
 description: Use when targeting European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases (ECML PKDD) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for AI/data mining.
 ---
 

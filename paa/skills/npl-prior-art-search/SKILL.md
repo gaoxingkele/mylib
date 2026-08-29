@@ -12,7 +12,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 # NPL 现有技术检索路由
 
-专利查新分两条腿：**专利腿**用 `incopat-search`（真实 API），**NPL 腿**用本路由。本 skill 不实现检索本身，而是按需求把任务派发给已装入各工具端 skills 目录（`~/.claude/skills/`、`~/.codex/skills/`、`~/.kimi-code/skills/`）的学术检索 skill，并统一证据口径与落稿位置。
+专利查新分两条腿：**专利腿**用 `incopat-search`（真实 API），**NPL 腿**用本路由。本 skill 不实现检索本身，而是按需求把任务派发给已装入 `~/.codex/skills/` 的学术检索 skill，并统一证据口径与落稿位置。
 
 ## 路由表（按需求自动选择，禁止同时盲目全跑）
 
@@ -62,4 +62,4 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 - `literature-search` / `literature-review` / `citation-management` / `deep-research`（lingzhi227）
 - `anysearch`（通用实时搜索兜底，源在 mylib/claude-user-skills/anysearch）
 
-技能事实源统一在 `D:/aicoding/mylib`：专利组在 `paa/skills/`，学术组在 `skills/`。Claude Code（`~/.claude/skills/`、项目 `.claude/skills/`）、Codex（`~/.codex/skills/`、项目 `.codex/skills/`）、Kimi（`~/.kimi-code/skills/`）各端点一律 junction 引用 mylib，不做第二份副本。
+技能事实源统一在 `D:/aicoding/mylib`：专利组在 `paa/skills/`，学术组在 `skills/`。Codex 运行时通过 `~/.codex/skills/` 的 junction 引用 mylib，不做第二份副本。

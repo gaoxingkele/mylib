@@ -71,7 +71,7 @@ Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/elsev
 
 ### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)
 
-- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/lib/skills/ResearchStudio-Idea`.
+- Method: **ResearchStudio-Idea / IdeaSpark** (arXiv:2607.04439) full-corpus pass over `papers/literature/**` → `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`.
 - Sample: **n=10** mapped local PDFs (mean ~25.4 pages extracted).
 - **Dominant IdeaSpark move:** `architectural_operator_substitution` — *Substitute the Operator or Representation*.
 - **Dominant journal-house move:** `storage_or_energy_device_review` — *Energy Storage / Device Technology*.
@@ -86,7 +86,7 @@ Corpus: all discoverable PDFs under `papers/literature/` mapped to `elsevier-jou
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **90%**, method **90%**, experiments/results **60%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **1.2**, tables **2.6**, algorithms **0.0**, equation markers **1.9**.

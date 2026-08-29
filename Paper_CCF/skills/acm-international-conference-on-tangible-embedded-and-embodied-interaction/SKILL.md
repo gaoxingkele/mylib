@@ -1,5 +1,5 @@
 ---
-name: acm-international-conference-on-tangible-embedded-and-embodied-interaction
+name: acm-tei
 description: Use when targeting ACM International Conference on Tangible, Embedded, and Embodied Interaction (TEI) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for tangible interaction.
 ---
 

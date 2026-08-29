@@ -1,5 +1,5 @@
 ---
-name: ieee-international-conference-on-automation-science-and-engineering
+name: ieee-case
 description: Use when targeting IEEE International Conference on Automation Science and Engineering (CASE) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for automation.
 ---
 

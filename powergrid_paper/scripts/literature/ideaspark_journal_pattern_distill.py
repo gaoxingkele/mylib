@@ -29,7 +29,7 @@ OUT_MD = META / "ideaspark_journal_distill_notes.md"
 OUT_JSON = META / "ideaspark_journal_distill.json"
 SKILL_ROOT = Path.home() / ".claude/skills/Paper_CCF/journals"
 BATCH_MD = Path.home() / ".claude/skills/Paper_CCF/resources/target-journals-2026-batch-distill.md"
-LIB_NOTE = Path(r"D:/aicoding/lib/papers/ResearchStudio-Idea_journal_adapt_note.md")
+LIB_NOTE = Path(r"D:/aicoding/mylib/papers/ResearchStudio-Idea_journal_adapt_note.md")
 
 SECTION_HEADER = "### ResearchStudio-Idea acceptance patterns (local corpus, 2026-08)"
 
@@ -518,7 +518,7 @@ def skill_block(slug: str, summary: dict) -> str:
     if summary["n"] == 0:
         return (
             "_No local PDFs — cannot induce IdeaSpark-style acceptance cards. "
-            "See `D:/aicoding/lib` ResearchStudio-Idea skill suite for the method; "
+            "See `D:/aicoding/mylib` ResearchStudio-Idea skill suite for the method; "
             "retry after OA mirrors for this venue are available._\n"
         )
     di = summary["dominant_idea"]
@@ -534,7 +534,7 @@ def skill_block(slug: str, summary: dict) -> str:
     combos = ", ".join(f"`{c}`" for c in summary["combos"][:4]) or "sparse"
     lines = [
         f"- Method: **ResearchStudio-Idea / IdeaSpark** pattern induction (arXiv:2607.04439), "
-        f"adapted to journal acceptance corpus (`D:/aicoding/lib/skills/ResearchStudio-Idea`).",
+        f"adapted to journal acceptance corpus (`D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea`).",
         f"- Sample: **n={summary['n']}** local PDFs → lit_table + pattern cards under "
         f"`papers/literature/target_journal_related/metadata/ideaspark_journal_*`.",
         f"- **Dominant IdeaSpark move:** `{di}` — *{di_name}*.",
@@ -594,7 +594,7 @@ def main():
     all_json = {}
     md = [
         "# IdeaSpark-adapted journal acceptance distill (2026-08)\n",
-        "Source method: ResearchStudio-Idea (arXiv:2607.04439) installed at `D:/aicoding/lib`.\n",
+        "Source method: ResearchStudio-Idea (arXiv:2607.04439) installed at `D:/aicoding/mylib`.\n",
         "Pipeline: local PDF full-text → strategy/bottleneck cues → tag with 15 IdeaSpark patterns "
         "+ journal-house patterns → lit_table + operational cards → Paper_CCF skill sections.\n",
     ]
@@ -624,7 +624,7 @@ def main():
     # append batch overview section
     extra = [
         "\n## ResearchStudio-Idea / IdeaSpark acceptance-pattern distill\n",
-        "Method borrowed from `D:/aicoding/lib/skills/ResearchStudio-Idea` (arXiv:2607.04439).\n",
+        "Method borrowed from `D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea` (arXiv:2607.04439).\n",
         "| slug | n | dominant_idea | dominant_journal_house | baseline% |",
         "|---|---:|---|---|---:|",
     ]
@@ -647,8 +647,8 @@ def main():
             [
                 "# ResearchStudio-Idea → powergrid journal distill adaptation\n",
                 "Paper: https://arxiv.org/abs/2607.04439",
-                "Code: D:/aicoding/lib/ResearchStudio/ResearchStudio-Idea",
-                "Skills: D:/aicoding/lib/skills/ResearchStudio-Idea (+ ~/.claude/skills junctions)\n",
+                "Code: D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea",
+                "Skills: D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea (+ ~/.claude/skills junctions)\n",
                 "## What we reused",
                 "- 15 ideation pattern vocabulary + operational-signature thinking",
                 "- lit_table tagging schema (pattern tags / bottleneck / open issue)",

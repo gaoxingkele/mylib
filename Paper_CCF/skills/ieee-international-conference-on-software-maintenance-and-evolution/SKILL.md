@@ -1,5 +1,5 @@
 ---
-name: ieee-international-conference-on-software-maintenance-and-evolution
+name: ieee-icsme
 description: Use when targeting IEEE International Conference on Software Maintenance and Evolution (ICSME) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for software maintenance.
 ---
 

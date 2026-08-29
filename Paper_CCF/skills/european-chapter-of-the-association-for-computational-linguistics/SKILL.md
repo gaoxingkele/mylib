@@ -1,5 +1,5 @@
 ---
-name: european-chapter-of-the-association-for-computational-linguistics
+name: eacl
 description: Use when targeting Conference of the European Chapter of the Association for Computational Linguistics (EACL) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for NLP regional flagship.
 ---
 

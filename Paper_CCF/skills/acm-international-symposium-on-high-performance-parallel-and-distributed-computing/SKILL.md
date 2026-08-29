@@ -1,5 +1,5 @@
 ---
-name: acm-international-symposium-on-high-performance-parallel-and-distributed-computing
+name: acm-hpdc
 description: Use when targeting ACM International Symposium on High-Performance Parallel and Distributed Computing (HPDC) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for parallel/distributed computing.
 ---
 

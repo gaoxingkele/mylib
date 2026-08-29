@@ -1,5 +1,5 @@
 ---
-name: international-conference-on-principles-of-knowledge-representation-and-reasoning
+name: kr-conference
 description: Use when targeting International Conference on Principles of Knowledge Representation and Reasoning (KR) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for knowledge representation.
 ---
 

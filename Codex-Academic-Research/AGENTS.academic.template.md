@@ -20,7 +20,7 @@
 - 文献笔记 → `literature/` 或项目约定目录
 - 草稿 → `drafts/` 或 `paper_projects/<name>/`
 - 最终导出 → `outputs/`
-- 电网项目共享能力 → `D:/aicoding/lib/`（Paper_CCF、ARS、蒸馏产物）
+- 电网项目共享能力 → `D:/aicoding/mylib/`（Paper_CCF、ARS、蒸馏产物）
 
 ## 工具路由（本机）
 

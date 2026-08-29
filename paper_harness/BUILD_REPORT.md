@@ -61,7 +61,7 @@ Implemented changes:
 Verification command:
 
 ```powershell
-python D:\aicoding\Lib\paper_harness\tests\test_smoke.py
+python D:\aicoding\mylib\paper_harness\tests\test_smoke.py
 ```
 
 Result: 12 tests passed in mock mode, including Hard Gate negative tests, sequential stage control, monorepo sparse

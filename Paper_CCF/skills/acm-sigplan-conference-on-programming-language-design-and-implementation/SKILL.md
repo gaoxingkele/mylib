@@ -1,5 +1,5 @@
 ---
-name: acm-sigplan-conference-on-programming-language-design-and-implementation
+name: acm-pldi
 description: Use when targeting ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for programming languages flagship.
 ---
 

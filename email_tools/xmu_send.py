@@ -12,7 +12,7 @@ from email.utils import formataddr, formatdate
 from pathlib import Path
 from typing import Iterable, Sequence
 
-CFG_PATH = Path(r"D:\aicoding\Lib\email_tools\xmu_mail_global_config.json")
+CFG_PATH = Path(r"D:\aicoding\mylib\email_tools\xmu_mail_global_config.json")
 
 
 def load_cfg(path: Path = CFG_PATH) -> dict:

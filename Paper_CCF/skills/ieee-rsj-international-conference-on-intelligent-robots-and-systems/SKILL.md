@@ -1,5 +1,5 @@
 ---
-name: ieee-rsj-international-conference-on-intelligent-robots-and-systems
+name: ieee-rsj-iros
 description: Use when targeting IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for robotics flagship.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: ieee-international-conference-on-acoustics-speech-and-signal-processing
+name: ieee-icassp
 description: Use when targeting IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for signal processing.
 ---
 

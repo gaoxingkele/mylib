@@ -30,7 +30,7 @@ OUT_LIT = META / "repllm_cpa_lit_tables"
 BATCH_MD = Path.home() / ".claude/skills/Paper_CCF/resources/repllm-cpa-journal-distill.md"
 SKILL_ROOT = Path.home() / ".claude/skills/Paper_CCF/journals"
 SECTION_HEADER = "### RepLLM-CPA structured evidence (full local corpus, 2026-08)"
-LIB_NOTE = Path(r"D:/aicoding/lib/RepLLM/journal_adapt_note.md")
+LIB_NOTE = Path(r"D:/aicoding/mylib/RepLLM/journal_adapt_note.md")
 
 # Reuse mapping + patterns from IdeaSpark full-corpus script
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -300,7 +300,7 @@ def skill_block(slug: str, summary: dict) -> str:
             SECTION_HEADER,
             "",
             f"- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; "
-            f"code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).",
+            f"code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).",
             f"- Sample: **n={summary['n']}** mapped local PDFs.",
             f"- Section presence rates: intro **{100*roles.get('intro',0):.0f}%**, method **{100*roles.get('method',0):.0f}%**, "
             f"experiments/results **{100*roles.get('experiments',0):.0f}%**, conclusion **{100*roles.get('conclusion',0):.0f}%**.",
@@ -406,7 +406,7 @@ def main():
         "# RepLLM-CPA journal distill (full local corpus)",
         "",
         "Method: RepLLM Content Parsing only (arXiv:2509.21074). Full code-reproduction agents not run.",
-        f"Lib: `D:/aicoding/lib/RepLLM`. PDFs: `{LIT.as_posix()}`.",
+        f"Lib: `D:/aicoding/mylib/RepLLM`. PDFs: `{LIT.as_posix()}`.",
         "",
     ]
     batch = [
@@ -488,7 +488,7 @@ def main():
         line = (
             "8. **RepLLM-CPA 结构化证据蒸馏**（Content Parsing → `paper.json`，非代码复现）→ "
             "`resources/repllm-cpa-journal-distill.md`；各刊 `SKILL.md` 内 "
-            "`### RepLLM-CPA structured evidence`。详见 `D:/aicoding/lib/RepLLM/`。\n"
+            "`### RepLLM-CPA structured evidence`。详见 `D:/aicoding/mylib/RepLLM/`。\n"
         )
         if needle not in t:
             # insert after ideaspark item if present

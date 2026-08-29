@@ -1,5 +1,5 @@
 ---
-name: acm-international-joint-conference-on-pervasive-and-ubiquitous-computing
+name: acm-ubicomp
 description: Use when targeting ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for ubiquitous computing.
 ---
 

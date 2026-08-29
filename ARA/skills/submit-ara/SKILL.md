@@ -12,12 +12,12 @@ description: |
   TRIGGERS: submit, submit ara, publish ara, upload ara, share ara, push ara to github, add to
   ara hub, submit-ara, publish artifact, make my ara public, submit to a conference,
   update my submission, resubmit
-argument-hint: "[ara-dir] [--title <t>] [--hosted] [--github] [--new] [--no-viz] [--dry-run]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(gh *|git *|python3 *|curl *|cat *|ls *|find *|mkdir *|cp *|rm *|test *|basename *|jq *|open *)
 metadata:
   author: ara-commons
   category: research-tooling
   version: "2.0.0"
+  argument-hint: "[ara-dir] [--title title] [--hosted] [--github] [--new] [--no-viz] [--dry-run]"
   tags: [research, publishing, ara-hub, conferences, visualization]
 ---
 

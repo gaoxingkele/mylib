@@ -1,17 +1,18 @@
 ---
 name: papers-skill
 description: "Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-contained Python CLI."
-category: research
-risk: safe
-source: community
-source_repo: xwmxcz/papers-skill
-source_type: community
-date_added: "2026-06-11"
-author: xwmxcz
-tags: [research, academic, papers, citations, arxiv, semantic-scholar, pdf]
-tools: [claude-code, antigravity, cursor, gemini-cli, codex-cli, opencode]
 license: "MIT"
-license_source: "https://github.com/xwmxcz/papers-skill/blob/main/LICENSE"
+metadata:
+  category: research
+  risk: safe
+  source: community
+  source-repo: xwmxcz/papers-skill
+  source-type: community
+  date-added: "2026-06-11"
+  author: xwmxcz
+  tags: "research, academic, papers, citations, arxiv, semantic-scholar, pdf"
+  tools: "claude-code, antigravity, cursor, gemini-cli, codex-cli, opencode"
+  license-source: "https://github.com/xwmxcz/papers-skill/blob/main/LICENSE"
 ---
 
 # Papers Skill

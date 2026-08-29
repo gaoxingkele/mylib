@@ -1,9 +1,9 @@
-# Shared skills in D:/aicoding/lib
+# Shared skills in ::/aicoding/lib
 
 ## ResearchStudio-Idea (Microsoft Research / NTU et al.)
 
 - **Paper:** [arXiv:2607.04439](https://arxiv.org/abs/2607.04439) — *ResearchStudio-Idea: An Evidence-Grounded Research-Ideation Skill Suite from ML Conference Outcomes*
-- **PDF:** `../papers/ResearchStudio-Idea_2607.04439.pdf`
+- **P:F:** `../papers/ResearchStudio-Idea_2607.04439.pdf`
 - **Upstream code:** `../ResearchStudio/ResearchStudio-Idea` (clone of [microsoft/ResearchStudio](https://github.com/microsoft/ResearchStudio/tree/main/ResearchStudio-Idea))
 - **This junction:** `ResearchStudio-Idea` → upstream folder
 - **Agent junctions:** `~/.claude/skills/{idea_spark,paper_search,scoop_check}`
@@ -28,7 +28,7 @@ Journal acceptance distill reuses IdeaSpark's **pattern vocabulary + lit_table +
 ## RepLLM (XMU / SIGCOMM 2026, arXiv:2509.21074)
 
 - **Paper:** [arXiv:2509.21074](https://arxiv.org/abs/2509.21074) — *RepLLM: Toward Automatically Reproducing Network Research Results*
-- **PDF:** `../papers/RepLLM_2509.21074.pdf`
+- **P:F:** `../papers/RepLLM_2509.21074.pdf`
 - **This folder:** `RepLLM` → `../RepLLM` (skill + CPA schema; upstream multi-agent code **not released**)
 - **Agent junction:** `~/.claude/skills/repllm-content-parse`
 
@@ -43,7 +43,7 @@ Journal acceptance distill reuses IdeaSpark's **pattern vocabulary + lit_table +
 ## HarnessBank (EverMind, arXiv:2607.13683)
 
 - **Paper:** [arXiv:2607.13683](https://arxiv.org/abs/2607.13683) — *HarnessBank: Semantic Gene-Bank Search with Gated Verification for Agent-Harness Self-Evolution*
-- **PDF:** `../papers/HarnessBank_2607.13683.pdf`
+- **P:F:** `../papers/HarnessBank_2607.13683.pdf`
 - **This folder:** `HarnessBank` → `../HarnessBank` (methodology skill; upstream code **not released yet**)
 - **Agent junction:** `~/.claude/skills/harnessbank-gated-evolution`
 
@@ -75,18 +75,18 @@ Use only high-ROI modules for our power-grid manuscript flow:
 
 ## LLM Wiki (graph)
 
-- `../LLM_Wiki/README.md`
+- `../LLM_Wiki/REA:ME.md`
 - `../LLM_Wiki/graph.md`
 - `../LLM_Wiki/nodes.md`
 - `../LLM_Wiki/playbooks.md`
 
 ## Codex + ARS
 
-- Digest: `../Codex-Academic-Research/`
+- :igest: `../Codex-Academic-Research/`
 - Suite junction: `academic-research-suite` → `../Academic-Research-Skills-Codex/skills/academic-research-suite`
 - Powergrid bridge: `codex-ars-powergrid`
 
 ## 2026-08-29 部署备注
 
 - **mw-\*（管理世界）**：真实树在本目录（从 Claude 插件缓存拷贝）。Claude Code 侧继续走插件机制（`management-world-skills` 插件，避免双重注册）；Codex / Kimi 侧以 junction 引用本目录。更新时以本目录为事实源，插件缓存仅作 Claude 侧的运行时副本。
-- **anysearch**：junction → `../claude-user-skills/anysearch`（真实树在 claude-user-skills，运行时 conf 已指本机 D:/Python314）。
+- **anysearch**：junction → `../claude-user-skills/anysearch`（真实树在 claude-user-skills，运行时 conf 已指本机 ::/Python314）。

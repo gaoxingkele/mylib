@@ -1,13 +1,13 @@
 # RepLLM-CPA journal distill (full local corpus)
 
 Method: RepLLM Content Parsing only (arXiv:2509.21074). Full code-reproduction agents not run.
-Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/literature`.
+Lib: `D:/aicoding/mylib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/literature`.
 
 ## elsevier-journal-of-energy-storage
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **90%**, method **90%**, experiments/results **60%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **1.2**, tables **2.6**, algorithms **0.0**, equation markers **1.9**.
@@ -19,7 +19,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **0%**, method **10%**, experiments/results **40%**, conclusion **0%**.
 - Multimodal density (mean/paper): figures **0.0**, tables **0.0**, algorithms **0.4**, equation markers **0.4**.
@@ -31,7 +31,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **70%**, method **50%**, experiments/results **50%**, conclusion **50%**.
 - Multimodal density (mean/paper): figures **1.8**, tables **0.3**, algorithms **0.0**, equation markers **1.3**.
@@ -43,7 +43,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **80%**, experiments/results **50%**, conclusion **50%**.
 - Multimodal density (mean/paper): figures **1.8**, tables **1.0**, algorithms **0.5**, equation markers **3.4**.
@@ -55,7 +55,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=43** mapped local PDFs.
 - Section presence rates: intro **100%**, method **95%**, experiments/results **81%**, conclusion **21%**.
 - Multimodal density (mean/paper): figures **5.6**, tables **3.1**, algorithms **0.2**, equation markers **9.0**.
@@ -67,7 +67,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **70%**, experiments/results **90%**, conclusion **70%**.
 - Multimodal density (mean/paper): figures **0.9**, tables **0.2**, algorithms **0.0**, equation markers **1.1**.
@@ -79,7 +79,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=15** mapped local PDFs.
 - Section presence rates: intro **100%**, method **100%**, experiments/results **80%**, conclusion **20%**.
 - Multimodal density (mean/paper): figures **7.4**, tables **3.2**, algorithms **0.0**, equation markers **8.1**.
@@ -91,7 +91,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=36** mapped local PDFs.
 - Section presence rates: intro **100%**, method **92%**, experiments/results **69%**, conclusion **6%**.
 - Multimodal density (mean/paper): figures **5.4**, tables **2.9**, algorithms **0.1**, equation markers **10.5**.
@@ -103,7 +103,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **70%**, experiments/results **40%**, conclusion **30%**.
 - Multimodal density (mean/paper): figures **5.5**, tables **1.7**, algorithms **0.0**, equation markers **1.3**.
@@ -115,7 +115,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **90%**, method **60%**, experiments/results **50%**, conclusion **10%**.
 - Multimodal density (mean/paper): figures **5.7**, tables **2.3**, algorithms **0.0**, equation markers **1.8**.
@@ -127,7 +127,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=8** mapped local PDFs.
 - Section presence rates: intro **88%**, method **88%**, experiments/results **88%**, conclusion **0%**.
 - Multimodal density (mean/paper): figures **6.0**, tables **1.8**, algorithms **0.2**, equation markers **5.6**.
@@ -139,7 +139,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **90%**, experiments/results **90%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **3.5**, tables **1.3**, algorithms **0.0**, equation markers **1.7**.
@@ -151,7 +151,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **40%**, experiments/results **40%**, conclusion **40%**.
 - Multimodal density (mean/paper): figures **0.9**, tables **0.5**, algorithms **0.0**, equation markers **6.4**.
@@ -163,7 +163,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=11** mapped local PDFs.
 - Section presence rates: intro **9%**, method **82%**, experiments/results **64%**, conclusion **27%**.
 - Multimodal density (mean/paper): figures **5.0**, tables **1.1**, algorithms **0.1**, equation markers **0.5**.
@@ -175,7 +175,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **60%**, experiments/results **20%**, conclusion **20%**.
 - Multimodal density (mean/paper): figures **2.7**, tables **1.3**, algorithms **0.2**, equation markers **1.8**.
@@ -187,7 +187,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **80%**, experiments/results **70%**, conclusion **10%**.
 - Multimodal density (mean/paper): figures **1.2**, tables **1.6**, algorithms **0.2**, equation markers **2.9**.
@@ -199,7 +199,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=20** mapped local PDFs.
 - Section presence rates: intro **30%**, method **70%**, experiments/results **90%**, conclusion **20%**.
 - Multimodal density (mean/paper): figures **1.5**, tables **3.5**, algorithms **0.2**, equation markers **3.4**.
@@ -211,7 +211,7 @@ Lib: `D:/aicoding/lib/RepLLM`. PDFs: `D:/aicoding/powergrid_benchmark/papers/lit
 
 ### RepLLM-CPA structured evidence (full local corpus, 2026-08)
 
-- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/lib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
+- Method: **RepLLM Content Parsing** (arXiv:2509.21074) CPA-lite → `paper.json` Shared Memory paper-space; code at `D:/aicoding/mylib/RepLLM` (full ADA/CGA/ARA **not** run on journal corpus).
 - Sample: **n=10** mapped local PDFs.
 - Section presence rates: intro **100%**, method **70%**, experiments/results **80%**, conclusion **50%**.
 - Multimodal density (mean/paper): figures **5.3**, tables **1.3**, algorithms **0.1**, equation markers **2.2**.

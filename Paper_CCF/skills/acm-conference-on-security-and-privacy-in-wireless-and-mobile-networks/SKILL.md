@@ -1,5 +1,5 @@
 ---
-name: acm-conference-on-security-and-privacy-in-wireless-and-mobile-networks
+name: acm-wisec
 description: Use when targeting ACM Conference on Security and Privacy in Wireless and Mobile Networks (WiSec) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for wireless/mobile security.
 ---
 

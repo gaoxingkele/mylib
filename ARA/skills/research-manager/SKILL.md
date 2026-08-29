@@ -12,12 +12,12 @@ description: |
   All entries carry provenance tags (user / ai-suggested / ai-executed / user-revised).
   Also supports optional, user-triggered taste comments — free-form evaluative reactions to a
   claim, heuristic, or trace node — independent of the crystallization pipeline.
-user-invocable: true
-argument-hint: "[optional: hint about what happened this turn]"
 allowed-tools: Read, Write, Edit, Glob, Grep
 metadata:
   author: ara-commons
   version: "2.6.0"
+  user-invocable: "true"
+  argument-hint: "[optional: hint about what happened this turn]"
   tags: [research, process-recording, provenance, progressive-crystallization, knowledge-management, taste-comments]
 ---
 

@@ -1,7 +1,8 @@
 ---
 name: literature-review
 description: Conduct comprehensive literature reviews using multi-perspective dialogue simulation. Generate diverse expert personas, conduct grounded Q&A conversations, and synthesize findings into structured knowledge. Use when starting a new research project or writing a survey section.
-argument-hint: [topic]
+metadata:
+  argument-hint: "[topic]"
 ---
 
 # Literature Review
@@ -15,20 +16,20 @@ Conduct deep literature reviews through multi-perspective dialogue and systemati
 
 ## References
 
-- Multi-perspective dialogue prompts (STORM): `~/.claude/skills/literature-review/references/dialogue-prompts.md`
-- Literature review workflow (AgentLaboratory): `~/.claude/skills/literature-review/references/review-workflow.md`
+- Multi-perspective dialogue prompts (STORM): `~/.codex/skills/literature-review/references/dialogue-prompts.md`
+- Literature review workflow (AgentLaboratory): `~/.codex/skills/literature-review/references/review-workflow.md`
 
 ## Scripts (from literature-search skill)
 
 ```bash
 # Search Semantic Scholar
-python ~/.claude/skills/deep-research/scripts/search_semantic_scholar.py --query "topic" --max-results 20
+python ~/.codex/skills/deep-research/scripts/search_semantic_scholar.py --query "topic" --max-results 20
 
 # Search OpenAlex
-python ~/.claude/skills/literature-search/scripts/search_openalex.py --query "topic" --max-results 20
+python ~/.codex/skills/literature-search/scripts/search_openalex.py --query "topic" --max-results 20
 
 # Search arXiv
-python ~/.claude/skills/deep-research/scripts/search_arxiv.py --query "topic" --max-results 10
+python ~/.codex/skills/deep-research/scripts/search_arxiv.py --query "topic" --max-results 10
 ```
 
 ## Workflow
@@ -78,5 +79,4 @@ A structured literature review with:
 
 ## Related Skills
 - Upstream: [literature-search](../literature-search/), [deep-research](../deep-research/)
-- Downstream: [related-work-writing](../related-work-writing/), [research-planning](../research-planning/)
-- See also: [survey-generation](../survey-generation/)
+- Optional downstream capabilities when installed: related-work writing, research planning, and survey generation.

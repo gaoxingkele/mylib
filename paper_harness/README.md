@@ -45,7 +45,7 @@ from holding an isolated worktree open; pre-existing processes are never targete
 ## 启动
 
 ```powershell
-$env:PYTHONPATH='D:\aicoding\Lib'
+$env:PYTHONPATH='D:\aicoding\mylib'
 python -m paper_harness init <论文目录> --journal mdpi_applied_sciences --manuscript paper_applsci.tex
 python -m paper_harness review <论文目录>
 python -m paper_harness plan <论文目录> --goal "完成证据对齐的三轮修改与投稿核验"
@@ -135,7 +135,7 @@ plan_created -> approved -> stage_started -> worktree_created
 ## 测试
 
 ```powershell
-python D:\aicoding\Lib\paper_harness\tests\test_smoke.py
+python D:\aicoding\mylib\paper_harness\tests\test_smoke.py
 ```
 
 测试不需要 pytest，且强制使用 mock transport，保证零 API 调用。

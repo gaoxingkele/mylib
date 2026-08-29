@@ -137,8 +137,10 @@ See `exploration-tree-spec.md` for the full schema. Required:
 - Source: cite `incopat-search claim API, YYYY-MM-DD`
 
 ### evidence/scoring/
-- scoring.json: {case_id, scores: {expert_name: {indicator: value}}, group_weights: {N, I, D, Q}, group_CR, latent, grant_probability, grade}
-- Matches the schema of `patent-grant-scorer` output
+- `scoring.json` keeps the compatible core `{case, scores, group_weights, group_CR, latent, grant_probability, grade}`.
+- Evidence-grounded reviews should also preserve `protocol_version`, `hard_gates`, `score_layers`, `consensus`, `version_binding`, `round_transition`, `relative_position`, `confidence_warnings`, and `action_queue` from `patent-grant-scorer` v2.
+- Each indicator may remain a legacy 1-9 number or use `{score, confidence, evidence_quality, status, evidence_refs}`. Numeric-only input is valid but is marked low-confidence.
+- Scores are bound to the reviewed claim hash and retrieval evidence hash. A materially revised claim must not reuse a stale `scoring.json`.
 
 ### evidence/design_around/
 - per round: `round_<N>_<mechanism>.md`

@@ -1,5 +1,5 @@
 ---
-name: acm-sigir-conference-on-research-and-development-in-information-retrieval
+name: acm-sigir
 description: Use when targeting ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for information retrieval flagship.
 ---
 

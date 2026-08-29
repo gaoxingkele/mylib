@@ -31,7 +31,7 @@ This file is the operational runbook. Design rationale (the 7 design principles,
 Follow [references/setup.md](references/setup.md). Quick version — set two shell variables, install deps, verify:
 
 ```bash
-SKILL_DIR=<path to this folder>                  # e.g. ~/.claude/skills/idea-spark (Claude Code), ~/.codex/skills/idea_spark (Codex CLI), or any clone location
+SKILL_DIR=<path to this folder>                  # e.g. ~/.codex/skills/idea-spark or any clone location
 RUN_DIR="$PWD/ideaspark_run/<topic-slug>"   # convention below; any absolute dir works. No mkdir needed — every phase mkdir -p's its own --out, and `next` treats a missing dir as a fresh run
 python3 -m pip install feedparser openreview-py beautifulsoup4 pymupdf
 python3 "$SKILL_DIR/scripts/run.py" check_connectors   # from the SAME shell you'll run phases from

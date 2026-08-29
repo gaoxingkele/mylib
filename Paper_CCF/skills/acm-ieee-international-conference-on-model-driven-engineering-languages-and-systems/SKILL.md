@@ -1,5 +1,5 @@
 ---
-name: acm-ieee-international-conference-on-model-driven-engineering-languages-and-systems
+name: acm-ieee-models
 description: Use when targeting ACM/IEEE International Conference on Model Driven Engineering Languages and Systems (MODELS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for model-driven engineering.
 ---
 

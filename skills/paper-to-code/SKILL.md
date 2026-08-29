@@ -1,7 +1,8 @@
 ---
 name: paper-to-code
 description: Convert an ML research paper into a complete, runnable code repository. 3-stage pipeline from Paper2Code — Planning (UML + dependency graph) → Analysis (per-file logic) → Coding (dependency-ordered generation). Use for reproducing paper methods.
-argument-hint: [paper-pdf-or-text]
+metadata:
+  argument-hint: "[paper-pdf-or-text]"
 ---
 
 # Paper to Code
@@ -80,4 +81,4 @@ reproduced_code/
 ## Related Skills
 - Upstream: [literature-search](../literature-search/)
 - Downstream: [experiment-code](../experiment-code/)
-- See also: [code-debugging](../code-debugging/), [algorithm-design](../algorithm-design/)
+- Optional related capabilities when installed: code debugging and algorithm design.

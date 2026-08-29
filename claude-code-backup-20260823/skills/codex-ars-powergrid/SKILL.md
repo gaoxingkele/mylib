@@ -13,8 +13,8 @@ description: 将 Codex 学术最佳实践与 academic-research-suite(ARS) 路由
 
 ## Mandatory reads
 
-1. `D:/aicoding/lib/Codex-Academic-Research/DIGEST.md`
-2. `D:/aicoding/lib/Codex-Academic-Research/playbooks.md`
+1. `D:/aicoding/mylib/Codex-Academic-Research/DIGEST.md`
+2. `D:/aicoding/mylib/Codex-Academic-Research/playbooks.md`
 3. Suite router：`academic-research-suite` → 只加载当前阶段 `WORKFLOW.md`
 
 ## Route map

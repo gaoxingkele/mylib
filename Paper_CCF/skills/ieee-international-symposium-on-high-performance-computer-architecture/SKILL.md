@@ -1,5 +1,5 @@
 ---
-name: ieee-international-symposium-on-high-performance-computer-architecture
+name: ieee-hpca
 description: Use when targeting IEEE International Symposium on High-Performance Computer Architecture (HPCA) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for computer architecture.
 ---
 

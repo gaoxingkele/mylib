@@ -1,5 +1,5 @@
 ---
-name: international-symposium-on-distributed-autonomous-robotic-systems
+name: dars
 description: Use when targeting International Symposium on Distributed Autonomous Robotic Systems (DARS) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for multi-robot systems.
 ---
 

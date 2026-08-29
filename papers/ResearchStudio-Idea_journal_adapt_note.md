@@ -1,8 +1,8 @@
 # ResearchStudio-Idea → powergrid journal distill adaptation
 
 Paper: https://arxiv.org/abs/2607.04439
-Code: D:/aicoding/lib/ResearchStudio/ResearchStudio-Idea
-Skills: D:/aicoding/lib/skills/ResearchStudio-Idea (+ ~/.claude/skills junctions)
+Code: D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea
+Skills: D:/aicoding/mylib/ResearchStudio/ResearchStudio-Idea (+ ~/.claude/skills junctions)
 
 ## What we reused
 - 15 ideation pattern vocabulary + operational-signature thinking

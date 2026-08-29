@@ -1,7 +1,8 @@
 ---
 name: experiment-code
 description: Write ML experiment code with iterative improvement. Generate training/evaluation pipelines, debug errors, and optimize results through code reflection. Use when implementing experiments for a research paper.
-argument-hint: [plan-or-idea]
+metadata:
+  argument-hint: "[plan-or-idea]"
 ---
 
 # Experiment Code
@@ -15,8 +16,8 @@ Generate and iteratively improve ML experiment code for research papers.
 
 ## References
 
-- Experiment prompts and patterns: `~/.claude/skills/experiment-code/references/experiment-prompts.md`
-- Code patterns (error handling, repair, hill-climbing): `~/.claude/skills/experiment-code/references/code-patterns.md`
+- Experiment prompts and patterns: `~/.codex/skills/experiment-code/references/experiment-prompts.md`
+- Code patterns (error handling, repair, hill-climbing): `~/.codex/skills/experiment-code/references/code-patterns.md`
 
 ## Action: `generate`
 
@@ -79,6 +80,6 @@ Generate publication-quality plots from experiment results:
 - Before each experiment include a print statement explaining exactly what the results are meant to show
 
 ## Related Skills
-- Upstream: [experiment-design](../experiment-design/), [algorithm-design](../algorithm-design/)
-- Downstream: [data-analysis](../data-analysis/), [backward-traceability](../backward-traceability/)
-- See also: [code-debugging](../code-debugging/), [paper-to-code](../paper-to-code/)
+- Upstream: [experiment-design](../experiment-design/); optional algorithm-design capability when installed.
+- Downstream: optional data-analysis and backward-traceability capabilities when installed.
+- See also: [paper-to-code](../paper-to-code/); use ordinary code debugging when no dedicated skill is installed.

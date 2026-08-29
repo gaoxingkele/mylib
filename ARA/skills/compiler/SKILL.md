@@ -11,13 +11,13 @@ description: |
   TRIGGERS: compile, create ARA, generate artifact, convert paper, build artifact, compile paper,
   ARA from PDF, ARA from repo, ARA from code, structure research, extract knowledge,
   extract figure data, digitize plot, read chart, figure to data
-argument-hint: "[any input — paths, URLs, descriptions, or nothing]"
 allowed-tools: Read, Write, Edit, Bash(python *|git clone *|ls *|mkdir *), Glob, Grep, Task
 metadata:
   author: ara-commons
   category: research-tooling
   version: "1.2.1"
   tags: [research, compilation, artifacts, knowledge-extraction]
+  argument-hint: "[any input — paths, URLs, descriptions, or nothing]"
 ---
 
 # Universal ARA Compiler

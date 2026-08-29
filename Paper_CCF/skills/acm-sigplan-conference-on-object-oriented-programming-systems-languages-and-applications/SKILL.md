@@ -1,5 +1,5 @@
 ---
-name: acm-sigplan-conference-on-object-oriented-programming-systems-languages-and-applications
+name: acm-oopsla
 description: Use when targeting ACM SIGPLAN Conference on Object-Oriented Programming, Systems, Languages, and Applications (OOPSLA) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for programming languages.
 ---
 

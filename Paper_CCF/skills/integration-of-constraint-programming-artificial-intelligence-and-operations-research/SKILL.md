@@ -1,5 +1,5 @@
 ---
-name: integration-of-constraint-programming-artificial-intelligence-and-operations-research
+name: cpaior
 description: Use when targeting Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for AI/OR optimization.
 ---
 

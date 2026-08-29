@@ -39,7 +39,7 @@ my-research/
 ```
 
 本仓库等价现场：
-- 文献 / 蒸馏：`papers/literature/`、`D:/aicoding/lib/powergrid_paper/`
+- 文献 / 蒸馏：`papers/literature/`、`D:/aicoding/mylib/powergrid_paper/`
 - 手稿：`paper_projects/`
 - 期刊规则：`Paper_CCF` / `~/.claude/skills/Paper_CCF`
 

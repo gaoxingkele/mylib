@@ -1,6 +1,11 @@
 ---
 name: paper-search-pro
-description: "Find academic papers across up to 7 sources (OpenAlex / Semantic Scholar / CrossRef / PubMed / arXiv for English, plus native-Chinese retrieval via NSSD 国家哲社文献中心 + yiigle 中华医学期刊) with adjustable depth — Quick scan (5 min) to Audit prep (3 hr). Use when the user wants to find papers, run a literature search, gather references, scope a research topic, search Chinese-language / 中文原生 literature (中文文献/中文核心/CSSCI/C刊/国内研究/国内文献/中华××期刊/心理学报/经济研究), or filter results by journal tier (中科院分区/一区/几区, Q1, JCR/SJR quartile, 影响因子/impact factor, 期刊分区, 顶刊/top journal, '按分区筛'). Triggers on search verbs ('find papers', 'literature search', 'papers about X'), review types ('scoping review', 'systematic review', 'SR prep', 'literature review', 'lit review', 'help me write a lit review'), Chinese ('找文献', '找论文', '论文搜索', '学术检索', '文献检索', '文献综述', '综述前期', '求文献', '中文文献', '中文核心', 'CSSCI', 'C刊', '国内研究', '找中文的'). Outputs Shadcn HTML report + BibTeX/RIS/CSV + PRISMA-S log. Do NOT use for: concept explanations ('what is X' / 'X 是什么', e.g. '影响因子怎么算'), writing ('帮我写' / 'help me write a paragraph'), single-paper interpretation or PDF download with metadata (use paper-downloader-portable), or when the user already has a literature set (use literature-set-review)."
+description: >-
+  Run reproducible multilingual academic searches across OpenAlex, Semantic Scholar, CrossRef,
+  PubMed, arXiv, NSSD, and yiigle, with optional journal-tier filtering and PRISMA-S logs. Use for
+  finding papers, gathering references, scoping or systematic-review preparation, and Chinese
+  literature retrieval. Do not use for concept explanations, prose writing, single-paper reading,
+  or reviewing a literature set the user already supplied.
 license: Apache-2.0
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, Task
 metadata:
@@ -336,7 +341,11 @@ Pass only the input files you actually produced — skip ones that were not enab
 
 Split the KG into batches of 10 papers each. Write to `"$SEARCH_DIR/batches/batch_NNN.jsonl"`.
 
-**Before dispatch**, expand `$PSP_HOME/references/rcs_rubric.md` into the actual absolute path (e.g. `/Users/alice/.claude/skills/paper-search-pro/references/rcs_rubric.md`) and substitute it for `{rubric_path}` in the classifier prompt template. Each SubAgent runs in its own shell where `$PSP_HOME` is **not** exported — passing the literal `$PSP_HOME` token would leave the SubAgent unable to find the rubric, which silently degrades scoring quality. See `references/classifier_subagent_prompt.md` for the full placeholder table.
+**Before dispatch**, resolve `$PSP_HOME/references/rcs_rubric.md` to the actual absolute path and
+substitute it for `{rubric_path}` in the classifier prompt template. Each SubAgent runs in its own
+shell where `$PSP_HOME` is **not** exported—passing the literal token would leave the SubAgent unable
+to find the rubric and silently degrade scoring quality. See
+`references/classifier_subagent_prompt.md` for the full placeholder table.
 
 🔥 **PARALLELISM IS MANDATORY** (Rule B):
 

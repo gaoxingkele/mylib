@@ -1,5 +1,5 @@
 ---
-name: ieee-international-conference-on-robot-and-human-interactive-communication
+name: ieee-ro-man
 description: Use when targeting IEEE International Conference on Robot and Human Interactive Communication (RO-MAN) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for human-robot communication.
 ---
 
