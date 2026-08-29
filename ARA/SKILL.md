@@ -1,22 +1,15 @@
 ---
-name: ARA
+name: ara
 description: >
-  Unified entry to the Agent-Native Research Artifact (ARA) toolkit — turn messy autoresearch into a
-  structured, verifiable, traceable artifact. Routes by intent to eight bundled sub-skills: CAPTURE
-  research as you work (research-manager), COMPILE a paper/repo/notes into an ARA (compiler), VERIFY
-  epistemic rigor before you trust/publish (rigor-reviewer), VISUALIZE the exploration trajectory as
-  interactive HTML (research-visualizer), ASK an ARA grounded/falsifiable questions (research-foresight),
-  SHARE files with another agent via one URL (context-drop), STEER open-ended investigation like a fuzzer
-  (research-fuzzer), and SUBMIT/publish an ARA to GitHub + the ARA Hub (submit-ara). TRIGGERS: ARA,
-  agent-native research artifact, compile ARA, create ARA, ARA from PDF/repo/code, structure research,
-  capture research process, record decisions/experiments/dead ends, verify artifact, rigor review,
-  seal level 2, visualize research trajectory, exploration graph, research world model, what should I
-  try next, why did this work, publish ARA, context drop, fuzzer investigation.
+  Route Agent-Native Research Artifact work to maintained modules for research capture, compilation,
+  rigor review, visualization, grounded foresight, context sharing, research fuzzing, and publication.
+  Use when creating or verifying an ARA, recording decisions and experiments, visualizing an
+  exploration graph, asking artifact-grounded questions, or publishing an ARA.
 ---
 
 # ARA — Agent-Native Research Artifact（统一 skill）
 
-复刻自论文 **《The Last Human-Written Paper: Agent-Native Research Artifacts》**(arXiv:2604.24658，本地 PDF：`D:/aicoding/ARA/ARA_paper_2604.24658.pdf`) 的开源工具箱
+复刻自论文 **《The Last Human-Written Paper: Agent-Native Research Artifacts》**(arXiv:2604.24658，本地 PDF：`D:/aicoding/mylib/ARA/ARA_paper_2604.24658.pdf`) 的开源工具箱
 (`AmberLJC/Agent-Native-Research-Artifact`, MIT，同步 commit e52a925 / 2026-08-29)。把 AI 科研过程中"被覆盖的代码、散落的日志、无人记录的死路"强制变成
 **结构化、可验证、可追溯**的研究产物(ARA),让人类无需逆向数千行终端输出就能信任 AI 产出的科学。
 
@@ -82,7 +75,7 @@ example_artifact/
 
 ## 全局使用 & 说明
 
-- 本 skill 装在用户级 `~/.claude/skills/ARA/`,**所有项目**的 Claude Code 会话都能用 `/ARA`(新建 skills 目录需重启一次热加载)。
+- Codex 使用轻量入口 `~/.codex/skills/ara/`；完整模块保留在 `D:/aicoding/mylib/ARA/skills/`，由入口按需读取。
 - 官方也提供 npx 安装器把技能**分别**装成独立 skill(`npx @ara-commons/ara-skills`,自动识别 Claude Code/Cursor/Gemini/Codex,可选全局/本地)。本统一 skill 是把它们**收敛成一个 `/ARA` 入口**的等价封装,内容逐字保留。
 - 遵循 [Agent Skills 开放标准](https://agentskills.io/specification),跨 Claude Code / Codex / Cursor 等通用。
 

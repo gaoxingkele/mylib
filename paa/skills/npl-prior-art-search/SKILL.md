@@ -12,7 +12,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 # NPL 现有技术检索路由
 
-专利查新分两条腿：**专利腿**用 `incopat-search`（真实 API），**NPL 腿**用本路由。本 skill 不实现检索本身，而是按需求把任务派发给已装入 `~/.claude/skills/` 的学术检索 skill，并统一证据口径与落稿位置。
+专利查新分两条腿：**专利腿**用 `incopat-search`（真实 API），**NPL 腿**用本路由。本 skill 不实现检索本身，而是按需求把任务派发给已装入各工具端 skills 目录（`~/.claude/skills/`、`~/.codex/skills/`、`~/.kimi-code/skills/`）的学术检索 skill，并统一证据口径与落稿位置。
 
 ## 路由表（按需求自动选择，禁止同时盲目全跑）
 
@@ -42,8 +42,8 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 1. **禁编造**：每个 NPL 对比文件必须带真实 DOI / arXiv ID / URL + 来源渠道 + 检索日期；WebSearch 摘要不是核验过的正文，只能算发现线索（`source-degraded`），须二次核验。
 2. **不绕付费墙**：只用开放获取渠道取全文；没有 OA 就把摘要+元数据写进报告并标注"未取全文"。
-3. **限流**：S2 无 key 时 429 常见——换渠道或降档，不要重试轰炸；S2 免费 key（https://www.semanticscholar.org/product/api）建议注册。
-4. **S2 key 约定**（配好后全组生效）：环境变量 `S2_API_KEY`（scholar-search/s2cli、deep-research 系脚本已默认读取）+ `~/.paper-search-pro/config.yaml` 的 `semantic_scholar_api_key:`（paper-search-pro）+ academic-search 的 curl 头 `-H "x-api-key: $S2_API_KEY"`。papers-skill 与 paper_search 无 key 通道（设计如此，限流时换渠道）。
+3. **限流**：S2 已配置 API key（2026-08-29，存于用户环境变量 `S2_API_KEY` + psp config），突发连发仍会瞬时 429——重试前等 10 秒以上，不要重试轰炸。
+4. **S2 key 约定**（已配置，全组生效）：环境变量 `S2_API_KEY`（scholar-search/s2cli、deep-research 系脚本默认读取）+ `~/.paper-search-pro/config.yaml` 的 `semantic_scholar_api_key:`（paper-search-pro）+ academic-search 的 curl 头 `-H "x-api-key: $S2_API_KEY"`。papers-skill 与 paper_search 无 key 通道（设计如此，限流时换渠道）。
 5. Python 一律 `D:/Python314/python.exe`；`uvx` 已装（0.12.7）；`node` v24 可用（academic-search 的 .mjs 脚本、CDP 模式可跑）。
 
 ## 输出落点（专利流程内）
