@@ -5,6 +5,7 @@
 - The only maintained source root is `D:/aicoding/mylib`.
 - The legacy sibling directory named `Lib` is retired and must not be used by runtime links, scripts, or documentation.
 - User-level Codex skills are installed as junctions into curated sources under this repository.
+- **技能来源/用处/效果/路由全知识 → 见 [`WIKI.md`](WIKI.md)**（2026-08-29 起，技能变动同步更新）
 
 ## Patent application toolkit
 
