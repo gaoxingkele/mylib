@@ -155,6 +155,26 @@ class PaperHarnessSmokeTest(unittest.TestCase):
         data = json.loads(reviews[-1].read_text(encoding="utf-8"))
         self.assertEqual(data["issues"], [])
 
+    def test_declarations_accepts_reproducibility_data_boundary_heading(self):
+        paper = self.tmp / "declaration_alias"
+        paper.mkdir()
+        manuscript = paper / "main.tex"
+        manuscript.write_text(
+            r"""\section*{Funding}
+None.
+\section{Reproducibility and Data Boundary}
+The source data and release boundary are stated here.
+\section*{Acknowledgments}
+None.
+""",
+            encoding="utf-8",
+        )
+        result = checks.check_declarations(
+            paper,
+            {"manuscript": "main.tex", "journal": "ieee_access"},
+        )
+        self.assertEqual(result["status"], "pass", result["detail"])
+
     def test_hard_gate_rejects_tampered_plan(self):
         paper = make_paper_project(self.tmp / "tamper")
         self._init_plan(paper)

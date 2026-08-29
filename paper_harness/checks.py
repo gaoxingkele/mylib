@@ -37,7 +37,11 @@ DEFAULT_DECLARATIONS = [
 DECLARATION_ALIASES = {
     "funding": ("funding", "funding statement"),
     "author contributions": ("author contributions", "credit author statement"),
-    "data availability": ("data availability", "availability of data and materials"),
+    "data availability": (
+        "data availability",
+        "availability of data and materials",
+        "reproducibility and data boundary",
+    ),
     "conflicts of interest": ("conflicts of interest", "conflict of interest"),
     "acknowledgments": ("acknowledgments", "acknowledgment"),
 }
