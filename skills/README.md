@@ -85,3 +85,8 @@ Use only high-ROI modules for our power-grid manuscript flow:
 - Digest: `../Codex-Academic-Research/`
 - Suite junction: `academic-research-suite` → `../Academic-Research-Skills-Codex/skills/academic-research-suite`
 - Powergrid bridge: `codex-ars-powergrid`
+
+## 2026-08-29 部署备注
+
+- **mw-\*（管理世界）**：真实树在本目录（从 Claude 插件缓存拷贝）。Claude Code 侧继续走插件机制（`management-world-skills` 插件，避免双重注册）；Codex / Kimi 侧以 junction 引用本目录。更新时以本目录为事实源，插件缓存仅作 Claude 侧的运行时副本。
+- **anysearch**：junction → `../claude-user-skills/anysearch`（真实树在 claude-user-skills，运行时 conf 已指本机 D:/Python314）。

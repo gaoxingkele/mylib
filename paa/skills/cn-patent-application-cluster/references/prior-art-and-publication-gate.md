@@ -10,15 +10,17 @@ Before filing, classify each source:
 
 If the user confirms a paper is not public, record it in the delivery index and recommend filing before publication. Still request written confirmation from the inventor or project owner.
 
-## Search Tiers
+## Search Tiers and Default Providers
 
 Tier 0: repository evidence and existing reports.
 
-Tier 1: public web and official pages; use current browsing when facts may have changed.
+Tier 1: public web discovery defaults to **Tavily and Brave**. Run both when API keys are available, retain provider/query/URL provenance, and mark search snippets as `source-degraded` until the underlying page or patent text is fetched.
 
 Tier 2: CNIPA publication announcement, Google Patents, official patent pages.
 
-Tier 3: professional deep search: CNIPA/INCOPAT/智慧芽. Do not claim Tier 3 completion unless it was actually performed.
+Tier 3: professional deep search uses **incoPat** when its API is configured, including semantic/field retrieval and claim/specification verification; CNIPA/智慧芽 may supplement it. Do not claim Tier 3 completion unless it was actually performed.
+
+For agent review, the normal order is Tavily + Brave discovery, incoPat professional retrieval, then a separate citation-verification pass. A failed or quota-exhausted provider must be recorded and must not erase usable evidence from the other lanes.
 
 ## Query Plan
 

@@ -4,7 +4,7 @@
 
 ```bash
 # 进入项目目录
-cd D:\aicoding\zhuanlishenqing\patent_ara
+cd D:\aicoding\mylib\paa\engine\patent_ara
 
 # 无外部依赖（纯 stdlib），可选依赖：
 pip install pyyaml jsonschema  # YAML 支持和 schema 校验
@@ -187,7 +187,7 @@ python examples\integrated_full_test.py
 
 ### Incopat 凭证
 
-编辑 `.claude/skills/incopat-search/scripts/credentials.json`：
+编辑 `D:/aicoding/mylib/paa/skills/incopat-search/scripts/credentials.json`，或设置同名 `INCOPAT_*` 环境变量。运行时环境变量优先：
 
 ```json
 {

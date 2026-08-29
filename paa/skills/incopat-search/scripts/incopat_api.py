@@ -5,6 +5,9 @@
   python incopat_api.py search   "TI-CN=(变压器 AND 故障诊断) AND PNC=CN" [--rows 10] [--from 0] [--order "PD DESC"] [--fields pn,ti-cn,...]
   python incopat_api.py count    "检索式"            # 无权限时会明确报错
   python incopat_api.py semantic "一段技术方案描述文字" [--rows 10]
+  python incopat_api.py info     CN103399241B        # 单件完整著录项
+  python incopat_api.py family   CN103399241B        # 同族
+  python incopat_api.py citation CN103399241B        # 引证
   python incopat_api.py claim    CN103399241B        # 权利要求全文
   python incopat_api.py spec     CN103399241B        # 说明书全文
   python incopat_api.py legal    CN103399241B        # 法律状态 2.0
@@ -35,18 +38,17 @@ if os.path.exists(_CRED_FILE):
     with open(_CRED_FILE, encoding="utf-8") as _f:
         _cred = json.load(_f)
 
-BASE = os.environ.get("INCOPAT_BASE", _cred.get("base", "https://apitest.incopat.com"))
+BASE = os.environ.get("INCOPAT_BASE_URL", os.environ.get("INCOPAT_BASE", _cred.get("base", "https://apitest.incopat.com")))
 CLIENT_ID = os.environ.get("INCOPAT_CLIENT_ID", _cred.get("client_id", ""))
 CLIENT_SECRET = os.environ.get("INCOPAT_CLIENT_SECRET", _cred.get("client_secret", ""))
 USERNAME = os.environ.get("INCOPAT_USERNAME", _cred.get("username", ""))
 PASSWORD = os.environ.get("INCOPAT_PASSWORD", _cred.get("password", ""))
-if not (CLIENT_ID and CLIENT_SECRET and USERNAME and PASSWORD):
-    raise SystemExit("缺少 incoPat 凭证：请在 scripts/credentials.json 填写（模板 credentials.example.json），或设 INCOPAT_* 环境变量")
-
 TOKEN_CACHE = os.path.join(_HERE, ".token_cache.json")
 
-# 测试账号实测可用的返回字段（ipc/lgd/status-lite 等无权限）
-DEFAULT_FIELDS = "pn,an,ti-cn,ti-en,ab-cn,ap-or,in-or,agc,ad,pd"
+# 2026-08-26 联调已覆盖 ipc/status-lite；ipcm/lgd 若账号未开通可通过
+# --fields 显式降级，并在检索审计中保留 API 的权限错误。
+DEFAULT_FIELDS = "pn,an,ti-cn,ti-en,ab-cn,ap-or,in-or,agc,ad,pd,ipc,ipcm,status-lite,lgd"
+CONFIRMED_FIELDS = "pn,an,ti-cn,ti-en,ab-cn,ap-or,in-or,agc,ad,pd,ipc,status-lite"
 
 
 def _post(path, params, timeout=60):
@@ -63,6 +65,8 @@ def _post(path, params, timeout=60):
 
 
 def get_token(force=False):
+    if not (CLIENT_ID and CLIENT_SECRET and USERNAME and PASSWORD):
+        raise SystemExit("缺少 incoPat 凭证：请在 scripts/credentials.json 填写（模板 credentials.example.json），或设 INCOPAT_* 环境变量")
     if not force and os.path.exists(TOKEN_CACHE):
         try:
             with open(TOKEN_CACHE, encoding="utf-8") as f:
@@ -100,13 +104,22 @@ def pretty(resp):
         sys.exit(1)
 
 
+def bounded_int(minimum, maximum):
+    def parse(value):
+        number = int(value)
+        if not minimum <= number <= maximum:
+            raise argparse.ArgumentTypeError(f"必须位于 {minimum}..{maximum}")
+        return number
+    return parse
+
+
 def main():
     p = argparse.ArgumentParser(description="incoPat API client")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("search", help="检索式检索 (incosearch)")
     s.add_argument("exp", help="incoPat 检索式, 如 TI-CN=(变压器) AND PNC=CN AND PD=[20200101 TO 20261231]")
-    s.add_argument("--rows", type=int, default=10, help="返回条数 1-20")
+    s.add_argument("--rows", type=bounded_int(1, 50), default=10, help="返回条数 1-50")
     s.add_argument("--from", dest="frm", type=int, default=0)
     s.add_argument("--order", default="", help="如 'PD DESC' 或 'relevancy DESC'")
     s.add_argument("--fields", default=DEFAULT_FIELDS)
@@ -116,21 +129,40 @@ def main():
 
     m = sub.add_parser("semantic", help="语义检索（技术方案文字→相似专利）")
     m.add_argument("text", help="词/语句/段落, 中国专利用中文")
-    m.add_argument("--rows", type=int, default=10)
+    m.add_argument("--rows", type=bounded_int(1, 100), default=10)
 
-    for name, path_help in [("claim", "权利要求"), ("spec", "说明书"), ("legal", "法律状态"),
+    for name, path_help in [("info", "完整著录项"), ("family", "同族"), ("citation", "引证"),
+                            ("claim", "权利要求"), ("spec", "说明书"), ("legal", "法律状态"),
                             ("value", "合享价值度"), ("assign", "转让"), ("licence", "许可"),
                             ("reexam", "复审无效")]:
         sp = sub.add_parser(name, help=path_help)
         sp.add_argument("pn", help="公开(公告)号, 如 CN103399241B")
+        if name in {"info", "family", "citation"}:
+            sp.add_argument("--fields", default="")
+
+    for name, help_text in [("oned1", "一维单字段统计"), ("oned2", "一维双字段统计")]:
+        sp = sub.add_parser(name, help=help_text)
+        sp.add_argument("exp")
+        sp.add_argument("field", help="统计字段，如 APTT 或 APTT,PDY")
+        sp.add_argument("--rows", type=bounded_int(1, 50), default=10)
+        sp.add_argument("--order", default="count")
+
+    twod = sub.add_parser("twod", help="二维字段统计")
+    twod.add_argument("exp")
+    twod.add_argument("first_field")
+    twod.add_argument("second_field")
+    twod.add_argument("--rows", type=bounded_int(1, 50), default=10)
 
     b = sub.add_parser("batch", help="批量按公开号取数据")
     b.add_argument("pns", nargs="+")
-    b.add_argument("--cmd", default="claim", choices=["claim", "spec", "legal", "value", "assign", "licence", "reexam"])
+    b.add_argument("--cmd", dest="batch_cmd", default="claim", choices=["info", "family", "citation", "claim", "spec", "legal", "value", "assign", "licence", "reexam"])
 
     a = p.parse_args()
     cid = CLIENT_ID
-    pn_paths = {"claim": f"/api/search/claim/{cid}", "spec": f"/api/search/spec/{cid}",
+    pn_paths = {"info": f"/api/search/info/{cid}",
+                "family": f"/api/customed/patent/{cid}/family",
+                "citation": f"/api/customed/patent/{cid}/citation",
+                "claim": f"/api/search/claim/{cid}", "spec": f"/api/search/spec/{cid}",
                 "legal": f"/api/search/lgtxt2/{cid}", "value": f"/api/search/vlstar/{cid}",
                 "assign": f"/api/search/assign/{cid}", "licence": f"/api/search/licence/{cid}",
                 "reexam": f"/api/search/reetxt/{cid}"}
@@ -139,19 +171,39 @@ def main():
         params = {"incoExp": a.exp, "rows": a.rows, "from": a.frm, "incoFields": a.fields}
         if a.order:
             params["order"] = a.order
-        pretty(api(f"/api/search/incosearch/{cid}", params))
+        response = api(f"/api/search/incosearch/{cid}", params)
+        message = str(response.get("message", "")).lower()
+        field_denied = ("字段" in message and "权限" in message) or ("field" in message and "permission" in message)
+        if response.get("status") is False and a.fields == DEFAULT_FIELDS and field_denied:
+            params["incoFields"] = CONFIRMED_FIELDS
+            response = api(f"/api/search/incosearch/{cid}", params)
+            response.setdefault("_client_audit", {})["field_fallback"] = {
+                "requested": DEFAULT_FIELDS.split(","),
+                "used": CONFIRMED_FIELDS.split(","),
+            }
+        pretty(response)
     elif a.cmd == "count":
         pretty(api(f"/api/search/count/{cid}", {"incoExp": a.exp}))
     elif a.cmd == "semantic":
         pretty(api(f"/api/semanticsApi/semanticsSearch/{cid}", {"searchText": a.text, "rows": a.rows}))
+    elif a.cmd in {"oned1", "oned2"}:
+        pretty(api(f"/api/analysis/{a.cmd}/{cid}", {
+            "incoExp": a.exp, "asField": a.field, "rows": a.rows, "order": a.order}))
+    elif a.cmd == "twod":
+        pretty(api(f"/api/analysis/twod/{cid}", {
+            "incoExp": a.exp, "firstField": a.first_field,
+            "secondField": a.second_field, "rows": a.rows}))
     elif a.cmd == "batch":
         out = {}
         for pn in a.pns:
-            out[pn] = api(pn_paths[a.cmd], {"pn": pn})
+            out[pn] = api(pn_paths[a.batch_cmd], {"pn": pn})
             time.sleep(0.15)  # 限速: 默认每秒最多 10 请求
         print(json.dumps(out, ensure_ascii=False, indent=2))
     else:
-        pretty(api(pn_paths[a.cmd], {"pn": a.pn}))
+        params = {"pn": a.pn}
+        if getattr(a, "fields", ""):
+            params["incoFields"] = a.fields
+        pretty(api(pn_paths[a.cmd], params))
 
 
 if __name__ == "__main__":

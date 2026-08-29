@@ -58,7 +58,7 @@ list concrete fix in MANIFEST.md § Gaps.
 
 ### Step 5 — Validate via scripts/validate.py
 Seal Level 1 checks: see `./references/validation-checklist.md`. The script is runnable:
-`python ./scripts/validate.py ./<paa-dir>`
+`D:/Python314/python.exe ./scripts/validate.py ./<paa-dir>`（本机 `python` 为 MS Store 占位符，须用完整解释器路径）
 
 ### Step 6 — Fix & iterate
 For each failure, apply targeted edits; re-validate. Converges in 2-3 rounds.

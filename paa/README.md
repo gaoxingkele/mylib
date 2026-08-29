@@ -131,10 +131,23 @@ difference_feature: "对违背图谱关系路径的候选结果施加惩罚因�
 - `patent-grant-scorer` skill → feeds `evidence/scoring/` (AHP weights, SEM scores, indicator scores)
 - `cnipa-drafting-workflow` skill → produces `application/` layer content
 - `patent-disclosure-skill` → produces `logic/invention.md` from project docs
-- 探索图(`trace/`)is) is the connective tissue across drafting rounds that current scattered git commits lose
+- `npl-prior-art-search` skill → 非专利文献（论文类对比文件）检索路由，派发到学术检索组
+- 探索图（`trace/`）是跨撰写轮次的连接组织——当前分散的 git commit 会丢掉这部分
 
-Portable copies are under `./skills/`; Codex role prompts are under
-`./agents/`. See `./PATENT_TOOLKIT.md` for installation and provenance.
+## 部署模型（2026-08-29，单一事实源）
+
+本仓库（mylib）是唯一事实源，所有开发端以 Windows junction 引用，不做第二份副本：
+
+```
+事实源                                 端点（junction → 事实源）
+D:/aicoding/mylib/paa/              →  项目 .claude/skills/paa
+D:/aicoding/mylib/paa/skills/<n>/   →  项目 .claude/skills/<n>、~/.claude/skills/<n>
+D:/aicoding/mylib/paa/agents/       →  项目 .codex/agents/
+D:/aicoding/mylib/skills/<n>/       →  ~/.claude/skills/<n>、~/.codex/skills/<n>、~/.kimi-code/skills/<n>
+D:/aicoding/mylib/skills/           →  统一浏览入口（含指向 paa/skills 与 paper-search-pro 的 junction）
+```
+
+更新技能只改 mylib；端点 junction 即时生效。工具适配器（Codex/Kimi/Grok/Pi）见 `./adapters/`。
 
 ## Tool adapters
 

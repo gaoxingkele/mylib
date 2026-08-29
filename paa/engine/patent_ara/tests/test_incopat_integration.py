@@ -29,6 +29,35 @@ def test_get_claims_accepts_claim_or_response_shape():
     assert client.get_claims("CN123A") == "<p>1. 一种方法……</p>"
 
 
+def test_get_specification_accepts_des_cn_response_shape():
+    client = _client_with_response(
+        {"status": True, "result": {"des-cn": "【0001】说明书正文"}}
+    )
+
+    assert client.get_specification("CN123A") == "【0001】说明书正文"
+
+
+def test_expression_search_retries_confirmed_fields_after_extended_field_denial():
+    client = IncopatClient.__new__(IncopatClient)
+    client.client_id = "test-client"
+    calls = []
+
+    def fake_api(path, params):
+        calls.append(dict(params))
+        if "ipcm" in params["incoFields"]:
+            return {"status": False, "message": "该字段(ipcm)没有权限查看"}
+        return {"status": True, "result": {"rows": [{"pn": "CN123A"}]}}
+
+    client._api = fake_api
+    rows = client.search_by_expression("TI-CN=(测试)", rows=50)
+
+    assert rows == [{"pn": "CN123A"}]
+    assert len(calls) == 2
+    assert calls[0]["rows"] == 50
+    assert "ipcm" in calls[0]["incoFields"]
+    assert "ipcm" not in calls[1]["incoFields"]
+
+
 def test_integrator_keeps_enough_claim_text_for_element_review():
     class FakeClient:
         def semantic_search(self, text, rows=5):

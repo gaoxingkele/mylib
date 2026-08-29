@@ -1,14 +1,15 @@
 # Patent Skills (PAA Building Blocks)
 
-PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以下四个 skill 协同驱动。它们
+PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以下五个 skill 协同驱动。它们
 是 PAA 在 `~/.claude/skills/` / 项目级 `.claude/skills/` 中的**真实执行器**，本目录是它们的
 **全局副本**（位于 `mylib/paa/skills/`），供任何 AI 工具（Claude Code / Codex / Kimi / Grok / Pi
 / Generic Agent）通过相对路径调用，避免环境差异。
 
-## 四个 skill 一览
+## 五个 skill 一览
 
 | Skill | 角色 | 在 PAA 中的位置 |
 |---|---|---|
+| **cn-patent-application-cluster** | Codex 原生的挖掘、检索、撰写、评审与交付编排 | orchestrates the complete workflow and specialist roles |
 | **incopat-search** | 真实专利 API 查新（incoPat 开放平台，厦大平潭研究院测试账号） | feeds `evidence/prior_art_search/` 与 `evidence/prior_art_claims/` |
 | **patent-grant-scorer** | AHP + SEM 四专家群决策的授权率预测 | feeds `evidence/scoring/scoring.json` |
 | **cnipa-drafting-workflow** | CNIPA 申请文件起草与审查工作流（22 条三步法 / 26 条 / OA 预案） | produces `application/` 工件层 |
@@ -21,6 +22,7 @@ PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以�
 load: ./README.md              # 工具无关核心
 
 # 2. 按需载入 skill（指向本地或全局路径）
+load: ./skills/cn-patent-application-cluster/SKILL.md
 load: ./skills/incopat-search/SKILL.md
 load: ./skills/patent-grant-scorer/SKILL.md
 load: ./skills/cnipa-drafting-workflow/SKILL.md
@@ -45,7 +47,7 @@ echo '{"client_id":"...","client_secret":"...","username":"...","password":"..."
 
 ## 从 PAA 顶层视角看
 
-PAA 把分散的 10 个 agent + 4 个 skill + 1 个评分体系整合为统一四层架构（参见 `../README.md`）。
+PAA 把分散的 agent 角色、5 个 skill 和评分体系整合为统一四层架构（参见 `../README.md`）。
 本目录中的 skill 是 PAA 的"工具层"——它们各司其职，PAA 在它们之上加了**探索图 + 四门禁 + 跨层绑定**，把
 "散件"变成"可验证的整体"。
 

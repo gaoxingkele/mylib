@@ -37,6 +37,9 @@ D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py \
   semantic "一种基于知识图谱和检索增强生成的变压器油色谱故障诊断方法……" --rows 10
 
 # ③ 按公开号取详情
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py info     CN103399241B   # 单件完整著录项
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py family   CN103399241B   # 同族
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py citation CN103399241B   # 引证
 D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py claim  CN103399241B   # 权利要求全文
 D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py spec   CN103399241B   # 说明书全文
 D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py legal  CN103399241B   # 法律状态 2.0
@@ -47,6 +50,12 @@ D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py ree
 
 # ④ 批量（自动限速）
 D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py batch CN116842422A CN113112164A --cmd claim
+
+# ⑤ 数量及分组统计（账号未开通时明确报错，不要重试）
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py count "TI-CN=(变压器) AND PNC=CN"
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned1 "TI-CN=(变压器) AND PNC=CN" APTT --rows 20
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned2 "TI-CN=(变压器) AND PNC=CN" APTT,PDY --rows 20
+D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py twod  "TI-CN=(变压器) AND PNC=CN" APTT PDY --rows 20
 ```
 
 ## 推荐查新工作流（三步漏斗）
@@ -64,13 +73,13 @@ D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py bat
 - 不支持大字段检索（FULL/TIABC/DES/CLAIM 等）；rows 每次 1-20；from 最大 100,000
 - 检索式与 incoPat 网页版基本一致
 
-## 测试账号权限边界（实测 2026-08-21）
+## 测试账号权限边界（实测 2026-08-21，联调 2026-08-26）
 
 - **可用接口**（token scope）：incosearch 检索、semanticsSearch 语义、claim 权利要求、spec 说明书、lgtxt2 法律状态、vlstar 价值度、assign 转让、licence 许可、reetxt 复审无效
-- **不可用**：count 统计、info 单件详细著录、同族/引证接口、图形检索、PDF/附图、特征对比报告（返回 `未授权接口，拒绝访问`）→ 遇到时如实告知用户权限不足，不要重试
-- **可用返回字段**：pn, an, ti-cn, ti-en, ab-cn, ap-or, in-or, agc, ad, pd（`ipc`/`lgd`/`status-lite` 无权限，切勿放进 --fields）
+- **账号相关（试运行，报错则如实告知权限不足，不要重试）**：count 统计、info 单件详细著录、family 同族、citation 引证、oned1/oned2/twod 分组统计、图形检索、PDF/附图、特征对比报告
+- **可用返回字段**（08-26 联调已覆盖）：pn, an, ti-cn, ti-en, ab-cn, ap-or, in-or, agc, ad, pd, ipc, status-lite（默认字段已含）；`ipcm`/`lgd` 若报"没有权限查看"，用 `--fields` 显式降级并在检索审计中保留权限错误
 - 限速默认 10 请求/秒；token 2 小时有效（脚本自动缓存刷新）
-- 授权截止 **2026-08-31**；测试域名 `https://apitest.incopat.com`（正式环境为 open.incopat.com，换正式账号时设环境变量 INCOPAT_BASE/INCOPAT_CLIENT_ID/INCOPAT_CLIENT_SECRET/INCOPAT_USERNAME/INCOPAT_PASSWORD 即可）
+- 授权截止 **2026-08-31**；测试域名 `https://apitest.incopat.com`（正式环境为 open.incopat.com，换正式账号时设环境变量 INCOPAT_BASE_URL/INCOPAT_BASE/INCOPAT_CLIENT_ID/INCOPAT_CLIENT_SECRET/INCOPAT_USERNAME/INCOPAT_PASSWORD 即可）
 
 ## 错误处理
 

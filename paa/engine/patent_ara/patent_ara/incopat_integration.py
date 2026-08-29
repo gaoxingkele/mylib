@@ -13,6 +13,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .model import Citation, PatentARA
@@ -23,18 +24,26 @@ class IncopatClient:
 
     def __init__(self, credentials_path: Optional[str] = None):
         if credentials_path is None:
-            # 默认路径：项目根目录下的 incopat-search skill
-            base = os.path.dirname(os.path.abspath(__file__))
-            credentials_path = os.path.join(
-                base, "..", "..", ".claude", "skills", "incopat-search", "scripts", "credentials.json"
+            # package -> patent_ara project -> engine -> paa -> skills
+            credentials_path = str(
+                Path(__file__).resolve().parents[3]
+                / "skills"
+                / "incopat-search"
+                / "scripts"
+                / "credentials.json"
             )
-        with open(credentials_path, encoding="utf-8") as f:
-            self._cred = json.load(f)
-        self.base_url = self._cred.get("base", "https://apitest.incopat.com")
-        self.client_id = self._cred.get("client_id", "")
-        self.client_secret = self._cred.get("client_secret", "")
-        self.username = self._cred.get("username", "")
-        self.password = self._cred.get("password", "")
+        credential_file = Path(credentials_path)
+        self._cred = {}
+        if credential_file.exists():
+            self._cred = json.loads(credential_file.read_text(encoding="utf-8"))
+        self.base_url = os.environ.get(
+            "INCOPAT_BASE_URL",
+            os.environ.get("INCOPAT_BASE", self._cred.get("base", "https://apitest.incopat.com")),
+        ).rstrip("/")
+        self.client_id = os.environ.get("INCOPAT_CLIENT_ID", self._cred.get("client_id", ""))
+        self.client_secret = os.environ.get("INCOPAT_CLIENT_SECRET", self._cred.get("client_secret", ""))
+        self.username = os.environ.get("INCOPAT_USERNAME", self._cred.get("username", ""))
+        self.password = os.environ.get("INCOPAT_PASSWORD", self._cred.get("password", ""))
         self._token = None
         self._token_expires = 0
 
@@ -53,6 +62,18 @@ class IncopatClient:
             raise RuntimeError(f"HTTP {e.code}: {body[:500]}")
 
     def _get_token(self) -> str:
+        missing = [
+            name
+            for name, value in (
+                ("INCOPAT_CLIENT_ID", self.client_id),
+                ("INCOPAT_CLIENT_SECRET", self.client_secret),
+                ("INCOPAT_USERNAME", self.username),
+                ("INCOPAT_PASSWORD", self.password),
+            )
+            if not value
+        ]
+        if missing:
+            raise RuntimeError("缺少 incoPat 配置: " + ", ".join(missing))
         if self._token and self._token_expires > time.time() + 60:
             return self._token
         resp = self._post("/oauth/token", {
@@ -82,7 +103,7 @@ class IncopatClient:
     def semantic_search(self, text: str, rows: int = 5) -> List[Dict]:
         resp = self._api(f"/api/semanticsApi/semanticsSearch/{self.client_id}", {
             "searchText": text[:2000],
-            "rows": min(rows, 20),
+            "rows": max(1, min(rows, 100)),
         })
         if resp.get("status") is not True:
             return []
@@ -90,12 +111,20 @@ class IncopatClient:
         return result.get("rows") or result.get("list") or []
 
     def search_by_expression(self, expression: str, rows: int = 5) -> List[Dict]:
-        resp = self._api(f"/api/search/incosearch/{self.client_id}", {
+        extended_fields = "pn,an,ti-cn,ti-en,ab-cn,ab-en,ap-or,in-or,pd,ad,ipc,ipcm,status-lite,lgd"
+        confirmed_fields = "pn,an,ti-cn,ti-en,ab-cn,ab-en,ap-or,in-or,pd,ad,ipc,status-lite"
+        params = {
             "incoExp": expression,
-            "rows": min(rows, 20),
+            "rows": max(1, min(rows, 50)),
             "from": 0,
-            "incoFields": "pn,an,ti-cn,ti-en,ab-cn,ab-en,ap-or,in-or,pd,ad",
-        })
+            "incoFields": extended_fields,
+        }
+        resp = self._api(f"/api/search/incosearch/{self.client_id}", params)
+        message = str(resp.get("message", "")).lower()
+        field_denied = ("字段" in message and "权限" in message) or ("field" in message and "permission" in message)
+        if resp.get("status") is False and field_denied:
+            params["incoFields"] = confirmed_fields
+            resp = self._api(f"/api/search/incosearch/{self.client_id}", params)
         if resp.get("status") is not True:
             return []
         return resp.get("result", {}).get("rows", [])
@@ -111,7 +140,12 @@ class IncopatClient:
         resp = self._api(f"/api/search/spec/{self.client_id}", {"pn": patent_number})
         if resp.get("status") is not True:
             return ""
-        return resp.get("result", {}).get("description", "")
+        result = resp.get("result", {}) or {}
+        for key in ("description", "des-cn", "des-or", "des-en", "desc-cn", "spec-cn"):
+            value = result.get(key)
+            if isinstance(value, str) and value.strip():
+                return value
+        return ""
 
 
 class IncopatIntegrator:

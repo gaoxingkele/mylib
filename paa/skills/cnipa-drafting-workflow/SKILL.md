@@ -33,6 +33,7 @@ description: 中国发明专利申请文件起草与审查工作流。用于从�
 2. **Evidence Pack**
    - 生成或更新 `01_现有技术检索报告.md`。
    - 若已配置 `.env.incopat`，优先执行 incoPat 专业中文专利检索；若未配置，生成 `incopat_query_plan.json` 并把状态标记为待执行。
+   - **NPL 腿**：论文类对比文件按 `.claude/skills/npl-prior-art-search/SKILL.md` 路由检索（默认 `paper_search` 多源并发初扫，中文/深度/引用追溯按需切换），结果入报告的"NPL 对比文件"节，每条带真实 DOI/arXiv ID/URL。
    - 对每个对比文件记录：文献号、来源 URL、公开日、共有特征、区别特征、风险等级。
    - 未核验的文献号不得进入权利要求或说明书正文。
 

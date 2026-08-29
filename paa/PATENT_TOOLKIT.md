@@ -1,6 +1,6 @@
 # Patent Toolkit Inventory
 
-> Updated: 2026-08-25
+> Inventory created: 2026-08-25; paths and retrieval policy re-audited: 2026-08-27
 >
 > Source project: `D:/aicoding/zhuanlishenqing`
 >
@@ -11,6 +11,7 @@
 | Type | Name | Library path | Purpose |
 |---|---|---|---|
 | Framework/skill | PAA | `paa/` | Four-layer patent application artifact with evidence and four hard gates |
+| Engine | PatentARA | `paa/engine/patent_ara/` | Claim decomposition, incoPat enrichment, element review, CNIPA gates, scoring, and PAA export |
 | Codex skill | cn-patent-application-cluster | `paa/skills/cn-patent-application-cluster/` | CNIPA patent mining, drafting, review, and packaging |
 | Claude-compatible skill | incopat-search | `paa/skills/incopat-search/` | Real incoPat search, claims, specification, legal and value APIs |
 | Claude-compatible skill | patent-grant-scorer | `paa/skills/patent-grant-scorer/` | AHP+SEM grant-readiness assessment |
@@ -26,7 +27,10 @@ seven companion role prompts were added in this sync.
 
 ## Codex installation
 
-Copy the cluster and role prompts into a target repository:
+Prefer a lightweight project router that reads the required module directly
+from `D:/aicoding/mylib/paa`. This avoids recursively exposing every nested
+`SKILL.md` to the model context. If a standalone copy is required, copy only
+the cluster and role prompts into the target repository:
 
 ```powershell
 Copy-Item -Recurse paa/skills/cn-patent-application-cluster <repo>/.codex/skills/
