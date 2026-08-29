@@ -23,7 +23,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 | **严谨性评估 / 审稿模拟** | `ARA` 内 `rigor-reviewer`（认知严谨性逐条审查）、`academic-research-suite` 的 review/revision 流程、`literature-review`（综述视角） | 投稿前、R&R 前；**评估论文是写作的一部分，不是可选项** |
 | **降 AIGC / 润色** | `academic-humanizer`（学术化改写降 AI 痕迹）、Auto-Empirical-Research-Skills 的 de-AIGC 组 | 终稿前；保留事实，只改文风 |
 | **投稿路由** | `Paper_CCF`（CCF 会议分区与匹配） | 选 venue、对照 deadline |
-| **PDF 结构化** | `repllm-content-parse`（PDF → 分层 paper.json） | 复现规划、把他人论文结构化 |
+| **论文逆向 / 复现工程** | `repllm-content-parse`（PDF → 分层 paper.json）→ `paper-to-code`（Paper2Code 三阶段：规划 UML+依赖图 → 逐文件逻辑 → 按依赖序生成代码仓）→ `experiment-code` / `experiment-design` / `paper-compilation`（实验与成稿辅助） | 把论文复现为可运行工程 |
 | **电力/电网论文专项** | `aers-powergrid-bridge`、`codex-ars-powergrid` | powergrid 领域论文 |
 | **研究自动化 agent 进化** | `harnessbank-gated-evolution` | 非论文写作——改进支撑研究的 agent 栈 |
 
@@ -38,5 +38,6 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 - 写作族：`ARA`（mylib/ARA）、`academic-research-suite`（Academic-Research-Skills-Codex）、`academic-humanizer`、`thesis-writing-skill`（素材库，按需启用）
 - 评估族：`rigor-reviewer`（在 ARA 内）、`scoop_check`、`idea_spark`、`literature-review`
+- 逆向/复现族：`repllm-content-parse`（PDF→paper.json）、`paper-to-code`（Paper2Code 三阶段）、`experiment-code`、`experiment-design`、`paper-compilation`（LaTeX 编译）
 - 投稿族：`Paper_CCF`；领域专项：`aers-powergrid-bridge`、`codex-ars-powergrid`、管理世界 `mw-*` 套件
 - 检索族（交叉引用）：见 `npl-prior-art-search` 的已装清单
