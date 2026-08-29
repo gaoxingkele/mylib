@@ -57,12 +57,12 @@
 - **效果**：论文实测 PaperBench 问答 72.4%→93.7%、RE-Bench 复现 57.4%→64.4%（"保留失败轨迹"是关键）；本地 24 个 ARA artifacts（Stock_benchmark 6 + geo-benchmark 18）Seal Level 1 全 PASS
 - **四层结构**：PAPER.md（~200 token 渐进披露）+ logic/（认知层）+ src/（物理层）+ trace/exploration_tree.yaml（探索图，死路一等节点）+ evidence/（原始证据）；跨层绑定、溯源标签
 
-### 2.2 博导推荐表达三件套（2026-08-29 接入）
+### 2.2 博导推荐表达三件套（2026-08-29 接入，已 ARA 式收敛）
 | 工具 | 来源 | 用处 | 融合决策 |
 |---|---|---|---|
-| **Supervisor-Skills** | HKUSTDial/Supervisor-Skills（**CC-BY-NC-SA-4.0 非商用**） | 导师式方法+专项 Skill | **融合 6 模块**进路由：paper-polish（忠于原意润色，"需作者确认"机制）/ paper-writer（证据门控正文）/ intro-drafter（六段式引言）/ pre-submission-reviewer（五维投稿前审查）/ idea-evaluator（五维选题评估）/ figure-designer（核心三图审计）。deep-research 重名冲突不融合 |
-| **research-writing-skill** | Norman-bury/research-writing-skill | 长项目工程系统（术语表/证据图/进度回写，工社医法分流） | **保持独立**：整包三端 junction；短摘要润色场景"流程比正文重"，按需启用 |
-| **academic-paper-skills** | lishix520/academic-paper-skills | 哲学/跨学科：strategist 分析平台→composer 逐章写作（28/35 大纲门槛） | **融合为理论型支线**：academic-paper-strategist → composer 成链；需 8-10 篇样例风格校准 |
+| **Supervisor-Skills** | HKUSTDial/Supervisor-Skills（**CC-BY-NC-SA-4.0 非商用**） | 导师式方法+专项 Skill | **收敛为 paper-writing 子技能**（`skills/paper-writing/skills/` 下 junction 指向上游源，不独立注册）：paper-polish（忠于原意润色，"需作者确认"机制）/ paper-writer（证据门控正文）/ intro-drafter（六段式引言）/ pre-submission-reviewer（五维投稿前审查）/ idea-evaluator（五维选题评估）/ figure-designer（核心三图审计）。deep-research 重名冲突不融合 |
+| **research-writing-skill** | Norman-bury/research-writing-skill | 长项目工程系统（术语表/证据图/进度回写，工社医法分流） | **收敛为子技能**（长项目场景按需加载）；短摘要润色场景"流程比正文重" |
+| **academic-paper-skills** | lishix520/academic-paper-skills | 哲学/跨学科：strategist 分析平台→composer 逐章写作（28/35 大纲门槛） | **收敛为子技能链**：strategist → composer；需 8-10 篇样例风格校准 |
 
 ### 2.3 其他写作/评估执行器
 - **academic-research-suite**（Academic-Research-Skills-Codex）：ARS 学术全流程（outline→draft→revision+审稿模拟）
