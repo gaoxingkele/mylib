@@ -19,11 +19,13 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 
 | 阶段 | 路由到 | 何时用 |
 |---|---|---|
-| **选题与新颖性** | `idea_spark`（生成可证伪的研究想法）、`scoop_check`（查重先防：核查是否已被发表） | 动笔前；新 idea 必须过 scoop_check |
+| **选题与新颖性** | `idea_spark`（生成可证伪的研究想法）、`scoop_check`（查重先防：核查是否已被发表）、`idea-evaluator`（五维评审式打分：Higher/Faster/Stronger/Cheaper/Broader + 致命缺陷审计） | 动笔前；新 idea 过 scoop_check，待选方向过 idea-evaluator |
 | **文献检索与综述** | `npl-prior-art-search` 路由（paper_search 初扫 / academic-search 中文 / paper-search-pro 深度 / literature-review 多视角综述） | 所有检索需求走它，不自建检索流程 |
-| **结构化写作** | `ARA`（paper_compiler：研究过程结构化编译为可验证工件）或 `academic-research-suite`（outline→draft→revision 流程） | 已有研究素材 → 结构化成文 |
-| **严谨性评估 / 审稿模拟** | `ARA` 内 `rigor-reviewer`（认知严谨性逐条审查）、`academic-research-suite` 的 review/revision 流程、`literature-review`（综述视角） | 投稿前、R&R 前；**评估论文是写作的一部分，不是可选项** |
-| **降 AIGC / 润色** | `academic-humanizer`（学术化改写降 AI 痕迹）、Auto-Empirical-Research-Skills 的 de-AIGC 组 | 终稿前；保留事实，只改文风 |
+| **结构化写作** | `ARA`（paper_compiler：研究过程结构化编译为可验证工件）、`academic-research-suite`（outline→draft→revision 流程）、`paper-writer`（证据门控正文：每条事实主张溯源到素材/核验检索/公知常识，引用过独立核验梯）、`intro-drafter`（引言六段式流程图） | 已有研究素材 → 结构化成文；引言单列走 intro-drafter |
+| **哲学/理论型跨学科** | `academic-paper-strategist`（平台/理论框架/研究空白分析→审稿维度优化大纲）→ `academic-paper-composer`（学风格→逐章写作→终评；28/35 大纲门槛） | 概念推进与长链条论证型论文；需 8-10 篇样例做风格校准 |
+| **严谨性评估 / 审稿模拟** | `ARA` 内 `rigor-reviewer`（认知严谨性逐条审查）、`academic-research-suite` 的 review/revision 流程、`pre-submission-reviewer`（五维投稿前审查：宏观逻辑/写作细节/语法/LaTeX/图质量，CRITICAL/MAJOR/MINOR 分级）、`literature-review`（综述视角） | 投稿前、R&R 前；**评估论文是写作的一部分，不是可选项** |
+| **降 AIGC / 润色** | `academic-humanizer`（学术化改写降 AI 痕迹）或 `paper-polish`（忠于原意的表达校准：中→英改写、证据强度对腔、AI 腔去除；可能动到含义的改动先列"需作者确认"） | 终稿前；保留事实，只改文风；语义敏感处用 paper-polish 的确认机制 |
+| **图表设计** | `figure-designer`（核心三图范式：Motivated Example / Solution Overview / Results + 质量审计） | 三图定生死，投稿前单独过一遍 |
 | **投稿路由** | `Paper_CCF`（CCF 会议分区与匹配） | 选 venue、对照 deadline |
 | **论文逆向 / 复现工程** | `repllm-content-parse`（PDF → 分层 paper.json）→ `paper-to-code`（Paper2Code 三阶段：规划 UML+依赖图 → 逐文件逻辑 → 按依赖序生成代码仓）→ `experiment-code` / `experiment-design` / `paper-compilation`（实验与成稿辅助） | 把论文复现为可运行工程 |
 | **电力/电网论文专项** | `aers-powergrid-bridge`、`codex-ars-powergrid` | powergrid 领域论文 |
@@ -39,6 +41,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 ## 已装清单（事实源 `D:/aicoding/mylib`，各工具端 junction 引用）
 
 - 写作族：`ARA`（mylib/ARA，8 子技能：manager/compiler/rigor-reviewer/visualizer/foresight/context-drop/research-fuzzer/submit）、`academic-research-suite`（Academic-Research-Skills-Codex）、`academic-humanizer`、`thesis-writing-skill`（素材库，按需启用）
+- 表达校准族（博导推荐三件套，2026-08-29 接入）：`paper-polish`/`paper-writer`/`intro-drafter`/`pre-submission-reviewer`/`idea-evaluator`/`figure-designer`（Supervisor-Skills，**CC-BY-NC-SA-4.0 非商用许可**，商用场景慎用）、`research-writing-skill`（长项目系统，工程化流程独立启用）、`academic-paper-strategist`/`academic-paper-composer`（哲学/理论型）
 - 评估族：`rigor-reviewer`（在 ARA 内）、`scoop_check`、`idea_spark`、`literature-review`
 - 逆向/复现族：`repllm-content-parse`（PDF→paper.json）、`paper-to-code`（Paper2Code 三阶段）、`experiment-code`、`experiment-design`、`paper-compilation`（LaTeX 编译）
 - 投稿族：`Paper_CCF`；领域专项：`aers-powergrid-bridge`、`codex-ars-powergrid`、管理世界 `mw-*` 套件
