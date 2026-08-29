@@ -2,10 +2,12 @@
 name: paper-writing
 description: >
   论文写作与评估统一路由。覆盖论文全生命周期：选题与新颖性核查、文献检索与综述、
-  结构化写作、严谨性评估与审稿模拟、降 AIGC 与润色、投稿路由、PDF 结构化。
+  结构化写作、严谨性评估与审稿模拟、降 AIGC 与润色、投稿路由、PDF 结构化、
+  论文逆向与复现工程（paper-to-code 生成代码仓）。
   按需求自动派发到已安装的论文族 skill，统一证据与质量口径。
   TRIGGERS: 写论文, 论文写作, 评估论文, 审稿模拟, 论文润色, 降AIGC, 论文投稿, CCF会议,
-  论文选题, 新颖性核查, paper writing, peer review, rebuttal, 论文修改
+  论文选题, 新颖性核查, 论文复现, 逆向工程, 复现代码, paper writing, peer review,
+  rebuttal, 论文修改, paper to code
 allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), Glob, Grep
 ---
 
