@@ -50,6 +50,25 @@ python D:/aicoding/mylib/skill-runtime/audit_skill_paths.py
 The runtime installs a lightweight `paa` router and independent leaf skills; it never junctions the
 whole `paa/` directory into the user skill root.
 
+## Grok Build installation
+
+Grok scans `.claude/skills` (compat) **and** `.grok/skills`. The Claude project
+junction `.claude/skills/paa` still points at the full `paa/` tree for relative
+paths; Grok would recursively register nested `SKILL.md` files. Install the
+native Grok roots so the **router** wins by name:
+
+```powershell
+& D:/aicoding/mylib/skill-runtime/repair_grok_skills.ps1 -ProjectRoot <repo>
+```
+
+- User `~/.grok/skills/`: patent leaf skills listed in `skill-runtime/manifest.json` → `grok_user_skills`, plus the `paa` router (never the whole tree).
+- Project `<repo>/.grok/skills/`: `paa` router + `cn-patent-application-cluster` + `paa-patent-toolkit`.
+- Specialist agents stay in `<repo>/.claude/agents/` (Grok loads them as `spawn_subagent` types). Parent session orchestrates; children cannot nest.
+- Workflow: `<repo>/.grok/workflows/cn-patent.rhai` (`/cn-patent`).
+- Adapter: `paa/adapters/grok.md`.
+
+Python on this machine is `D:/Python/Python314/python.exe`.
+
 ## Claude-compatible installation
 
 Copy the desired skill directory into `<repo>/.claude/skills/` or the user's

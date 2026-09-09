@@ -28,7 +28,7 @@ any tool — they're plain markdown, no special parsing.
 | Codex CLI | `codex.md` | ready | Plugin manifest format reference |
 | Generic AI Agent SDKs | `agent.md` | ready | Plain instructions; works with any agent that loads markdown |
 | Kimi | `kimi.md` | ready | Wraps core for Kimi's skill/agent format |
-| Grok | `grok.md` | ready | Wraps core for Grok plugin format |
+| Grok | `grok.md` | ready | Native `.grok/skills` junctions + `cn-patent` workflow; parent orchestrates (no nested subagents) |
 | Pi | `pi.md` | ready | Wraps for Pi assistant format |
 
 When loading PAA in a new tool, prefer to copy the `README.md` content as the system prompt / instructions

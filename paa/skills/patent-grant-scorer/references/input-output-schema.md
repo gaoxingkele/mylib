@@ -109,12 +109,11 @@ complete | degraded | failed | empty | quota-exhausted
 
 | 字段 | 含义 |
 |---|---|
-| `grant_probability` | AHP/SEM内部风险点估计 |
+| `ahp_index` | 由1—9分AHP综合值线性映射得到的0—100内部风险/准备度指数，不是授权概率 |
 | `decision` | 门禁、版本和证据约束后的工作流决策 |
 | `score_layers.structural_readiness` | D/Q主导的文本结构成熟度 |
-| `score_layers.risk_adjusted_patentability` | 风险点估计百分制表示 |
+| `score_layers.ahp_substantive_index` | 与`ahp_index`相同的AHP实质风险层 |
 | `score_layers.evidence_confidence` | 当前证据完整性，不是模型自信 |
-| `uncertainty_interval` | 证据不足/分歧导致的工作区间，非统计置信区间 |
 | `hard_gates` | 不能被平均分覆盖的PASS/FAIL/CONDITIONAL |
 | `consensus.<indicator>` | 中位数、MAD、证据加权均值、异常抑制和高质量少数意见 |
 | `version_binding.stale` | 当前评审或检索是否绑定旧独权 |
@@ -139,9 +138,8 @@ REBUILD_INDEPENDENT_CLAIM_OR_RESELECT_POINT
 
 ```powershell
 # 默认稳健仲裁
-python paa/skills/patent-grant-scorer/scripts/ahp_sem_scorer.py input.json -o output.json
+python paa/skills/patent-grant-scorer/scripts/ahp_only_scorer.py input.json -o output.json
 
-# 仅用于复算旧历史均值口径
+# 仅用于复现旧AHP/SEM历史报告；grant_probability不得解释为真实概率
 python paa/skills/patent-grant-scorer/scripts/ahp_sem_scorer.py input.json --aggregation legacy-mean
 ```
-

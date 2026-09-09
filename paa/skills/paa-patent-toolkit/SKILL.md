@@ -6,8 +6,10 @@ description: Route PAA, PatentARA, patent grant scoring, incoPat, and NPL academ
 # PAA patent toolkit router
 
 The single source of truth is this repo (`D:/aicoding/mylib`). Every tool
-endpoint (Claude Code / Codex / Kimi) junctions into it — never copy skills
+endpoint (Claude Code / Codex / Kimi / Grok Build) junctions into it — never copy skills
 into per-tool directories. Load only the module needed for the current task.
+Grok: `~/.grok/skills` + project `.grok/skills` via `skill-runtime/repair_grok_skills.ps1`;
+parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok.md`.
 
 ## Module map
 

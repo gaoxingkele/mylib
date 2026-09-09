@@ -1,8 +1,8 @@
 # mylib 技能库 Wiki
 
-> 单一事实源：`D:/aicoding/mylib`。三端（Claude Code / Codex / Kimi）以 junction 引用，不做第二份副本。
+> 单一事实源：`D:/aicoding/mylib`。四端（Claude Code / Codex / Kimi / Grok Build）以 junction 引用，不做第二份副本。
 > 本 wiki 记录每个技能的来源、用处、实测效果与路由关系。更新技能时同步更新本文件。
-> 最后更新：2026-08-29
+> 最后更新：2026-09-04
 
 ---
 
@@ -10,11 +10,14 @@
 
 ```
 事实源 mylib/                        端点（junction）
-├── paa/           专利族            → 项目 .claude/skills/、三端 ~/.{claude,codex,kimi-code}/skills/
-├── skills/        论文族+检索族       → 三端 skills 目录
-├── Paper_CCF/     投稿画像          → 三端
-├── RepLLM/  ARA/  HarnessBank/ …    → 三端
+├── paa/           专利族            → 项目 .claude/skills/ + .grok/skills/；四端 ~/.{claude,codex,kimi-code,grok}/skills/
+├── skills/        论文族+检索族       → 四端 skills 目录
+├── Paper_CCF/     投稿画像          → Claude/Codex/Kimi
+├── RepLLM/  ARA/  HarnessBank/ …    → Claude/Codex/Kimi
 └── 三路由：paa（专利）/ paper-writing（论文）/ npl-prior-art-search（检索）
+Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专利叶技能+paa 路由）
+         + 项目 .grok/skills（paa 路由 + cluster + toolkit，shadow 掉 .claude/skills/paa 整树）
+         + .grok/workflows/cn-patent.rhai；适配器 paa/adapters/grok.md
 ```
 
 路由原则：说人话触发 → 族内按状态二次派发 → 出口确定性门禁兜底（validate.py / claim_formal_check / 禁编造口径）。
