@@ -1,13 +1,29 @@
 ---
 name: mdpi-information
-description: Use when targeting MDPI Information or routing information-systems / knowledge / data / applied AI manuscripts to a fast OA CS venue. Encodes scope, soundness bar, APC, indexing, SI dynamics. Read ../../resources/mdpi-common.md first.
+description: Assess MDPI Information fit, manuscript quality and submission readiness using official criteria and separately identified full-text observations. Use for Information journal selection, writing calibration or pre-submission review; do not infer acceptance probability from published examples.
+metadata:
+  calibration_version: "2026-09-12.1"
 ---
 
 # Information (MDPI)
 
+## Current calibration — required before assessment
+
+Read `references/standards-and-evidence.md` for Information reviews and writing adaptation. It separates official rules, four DOI-verified full-text observations, and local review recommendations. Its evidence constraints supersede the legacy corpus heuristics below and any blanket soundness-only or SCIE claims in shared references.
+
+Do not turn published-paper averages into minimum page, figure, equation, baseline or experiment counts. Do not infer acceptance rates, guaranteed easier acceptance, or journal-wide quality from these selected papers. A polished negative-result paper still needs a meaningful question and evidence supporting its diagnostic lesson.
+
+## Meta review and revision loop
+
+For an explicit meta-deconstruction scoring/revision/rescoring request, use
+`C:/Users/10175/.codex/skills/paper-meta-review/SKILL.md` and its versioned rubric.
+Keep initial and final scores on the same weights, bind manuscript hashes, and
+preserve the atlas coverage limitations. This optional local score is advisory,
+not a replacement for the evidence reference or an acceptance probability.
+
 ## Journal positioning
 
-Information (est. 2010, ISSN 2078-2489, monthly, gold OA) is MDPI’s broad **information science & technology** journal — data, knowledge, communication, and applied computing. Fit on **methodological soundness + clear information/CS contribution**, not breakthrough novelty. Affiliated with IS4SI (member APC discounts).
+Information (est. 2010, ISSN 2078-2489, monthly, gold OA) covers information science and technology, data, knowledge and communication. Assess a clear information/CS contribution, novelty, significance and scientific soundness together; the official reviewer criteria do not waive novelty. Incremental or diagnostic work must explain what new knowledge it establishes. Affiliated with IS4SI (member APC discounts).
 
 Read `../../resources/mdpi-common.md` for the shared MDPI model.
 
@@ -30,6 +46,8 @@ Named datasets/baselines for algorithmic claims; mandatory Data Availability Sta
 MDPI Word/LaTeX template, IMRaD, numbered refs (see `../../resources/mdpi-common.md`).
 
 ### Distilled full-text patterns (local corpus, 2026-08)
+
+**Legacy extraction observations, not current acceptance standards.** The following older n=10/n=30 mappings and parser-derived rates have not been revalidated against every source in the September calibration. Extraction artifacts, mixed article types and sample selection can distort counts. Preserve for provenance only; do not use the labels `strong` or `very_strong`, missing-keyword rates, or corpus averages to score a manuscript or relax its evidence requirements.
 
 - Full-text sample: **n=10** (avg ~26 pages in first-pass extract).
 - Topic mix in sample: power/energy-related ≈ 2/10; algorithm/ML ≈ 9/10.
@@ -67,7 +85,7 @@ Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/mdpi-
 - **Frequent named algorithms:** attention(9), Attention(4), CNN(4), random forest(3), Adam(3), LSTM(3), SVM(3), BERT(3).
 - **Frequent dataset/benchmark cues:** dataset(8), Dataset(5), benchmark(4), Kaggle(2), kaggle(2), Mendeley(1), IEEE 2015(1), IEEE 1998(1).
 - **Common sentence openings:** `To the best of knowledge no`; `Information doi FOR PEER REVIEW www`; `In the literature various techniques have`; `The goal of each technique was`; `Researchers have addressed the issue with`; `To the best of our knowledge`.
-- **Writing logic to emulate:** match the dominant innovation mode; keep section budget near the means above; put architecture/block diagrams in method (and sometimes experiment overview); pair claims with the observed figure/table/formula density; abstract should follow the dominant pattern and usually include a quantitative punchline when the corpus does.
+- **Use limitation:** section budgets and artifact density above are descriptive extraction outputs only. Allocate space according to the actual contribution and evidence; never add formulas or figures merely to match these averages. Use the current calibration reference for writing decisions.
 
 Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/mdpi-information/`.
 
@@ -82,7 +100,7 @@ Corpus path: `papers/literature/target_journal_related/fulltext_by_journal/mdpi-
 - Journal-house distribution: `named_stack_plus_case`×12, `survey_or_review_synthesis`×7, `power_system_planning_ops`×3, `systems_security_or_iot_stack`×3, `hardware_or_field_validation`×2.
 - Attested multi-pattern combos: `assumption_audit_and_pivot+structural_prior_encoding`, `assumption_audit_and_pivot+generative_process_redesign`, `algebraic_equivalence_unification+assumption_audit_and_pivot`, `heterogeneous_decomposition+self_supervised_signal_engineering`, `algebraic_equivalence_unification+decompose_and_delegate`.
 - Evidence readiness: baseline **37%**, ablation **10%**, dataset/benchmark **63%**.
-- **Write for this venue:** pick bottleneck → compose IdeaSpark move with journal-house move → audit failure modes (wrapper / confound / untouched bottleneck) → match evidence rates.
+- **Use limitation:** these inferred pattern labels may suggest questions to examine; do not match evidence rates or present them as editorial preferences. Verify the actual bottleneck, contribution and controls independently.
 - Artifacts: `metadata/ideaspark_fullcorpus_pattern_cards/mdpi-information/overview.md`, `metadata/ideaspark_fullcorpus_lit_tables/mdpi-information_lit_table.md`.
 
 Corpus: all discoverable PDFs under `papers/literature/` mapped to `mdpi-information`.
@@ -112,6 +130,8 @@ APC ≈ CHF 1,800 after acceptance. Single-blind, ≥2 reviewers, ~19 d first de
 - Re-route: Algorithms / Mathematics (theory); Energies (energy-primary); IEEE Access / Scientific Reports (megajournal); Electronics.
 
 ## Output format
+
+For a comprehensive assessment, use the current reference's dimension matrix and prioritized findings, including source anchors, repair criteria and unverified items. The brief routing card below is not a full review. Report the profile version and manuscript SHA; separate scientific quality, build/package readiness and author/portal actions. Do not invent a calibrated score, panel consensus or probability of acceptance.
 
 ```text
 [Target] Information (MDPI)

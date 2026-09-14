@@ -68,6 +68,6 @@ The `dimensions`/rubric that `paper_reviews` scores on stays owned by `paper_rev
 this export feeds venue *facts + routing*, not the review rubric.
 
 ## Freshness
-All IF / quartile / APC / review-time values are **2026-07 snapshots** flagged `verify: true`.
+Most IF / quartile / APC / review-time values are **2026-07 snapshots** flagged `verify: true`; check each record's `as_of`. Information now has the 2026-09-12.1 calibration and a linked standards reference. Its `decision_threshold` and `acceptance_probability` are null because no numerical acceptance cutoff or probability has been calibrated; consumers must not silently substitute a purported journal threshold.
 Confirm on each record's `official_url` before quoting. Regenerate with `py build_venues.py`
 after editing the authored profiles.

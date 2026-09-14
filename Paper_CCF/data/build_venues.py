@@ -26,6 +26,28 @@ AS_OF = "2026-07"
 # power_cs_fit: high | medium | low ;  level: top|strong|standard|regional (paper_reviews strictness)
 JOURNALS = [
   {
+    "slug": "mdpi-information", "name": "Information", "publisher": "MDPI", "oa_model": "gold",
+    "decision_model": "tiered", "level": "standard", "free_to_publish": False,
+    "as_of": "2026-09-12", "calibration_version": "2026-09-12.1",
+    "decision_threshold_override": None,
+    "apc": {"amount": None, "currency": "CHF", "note": "verify current official APC; prior profile snapshot was CHF 1800"},
+    "metrics": {"impact_factor": 4.3, "quartile": "Q2 (Computer Science, Information Systems)", "citescore": 8.2},
+    "indexing": ["ESCI", "Scopus", "EI Compendex"],
+    "review": {"model": "single-blind (verify current instructions)", "first_decision": "18.7 days (published-paper median, 2026 H1)",
+               "to_publication": "3.8 days after acceptance (2026 H1)", "notes": "not an acceptance probability or submission-to-publication promise"},
+    "power_cs_fit": "medium", "core_rule": "information/CS contribution plus novelty, significance and soundness; not soundness-only",
+    "aims_scope": "Information science and technology, data, knowledge and communication; experimental and theoretical work with reproducible detail.",
+    "hard_gates": [],
+    "desk_reject": ["no meaningful information/CS contribution", "claims unsupported by evidence", "uninterpretable or irreproducible study", "integrity concerns"],
+    "policies": {"ai_use_disclosure": True, "ethics_required": True, "no_concurrent_submission": True},
+    "neighbors": ["mdpi-algorithms", "mdpi-electronics", "mdpi-energies", "ieee-access"],
+    "fingerprint": ["information systems", "data and knowledge", "diagnostic evidence", "EI/ESCI not SCIE"],
+    "official_url": "https://www.mdpi.com/journal/information",
+    "calibration_reference": "journals/mdpi-information/references/standards-and-evidence.md",
+    "acceptance_probability": None,
+    "calibration_note": "Four purposeful full-text cases are not an acceptance distribution. No numeric decision threshold calibrated. Journal instructions require live confirmation.",
+  },
+  {
     "slug": "ieee-access", "name": "IEEE Access", "publisher": "IEEE", "oa_model": "gold",
     "decision_model": "binary", "level": "standard", "free_to_publish": False,
     "apc": {"amount": 2160, "currency": "USD", "note": "per article; verify"},
@@ -315,7 +337,7 @@ def parse_conferences(path):
 def main():
     for j in JOURNALS:
         j["type"] = "journal"
-        j["as_of"] = AS_OF
+        j.setdefault("as_of", AS_OF)
         j["verify"] = True
         j["profile_path"] = f"journals/{j['slug']}/SKILL.md"
         j["paper_reviews"] = {
@@ -323,7 +345,7 @@ def main():
             "full_name": j["name"],
             "level": j["level"],
             "decision_model": pr_decision_model(j["decision_model"]),
-            "decision_threshold": pr_threshold(j["decision_model"]),
+            "decision_threshold": j.get("decision_threshold_override", pr_threshold(j["decision_model"])),
             "aims_scope": j["aims_scope"],
             "policies": j["policies"],
             "alt_venues": j["neighbors"],
