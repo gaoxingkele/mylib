@@ -28,6 +28,8 @@ This is the most critical skill in the patent pipeline. Claims define the legal 
 3. `patent/NOVELTY_ASSESSMENT.md` — novelty analysis with suggested amendments
 4. Target jurisdiction from invention disclosure or `$ARGUMENTS`
 
+> **输入来源可替换** —— 上述 `patent/` 路径是 v1 流水线约定，而这三份输入本应由 `/invention-structuring`、`/prior-art-search`、`/patent-novelty-check` 产出——这三个 skill 在任何端都未实现（2026-09-14 溯源确认）。实际使用时按宿主项目约定取等价物，例如 zhuanlishenqing 的 `output/<案件名>/00_发明要素表.md`（发明要素）、`01_现有技术检索报告.md`（对比文件）、`06_审查自评_26条.md` + `07_审查自评_22条.md`。若手上只有原始交底书，先走 `../../paa/skills/patent-disclosure-skill/SKILL.md`（模式 A）或 `../../paa/skills/cnipa-drafting-workflow/SKILL.md` Step 1–3 补出结构化输入。
+
 ## Shared References
 
 Load `../shared-references/patent-writing-principles.md` for claim drafting principles, antecedent basis rules, and common pitfalls.

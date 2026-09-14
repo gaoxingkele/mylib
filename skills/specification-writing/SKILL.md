@@ -16,7 +16,7 @@ Adapted from `/paper-write` for patent specifications. The specification support
 
 - `REVIEWER_MODEL = gpt-5.6-sol` — External reviewer for specification quality
 - `JURISDICTION = "auto"` — Inherit from pipeline or detect from args; `CN`, `US`, `EP`, `ALL`
-- `OUTPUT_FORMAT = "markdown"` — Markdown drafts; converted to filing format by `/jurisdiction-format`
+- `OUTPUT_FORMAT = "markdown"` — Markdown 草稿；CNIPA 格式由本流程直接产出（原版引用的 `/jurisdiction-format` 子 skill 从未实现，已移除）
 - `OUTPUT_DIR = "patent/"` — Base output directory
 - `LANGUAGE = "auto"` — Auto from jurisdiction: CN->Chinese, US/EP->English
 
@@ -99,10 +99,9 @@ Three parts, directly mirroring INVENTION_DISCLOSURE.md:
 
 ### Step 6: Write Brief Description of Drawings (附图说明)
 
-Invoke `/figure-description` as a sub-skill if user has provided figures:
-```
-/figure-description "patent/figures/"
-```
+附图清单与标号体系派发到 `../../paa/skills/cnipa-drafting-workflow/SKILL.md` Step 4（附图规划与标号体系）。
+
+> 原版此处引用 `/figure-description` 子 skill —— 该 skill 在任何端都未实现（2026-09-14 溯源确认），已改道至 paa 族；不再新增平行实现。
 
 If no user figures, describe what figures should exist based on the claims.
 
@@ -112,10 +111,7 @@ Format:
 
 ### Step 7: Write Detailed Description (具体实施方式)
 
-Invoke `/embodiment-description` as a sub-skill:
-```
-/embodiment-description "patent/CLAIMS.md"
-```
+具体实施方式按下列要求直接撰写（原版引用的 `/embodiment-description` 子 skill 从未实现，其职责已并入本步骤，不另设 skill）。
 
 This section must:
 - Describe at least one complete embodiment with reference numerals

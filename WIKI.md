@@ -48,7 +48,10 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - **效果**：闽投申报 10 篇（P01-P06×2）全套产物即此流水线输出；确定性检查 `claim_formal_check.py` + `patent_static_check.py` 对真实案件跑通
 
 ### 1.5 通用专利技能（skills/）
-- **claims-drafting / specification-writing / patent-pipeline / shared-references**：来源=外部 patent skill 套件；用处=权利要求/说明书撰写、CN/US/EP 三管辖流水线、共享格式规范（patent-format-cn/ep/us、prior-art-databases）；三端原已装，统一时收敛为 mylib 单一副本
+- **claims-drafting / specification-writing / patent-pipeline / shared-references**：来源=外部 patent skill 套件；三端原已装，统一时收敛为 mylib 单一副本
+- **用处**：权利要求/说明书撰写（CN 两部式）、共享格式规范（patent-format-cn/ep/us、prior-art-databases）
+- **2026-09-14 改道**：patent-pipeline 原版串联 9 个 slash command，实测 **7 个在任何端从未实现**（`/prior-art-search`、`/patent-novelty-check`、`/invention-structuring`、`/figure-description`、`/embodiment-description`、`/patent-review`、`/jurisdiction-format`）。溯源确认**非搬运丢失**——ARIS 上游 `42-wanshuiyin-ARIS` 是论文套件，本身无这些 skill，系改编时从未写出，故不可恢复、只能改道。已重写 patent-pipeline 为**薄路由**（派发到 paa 族 + cnipa-drafting-workflow，不新增平行流水线），并清除 claims-drafting / specification-writing 内 4 处同类失效引用。管辖收敛为 **CN 单管辖**（US/EP 超项目范围，格式文件仅作参考保留）
+- **效果**：全部引用路径已核验可达；生产路径仍为 `/patent` → patent-orchestrator → paa 族，本组仅作 CN 文本技法补充
 
 ---
 
