@@ -51,6 +51,7 @@ description: 中国发明专利申请文件起草与审查工作流。用于从�
 
 5. **RRAG Review Loop**
    - reviewer 先列问题，再让对应 writer 修改。
+   - 对算法、状态机或多版本方案的闭环补强，读取 [机制收敛与改稿收益核验](../patent-grant-scorer/references/mechanism-convergence-review.md)，检查前后时序、分支冲突及工程依据；按适用性选用，不套用案例机制。
    - 每轮审查记录：问题、依据、修改对象、是否关闭。
    - 对高风险对比文件建立 A/B/C 三套修改预案：宽版、合入关键从权版、应急窄版。
 

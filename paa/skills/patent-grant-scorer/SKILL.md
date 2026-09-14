@@ -6,7 +6,7 @@ description: >
   拜占庭异常评分、跨轮版本漂移和同批案件相对公平。适用于授权成功率、专利评分、
   可专利性评估、低分改进、多专家仲裁、改稿前后复评；不用于把单一分数解释为授权保证。
 metadata:
-  version: "2.1.0"
+  version: "2.2.0"
   domain: chinese-invention-patent-review
 ---
 
@@ -45,7 +45,7 @@ metadata:
 - 申请日或优先权日、检索日期、检索接口与错误日志；
 - PatentARA/PAA/CNIPA门禁使用的申请文件版本。
 
-任一哈希不一致，输出`STALE_REVIEW_RESEARCH_REQUIRED`，不要继续比较分数。
+比较同一对象在不同工序绑定的哈希，不要求独权哈希与证据集哈希相等。独权与检索输入版本不一致时，输出`STALE_REVIEW_RESEARCH_REQUIRED`。说明书、效果依据、工程证据或评分口径改变时也须检查复评范围；同日评分不代表覆盖当日终稿。
 
 ### 2. 建立检索证据
 
@@ -58,6 +58,9 @@ metadata:
 5. 网页IPR报告只作为独立证据层，保留项目状态、候选数、报告数和失败原因。
 
 ### 3. 独立专家评审
+
+对改稿前后比较、算法/状态机闭环检查或低分整改，先读取
+[references/mechanism-convergence-review.md](references/mechanism-convergence-review.md)，核验时序、规则冲突和技术因果链；不得把新增机制数量当作创造性收益。
 
 四个基本角色分别评分，不先看他人结论：
 
@@ -127,6 +130,8 @@ python paa/skills/patent-grant-scorer/scripts/ahp_sem_scorer.py input.json --agg
 - `version_binding`和`round_transition`；
 - 当前同批案件的相对百分位；
 - 按P0/P1/P2排列的`action_queue`。
+
+改稿复评另附“原问题—修改关系—实际收益—范围代价—证据状态—未关闭风险”表；收益须区分文本、机制、实测效果，不以旧分数为最新稿背书。
 
 完整JSON格式和示例见[references/input-output-schema.md](references/input-output-schema.md)。
 
