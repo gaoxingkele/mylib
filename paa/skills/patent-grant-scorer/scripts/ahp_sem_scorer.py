@@ -11,11 +11,14 @@ guarantee or permission to file directly.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
+import os
 import statistics
 import sys
-from typing import Any, Dict, List, Mapping, MutableMapping, Sequence, Tuple
+from pathlib import Path
+from typing import Any, Dict, List, Mapping, MutableMapping, Optional, Sequence, Tuple
 
 
 PROTOCOL_VERSION = "2.0.0"
@@ -361,23 +364,125 @@ def _gate_diagnostics(review_context: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
-def _version_binding(review_context: Mapping[str, Any]) -> Dict[str, Any]:
+def _norm_hash(value: Any) -> Optional[str]:
+    """Normalise a hash for comparison: drop an optional 'sha256:' prefix, lowercase."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip()
+    if text.lower().startswith("sha256:"):
+        text = text.split(":", 1)[1]
+    return text.lower()
+
+
+#: Relations in which the searched text is *derived from* the reviewed document
+#: (e.g. claim 1 extracted from the claims document). In that case the search
+#: input hash and the document hash describe two different artifacts and must
+#: not be compared with each other.
+DERIVED_SEARCH_RELATIONS = frozenset(
+    {"verbatim_substring", "derived_claim_text", "claim1_of_document", "extract_of_document"}
+)
+
+
+def _search_input_hash_from_path(
+    search_path: Any, root: Optional[Any]
+) -> Tuple[Optional[str], Optional[str]]:
+    """Read a search-evidence file and return sha256 of its `input` text.
+
+    The scorer recomputes this itself so a caller cannot make the binding check
+    pass merely by writing the same value into two fields.
+    Returns (hash, error). hash is None when it could not be established.
+    """
+    if not isinstance(search_path, str) or not search_path.strip():
+        return None, None
+    path = Path(search_path.strip())
+    if not path.is_absolute():
+        path = Path(root or os.getcwd()) / path
+    if not path.is_file():
+        return None, "unreadable"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None, "unparsable"
+    text = data.get("input") if isinstance(data, Mapping) else None
+    if not isinstance(text, str) or not text:
+        return None, "missing_input_field"
+    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest(), None
+
+
+def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = None) -> Dict[str, Any]:
+    """Claim/search version binding.
+
+    A bare ``current_claim_hash != search_claim_hash`` comparison is not a valid
+    staleness test on its own: it silently assumes both hashes name the same
+    artifact. Callers that populate them from different files therefore get a
+    guaranteed false positive, and callers that write the same value into both
+    get a guaranteed false negative. Two mechanisms replace that assumption:
+
+    1. ``review_context.search_binding`` declares what was searched and how it
+       relates to the reviewed document, so derived claim text is compared
+       like-for-like instead of against the whole document.
+    2. When ``search_path`` is supplied the scorer recomputes the hash from the
+       evidence file itself, so equality cannot be asserted without evidence.
+    """
     current_claim_hash = review_context.get("claim_hash") or review_context.get("current_claim_hash")
     reviewed_claim_hash = review_context.get("reviewed_claim_hash") or current_claim_hash
-    search_claim_hash = review_context.get("search_claim_hash")
-    evidence_hash = review_context.get("evidence_hash") or review_context.get("retrieval_hash")
-    stale_reasons = []
-    if current_claim_hash and reviewed_claim_hash and current_claim_hash != reviewed_claim_hash:
+    declared_search_hash = review_context.get("search_claim_hash")
+    raw_binding = review_context.get("search_binding")
+    binding: Mapping[str, Any] = raw_binding if isinstance(raw_binding, Mapping) else {}
+    relation = binding.get("relation")
+    search_path = review_context.get("search_path") or binding.get("search_path")
+
+    # --- 1) establish the authoritative search-input hash ---
+    recomputed, evidence_error = _search_input_hash_from_path(search_path, root)
+    if recomputed:
+        search_input_hash = recomputed
+        binding_basis = "verified_from_evidence"
+    elif binding.get("search_input_hash"):
+        search_input_hash = binding["search_input_hash"]
+        binding_basis = "declared_by_reviewer"
+    elif declared_search_hash:
+        search_input_hash = declared_search_hash
+        binding_basis = "legacy_assumed_same_artifact"
+    else:
+        search_input_hash = None
+        binding_basis = "absent"
+
+    # --- 2) decide staleness ---
+    stale_reasons: List[str] = []
+    if current_claim_hash and reviewed_claim_hash and _norm_hash(current_claim_hash) != _norm_hash(reviewed_claim_hash):
         stale_reasons.append("reviewed_claim_hash_mismatch")
-    if current_claim_hash and search_claim_hash and current_claim_hash != search_claim_hash:
-        stale_reasons.append("search_bound_to_different_claim_hash")
+
+    if relation in DERIVED_SEARCH_RELATIONS:
+        # Searched text is derived from the reviewed document (e.g. claim 1).
+        # Comparing it to the document hash is meaningless; compare it to the
+        # hash the reviewer declares for that derived text.
+        declared_text_hash = binding.get("searched_claim_text_hash") or declared_search_hash
+        if declared_text_hash and search_input_hash and _norm_hash(declared_text_hash) != _norm_hash(search_input_hash):
+            stale_reasons.append("search_input_differs_from_declared_claim_text")
+    else:
+        if current_claim_hash and search_input_hash and _norm_hash(current_claim_hash) != _norm_hash(search_input_hash):
+            stale_reasons.append("search_bound_to_different_claim_hash")
+
+    binding_warnings: List[str] = []
+    if binding_basis == "legacy_assumed_same_artifact":
+        # Equality was asserted by the caller, not verified. Visible, not silent.
+        binding_warnings.append("search_binding_identity_undeclared")
+    elif binding_basis == "absent":
+        binding_warnings.append("missing_search_claim_hash")
+    if evidence_error:
+        binding_warnings.append(f"search_evidence_{evidence_error}")
+
     return {
         "current_claim_hash": current_claim_hash,
         "reviewed_claim_hash": reviewed_claim_hash,
-        "search_claim_hash": search_claim_hash,
-        "evidence_hash": evidence_hash,
+        "search_claim_hash": search_input_hash,
+        "evidence_hash": review_context.get("evidence_hash") or review_context.get("retrieval_hash"),
+        "search_binding_basis": binding_basis,
+        "search_binding_relation": relation,
+        "search_path": search_path,
         "stale": bool(stale_reasons),
         "stale_reasons": stale_reasons,
+        "binding_warnings": binding_warnings,
     }
 
 
@@ -407,6 +512,13 @@ def _evidence_confidence(
     if not version_binding.get("search_claim_hash"):
         warnings.append("missing_search_claim_hash")
         confidence = min(confidence, 0.70)
+    # Binding-integrity warnings are surfaced, never silently absorbed: an
+    # undeclared identity or an unreadable evidence file means the binding was
+    # asserted rather than verified. They do not by themselves cap confidence
+    # (keeps existing cohorts reproducible), but they must be visible.
+    for warning in version_binding.get("binding_warnings") or []:
+        if warning not in warnings:
+            warnings.append(warning)
     if version_binding.get("stale"):
         warnings.append("stale_review_or_search_binding")
         confidence = min(confidence, 0.20)
@@ -511,7 +623,7 @@ def _decision(probability: float, confidence: float, gates: Mapping[str, Any], v
     return "REBUILD_INDEPENDENT_CLAIM_OR_RESELECT_POINT"
 
 
-def score_case(case: Mapping[str, Any], mode: str = "robust") -> Dict[str, Any]:
+def score_case(case: Mapping[str, Any], mode: str = "robust", root: Optional[Any] = None) -> Dict[str, Any]:
     weights, group_cr, per_expert = group_weights()
     latent, indicator_detail, consensus = latent_scores(
         case["scores"], case.get("expert_meta") or {}, mode=mode
@@ -519,7 +631,7 @@ def score_case(case: Mapping[str, Any], mode: str = "robust") -> Dict[str, Any]:
     probability, composite, probability_before_subject = sem_probability(latent, weights)
     review_context = case.get("review_context") or {}
     gates = _gate_diagnostics(review_context)
-    version_binding = _version_binding(review_context)
+    version_binding = _version_binding(review_context, root=root)
     confidence, confidence_warnings = _evidence_confidence(consensus, review_context, version_binding)
     uncertainty_margin = 0.05 + (1.0 - confidence) * 0.25
     result: Dict[str, Any] = {
@@ -601,6 +713,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--aggregation", choices=("robust", "legacy-mean"), default="robust",
         help="robust is the default; legacy-mean reproduces arithmetic aggregation",
     )
+    parser.add_argument(
+        "--root", default=None,
+        help=(
+            "base directory for resolving review_context.search_path; the scorer "
+            "recomputes the search-input hash from that evidence file so binding "
+            "equality cannot be asserted without evidence (default: cwd)"
+        ),
+    )
     args = parser.parse_args(argv)
     if not args.input:
         weights, group_cr, per_expert = group_weights()
@@ -613,7 +733,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         }
     else:
         cases, cohort_id = _load_cases(args.input)
-        payload = [score_case(case, mode=args.aggregation) for case in cases]
+        payload = [score_case(case, mode=args.aggregation, root=args.root) for case in cases]
         add_relative_positions(payload, cohort_id=cohort_id)
     rendered = json.dumps(payload, ensure_ascii=False, indent=2)
     if args.output:

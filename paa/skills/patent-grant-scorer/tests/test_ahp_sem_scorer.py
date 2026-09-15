@@ -85,6 +85,67 @@ class PatentGrantScorerTests(unittest.TestCase):
         self.assertTrue(result["version_binding"]["stale"])
         self.assertEqual(result["decision"], "STALE_REVIEW_RESEARCH_REQUIRED")
 
+    # --- binding-identity regressions (2026-09-15) -------------------------
+    # A bare `current_claim_hash != search_claim_hash` test assumes both hashes
+    # name the same artifact. Populated from different files it yields a
+    # guaranteed false positive; written equal by hand it yields a guaranteed
+    # false negative. These four cases pin both failure modes.
+
+    def test_derived_claim_text_binding_is_not_a_false_stale(self):
+        """Search bound to claim 1 extracted from the reviewed claims document
+        describes a different artifact than the document — that is not drift."""
+        case = rich_case()
+        case["review_context"]["search_claim_hash"] = "sha256:claim1-hash"
+        case["review_context"]["search_binding"] = {
+            "searched_artifact": "claims/claim1.txt",
+            "document_artifact": "02_权利要求书.md",
+            "relation": "verbatim_substring",
+            "searched_claim_text_hash": "sha256:claim1-hash",
+        }
+        result = scorer.score_case(case)
+        binding = result["version_binding"]
+        self.assertFalse(binding["stale"])
+        self.assertNotIn("search_bound_to_different_claim_hash", binding["stale_reasons"])
+        self.assertEqual(binding["search_binding_relation"], "verbatim_substring")
+
+    def test_undeclared_binding_identity_is_visible_not_silent(self):
+        """Equal hashes with no declared identity is an assertion, not evidence."""
+        result = scorer.score_case(rich_case())  # claim_hash == search_claim_hash
+        binding = result["version_binding"]
+        self.assertFalse(binding["stale"])
+        self.assertEqual(binding["search_binding_basis"], "legacy_assumed_same_artifact")
+        self.assertIn("search_binding_identity_undeclared", binding["binding_warnings"])
+        self.assertIn("search_binding_identity_undeclared", result["confidence_warnings"])
+
+    def test_binding_equality_cannot_be_asserted_without_evidence(self):
+        """With search_path present the hash is recomputed from the evidence, so
+        declaring matching hashes does not make the check pass."""
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "semantic.json").write_text(
+                json.dumps({"input": "the OLD claim text"}), encoding="utf-8"
+            )
+            case = rich_case()
+            case["review_context"]["search_path"] = "semantic.json"
+            case["review_context"]["search_binding"] = {
+                "relation": "same_document",
+                "search_input_hash": "claim-v2",  # caller claims it matches
+            }
+            result = scorer.score_case(case, root=tmp)
+        binding = result["version_binding"]
+        self.assertEqual(binding["search_binding_basis"], "verified_from_evidence")
+        self.assertTrue(binding["stale"])
+        self.assertIn("search_bound_to_different_claim_hash", binding["stale_reasons"])
+        self.assertEqual(result["decision"], "STALE_REVIEW_RESEARCH_REQUIRED")
+
+    def test_unreadable_evidence_degrades_to_a_warning(self):
+        """A missing evidence file must be visible, never a silent pass."""
+        case = rich_case()
+        case["review_context"]["search_path"] = "does/not/exist.json"
+        result = scorer.score_case(case, root=".")
+        binding = result["version_binding"]
+        self.assertIn("search_evidence_unreadable", binding["binding_warnings"])
+        self.assertIn("search_evidence_unreadable", result["confidence_warnings"])
+
     def test_low_evidence_byzantine_outlier_is_downweighted(self):
         case = rich_case()
         case["scores"]["analyst"]["I1"] = {

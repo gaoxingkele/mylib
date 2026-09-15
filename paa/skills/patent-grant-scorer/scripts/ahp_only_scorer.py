@@ -132,7 +132,7 @@ def _history_transition(
     }
 
 
-def _score_raw_case(case: Mapping[str, Any], aggregation: str) -> Dict[str, Any]:
+def _score_raw_case(case: Mapping[str, Any], aggregation: str, root: Any = None) -> Dict[str, Any]:
     latent, indicators, consensus = core.latent_scores(
         case.get("scores") or {},
         case.get("expert_meta") or {},
@@ -142,7 +142,7 @@ def _score_raw_case(case: Mapping[str, Any], aggregation: str) -> Dict[str, Any]
     weights = dict(zip(("N", "I", "D", "Q"), weights_list))
     review_context = case.get("review_context") or {}
     gates = core._gate_diagnostics(review_context)
-    version = core._version_binding(review_context)
+    version = core._version_binding(review_context, root=root)
     confidence, confidence_warnings = core._evidence_confidence(
         consensus, review_context, version
     )
@@ -250,9 +250,9 @@ def _score_existing_result(record: Mapping[str, Any]) -> Dict[str, Any]:
     return result
 
 
-def score_case(case: Mapping[str, Any], aggregation: str = "robust") -> Dict[str, Any]:
+def score_case(case: Mapping[str, Any], aggregation: str = "robust", root: Any = None) -> Dict[str, Any]:
     if case.get("scores"):
-        return _score_raw_case(case, aggregation)
+        return _score_raw_case(case, aggregation, root=root)
     return _score_existing_result(case)
 
 
@@ -288,9 +288,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("input", type=Path)
     parser.add_argument("-o", "--output", type=Path)
     parser.add_argument("--aggregation", choices=("robust", "legacy-mean"), default="robust")
+    parser.add_argument(
+        "--root", default=None,
+        help=(
+            "base directory for resolving review_context.search_path; the scorer "
+            "recomputes the search-input hash from that evidence file so binding "
+            "equality cannot be asserted without evidence (default: cwd)"
+        ),
+    )
     args = parser.parse_args(argv)
     cases, cohort_id = load_cases(args.input)
-    results = [score_case(case, aggregation=args.aggregation) for case in cases]
+    results = [score_case(case, aggregation=args.aggregation, root=args.root) for case in cases]
     add_relative_positions(results, cohort_id=cohort_id)
     text = json.dumps(results, ensure_ascii=False, indent=2)
     if args.output:
