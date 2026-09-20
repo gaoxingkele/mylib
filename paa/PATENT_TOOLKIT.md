@@ -17,6 +17,7 @@
 | Claude-compatible skill | patent-grant-scorer | `paa/skills/patent-grant-scorer/` | AHP+SEM grant-readiness assessment |
 | Claude-compatible skill | cnipa-drafting-workflow | `paa/skills/cnipa-drafting-workflow/` | CNIPA drafting rules and examiner loop |
 | Claude-compatible skill | patent-disclosure-skill | `paa/skills/patent-disclosure-skill/` | Project documents/code to technical disclosure |
+| Claude-compatible skill | browser-multi-model-review | `paa/skills/browser-multi-model-review/` | Playwright MCP control of Gemini/ChatGPT/Grok/Perplexity for independent highest-model reviews |
 | Codex role set | cn-patent-* | `paa/agents/` | Orchestrator, disclosure, prior-art, claim, specification, examiner, packager roles |
 | Slash commands | patent, evolve-patent-system | `paa/commands/` | One-shot full-pipeline entry; system-evolution outer loop (`.claude/commands/`) |
 

@@ -1,11 +1,11 @@
 # Patent Skills (PAA Building Blocks)
 
-PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以下五个 skill 协同驱动。它们
+PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以下 skill 协同驱动。它们
 是 PAA 在 `~/.claude/skills/` / 项目级 `.claude/skills/` 中的**真实执行器**，本目录是它们的
 **全局副本**（位于 `mylib/paa/skills/`），供任何 AI 工具（Claude Code / Codex / Kimi / Grok / Pi
 / Generic Agent）通过相对路径调用，避免环境差异。
 
-## 五个 skill 一览
+## skill 一览
 
 | Skill | 角色 | 在 PAA 中的位置 |
 |---|---|---|
@@ -14,6 +14,8 @@ PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以�
 | **patent-grant-scorer** | 证据约束的AHP/SEM四专家评审、拜占庭仲裁与跨轮风险排序 | feeds `evidence/scoring/scoring.json` |
 | **cnipa-drafting-workflow** | CNIPA 申请文件起草与审查工作流（22 条三步法 / 26 条 / OA 预案） | produces `application/` 工件层 |
 | **patent-disclosure-skill** | 从项目文档挖掘专利点并生成可交付技术交底书 | produces `logic/invention.md` 输入 |
+| **npl-prior-art-search** | 论文类对比文件检索路由 | feeds `evidence/prior_art_npl/` |
+| **browser-multi-model-review** | Playwright MCP 四端浏览器控制（Gemini/ChatGPT/Grok/Perplexity 独立会话最高档审核） | 网页评审 md + wiki 标识词/版本号行；不替代 incoPat |
 
 ## 调用模式（任一 AI 工具通用）
 
@@ -27,6 +29,8 @@ load: ./skills/incopat-search/SKILL.md
 load: ./skills/patent-grant-scorer/SKILL.md
 load: ./skills/cnipa-drafting-workflow/SKILL.md
 load: ./skills/patent-disclosure-skill/SKILL.md
+load: ./skills/npl-prior-art-search/SKILL.md
+load: ./skills/browser-multi-model-review/SKILL.md
 
 # 3. 用工具自身的执行器（Python / Bash / shell）跑脚本
 python ./scripts/scaffold.py <case-dir> --case-id P05-1 --case-name "..."

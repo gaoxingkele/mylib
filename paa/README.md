@@ -132,6 +132,7 @@ difference_feature: "对违背图谱关系路径的候选结果施加惩罚因�
 - `cnipa-drafting-workflow` skill → produces `application/` layer content
 - `patent-disclosure-skill` → produces `logic/invention.md` from project docs
 - `npl-prior-art-search` skill → 非专利文献（论文类对比文件）检索路由，派发到学术检索组
+- `browser-multi-model-review` skill → Playwright MCP 四端浏览器控制（Gemini/ChatGPT/Grok/Perplexity），网页评审不替代 incoPat
 - 探索图（`trace/`）是跨撰写轮次的连接组织——当前分散的 git commit 会丢掉这部分
 
 ## 部署模型（2026-08-29，单一事实源）

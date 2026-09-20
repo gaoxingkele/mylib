@@ -21,6 +21,7 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
 | CNIPA drafting workflow | `paa/skills/cnipa-drafting-workflow/SKILL.md` |
 | Patent disclosure extraction | `paa/skills/patent-disclosure-skill/SKILL.md` |
 | NPL prior-art routing (papers as references) | `paa/skills/npl-prior-art-search/SKILL.md` |
+| Playwright four-site browser review | `paa/skills/browser-multi-model-review/SKILL.md` |
 | Full application cluster internals | `paa/skills/cn-patent-application-cluster/SKILL.md` |
 | PatentARA engine or integration | `paa/engine/patent_ara/README.md`, then only the relevant source/test |
 | Academic search skills | `skills/<name>/SKILL.md` (academic-search, paper-search-pro, paper_search, papers-skill, scholar-search, literature-search, …) |

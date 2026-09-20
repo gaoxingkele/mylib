@@ -30,7 +30,7 @@ From this repo, or any directory that contains `CLAUDE.md` + `knowledge/`:
 
 This creates junctions only (never copies):
 
-- User: `~/.grok/skills/{paa,incopat-search,cnipa-drafting-workflow,patent-disclosure-skill,patent-grant-scorer,npl-prior-art-search,claims-drafting,specification-writing,patent-pipeline}`
+- User: `~/.grok/skills/{paa,incopat-search,cnipa-drafting-workflow,patent-disclosure-skill,patent-grant-scorer,npl-prior-art-search,claims-drafting,specification-writing,patent-pipeline,browser-multi-model-review}`
 - Project: `<repo>/.grok/skills/{paa,cn-patent-application-cluster,paa-patent-toolkit}`
 
 `paa` at both scopes points at `mylib/skill-runtime/routers/paa`, **not** the
