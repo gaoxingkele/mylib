@@ -55,6 +55,9 @@ application/specification.md:
   [ ]  background 引用 only real pns from logic/prior_art.md
   [ ]  ≥2 实施例 with numerical instances
   [ ]  no banned expressions in effect statements
+  [ ]  background explicitly states the technical problem to be solved
+  [ ]  per-feature effect record exists (作用/效果/机理 for every claim feature)
+  [ ]  numbers correspond strictly across claim ranges, specification text, and embodiments
 
 application/abstract.md:
   [ ]  ≤300 字
@@ -97,8 +100,6 @@ For every inventive_concept CXX:
   [ ]  → application/specification.md §embodiment
   [ ]  → evidence/prior_art_claims/<pn>.md
   [ ]  (if scoring) → evidence/scoring/scoring.json → latent[I]
-
-]
 ```
 
 ## Gate integration
@@ -120,6 +121,9 @@ emits structured output. The MANIFEST.md frontmatter should reflect:
 | fabricated pn | Re-run the search; replace the placeholder with a real pn + evidence transcription |
 | invalid claim structure (no 特征部分 marker) | Re-formulate the 独立权利要求 with explicit preamble + 其特征在于 + characterizing portion |
 | exploration-tree node count too low | Verify this is honest (not a quota); if real, surface "scarce drafting history" in MANIFEST.md |
+| Technical problem not stated in 背景技术 | Rewrite the background to state the problem explicitly; re-anchor effect statements to it |
+| Per-feature effect record missing | Add 作用/效果/机理 per claim feature in the specification (OA 公知常识 rebuttal ammunition) |
+| Claim/specification/embodiment numbers don't correspond (4W118464-type) | Align ranges across all three; enforce a single accounting basis for component totals |
 
 ## Run
 

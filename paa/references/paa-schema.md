@@ -167,7 +167,14 @@ difference_feature:
 
 Mandatory core is fixed. Additional files are your judgment based on case content:
 - 说明书补强 (`logic/solution/disclosure_amplification.md`) — when 26.3 risk detected
-- 答辩预案 (`logic/solution/oa_response_plan.md`) — when OA exists
+- 答辩预案 (`logic/solution/oa_response_plan.md`) — when OA exists. Content schema:
+  - **区别特征清单** — numbered D01..DXX, verbatim from `claims_analysis.md`, each mapped to the OA's feature comparison
+  - **每特征第二作用** — per-feature second function/effect beyond its common general knowledge role, with specification paragraph anchor (ammunition for the 公知常识 rebuttal)
+  - **重构后的实际解决技术问题** — technical problem re-packaged using the second function
+  - **三步法论证要点** — closest prior art / distinguishing features / motivation analysis, bullet form
+  - **修改动作** — one feature per amendment round only; remaining fallback tier listed
+  - **禁止反悔检查** — confirmation that no argument is exhausted and no self-incriminating prosecution history is written
+  - **引用模板** — section numbers of `references/oa-response-playbook.md` applied (e.g., §2 第二作用模板)
 - 附图核读 (`evidence/drawings/`) — when figures need visual extraction
 
 Do not force template files onto cases that don't need them.

@@ -4,7 +4,8 @@
   "provenance": [
     "Applied Sciences MA-SQLGrid narrative revisions v1-v3",
     "Applied Sciences C2GES narrative revisions v1-v2",
-    "Mintou six-paper academic narrative audit and submission-quality revision, 2026-08-12 to 2026-08-13"
+    "Mintou six-paper academic narrative audit and submission-quality revision, 2026-08-12 to 2026-08-13",
+    "MDPI Information MA-SQLGrid migration and upgrade, 2026-09-12 to 2026-09-22 (42-to-30-page length reduction, figure relocation and restoration, pre-registered update criteria, benchmark review against same-journal and same-domain comparators)"
   ],
   "non_negotiable_rules": [
     {
@@ -66,6 +67,26 @@
     {
       "id": "READ_WRITE_SCOPE",
       "rule": "Shared evidence needed for tests is a read-only dependency and must not widen the stage write scope, merge gate, or cross-paper contribution boundary."
+    },
+    {
+      "id": "RELOCATE_NOT_DELETE",
+      "rule": "Length reduction relocates displays; it never deletes them. Register tables and figures separately in the migration record, keep every reported value either in the main text, in a shipped figure label, or in a declared supplementary table, and finish only when every figure file shipped in the package is referenced somewhere in the submission."
+    },
+    {
+      "id": "DISPLAY_BUDGET_VS_DOMAIN",
+      "rule": "Judge main-text display density (figures plus tables per page) against same-domain comparators, not against journal averages. A manuscript whose display density falls below its strongest domain comparators carries a review risk that prose cannot fix; restore consolidated multi-panel figures re-plotted from frozen summaries rather than adding exposition."
+    },
+    {
+      "id": "SUPPLEMENT_DUAL_SOURCE",
+      "rule": "A rendered supplementary PDF must ship together with the markdown or TeX source it was rendered from, byte-identical, and every archive file must be declared in the manifest with a checksum. A PDF that is newer than its shipped source is a version-drift defect, not a cosmetic one."
+    },
+    {
+      "id": "PREREGISTERED_UPDATE_CRITERIA",
+      "rule": "Decide whether newly finished experiments enter an existing manuscript using criteria and thresholds written before the results are read, then record the per-criterion verdict in a separate decision file. An experiment that misses its pre-registered threshold is demoted to a secondary observation or supplementary material; abstract-level and headline claims do not move."
+    },
+    {
+      "id": "MEASURE_BEFORE_TRUNCATE",
+      "rule": "Page-budget decisions are measured, not felt: read the compiled artifact for page count and final-page fill (a last page already flush to the text block turns any net display addition into an extra page), and state the trade-off explicitly when a display restore costs a page that the manuscript cannot recover without deleting evidence text."
     }
   ],
   "issue_taxonomy": [
@@ -86,7 +107,12 @@
     "METHOD_IMPLEMENTATION_MISMATCH",
     "VISUAL_QA_STALE",
     "DECLARATION_PLACEHOLDER",
-    "REFERENCE_OR_METADATA_UNVERIFIED"
+    "REFERENCE_OR_METADATA_UNVERIFIED",
+    "DISPLAY_DENSITY_BELOW_DOMAIN_COMPARATOR",
+    "RELOCATED_FIGURE_ORPHANED",
+    "SUPPLEMENT_SOURCE_DRIFT",
+    "UNPREREGISTERED_UPDATE",
+    "PAGE_BUDGET_UNMEASURED"
   ],
   "venue_overlays": {
     "ieee_access": [
@@ -96,6 +122,11 @@
     "mdpi_electronics": [
       "Explain why each information-processing or algorithmic component is necessary.",
       "For prediction papers, use multiple meaningful baselines and at least two appropriate error metrics; negative results are publishable when informative."
+    ],
+    "mdpi_information": [
+      "The journal states no maximum manuscript length and its APC does not scale with pages, so length is a communication choice: compare display density with same-domain comparators before compressing further.",
+      "A diagnostic or negative-result contribution is publishable, but each conclusion must name its visible-evidence class (synthetic or development-visible, public non-domain, unseen expert-adjudicated) and the abstract must not exceed what that class licenses.",
+      "Unfinished external-validity work (expert adjudication, human-in-the-loop studies, training-data comparators) belongs in Limitations with a route, not in the abstract and not replaced by additional polishing or repackaging."
     ],
     "mdpi_energies": [
       "Connect the method to an energy-system decision or engineering use, and include sensitivity evidence appropriate to the application.",
@@ -113,6 +144,7 @@
     "Check negative and null findings for cross-section continuity.",
     "Separate scientific narrative from reproducibility and audit support.",
     "Check companion overlap, visual-artifact consistency, declarations, and author-confirmed metadata.",
+    "Check the display budget: figures plus tables per page against same-domain comparators, unreferenced float labels, orphan figure files, and whether the supplement ships with its own source.",
     "Recommend only evidence-preserving edits or explicitly scoped new experiments."
   ]
 }

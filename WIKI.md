@@ -2,7 +2,7 @@
 
 > 单一事实源：`D:/aicoding/mylib`。四端（Claude Code / Codex / Kimi / Grok Build）以 junction 引用，不做第二份副本。
 > 本 wiki 记录每个技能的来源、用处、实测效果与路由关系。更新技能时同步更新本文件。
-> 最后更新：2026-09-04
+> 最后更新：2026-09-25
 
 ---
 
@@ -105,6 +105,7 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 
 - **mw-\*（管理世界，11 件）**：事实源 mylib/skills/（自 Claude 插件缓存拷贝）；Claude 走插件机制，Codex/Kimi 走 junction；选题/综述/机制/政策/复现/投稿/回复全套
 - **aers-powergrid-bridge / codex-ars-powergrid**：电网/AI 论文域路由（AERS/ARS 最小必要子技能）
+- **论文升级经验族（2026-09-22 新增）**：`Codex-Academic-Research/digests/mdpi-information-upgrade-2026-09.md`（MA-SQLGrid 迁 MDPI Information：长度控制、图表预算、补充材料迁移、新证据入稿判据、打包投递纪律）+ `Codex-Academic-Research/tools/manuscript_display_audit.py`（页数/末页余量/图表清单/孤儿图/双源一致/哈希 的确定性审计，失败即退出码 1，可挂 paper_harness 的 `custom:` 验收）；期刊侧场标定写入 `Paper_CCF/journals/mdpi-information/SKILL.md`（标定版本 2026-09-22.1），通用规则与 issue 类型追加进 `paper_harness/resources/paper_experience_digest.json`
 - **skill-runtime/**（新）：三端 skill 路径审计/修复运行时 + ara/paa/paper-ccf 路由器（外部端搭建）
 - **素材库**（未进活跃层，按需启用）：Auto-Empirical-Research-Skills（顶层 22 件，统计/计量/降AIGC）、Research-Paper-Writing-Skills（彭思达方法论）、cnki-skills、gs-skills、thesis-writing-skill 等
 
@@ -132,3 +133,7 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - 08-27：P05-1 v3（封箱+元适配），CN121659916A 退出语义 top5
 - 08-28：学术检索组安装（8 件）+ NPL 路由 + OpenAlex key
 - 08-29：单一事实源重构（三端 99+ junction）→ S2 key → ARA 对齐上游 e52a925（8 子技能）→ 逆向复现族 → 博导三件套融合 → 本 wiki
+- 09-12→09-15：MA-SQLGrid 迁 MDPI Information（v1/v2/v3）；两路独立评审（paperreview.ai + mylib 投稿前审计）合并处理，新增免训练共识基线与 11 条核实引用
+- 09-20→09-22：60 题现场批与 640 题扩展批入稿（判据先写、结果后判）；正文 42→30 页瘦身；同刊/同域对标评审（F-1…F-6）；图表密度修复回迁为四联结果图，定稿 31 页 3 图 6 表并投递作者包
+- 09-22：本轮经验蒸馏入库——`Codex-Academic-Research` 新增 case digest + 确定性审计工具，`Paper_CCF` Information 画像升级到 2026-09-22.1，`paper_harness` 经验契约新增 5 条规则/5 类 issue/mdpi_information overlay（19 项 smoke 全过）
+- 09-25：授权率升级（PAPERS-GRANT-RATE-26，蒸馏自 zhuanlishenqing/docs/专利申请技巧论文.zip 26 篇论文研读）——新建 `paa/references/oa-response-playbook.md`（OA 答复武器库：五步法/朱丽莎第二作用模板/协同效应/反后见之明/禁止反悔/单独对比核实）；cluster references 三件套注入（claim-strategy 独权最小化+星型布局+功能性特征、review-gates 新增 Gate F + Gate A/C 补强、disclosure-structure 撰写规则 6 条）；paa/references 四门禁补强（Gate 1 三要素闭环+删商业词、Gate 3 逐特征效果+实验数据+协同数据）+ validation-checklist 对齐检查 + paa-schema 定义 oa_response_plan.md schema；3 个 agent toml 约束注入；grant-scorer/cnipa-drafting-workflow knowledge/claims-drafting 同步升级；安装端为 symlink 即时生效

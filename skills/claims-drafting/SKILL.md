@@ -18,7 +18,8 @@ This is the most critical skill in the patent pipeline. Claims define the legal 
 - `MAX_CLAIM_REVISION_ROUNDS = 3` — Maximum revision iterations
 - `CLAIM_STYLE = "auto"` — `US` (Jepson or open), `EP` (two-part mandatory), `CN` (two-part), `auto` (detect from jurisdiction)
 - `MIN_INDEPENDENT_CLAIMS = 2` — Typically method + system. For utility model (实用新型): apparatus/device only, NO method claims.
-- `MAX_TOTAL_CLAIMS = 20` — Practical limit (USPTO includes 20 in base fee)
+- `MAX_TOTAL_CLAIMS = 20` — Practical limit (USPTO includes 20 in base fee, jurisdiction-specific)
+- CN 注：中国发明专利权利要求超过 10 项即从第 11 项起收附加费（每项 150 元），布局 Wheeler 圆圈/星型从权时应权衡从权数量的成本；上述 USPTO 20 项基准仅适用于美国语境。
 - `PATENT_TYPE = "invention"` — `invention` (发明专利) or `utility_model` (实用新型, apparatus claims only)
 
 ## Inputs

@@ -27,6 +27,11 @@ For each 独立权利要求 in `application/claims.md`:
 [ ]  algorithm parameters / thresholds / data structures are present
 [ ]  the underlying technical problem problem in logic/invention.md is "technical"
      (not "how to organize workflow" / "how to do risk control" / etc.)
+[ ]  technical problem is explicitly stated in the background section and the three-element
+     loop closes (技术问题 — 技术手段 — 技术效果)
+[ ]  no business-inducement wording (销售商 / 交易类词汇)
+[ ]  algorithmic features and technical features mutually support each other functionally
+     (指南二部分九章 6 节, when algorithms are involved)
 ```
 
 ### Output
@@ -49,6 +54,13 @@ gate_1_subject_matter:
   → FAIL. Fix by binding to a concrete machine-readable criterion + automatic execution path.
 - **领域 specification too broad** (e.g., "信息处理方法")
   → narrow the 领域 to a specific technical subsystem.
+- **Technical problem never stated in the background** (三维路径绘制案: without an explicit problem,
+  "方法简便、效果逼真" was not recognized as a technical effect)
+  → FAIL. Fix by stating the technical problem explicitly in 背景技术 and closing the
+  技术问题—技术手段—技术效果 loop.
+- **Business-inducement wording present** (e.g., 销售商 / 交易类词汇; 苑军茹 case: parent rejected,
+  rejection reversed after deleting such terms + three-element argument)
+  → FAIL. Fix by removing all business-inducement terms and re-arguing the three-element loop.
 
 ---
 
@@ -95,6 +107,12 @@ For each 权利要求 feature (independent + dependent):
   [ ]  ≥1 实施例 paragraph in application/specification.md §具体实施方式
   [ ]  parameters / formulas / thresholds are concrete numbers or named ranges (not "about X")
   [ ]  no black-box terms: no "本发明采用X算法" without showing how the algorithm works
+  [ ]  per-feature effect record exists (作用 / 效果 / 机理 for every feature — ammunition for
+       OA "公知常识" rebuttals)
+  [ ]  functional limitations have a self-evident implementation within the claim, or layered
+       specification support with the "不可缺少" features described as a separate layer
+  [ ]  new-use / non-measurable effects are backed by experimental data (Decision No. 57857 rule)
+  [ ]  combination inventions pre-embed synergy-effect comparison data
   [ ]  if LLM / model is involved:
        - prompt templates are given (full structure, not summary)
        - gating rules are explicit
@@ -117,6 +135,8 @@ gate_3_sufficient_disclosure:
 - **LLM algorithm with prompt-only description** → FAIL. Fix by giving full prompt template structure + template text + grounding rules.
 - **Threshold / weight left abstract** → FAIL. Fix by giving a concrete number or a named range with selection rule.
 - **Single 实施例 only** → usually fine but weak. ≥2 implementations strongly recommended for software-method claims.
+- **Per-feature effect record missing** → FAIL at OA time even if PASS now: without pre-embedded 作用/效果/机理, the "公知常识" second-function rebuttal has no ammunition (朱丽莎 template depends on it). Fix by writing each feature's function, effect, and mechanism into the specification.
+- **New use / non-measurable effect asserted without experimental data** → FAIL (Decision No. 57857: contrast agent lacked experimental data → 26.3). Fix by adding experimental data or narrowing the claimed effect.
 
 ---
 

@@ -36,3 +36,8 @@
 - Avoid adding business-only effects as core technical effects.
 - Keep unconfirmed implementation facts out of claims unless marked and later confirmed.
 - For multiple related cases, maintain a portfolio map to avoid self-collision and duplicate claim scopes.
+- Record the function, effect, and mechanism of every individual feature (one specification then serves 26.3 sufficiency, "common general knowledge" rebuttals, and functional-feature scope construction at once).
+- State the technical problem to be solved explicitly in the background section — a technical effect is only recognized when anchored to a stated technical problem.
+- Support functional limitations with layered specification disclosure; describe the "indispensable" features as a separate layer.
+- Numerical ranges must correspond strictly across claims, specification, and embodiments.
+- Include as many drawings as practical (documents with figures show roughly 2x the specification–claim alignment rate of figure-less documents).
