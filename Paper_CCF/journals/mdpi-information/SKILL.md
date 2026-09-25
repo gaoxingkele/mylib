@@ -2,7 +2,7 @@
 name: mdpi-information
 description: Assess MDPI Information fit, manuscript quality and submission readiness using official criteria and separately identified full-text observations. Use for Information journal selection, writing calibration or pre-submission review; do not infer acceptance probability from published examples.
 metadata:
-  calibration_version: "2026-09-12.1"
+  calibration_version: "2026-09-22.1"
 ---
 
 # Information (MDPI)
@@ -12,6 +12,20 @@ metadata:
 Read `references/standards-and-evidence.md` for Information reviews and writing adaptation. It separates official rules, four DOI-verified full-text observations, and local review recommendations. Its evidence constraints supersede the legacy corpus heuristics below and any blanket soundness-only or SCIE claims in shared references.
 
 Do not turn published-paper averages into minimum page, figure, equation, baseline or experiment counts. Do not infer acceptance rates, guaranteed easier acceptance, or journal-wide quality from these selected papers. A polished negative-result paper still needs a meaningful question and evidence supporting its diagnostic lesson.
+
+## Field calibration — MA-SQLGrid upgrade case (2026-09-22, local observation)
+
+Source: `Codex-Academic-Research/digests/mdpi-information-upgrade-2026-09.md`. One real cycle: an Applied Sciences manuscript migrated to *Information*, revised through two independent reviewer-style passes, benchmarked against same-journal and same-domain comparators, reduced from 42 to 30 pages, then returned to 31 pages when four relocated result figures were consolidated into one main-text overview.
+
+- **Observed accepted-article length band (not a rule):** 16, 19, 21 and 33 pages for four *Information* full texts; 18, 24, 24, 24, 24 and 34 pages for nine sampled research PDFs. The journal states no maximum length and its APC does not scale with pages.
+- **Display density is the reviewer-visible quantity.** Same-domain comparators carried 6 figures + 6 tables (SQL-GRID, 18 pages) and 1 figure + 8 tables (DKA-SQL). A 30-page manuscript with 2 figures + 6 tables was scored as display-sparse by an internal benchmark review; the fix was a four-panel results overview, not more prose.
+- **Rules distilled from that cycle (apply as practice, not as journal requirements):**
+  1. Length reduction relocates displays, never deletes them; register tables and figures separately and finish by proving every shipped figure file is referenced somewhere.
+  2. A consolidated figure is re-plotted from frozen shipped summaries, its renderer ships with the submission, and no printed value is transcribed by hand.
+  3. The supplementary PDF ships together with the markdown it was rendered from, byte-identical, and every archive file is declared in its manifest.
+  4. Decide whether new experiments enter the paper with criteria pre-registered before the results are read; headline and abstract-level claims stay unchanged.
+  5. Visible-evidence class (synthetic/development-visible · public non-domain · unseen expert-adjudicated) is stated with every conclusion, and unfinished external-validity work is named in Limitations with a route rather than hidden behind polish.
+- **Deterministic audit for these items:** `Codex-Academic-Research/tools/manuscript_display_audit.py` (pages, overfull, undefined refs, float inventory, unreferenced labels, orphan figures, last-page headroom, tex/pdf/docx hashes, supplement dual-source equality).
 
 ## Meta review and revision loop
 

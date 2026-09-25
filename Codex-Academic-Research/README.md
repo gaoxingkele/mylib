@@ -9,8 +9,21 @@
 |---|---|
 | `DIGEST.md` | 教程消化版（6 姿势 + ARS 装用 + 红线） |
 | `playbooks.md` | 电网论文任务路由（接 Paper_CCF / IdeaSpark / RepLLM） |
+| `digests/mdpi-information-upgrade-2026-09.md` | 真实案例蒸馏：长稿迁 MDPI Information 的长度控制、图表预算、补充材料迁移、新证据入稿判据、打包与投递纪律 |
+| `tools/manuscript_display_audit.py` | 确定性审计：页数/Overfull/未定义引用、末页余量、图-表清单与未引用 label、孤儿图、tex/pdf/docx 哈希、补充材料 md↔PDF 双源一致 |
 | `AGENTS.academic.template.md` | 可复制到项目根的学术规则模板 |
 | `../Academic-Research-Skills-Codex/` | 上游 ARS-Codex 源码（单 skill：`academic-research-suite`） |
+
+## 快速用法
+
+```text
+# 长稿升级 / 瘦身 / 回迁图前后的同一把尺子
+python -B D:/aicoding/mylib/Codex-Academic-Research/tools/manuscript_display_audit.py \
+  --project <paper_dir> --tex paper.tex --figure-root figures \
+  --supplement-zip <supp.zip> --supplement-source build_supplementary/_source.md
+```
+
+任一硬项失败（编译错误、Overfull、未定义引用、缺图、孤儿图、补充材料双源不一致）时退出码为 1，可直接挂进 CI 或 `paper_harness` 的 `custom:<path>` 验收项。
 
 ## 已安装位置
 
