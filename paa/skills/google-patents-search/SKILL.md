@@ -212,6 +212,28 @@ python "$P/gp_fetch.py" CN210644322U --html saved_patent_page.html --out tmp/gp
 本 skill **不判断**抵触申请、不做法律状态结论、不代替代理师的检索报告。
 所有"未发现"只能表述为"本轮检索未发现"。
 
+### 分通道可信度实测（2026-09-26，P06-4/P06-5 案两轮真实使用）
+
+不要笼统相信"本 skill 可用"——同一次会话里各通道表现差异很大，按实测结果分级：
+
+- **确认可用，可当 incoPat 原文核验的免费等价物**：按公开号取著录项+权利要求原文
+  （`google` 直连、`gp_bigquery.py lookup`）。8/8 与 6/8 真实核验通过，内容与已知事实吻合。
+- **确认可用，但曾经是坏的、当天现修**：`gp_bigquery.py similar`（语义近邻，`embedding_v1`）。
+  修复前 `lookup`/`similar` 因 `publication_number` 未转换成数据集实际存储格式
+  （`CN-117291184-A` 而非 `CN117291184A`）恒 `not_found`，且 `similar` 在候选与种子向量维度
+  不一致时 `cosine_distance` 直接报错——已在 `gp_backends.py` 修复（`_bq_pub_number()` 转换 +
+  `ARRAY_LENGTH` 一致性过滤），修复前的版本**不能用**。若后续在别的环境/别的表结构上复现
+  `not_found` 或 `Array inputs are not equal in length`，先怀疑格式/维度问题，不要当"确无数据"。
+- **实测不可信，未修复**：`patentscope` 后端的关键词全文检索（`gp_search.py --backend patentscope`
+  与 `gp_pipeline.py` 的 `keyword` 轴）。同一天对两个不同技术领域各测 3 组查询式，多数返回的候选与
+  检索词毫无关联（工具自算的 `term_overlap` 为 0），只有 SKILL.md 自带的示例查询表现正常——**不要
+  拿这条通道的"命中"当相关性结论**，用之前先用已知应该命中的查询词复测一次，确认当前网络/索引状态
+  正常。根因未查明，可能是 PATENTSCOPE 侧对中文语料的排序退化，也可能是本地网络出口问题。
+- **未查明、别默认为"真空"**：种子件的 `seed_citation`/`seed_similar` 轴（`google` 后端页面抓取）。
+  对两个真实种子公开号都返回 0 条，不确定是页面本身确无引证/相似文献表，还是这条抓取路径本身有
+  未发现的 bug——如遇到这个情况，报告里只能写"本轮未取到"，不能写"该件无引证关系"。
+- **明确不支持**：法律状态（是否有效/同族/价值度）——这是设计上的边界，不是待修的 bug。
+
 中继（`tavily`）通道取回的是同一公开页面，但经过第三方转换：报告必须写明 `relay` provenance，
 关键引用建议加 `--save-pdf` 留 PDF 字节证据；`gp_pipeline.py` 的 `score` 只是排序分，
 `citations.draft.json` 只是核验骨架，二者都不是检索或比对结论。
