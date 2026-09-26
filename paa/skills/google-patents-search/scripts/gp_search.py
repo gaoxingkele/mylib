@@ -62,6 +62,11 @@ def _finish(args, hits, backend, attempts, url) -> int:
         return EXIT_OK
     if blocked:
         return EXIT_BLOCKED
+    # 区分"服务端错误"与"确实没命中"：前者退出码 5，后者 4，
+    # 否则调用方会把一次 500 误当成"没有现有技术"。
+    if any(a.get("error") for a in attempts):
+        note("all backends errored (see attempts[])")
+        return EXIT_RUNTIME
     hint("zero hits: check query syntax (references/query_syntax.md), then widen axes")
     return EXIT_EMPTY
 

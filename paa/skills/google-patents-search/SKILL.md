@@ -44,6 +44,11 @@ Google 对非浏览器客户端的拦截很激进。2026-09-26 在同一台机�
 | `patentscope` | WIPO PATENTSCOPE 官方库，免 key，覆盖 CN；默认兜底 | 否 |
 | `bigquery` | Google 官方专利数据集（著录项/摘要/可得权利要求） | GCP 项目凭据 |
 
+**想"更深入"用 Google Patents，就得走 BigQuery**（Google 唯一的官方程序化入口）：
+SQL 直查约 1 亿+ 公开文本、权利要求全文、CPC/日期/国别过滤，以及
+`google_patents_research.publications.embedding_v1` 的**向量语义近邻检索**（incoPat 语义检索的免费等价物）。
+开通方式（含**免信用卡的沙盒**）与成本控制见 `references/gcp_bigquery_setup.md`。
+
 `--backend auto`（默认）先试 google；被拦则自动改走 patentscope，并在输出的 `attempts`
 里记录两次尝试——**绝不把"被拦"写成"0 命中"**。
 
@@ -72,6 +77,12 @@ python "$P/gp_search.py" --query 'graphene eye mask country=CN' \
 # 1b) 明确指定后端
 python "$P/gp_search.py" --query 'EN_ALLTXT:(石墨烯 眼罩) AND CTR:(CN)' --backend patentscope
 python "$P/gp_search.py" --query '石墨烯 眼罩 country=CN' --backend google
+
+# 1c) 走 Google 官方数据集（需 GCP 凭据；先 probe 自检）
+python "$P/gp_bigquery.py" probe
+python "$P/gp_bigquery.py" lookup CN210644322U --out evidence/bq/CN210644322U.json
+python "$P/gp_bigquery.py" search --keyword 石墨烯 --keyword 眼罩 --country CN --cpc A61F --max-gb 50
+python "$P/gp_bigquery.py" similar CN210644322U --country China --limit 20 --max-gb 20   # 语义近邻
 
 # 2) 取候选原文（核验腿）
 python "$P/gp_fetch.py" CN210644322U --backend google --out evidence/gp \

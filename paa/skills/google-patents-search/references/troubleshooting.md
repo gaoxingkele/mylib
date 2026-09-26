@@ -25,7 +25,11 @@ Google 侧的可用程序化通道是 **BigQuery**（需 GCP 凭据）与 **pate
    被拦时明确返回 `blocked_by_google`，**不**伪装成"0 命中"。
 2. `patentscope` —— WIPO 官方库，**免 key、免浏览器**，本机实测可用，覆盖 CN；作为默认兜底。
 3. `bigquery` —— Google 官方专利数据集（`patents-public-data`），真正的官方 API 通道，
-   需要 GCP 项目与凭据；未安装/未登录时给出明确前置条件。
+   需要 GCP 项目与凭据；未安装/未登录时给出明确前置条件。**这是"更深入使用 Google Patents"的唯一正路**：
+   SQL 直查约 1 亿+ 公开文本 + 权利要求全文 + CPC/日期/国别过滤 + 向量语义近邻；
+   开通（含**免信用卡沙盒**）与成本控制见 `gcp_bigquery_setup.md`。
+   所有 BigQuery 查询都先干跑估算扫描量，`gp_bigquery.py` 的 `--max-gb` 超限即拒绝执行，
+   避免误烧每月 1 TiB 免费额度。
 
 ## 2. 怎么选后端
 

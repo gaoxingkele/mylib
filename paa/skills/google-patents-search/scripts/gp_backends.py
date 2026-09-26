@@ -187,16 +187,30 @@ def parse_patentscope_results(html: str) -> list[dict]:
     return hits
 
 
-def patentscope_search(query: str, timeout: int = 45) -> dict:
-    s = _session()
-    try:
-        r = s.get(f"{PS}/result.jsf", params={"query": query}, timeout=timeout)
-    except Exception as exc:  # noqa: BLE001
-        return {"blocked": False, "error": f"network_error:{type(exc).__name__}", "hits": []}
-    if r.status_code != 200:
-        return {"blocked": False, "error": f"http_{r.status_code}", "hits": [], "url": str(r.url)}
-    hits = parse_patentscope_results(r.text)
-    return {"blocked": False, "hits": hits, "url": str(r.url), "count": len(hits)}
+def patentscope_search(query: str, timeout: int = 45, retries: int = 2) -> dict:
+    """PATENTSCOPE 检索。该站偶发 5xx（实测遇到 http_500），故对 5xx 做退避重试。"""
+    import time as _t
+    last = None
+    for attempt in range(retries + 1):
+        s = _session()
+        try:
+            r = s.get(f"{PS}/result.jsf", params={"query": query}, timeout=timeout)
+        except Exception as exc:  # noqa: BLE001
+            last = {"blocked": False, "error": f"network_error:{type(exc).__name__}", "hits": []}
+        else:
+            if r.status_code == 200:
+                hits = parse_patentscope_results(r.text)
+                res = {"blocked": False, "hits": hits, "url": str(r.url), "count": len(hits)}
+                if attempt:
+                    res["retried"] = attempt
+                return res
+            last = {"blocked": False, "error": f"http_{r.status_code}", "hits": [],
+                    "url": str(r.url), "status": r.status_code}
+            if r.status_code < 500:
+                return last
+        if attempt < retries:
+            _t.sleep(3 * (attempt + 1))
+    return last or {"blocked": False, "error": "unknown", "hits": []}
 
 
 def patentscope_fetch(doc_id: str, timeout: int = 45) -> dict:
@@ -233,47 +247,216 @@ def patentscope_fetch(doc_id: str, timeout: int = 45) -> dict:
     return {"blocked": False, "doc": doc, "html": html}
 
 
-# ---------------------------------------------------------------- Google BigQuery（官方通道）
+# ---------------------------------------------------------------- Google BigQuery（Google 官方通道）
+#
+# 表结构依据官方示例仓库 google/patents-public-data 核实（2026-09-26）：
+#   patents-public-data.patents.publications
+#     publication_number, country_code, priority_date(yyyymmdd), publication_date(yyyymmdd),
+#     title_localized, abstract_localized, claims_localized（REPEATED RECORD: language/text）,
+#     cpc（REPEATED RECORD: code）, assignee, inventor, citation …
+#   patents-public-data.google_patents_research.publications
+#     publication_number, country, top_terms, embedding_v1（向量，可做 cosine 相似检索）
+
+PUBLIC_TABLE = "patents-public-data.patents.publications"
+RESEARCH_TABLE = "patents-public-data.google_patents_research.publications"
+
+
+def _bq_client():
+    """返回 (client, error_dict)。"""
+    try:
+        from google.cloud import bigquery
+    except ImportError:
+        return None, {"error": "bigquery_sdk_missing",
+                      "remedy": "pip install google-cloud-bigquery db-dtypes"}
+    try:
+        return bigquery.Client(), None
+    except Exception as exc:  # noqa: BLE001
+        return None, {"error": "bigquery_credentials_missing", "detail": type(exc).__name__,
+                      "remedy": "gcloud auth application-default login，或设置 "
+                                "GOOGLE_APPLICATION_CREDENTIALS 指向服务账号 JSON"}
+
 
 def bigquery_probe() -> dict:
     """检查官方 Google Patents BigQuery 通道的前置条件（不发查询）。"""
-    info = {"backend": "bigquery", "dataset": "patents-public-data.patents.publications"}
-    try:
-        import google.cloud.bigquery  # noqa: F401
-        info["installed"] = True
-    except ImportError:
-        info["installed"] = False
-        info["remedy"] = "pip install google-cloud-bigquery db-dtypes"
+    info = {"backend": "bigquery", "dataset": PUBLIC_TABLE,
+            "research_dataset": RESEARCH_TABLE}
+    client, err = _bq_client()
+    if err:
+        info.update(err)
+        info["installed"] = err["error"] != "bigquery_sdk_missing"
         return info
-    try:
-        from google.cloud import bigquery
-        client = bigquery.Client()
-        info["project"] = client.project
-        info["credentials"] = "ok"
-    except Exception as exc:  # noqa: BLE001
-        info["credentials"] = f"missing:{type(exc).__name__}"
-        info["remedy"] = ("需要 GCP 项目与凭据：gcloud auth application-default login，"
-                          "或设置 GOOGLE_APPLICATION_CREDENTIALS 指向服务账号 JSON")
+    info.update({"installed": True, "credentials": "ok", "project": client.project})
     return info
 
 
-def bigquery_lookup(pn: str, timeout: int = 120) -> dict:
-    """按公开号取官方数据集条目（著录项 + 摘要 + 可得权利要求）。"""
-    try:
-        from google.cloud import bigquery
-    except ImportError:
-        return {"error": "bigquery_sdk_missing",
-                "remedy": "pip install google-cloud-bigquery db-dtypes"}
-    try:
-        client = bigquery.Client()
-    except Exception as exc:  # noqa: BLE001
-        return {"error": "bigquery_credentials_missing", "detail": type(exc).__name__,
-                "remedy": "gcloud auth application-default login"}
-    sql = ("SELECT publication_number, country_code, publication_date, title_localized, "
-           "assignee, inventor, abstract_localized, claims_localized "
-           "FROM `patents-public-data.patents.publications` "
-           "WHERE publication_number = @pn LIMIT 1")
-    job = bigquery.QueryJobConfig(query_parameters=[
-        bigquery.ScalarQueryParameter("pn", "STRING", pn)])
-    rows = [dict(r) for r in client.query(sql, job_config=job, timeout=timeout).result()]
-    return {"pub_number": pn, "rows": rows}
+def bigquery_dry_run(sql: str, params: list | None = None) -> dict:
+    """干跑：只报预计扫描字节数，不计费。预算控制的第一步。"""
+    client, err = _bq_client()
+    if err:
+        return err
+    from google.cloud import bigquery
+    cfg = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False,
+                                  query_parameters=params or [])
+    job = client.query(sql, job_config=cfg)
+    gb = (job.total_bytes_processed or 0) / 1e9
+    return {"dry_run": True, "total_bytes_processed": job.total_bytes_processed,
+            "estimate_gb": round(gb, 3),
+            "free_tier_gb_per_month": 1000,
+            "within_free_tier_single_query": gb <= 1000}
+
+
+def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dict:
+    """按公开号从官方数据集取著录项 + 权利要求全文。"""
+    client, err = _bq_client()
+    if err:
+        return err
+    from google.cloud import bigquery
+    sql = (
+        "SELECT publication_number, country_code, publication_date, priority_date, "
+        "title_localized, abstract_localized, claims_localized, cpc, assignee, inventor "
+        f"FROM `{PUBLIC_TABLE}` WHERE publication_number = @pn LIMIT 1"
+    )
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn)]
+    est = bigquery_dry_run(sql, params)
+    rows = [dict(r) for r in client.query(
+        sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
+        timeout=timeout).result()]
+    return {"pub_number": pn, "rows": rows, "estimate": est}
+
+
+def bigquery_normalize_row(row: dict, lang: str | None = None) -> dict:
+    """把 BigQuery 行转成本 skill 统一的 doc 结构（含公开日 ISO 化与权利要求切分）。"""
+    def pick(localized, want):
+        """localized 是 [{language, text}, …]；按期望语言优先取，其次 en，最后第一个。"""
+        if isinstance(localized, str):
+            return localized
+        if not localized:
+            return ""
+        want = want or ""
+        for item in localized:
+            if (item.get("language") or "") == want and item.get("text"):
+                return item["text"]
+        for item in localized:
+            if (item.get("language") or "") == "en" and item.get("text"):
+                return item["text"]
+        return (localized[0].get("text") or "")
+
+    country = (row.get("country_code") or "").upper()
+    want = lang or ("zh" if country == "CN" else "en")
+    pub = row.get("publication_date")
+    iso = ""
+    if isinstance(pub, int) and pub > 10000000:
+        s = str(pub)
+        iso = f"{s[:4]}-{s[4:6]}-{s[6:8]}"
+    claim_text = pick(row.get("claims_localized"), want)
+    claims = []
+    if claim_text:
+        parts = re.split(r"(?m)^\s*(\d{1,3})\s*[.、]\s*", claim_text)
+        if len(parts) > 2:
+            for i in range(1, len(parts) - 1, 2):
+                claims.append({"claim_no": int(parts[i]), "text": parts[i + 1].strip()})
+        else:
+            for i, line in enumerate([l for l in claim_text.split("\n") if l.strip()], 1):
+                claims.append({"claim_no": i, "text": line.strip()})
+    cpc = row.get("cpc") or []
+    codes = [c.get("code", "") for c in cpc] if isinstance(cpc, list) else []
+    return {
+        "pub_number": row.get("publication_number") or "",
+        "country": country,
+        "title": (pick(row.get("title_localized"), want) or "")[:300],
+        "publication_date": iso,
+        "priority_date": str(row.get("priority_date") or ""),
+        "abstract": pick(row.get("abstract_localized"), want),
+        "claims": claims,
+        "claim_count": len(claims),
+        "description": "",
+        "description_chars": 0,
+        "cpc": codes[:12],
+        "assignee": row.get("assignee") or "",
+        "inventor": row.get("inventor") or "",
+        "source": "google_patents_bigquery",
+        "backend": "bigquery",
+        "evidence_level": "original-text" if claims else "metadata-only",
+    }
+
+
+def bigquery_search(keywords: list[str], country: str | None = None,
+                    cpc_prefix: str | None = None, after_priority: str | None = None,
+                    before_priority: str | None = None, limit: int = 20,
+                    timeout: int = 180) -> dict:
+    """关键词/CPC/国别/日期条件检索官方数据集（廉价路径：只用可过滤字段）。
+
+    ``after_priority``/``before_priority`` 形如 ``2015-01-01``（转成 yyyymmdd 整数比较）。
+    """
+    client, err = _bq_client()
+    if err:
+        return err
+    from google.cloud import bigquery
+    where, params = [], []
+    for i, kw in enumerate(keywords or []):
+        p = f"kw{i}"
+        where.append(f"(EXISTS (SELECT 1 FROM UNNEST(title_localized) t WHERE LOWER(t.text) LIKE @{p}) "
+                     f"OR EXISTS (SELECT 1 FROM UNNEST(abstract_localized) a WHERE LOWER(a.text) LIKE @{p}))")
+        params.append(bigquery.ScalarQueryParameter(p, "STRING", f"%{kw.lower()}%"))
+    if country:
+        where.append("country_code = @cc")
+        params.append(bigquery.ScalarQueryParameter("cc", "STRING", country.upper()))
+    if cpc_prefix:
+        where.append("EXISTS (SELECT 1 FROM UNNEST(cpc) c WHERE STARTS_WITH(c.code, @cpc))")
+        params.append(bigquery.ScalarQueryParameter("cpc", "STRING", cpc_prefix.upper()))
+    if after_priority:
+        where.append("priority_date >= @ap")
+        params.append(bigquery.ScalarQueryParameter(
+            "ap", "INT64", int(after_priority.replace("-", "")) * 10000))
+    if before_priority:
+        where.append("priority_date <= @bp")
+        params.append(bigquery.ScalarQueryParameter(
+            "bp", "INT64", int(before_priority.replace("-", "")) * 10000))
+    sql = ("SELECT publication_number, country_code, publication_date, priority_date, "
+           "title_localized, assignee "
+           f"FROM `{PUBLIC_TABLE}` "
+           + ("WHERE " + " AND ".join(where) if where else "")
+           + " ORDER BY priority_date DESC LIMIT @lim")
+    params.append(bigquery.ScalarQueryParameter("lim", "INT64", int(limit)))
+    est = bigquery_dry_run(sql, params)
+    rows = [bigquery_normalize_row(dict(r)) for r in client.query(
+        sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
+        timeout=timeout).result()]
+    return {"hits": rows, "estimate": est, "count": len(rows)}
+
+
+def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
+                     max_gb: float = 20.0, timeout: int = 300) -> dict:
+    """**语义近邻检索**：以某件专利的向量为种子，在官方研究子集里找最相似的公开。
+
+    这是 incoPat 语义检索的免费等价物（用 Google 官方数据集的 ``embedding_v1``）。
+    整表扫描代价高，故先干跑估算，超过 ``max_gb`` 直接拒绝执行。
+    """
+    client, err = _bq_client()
+    if err:
+        return err
+    from google.cloud import bigquery
+    where = "gpr.publication_number != @pn"
+    if country:
+        where += " AND gpr.country = @cc"
+    sql = (
+        "WITH seed AS (SELECT embedding_v1 FROM `" + RESEARCH_TABLE + "` "
+        "WHERE publication_number = @pn LIMIT 1) "
+        "SELECT gpr.publication_number, gpr.country, gpr.top_terms, "
+        "cosine_distance(gpr.embedding_v1, seed.embedding_v1) AS distance "
+        f"FROM `{RESEARCH_TABLE}` gpr, seed WHERE {where} "
+        "ORDER BY distance LIMIT @lim"
+    )
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn),
+              bigquery.ScalarQueryParameter("lim", "INT64", int(limit))]
+    if country:
+        params.append(bigquery.ScalarQueryParameter("cc", "STRING", country))
+    est = bigquery_dry_run(sql, params)
+    if est.get("estimate_gb", 0) > max_gb:
+        return {"error": "estimate_over_budget", "estimate": est,
+                "remedy": f"预计扫描 {est.get('estimate_gb')} GB > --max-gb {max_gb}；"
+                          "请加 country 过滤或提高预算上限"}
+    rows = [dict(r) for r in client.query(
+        sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
+        timeout=timeout).result()]
+    return {"seed": pn, "hits": rows, "estimate": est, "count": len(rows)}

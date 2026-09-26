@@ -42,6 +42,7 @@ from gp_common import (  # noqa: E402
 )
 
 EXIT_OK, EXIT_ARGS, EXIT_BLOCKED, EXIT_METADATA_ONLY, EXIT_RUNTIME = 0, 2, 3, 4, 5
+EXIT_EMPTY = 4          # 与 EXIT_METADATA_ONLY 同码：都是"没拿到可引用的原文"
 
 
 def canonical_text(doc: dict) -> str:
@@ -198,30 +199,9 @@ def main(argv=None) -> int:
             if not rows:
                 emit("GP_DOC_JSON", {"ok": False, "backend": "bigquery", "pub_number": pn,
                                      "error": "not_found"})
-                return EXIT_EMPTY_RESULT()
-            r0 = rows[0]
-            claims = []
-            cl = r0.get("claims_localized")
-            if isinstance(cl, list) and cl:
-                txt = cl[0] if isinstance(cl[0], str) else cl[0].get("text", "")
-                for i, part in enumerate([p for p in str(txt).split("\n") if p.strip()][:200], 1):
-                    claims.append({"claim_no": i, "text": part.strip()})
-            ab = r0.get("abstract_localized")
-            doc = {
-                "pub_number": normalize_pub(r0.get("publication_number") or pn),
-                "title": (r0.get("title_localized") or "")[:300],
-                "publication_date": r0.get("publication_date") or "",
-                "assignee": r0.get("assignee") or "",
-                "inventor": r0.get("inventor") or "",
-                "abstract": (ab[0] if isinstance(ab, list) and ab else ab) or "",
-                "claims": claims,
-                "claim_count": len(claims),
-                "description": "",
-                "description_chars": 0,
-                "source": "google_patents_bigquery",
-                "backend": "bigquery",
-                "evidence_level": "original-text" if claims else "metadata-only",
-            }
+                return EXIT_EMPTY
+            doc = bk.bigquery_normalize_row(rows[0], lang=args.lang)
+            doc["estimate"] = res.get("estimate")
             return finish(args, doc, "", f"bigquery://patents-public-data/{pn}", "bigquery")
 
         if not pn:
@@ -246,11 +226,5 @@ def main(argv=None) -> int:
         note(f"runtime error {type(exc).__name__}")
         emit("GP_DOC_JSON", {"ok": False, "error": f"{type(exc).__name__}: {exc}"})
         return EXIT_RUNTIME
-
-
-def EXIT_EMPTY_RESULT() -> int:
-    return 4
-
-
 if __name__ == "__main__":
     raise SystemExit(main())
