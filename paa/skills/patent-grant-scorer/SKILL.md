@@ -30,6 +30,8 @@ metadata:
 - **禁止为了提分编造机制。** 新增状态、CAS、哈希、锁、凭证、父链、阈值或实验数据必须有申请日前材料；否则标记`needs-confirmation`并阻断正式写入。
 - **输出只到人工复核。** 高分最多表示“进入代理师复核”；不得输出“保证授权”或“建议直接提交”。
 - **OA 答复预案与禁止反悔风险评估引用 `paa/references/oa-response-playbook.md`。** 公知常识第二作用反驳、协同效应论证、禁止反悔管理是评分中的可救济性加分项。
+- **独权收窄类整改必须实测，不凭直觉判断"更精简=分数更好"。** 收窄前后都跑一次量化门禁（Jev 或本评分器）对照，数据不支持就用 git 精确回退到收窄前版本，不要因为"已经做完"而将就；完整流程见
+  [references/claim-narrowing-empirical-loop.md](../../references/claim-narrowing-empirical-loop.md)（P06-4/P06-5 实战蒸馏）。
 
 完整证据等级、检索纪律、创造性攻击和整改规则见
 [references/evidence-review-protocol.md](references/evidence-review-protocol.md)。
