@@ -192,18 +192,30 @@ def parse_patentscope_results(html: str) -> list[dict]:
     return hits
 
 
+_NON_ASCII_RE = re.compile(r"[^\x00-\x7f]")
+
+
 def patentscope_query_variants(query: str, country: str | None = None) -> tuple:
     """把检索式归一化成 PATENTSCOPE 可用的形式，返回 (候选检索式列表, 国别)。
 
-    实测（2026-09-26）：
+    实测（2026-09-26，两轮）：
 
-    * 裸检索式 ``配电变压器 故障诊断`` 直接提交 → **0 命中**，必须带字段算子；
-    * ``EN_ALLTXT:(配电变压器 故障诊断)`` → 10 命中，而把 4 个词空格相连做 AND → 0 命中；
+    第一轮误判：``EN_ALLTXT:(配电变压器 故障诊断)`` 表面看"10 命中"，曾被当作中文可用的证据；
+    第二轮用真实案件的中文查询词复测发现，``EN_ALLTXT`` 是**英文机器翻译全文字段**，塞中文进去
+    命中与否、相关与否都不稳定——同一天另外两组中文查询（``大模型 评测 缓存``、``题目版本 依赖
+    失效 重算``）用 ``EN_ALLTXT`` 返回的候选与检索词毫无关系（私域直播间热点预测、堰塞湖灾害
+    防治……）。对照测试 ``FP:(大模型 评测 缓存)``（Front Page：标题/摘要/申请人等前页字段，
+    覆盖各文献原始语言，非机翻）——同一组中文词直接命中"大模型集群分流""KV缓存管理""大语言
+    模型键值缓存安全检测"等真正相关的title；再用 ``FP:(物化视图 增量刷新)`` 复测同样精准命中
+    多篇物化视图增量刷新专利。结论：**中文查询式必须用 FP，不能用 EN_ALLTXT**；纯英文查询式
+    两者都可，仍用 EN_ALLTXT（已验证对英文词精确）。
+
+    * 裸检索式（无字段算子）直接提交 → 0 命中，必须带字段算子；
     * 用户常按 Google 语法写 ``graphene eye mask country=CN``，该库不认 ``country=``。
 
-    因此：抽掉 ``country=``/``ctr=`` 作为国别；已带字段算子的原样放行；
-    否则包成 ``EN_ALLTXT:(…)``，并在词数 >2 时追加"仅留最长两词""仅留最长一词"两个收窄候选，
-    由调用方逐个试、命中即停。
+    因此：抽掉 ``country=``/``ctr=`` 作为国别；已带字段算子的原样放行；否则按查询式是否含
+    非 ASCII 字符选字段（含中文/日文/韩文等 → ``FP``，纯英文/数字 → ``EN_ALLTXT``），
+    并在词数 >2 时追加"仅留最长两词""仅留最长一词"两个收窄候选，由调用方逐个试、命中即停。
     """
     q = (query or "").strip()
     m = re.search(r"\b(?:country|ctr|pn)\s*=\s*([A-Za-z]{2})\b", q)
@@ -216,11 +228,12 @@ def patentscope_query_variants(query: str, country: str | None = None) -> tuple:
     toks = [t for t in re.split(r"[\s,，、;；]+", q) if t]
     if not toks:
         return [], country
-    out = [f"EN_ALLTXT:({' '.join(toks)}){suffix}"]
+    field = "FP" if _NON_ASCII_RE.search(q) else "EN_ALLTXT"
+    out = [f"{field}:({' '.join(toks)}){suffix}"]
     if len(toks) > 2:
         srt = sorted(toks, key=len, reverse=True)
-        out.append(f"EN_ALLTXT:({' '.join(srt[:2])}){suffix}")
-        out.append(f"EN_ALLTXT:({srt[0]}){suffix}")
+        out.append(f"{field}:({' '.join(srt[:2])}){suffix}")
+        out.append(f"{field}:({srt[0]}){suffix}")
     return out, country
 
 
