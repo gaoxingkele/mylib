@@ -49,8 +49,10 @@ def _finish(args, hits, backend, attempts, url) -> int:
     payload = {
         "ok": bool(hits), "blocked": blocked, "backend": backend,
         "attempts": attempts, "url": url, "query": args.query,
-        "query_used": next((a.get("query_used") for a in reversed(attempts)
-                            if a.get("query_used")), None),
+        # 只取「真正给出这次命中结果」的后端的检索式；否则会把上一个失败后端的归一化式误当生效式
+        "query_used": next((a.get("query_used") for a in attempts
+                            if a.get("backend") == backend and a.get("query_used")),
+                           args.query if backend == "tavily" else None),
         "retrieved_at": now_iso(), "count": len(hits), "hits": hits,
         "evidence_level": "snippet-degraded",
         "next_step": "对候选逐件 gp_fetch.py 取原文，再 gp_verify.py 核验后才可引用",
