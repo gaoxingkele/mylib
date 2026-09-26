@@ -17,6 +17,7 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
 |---|---|
 | PAA artifact structure, gates, seals, validation | `paa/SKILL.md`, then the directly named file under `paa/references/` |
 | incoPat search/API/permissions | `paa/skills/incopat-search/SKILL.md` |
+| Free patent search + original-text verification (no key) | `paa/skills/google-patents-search/SKILL.md` |
 | AHP/SEM grant score | `paa/skills/patent-grant-scorer/SKILL.md` |
 | CNIPA drafting workflow | `paa/skills/cnipa-drafting-workflow/SKILL.md` |
 | Patent disclosure extraction | `paa/skills/patent-disclosure-skill/SKILL.md` |
@@ -29,7 +30,12 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
 
 ## Retrieval policy
 
-- Patent leg: incoPat API first (real data, no fabricated pn).
+- Patent leg: incoPat API first (real data, no fabricated pn). **When incoPat is unavailable
+  (expired test authorization / interface not in scope / quota 429) or a second independent
+  re-search axis is needed, use `paa/skills/google-patents-search/SKILL.md`** — free, no key.
+  That skill also owns the *original-text* gate: `gp_fetch.py` upgrades a hit to
+  `evidence_level=original-text`, and `gp_verify.py` must return `all_verified=true` before any
+  publication is quoted as X/Y/A prior art.
 - NPL leg: route via `paa/skills/npl-prior-art-search/SKILL.md` — multi-source
   sweep by default, Chinese/CCF via academic-search, deep scans via
   paper-search-pro, citation tracing via scholar-search/openalexcli.
