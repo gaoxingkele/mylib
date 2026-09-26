@@ -1,6 +1,12 @@
-# Google Patents 免费检索 / 核验 skill 的依赖
-# 只需要 Playwright 一个第三方包；无任何 API key。
-playwright>=1.40
+# 免费专利检索 / 核验 skill 的依赖。**不使用浏览器自动化，无需任何 API key。**
+#
+# 必需：curl_cffi —— 以 Chrome 的 TLS/HTTP2 指纹发请求。
+#   实测普通 requests 与无头浏览器都会拿到 Google 的 "Sorry… automated queries" 页，
+#   而 curl_cffi 在多数网络下可正常取数（本机出口被 Google 判定可疑时仍会 503，此时如实上报）。
+curl_cffi>=0.5
 
-# 首次安装后需下载浏览器内核（也可复用系统 Chrome）：
-#   python -m playwright install chromium
+# 可选：官方 Google Patents 数据集（BigQuery）通道。装了并且有 GCP 凭据时会自动可用。
+#   pip install google-cloud-bigquery db-dtypes
+#   （凭据：gcloud auth application-default login 或 GOOGLE_APPLICATION_CREDENTIALS）
+# google-cloud-bigquery>=3.11
+# db-dtypes>=1.2

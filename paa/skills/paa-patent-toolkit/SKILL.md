@@ -33,6 +33,9 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
 - Patent leg: incoPat API first (real data, no fabricated pn). **When incoPat is unavailable
   (expired test authorization / interface not in scope / quota 429) or a second independent
   re-search axis is needed, use `paa/skills/google-patents-search/SKILL.md`** — free, no key.
+  That skill is **HTTP/API only (never browser automation)**: backend `google` (site JSON via
+  curl_cffi), `patentscope` (WIPO official, keyless fallback), `bigquery`
+  (`patents-public-data`, Google's official programmatic route, needs GCP credentials).
   That skill also owns the *original-text* gate: `gp_fetch.py` upgrades a hit to
   `evidence_level=original-text`, and `gp_verify.py` must return `all_verified=true` before any
   publication is quoted as X/Y/A prior art.

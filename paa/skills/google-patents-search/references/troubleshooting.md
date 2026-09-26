@@ -1,63 +1,82 @@
-# 取数路线与故障排查（2026-09-26 实测）
+# 取数通道与故障排查（2026-09-26 实测，全部为 HTTP 客户端，不使用浏览器自动化）
 
-## 1. 实测结论：为什么必须走"真实浏览器"
+## 1. 实测结论：Google Patents 没有免费公开 REST API
 
-同一天、同一台机器、同一网络下逐条实测：
+Google 对 `patents.google.com` **不提供**面向公众的免费 REST API。可程序化取数的通道有三类，
+本轮逐一实测（同一台机器、同一出口 IP）：
 
-| 取数方式 | 结果 |
-| --- | --- |
-| `python requests` → `/xhr/query`（站点检索用的内部接口） | **503**，返回 Google "Sorry… automated queries" 页 |
-| `python requests` → `/patent/<PN>/<lang>`（单件说明书页） | **503**，同上 |
-| Playwright 自带 chromium **无头** | **503**，同上 |
-| Playwright 自带 chromium **有头** | 仍可能被拦（视网络信誉） |
-| **用户真实 Chrome（Playwright MCP / 扩展会话）** | ✅ 正常：结果页 10 条/页，单件页可取 `#claims`（实测 22 项）与 `#description`（实测 51k 字符） |
-| Playwright `connect_over_cdp` 挂到带调试端口的 Chrome | ✅ 管路已验证（复用真实 profile 即可复用会话） |
+| 通道 | 结果 | 说明 |
+| --- | --- | --- |
+| 站点内部 JSON 接口 `patents.google.com/xhr/query`（网站自身在用） | **503** "Sorry… automated queries" | `requests` 直连被拦 |
+| 同一接口换 **curl_cffi（Chrome TLS/HTTP2 指纹，chrome124/131/136、safari18）** | **503** | 说明拦截不是单纯 UA 问题 |
+| 站点首页 `patents.google.com/`（HTTP 客户端） | **503** | 连首页都不给非浏览器客户端 |
+| 公共 CORS 代理（allorigins）转发同页 | **200 但内容是 Google 的 Sorry 页** | 代理出口同样被拦 |
+| Jina Reader（服务端渲染）转发 | **403 Cloudflare** | 需要 key/浏览器 |
+| **官方通道：BigQuery `patents-public-data`** | `bigquery.googleapis.com` **401**（可达，缺凭据） | 这才是 Google 官方程序化入口 |
+| **`patentimages.storage.googleapis.com`（附图/PDF 存储）** | **200**，能直接下到 422KB 真 PDF | 只要知道带哈希的 PDF 路径即可绕过前面所有限制 |
+| WIPO **PATENTSCOPE**（官方库，免 key） | **200**：检索页 228KB、详情页 41KB | 覆盖 CN，本机可用 ✅ |
+| Espacenet / Justia / PatentsView 旧接口 | 403 / 403 / 重定向到官网 | 需要 key 或已停用 |
 
-**结论**：Google 的拦截是**会话/信誉级**的，不是 UA 级。绕过方式不是伪造请求头，而是**用真实浏览器会话**。
-因此本 skill 的默认路线是 `--route auto`：先试 CDP，失败才降级无头，且降级后被拦时**明确报错**
-（退出码 3 + `GP_BLOCKED: google_anti_bot`），绝不静默返回 0 条。
+**结论**：本机（出口被 Google 判定为可疑）**无法**用纯 HTTP 拿到 Google Patents 站点数据；
+Google 侧的可用程序化通道是 **BigQuery**（需 GCP 凭据）与 **patentimages 存储**（需 PDF 路径）。
+因此本 skill 的后端策略是：
 
-## 2. 三条路线怎么选
+1. `google` —— 站点 JSON 接口（curl_cffi）。在**不被 Google 拦的网络**上这是最直接的通道；
+   被拦时明确返回 `blocked_by_google`，**不**伪装成"0 命中"。
+2. `patentscope` —— WIPO 官方库，**免 key、免浏览器**，本机实测可用，覆盖 CN；作为默认兜底。
+3. `bigquery` —— Google 官方专利数据集（`patents-public-data`），真正的官方 API 通道，
+   需要 GCP 项目与凭据；未安装/未登录时给出明确前置条件。
+
+## 2. 怎么选后端
 
 ```bash
-# 路线 A（推荐，可脚本化）：让 Chrome 带调试端口启动一次
-& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
-python gp_search.py --query '石墨烯 眼罩 country=CN' --cdp 9222
-python gp_fetch.py CN103399241B --cdp 9222 --out evidence/gp
+# 默认 auto：先试 google，被拦则自动改走 patentscope，并在 attempts 里记录两次尝试
+python gp_search.py --query 'graphene eye mask country=CN' --out hits.json --audit audit.jsonl
 
-# 路线 B（推荐，人工在场时最稳）：MCP 浏览器工具
-python gp_search.py --query '石墨烯 眼罩 country=CN' --print-url     # 取 URL
-#   → browser_navigate 到该 URL
-#   → browser_run_code_unsafe filename=scripts/gp_parse_current_search.js
-#
-# 路线 C：离线复算（把上一次的 HTML 拿来解析，可回归测试）
-python gp_search.py --html tmp/gp/result.html
+# 明确指定
+python gp_search.py --query 'EN_ALLTXT:(石墨烯 眼罩) AND CTR:(CN)' --backend patentscope
+python gp_search.py --query '石墨烯 眼罩 country=CN' --backend google
+
+# 有 GCP 凭据时，用官方数据集核验著录项/摘要
+python gp_fetch.py CN210644322U --backend bigquery --out evidence/bq
+
+# 取 WIPO 详情（docId 用 gp_search 输出里的 doc_id）
+python gp_fetch.py --doc-id CN241725947 --backend patentscope --out evidence/ps
 ```
 
 ## 3. 症状 → 处置
 
 | 症状 | 判定 | 处置 |
 | --- | --- | --- |
-| 屏幕/HTML 出现 "Sorry… automated queries" | `GP_BLOCKED: google_anti_bot` | 换路线 A/B；不要在无头下反复重试（会加重拦截） |
-| 结果页 0 条但页面正常 | 检索式问题 | 按 `query_syntax.md` 逐项放宽：去 `CL=`/`CPC=` 限定、改 `country=`、减词 |
-| 单件页无 `#claims` | 该公开号只有著录项或尚未公开全文 | 试同族其他成员、试 `zh`/`en` 另一语言路径，或改用 incoPat/官方渠道 |
-| `--html` 解析出 0 条 | HTML 是重定向页/被拦页 | 用 `--save-html`（实时路线）保存原始 HTML 再离线复算 |
-| CDP 连不上 | Chrome 未开调试端口/端口占用 | 确认 `--remote-debugging-port=9222` 且该实例未崩溃；`curl http://127.0.0.1:9222/json/version` 自检 |
+| `GP_BLOCKED: google_anti_bot` | Google 拦下该出口的 HTTP 客户端 | 交由 auto 走 patentscope；或用 `--backend bigquery`（需凭据）；**不要**为此引入浏览器自动化 |
+| `curl_cffi 未安装` | 依赖缺失 | `pip install curl_cffi` |
+| 结果页 0 条但请求成功 | 检索式问题 | 按 `query_syntax.md` 放宽：去 `CL=`/`CPC=` 限定、改 `country=`、减词 |
+| patentscope 详情页无权利要求 | 该库详情页以著录项为主 | 用 `--backend google`（若网络允许）或 `--backend bigquery` 取权利要求 |
+| `bigquery_credentials_missing` | 无 GCP 凭据 | `gcloud auth application-default login`，或设 `GOOGLE_APPLICATION_CREDENTIALS` 指向服务账号 JSON |
+| `bigquery_sdk_missing` | 未装 SDK | `pip install google-cloud-bigquery db-dtypes` |
+| 单件页无 `#claims` | 该号无电子全文或只有 A 文献 | 换同族成员、试另一语言路径，或改用 BigQuery/官方渠道 |
 
 ## 4. 频率与礼貌抓取
 
-- 结果页与单件页之间**留 2–3 秒**间隔；批量取件时建议每 10 件停 20–30 秒；
-- 本 skill 不做并发抓取（`gp_fetch.py` 逐个顺序执行）；
-- 只要出现一次 `GP_BLOCKED`，本轮就应停止抓取并切换路线，不要循环重试。
+- 相邻请求留 2–3 秒；批量取件每 10 件停 20–30 秒；
+- 本 skill 不做并发抓取（逐件顺序执行）；
+- 出现一次 `GP_BLOCKED` 即切换后端，不要循环重试同一通道。
 
 ## 5. 与 incoPat 的关系（互补，不替代）
 
-| 维度 | incoPat（本仓首选） | google-patents-search（本 skill） |
+| 维度 | incoPat（本仓首选） | 本 skill |
 | --- | --- | --- |
 | 凭证 | 需要账号（测试账号授权 2026-08-31 已到期） | **无需 key** |
-| 中文库覆盖 | 中国库完整，支持语义检索/法律状态/同族/引证 | 覆盖广但**无法律状态**，中文全文以公开文本为准 |
-| 语义检索 | 有（整段技术方案 → 相似度） | 无（只有布尔/字段检索） |
-| 适合 | 法定检索、法律状态、价值度 | 免费候选发现 + 原文核验 + 与检索式互补的第二轮复检索 |
+| 中文库覆盖 | 中国库完整，支持语义检索/法律状态/同族/引证 | PATENTSCOPE 覆盖 CN 著录项；Google 通道取决于网络是否放行 |
+| 语义检索 | 有（整段技术方案 → 相似度） | 无（布尔/字段检索） |
+| 适合 | 法定检索、法律状态、价值度 | 免费候选发现 + 原文核验门禁 + 第二轮独立复检索 |
 
-两者条件都具备时：先用 incoPat 拿范围与法律状态，再用本 skill 做**第二轮独立复检索**（换轴检索），
-两边结果按公开号取并集后统一走 `gp_verify.py` 的核验门禁。
+两者都可用时：incoPat 定范围与法律状态，本 skill 做第二轴复检索与逐字核验，按公开号取并集后
+统一走 `gp_verify.py`。
+
+## 6. 边界（必须写进报告）
+
+- 本 skill **不是法定检索**，也不判断抵触申请；
+- `patentscope` 详情页**不保证**给权利要求全文，`evidence_level=metadata-only` 的条目**不得**作为对比文件引用；
+- Google 站点通道可用与否取决于出口网络，报告里应记录 `attempts`（哪条通道、是否被拦），
+  以便复核时区分"确实没有"与"取不到"。
