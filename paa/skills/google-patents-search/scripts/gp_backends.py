@@ -23,7 +23,7 @@ import os
 import re
 
 from gp_common import (  # noqa: E402
-    BASE, looks_blocked, normalize_pub, patent_url,
+    BASE, looks_blocked, normalize_pub, patent_url, split_pub,
 )
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -358,6 +358,20 @@ def bigquery_dry_run(sql: str, params: list | None = None) -> dict:
             "within_free_tier_single_query": gb <= 1000}
 
 
+def _bq_pub_number(pn: str) -> str:
+    """把规范化公开号转成 patents-public-data 实际存储的带分隔符形式。
+
+    该数据集的 ``publication_number`` 一律是 ``{国家}-{数字}-{种类码}``
+    （如 ``CN-117291184-A``），而本 skill 其余通道统一用无分隔符形式
+    （``CN117291184A``）。不做这层转换会导致 ``lookup``/``similar`` 对任何
+    真实存在的公开号都返回 not_found（2026-09-26 实测发现，含官方示例号）。
+    """
+    country, digits, kind = split_pub(pn)
+    if not country or not digits:
+        return pn
+    return f"{country}-{digits}-{kind}" if kind else f"{country}-{digits}"
+
+
 def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dict:
     """按公开号从官方数据集取著录项 + 权利要求全文。"""
     client, err = _bq_client()
@@ -369,7 +383,7 @@ def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dic
         "title_localized, abstract_localized, claims_localized, cpc, assignee, inventor "
         f"FROM `{PUBLIC_TABLE}` WHERE publication_number = @pn LIMIT 1"
     )
-    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn)]
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", _bq_pub_number(pn))]
     est = bigquery_dry_run(sql, params)
     rows = [dict(r) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
@@ -414,7 +428,7 @@ def bigquery_normalize_row(row: dict, lang: str | None = None) -> dict:
     cpc = row.get("cpc") or []
     codes = [c.get("code", "") for c in cpc] if isinstance(cpc, list) else []
     return {
-        "pub_number": row.get("publication_number") or "",
+        "pub_number": normalize_pub(row.get("publication_number") or ""),
         "country": country,
         "title": (pick(row.get("title_localized"), want) or "")[:300],
         "publication_date": iso,
@@ -489,18 +503,19 @@ def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
     if err:
         return err
     from google.cloud import bigquery
-    where = "gpr.publication_number != @pn"
+    where = ("gpr.publication_number != @pn AND gpr.embedding_v1 IS NOT NULL "
+              "AND ARRAY_LENGTH(gpr.embedding_v1) = ARRAY_LENGTH(seed.embedding_v1)")
     if country:
         where += " AND gpr.country = @cc"
     sql = (
         "WITH seed AS (SELECT embedding_v1 FROM `" + RESEARCH_TABLE + "` "
-        "WHERE publication_number = @pn LIMIT 1) "
+        "WHERE publication_number = @pn AND embedding_v1 IS NOT NULL LIMIT 1) "
         "SELECT gpr.publication_number, gpr.country, gpr.top_terms, "
         "cosine_distance(gpr.embedding_v1, seed.embedding_v1) AS distance "
         f"FROM `{RESEARCH_TABLE}` gpr, seed WHERE {where} "
         "ORDER BY distance LIMIT @lim"
     )
-    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn),
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", _bq_pub_number(pn)),
               bigquery.ScalarQueryParameter("lim", "INT64", int(limit))]
     if country:
         params.append(bigquery.ScalarQueryParameter("cc", "STRING", country))
@@ -512,6 +527,8 @@ def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
     rows = [dict(r) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
         timeout=timeout).result()]
+    for r in rows:
+        r["publication_number"] = normalize_pub(r.get("publication_number") or "")
     return {"seed": pn, "hits": rows, "estimate": est, "count": len(rows)}
 
 
