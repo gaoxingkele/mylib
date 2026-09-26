@@ -12,9 +12,14 @@
                  流程：result.jsf 检索 → 取结果行内部 ``data-rk`` 作 docId → detail.jsf 取详情。
 ``bigquery``     Google 官方专利数据集 ``patents-public-data``（真正的 Google 官方 API 通道），
                  需要 GCP 项目与凭据；未安装/未登录时给出明确前置条件。
+``tavily``       中继取件：本机出口被 Google 判定为可疑（patents.google.com 一律 503）时，
+                 用 Tavily 官方 extract API 取同一公开页面，**能拿到摘要/说明书/权利要求全文**，
+                 并附带引证表与相似文献表。它是"取件中继"，不是检索源；provenance 如实记 relay。
 """
 from __future__ import annotations
 
+import hashlib
+import os
 import re
 
 from gp_common import (  # noqa: E402
@@ -187,29 +192,77 @@ def parse_patentscope_results(html: str) -> list[dict]:
     return hits
 
 
-def patentscope_search(query: str, timeout: int = 45, retries: int = 2) -> dict:
-    """PATENTSCOPE 检索。该站偶发 5xx（实测遇到 http_500），故对 5xx 做退避重试。"""
+def patentscope_query_variants(query: str, country: str | None = None) -> tuple:
+    """把检索式归一化成 PATENTSCOPE 可用的形式，返回 (候选检索式列表, 国别)。
+
+    实测（2026-09-26）：
+
+    * 裸检索式 ``配电变压器 故障诊断`` 直接提交 → **0 命中**，必须带字段算子；
+    * ``EN_ALLTXT:(配电变压器 故障诊断)`` → 10 命中，而把 4 个词空格相连做 AND → 0 命中；
+    * 用户常按 Google 语法写 ``graphene eye mask country=CN``，该库不认 ``country=``。
+
+    因此：抽掉 ``country=``/``ctr=`` 作为国别；已带字段算子的原样放行；
+    否则包成 ``EN_ALLTXT:(…)``，并在词数 >2 时追加"仅留最长两词""仅留最长一词"两个收窄候选，
+    由调用方逐个试、命中即停。
+    """
+    q = (query or "").strip()
+    m = re.search(r"\b(?:country|ctr|pn)\s*=\s*([A-Za-z]{2})\b", q)
+    if m:
+        country = country or m.group(1).upper()
+        q = (q[:m.start()] + " " + q[m.end():]).strip()
+    suffix = f" AND CTR:({country.upper()})" if country else ""
+    if re.search(r"\b[A-Za-z_]{2,}\s*:", q):        # 已带字段算子，原样放行
+        return ([q] if q else []), country
+    toks = [t for t in re.split(r"[\s,，、;；]+", q) if t]
+    if not toks:
+        return [], country
+    out = [f"EN_ALLTXT:({' '.join(toks)}){suffix}"]
+    if len(toks) > 2:
+        srt = sorted(toks, key=len, reverse=True)
+        out.append(f"EN_ALLTXT:({' '.join(srt[:2])}){suffix}")
+        out.append(f"EN_ALLTXT:({srt[0]}){suffix}")
+    return out, country
+
+
+def patentscope_search(query: str, timeout: int = 45, retries: int = 2,
+                       country: str | None = None) -> dict:
+    """PATENTSCOPE 检索。该站偶发 5xx（实测遇到 http_500），故对 5xx 做退避重试。
+
+    检索式先经 :func:`patentscope_query_variants` 归一化；多个候选按顺序试，命中即返回，
+    并在结果里记 ``query_used`` / ``variants``，便于回溯到底哪条检索式起了作用。
+    """
     import time as _t
+    variants, country = patentscope_query_variants(query, country)
+    if not variants:
+        return {"blocked": False, "error": "empty_query", "hits": []}
     last = None
-    for attempt in range(retries + 1):
-        s = _session()
-        try:
-            r = s.get(f"{PS}/result.jsf", params={"query": query}, timeout=timeout)
-        except Exception as exc:  # noqa: BLE001
-            last = {"blocked": False, "error": f"network_error:{type(exc).__name__}", "hits": []}
-        else:
-            if r.status_code == 200:
-                hits = parse_patentscope_results(r.text)
-                res = {"blocked": False, "hits": hits, "url": str(r.url), "count": len(hits)}
-                if attempt:
-                    res["retried"] = attempt
-                return res
-            last = {"blocked": False, "error": f"http_{r.status_code}", "hits": [],
-                    "url": str(r.url), "status": r.status_code}
-            if r.status_code < 500:
-                return last
-        if attempt < retries:
-            _t.sleep(3 * (attempt + 1))
+    for vq in variants:
+        for attempt in range(retries + 1):
+            s = _session()
+            try:
+                r = s.get(f"{PS}/result.jsf", params={"query": vq}, timeout=timeout)
+            except Exception as exc:  # noqa: BLE001
+                last = {"blocked": False, "error": f"network_error:{type(exc).__name__}",
+                        "hits": [], "query_used": vq, "variants": variants}
+            else:
+                if r.status_code == 200:
+                    hits = parse_patentscope_results(r.text)
+                    res = {"blocked": False, "hits": hits, "url": str(r.url),
+                           "count": len(hits), "query_used": vq, "variants": variants,
+                           "country": country}
+                    if attempt:
+                        res["retried"] = attempt
+                    if hits:
+                        return res
+                    last = res          # 0 命中：试下一个收窄候选
+                    break
+                last = {"blocked": False, "error": f"http_{r.status_code}", "hits": [],
+                        "url": str(r.url), "status": r.status_code, "query_used": vq,
+                        "variants": variants}
+                if r.status_code < 500:
+                    return last
+            if attempt < retries:
+                _t.sleep(3 * (attempt + 1))
     return last or {"blocked": False, "error": "unknown", "hits": []}
 
 
@@ -460,3 +513,306 @@ def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
         timeout=timeout).result()]
     return {"seed": pn, "hits": rows, "estimate": est, "count": len(rows)}
+
+
+# ---------------------------------------------------------------- Tavily 中继取件
+#
+# 用途：出口 IP 被 Google 反爬判定为可疑时（patents.google.com 恒 503，curl_cffi 指纹无效），
+# 仍需要"该公开号到底公开了什么"的**原文**。做法是把同一公开页面交给 Tavily 官方 extract API，
+# 由它取回并转成 Markdown —— 实测该 Markdown 含摘要、说明书、权利要求逐项，以及引证表、
+# 相似文献表、PDF 直链。这不是绕 WAF 的破解：用的是有授权凭据的公开 API，取的是公开页面。
+#
+# 证据纪律：结果里始终带 relay / relay_key_source / url / retrieved_at，且 sha256 只覆盖文本。
+# 中继文本可能有个别字符与页面渲染差异，故 gp_verify 会标记 relay provenance；
+# 需要更强证据时用同一页的 PDF 直链（--save-pdf）做字节级留痕。
+
+TAVILY_EXTRACT = "https://api.tavily.com/extract"
+TAVILY_SEARCH = "https://api.tavily.com/search"
+TAVILY_KEY_NAMES = ("TAVILY_API_KEY", "TAVILYAPI", "TAVILY_KEY", "TAVILY_TOKEN")
+DOTENV_NAMES = (".env", ".env.local", ".env.cloubic")
+
+
+def _dotenv_lookup(names: set) -> tuple:
+    """从当前目录起向上最多 4 层找 .env，按键名（大小写不敏感）取第一个命中值。"""
+    d = os.path.abspath(os.getcwd())
+    for _ in range(5):
+        for fn in DOTENV_NAMES:
+            p = os.path.join(d, fn)
+            if not os.path.exists(p):
+                continue
+            try:
+                with open(p, encoding="utf-8", errors="replace") as fh:
+                    for line in fh:
+                        line = line.strip()
+                        if not line or line.startswith("#") or "=" not in line:
+                            continue
+                        k, v = line.split("=", 1)
+                        if k.strip().upper() in names:
+                            return v.strip().strip('"').strip("'"), f"dotenv:{fn}"
+            except OSError:
+                continue
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    return "", ""
+
+
+def resolve_tavily_key(explicit: str | None = None) -> tuple:
+    """返回 (key, 来源)。来源只报位置（env:名字 / dotenv:文件名 / cli），绝不回显 key。"""
+    if explicit:
+        return explicit.strip(), "cli"
+    for n in TAVILY_KEY_NAMES + ("tavilyapi", "TavilyApi"):
+        v = os.environ.get(n)
+        if v:
+            return v.strip(), f"env:{n}"
+    return _dotenv_lookup({n.upper() for n in TAVILY_KEY_NAMES})
+
+
+def tavily_extract(pn: str, lang: str | None = None, timeout: int = 90,
+                   key: str | None = None) -> dict:
+    """用 Tavily extract 中继取回某公开号的 Google Patents 页面，并解析成统一 doc 结构。"""
+    from gp_common import parse_google_patents_markdown
+
+    k, src = resolve_tavily_key(key)
+    url = patent_url(pn, lang)
+    if not k:
+        return {"blocked": False, "error": "tavily_key_missing", "url": url, "hits": [],
+                "remedy": "设置环境变量 TAVILY_API_KEY=<key>，或在当前目录（或其上层）的 .env "
+                          "里写 TAVILY_API_KEY=…；本 skill 只把它当取件中继，不当检索源"}
+    s = _session()
+    body = {"urls": [url], "include_raw_content": True, "extract_depth": "advanced"}
+    try:
+        r = s.post(TAVILY_EXTRACT, timeout=timeout, json=body,
+                   headers={"Authorization": f"Bearer {k}", "Content-Type": "application/json"})
+    except Exception as exc:  # noqa: BLE001
+        return {"blocked": False, "error": f"network_error:{type(exc).__name__}", "url": url}
+    if r.status_code in (401, 402, 403):
+        return {"blocked": False, "error": "tavily_auth_failed", "status": r.status_code,
+                "url": url, "key_source": src,
+                "remedy": "检查凭据/额度（401=key 无效；402/403=额度或权限不足）"}
+    if r.status_code == 429:
+        return {"blocked": False, "error": "tavily_rate_limited", "status": 429, "url": url,
+                "key_source": src}
+    if r.status_code != 200:
+        return {"blocked": False, "error": f"http_{r.status_code}", "status": r.status_code,
+                "url": url, "key_source": src}
+    try:
+        data = r.json()
+    except Exception:  # noqa: BLE001
+        return {"blocked": False, "error": "not_json", "url": url, "key_source": src}
+    results = data.get("results") or []
+    if not results:
+        failed = [f for f in (data.get("failed_results") or []) if isinstance(f, dict)]
+        msg = str((failed[0].get("error") if failed else "") or "")
+        # 与"被拦""缺凭据"区分开：404 表示该公开号在 Google Patents 确实没有页面
+        # （实测常见于只收录在 PATENTSCOPE/CNIPA 的 CN 文献），不是本机网络问题。
+        code = "doc_not_on_google_patents" if "404" in msg else "relay_extract_failed"
+        remedy = ("该公开号在 Google Patents 无对应页面（常见于只收录在 PATENTSCOPE/CNIPA 的 "
+                  "CN 文献）：请改用 incoPat/CNIPA 原文库，或按 PATENTSCOPE docId 直接查看"
+                  ) if code == "doc_not_on_google_patents" else "稍后重试，或换 --backend google/bigquery"
+        return {"blocked": False, "error": code, "message": msg, "url": url, "remedy": remedy,
+                "failed_results": failed[:3], "key_source": src}
+    res = results[0]
+    md = res.get("raw_content") or res.get("content") or ""
+    doc = parse_google_patents_markdown(md, pn)
+    doc.update({
+        "url": url,
+        "backend": "tavily",
+        "relay": "tavily_extract",
+        "relay_key_source": src,
+        "relay_depth": "advanced",
+        "note": "文本由第三方中继取回公开页面后转 Markdown；引用前建议用 pdf_url 复核原文",
+    })
+    return {"blocked": False, "doc": doc, "html": md, "url": url,
+            "relay": "tavily", "key_source": src, "status": r.status_code}
+
+
+def fetch_binary(url: str, timeout: int = 120) -> dict:
+    """下载二进制（用于 PDF 直链留痕）。返回 {ok, data, sha256, status, bytes}。"""
+    s = _session()
+    try:
+        r = s.get(url, timeout=timeout, headers={"Accept": "application/pdf,*/*"})
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "error": f"network_error:{type(exc).__name__}"}
+    if r.status_code != 200:
+        return {"ok": False, "error": f"http_{r.status_code}", "status": r.status_code}
+    data = r.content
+    return {"ok": True, "data": data, "status": 200, "bytes": len(data),
+            "sha256": hashlib.sha256(data).hexdigest(), "url": url}
+
+
+# ---------------------------------------------------------------- Tavily 中继检索
+
+TAVILY_PATENT_URL_RE = re.compile(
+    r"(?:patents\.google\.[a-z.]+|google\.[a-z.]+)/patents?/?(?:patent/)?"
+    r"([A-Z]{2}\d{6,13}[A-Z]?\d?)", re.I)
+
+
+def tavily_search(query: str, limit: int = 10, timeout: int = 60, key: str | None = None,
+                  country: str | None = None) -> dict:
+    """中继检索腿：用 Tavily 官方 search API 在 ``patents.google.com`` 域内检索。
+
+    为什么需要：本机出口被 Google 判为可疑时，``google_search`` 恒 503，检索腿就只剩
+    PATENTSCOPE 一个索引。实测（2026-09-26）Tavily 的 search 走它自己的出口，中文查询
+    也能返回 Google Patents 的条目（``include_domains=["patents.google.com"]``），
+    因此它是"Google 检索腿"的中继替代。**它是检索来源的中继，不是新证据源**：
+    返回项一律 ``evidence_level=snippet-degraded``，必须再经 gp_fetch 取原文才能引用。
+
+    只保留能解析出公开号的 Google Patents 链接，避免把普通网页混进对比文件池。
+    """
+    k, src = resolve_tavily_key(key)
+    if not k:
+        return {"blocked": False, "error": "tavily_key_missing", "hits": [],
+                "remedy": "设置 TAVILY_API_KEY 后可用中继检索腿"}
+    q = (query or "").strip()
+    body = {"query": q, "max_results": max(1, min(limit * 2, 20)),
+            "search_depth": "advanced", "include_domains": ["patents.google.com"]}
+    s = _session()
+    try:
+        r = s.post(TAVILY_SEARCH, timeout=timeout, json=body,
+                   headers={"Authorization": f"Bearer {k}", "Content-Type": "application/json"})
+    except Exception as exc:  # noqa: BLE001
+        return {"blocked": False, "error": f"network_error:{type(exc).__name__}", "hits": []}
+    if r.status_code in (401, 402, 403):
+        return {"blocked": False, "error": "tavily_auth_failed", "status": r.status_code,
+                "hits": [], "key_source": src,
+                "remedy": "检查凭据/额度（401=key 无效；402/403=额度或权限不足）"}
+    if r.status_code == 429:
+        return {"blocked": False, "error": "tavily_rate_limited", "status": 429, "hits": [],
+                "key_source": src}
+    if r.status_code != 200:
+        return {"blocked": False, "error": f"http_{r.status_code}", "status": r.status_code,
+                "hits": [], "key_source": src}
+    try:
+        data = r.json()
+    except Exception:  # noqa: BLE001
+        return {"blocked": False, "error": "not_json", "hits": [], "key_source": src}
+    hits, skipped = [], 0
+    for it in data.get("results") or []:
+        url = it.get("url") or ""
+        m = TAVILY_PATENT_URL_RE.search(url)
+        if not m:
+            skipped += 1
+            continue
+        pn = normalize_pub(m.group(1))
+        title = re.sub(r"\s*[-–—|]\s*Google Patents\s*$", "",
+                       (it.get("title") or "").strip(), flags=re.I)
+        title = re.sub(r"^[A-Z]{2}\d{6,13}[A-Z]?\d?\s*[-–—]\s*", "", title)
+        hits.append({
+            "pub_number": pn,
+            "title": title,
+            "assignee": "",
+            "inventor": "",
+            "priority_date": "",
+            "filing_date": "",
+            "publication_date": "",
+            "snippet": (it.get("content") or "")[:600],
+            "pdf_url": "",
+            "url": url or patent_url(pn),
+            "source": "google_patents_via_relay",
+            "backend": "tavily",
+            "relay": "tavily_search",
+            "evidence_level": "snippet-degraded",
+        })
+    seen, uniq = set(), []
+    for h in hits:
+        if h["pub_number"] in seen:
+            continue
+        seen.add(h["pub_number"])
+        uniq.append(h)
+    return {"blocked": False, "hits": uniq[:limit], "count": len(uniq[:limit]),
+            "raw_results": len(data.get("results") or []), "non_patent_skipped": skipped,
+            "key_source": src, "relay": "tavily", "url": TAVILY_SEARCH}
+
+
+# ---------------------------------------------------------------- 统一的"取件链"
+
+DEFAULT_FETCH_CHAIN = ("google", "tavily", "bigquery")
+CONFIG_ERRORS = frozenset({
+    "tavily_key_missing", "bigquery_credentials_missing", "bigquery_sdk_missing",
+})
+
+
+def fetch_document(pn: str, backends=DEFAULT_FETCH_CHAIN, lang: str | None = None,
+                   timeout: int = 40, tavily_key: str | None = None,
+                   allow_relay: bool = True) -> dict:
+    """按顺序尝试多个后端取同一公开号的原文，返回首个成功结果。
+
+    ``gp_fetch.py`` 与 ``gp_pipeline.py`` 共用本函数，保证两条入口的降级顺序、
+    退出判定与 ``attempts[]`` 记录一致。返回值：
+
+    * 成功：``{ok: True, backend, doc, html, url, attempts}``
+    * 失败：``{ok: False, blocked, reason, remedy, attempts}``
+      （``reason`` ∈ all_backends_blocked / no_usable_channel / all_backends_failed）
+
+    **绝不**把"被拦"或"缺凭据"降级成"没找到"：``attempts[]`` 会逐条保留原因。
+    """
+    attempts: list = []
+    for b in backends:
+        if b == "tavily" and not allow_relay:
+            continue
+        if b == "google":
+            res = google_fetch(pn, lang=lang, timeout=timeout)
+            if res.get("blocked"):
+                attempts.append({"backend": b, "blocked": True, "status": res.get("status")})
+                continue
+            if res.get("error"):
+                attempts.append({"backend": b, "error": res["error"],
+                                 **({"detail": res["message"]} if res.get("message") else {})})
+                continue
+            doc, html, url = res["doc"], res.get("html", ""), res["doc"].get("url", "")
+        elif b == "tavily":
+            res = tavily_extract(pn, lang=lang, timeout=max(timeout, 90), key=tavily_key)
+            if res.get("error"):
+                attempts.append({"backend": b, "error": res["error"],
+                                 **({"detail": res["message"]} if res.get("message") else {})})
+                continue
+            doc, html, url = res["doc"], res.get("html", ""), res["url"]
+        elif b == "bigquery":
+            res = bigquery_lookup(pn, timeout=max(timeout, 120))
+            if res.get("error"):
+                attempts.append({"backend": b, "error": res["error"]})
+                continue
+            rows = res.get("rows") or []
+            if not rows:
+                attempts.append({"backend": b, "error": "not_found"})
+                continue
+            doc = bigquery_normalize_row(rows[0], lang=lang)
+            doc["estimate"] = res.get("estimate")
+            html, url = "", f"bigquery://patents-public-data/{pn}"
+        else:
+            attempts.append({"backend": b, "error": "unsupported_backend"})
+            continue
+        attempts.append({"backend": b, "blocked": False})
+        return {"ok": True, "backend": b, "doc": doc, "html": html,
+                "url": url or doc.get("url", ""), "attempts": attempts}
+
+    blocked = bool(attempts) and all(a.get("blocked") for a in attempts)
+    all_cfg = bool(attempts) and all(a.get("error") in CONFIG_ERRORS for a in attempts)
+    any_block = any(a.get("blocked") for a in attempts)
+    block_or_cfg = bool(attempts) and all(
+        a.get("blocked") or a.get("error") in CONFIG_ERRORS for a in attempts)
+    codes = {a.get("error") for a in attempts if a.get("error")}
+    if blocked:
+        reason = "all_backends_blocked"
+        remedy = ("该出口被 Google 拦截：配置 TAVILY_API_KEY 走中继取件（免 GCP），"
+                  "或开通 GCP 用 BigQuery 官方通道")
+    elif all_cfg:
+        reason = "no_usable_channel"
+        remedy = ("缺少取件凭据：export TAVILY_API_KEY=…（中继，免 GCP）"
+                  " 或 gcloud auth application-default login（BigQuery）")
+    elif any_block and block_or_cfg:
+        # 直连被拦 + 其余通道缺凭据：本质是"当前没有任何可用取件通道"，按被拦处理并给两条出路
+        reason, blocked = "all_backends_blocked_or_unconfigured", True
+        remedy = ("直连被 Google 拦截、其余通道又缺凭据：二选一即可——"
+                  "① export TAVILY_API_KEY=…（中继取件，免 GCP）；"
+                  "② 开通 GCP 并 gcloud auth application-default login（BigQuery 官方通道）")
+    elif codes == {"doc_not_on_google_patents"}:
+        reason = "doc_not_on_google_patents"
+        remedy = ("该公开号在 Google Patents 无页面（不是网络问题）；改用 incoPat/CNIPA 原文库，"
+                  "或按 PATENTSCOPE docId 查看该件")
+    else:
+        reason, remedy = "all_backends_failed", None
+    return {"ok": False, "blocked": blocked, "reason": reason, "remedy": remedy,
+            "attempts": attempts}

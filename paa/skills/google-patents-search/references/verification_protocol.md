@@ -16,6 +16,24 @@
 | `metadata-only` | 说明书页只取到著录项 | 公开号/日期/申请人核对 | 权利要求或说明书内容比对 |
 | `original-text` | `gp_fetch.py` 取到权利要求/说明书 | X/Y/A 分类、特征比对、逐字引用 | —— |
 
+### 2.1 取数 provenance（直连 vs 中继）
+
+同样是 `original-text`，**取数路径不同，证据强度不同**，必须在记录里区分：
+
+| provenance | 含义 | 记录字段 | 使用口径 |
+| --- | --- | --- | --- |
+| `direct` | 直连页面/官方数据集取回（`google` / `bigquery` 后端） | `provenance="direct"` | 可直接引用 |
+| `relay` | 经第三方 API（`tavily` 中继）取回同一公开页面后转 Markdown | `provenance="relay"`、`relay="tavily_extract"` | **默认允许引用，但必须标注中继来源**；`gp_verify.py` 会写 `warnings[]` |
+
+操作要求：
+
+1. `gp_fetch.py` 对中继取件**始终落盘** `<PN>.relay.md`（sha256 的实际计算对象），报告里应同时给
+   Google Patents URL 与 `retrieved_at`；
+2. 对要写进申请文件/检索报告的关键引用，建议加 `--save-pdf` 同步下载同页 PDF，
+   记录 `pdf_sha256` 做字节级留痕（PDF 直链来自中继页面，存储在 `patentimages`，本机实测可直下）；
+3. 若受理方要求"只采直连证据"，用 `gp_verify.py --require-direct`：中继条目会被判
+   `relay_not_allowed`（退出码 1，阻断落稿），此时需解决出口网络或改用 BigQuery。
+
 ## 2. 每件对比文件的最小证据集
 
 一份可引用的对比文件记录**必须**齐备：
@@ -27,6 +45,8 @@
 5. `publication_date`（公开日），以及与本案申请日的先后关系判断。
 
 `gp_verify.py` 就是这条最小证据集的自动检查器；它返回 `status=verified` 才算通过。
+每条记录都会带 `provenance`（`direct`/`relay`）、`doc_url`、`retrieved_at`、`sha256`，
+中继条目另带 `relay` 与 `warnings[]`。
 
 ## 3. 三选一分类（X / Y / A）判定口径
 
@@ -61,4 +81,14 @@
 ```
 
 核验未通过但仍有参考价值的，放在"未通过核验的候选"小节，并写明未通过原因
-（`doc_missing` / `quote_not_found` / `locator_mismatch` / `date_after_cutoff`）。
+（`doc_missing` / `quote_not_found` / `locator_mismatch` / `date_after_cutoff` /
+`relay_not_allowed`）。
+
+## 6. 流水线产物的用法（`gp_pipeline.py`）
+
+`gp_pipeline.py` 输出的 `candidates`/`fetched`/`verify` 与 `screening.md` **只是筛查台**：
+
+- `score`/`score_parts` 是启发式排序分（轴权重＋截止日资格＋题名词重合），**不是相关性或相似度结论**；
+- `citations.draft.json` 里的 `quote` 是**权利要求 1 的逐字原文**，`role` 留空、`auto=true`；
+  它只证明"已取到原文且可逐字定位"，**必须人工替换**为真正相关的片段与 X/Y/A 角色后再跑 `gp_verify.py`；
+- 报告里的"未通过核验的候选"与 `limitations[]` 要原样带进最终检索报告的限制说明。

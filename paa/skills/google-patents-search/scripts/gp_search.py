@@ -13,6 +13,7 @@
 | --- | --- | --- |
 | ``google`` | Google Patents 站点内部 JSON 接口（最接近 Google Patents API） | 否 |
 | ``patentscope`` | WIPO PATENTSCOPE 官方库（覆盖 CN，实测本机可用） | 否 |
+| ``tavily`` | 中继检索：在 ``patents.google.com`` 域内检索（本机 google 被 503 时的替代腿） | TAVILY_API_KEY |
 
 ``--backend auto``（默认）先试 google；若被 Google 反爬拦下，自动改走 patentscope，
 并在输出的 ``attempts`` 里如实记录两次尝试，绝不把"被拦"写成"0 命中"。
@@ -48,6 +49,8 @@ def _finish(args, hits, backend, attempts, url) -> int:
     payload = {
         "ok": bool(hits), "blocked": blocked, "backend": backend,
         "attempts": attempts, "url": url, "query": args.query,
+        "query_used": next((a.get("query_used") for a in reversed(attempts)
+                            if a.get("query_used")), None),
         "retrieved_at": now_iso(), "count": len(hits), "hits": hits,
         "evidence_level": "snippet-degraded",
         "next_step": "对候选逐件 gp_fetch.py 取原文，再 gp_verify.py 核验后才可引用",
@@ -56,6 +59,7 @@ def _finish(args, hits, backend, attempts, url) -> int:
         write_json(args.out, payload)
     emit("GP_HITS_JSON", payload)
     append_audit(args.audit, {"ts": payload["retrieved_at"], "query": args.query,
+                              "query_used": payload["query_used"],
                               "backend": backend, "blocked": blocked,
                               "hits": len(hits), "url": url})
     if hits:
@@ -77,7 +81,9 @@ def main(argv=None) -> int:
     ap.add_argument("query_terms", nargs="*", help="检索式（位置参数）")
     ap.add_argument("--query", help="检索式（显式参数）")
     ap.add_argument("--query-file", help="从文件读检索式")
-    ap.add_argument("--backend", choices=["auto", "google", "patentscope"], default="auto")
+    ap.add_argument("--backend", choices=["auto", "google", "patentscope", "tavily"],
+                    default="auto")
+    ap.add_argument("--country", help="国别（patentscope 后端用：拼进 CTR 条件，收窄时保留）")
     ap.add_argument("--html", help="离线解析已保存的结果页 HTML")
     ap.add_argument("--page", type=int, default=1, help="页码（google 每页 10 条）")
     ap.add_argument("--limit", type=int, default=0, help="截断命中数（0=不截断）")
@@ -113,18 +119,26 @@ def main(argv=None) -> int:
         ap.error("需要 query / --query / --query-file / --html 之一")
 
     attempts = []
-    order = ["google", "patentscope"] if args.backend == "auto" else [args.backend]
+    # auto：先直连（免费），再 PATENTSCOPE（免费），最后中继检索腿（消耗 Tavily 额度，仅在前两者无命中时用）
+    order = (["google", "patentscope", "tavily"] if args.backend == "auto"
+             else [args.backend])
     try:
         for backend in order:
             note(f"backend={backend}")
             if backend == "google":
                 res = bk.google_search(args.query, page=args.page, lang=args.lang,
                                        timeout=args.timeout)
+            elif backend == "tavily":
+                res = bk.tavily_search(args.query, limit=args.limit or 10,
+                                       timeout=max(args.timeout, 60), country=args.country)
             else:
-                res = bk.patentscope_search(args.query, timeout=args.timeout)
+                res = bk.patentscope_search(args.query, timeout=args.timeout,
+                                            country=args.country)
             attempts.append({"backend": backend, "blocked": bool(res.get("blocked")),
                              "error": res.get("error"), "status": res.get("status"),
-                             "hits": len(res.get("hits") or []), "url": res.get("url")})
+                             "hits": len(res.get("hits") or []), "url": res.get("url"),
+                             "query_used": res.get("query_used"),
+                             "variants": res.get("variants")})
             if res.get("blocked"):
                 sys.stderr.write(f"GP_BLOCKED: {backend}_anti_bot\n")
                 continue

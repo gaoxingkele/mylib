@@ -11,8 +11,13 @@
 | backend | 输入 | 得到 | 证据级别 |
 | --- | --- | --- | --- |
 | ``google`` | 公开号 | 权利要求逐项 + 说明书 + 摘要 | ``original-text`` |
+| ``tavily`` | 公开号 | 同上（**中继**取回同一公开页面，本机被 Google 503 时仍可用） | ``original-text``（带 relay provenance） |
 | ``patentscope`` | 内部 docId（见 gp_search 输出） | 著录项为主 | ``metadata-only`` |
 | ``bigquery`` | 公开号 | 官方数据集的著录项/摘要/可得权利要求 | 视返回而定 |
+
+``--backend auto``（默认）按 ``google → tavily → bigquery`` 依次尝试：直连可用就用直连，
+直连被拦而配置了 ``TAVILY_API_KEY`` 就走中继，都没有凭据才落到 BigQuery。
+每次尝试都记进输出的 ``attempts[]``；``--no-relay`` 可禁用中继。
 
 **输出**：stdout 单行 ``GP_DOC_JSON:``；stderr 只写 ASCII 诊断；
 ``--out DIR`` 时落 ``<PN>.json``、``<PN>.md``、``manifest.json``。
@@ -20,6 +25,8 @@
 用法：
 
   python gp_fetch.py CN210644322U --backend google --out evidence/gp --audit audit.jsonl
+  python gp_fetch.py CN214180783U --backend tavily --out evidence/gp        # 中继取全文
+  python gp_fetch.py CN214180783U --save-pdf --out evidence/gp             # 同页 PDF 字节留痕
   python gp_fetch.py CN210644322U --from-hits hits.json --out evidence/gp   # 自动回填公开日
   python gp_fetch.py --doc-id CN241725947 --backend patentscope --out evidence/ps
   python gp_fetch.py CN210644322U --html saved_patent_page.html --out tmp/gp   # 离线复算
@@ -37,8 +44,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gp_backends as bk  # noqa: E402
 from gp_common import (  # noqa: E402
     append_audit, blocked_payload, emit, ensure_utf8_stdio, hint, load_html,
-    looks_blocked, normalize_pub, note, now_iso, parse_patent_doc, patent_url,
-    sha256_text, write_json,
+    looks_blocked, normalize_pub, note, now_iso, parse_google_patents_markdown,
+    parse_patent_doc, patent_url, sha256_text, write_json,
 )
 
 EXIT_OK, EXIT_ARGS, EXIT_BLOCKED, EXIT_METADATA_ONLY, EXIT_RUNTIME = 0, 2, 3, 4, 5
@@ -87,6 +94,10 @@ def save_doc(args, doc: dict, html: str, url: str) -> None:
     if args.save_html and html:
         with open(os.path.join(args.out, f"{pn}.html"), "w", encoding="utf-8") as fh:
             fh.write(html)
+    # 中继取件的原始 Markdown 始终留痕：它是 sha256 的实际计算对象，也是复核水印
+    if doc.get("relay") and html:
+        with open(os.path.join(args.out, f"{pn}.relay.md"), "w", encoding="utf-8") as fh:
+            fh.write(html)
     man_path = os.path.join(args.out, "manifest.json")
     man = []
     if os.path.exists(man_path):
@@ -105,6 +116,20 @@ def finish(args, doc: dict, html: str, url: str, backend: str) -> int:
     doc["url"] = url
     doc["retrieved_at"] = now_iso()
     doc["backend"] = doc.get("backend") or backend
+    if args.save_pdf and doc.get("pdf_url"):
+        pdf = bk.fetch_binary(doc["pdf_url"], timeout=max(args.timeout, 120))
+        if pdf.get("ok") and args.out:
+            os.makedirs(args.out, exist_ok=True)
+            path = os.path.join(args.out, f"{doc.get('pub_number') or 'UNKNOWN'}.pdf")
+            with open(path, "wb") as fh:
+                fh.write(pdf["data"])
+            doc["pdf_file"] = path
+        doc["pdf_bytes"] = pdf.get("bytes")
+        doc["pdf_sha256"] = pdf.get("sha256")
+        doc["pdf_retrieved_at"] = now_iso()
+        if not pdf.get("ok"):
+            doc["pdf_error"] = pdf.get("error")
+            note(f"pdf download failed: {pdf.get('error')}")
     if args.pub_date:
         doc["publication_date"] = args.pub_date
         doc["publication_date_source"] = "cli"
@@ -137,12 +162,18 @@ def main(argv=None) -> int:
     ensure_utf8_stdio()
     ap = argparse.ArgumentParser(description="按公开号取专利原文（GP_DOC_JSON 单行输出，无浏览器）")
     ap.add_argument("pub_numbers", nargs="*", help="公开号（google/bigquery 后端）")
-    ap.add_argument("--backend", choices=["auto", "google", "patentscope", "bigquery"], default="auto")
+    ap.add_argument("--backend", choices=["auto", "google", "tavily", "patentscope", "bigquery"],
+                    default="auto")
     ap.add_argument("--doc-id", help="patentscope 内部 docId（来自 gp_search 输出的 doc_id）")
     ap.add_argument("--html", help="离线解析已保存的单件页 HTML")
     ap.add_argument("--lang", help="google 语言路径 zh/en（默认按国家码推断）")
     ap.add_argument("--from-hits", help="从 gp_search 的 --out 文件回填公开日/申请人（含 doc_id 时也可解析 patentscope）")
     ap.add_argument("--pub-date", help="显式指定公开日 YYYY-MM-DD")
+    ap.add_argument("--tavily-key", help="中继取件凭据（缺省读 TAVILY_API_KEY 或所在目录 .env）")
+    ap.add_argument("--no-relay", action="store_true",
+                    help="禁用第三方中继：auto 链只走 google/bigquery")
+    ap.add_argument("--save-pdf", action="store_true",
+                    help="按 pdf_url 同步下载 PDF 做字节留痕（记 pdf_sha256）")
     ap.add_argument("--timeout", type=int, default=40, help="单次请求超时秒数")
     ap.add_argument("--out", help="落盘目录")
     ap.add_argument("--save-html", action="store_true", help="同时保存原始 HTML")
@@ -154,8 +185,16 @@ def main(argv=None) -> int:
         if looks_blocked(200, html):
             emit("GP_DOC_JSON", blocked_payload("html", 200, args.html))
             return EXIT_BLOCKED
-        doc = parse_patent_doc(html, args.pub_numbers[0] if args.pub_numbers else "")
-        return finish(args, doc, html, args.html, "offline")
+        pn_hint = args.pub_numbers[0] if args.pub_numbers else ""
+        # 离线复算同时支持两种留痕：单件页 HTML，以及中继取回的页面 Markdown
+        if html.lstrip().startswith("<"):
+            doc = parse_patent_doc(html, pn_hint)
+            backend = "offline"
+        else:
+            doc = parse_google_patents_markdown(html, pn_hint)
+            doc["relay"] = doc.get("relay") or "offline_markdown"
+            backend = "offline-relay"
+        return finish(args, doc, html, args.html, backend)
 
     # patentscope 分支：需要内部 docId
     doc_id = args.doc_id
@@ -172,7 +211,13 @@ def main(argv=None) -> int:
 
     backend = args.backend
     if backend == "auto":
-        backend = "patentscope" if (doc_id and not pn) else "google"
+        if doc_id and not pn:
+            chain = ["patentscope"]
+        else:
+            chain = ["google"] + ([] if args.no_relay else ["tavily"]) + ["bigquery"]
+    else:
+        chain = [backend]
+    backend = backend if backend != "auto" else chain[0]
 
     try:
         if backend == "patentscope":
@@ -209,17 +254,23 @@ def main(argv=None) -> int:
         rc = EXIT_OK
         for raw in args.pub_numbers:
             p = normalize_pub(raw)
-            note(f"fetch {p}")
-            res = bk.google_fetch(p, lang=args.lang, timeout=args.timeout)
-            if res.get("blocked"):
-                sys.stderr.write("GP_BLOCKED: google_anti_bot\n")
-                emit("GP_DOC_JSON", blocked_payload("google", res.get("status"), res.get("url", "")))
-                return EXIT_BLOCKED
-            if res.get("error"):
-                note(f"google error={res['error']}")
-                emit("GP_DOC_JSON", {"ok": False, "pub_number": p, "error": res["error"]})
-                return EXIT_RUNTIME
-            code = finish(args, res["doc"], res.get("html", ""), res["doc"]["url"], "google")
+            res = bk.fetch_document(p, backends=chain, lang=args.lang, timeout=args.timeout,
+                                    tavily_key=args.tavily_key, allow_relay=not args.no_relay)
+            if res.get("ok"):
+                doc = res["doc"]
+                doc["fetch_attempts"] = res["attempts"]
+                code = finish(args, doc, res["html"], res["url"], res["backend"])
+            else:
+                attempts = res["attempts"]
+                note("no usable channel: "
+                     + ",".join(str(a.get("error") or "blocked") for a in attempts))
+                if res["blocked"]:
+                    sys.stderr.write("GP_BLOCKED: all_backends_blocked\n")
+                emit("GP_DOC_JSON", {"ok": False, "blocked": res["blocked"], "pub_number": p,
+                                     "attempts": attempts, "reason": res["reason"],
+                                     "remedy": res["remedy"]})
+                code = (EXIT_BLOCKED if res["blocked"]
+                        else (EXIT_ARGS if res["reason"] == "no_usable_channel" else EXIT_RUNTIME))
             rc = code if code != EXIT_OK else rc
         return rc
     except Exception as exc:  # noqa: BLE001

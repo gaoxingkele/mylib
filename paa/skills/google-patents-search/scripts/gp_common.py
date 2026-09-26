@@ -2,10 +2,12 @@
 """Google Patents 免费检索 / 核验的共享工具。
 
 本模块只放「与取数方式无关」的东西：公开号规范化、选择器常量、反爬判定、
-审计记录、摘要与时间戳。检索/取件的三条路线（MCP 浏览器、CDP 挂载、无头）分别在
-gp_search.py / gp_fetch.py 里实现，共享这里的选择器与判定。
+审计记录、摘要与时间戳，以及**页面解析**（单件页 HTML 与中继取回的页面 Markdown 两种形态）。
+检索/取件的各条路线在 gp_backends.py（HTTP 客户端）里实现，命令行入口在
+gp_search.py / gp_fetch.py / gp_verify.py / gp_bigquery.py / gp_pipeline.py。
 
-选择器来源：2026-09-26 在真实 Chrome 会话中实测的 DOM（见 references/troubleshooting.md）。
+**本 skill 不使用浏览器自动化**；被反爬拦下时如实上报，并升级到中继（Tavily extract）
+或 Google 官方 BigQuery 数据集，见 references/troubleshooting.md。
 """
 from __future__ import annotations
 
@@ -140,8 +142,10 @@ def blocked_payload(route: str, status: int | None, url: str) -> dict:
     return {
         "ok": False, "blocked": True, "route": route, "status": status, "url": url,
         "reason": "google_anti_bot",
-        "remedy": "改用用户真实 Chrome 会话：MCP 浏览器工具（scripts/gp_browser_snippets.js）"
-                  "或 gp_search.py --cdp http://127.0.0.1:9222（Chrome 需以 --remote-debugging-port=9222 启动）",
+        "remedy": "该出口被 Google 判定为可疑（非本 skill 问题）。二选一："
+                  "① 配置 TAVILY_API_KEY 走中继取件/中继检索（免 GCP）；"
+                  "② 开通 GCP 并用 BigQuery 官方数据集（见 references/gcp_bigquery_setup.md）。"
+                  "本 skill 不回退到浏览器自动化。",
     }
 
 
@@ -409,5 +413,229 @@ def parse_patent_doc(html: str, pn: str = "") -> dict:
         "cited_by": count("citedBy"),
         "similar_documents": count("similarDocuments"),
         "source": "google_patents",
+        "evidence_level": "original-text" if (claims or desc) else "metadata-only",
+    }
+
+
+# ---------------------------------------------------------------- 中继取件：Google Patents 页面 Markdown
+#
+# 背景（2026-09-26 实测）：本机出口 IP 直连 patents.google.com 一律 503，Google Patents
+# 页面本身又是客户端渲染，普通抽取器只能拿到空的章节标题。改用 Tavily 官方 extract API
+# （extract_depth=advanced）时，该服务返回的 Markdown **带完整正文**：摘要、说明书、
+# 权利要求逐项，以及引证表（Citations）、相似文献表（Similar Documents）、PDF 直链。
+# 因此把这些解析函数放在共享层，供 gp_backends.tavily_extract 与离线复算共用。
+
+MD_HEADING_RE = re.compile(r"^\s{0,3}(#{1,3})\s+(.*\S)\s*$")
+MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+MD_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+MD_PUB_IN_URL_RE = re.compile(r"patents\.google\.com/patent/([A-Za-z0-9]+)")
+MD_PDF_RE = re.compile(r"\((https://patentimages\.storage\.googleapis\.com/[^)\s]+\.pdf)\)")
+
+
+def strip_md(text: str) -> str:
+    """把 Markdown 片段还原成纯文本：去链接外壳、去引用记号、压空白。"""
+    t = MD_LINK_RE.sub(r"\1", text or "")
+    t = t.replace("**", "").replace("`", "").replace("*", "").replace("†", "")
+    t = re.sub(r"^[\s>#-]+", "", t)
+    return re.sub(r"[ \t\u00a0]+", " ", t).strip()
+
+
+def md_sections(md: str) -> dict:
+    """按 ``## 标题`` 切分页面 Markdown：{标题: 正文}。重名标题取正文较长的一份。"""
+    out: dict[str, str] = {}
+    cur, buf = "", []
+    for line in (md or "").splitlines():
+        m = MD_HEADING_RE.match(line)
+        if m:
+            if cur:
+                body = "\n".join(buf).strip()
+                if len(body) > len(out.get(cur, "")):
+                    out[cur] = body
+            cur, buf = m.group(2).strip(), []
+        else:
+            buf.append(line)
+    if cur:
+        body = "\n".join(buf).strip()
+        if len(body) > len(out.get(cur, "")):
+            out[cur] = body
+    return out
+
+
+def md_find_section(sections: dict, name: str) -> str:
+    """按标题前缀取章节正文（标题常带计数，如 ``Claims (6)``、``Citations (5)``）。"""
+    n = (name or "").lower()
+    best = ""
+    for k, v in (sections or {}).items():
+        kl = k.lower()
+        if (kl == n or kl.startswith(n + " ") or kl.startswith(n + "(")) and len(v) > len(best):
+            best = v
+    return best
+
+
+def md_table_rows(text: str) -> list:
+    """解析 Markdown 表格 → 行列表（跳过表头分隔行）。"""
+    rows = []
+    for line in (text or "").splitlines():
+        s = line.strip()
+        if not s.startswith("|"):
+            continue
+        cells = [c.strip() for c in s.strip("|").split("|")]
+        if not cells or all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c != ""):
+            continue
+        rows.append([strip_md(c) for c in cells] + ["\u0000"])  # 末尾哨兵，防下标越界
+    return rows
+
+
+def md_pub_in_cell(cell: str) -> str:
+    """从表格单元里取公开号（优先 Google 链接，其次裸公开号文本）。"""
+    m = MD_PUB_IN_URL_RE.search(cell or "")
+    if m:
+        return normalize_pub(m.group(1))
+    m2 = PUB_RE.search((cell or "").upper())
+    return normalize_pub(m2.group(0)) if m2 else ""
+
+
+def parse_related_table(text: str) -> list:
+    """解析相似文献表 / 引证表 → [{pub_number, publication_date, title, assignee, url, source}]。
+
+    实测列序：相似文献 ``Publication | Publication Date | Title``；
+    引证表 ``Publication number | Priority date | Publication date | Assignee | Title``。
+    因此标题取末列，申请人取倒数第二列（仅当列数≥5）。
+    """
+    out = []
+    for cells in md_table_rows(text):
+        pn = md_pub_in_cell(cells[0])
+        if not pn:
+            continue
+        dates = [c for c in cells if MD_DATE_RE.fullmatch(c or "")]
+        raw = cells[:-1]
+        title = raw[-1] if raw else ""
+        assignee = raw[-2] if len(raw) >= 5 else ""
+        out.append({
+            "pub_number": pn,
+            "title": "" if MD_DATE_RE.fullmatch(title or "") else title,
+            "assignee": "" if MD_DATE_RE.fullmatch(assignee or "") else assignee,
+            "priority_date": dates[0] if dates else "",
+            "publication_date": dates[-1] if len(dates) > 1 else (dates[0] if dates else ""),
+            "url": patent_url(pn),
+            "source": "google_patents_page_table",
+            "evidence_level": "snippet-degraded",
+        })
+    # 同一公开号只留首条
+    seen, uniq = set(), []
+    for it in out:
+        if it["pub_number"] in seen:
+            continue
+        seen.add(it["pub_number"])
+        uniq.append(it)
+    return uniq
+
+
+def parse_claims_md(text: str) -> list:
+    """从 Claims 章节 Markdown 切出逐项权利要求。"""
+    # 中继 Markdown 里权利要求段之后可能紧跟家族/引证表的裸行（无标题分隔），
+    # 实测末项会把 "CN202022751283.7U 2020-11-25 … Expired - Fee Related[CN…](…)" 粘进正文。
+    # 故先切掉表行与含 Google 链接的行，避免污染引用片段。
+    keep = []
+    for line in (text or "").splitlines():
+        s = line.strip()
+        if s.startswith("|") or "patents.google.com/patent/" in s or s.startswith("#"):
+            break
+        keep.append(line)
+    body = "\n".join(keep).strip()
+    if not body:
+        return []
+    claims = []
+    parts = re.split(r"(?m)^\s*(\d{1,3})\s*[.、]\s*", body)
+    if len(parts) > 2:
+        for i in range(1, len(parts) - 1, 2):
+            chunk = strip_md(parts[i + 1])
+            if chunk:
+                claims.append({"claim_no": int(parts[i]), "text": chunk})
+    if not claims:
+        chunk = strip_md(body)
+        if chunk:
+            claims.append({"claim_no": 1, "text": chunk})
+    return claims
+
+
+def parse_google_patents_markdown(md: str, pn: str = "") -> dict:
+    """把中继取回的 Google Patents 页面 Markdown 解析成与 parse_patent_doc 同构的 doc。
+
+    与 HTML 路径的差别（都要如实写进报告）：
+
+    * 公开日取自 ``Publications`` 表，是**真实公开日**（HTML 路径的 ``DC.date`` 是申请日）；
+    * 附带回引证表 ``cited_patents`` 与相似文献表 ``similar_patents``（可作扩检轴）；
+    * 文本经第三方中继转成 Markdown，provenance 记 ``relay``，引用前建议核对 PDF。
+    """
+    md = md or ""
+    sections = md_sections(md)
+    lines = [l.strip() for l in md.splitlines()]
+    head = lines[0] if lines else ""
+    m = re.match(r"^#\s*([A-Z]{2}\d{6,13}[A-Z]?\d?)\s*[-–—]?\s*(.*)$", head)
+    if m:
+        pn = pn or normalize_pub(m.group(1))
+        title = m.group(2)
+    else:
+        mt = re.match(r"^#\s*(.+)$", head)
+        title = mt.group(1) if mt else ""
+    # 页面标题形如 "# CN214180783U - 标题 - Google Patents"；去掉站点后缀与链接外壳
+    title = re.sub(r"\s*[-–—|]\s*Google Patents\s*$", "", title, flags=re.I).strip()
+    title = re.sub(r"\s*\[[^\]]*\]\([^)]*\)\s*$", "", title).strip()
+    if not title or re.fullmatch(r"[A-Z]{2}\d{6,13}[A-Z]?\d?", title):
+        for l in lines[1:6]:
+            if not l or l.startswith("#"):
+                continue
+            cand = re.split(r"\s{2,}|\[", l)[0].strip()
+            if cand and not re.fullmatch(r"[A-Z]{2}\d{6,13}[A-Z]?\d?", cand):
+                title = cand
+                break
+
+    claims = parse_claims_md(md_find_section(sections, "Claims"))
+    desc = strip_md(md_find_section(sections, "Description"))
+    abstract = strip_md(md_find_section(sections, "Abstract"))
+    if desc.startswith(title) and title:      # 说明书首行常重复标题
+        desc = desc[len(title):].lstrip()
+
+    pub, priority, filing = "", "", ""
+    for cells in md_table_rows(md_find_section(sections, "Publications")):
+        if pn and pn.replace(" ", "") in (cells[0] or "").replace(" ", ""):
+            dates = [c for c in cells if MD_DATE_RE.fullmatch(c or "")]
+            if dates:
+                pub = dates[-1]
+    for cells in md_table_rows(md_find_section(sections, "Priority Applications")):
+        dates = [c for c in cells if MD_DATE_RE.fullmatch(c or "")]
+        if len(dates) >= 2:
+            priority, filing = dates[0], dates[1]
+            break
+    if not pub:   # 退路：正文里紧跟公开号出现的日期
+        mp = re.search(re.escape(pn) + r"[^\n]{0,80}?(\d{4}-\d{2}-\d{2})", md)
+        pub = mp.group(1) if mp else ""
+
+    pdf = ""
+    mpdf = MD_PDF_RE.search(md)
+    if mpdf:
+        pdf = mpdf.group(1)
+
+    cited = parse_related_table(md_find_section(sections, "Citations"))
+    similar = parse_related_table(md_find_section(sections, "Similar Documents"))
+
+    return {
+        "pub_number": normalize_pub(pn),
+        "title": title,
+        "publication_date": pub,
+        "publication_date_source": "google_patents_publications_table" if pub else "",
+        "priority_date": priority,
+        "filing_date": filing,
+        "abstract": abstract,
+        "claims": claims,
+        "claim_count": len(claims),
+        "description": desc,
+        "description_chars": len(desc),
+        "cited_patents": cited,
+        "similar_patents": similar,
+        "pdf_url": pdf,
+        "raw_markdown_chars": len(md),
+        "source": "google_patents_via_relay",
         "evidence_level": "original-text" if (claims or desc) else "metadata-only",
     }

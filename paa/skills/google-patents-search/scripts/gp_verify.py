@@ -84,7 +84,7 @@ def locator_text(doc: dict, locator: str) -> str | None:
 
 
 def verify_one(cit: dict, docs_dir: str, min_quote: int, cutoff: str | None,
-               strict_locator: bool) -> dict:
+               strict_locator: bool, require_direct: bool = False) -> dict:
     pn = normalize_pub(cit.get("pn") or "")
     quote = norm_ws(cit.get("quote") or "")
     locator = cit.get("locator") or ""
@@ -101,6 +101,15 @@ def verify_one(cit: dict, docs_dir: str, min_quote: int, cutoff: str | None,
     level = doc.get("evidence_level")
     if level != "original-text":
         rec["reasons"].append(f"evidence_level={level}:检索片段/仅元数据不可作为对比文件")
+    # provenance：直连 vs 中继。中继（如 Tavily extract）取回的是同一公开页面，但经过了第三方
+    # 转换，可能有字符级差异，故默认只警告；要更强证据时用 --require-direct，或用同页 PDF 复核。
+    rec["provenance"] = "relay" if doc.get("relay") else "direct"
+    if doc.get("relay"):
+        rec["relay"] = doc.get("relay")
+        rec.setdefault("warnings", []).append(
+            "relay_provenance:文本经第三方中继取回（非直连页面），建议用同页 PDF 复核")
+        if require_direct:
+            rec["reasons"].append("relay_not_allowed:--require-direct 要求直连取回的原文")
     if len(quote) < min_quote:
         rec["reasons"].append(f"quote_too_short:<{min_quote}字")
     hay = norm_ws("\n".join(
@@ -142,6 +151,8 @@ def main(argv=None) -> int:
     ap.add_argument("--min-quote", type=int, default=20, help="引用片段最小字数（默认 20）")
     ap.add_argument("--cutoff", help="公开日截止（YYYY-MM-DD），用于申请日前公开资格判断")
     ap.add_argument("--strict-locator", action="store_true", help="强制要求定位符")
+    ap.add_argument("--require-direct", action="store_true",
+                    help="只接受直连取回的原文；经第三方中继（relay）取回的一律判为未通过")
     ap.add_argument("--out", help="完整结果落盘")
     ap.add_argument("--audit", help="审计 JSONL 追加路径")
     args = ap.parse_args(argv)
@@ -156,13 +167,15 @@ def main(argv=None) -> int:
         note("citations must be a non-empty JSON array")
         return EXIT_ARGS
 
-    records = [verify_one(c, args.docs, args.min_quote, args.cutoff, args.strict_locator)
+    records = [verify_one(c, args.docs, args.min_quote, args.cutoff, args.strict_locator,
+                          args.require_direct)
                for c in cits]
     ok = [r for r in records if r["status"] == "verified"]
     payload = {
         "checked_at": now_iso(), "docs_dir": os.path.abspath(args.docs),
         "total": len(records), "verified": len(ok), "failed": len(records) - len(ok),
         "all_verified": len(ok) == len(records), "records": records,
+        "relay_count": len([r for r in records if r.get("provenance") == "relay"]),
         "policy": "只有 status=verified 的条目才可写入现有技术检索报告并作为 X/Y/A 引用",
     }
     if args.out:

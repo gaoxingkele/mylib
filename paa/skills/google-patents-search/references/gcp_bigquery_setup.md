@@ -4,6 +4,12 @@
 事实依据：Google Cloud 官方文档（Free Trial / Free Tier / BigQuery sandbox，2026-09-26 抓取）
 与官方示例仓库 `google/patents-public-data`（表名与字段来自其示例 SQL）。
 
+> **先看这条**：如果只是"本机直连 Google Patents 被 503，需要拿到某个公开号的全文"，
+> 不必先开 GCP —— 配一个 `TAVILY_API_KEY` 即可用中继通道（见 `troubleshooting.md` §1），
+> 同样能取到摘要/说明书/权利要求。**BigQuery 的独特价值在本文档 §4 与 §6**：
+> 全库 SQL 检索（CPC/日期/国别过滤、跨库批量）与 `embedding_v1` **向量语义近邻**
+> ——后者是 `gp_pipeline.py` 的 `semantic` 轴，中继通道给不了。
+
 ## 1. 三条入门路径（先选一条）
 
 | 路径 | 费用 | 要不要信用卡/账单账户 | 关键限制 |

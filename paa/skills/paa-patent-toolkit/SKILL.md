@@ -17,7 +17,7 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
 |---|---|
 | PAA artifact structure, gates, seals, validation | `paa/SKILL.md`, then the directly named file under `paa/references/` |
 | incoPat search/API/permissions | `paa/skills/incopat-search/SKILL.md` |
-| Free patent search + original-text verification (no key) | `paa/skills/google-patents-search/SKILL.md` |
+| Free patent search + original-text verification + seed-expansion pipeline (no key for search/fetch) | `paa/skills/google-patents-search/SKILL.md` |
 | AHP/SEM grant score | `paa/skills/patent-grant-scorer/SKILL.md` |
 | CNIPA drafting workflow | `paa/skills/cnipa-drafting-workflow/SKILL.md` |
 | Patent disclosure extraction | `paa/skills/patent-disclosure-skill/SKILL.md` |
@@ -34,8 +34,13 @@ parent session orchestrates (Grok subagents cannot nest). See `paa/adapters/grok
   (expired test authorization / interface not in scope / quota 429) or a second independent
   re-search axis is needed, use `paa/skills/google-patents-search/SKILL.md`** — free, no key.
   That skill is **HTTP/API only (never browser automation)**: backend `google` (site JSON via
-  curl_cffi), `patentscope` (WIPO official, keyless fallback), `bigquery`
+  curl_cffi), `patentscope` (WIPO official, keyless fallback), `tavily` (relay: pulls the same
+  public page's full text / searches inside patents.google.com when the local egress is
+  503-blocked by Google — needs `TAVILY_API_KEY`), `bigquery`
   (`patents-public-data`, Google's official programmatic route, needs GCP credentials).
+  `gp_pipeline.py` runs the whole recall→fetch→verify chain from a seed publication:
+  axes = seed citations / similar documents / BigQuery embedding neighbours / keyword,
+  and it records every unavailable axis honestly instead of reporting "no prior art".
   That skill also owns the *original-text* gate: `gp_fetch.py` upgrades a hit to
   `evidence_level=original-text`, and `gp_verify.py` must return `all_verified=true` before any
   publication is quoted as X/Y/A prior art.
