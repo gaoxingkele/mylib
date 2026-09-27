@@ -12,7 +12,7 @@
 ## ChatGPT `chatgpt.com`
 
 - 输入：role `textbox` name `与 ChatGPT 聊天`
-- 模型按钮须为 `GPT-6 Astra 极高`
+- 模型按钮：2026-09-27 起选 `GPT-6 Pro`（此前为 `GPT-6 Astra 极高`）
 - 发送：`发送提示|发送`
 - 复制：`复制回复` last()。仅有 `复制消息` 时复制的是用户提问。
 - 未完成：存在 `停止回答`。回复只有「评」等残句时发 `chatgpt_continue.js`。

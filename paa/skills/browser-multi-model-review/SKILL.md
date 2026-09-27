@@ -5,7 +5,7 @@ description: >
   与 Kimi（K3 + 学术数据库插件），每案独立会话、最高档模型审核中国发明专利申请文件。**仅限用户手动点名触发，
   不属于 /patent、patent-orchestrator、/evolve-patent-system 任何自动化环节。**上传失败则 insertText 粘贴；回复写入
   入口标识 md；wiki 日志必须含标识词+版本号。TRIGGERS（须用户明确说出）: 浏览器多端审核, 浏览器四端/五端审核,
-  Playwright MCP, Gemini 扩展思考, GPT-6 Astra 极高, Grok Expert, Perplexity 专利搜索, Kimi K3 学术数据库,
+  Playwright MCP, Gemini Pro, GPT-6 Pro, Grok Expert, Perplexity 专利搜索, Kimi K3 学术数据库,
   独立会话评专利, /browser-multi-model-review
 ---
 
@@ -54,7 +54,7 @@ description: >
 ## 硬约束
 
 - 每专利独立会话，禁止串案。
-- 模型：Gemini 账号最高档（禁止 Flash-Lite）；ChatGPT **GPT-6 Astra 极高**；Grok **Expert**；Perplexity 从 **`https://www.perplexity.ai/patents`** 进入，能选模型委员会就选 **Max**（`/` 搜索菜单，点满三模型后「提交」才可用），该入口下不能选则用页面可用最高档并在 md 中如实记录；Kimi 选 **K3** 模型并启用 **学术数据库** 插件。
+- 模型（2026-09-27 用户指定）：Gemini **Pro**（账号最高档，禁止 Flash-Lite）；ChatGPT 对话选 **GPT-6 Pro**（此前轮次为 GPT-6 Astra 极高）；Grok **Expert**；Perplexity 从 **`https://www.perplexity.ai/patents`** 进入，能选模型委员会就选 **Max**（`/` 搜索菜单，点满三模型后「提交」才可用），该入口下不能选则用页面可用最高档并在 md 中如实记录；Kimi 选 **K3** 模型并启用 **学术数据库** 插件。
 - 粘贴用 `page.keyboard.insertText`。Perplexity 可对 composer `drop({files})`。
 - 只改合理项：锁耦合、消 26.4 冲突、补说明书支持。数值/未实测公式不进独权。
 - 每轮：`当前版本_YYYYMMDD` + wiki 一行 `` `GATE` `CASE` 版本 `YYYYMMDD` ``。
@@ -85,8 +85,8 @@ D:/Python/Python314/python.exe .../scripts/wiki_log.py --case P0x-x --gate GEMIN
 
 5. 四门齐后按 `prompts/adoption-rules.md` 改 02/03/05，升版本，再 `wiki_log` 新版本号行。
 
-Gate 标识词只能是：`GEMINI` `GROK-EXPERT` `GPT-ASTRA-HIGH` `PPLX-PATENTS` `KIMI-K3-ACADEMIC`。
-历史记录中的 `PPLX-COMMITTEE`（2026-09-20 起普通 `/search` 入口的委员会轮次）保留原名，不回改。
+Gate 标识词只能是：`GEMINI` `GROK-EXPERT` `GPT-6-PRO` `PPLX-PATENTS` `KIMI-K3-ACADEMIC`。
+历史记录中的 `GPT-ASTRA-HIGH`（GPT-6 Astra 极高轮次）与 `PPLX-COMMITTEE`（普通 `/search` 入口的委员会轮次）保留原名，不回改。
 
 ## 各端要点（摘要）
 
