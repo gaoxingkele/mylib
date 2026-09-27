@@ -34,7 +34,7 @@ description: >
 
 浏览器控制的 token 主要花在"页面内容进模型上下文"上。以下规则不得违反：
 
-1. **禁止用 `browser_snapshot` 轮询等待生成结束。** 等待一律用 `browser_run_code_unsafe` 的 `filename=` 执行 `scripts/js/wait_done.js`：它在 Playwright 进程内每 3 秒测一次正文长度和"停止"按钮，连续约 9 秒无变化才返回 `done:true`，只回传 `{site, done, reason, elapsedSec, len}` 这样的小对象。返回 `done:false` 就原样再调一次，不要改用快照查看进度。
+1. **禁止用 `browser_snapshot` 轮询等待生成结束。** 等待一律用 `browser_run_code_unsafe` 的 `filename=` 执行 `scripts/js/wait_done.js`：它在 Playwright 进程内每 30 秒测一次正文长度和"停止"按钮，连续 30 秒无变化才返回 `done:true`（检查本身不耗 token，token 只花在调用次数上），只回传 `{site, done, reason, elapsedSec, len}` 这样的小对象。返回 `done:false` 就原样再调一次，不要改用快照查看进度。
 2. **`browser_snapshot` 只用于定位失败时**（`getByRole` 找不到元素、首次适配新站点如 Kimi），且先用 `browser_find`，再用 `browser_snapshot(target=ref)` 看局部，不做整页快照。
 3. **申请全文不进上下文。** 用 `mk_site_insert.py` 生成 `insert_<site>.js`，经 `filename=` 执行；不要先 Read 全文再手动输入。
 4. **回复不整篇读回。** 复制 → `save_clipboard.py` → `wrap_eval.py` 直接落文件；需要采纳时只读结论与 P0/P1 段。

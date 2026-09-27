@@ -2,8 +2,8 @@ async (page) => {
   // 等待网页模型生成结束。只在 Playwright 进程内轮询，返回极小的状态对象，不把页面内容带回模型上下文。
   // done:false 时直接再调用一次本脚本（Grok Expert / Kimi 学术检索常需多次）。
   const MAX_MS = 150000;      // 单次调用上限，留足 MCP 超时余量
-  const INTERVAL_MS = 3000;
-  const STABLE_ROUNDS = 3;    // 连续 3 次（约 9 秒）正文长度不变且无"停止"按钮才算完成
+  const INTERVAL_MS = 30000;  // 30 秒查一次：检查在进程内进行，不耗 token；间隔长可避免 Grok/Kimi 检索停顿被误判为完成
+  const STABLE_ROUNDS = 1;    // 相隔 30 秒两次正文长度相同且无"停止"按钮才算完成
 
   const host = new URL(page.url()).hostname;
   const site = /chatgpt/.test(host) ? 'chatgpt'

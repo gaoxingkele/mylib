@@ -22,7 +22,7 @@
 
 ## 等待生成结束
 
-用 `browser_run_code_unsafe` `filename=<skill>/scripts/js/wait_done.js`。它自动按 URL 识别站点，在进程内每 3 秒检查正文长度与"停止/Stop"按钮，稳定约 9 秒返回 `done:true`；单次最长 150 秒，超时返回 `done:false` 与 `reason`（`still_generating` / `still_changing` / ChatGPT 的 `no_reply_button`），再调一次即可。不要用 `browser_snapshot` 看进度。
+用 `browser_run_code_unsafe` `filename=<skill>/scripts/js/wait_done.js`。它自动按 URL 识别站点，在进程内每 30 秒检查正文长度与"停止/Stop"按钮，连续 30 秒不变返回 `done:true`；单次最长 150 秒，超时返回 `done:false` 与 `reason`（`still_generating` / `still_changing` / ChatGPT 的 `no_reply_button`），再调一次即可。不要用 `browser_snapshot` 看进度。
 
 ## 剪贴板
 
