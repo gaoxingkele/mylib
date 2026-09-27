@@ -34,6 +34,8 @@ metadata:
   [references/claim-narrowing-empirical-loop.md](../../references/claim-narrowing-empirical-loop.md)（P06-4/P06-5 实战蒸馏）。
 - **创造性评分不能只看专利检索+模拟委员会，NPL 是必过腿，算法原理审查是必过项。** 只查专利文献、只用模拟角色评分，对算法/软件类发明系统性会漏掉相邻学科（运筹学/分布式系统/控制论等）里的经典范式作为真正 D1/D2；每案评分前确认 NPL 检索与算法原理审查（范式识别→跨领域失败模式→限定锚点核对）已执行，未执行的按门禁不完整处理，不得给出"创造性大概率通过"的结论。完整方法见
   [references/novelty-inventive-step-full-diligence.md](../../references/novelty-inventive-step-full-diligence.md)。
+- **已有外部专业意见必须先进入评分输入，并与之对账。** 评分前检查 `revised/`、`raw_inputs/`、`历史资料归档/` 中有无代理机构或审查员意见；有则把其对比文件与结论一并提供给各角色。内部结论比外部乐观时，须逐条给出外部意见未掌握的具体证据，否则以外部结论为准。步骤见
+  [references/novelty-inventive-step-full-diligence.md](../../references/novelty-inventive-step-full-diligence.md) 第零节。
 
 完整证据等级、检索纪律、创造性攻击和整改规则见
 [references/evidence-review-protocol.md](references/evidence-review-protocol.md)。
