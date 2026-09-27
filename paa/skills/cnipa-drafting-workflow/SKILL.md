@@ -36,6 +36,8 @@ description: 中国发明专利申请文件起草与审查工作流。用于从�
    - **NPL 腿**：论文类对比文件按 `.claude/skills/npl-prior-art-search/SKILL.md` 路由检索（默认 `paper_search` 多源并发初扫，中文/深度/引用追溯按需切换），结果入报告的"NPL 对比文件"节，每条带真实 DOI/arXiv ID/URL。
    - 对每个对比文件记录：文献号、来源 URL、公开日、共有特征、区别特征、风险等级。
    - 未核验的文献号不得进入权利要求或说明书正文。
+   - **算法原理贴合审查**：对说明书每个算法/公式模块做"范式识别→跨领域失败模式推演→独权限定锚点核对→NPL反向核验"四步（不止是找对比文件，还要判断本发明的限定是否精准命中了跨领域迁移的具体失败点），完整方法见
+     [references/novelty-inventive-step-full-diligence.md](../../references/novelty-inventive-step-full-diligence.md)（P06-2/P06-3 revised 报告蒸馏）；专利检索+NPL检索+此项算法审查三者缺一都不算完成 Evidence Pack。
 
 3. **PGTree / Drafting Outline**
    - 在 `output/<案件名>/_drafting_outline.md` 建立树状撰写大纲：
