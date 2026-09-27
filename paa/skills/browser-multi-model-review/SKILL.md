@@ -70,4 +70,7 @@ Gate 标识词只能是：`GEMINI` `GROK-EXPERT` `GPT-ASTRA-HIGH` `PPLX-COMMITTE
 | Grok | `Ask Grok anything` | 先 Dismiss「Meet Grok Bot」，再 `grok_submit.js` | `Copy response` | Expert 检索可 >3 min；md 如实记录 |
 | Perplexity | contenteditable last | `/` → 模型委员会 → 三模型 Max → `pplx_click_submit.js` | 最后一个「复制」 | 「提交」在 0 个模型时禁用 |
 
+Perplexity 另有**专利搜索入口** `https://www.perplexity.ai/patents`（区别于普通 `/search`）——
+涉及查新/专利检索时优先从该入口进入，模型委员会仍是最高档审核的固定要求。
+
 Gemini 新会话把专利当法律咨询时，改称「中国发明专利申请技术文件质量评估，不是法律意见」。标题已是「对话终止」时同线程追问无效。
