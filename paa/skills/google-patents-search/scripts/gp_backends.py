@@ -23,7 +23,7 @@ import os
 import re
 
 from gp_common import (  # noqa: E402
-    BASE, looks_blocked, normalize_pub, patent_url,
+    BASE, looks_blocked, normalize_pub, patent_url, split_pub,
 )
 
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -192,18 +192,30 @@ def parse_patentscope_results(html: str) -> list[dict]:
     return hits
 
 
+_NON_ASCII_RE = re.compile(r"[^\x00-\x7f]")
+
+
 def patentscope_query_variants(query: str, country: str | None = None) -> tuple:
     """把检索式归一化成 PATENTSCOPE 可用的形式，返回 (候选检索式列表, 国别)。
 
-    实测（2026-09-26）：
+    实测（2026-09-26，两轮）：
 
-    * 裸检索式 ``配电变压器 故障诊断`` 直接提交 → **0 命中**，必须带字段算子；
-    * ``EN_ALLTXT:(配电变压器 故障诊断)`` → 10 命中，而把 4 个词空格相连做 AND → 0 命中；
+    第一轮误判：``EN_ALLTXT:(配电变压器 故障诊断)`` 表面看"10 命中"，曾被当作中文可用的证据；
+    第二轮用真实案件的中文查询词复测发现，``EN_ALLTXT`` 是**英文机器翻译全文字段**，塞中文进去
+    命中与否、相关与否都不稳定——同一天另外两组中文查询（``大模型 评测 缓存``、``题目版本 依赖
+    失效 重算``）用 ``EN_ALLTXT`` 返回的候选与检索词毫无关系（私域直播间热点预测、堰塞湖灾害
+    防治……）。对照测试 ``FP:(大模型 评测 缓存)``（Front Page：标题/摘要/申请人等前页字段，
+    覆盖各文献原始语言，非机翻）——同一组中文词直接命中"大模型集群分流""KV缓存管理""大语言
+    模型键值缓存安全检测"等真正相关的title；再用 ``FP:(物化视图 增量刷新)`` 复测同样精准命中
+    多篇物化视图增量刷新专利。结论：**中文查询式必须用 FP，不能用 EN_ALLTXT**；纯英文查询式
+    两者都可，仍用 EN_ALLTXT（已验证对英文词精确）。
+
+    * 裸检索式（无字段算子）直接提交 → 0 命中，必须带字段算子；
     * 用户常按 Google 语法写 ``graphene eye mask country=CN``，该库不认 ``country=``。
 
-    因此：抽掉 ``country=``/``ctr=`` 作为国别；已带字段算子的原样放行；
-    否则包成 ``EN_ALLTXT:(…)``，并在词数 >2 时追加"仅留最长两词""仅留最长一词"两个收窄候选，
-    由调用方逐个试、命中即停。
+    因此：抽掉 ``country=``/``ctr=`` 作为国别；已带字段算子的原样放行；否则按查询式是否含
+    非 ASCII 字符选字段（含中文/日文/韩文等 → ``FP``，纯英文/数字 → ``EN_ALLTXT``），
+    并在词数 >2 时追加"仅留最长两词""仅留最长一词"两个收窄候选，由调用方逐个试、命中即停。
     """
     q = (query or "").strip()
     m = re.search(r"\b(?:country|ctr|pn)\s*=\s*([A-Za-z]{2})\b", q)
@@ -216,11 +228,12 @@ def patentscope_query_variants(query: str, country: str | None = None) -> tuple:
     toks = [t for t in re.split(r"[\s,，、;；]+", q) if t]
     if not toks:
         return [], country
-    out = [f"EN_ALLTXT:({' '.join(toks)}){suffix}"]
+    field = "FP" if _NON_ASCII_RE.search(q) else "EN_ALLTXT"
+    out = [f"{field}:({' '.join(toks)}){suffix}"]
     if len(toks) > 2:
         srt = sorted(toks, key=len, reverse=True)
-        out.append(f"EN_ALLTXT:({' '.join(srt[:2])}){suffix}")
-        out.append(f"EN_ALLTXT:({srt[0]}){suffix}")
+        out.append(f"{field}:({' '.join(srt[:2])}){suffix}")
+        out.append(f"{field}:({srt[0]}){suffix}")
     return out, country
 
 
@@ -358,6 +371,20 @@ def bigquery_dry_run(sql: str, params: list | None = None) -> dict:
             "within_free_tier_single_query": gb <= 1000}
 
 
+def _bq_pub_number(pn: str) -> str:
+    """把规范化公开号转成 patents-public-data 实际存储的带分隔符形式。
+
+    该数据集的 ``publication_number`` 一律是 ``{国家}-{数字}-{种类码}``
+    （如 ``CN-117291184-A``），而本 skill 其余通道统一用无分隔符形式
+    （``CN117291184A``）。不做这层转换会导致 ``lookup``/``similar`` 对任何
+    真实存在的公开号都返回 not_found（2026-09-26 实测发现，含官方示例号）。
+    """
+    country, digits, kind = split_pub(pn)
+    if not country or not digits:
+        return pn
+    return f"{country}-{digits}-{kind}" if kind else f"{country}-{digits}"
+
+
 def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dict:
     """按公开号从官方数据集取著录项 + 权利要求全文。"""
     client, err = _bq_client()
@@ -369,7 +396,7 @@ def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dic
         "title_localized, abstract_localized, claims_localized, cpc, assignee, inventor "
         f"FROM `{PUBLIC_TABLE}` WHERE publication_number = @pn LIMIT 1"
     )
-    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn)]
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", _bq_pub_number(pn))]
     est = bigquery_dry_run(sql, params)
     rows = [dict(r) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
@@ -414,7 +441,7 @@ def bigquery_normalize_row(row: dict, lang: str | None = None) -> dict:
     cpc = row.get("cpc") or []
     codes = [c.get("code", "") for c in cpc] if isinstance(cpc, list) else []
     return {
-        "pub_number": row.get("publication_number") or "",
+        "pub_number": normalize_pub(row.get("publication_number") or ""),
         "country": country,
         "title": (pick(row.get("title_localized"), want) or "")[:300],
         "publication_date": iso,
@@ -489,18 +516,19 @@ def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
     if err:
         return err
     from google.cloud import bigquery
-    where = "gpr.publication_number != @pn"
+    where = ("gpr.publication_number != @pn AND gpr.embedding_v1 IS NOT NULL "
+              "AND ARRAY_LENGTH(gpr.embedding_v1) = ARRAY_LENGTH(seed.embedding_v1)")
     if country:
         where += " AND gpr.country = @cc"
     sql = (
         "WITH seed AS (SELECT embedding_v1 FROM `" + RESEARCH_TABLE + "` "
-        "WHERE publication_number = @pn LIMIT 1) "
+        "WHERE publication_number = @pn AND embedding_v1 IS NOT NULL LIMIT 1) "
         "SELECT gpr.publication_number, gpr.country, gpr.top_terms, "
         "cosine_distance(gpr.embedding_v1, seed.embedding_v1) AS distance "
         f"FROM `{RESEARCH_TABLE}` gpr, seed WHERE {where} "
         "ORDER BY distance LIMIT @lim"
     )
-    params = [bigquery.ScalarQueryParameter("pn", "STRING", pn),
+    params = [bigquery.ScalarQueryParameter("pn", "STRING", _bq_pub_number(pn)),
               bigquery.ScalarQueryParameter("lim", "INT64", int(limit))]
     if country:
         params.append(bigquery.ScalarQueryParameter("cc", "STRING", country))
@@ -512,6 +540,8 @@ def bigquery_similar(pn: str, country: str | None = None, limit: int = 20,
     rows = [dict(r) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
         timeout=timeout).result()]
+    for r in rows:
+        r["publication_number"] = normalize_pub(r.get("publication_number") or "")
     return {"seed": pn, "hits": rows, "estimate": est, "count": len(rows)}
 
 

@@ -36,6 +36,8 @@ description: 中国发明专利申请文件起草与审查工作流。用于从�
    - **NPL 腿**：论文类对比文件按 `.claude/skills/npl-prior-art-search/SKILL.md` 路由检索（默认 `paper_search` 多源并发初扫，中文/深度/引用追溯按需切换），结果入报告的"NPL 对比文件"节，每条带真实 DOI/arXiv ID/URL。
    - 对每个对比文件记录：文献号、来源 URL、公开日、共有特征、区别特征、风险等级。
    - 未核验的文献号不得进入权利要求或说明书正文。
+   - **算法原理贴合审查**：对说明书每个算法/公式模块做"范式识别→跨领域失败模式推演→独权限定锚点核对→NPL反向核验"四步（不止是找对比文件，还要判断本发明的限定是否精准命中了跨领域迁移的具体失败点），完整方法见
+     [references/novelty-inventive-step-full-diligence.md](../../references/novelty-inventive-step-full-diligence.md)（P06-2/P06-3 revised 报告蒸馏）；专利检索+NPL检索+此项算法审查三者缺一都不算完成 Evidence Pack。
 
 3. **PGTree / Drafting Outline**
    - 在 `output/<案件名>/_drafting_outline.md` 建立树状撰写大纲：
@@ -52,6 +54,10 @@ description: 中国发明专利申请文件起草与审查工作流。用于从�
 5. **RRAG Review Loop**
    - reviewer 先列问题，再让对应 writer 修改。
    - 对算法、状态机或多版本方案的闭环补强，读取 [机制收敛与改稿收益核验](../patent-grant-scorer/references/mechanism-convergence-review.md)，检查前后时序、分支冲突及工程依据；按适用性选用，不套用案例机制。
+   - 独权收窄类整改（委员会建议"独权含非必要特征"）按
+     [独权收窄的实证迭代闭环](../../references/claim-narrowing-empirical-loop.md)
+     执行：先温和去重复，再视委员会意见与量化基线决定是否激进移出；改前改后
+     都跑量化门禁对照，数据不支持就回退，不要凭直觉判断"更精简=分数更好"。
    - 每轮审查记录：问题、依据、修改对象、是否关闭。
    - 对高风险对比文件建立 A/B/C 三套修改预案：宽版、合入关键从权版、应急窄版。
 
