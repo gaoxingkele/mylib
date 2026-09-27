@@ -11,3 +11,4 @@
 9. **wiki_log 追加到 EOF** → 行必须插入含 `--section` 标记的标题下、下一 `##` 之前。
 10. **网页模型专利号** → 非指定对比文件；不得写入申请对比文件表，不得当 incoPat 命中。
 11. **Python 3.14 + PIL** → Word/AHP 用 3.12。本 pack 的 prepare/wiki_log/wrap_eval 用 3.14 即可。
+12. **用快照轮询等待生成** → 每次整页快照可达上万 token，Grok Expert 等 3 分钟以上就是几十万 token。改用 `scripts/js/wait_done.js`（进程内轮询、只回传状态小对象），`done:false` 再调一次。

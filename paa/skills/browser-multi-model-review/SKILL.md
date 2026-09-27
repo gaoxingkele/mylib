@@ -30,6 +30,16 @@ description: >
 
 解释器：`D:/Python/Python314/python.exe`。python-docx / AHP 用 `C:\WINDOWS\py.exe -V:3.12`。
 
+## Token 纪律（硬约束，2026-09-27）
+
+浏览器控制的 token 主要花在"页面内容进模型上下文"上。以下规则不得违反：
+
+1. **禁止用 `browser_snapshot` 轮询等待生成结束。** 等待一律用 `browser_run_code_unsafe` 的 `filename=` 执行 `scripts/js/wait_done.js`：它在 Playwright 进程内每 3 秒测一次正文长度和"停止"按钮，连续约 9 秒无变化才返回 `done:true`，只回传 `{site, done, reason, elapsedSec, len}` 这样的小对象。返回 `done:false` 就原样再调一次，不要改用快照查看进度。
+2. **`browser_snapshot` 只用于定位失败时**（`getByRole` 找不到元素、首次适配新站点如 Kimi），且先用 `browser_find`，再用 `browser_snapshot(target=ref)` 看局部，不做整页快照。
+3. **申请全文不进上下文。** 用 `mk_site_insert.py` 生成 `insert_<site>.js`，经 `filename=` 执行；不要先 Read 全文再手动输入。
+4. **回复不整篇读回。** 复制 → `save_clipboard.py` → `wrap_eval.py` 直接落文件；需要采纳时只读结论与 P0/P1 段。
+5. **按需单端。** 只查专利跑 Perplexity `/patents`，只查学术文献跑 Kimi，不必每次五端齐跑。
+
 ## MCP 用法
 
 1. 先 `search_tool` 取 Playwright 工具 schema，再 `use_tool`。不要猜参数名。
@@ -64,7 +74,7 @@ D:/Python/Python314/python.exe .../scripts/mk_site_insert.py --batch-dir <batch-
 ```
 
 2. 新标签打开对应站点 → 选最高档 → 粘贴/拖放 → 发送。JS 在 `scripts/js/`。
-3. 等生成结束（ChatGPT「停止回答」消失且出现「复制回复」）。
+3. 等生成结束：`browser_run_code_unsafe` `filename=scripts/js/wait_done.js`，`done:false` 就再调一次；ChatGPT 返回 `no_reply_button` 时执行 `chatgpt_continue.js` 后再等。**不要用快照轮询。**
 4. 点复制按钮，然后：
 
 ```
