@@ -11,6 +11,8 @@ BOXES = {
     "chatgpt": "page.getByRole('textbox', { name: '与 ChatGPT 聊天' })",
     "grok": "page.getByRole('textbox', { name: 'Ask Grok anything' })",
     "pplx": "page.locator('[contenteditable=\"true\"]').last()",
+    # Kimi（K3 + 学术数据库插件）：输入框选择器尚未实测，暂用通用 contenteditable 兜底，首次实跑后按页面实际改写
+    "kimi": "page.locator('[contenteditable=\"true\"]').last()",
 }
 
 

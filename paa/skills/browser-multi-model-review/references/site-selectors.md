@@ -1,4 +1,4 @@
-# 四端选择器（2026-09-20 实测）
+# 各端选择器（2026-09-20 实测；2026-09-27 增 Perplexity /patents 与 Kimi）
 
 模型名单会变。以页面当前按钮文案为准；下表是当时可用的最高档。
 
@@ -25,7 +25,10 @@
 - 复制：`Copy response`
 - 提交后 URL 变成 `/c/<uuid>`，记下该 URL。
 
-## Perplexity `perplexity.ai`
+## Perplexity `perplexity.ai/patents`（2026-09-27 起固定入口）
+
+- 入口：`https://www.perplexity.ai/patents`，不是 `/search`。命令行直连被 Cloudflare 403，只能在已登录浏览器会话里打开。
+- 以下选择器是 2026-09-20 在 `/search` 下实测的；`/patents` 页面若布局不同，以页面实际为准并回填本节。
 
 - Composer：`locator('[contenteditable="true"]').last()`
 - **模型委员会不在「模型」按钮里**（那是 最佳 / GPT-5.6 Sol Max 等单模型列表）。在搜索框键入 `/`，选 **模型委员会**。
@@ -33,3 +36,10 @@
 - 提交：role `button` name `提交`
 - 复制：exact name `复制` last()
 - 重命名：会话操作 → `Pxx-x 简写`。标签仍可能显示提问摘要。
+
+## Kimi `kimi.com`（2026-09-27 新增，选择器待首次实跑补录）
+
+- 模型：选 **K3**。
+- 插件：启用 **学术数据库**。未看到插件已启用的标记时，不得把回答当作学术检索结果。
+- 输入/发送/复制：尚未实测。`mk_site_insert.py --site kimi` 暂用 `[contenteditable="true"]` last() 兜底；首次实跑后把真实 role/name 回填本节并同步改 `BOXES["kimi"]`。
+- 提问要求：列出每篇文献的 DOI / arXiv ID / 期刊卷期；只作「非指定对比文件」，须逐条打开原页面核验。

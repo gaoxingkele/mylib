@@ -22,6 +22,11 @@ class MkSiteInsertTests(unittest.TestCase):
         self.assertIn("为 Gemini 输入提示", js)
         self.assertIn("仅评本案：P00-0", js)
 
+    def test_kimi_site_is_supported(self) -> None:
+        js = mk_site_insert.render_insert_js("仅评本案：P00-0。正文", "kimi")
+        self.assertIn("insertText", js)
+        self.assertIn("contenteditable", js)
+
     def test_cli_writes_insert_js_from_fulltext(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             batch = Path(tmp)

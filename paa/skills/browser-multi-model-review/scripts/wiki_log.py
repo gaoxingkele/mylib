@@ -42,7 +42,7 @@ def insert_line(prev: str, line: str, section_mark: str = DEFAULT_SECTION) -> st
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--case", required=True)
-    ap.add_argument("--gate", required=True, help="GEMINI | GROK-EXPERT | GPT-ASTRA-HIGH | PPLX-COMMITTEE")
+    ap.add_argument("--gate", required=True, help="GEMINI | GROK-EXPERT | GPT-ASTRA-HIGH | PPLX-PATENTS | KIMI-K3-ACADEMIC（历史：PPLX-COMMITTEE）")
     ap.add_argument("--version", required=True)
     ap.add_argument("--note", default="")
     ap.add_argument("--url", default="")
