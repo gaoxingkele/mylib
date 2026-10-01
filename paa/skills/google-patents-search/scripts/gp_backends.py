@@ -385,8 +385,12 @@ def _bq_pub_number(pn: str) -> str:
     return f"{country}-{digits}-{kind}" if kind else f"{country}-{digits}"
 
 
-def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dict:
-    """按公开号从官方数据集取著录项 + 权利要求全文。"""
+def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120,
+                    max_gb: float = 50.0) -> dict:
+    """按公开号从官方数据集取著录项 + 权利要求全文。
+
+    注意：publications 表未按 publication_number 聚簇，单次 lookup 干跑实测约 390 GB
+    （2026-10-01），并非"扫描量极小"。先干跑，超过 max_gb 即拒绝，不真正执行。"""
     client, err = _bq_client()
     if err:
         return err
@@ -398,6 +402,11 @@ def bigquery_lookup(pn: str, lang: str | None = None, timeout: int = 120) -> dic
     )
     params = [bigquery.ScalarQueryParameter("pn", "STRING", _bq_pub_number(pn))]
     est = bigquery_dry_run(sql, params)
+    est_gb = (est or {}).get("estimate_gb", 0) or 0
+    if est_gb > max_gb:
+        return {"error": "estimate_over_budget", "estimate": est,
+                "remedy": f"预计扫描 {est_gb} GB > max_gb {max_gb}；lookup 不按公开号聚簇，"
+                          "请改用 tavily/google 后端取件，或显式提高 --max-gb"}
     rows = [dict(r) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
         timeout=timeout).result()]
@@ -463,7 +472,7 @@ def bigquery_normalize_row(row: dict, lang: str | None = None) -> dict:
 def bigquery_search(keywords: list[str], country: str | None = None,
                     cpc_prefix: str | None = None, after_priority: str | None = None,
                     before_priority: str | None = None, limit: int = 20,
-                    timeout: int = 180) -> dict:
+                    timeout: int = 180, max_gb: float = 50.0) -> dict:
     """关键词/CPC/国别/日期条件检索官方数据集（廉价路径：只用可过滤字段）。
 
     ``after_priority``/``before_priority`` 形如 ``2015-01-01``（转成 yyyymmdd 整数比较）。
@@ -499,6 +508,11 @@ def bigquery_search(keywords: list[str], country: str | None = None,
            + " ORDER BY priority_date DESC LIMIT @lim")
     params.append(bigquery.ScalarQueryParameter("lim", "INT64", int(limit)))
     est = bigquery_dry_run(sql, params)
+    # 预算门必须在真正执行前判定（此前在 CLI 层事后判定，查询已扣费，2026-10-01 修正）
+    est_gb = (est or {}).get("estimate_gb", 0) or 0
+    if est_gb > max_gb:
+        return {"error": "estimate_over_budget", "estimate": est,
+                "remedy": f"预计 {est_gb} GB > max_gb {max_gb}；请加 country/cpc/after 收窄"}
     rows = [bigquery_normalize_row(dict(r)) for r in client.query(
         sql, job_config=bigquery.QueryJobConfig(query_parameters=params),
         timeout=timeout).result()]
@@ -754,6 +768,102 @@ def tavily_search(query: str, limit: int = 10, timeout: int = 60, key: str | Non
     return {"blocked": False, "hits": uniq[:limit], "count": len(uniq[:limit]),
             "raw_results": len(data.get("results") or []), "non_patent_skipped": skipped,
             "key_source": src, "relay": "tavily", "url": TAVILY_SEARCH}
+
+
+# ---------------------------------------------------------------- Brave 中继检索
+
+BRAVE_SEARCH = "https://api.search.brave.com/res/v1/web/search"
+BRAVE_KEY_NAMES = ("BRAVE_API_KEY", "BRAVEAPI", "BRAVE_KEY", "BRAVE_SEARCH_API_KEY")
+
+
+def resolve_brave_key(explicit: str | None = None) -> tuple:
+    """返回 (key, 来源)。只报位置，绝不回显 key。"""
+    if explicit:
+        return explicit.strip(), "cli"
+    for n in BRAVE_KEY_NAMES + ("braveapi", "BraveApi"):
+        v = os.environ.get(n)
+        if v:
+            return v.strip(), f"env:{n}"
+    return _dotenv_lookup({n.upper() for n in BRAVE_KEY_NAMES})
+
+
+def brave_search(query: str, limit: int = 10, timeout: int = 60, key: str | None = None,
+                 country: str | None = None) -> dict:
+    """中继检索腿二：用 Brave Search API 以 ``site:patents.google.com`` 限域检索。
+
+    与 ``tavily_search`` 同一定位——Google 直连被拦时的召回替代，索引与 Tavily 不同，
+    两腿并用可降低单一索引的召回盲区。**只是检索来源的中继，不是证据源**：返回项一律
+    ``evidence_level=snippet-degraded``，必须再经 gp_fetch 取原文并 gp_verify 后才能引用。
+    只保留能解析出公开号的 Google Patents 链接。
+    """
+    k, src = resolve_brave_key(key)
+    if not k:
+        return {"blocked": False, "error": "brave_key_missing", "hits": [],
+                "remedy": "设置 BRAVE_API_KEY 后可用 Brave 中继检索腿"}
+    q = (query or "").strip()
+    if "site:" not in q:
+        q = f"site:patents.google.com {q}"
+    params = {"q": q, "count": max(1, min(limit * 2, 20))}
+    if country:
+        params["country"] = country
+    s = _session()
+    try:
+        r = s.get(BRAVE_SEARCH, timeout=timeout, params=params,
+                  headers={"Accept": "application/json", "X-Subscription-Token": k})
+    except Exception as exc:  # noqa: BLE001
+        return {"blocked": False, "error": f"network_error:{type(exc).__name__}", "hits": []}
+    if r.status_code in (401, 402, 403):
+        return {"blocked": False, "error": "brave_auth_failed", "status": r.status_code,
+                "hits": [], "key_source": src,
+                "remedy": "检查凭据/额度（401=key 无效；402/403=额度或权限不足）"}
+    if r.status_code == 429:
+        return {"blocked": False, "error": "brave_rate_limited", "status": 429, "hits": [],
+                "key_source": src, "remedy": "Brave 免费档约 1 req/s，放慢节奏重试"}
+    if r.status_code != 200:
+        return {"blocked": False, "error": f"http_{r.status_code}", "status": r.status_code,
+                "hits": [], "key_source": src}
+    try:
+        data = r.json()
+    except Exception:  # noqa: BLE001
+        return {"blocked": False, "error": "not_json", "hits": [], "key_source": src}
+    results = (data.get("web") or {}).get("results") or []
+    hits, skipped = [], 0
+    for it in results:
+        url = it.get("url") or ""
+        m = TAVILY_PATENT_URL_RE.search(url)
+        if not m:
+            skipped += 1
+            continue
+        pn = normalize_pub(m.group(1))
+        title = re.sub(r"\s*[-–—|]\s*Google Patents\s*$", "",
+                       (it.get("title") or "").strip(), flags=re.I)
+        title = re.sub(r"^[A-Z]{2}\d{6,13}[A-Z]?\d?\s*[-–—]\s*", "", title)
+        snippet = re.sub(r"</?strong>", "", it.get("description") or "")
+        hits.append({
+            "pub_number": pn,
+            "title": title,
+            "assignee": "",
+            "inventor": "",
+            "priority_date": "",
+            "filing_date": "",
+            "publication_date": "",
+            "snippet": snippet[:600],
+            "pdf_url": "",
+            "url": url or patent_url(pn),
+            "source": "google_patents_via_relay",
+            "backend": "brave",
+            "relay": "brave_search",
+            "evidence_level": "snippet-degraded",
+        })
+    seen, uniq = set(), []
+    for h in hits:
+        if h["pub_number"] in seen:
+            continue
+        seen.add(h["pub_number"])
+        uniq.append(h)
+    return {"blocked": False, "hits": uniq[:limit], "count": len(uniq[:limit]),
+            "raw_results": len(results), "non_patent_skipped": skipped,
+            "query_used": q, "key_source": src, "relay": "brave", "url": BRAVE_SEARCH}
 
 
 # ---------------------------------------------------------------- 统一的"取件链"

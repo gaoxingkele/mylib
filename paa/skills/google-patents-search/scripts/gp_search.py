@@ -83,7 +83,7 @@ def main(argv=None) -> int:
     ap.add_argument("query_terms", nargs="*", help="检索式（位置参数）")
     ap.add_argument("--query", help="检索式（显式参数）")
     ap.add_argument("--query-file", help="从文件读检索式")
-    ap.add_argument("--backend", choices=["auto", "google", "patentscope", "tavily"],
+    ap.add_argument("--backend", choices=["auto", "google", "patentscope", "tavily", "brave"],
                     default="auto")
     ap.add_argument("--country", help="国别（patentscope 后端用：拼进 CTR 条件，收窄时保留）")
     ap.add_argument("--html", help="离线解析已保存的结果页 HTML")
@@ -121,8 +121,8 @@ def main(argv=None) -> int:
         ap.error("需要 query / --query / --query-file / --html 之一")
 
     attempts = []
-    # auto：先直连（免费），再 PATENTSCOPE（免费），最后中继检索腿（消耗 Tavily 额度，仅在前两者无命中时用）
-    order = (["google", "patentscope", "tavily"] if args.backend == "auto"
+    # auto：先直连（免费），再 PATENTSCOPE（免费），最后中继检索腿（消耗 Tavily/Brave 额度，仅在前两者无命中时用）
+    order = (["google", "patentscope", "tavily", "brave"] if args.backend == "auto"
              else [args.backend])
     try:
         for backend in order:
@@ -133,6 +133,9 @@ def main(argv=None) -> int:
             elif backend == "tavily":
                 res = bk.tavily_search(args.query, limit=args.limit or 10,
                                        timeout=max(args.timeout, 60), country=args.country)
+            elif backend == "brave":
+                res = bk.brave_search(args.query, limit=args.limit or 10,
+                                      timeout=max(args.timeout, 60), country=args.country)
             else:
                 res = bk.patentscope_search(args.query, timeout=args.timeout,
                                             country=args.country)

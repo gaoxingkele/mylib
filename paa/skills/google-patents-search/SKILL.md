@@ -52,6 +52,7 @@ Google 对非浏览器客户端的拦截很激进。2026-09-26 在同一台机�
 | `google` | Google Patents 站点内部 JSON 接口（curl_cffi 指纹）。**不被拦的网络**上最直接 | 否 |
 | `patentscope` | WIPO PATENTSCOPE 官方库，免 key，覆盖 CN；默认兜底 | 否 |
 | `tavily` | **中继**：`extract` 取同一公开页全文（本机被 503 时仍可拿到权利要求与说明书）；`search` 在 `patents.google.com` 域内检索 | `TAVILY_API_KEY` |
+| `brave` | **中继检索腿二**：Brave Search API 以 `site:patents.google.com` 限域检索，索引与 Tavily 不同，两腿并用降低召回盲区；只做召回，命中一律 `snippet-degraded`，须再 gp_fetch＋gp_verify | `BRAVE_API_KEY`（亦识别 `BRAVEAPI`） |
 | `bigquery` | Google 官方专利数据集（著录项/摘要/可得权利要求） | GCP 项目凭据 |
 
 中继取的是公开页面、用的是有授权凭据的官方 API，不是绕 WAF 破解；但输出里**始终**保留
