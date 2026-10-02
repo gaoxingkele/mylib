@@ -48,15 +48,6 @@
 - 作用：研究→写作→审稿→pipeline（单 skill router；内部 5 个 WORKFLOW）
 - 验证：技能列表里只应出现 **一个** ARS 条目
 
-## Patent Layer
-
-### `paper2patent-power-water-12`
-- 位置：`C:/aicoding/zhuanlishenqing/output/论文迁移电力水利12案_20261001/`
-- 作用：10 篇自有论文 → 电力 5 案 + 水利 7 案的完整申请草稿、两轮查新证据、Word 交付件、cohort 评分
-- 依赖技能：`paa`（validate）、`patent-disclosure-skill`、`cnipa-drafting-workflow`、`google-patents-search`（tavily 后端）、`npl-prior-art-search`、`patent-grant-scorer`
-- 关键脚本：`zhuanlishenqing/scripts/build_paper12_word.py`、`<批次>/_scoring/merge_cohort.py`
-- 手册：`patent-paper2patent-power-water-12.md`
-
 ## Project mirror Layer
 
 ### `powergrid_paper`

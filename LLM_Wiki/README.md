@@ -7,7 +7,6 @@
 - 总图：`graph.md`
 - 节点说明：`nodes.md`
 - 路由手册：`playbooks.md`
-- 专利批次手册：`patent-paper2patent-power-water-12.md`（论文→电力/水利专利 12 案，含接手所需的目录、命令、坑、待办）
 
 ## 设计原则
 
