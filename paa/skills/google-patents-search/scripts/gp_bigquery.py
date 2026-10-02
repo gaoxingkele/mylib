@@ -13,7 +13,7 @@
 子命令：
 
   probe                     检查 SDK 与凭据前置条件
-  lookup   <公开号>          取著录项 + 权利要求全文（扫描量极小）
+  lookup   <公开号>          取著录项 + 权利要求全文（实测单次约 390 GB，默认 --max-gb 50 拒绝）
   search   --keyword 石墨烯 --country CN --cpc A61F --after 2015-01-01
                             关键词/CPC/国别/日期条件检索
   similar  <种子公开号>       以该件向量做**语义近邻**检索（incoPat 语义检索的免费等价物）
@@ -57,6 +57,7 @@ def main(argv=None) -> int:
     p1.add_argument("--out")
 
     p2 = sub.add_parser("lookup", help="按公开号取著录项+权利要求")
+    p2.add_argument("--max-gb", type=float, default=50.0, help="预计扫描量上限（GB），超过即拒绝")
     p2.add_argument("pn")
     p2.add_argument("--lang", help="权利要求语言 zh/en（默认按国家码推断）")
     p2.add_argument("--out")
@@ -83,7 +84,7 @@ def main(argv=None) -> int:
     if args.cmd == "probe":
         return _out(args, bk.bigquery_probe())
     if args.cmd == "lookup":
-        res = bk.bigquery_lookup(args.pn, lang=args.lang)
+        res = bk.bigquery_lookup(args.pn, lang=args.lang, max_gb=args.max_gb)
         if res.get("error"):
             return _out(args, res)
         rows = res.get("rows") or []
@@ -97,7 +98,7 @@ def main(argv=None) -> int:
             ap.error("search 至少要给 --keyword 或 --cpc")
         res = bk.bigquery_search(args.keyword, country=args.country, cpc_prefix=args.cpc,
                                  after_priority=args.after, before_priority=args.before,
-                                 limit=args.limit)
+                                 limit=args.limit, max_gb=args.max_gb)
         if res.get("error"):
             return _out(args, res)
         est_gb = (res.get("estimate") or {}).get("estimate_gb", 0)

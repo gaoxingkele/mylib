@@ -60,9 +60,30 @@ def _find_mmdc_invocation() -> tuple[list[str], bool]:
     mmdc = shutil.which("mmdc")
     if mmdc and Path(mmdc).suffix.lower() not in (".ps1",):
         return [mmdc], False
+    # npx 直接执行包的 bin（mmdc），不要再追加 "mmdc" 子命令：
+    # mermaid-cli 12 会把它当成多余的位置参数而报错（2026-10-01 实测）。
     if sys.platform == "win32":
-        return ["npx", "-y", "@mermaid-js/mermaid-cli", "mmdc"], True
-    return ["npx", "-y", "@mermaid-js/mermaid-cli", "mmdc"], False
+        return ["npx", "-y", "@mermaid-js/mermaid-cli"], True
+    return ["npx", "-y", "@mermaid-js/mermaid-cli"], False
+
+
+_VIEWPORT_SUPPORT: dict[str, bool] = {}
+
+
+def _supports_viewport_args(mmdc_base: list[str], use_shell: bool) -> bool:
+    """mermaid-cli 12 起移除了 -w/-H；用 --help 探测一次并缓存。"""
+    key = " ".join(mmdc_base)
+    if key not in _VIEWPORT_SUPPORT:
+        try:
+            argv = [*mmdc_base, "--help"]
+            r = subprocess.run(
+                subprocess.list2cmdline(argv) if use_shell else argv,
+                shell=use_shell, capture_output=True, text=True, timeout=180,
+            )
+            _VIEWPORT_SUPPORT[key] = "--width" in (r.stdout or "") + (r.stderr or "")
+        except Exception:
+            _VIEWPORT_SUPPORT[key] = False
+    return _VIEWPORT_SUPPORT[key]
 
 
 def _mmdc_extra_args(
@@ -70,16 +91,14 @@ def _mmdc_extra_args(
     scale: float,
     width: int,
     height: int,
+    viewport: bool = True,
 ) -> list[str]:
-    """传给 mmdc 的分辨率相关参数（-s 为 Puppeteer deviceScaleFactor，显著影响 PNG 清晰度）。"""
-    return [
-        "-s",
-        str(scale),
-        "-w",
-        str(width),
-        "-H",
-        str(height),
-    ]
+    """传给 mmdc 的分辨率相关参数（-s 为 Puppeteer deviceScaleFactor，显著影响 PNG 清晰度）。
+    viewport=False 时（mermaid-cli ≥12 无 -w/-H）只传 -s。"""
+    args = ["-s", str(scale)]
+    if viewport:
+        args += ["-w", str(width), "-H", str(height)]
+    return args
 
 
 def _render_one_mermaid(
@@ -102,7 +121,10 @@ def _render_one_mermaid(
         tmp.write(mermaid_source.strip() + "\n")
         tmp_path = Path(tmp.name)
     try:
-        extra = _mmdc_extra_args(scale=scale, width=width, height=height)
+        extra = _mmdc_extra_args(
+            scale=scale, width=width, height=height,
+            viewport=_supports_viewport_args(mmdc_base, use_shell),
+        )
         if use_shell:
             parts = [
                 *mmdc_base,
@@ -114,7 +136,9 @@ def _render_one_mermaid(
                 "white",
                 *extra,
             ]
-            cmd = " ".join(shlex.quote(p) for p in parts)
+            # Windows cmd.exe 不认 POSIX 单引号（shlex.quote），须用 list2cmdline
+            cmd = (subprocess.list2cmdline(parts) if sys.platform == "win32"
+                   else " ".join(shlex.quote(p) for p in parts))
             r = subprocess.run(
                 cmd,
                 shell=True,
