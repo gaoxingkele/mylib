@@ -75,13 +75,19 @@ D:/Python/Python314/python.exe .../scripts/mk_site_insert.py --batch-dir <batch-
 
 2. 新标签打开对应站点 → 选最高档 → 粘贴/拖放 → 发送。JS 在 `scripts/js/`。
 3. 等生成结束：`browser_run_code_unsafe` `filename=scripts/js/wait_done.js`，`done:false` 就再调一次；ChatGPT 返回 `no_reply_button` 时执行 `chatgpt_continue.js` 后再等。**不要用快照轮询。**
-4. 点复制按钮，然后：
+4. 点复制按钮，然后单次调用 `post_copy.py`（合并 save_clipboard + wrap_eval + wiki_log，3 步 → 1 步）：
 
 ```
-D:/Python/Python314/python.exe .../scripts/save_clipboard.py <raw.txt>
-D:/Python/Python314/python.exe .../scripts/wrap_eval.py --case P0x-x --gate GEMINI --url <会话URL> --raw <raw.txt> --note "扩展思考" --out-dir <案目录>
-D:/Python/Python314/python.exe .../scripts/wiki_log.py --case P0x-x --gate GEMINI --version 20260918 --url <会话URL> --log <项目>/wiki/log.md --section 八案四端审核
+D:/Python/Python314/python.exe .../scripts/post_copy.py \
+  --case P0x-x --gate GEMINI --version 20260918 \
+  --url <会话URL> \
+  --out-dir <案目录>/paa/evidence/browser_review \
+  --log <项目>/wiki/log.md \
+  --note "扩展思考" --section 八案四端审核
 ```
+
+stdout 返回单行 JSON，含 `summary`（400 字结论摘要）、`out_md`（全文路径）、`wiki`（wiki 行）、`raw_len`（字符数）。
+**Claude 只读 `summary` 字段**，不 Read 全文 md，全文留作存档。
 
 5. 四门齐后按 `prompts/adoption-rules.md` 改 02/03/05，升版本，再 `wiki_log` 新版本号行。
 

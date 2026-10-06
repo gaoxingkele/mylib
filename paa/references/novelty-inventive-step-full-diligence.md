@@ -78,6 +78,7 @@ revised 报告用的是"CNIPA X%~Y%"区间+"较上一轮变化"这种表达，�
 
 ## 六、与既有文档的分工
 
+- 检索候选是否写出创造性锚点：`paa/skills/patent-jev-screen/SKILL.md`。只对已公开文献的标题、摘要或已定位段落做要素判别；路由不替代本节的锚点核对，也不把概率写成新颖性或创造性结论；
 - NPL 检索的具体调用方式：`paa/skills/npl-prior-art-search/SKILL.md`（本文档不重复）；
 - Gate 2 证据绑定的形式要求：`gates-checklist.md`；
 - OA答复弹药预埋：`oa-response-playbook.md`（本文档第三节的"锚点核对"结论就是该武器库"逐特征效果记载"的具体填法）；
