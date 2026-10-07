@@ -7,6 +7,13 @@
 - User-level Codex skills are installed as junctions into curated sources under this repository.
 - **技能来源/用处/效果/路由全知识 → 见 [`WIKI.md`](WIKI.md)**（2026-08-29 起，技能变动同步更新）
 
+## Proposal writing / 申报书
+
+- Main module: [`proposal-writing/`](proposal-writing/README.md), entry [`SKILL.md`](proposal-writing/SKILL.md).
+- Internal routes: 科研基金 → `fund-research-content-writer`; 科技项目 → `research-grants`; 教改 / 人才计划 → `doc-coauthoring`.
+- Three complete upstream skill snapshots, pinned provenance and licenses; current guides, templates and numbered evidence govern every draft.
+- Runtime registers only `proposal-writing` through `skill-runtime/routers/proposal-writing`; leaf skills load on demand.
+
 ## Patent application toolkit
 
 - Entry: `paa/README.md` and `paa/SKILL.md`

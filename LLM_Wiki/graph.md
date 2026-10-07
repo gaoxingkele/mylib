@@ -2,6 +2,14 @@
 
 ```mermaid
 graph TD
+    PU[User Goal: 申报书] --> PR[proposal-writing 单入口]
+    PR --> PF[科研基金 / fund-research-content-writer]
+    PR --> PT[科技项目 / research-grants]
+    PR --> PD[教改与人才 / doc-coauthoring]
+    PF --> PE[当年指南模板 / 编号证据 / 缺项待补]
+    PT --> PE
+    PD --> PE
+
     U[User Goal: 电网/AI论文] --> P0[Project Workspace<br/>D:/aicoding/powergrid_benchmark]
 
     P0 --> RS[ResearchStudio-Idea]

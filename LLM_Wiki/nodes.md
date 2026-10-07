@@ -63,3 +63,11 @@
 
 ### Full-corpus Distill
 - lib 镜像：`powergrid_paper/metadata/ideaspark_fullcorpus_*`、`repllm_cpa_*`
+
+## Proposal Layer
+
+### `proposal-writing`（申报书）
+- 维护源：[proposal-writing/](../proposal-writing/README.md)；入口 [SKILL.md](../proposal-writing/SKILL.md)。
+- 科研基金、科技项目、教改项目、人才计划四类内部路线，三个完整上游执行器按需加载，运行时仅注册一个入口。
+- 来源与固定 commit：[sources.json](../proposal-writing/upstream/sources.json)；指南、模板、编号材料约束在 [主入口](../proposal-writing/SKILL.md)。
+- 已验证文件完整性和路由路径；未验证真实项目申报效果。

@@ -11,10 +11,11 @@
 ```
 事实源 mylib/                        端点（junction）
 ├── paa/           专利族            → 项目 .claude/skills/ + .grok/skills/；四端 ~/.{claude,codex,kimi-code,grok}/skills/
+├── proposal-writing/ 申报书族        → 单入口 proposal-writing；三上游 skill 内部路由
 ├── skills/        论文族+检索族       → 四端 skills 目录
 ├── Paper_CCF/     投稿画像          → Claude/Codex/Kimi
 ├── RepLLM/  ARA/  HarnessBank/ …    → Claude/Codex/Kimi
-└── 三路由：paa（专利）/ paper-writing（论文）/ npl-prior-art-search（检索）
+└── 四路由：proposal-writing（申报书）/ paa（专利）/ paper-writing（论文）/ npl-prior-art-search（检索）
 Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专利叶技能+paa 路由）
          + 项目 .grok/skills（paa 路由 + cluster + toolkit，shadow 掉 .claude/skills/paa 整树）
          + .grok/workflows/cn-patent.rhai；适配器 paa/adapters/grok.md
@@ -137,3 +138,11 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - 09-20→09-22：60 题现场批与 640 题扩展批入稿（判据先写、结果后判）；正文 42→30 页瘦身；同刊/同域对标评审（F-1…F-6）；图表密度修复回迁为四联结果图，定稿 31 页 3 图 6 表并投递作者包
 - 09-22：本轮经验蒸馏入库——`Codex-Academic-Research` 新增 case digest + 确定性审计工具，`Paper_CCF` Information 画像升级到 2026-09-22.1，`paper_harness` 经验契约新增 5 条规则/5 类 issue/mdpi_information overlay（19 项 smoke 全过）
 - 09-25：授权率升级（PAPERS-GRANT-RATE-26，蒸馏自 zhuanlishenqing/docs/专利申请技巧论文.zip 26 篇论文研读）——新建 `paa/references/oa-response-playbook.md`（OA 答复武器库：五步法/朱丽莎第二作用模板/协同效应/反后见之明/禁止反悔/单独对比核实）；cluster references 三件套注入（claim-strategy 独权最小化+星型布局+功能性特征、review-gates 新增 Gate F + Gate A/C 补强、disclosure-structure 撰写规则 6 条）；paa/references 四门禁补强（Gate 1 三要素闭环+删商业词、Gate 3 逐特征效果+实验数据+协同数据）+ validation-checklist 对齐检查 + paa-schema 定义 oa_response_plan.md schema；3 个 agent toml 约束注入；grant-scorer/cnipa-drafting-workflow knowledge/claims-drafting 同步升级；安装端为 symlink 即时生效
+
+## 申报书族（2026-10-07 新增，`proposal-writing/`）
+
+- **入口**：[proposal-writing/SKILL.md](proposal-writing/SKILL.md)；运行时 [单入口](skill-runtime/routers/proposal-writing/SKILL.md)，由 `skill-runtime/manifest.json` 注册，三个上游 skill 不独立注册。
+- **分类**：科研基金 → fund-research-content-writer；科技项目 → research-grants；教改 / 人才计划 → doc-coauthoring，各有 [内部适配说明](proposal-writing/README.md)。
+- **来源**：Chinese-Grant-Writer-Skills、K-Dense scientific-agent-skills、Anthropic skills，固定版本、完整文件清单和许可依据见 [sources.json](proposal-writing/upstream/sources.json) 与 [模块说明](proposal-writing/README.md)。
+- **口径**：当年指南和模板优先；事实注明材料编号；缺项【待补】；不编造文献、数据、成果、指标、经费或单位承诺。先缺口和提纲，再逐节起草并独立审查。
+- **验证边界**：26 个上游文件通过 Git blob/SHA-256 与完整性检查，注册与路径审计通过；真实项目写作及申报结果未验收。doc-coauthoring 固定版未见单独 LICENSE，保留 README 许可概述与不确定性。
