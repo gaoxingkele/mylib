@@ -13,7 +13,7 @@ description: metaRSI 证据账本与准入控制。做实验、筛规则、改�
 |---|---|
 | `constitution.json` | 受保护面、证据等级、项目不变量。`init` 生成一次，之后只由人修改 |
 | `metarsi.db` | SQLite。`events` 表只追加、逐条哈希相连，是唯一的记录；`windows / trials / negatives / shadows / admissions / episodes` 是每次写入后由它重建的查询表 |
-| `wiki/` | LLM wiki 风格的 Markdown：`README.md`（入口和当前状态）、`graph.md`（证据图）、`nodes.md`、`trials.md`、`negatives.md`、`log.md`、`playbooks.md`。每次写入后由数据库重写，供人、代理和 git diff 阅读，不要手改 |
+| `wiki/` | LLM wiki 风格的 Markdown：`README.md`（入口和当前状态）、`graph.md`（证据图）、`nodes.md`、`trials.md`、`negatives.md`、`ideas.md`（想法与思考算子）、`log.md`、`playbooks.md`。每次写入后由数据库重写，供人、代理和 git diff 阅读，不要手改 |
 
 查已有结论时，代理可以直接读 `wiki/` 下的页面，或对 `metarsi.db` 写 SQL；写入只走命令。
 
@@ -64,18 +64,41 @@ python C:/aicoding/mylib/skills/meta-rsi/scripts/metarsi.py --project <项目根
 除了每回合的 `tick`，在下面四个时点调用：
 
 1. **开始一个实验之前**
+   - `idea suggest [--problem 一句话]`：想法从哪来。工具按本项目账本挑出几条没用过的思考算子（跨至少两个层次），给出问句和陷阱；代理按问句想，再 `idea add` 登记。见下节「创意演化」。
    - `search <关键词>`：这个想法是否已经试过、为什么被否决。
    - `check --read 起..止 --write 路径`：要读的日期是否碰到保留窗口，要写的文件是否受保护。返回码 2 表示违规，停下来告诉用户，不要绕过。
 2. **实验出结果之后**
    - `trial log`：每条有结论的规则记一条。等级由工具按「规则在哪段数据上选定、在哪段数据上计分」算出，不能自报。附上结果文件（`--artifact`）。
-   - 否决的想法另记 `negative add`，写清原因和教训。
+   - 否决的想法另记 `negative add`，写清原因和教训；对应的想法 `idea update --status rejected --link N0001`。进了试验的 `--status trialed --link T0001`；采纳必须带试验或准入编号。
 3. **提出「以后再验」的规则时**
-   - `shadow add`：把规则原文、指标、窗口、最少成熟天数写死。一个窗口只能有一条 `--primary`。
+   - `shadow add`：把规则原文、指标、窗口、最少成熟天数写死。一个窗口只能有一条 `--primary`；换主用 `shadow primary --id --by <用户名>`，旧主规则留痕退为并列。
 4. **想改受保护的文件时**
    - `propose --surface 路径 --evidence 试验编号`：证据等级不够直接拒绝；够了也只会变成 `pending_human`。
    - `decide` 只在用户明确指示后执行，并写上用户的名字（`--by`）。代理不能批准自己的提议。
 
 每个用户回合结束时可以用 `episode log` 记一条问答摘要，和项目的 wiki 会话记录对应。
+
+## 创意演化：想法从哪来、怎么算数
+
+改进不能只靠「把已有要素再组合一下」。工具不产生想法，但管三件事：想法的**来源**（用了哪个思考算子）、想法的**可检验性**（什么观测能推翻它）、各类算子在本项目里的**产出**。算子目录在 `config/ideation.json`，分五个层次，详解见 [references/IDEATION.md](references/IDEATION.md)：
+
+| 层次 | 内容 | 例子 |
+|---|---|---|
+| L1 组合与调参 | 并置已有机制、调阈值 | 常规改进；审查里最容易被认定为显而易见 |
+| L2 科学第一性原理 | 守恒与收支、极限与量纲、物理/信息上界、时间尺度分离、对称与破缺、不变量与比值、因果反转、限速步、可观测性 | 「不可测的那一项能否安排一个时段让它退出方程」→ 新的标定窗口 |
+| L3 哲学视角 | 现象学（被给予之物）、可证伪性、奥卡姆与减法、范畴检查、先验条件、矛盾与前提改变、过程哲学、知道与假定、约束作资源 | 「受体真正接收的是什么量」→ 控制目标换成受体侧量 |
+| L4 社会学视角 | 实践与惯习、问责与信任、可见性与规训、行动者网络、采用与扩散、可及性、规范作输入、外部性、社会建构的判据 | 「出了事谁负责」→ 责任边界做成许可位和不可绕过的联锁 |
+| L5 跨域类比 | 结构同构、生物类比、历史先例 | 方程形式相同的另一领域的解法 |
+
+用法：
+
+1. 提改进前 `idea suggest [--problem 一句话] [--n 3]`。工具按账本挑最少用过的层次和算子（L1 不在推荐之列），至少跨两个层次，打印问句、会得到什么、陷阱。代理按问句去想；问句不是答案。
+2. 每条想法 `idea add --title ... --operator L2.conservation --premise <所用的原理或视角> --claim <想法> --falsifier <能推翻它的观测>`。没有证伪条件的想法工具不收——这是把波普尔那条算子做成了硬规则。
+3. 想法的状态只有五个：seed → screened → trialed → adopted | rejected。`adopted` 必须 `--link` 一个试验或准入编号；凭意见不能算采纳。想法本身始终是 `judge` 级，证据等级只属于它关联的试验。
+4. `idea stats` 看按层次和按算子的产出；`tick`/钩子在最近 N 条想法里组合类超过一半时提醒换视角。这就是工具的「学习」：不是模型学，而是账本累积出「在这个项目里哪类思考方式真的出过成果」，并把代理从组合惯性里推出来。
+5. 项目可以在 `constitution.json` 的 `ideation.extra_operators` 里加自己的算子（同样的 id/level/name/question 字段），`ideation.policy` 覆盖 `recent_n`、`max_combination_share`、`suggest_n`。
+
+不做的事：工具不给想法打分、不排序、不用模型生成候选；哪个想法值得试仍由代理和人判断，判断的依据写进 `--premise` 和 `--falsifier`。
 
 ## 模型审计：训练和外推
 
@@ -142,7 +165,12 @@ window add --name N --start D [--end D] --state open|consumed|reserved
 trial log --rule-id R --family F --selected-on W1 --scored-on W2 [--shadow S] \
           --n-compared K --effect X --t T --verdict pass|fail|inconclusive --artifact 文件
 negative add --idea ... --reason ... --lesson ... [--trial T0001]
+idea suggest [--problem ...] [--n 3]         按账本挑没用过的思考算子（跨层次），给问句和陷阱
+idea add --title ... --operator L2.conservation --premise ... --claim ... --falsifier ...
+idea update --id I0001 --status screened|trialed|adopted|rejected [--link T0001|N0001|P0001] [--note ...]
+idea stats | idea list                     各层次/算子的产出；组合类占比超过一半会在 tick 里提醒
 shadow add --rule ... --metric ... --window W --min-matured 60 [--primary]
+shadow primary --id S0008 --by <用户名> --note ...   把窗口的主规则换到另一条未结影子（只有用户能换）
 check --read 20260101..20260630 --write config/x.json [--shadow S0001 --matured 60]
 propose --surface 路径 --summary ... --evidence T0003 [--check 复现=pass]
 decide --id P0001 --approve|--reject --by <用户名> --reason ...
@@ -165,4 +193,5 @@ emit_signal(project_root, "failure", "daily list empty", note="...")   # 项目�
 - 工具只在被调用时起作用，不拦截代理的其他操作。它是约定加记录，不是沙箱。
 - 直接改 `events` 表能被 `verify-ledger` 发现，但不能阻止；查询表和 wiki 页面改了也没用，下次写入会按 `events` 重建。真正的防线是 git 和人的审查。
 - 不自动改合约、不自动交易、不自动提交。受保护面的最终决定永远是人。
+- 不生成想法、不给想法打分。`idea suggest` 只是按账本轮换思考算子并复述问句；想法的好坏由随后的试验说话。
 - 设计来源、与原始六层方案的对应关系、以及哪些部分没有实现，见 [references/DESIGN.md](references/DESIGN.md)。

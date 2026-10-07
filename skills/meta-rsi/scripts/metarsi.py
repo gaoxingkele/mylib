@@ -25,7 +25,13 @@ What the tool decides and what it only records:
              the calendar say (never from a model's self-assessment).
   records  - episodes, trials, rejected ideas, pre-registered shadow rules,
              signals raised while the project runs, admission decisions, and
-             every check that was run.
+             every check that was run;
+           - ideas with their provenance: which thinking operator (first
+             principles, a philosophical or sociological lens, an analogy, or
+             plain combination) produced them, and the observation that would
+             falsify them. The tool does not generate ideas; it refuses ideas
+             without a falsifier, measures how diverse the operators are, and
+             reports which operators have paid off in this project.
 """
 from __future__ import annotations
 
@@ -46,7 +52,9 @@ from statistics import NormalDist
 # "judge" is any model's or person's opinion without an outcome behind it.
 DEFAULTS = json.loads((Path(__file__).resolve().parents[1] / "config/defaults.json").read_text(encoding="utf-8"))
 DEFAULT_TIERS = DEFAULTS["tiers"]
-LEDGERS = ("windows", "trials", "negatives", "shadows", "admissions", "episodes", "signals", "modes", "models", "audit")
+IDEATION = json.loads((Path(__file__).resolve().parents[1] / "config/ideation.json").read_text(encoding="utf-8"))
+IDEA_STATES = ("seed", "screened", "trialed", "adopted", "rejected")
+LEDGERS = ("windows", "trials", "negatives", "shadows", "admissions", "episodes", "signals", "modes", "models", "audit", "ideas")
 OPEN_END = "99999999"
 GENESIS = "0" * 16
 
@@ -64,7 +72,7 @@ VIEWS = {
     "trials": ["id", "ts", "by", "rule_id", "family", "question", "kind", "selected_on", "scored_on", "shadow", "tier",
                "n_compared", "metric", "effect", "t", "n_obs", "verdict", "artifacts", "wiki", "note"],
     "negatives": ["id", "ts", "by", "idea", "reason", "lesson", "trials", "wiki"],
-    "shadows": ["id", "ts", "by", "rule", "rule_sha", "metric", "window", "min_matured", "primary", "note", "open",
+    "shadows": ["id", "ts", "by", "rule", "rule_sha", "metric", "window", "min_matured", "primary", "demoted", "note", "open",
                 "outcome", "trial"],
     "admissions": ["id", "ts", "by", "surface", "summary", "evidence", "required_tier", "best_tier", "checks",
                    "decision", "decided_by", "reason"],
@@ -73,6 +81,7 @@ VIEWS = {
     "modes": ["id", "ts", "by", "mode", "stage", "reasons", "needs_human"],
     "models": ["name", "role", "recipe", "recipe_sha", "trees", "market_gain", "flags", "note"],
     "model_blocks": ["model", "block", "relation", "metric", "value", "days", "fit_days", "scored_by", "profile"],
+    "ideas": ["id", "ts", "by", "title", "operator", "level", "premise", "claim", "falsifier", "status", "links", "note", "wiki"],
 }
 
 
@@ -150,6 +159,7 @@ class Project:
             "shadows": list(self.shadows().values()), "admissions": list(self.admissions().values()),
             "episodes": self.read("episodes"), "signals": list(self.signals().values()), "modes": self.read("modes"),
         }
+        state["ideas"] = list(self.ideas().values())
         models = self.models()
         state["models"] = [{**m, "flags": model_flags(self, m)} for m in models.values()]
         state["model_blocks"] = [{"model": m["name"], **b} for m in models.values() for b in m["blocks"]]
@@ -182,7 +192,40 @@ class Project:
                 state[event["id"]] = {**event, "open": True}
             elif event["op"] == "close" and event["ref"] in state:
                 state[event["ref"]].update(open=False, outcome=event.get("outcome"), trial=event.get("trial"))
+            elif event["op"] == "primary" and event["ref"] in state:
+                # the primary flag moves within a window; the earlier holder keeps a note of when and why
+                window = state[event["ref"]]["window"]
+                for s in state.values():
+                    if s["window"] == window and s.get("primary") and s["id"] != event["ref"]:
+                        s.update(primary=False, demoted=f"{event['ts'][:10]} → {event['ref']}：{event.get('note') or ''}")
+                state[event["ref"]].update(primary=True)
         return state
+
+    def ideas(self) -> dict[str, dict]:
+        state: dict[str, dict] = {}
+        for event in self.read("ideas"):
+            if event["op"] == "add":
+                state[event["id"]] = {**{k: v for k, v in event.items() if k != "op"}, "status": "seed", "links": []}
+            elif event["op"] == "update" and event["ref"] in state:
+                cur = state[event["ref"]]
+                if event.get("status"):
+                    cur["status"] = event["status"]
+                if event.get("links"):
+                    cur["links"] = sorted(set(cur["links"]) | set(event["links"]))
+                if event.get("note"):
+                    cur["note"] = ((cur.get("note") or "") + "；" + event["note"]).strip("；")
+        return state
+
+    def operators(self) -> dict[str, dict]:
+        """The catalog of thinking operators: mylib defaults plus the project's own extras."""
+        out = {o["id"]: dict(o) for o in IDEATION["operators"]}
+        for o in (self.constitution().get("ideation") or {}).get("extra_operators") or []:
+            if o.get("id") and o.get("level") in IDEATION["levels"]:
+                out[o["id"]] = dict(o)
+        return out
+
+    def ideation_policy(self) -> dict:
+        return {**IDEATION["policy"], **((self.constitution().get("ideation") or {}).get("policy") or {})}
 
     def signals(self) -> dict[str, dict]:
         state: dict[str, dict] = {}
@@ -399,6 +442,14 @@ def cmd_shadow(p: Project, a) -> int:
         if a.id not in p.shadows():
             raise SystemExit(f"unknown shadow {a.id}")
         p.append("shadows", {"op": "close", "id": None, "ref": a.id, "outcome": a.outcome, "trial": a.trial_id}, "S", a.by)
+    elif a.action == "primary":
+        # move the window's primary flag to an open shadow; the user names it, so --by must be a person
+        target = p.shadows().get(a.id)
+        if target is None or not target["open"]:
+            raise SystemExit(f"{a.id} is not an open shadow")
+        if a.by in ("agent", "claude", "codex"):
+            raise SystemExit("the primary rule is named by the user: pass --by <user name>")
+        p.append("shadows", {"op": "primary", "id": None, "ref": a.id, "note": a.note}, "S", a.by)
     for s in p.shadows().values():
         flag = "primary" if s.get("primary") else "       "
         state = "open  " if s["open"] else f"closed:{s.get('outcome')}"
@@ -484,16 +535,135 @@ def cmd_episode(p: Project, a) -> int:
 def cmd_search(p: Project, a) -> int:
     words = [w.lower() for w in a.words]
     hits = 0
-    for name in ("negatives", "trials", "shadows", "episodes", "admissions"):
-        for rec in p.read(name):
+    for name in ("negatives", "trials", "shadows", "episodes", "admissions", "ideas"):
+        for rec in (p.ideas().values() if name == "ideas" else p.read(name)):
             text = json.dumps(rec, ensure_ascii=False).lower()
             if all(w in text for w in words):
                 hits += 1
-                brief = rec.get("idea") or rec.get("rule_id") or rec.get("rule") or rec.get("question") or rec.get("summary") or ""
-                extra = rec.get("reason") or rec.get("verdict") or rec.get("answer") or rec.get("decision") or ""
+                brief = rec.get("idea") or rec.get("rule_id") or rec.get("rule") or rec.get("question") or rec.get("summary") or rec.get("title") or ""
+                extra = rec.get("reason") or rec.get("verdict") or rec.get("answer") or rec.get("decision") or rec.get("status") or ""
                 print(f"[{name}] {rec.get('id')} {brief} | {extra} | {rec.get('wiki') or ''}")
     print(f"{hits} match(es)")
     return 0
+
+
+def ideation_report(p: Project) -> dict:
+    """What the idea record says, by operator level: counts, outcomes, and whether
+    recent ideas lean on plain combination. Pure bookkeeping; no judgement of quality."""
+    ideas = list(p.ideas().values())
+    policy = p.ideation_policy()
+    recent = ideas[-int(policy["recent_n"]):]
+    levels = IDEATION["levels"]
+    per_level = {lv: {"n": 0, "adopted": 0, "rejected": 0, "trialed": 0, "recent": 0} for lv in levels}
+    per_op: dict[str, dict] = {}
+    for i in ideas:
+        lv = i.get("level") or "L1"
+        row = per_level.setdefault(lv, {"n": 0, "adopted": 0, "rejected": 0, "trialed": 0, "recent": 0})
+        row["n"] += 1
+        if i["status"] in ("adopted", "rejected", "trialed"):
+            row[i["status"]] += 1
+        o = per_op.setdefault(i.get("operator") or "?", {"n": 0, "adopted": 0, "rejected": 0, "trialed": 0, "level": lv})
+        o["n"] += 1
+        if i["status"] in ("adopted", "rejected", "trialed"):
+            o[i["status"]] += 1
+    for i in recent:
+        per_level.setdefault(i.get("level") or "L1", {"n": 0, "adopted": 0, "rejected": 0, "trialed": 0, "recent": 0})["recent"] += 1
+    share = (per_level["L1"]["recent"] / len(recent)) if recent else 0.0
+    skewed = len(recent) >= int(policy["recent_n"]) and share > float(policy["max_combination_share"])
+    warnings = []
+    if skewed:
+        warnings.append(f"近 {len(recent)} 条想法里组合与调参类占 {share:.0%}，超过 {float(policy['max_combination_share']):.0%}；"
+                        "下一批至少从 L2 第一性原理、L3 哲学、L4 社会学里各取一个视角")
+    no_falsifier = [i["id"] for i in ideas if not i.get("falsifier")]
+    if no_falsifier:
+        warnings.append("没有证伪条件的想法：" + "、".join(no_falsifier))
+    stale = [i["id"] for i in ideas if i["status"] == "seed"][:-20] if len(ideas) > 40 else []
+    if stale:
+        warnings.append(f"{len(stale)} 条想法长期停留在 seed，未筛选也未否决")
+    return {"n": len(ideas), "recent": len(recent), "share_L1": share, "skewed": skewed,
+            "per_level": per_level, "per_op": per_op, "warnings": warnings}
+
+
+def suggest_operators(p: Project, n: int) -> list[dict]:
+    """Pick operators to try next: levels other than combination first, the least-used
+    level and then the least-used operator within it, so the batch spans several levels.
+    Deterministic, no model."""
+    ops = p.operators()
+    rep = ideation_report(p)
+    policy = p.ideation_policy()
+    used_op = {k: v["n"] for k, v in rep["per_op"].items()}
+    level_order = sorted((lv for lv in IDEATION["levels"] if lv != "L1"),
+                         key=lambda lv: (rep["per_level"].get(lv, {}).get("recent", 0), rep["per_level"].get(lv, {}).get("n", 0), lv))
+    picked: list[dict] = []
+    taken_levels: list[str] = []
+    while len(picked) < n and level_order:
+        for lv in list(level_order):
+            if len(picked) >= n:
+                break
+            cands = [o for o in ops.values() if o["level"] == lv and o["id"] not in {x["id"] for x in picked}]
+            if not cands:
+                level_order.remove(lv)
+                continue
+            cands.sort(key=lambda o: (used_op.get(o["id"], 0), list(ops).index(o["id"])))
+            picked.append(cands[0])
+            taken_levels.append(lv)
+    if len(set(taken_levels)) < min(int(policy["min_levels_per_batch"]), len(IDEATION["levels"]) - 1) and len(picked) < n:
+        pass  # fewer levels than wanted only when the catalog is nearly empty
+    return picked
+
+
+def cmd_idea(p: Project, a) -> int:
+    ops = p.operators()
+    if a.action == "add":
+        if a.operator not in ops:
+            raise SystemExit(f"unknown operator {a.operator}; run `idea suggest` or see config/ideation.json")
+        if not (a.falsifier or "").strip() or len(a.falsifier.strip()) < 8:
+            raise SystemExit("an idea is recorded only with a falsifier: the observation that would show it wrong (--falsifier)")
+        next_id = f"I{sum(1 for e in p.read('ideas') if e.get('op') == 'add') + 1:04d}"   # updates share the ledger; number only the adds
+        rec = p.append("ideas", {"id": next_id, "op": "add", "title": a.title, "operator": a.operator, "level": ops[a.operator]["level"],
+                                 "premise": a.premise, "claim": a.claim, "falsifier": a.falsifier, "note": a.note, "wiki": a.wiki}, "I", a.by)
+        print(rec["id"])
+        return 0
+    if a.action == "update":
+        if a.id not in p.ideas():
+            raise SystemExit(f"unknown idea {a.id}")
+        if a.status and a.status not in IDEA_STATES:
+            raise SystemExit(f"status must be one of {IDEA_STATES}")
+        if a.status == "adopted" and not (a.link or p.ideas()[a.id]["links"]):
+            raise SystemExit("adopted needs at least one --link to a trial or admission; an idea is not adopted on opinion")
+        p.append("ideas", {"op": "update", "ref": a.id, "status": a.status, "links": a.link, "note": a.note}, "IU", a.by)
+        print(a.id, a.status or "")
+        return 0
+    if a.action == "list":
+        for i in p.ideas().values():
+            print(f"{i['id']} [{i['status']}] {i['level']} {i['operator']} | {i['title']} | 证伪：{i.get('falsifier') or ''}")
+        return 0
+    if a.action == "suggest":
+        n = a.n or int(p.ideation_policy()["suggest_n"])
+        if a.problem:
+            print(f"问题：{a.problem}")
+        rep = ideation_report(p)
+        for w in rep["warnings"]:
+            print(f"! {w}")
+        for o in suggest_operators(p, n):
+            print(f"\n[{o['id']}] {IDEATION['levels'][o['level']]} · {o['name']}")
+            print(f"  问：{o['question']}")
+            print(f"  会得到：{o.get('yields') or ''}")
+            print(f"  陷阱：{o.get('trap') or ''}")
+        print("\n登记：idea add --title ... --operator <id> --premise <所用原理/视角> --claim <想法> --falsifier <能推翻它的观测>")
+        return 0
+    if a.action == "stats":
+        rep = ideation_report(p)
+        print(f"想法 {rep['n']} 条；近 {rep['recent']} 条中组合类占 {rep['share_L1']:.0%}")
+        for lv, name in IDEATION["levels"].items():
+            r = rep["per_level"].get(lv, {})
+            print(f"  {lv} {name}: n={r.get('n', 0)} 试验={r.get('trialed', 0)} 采纳={r.get('adopted', 0)} 否决={r.get('rejected', 0)}")
+        for k, r in sorted(rep["per_op"].items(), key=lambda kv: -kv[1]["n"]):
+            print(f"    {k}: n={r['n']} 采纳={r['adopted']} 否决={r['rejected']}")
+        for w in rep["warnings"]:
+            print(f"! {w}")
+        return 0
+    raise SystemExit(f"unknown action {a.action}")
 
 
 def calibration(p: Project) -> tuple[list[str], int, int]:
@@ -777,9 +947,10 @@ def decide_mode(p: Project) -> dict:
                 if better:
                     reasons.append(f"审计问题更少的候选模型：{'、'.join(better)}。要替换先看 model diagnose，再登记成影子在保留窗口上并行验证")
     label, allowed, forbidden = MODE_TEXT[(mode, stage)]
+    ideation = ideation_report(p)["warnings"] if (p.dir / "constitution.json").exists() else []
     return {
         "mode": mode, "stage": stage, "label": label, "target": target, "reasons": reasons, "needs_human": humans,
-        "exhausted": exhausted, "allowed": allowed, "forbidden": forbidden,
+        "exhausted": exhausted, "allowed": allowed, "forbidden": forbidden, "ideation": ideation,
         "signals": [f"{g['id']} {g['kind']} {g['name']}" for g in live],
         "open_shadows": len(shadows), "max_open_shadows": int(policy["max_open_shadows"]),
     }
@@ -814,8 +985,10 @@ def hook_text(d: dict, full: bool) -> str:
             lines.append(f"已疲劳的类别：{'、'.join(d['exhausted'])}")
         if d["signals"]:
             lines.append("未处理的信号：" + "；".join(d["signals"]))
+        lines.append("创意：提改进前先 `idea suggest`，从第一性原理、哲学、社会学视角里至少取两个；每条想法带证伪条件再 `idea add`")
     else:
         lines = [f"[metaRSI] 模式：{d['label']}（未变）。现在不做：{d['forbidden']}。用户明确要求的分析照做，并说明能达到的证据等级。"]
+    lines += [f"创意：{text}" for text in d.get("ideation") or []]
     lines += [f"需要用户决定：{text}" for text in d["needs_human"]]
     return "\n".join(lines)
 
@@ -879,14 +1052,16 @@ metaRSI 不是每轮问答都调用，在四个时点用。命令前缀：
 3. 用户提出改进要求、项目运行出故障或指标漂移时，`signal log --kind request|failure|drift`；处理完 `signal resolve`。
 
 ## 1) 开始一个实验之前
-1. `search <关键词>`：这个想法是否已经试过、为什么被否决（也可以直接读 `negatives.md`）。
+0. 想法从哪来：`idea suggest [--problem 一句话]` 给出几条没用过的思考算子（守恒与收支、极限与量纲、现象学、可证伪性、惯习、问责、结构同构……），至少跨两个层次；按它的问句想，再 `idea add --operator <算子> --premise <所用原理> --claim <想法> --falsifier <能推翻它的观测>`。没有证伪条件的想法工具不收。`idea stats` 看哪类算子在本项目里真正出过成果、最近是否只在做组合。
+1. `search <关键词>`：这个想法是否已经试过、为什么被否决（也可以直接读 `negatives.md`、`ideas.md`）。
 2. `check --read 起..止 --write 路径`：要读的日期是否碰到保留窗口，要写的文件是否受保护。
 3. 返回码 2 就停下并告知用户，不绕过。
 
 ## 2) 实验有结论之后
 1. 每条规则 `trial log`，写清在哪段数据上选定、在哪段数据上计分，附结果文件。等级由工具算。
-2. 被否决的想法 `negative add`，写原因和教训。
-3. 回合结束 `episode log`，记用户问了什么、答了什么、留下什么。
+2. 被否决的想法 `negative add`，写原因和教训；对应的想法 `idea update --id I0001 --status rejected --link N0001`。
+3. 想法进了试验 `idea update --status trialed --link T0001`；试验通过并被采纳 `--status adopted --link T0001`（采纳必须带试验或准入编号，不能凭意见）。
+4. 回合结束 `episode log`，记用户问了什么、答了什么、留下什么。
 
 ## 3) 提出「以后再验」的规则
 1. `shadow add`：规则原文、指标、窗口、最少成熟天数写死。
@@ -943,7 +1118,7 @@ def render_wiki(p: Project, state: dict) -> None:
     problems = p.verify_chain()
     lines = [f"# metaRSI 账本 — {c.get('project')}", "", head, "## 入口", "",
              "- 总图：`graph.md`", "- 节点（窗口、受保护面、影子规则、准入提议）：`nodes.md`", "- 试验：`trials.md`",
-             "- 否决过的想法：`negatives.md`", "- 模型与模型审计：`models.md`", "- 问答日志：`log.md`", "- 调用手册：`playbooks.md`", "",
+             "- 否决过的想法：`negatives.md`", "- 想法与思考算子：`ideas.md`", "- 模型与模型审计：`models.md`", "- 问答日志：`log.md`", "- 调用手册：`playbooks.md`", "",
              "## 当前模式", "", f"**{mode['label']}**", ""]
     lines += [f"- {text}" for text in mode["reasons"]]
     lines += [f"- 现在可以做：{mode['allowed']}", f"- 现在不做：{mode['forbidden']}"]
@@ -1008,7 +1183,10 @@ def render_wiki(p: Project, state: dict) -> None:
         n += [f"### `{s_['id']}`{'（主规则）' if s_.get('primary') else ''}", f"- 规则：{s_['rule']}",
               f"- 指标：{s_.get('metric') or ''}", f"- 窗口：{s_['window']}，最少成熟 {s_.get('min_matured')} 个信号日",
               f"- 登记：{s_['ts'][:10]}，规则指纹 {s_.get('rule_sha')}",
-              f"- 状态：{'未结' if s_['open'] else '已结 ' + str(s_.get('outcome') or '')}", f"- 备注：{s_.get('note') or ''}", ""]
+              f"- 状态：{'未结' if s_['open'] else '已结 ' + str(s_.get('outcome') or '')}", f"- 备注：{s_.get('note') or ''}"]
+        if s_.get("demoted"):
+            n.append(f"- 曾为主规则，{s_['demoted']}")
+        n.append("")
     n += ["## 准入提议", ""]
     for x in state["admissions"]:
         n += [f"### `{x['id']}` {x['surface']}", f"- 内容：{x['summary']}", f"- 证据：{'、'.join(x.get('evidence') or [])}"
@@ -1075,6 +1253,32 @@ def render_wiki(p: Project, state: dict) -> None:
     if len(state["models"]) >= 2:
         md += ["## 放在一起看：往哪用力", ""] + diagnose_models(p) + [""]
     (wiki / "models.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    # ideas
+    rep = ideation_report(p)
+    ops = p.operators()
+    idp = ["# 想法与思考算子", "", head,
+           "工具不产生想法。它记每条想法来自哪个算子、依据什么原理或视角、什么观测能推翻它，并统计各层算子在本项目里的产出。",
+           "算子目录见 mylib `config/ideation.json` 与 `references/IDEATION.md`；项目可在宪法 `ideation.extra_operators` 里加自己的。", "",
+           f"想法 {rep['n']} 条；近 {rep['recent']} 条中组合与调参类占 {rep['share_L1']:.0%}。"]
+    idp += [f"- 提醒：{w}" for w in rep["warnings"]]
+    idp += ["", "## 按层次", "", "| 层次 | 想法数 | 进入试验 | 采纳 | 否决 |", "|---|---:|---:|---:|---:|"]
+    for lv, name in IDEATION["levels"].items():
+        r = rep["per_level"].get(lv, {})
+        idp.append(f"| {lv} {name} | {r.get('n', 0)} | {r.get('trialed', 0)} | {r.get('adopted', 0)} | {r.get('rejected', 0)} |")
+    if rep["per_op"]:
+        idp += ["", "## 按算子", "", "| 算子 | 名称 | 想法数 | 采纳 | 否决 |", "|---|---|---:|---:|---:|"]
+        for k, r in sorted(rep["per_op"].items(), key=lambda kv: -kv[1]["n"]):
+            idp.append(f"| `{k}` | {ops.get(k, {}).get('name', '')} | {r['n']} | {r['adopted']} | {r['rejected']} |")
+    idp += ["", "## 想法", ""]
+    for i in state["ideas"]:
+        idp += [f"### `{i['id']}` {i['title']}（{i['status']}）",
+                f"- 算子：`{i['operator']}` {ops.get(i['operator'], {}).get('name', '')}（{IDEATION['levels'].get(i['level'], i['level'])}）",
+                f"- 依据：{i.get('premise') or ''}", f"- 想法：{i.get('claim') or ''}", f"- 证伪条件：{i.get('falsifier') or ''}",
+                f"- 关联：{'、'.join(i.get('links') or []) or '无'}", f"- 备注：{i.get('note') or ''}",
+                f"- 出处：{link(i.get('wiki'))}", f"- 记录：{i['ts'][:10]}，{i['by']}", ""]
+    if not state["ideas"]:
+        idp += ["（暂无）", ""]
+    (wiki / "ideas.md").write_text("\n".join(idp) + "\n", encoding="utf-8")
     (wiki / "playbooks.md").write_text(PLAYBOOKS, encoding="utf-8")
 
 
@@ -1158,6 +1362,17 @@ def self_test() -> int:
         except SystemExit:
             pass
         run("shadow", "add", "--rule", "keep top 10", "--metric", "ret", "--window", "future", "--min-matured", "60", "--primary")
+        run("shadow", "add", "--rule", "keep top 5", "--metric", "ret", "--window", "future", "--min-matured", "60")
+        try:
+            run("shadow", "primary", "--id", "S0002", "--by", "agent")
+            raise AssertionError("agent moved the primary flag")
+        except SystemExit:
+            pass
+        run("shadow", "primary", "--id", "S0002", "--by", "tester", "--note", "swap")
+        sh = Project(root).shadows()
+        assert sh["S0002"]["primary"] and not sh["S0001"]["primary"] and "S0002" in sh["S0001"]["demoted"], sh
+        run("shadow", "primary", "--id", "S0001", "--by", "tester", "--note", "swap back")
+        run("shadow", "close", "--id", "S0002", "--outcome", "test", "--by", "tester")
         assert Project(root).matured(Project(root).windows()["future"]) == 3
         assert decide_mode(Project(root))["mode"] == "learn"
         for i in range(5, 70):
@@ -1197,8 +1412,30 @@ def self_test() -> int:
         assert any("互补" in line or "一起失效" in line for line in diagnose_models(Project(root)))
         assert run("propose", "--surface", "config/contract.json", "--summary", "ship", "--evidence", "T0003", "--model", "shipped") == 2
         assert run("calibration") == 0
+        # ideation: refuse an idea without a falsifier; adopted needs a link; diversity warning after a run of L1 ideas
+        try:
+            run("idea", "add", "--title", "x", "--operator", "L2.conservation", "--claim", "c")
+            raise AssertionError("idea without falsifier was accepted")
+        except SystemExit as e:
+            assert "falsifier" in str(e)
+        for i in range(10):
+            run("idea", "add", "--title", f"combo{i}", "--operator", "L1.combine", "--claim", "c", "--falsifier", "no joint effect measured")
+        rep = ideation_report(Project(root))
+        assert rep["skewed"] and any("组合" in w for w in rep["warnings"]), rep
+        picks = suggest_operators(Project(root), 3)
+        assert len({o["level"] for o in picks}) >= 2 and all(o["level"] != "L1" for o in picks), picks
+        run("idea", "add", "--title", "flux", "--operator", "L3.phenomenology", "--premise", "受体接收的量", "--claim", "控热流", "--falsifier", "热流估计与实测差超 20%")
+        try:
+            run("idea", "update", "--id", "I0011", "--status", "adopted")
+            raise AssertionError("adopted without link was accepted")
+        except SystemExit as e:
+            assert "link" in str(e)
+        assert run("idea", "update", "--id", "I0011", "--status", "trialed", "--link", "T0003") == 0
+        assert Project(root).ideas()["I0011"]["status"] == "trialed"
+        assert run("idea", "stats") == 0 and run("idea", "suggest", "--problem", "demo") == 0 and run("idea", "list") == 0
+        assert run("search", "flux") == 0
         assert run("verify-ledger") == 0
-        for page in ("README.md", "graph.md", "nodes.md", "trials.md", "negatives.md", "models.md", "log.md", "playbooks.md"):
+        for page in ("README.md", "graph.md", "nodes.md", "trials.md", "negatives.md", "ideas.md", "models.md", "log.md", "playbooks.md"):
             assert (root / ".metarsi/wiki" / page).is_file(), page
         with closing(sqlite3.connect(root / ".metarsi/metarsi.db")) as con:
             assert con.execute("SELECT COUNT(*) FROM trials").fetchone()[0] == 3
@@ -1250,7 +1487,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--idea", required=True); s.add_argument("--reason", required=True); s.add_argument("--lesson")
     s.add_argument("--trial", action="append"); s.add_argument("--wiki"); s.set_defaults(fn=cmd_negative)
 
-    s = add("shadow"); s.add_argument("action", choices=["add", "close", "list"])
+    s = add("shadow"); s.add_argument("action", choices=["add", "close", "primary", "list"])
     s.add_argument("--rule"); s.add_argument("--metric"); s.add_argument("--window"); s.add_argument("--min-matured", type=int, default=0)
     s.add_argument("--primary", action="store_true"); s.add_argument("--note")
     s.add_argument("--id"); s.add_argument("--outcome"); s.add_argument("--trial-id"); s.set_defaults(fn=cmd_shadow)
@@ -1272,6 +1509,12 @@ def build_parser() -> argparse.ArgumentParser:
     s = add("decide"); s.add_argument("--id", required=True)
     g = s.add_mutually_exclusive_group(required=True); g.add_argument("--approve", action="store_true"); g.add_argument("--reject", action="store_true")
     s.add_argument("--reason"); s.set_defaults(fn=cmd_decide)
+
+    s = add("idea"); s.add_argument("action", choices=["add", "update", "list", "suggest", "stats"])
+    s.add_argument("--title"); s.add_argument("--operator"); s.add_argument("--premise"); s.add_argument("--claim")
+    s.add_argument("--falsifier"); s.add_argument("--note"); s.add_argument("--wiki")
+    s.add_argument("--id"); s.add_argument("--status", choices=list(IDEA_STATES)); s.add_argument("--link", action="append")
+    s.add_argument("--problem"); s.add_argument("--n", type=int); s.set_defaults(fn=cmd_idea)
 
     s = add("episode"); s.add_argument("action", choices=["log"])
     s.add_argument("--question", required=True); s.add_argument("--answer", required=True)
