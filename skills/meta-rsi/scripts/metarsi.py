@@ -205,6 +205,8 @@ class Project:
         state: dict[str, dict] = {}
         for event in self.read("ideas"):
             if event["op"] == "add":
+                if event["id"] in state:          # a duplicated id from an older numbering scheme: keep both, suffix the later one
+                    event = {**event, "id": event["id"] + "b"}
                 state[event["id"]] = {**{k: v for k, v in event.items() if k != "op"}, "status": "seed", "links": []}
             elif event["op"] == "update" and event["ref"] in state:
                 cur = state[event["ref"]]
@@ -619,7 +621,8 @@ def cmd_idea(p: Project, a) -> int:
             raise SystemExit(f"unknown operator {a.operator}; run `idea suggest` or see config/ideation.json")
         if not (a.falsifier or "").strip() or len(a.falsifier.strip()) < 8:
             raise SystemExit("an idea is recorded only with a falsifier: the observation that would show it wrong (--falsifier)")
-        next_id = f"I{sum(1 for e in p.read('ideas') if e.get('op') == 'add') + 1:04d}"   # updates share the ledger; number only the adds
+        taken = [int(e["id"][1:]) for e in p.read("ideas") if e.get("op") == "add" and str(e.get("id", "")).startswith("I") and e["id"][1:].isdigit()]
+        next_id = f"I{(max(taken) + 1) if taken else 1:04d}"   # updates share the ledger; ids never reuse a number
         rec = p.append("ideas", {"id": next_id, "op": "add", "title": a.title, "operator": a.operator, "level": ops[a.operator]["level"],
                                  "premise": a.premise, "claim": a.claim, "falsifier": a.falsifier, "note": a.note, "wiki": a.wiki}, "I", a.by)
         print(rec["id"])
