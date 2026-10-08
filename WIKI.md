@@ -11,7 +11,7 @@
 ```
 事实源 mylib/                        端点（junction）
 ├── paa/           专利族            → 项目 .claude/skills/ + .grok/skills/；四端 ~/.{claude,codex,kimi-code,grok}/skills/
-├── proposal-writing/ 申报书族        → 单入口 proposal-writing；三上游 skill 内部路由
+├── proposal-writing/ 申报书族        → 单入口 proposal-writing；写作与评审内部路由
 ├── skills/        论文族+检索族       → 四端 skills 目录
 ├── Paper_CCF/     投稿画像          → Claude/Codex/Kimi
 ├── RepLLM/  ARA/  HarnessBank/ …    → Claude/Codex/Kimi
@@ -146,3 +146,13 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - **来源**：Chinese-Grant-Writer-Skills、K-Dense scientific-agent-skills、Anthropic skills，固定版本、完整文件清单和许可依据见 [sources.json](proposal-writing/upstream/sources.json) 与 [模块说明](proposal-writing/README.md)。
 - **口径**：当年指南和模板优先；事实注明材料编号；缺项【待补】；不编造文献、数据、成果、指标、经费或单位承诺。先缺口和提纲，再逐节起草并独立审查。
 - **验证边界**：26 个上游文件通过 Git blob/SHA-256 与完整性检查，注册与路径审计通过；真实项目写作及申报结果未验收。doc-coauthoring 固定版未见单独 LICENSE，保留 README 许可概述与不确定性。
+
+
+## 申报书评审与修订能力更新 2026-10-08
+
+- 维护入口仍为 proposal-writing；四类申报写作路线保留，新增 review-revise 内部路线，不额外注册评审叶技能。
+- 引入固定版本 review-grant（d12975697b8603ec4dd6f0e922fcc1251d5355d1）与 peer-review（92ace75ac21efe19a620434e0ca4e356081fe807）。原文、许可及完整文件来源记录保留；review-grant 的本地入口与原始快照分别记录，不能把适配文件当成上游原文。
+- 采用五类独立审查视角加第六仲裁视角，核查指南、原句、证据和可执行修改；外部证明未到仍保留 needs_external_evidence/partial，不输出官方评分、资助建议或获批概率。
+- 本地修订台账校验器检查结构、来源标识、状态及占位；51个固定上游文件来源校验和10个合成台账测试通过。此结果不证明材料真实、外部授权已落实或项目已获批。
+- 专业中文编辑减少教学式元说明与空泛套话，保持研究问题、创新、任务、验收和团队证据对应；不承诺AI检测结果。私人申报资料和案例审查记录留在各项目，不存入技能库。
+- 使用与来源详见 proposal-writing/SKILL.md、references/review-revise.md、README.md 及 upstream/sources.json。

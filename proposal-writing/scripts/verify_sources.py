@@ -12,9 +12,12 @@ def verify() -> tuple[list[str], int]:
     manifest = json.loads((root / "upstream/sources.json").read_text(encoding="utf-8"))
     errors: list[str] = []
     count = 0
+    evidence_index = {item["path"]: item for item in manifest["evidence_files"]}
     for skill in manifest["skills"]:
         directory = root / skill["local_path"]
         expected = {item["path"] for item in skill["files"]}
+        adapters = {item["path"]: item for item in skill.get("local_adapter_files", [])}
+        allowed = expected | set(adapters)
         actual = {
             path.relative_to(directory).as_posix()
             for path in directory.rglob("*")
@@ -22,7 +25,7 @@ def verify() -> tuple[list[str], int]:
         }
         for missing in sorted(expected - actual):
             errors.append(f"missing upstream file: {skill['name']}/{missing}")
-        for extra in sorted(actual - expected):
+        for extra in sorted(actual - allowed):
             errors.append(f"unexpected upstream file: {skill['name']}/{extra}")
         for item in skill["files"]:
             if item["path"] not in actual:
@@ -34,6 +37,16 @@ def verify() -> tuple[list[str], int]:
             if hashlib.sha256(data).hexdigest() != item["sha256"]:
                 errors.append(f"SHA-256 mismatch: {skill['name']}/{item['path']}")
             count += 1
+        for path, item in sorted(adapters.items()):
+            if path not in actual:
+                errors.append(f"missing local adapter file: {skill['name']}/{path}")
+                continue
+            data = (directory / path).read_bytes()
+            if hashlib.sha256(data).hexdigest() != item["sha256"]:
+                errors.append(f"local adapter SHA-256 mismatch: {skill['name']}/{path}")
+        license_evidence = skill.get("license_evidence")
+        if license_evidence and license_evidence not in evidence_index:
+            errors.append(f"license evidence not listed: {skill['name']}/{license_evidence}")
     for item in manifest["evidence_files"]:
         path = root / item["path"]
         if not path.is_file():
