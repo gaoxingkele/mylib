@@ -20,12 +20,14 @@
   - `.../repllm_cpa_journal_distill.json`
 
 ### `Paper_CCF`
-- 位置：`D:/aicoding/mylib/Paper_CCF`（镜像自 `~/.claude/skills/Paper_CCF`）
-- 作用：期刊路由、写作规范、投稿策略
+- 位置：`D:/aicoding/mylib/Paper_CCF`（维护源，运行端按需引用）
+- 作用：会议/期刊路由、写作规范、投稿策略、基于会场证据门槛的论文评审
 - 关键入口：
   - `resources/ideaspark-fullcorpus-journal-distill.md`
   - `resources/repllm-cpa-journal-distill.md`
   - `journals/<slug>/SKILL.md`
+  - `resources/evidence-calibrated-review.md`（仅评审/报告模式）
+  - `resources/worked-examples/lightgmem-review-distill.md`（证据、误判与回放边界）
 
 ## Bridge Layer
 

@@ -2,7 +2,7 @@
 
 > 单一事实源：`D:/aicoding/mylib`。四端（Claude Code / Codex / Kimi / Grok Build）以 junction 引用，不做第二份副本。
 > 本 wiki 记录每个技能的来源、用处、实测效果与路由关系。更新技能时同步更新本文件。
-> 最后更新：2026-09-25
+> 最后更新：2026-10-01
 
 ---
 
@@ -75,7 +75,7 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - **academic-research-suite**（Academic-Research-Skills-Codex）：ARS 学术全流程（outline→draft→revision+审稿模拟）
 - **academic-humanizer**（v0.3.3）：学术化改写降 AI 痕迹，保事实/引用/数字
 - **idea_spark / scoop_check**（微软 ResearchStudio-Idea）：可证伪想法生成 / 查重先防
-- **Paper_CCF**（paper-ccf）：投稿路由——186 件期刊/会议画像（fit/证据门槛/APC/审稿模式/desk-reject 风险/备选）
+- **Paper_CCF**（paper-ccf）：投稿路由与会场标定评审——期刊/会议画像（fit/证据门槛/APC/审稿模式/desk-reject 风险/备选）；评审请求按需加载 [`evidence-calibrated-review.md`](Paper_CCF/resources/evidence-calibrated-review.md)。2026-10-01 从 LightGMEM 的 AAAI/paperreview.ai 原评审及自身报告复核中提炼机制反例、跨表/子集/取整核查、实验归因与文献时间边界；加入 stdlib 数值助手 [`audit_review_numbers.py`](Paper_CCF/scripts/audit_review_numbers.py)，用输入账本实际核查加总、倍数与差值。源路径、验证和回放局限见 [`案例蒸馏`](Paper_CCF/resources/worked-examples/lightgmem-review-distill.md)。这是单案例方法升级，不是已校准的录用概率或通用能力排名。
 - **逆向复现族**：repllm-content-parse（PDF→paper.json）→ paper-to-code（Paper2Code 三阶段：规划 UML+依赖图→逐文件逻辑→依赖序生成）→ experiment-code / experiment-design / paper-compilation（LaTeX 编译）
 - **harnessbank-gated-evolution**：研究自动化 agent 栈进化（非论文写作本体）
 

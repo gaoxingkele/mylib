@@ -15,6 +15,13 @@
 4. `figure-table-audit` + `de-AIGC`：图表一致性与语言风险。
 5. `academic-paper-reviewer`：模拟审稿 / desk-reject 风险。
 
+### 按目标会场独立评审
+
+用户要求 Paper CCF 审稿/评审报告时：先读 `Paper_CCF/SKILL.md` 与一个目标会场画像，再读
+`Paper_CCF/resources/evidence-calibrated-review.md`，从原稿建立证据记录后核验已有意见。
+输出保留实际优点、关键问题、作者问题与有条件建议；PDF 另做文本与页面验证。
+经验与证据边界见 `Paper_CCF/resources/worked-examples/lightgmem-review-distill.md`。
+
 ## 3) 全流程“一条龙”
 
 1. Codex 姿势：`Codex-Academic-Research/DIGEST.md`（现场 / AGENTS / 四要素 / Plan）

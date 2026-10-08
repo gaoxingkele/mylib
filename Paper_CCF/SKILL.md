@@ -2,9 +2,9 @@
 name: paper-ccf
 description: >-
   Route computer-science and engineering manuscripts to a conference or journal profile. Use when
-  choosing a venue, checking venue fit, evidence expectations, review model, submission cycle,
-  desk-reject risks, or fallback venues. Load only the selected profile and verify current rules
-  against the official venue site.
+  choosing a venue, checking venue fit, independently reviewing a manuscript against a venue's
+  evidence standards, or examining submission-cycle and fallback-venue risks. Load only the
+  selected profile and relevant review guidance; verify current rules against the official site.
 ---
 
 # Paper_CCF — 计算机会议投稿路由器 (CS / CCF conferences)
@@ -27,6 +27,16 @@ description: >-
 3. **加载该会议画像**：打开 `skills/<slug>/SKILL.md`，据其 fit / 证据标准 / 官方周期清单 / desk-reject / 改投 / 输出格式 给出建议。
 4. **会议不明或需在兄弟会议间取舍**：打开 `skills/cs-ai-conference-workflow/SKILL.md`（按贡献类型的分区路由表 + 兄弟会议辨析），并参考 `resources/exemplars/selection-patterns.md` 与 `resources/worked-examples/venue-routing.md`。
 5. **投稿前务必核对官方当年规则**：会议每届的 DDL、页数、模板、双盲、rebuttal、artifact、AI 使用政策都会变。用 `resources/conference-roster.md` 与 `resources/official-source-map.md` 找到官方 CFP / author kit 链接，以官方为准；官方与本 skill 冲突时以官方为准。
+
+## 独立评审与审稿报告模式
+
+用户要求审稿、独立评审、评审报告或复核已有意见时，加载一个目标会议/期刊画像，再读
+[证据校准评审方法](resources/evidence-calibrated-review.md)。该方法补充机制、数字、实验归因与措辞核查；
+会场画像决定贡献门槛，官方当年规则决定政策要求。不把一次案例的评分或拒稿结论变成通用阈值。
+
+若提供既有评审，先从论文建立自己的证据记录，再把既有意见作为待核验线索；说明已接触哪些意见，
+不将复核包装成严格盲审。只做选刊或周期咨询时，不加载评审方法或展开整篇论文审计。
+报告范围与语言依用户要求；投稿路由模板不替代评审的优点、关键问题、作者问题与有条件建议。
 
 ## 期刊模块（Journals）路由
 

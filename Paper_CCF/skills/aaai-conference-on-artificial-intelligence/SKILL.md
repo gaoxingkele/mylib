@@ -1,6 +1,6 @@
 ---
 name: aaai-conference-on-artificial-intelligence
-description: Use when targeting AAAI Conference on Artificial Intelligence (AAAI) or deciding whether a computer-science manuscript fits this venue. Encodes conference fit, framing, evidence bar, submission-cycle checks, rebuttal posture, and desk-reject risks for AI/ML flagship.
+description: Use when targeting AAAI Conference on Artificial Intelligence (AAAI), reviewing a manuscript against its evidence bar, or checking venue fit. Encodes conference fit, framing, evidence expectations, submission-cycle checks, and rebuttal posture.
 ---
 
 # AAAI Conference on Artificial Intelligence (AAAI)
@@ -17,6 +17,16 @@ Because CS conferences change deadlines, templates, page limits, review workflow
 - A manuscript in broad artificial intelligence across reasoning needs a conference-fit read before being formatted or submitted.
 - The paper must be re-framed from journal style or arXiv style into a selective CS conference narrative.
 - The author needs an evidence-gap, anonymity, artifact, rebuttal, or re-routing diagnosis for this venue.
+- The user requests an independent AAAI-style manuscript review or a review report.
+
+## Manuscript review mode
+
+For a substantive review, read [Evidence-calibrated review](../../resources/evidence-calibrated-review.md).
+Apply this profile's broad-AI contribution bar to manuscript-grounded findings. Distinguish a confirmed
+technical flaw, an unsupported claim, and unavailable evidence. A system or integrative contribution
+can qualify without inventing every component; ask which reusable mechanism the experiments establish.
+Keep recommendation-critical evidence in the review, with a concise author question or discriminating
+validation for each major issue. Do not require every proposed extension as a condition of acceptance.
 
 ## Scope & topic fit
 

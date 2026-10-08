@@ -12,6 +12,11 @@ uncertain.
 - `worked-examples/venue-routing.md` - diagnostic routing cases.
 - `exemplars/selection-patterns.md` - sibling-conference differentiation
   patterns and common routing traps.
+- `evidence-calibrated-review.md` - manuscript review/report mode: mechanism,
+  numerical consistency, attribution, and evidence-calibrated recommendations.
+  Load for reviews, not ordinary venue selection; it links a source-backed case
+  and a bounded behavioral replay exercise. Quantitative reviews can use
+  `../scripts/audit_review_numbers.py` with source-checked numeric ledgers.
 
 ## Journal module extras
 
