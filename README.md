@@ -13,6 +13,7 @@
 - Internal routes: 科研基金 → `fund-research-content-writer`; 科技项目 → `research-grants`; 教改 / 人才计划 → `doc-coauthoring`.
 - Three complete upstream skill snapshots, pinned provenance and licenses; current guides, templates and numbered evidence govern every draft.
 - Runtime registers only `proposal-writing` through `skill-runtime/routers/proposal-writing`; leaf skills load on demand.
+- Power-grid proposal review uses [the domain adapter](proposal-writing/references/power-grid-review.md), reusable competency cards and a local source-applicability checker; current calls and evidence govern requirements.
 
 ## Patent application toolkit
 

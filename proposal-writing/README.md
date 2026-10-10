@@ -10,6 +10,8 @@
 | 人才计划 | [talent-program](references/talent-program.md) | [doc-coauthoring](skills/doc-coauthoring/SKILL.md) |
 | 评审与修订 | [review-revise](references/review-revise.md) | [review-grant](skills/review-grant/SKILL.md)、[peer-review](skills/peer-review/SKILL.md) |
 
+电网/能源科技项目评审及大型指南能力学习，按需加载 [power-grid-review](references/power-grid-review.md)：10张通用能力卡、30个问题、22个公开来源入口。原始指南、申报书和内部评审数据留在项目；题录/历史资料仅作适配参考，具体要求以本轮适用文件为准。领域依据检查的JSON格式见 [review-basis-schema](references/review-basis-schema.md)。
+
 ## 来源与许可
 
 完整子目录通过 Codex skill-installer 从指定 GitHub commit 下载；未导入整套仓库、其他 skill 或代码依赖。上游文件原样保留，适配写在本模块入口与 `references/`。
@@ -44,6 +46,8 @@
 ```powershell
 python proposal-writing/scripts/verify_sources.py
 python proposal-writing/scripts/test_revision_ledger.py
+python proposal-writing/scripts/test_review_basis.py
+python proposal-writing/scripts/validate_review_basis.py --profile proposal-writing/references/power-grid-review-profile.json
 python skill-runtime/audit_skill_paths.py --source-only --json
 python -X utf8 C:/Users/iamaf/.codex/skills/.system/skill-creator/scripts/quick_validate.py proposal-writing
 python -X utf8 C:/Users/iamaf/.codex/skills/.system/skill-creator/scripts/quick_validate.py skill-runtime/routers/proposal-writing
@@ -51,6 +55,8 @@ git diff --cached --check -- . ":(exclude)proposal-writing/skills/**" ":(exclude
 ```
 
 `verify_sources.py` 检查完整文件集与来源哈希；`test_revision_ledger.py` 使用合成记录验证本地修订台账规则；运行时审计检查注册数量、YAML 和路径。上游 `research-grants` 和 `peer-review` 的标准 `compatibility` 字段不被当前旧版 quick_validate 接受，因此保留原文，以运行时 YAML/路径审计和来源校验验证叶技能。
+
+`validate_review_basis.py`检查意见引用的读取层次、版本、生效、机构/批次/类别/阶段和明确采用声明；也检查领域能力卡引用。它仅校验本地声明，不能证明原文真实、采用条款成立、现场性能或申报合规。推荐性/指导性标准不能仅凭题录变成本轮强制要求，历史资料可保留作学习参考。
 
 上游快照保留原有空白与 Markdown 换行，空白检查只针对本地维护内容；来源校验负责确认快照未被改写。
 

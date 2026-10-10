@@ -2,7 +2,7 @@
 
 > 单一事实源：`D:/aicoding/mylib`。四端（Claude Code / Codex / Kimi / Grok Build）以 junction 引用，不做第二份副本。
 > 本 wiki 记录每个技能的来源、用处、实测效果与路由关系。更新技能时同步更新本文件。
-> 最后更新：2026-10-01
+> 最后更新：2026-10-11
 
 ---
 
@@ -156,3 +156,12 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - 本地修订台账校验器检查结构、来源标识、状态及占位；51个固定上游文件来源校验和10个合成台账测试通过。此结果不证明材料真实、外部授权已落实或项目已获批。
 - 专业中文编辑减少教学式元说明与空泛套话，保持研究问题、创新、任务、验收和团队证据对应；不承诺AI检测结果。私人申报资料和案例审查记录留在各项目，不存入技能库。
 - 使用与来源详见 proposal-writing/SKILL.md、references/review-revise.md、README.md 及 upstream/sources.json。
+
+## 电网项目评审能力更新 2026-10-11
+
+- 保留proposal-writing单入口和既有六角色，电网/能源科技项目评审及大型指南能力学习按需加载 [领域适配](proposal-writing/references/power-grid-review.md)。普通申报任务不强制加载领域标准。
+- [能力profile](proposal-writing/references/power-grid-review-profile.json)收录10种通用推断能力、30个审查问题和22个公开来源入口；题录读取层次、版本核验时点和适用边界明确，不存私人申报书、内部评分、指南原文或私人路径。
+- 新增 [依据校验器](proposal-writing/scripts/validate_review_basis.py)及合成测试，检查声明中的来源层次、版本、生效、机构/批次/类别/阶段与采用关系；历史/题录可作软参考，不能自动作为硬要求。[记录格式](proposal-writing/references/review-basis-schema.md)说明CLI和示例。
+- 用户明确要求时可输出内部工作评分并公开自定维度；不称官方权重或获批概率，文本与材料状态分开，来源不适用及外部补证由仲裁角色复核。
+- 校验只证明记录结构及声明一致；需实际原文、专家判断和业主确认才能评价技术、材料与正式条件。固定上游快照不改写，适配仅在本地维护层。
+- 验证：23项新依据/能力库测试与10项原台账测试通过；独立合成前向评审区分本轮要求、历史装备条件、标准题录和补证缺口。51件上游来源、主入口/运行时格式及路径审计通过。profile保留22条题录/历史/未知状态提示，不将参考资料伪标成已读全文。
