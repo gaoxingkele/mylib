@@ -30,6 +30,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 | **图表设计** | `figure-designer`（核心三图范式+质量审计） | `skills/figure-designer/SKILL.md` | 三图定生死，投稿前单独过一遍 |
 | **长项目系统** | `research-writing-skill`（术语表/证据图/进度回写的工程化长稿系统） | `skills/research-writing-skill/SKILL.md` | 多章节跨会话长项目；短文润色用它会"流程比正文重" |
 | **投稿路由** | `Paper_CCF`（186 件期刊/会议画像） | 兄弟族 | 选 venue、对照 deadline |
+| **默认目标刊样本金字塔** | `journal-article-atlas` | 仓库 `powergrid_benchmark/knowledge_base/journal_article_atlas/skill/SKILL.md`，流程 `PROCEDURE_DEFAULT_TARGETS.md` | 代投稿审核或按范例生成前。默认刊含 IEEE Access，并含 Energies、Energy Reports、CSEE JPES、Applied Energy、SEGAN、Smart Energy。用已下载样本做用词、句子、段落、实验、公式、理论、图、表、数据集对照。只采用 `verified`；`automatic_candidate` 不能写成期刊标准。新增候选刊走同一采集脚本 |
 | **论文逆向 / 复现工程** | `repllm-content-parse`（PDF→paper.json）→ `paper-to-code`（Paper2Code 三阶段）→ `experiment-code` / `experiment-design` / `paper-compilation` | 兄弟族 | 把论文复现为可运行工程 |
 | **电力/电网论文专项** | `aers-powergrid-bridge`、`codex-ars-powergrid` | 兄弟族 | powergrid 领域论文 |
 | **研究自动化 agent 进化** | `harnessbank-gated-evolution` | 兄弟族 | 非论文写作——改进支撑研究的 agent 栈 |
@@ -47,5 +48,5 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 - 表达校准族（博导推荐三件套，2026-08-29 接入，**ARA 式收敛为本目录子技能 `skills/`，junction 指向上游源**）：`paper-polish`/`paper-writer`/`intro-drafter`/`pre-submission-reviewer`/`idea-evaluator`/`figure-designer`（Supervisor-Skills，**CC-BY-NC-SA-4.0 非商用许可**，商用场景慎用）、`research-writing-skill`（长项目系统）、`academic-paper-strategist`/`academic-paper-composer`（哲学/理论型）
 - 评估族：`rigor-reviewer`（在 ARA 内）、`scoop_check`、`idea_spark`、`literature-review`
 - 逆向/复现族：`repllm-content-parse`（PDF→paper.json）、`paper-to-code`（Paper2Code 三阶段）、`experiment-code`、`experiment-design`、`paper-compilation`（LaTeX 编译）
-- 投稿族：`Paper_CCF`；领域专项：`aers-powergrid-bridge`、`codex-ars-powergrid`、管理世界 `mw-*` 套件
+- 投稿族：`Paper_CCF`；默认目标刊样本金字塔：仓库 `powergrid_benchmark/knowledge_base/journal_article_atlas`（含 IEEE Access）；领域专项：`aers-powergrid-bridge`、`codex-ars-powergrid`、管理世界 `mw-*` 套件
 - 检索族（交叉引用）：见 `npl-prior-art-search` 的已装清单

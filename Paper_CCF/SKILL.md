@@ -50,6 +50,7 @@ description: >-
 6. **IdeaSpark 全量本地语料蒸馏**（`papers/literature/**` ≈480 PDF → 按刊 acceptance pattern）→ **先读** `resources/ideaspark-fullcorpus-journal-distill.md`；各命中刊 `journals/<slug>/SKILL.md` 内有 `### ResearchStudio-Idea acceptance patterns (full local corpus, 2026-08)`。细表/卡片在仓库 `papers/literature/target_journal_related/metadata/ideaspark_fullcorpus_*`。
 7. **RepLLM-CPA 结构化证据蒸馏**（Content Parsing → `paper.json`，**非**全量代码复现）→ `resources/repllm-cpa-journal-distill.md`；各刊 `### RepLLM-CPA structured evidence`。库：`D:/aicoding/mylib/RepLLM/`。
 8. **所有 IF / 分区 / APC / 审稿时长均为快照，逐年变动——务必以官网/Clarivate 当年数据为准**；官网与本 skill 冲突以官网为准。总索引见 `resources/journal-roster.md`。
+9. **默认投稿对象的样本金字塔**（2026-10-04 起）：Journal of Energy Storage、Discover Computing、Electronics、Applied Sciences、Information、Algorithms、Future Internet、Mathematics、Sensors、Symmetry、**IEEE Access**。同日补入更贴非综述电力研究的 Energies、Energy Reports、CSEE JPES、Applied Energy、Sustainable Energy, Grids and Networks、Smart Energy。每刊目标是最新 10 篇开放全文 + 10 篇电力/储能×计算交叉全文。流程、缺口和“自动候选 ≠ 录用标准”写在仓库 `powergrid_benchmark/knowledge_base/journal_article_atlas/PROCEDURE_DEFAULT_TARGETS.md`。审稿或生成稿件时先读该流程和 `DESIGN.md`，再读 `deconstruction/v1/default_targets_20261004/PYRAMID_INDEX.md`。新加一本候选刊时，把 ISSN 加进 `scripts/acquire_default_targets_20261004.py` 后重跑采集和分析，不要只改这张路由表。*Information* / *Algorithms* / *Future Internet* 仍按各刊 skill 记为 ESCI，不是 SCIE。后 6 本还没有 2026-10-04 的 20 篇样本。
 
 ### 期刊索引（29）
 
