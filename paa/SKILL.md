@@ -103,6 +103,8 @@ SKILL.md (for Claude Code) or the equivalent adapter.
 
 - `./scripts/scaffold.py` — creates empty PAA structure
 - `./scripts/validate.py` — runs Seal Level 1 + gates
+- `./scripts/build_cnipa_docx.py` — assembles 02/03/04/05 Markdown into a CNIPA-layout .docx (OMML equations, B/W mermaid figures, five parts on separate pages); `--check` for residue/section check
+- Revision workflow after external review: `./skills/cnipa-drafting-workflow/revision/README.md` (+ three spec templates)
 
 ## Example
 
