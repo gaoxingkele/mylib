@@ -98,7 +98,7 @@ output/<案件名>/
 
 ## 已有申请文件的评审驱动修订
 
-收到外部评审（网页多模型评审、代理人意见、模拟 OA）后出下一版，或要回答"分数为什么变 / 参数够不够 / 来源算法引没引够"，读 [revision/README.md](revision/README.md)，按需复制 `revision/templates/` 下的三种修订规范模板（按评审修改 / 叙事链闭合 / 查新重评与三问），每案一个子代理（≤3 并行），主代理统一核对、出 Word（`paa/scripts/build_cnipa_docx.py`）与记账。
+收到外部评审（网页多模型评审、代理人意见、模拟 OA）后出下一版，或要回答"分数为什么变 / 参数够不够 / 来源算法引没引够"，读 [revision/README.md](revision/README.md)，按需复制 `revision/templates/` 下的四种修订规范模板（按评审修改 / 叙事链闭合 / 查新重评与三问 / 说明书反 AI 痕迹与叙事连贯性，后者配 `paa/scripts/check_ai_traces.py`），每案一个子代理（≤3 并行），主代理统一核对、出 Word（`paa/scripts/build_cnipa_docx.py`）与记账。
 
 ## 必读清单
 
