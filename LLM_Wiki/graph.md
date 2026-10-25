@@ -63,6 +63,19 @@ graph TD
     Q2 --> S
     Q3 --> S
     Q4 --> S
+
+    CM[C-MARS ReviewSpec] --> RSPEC[Typed ReviewSpec and Compiler IR]
+    CM --> LRB[LongReviewBench Seed]
+    CM --> EV[Evidence Map and Literature Manifests]
+    EV --> RSPEC
+    RSPEC --> TG[Independent Review Task Graph]
+    RSPEC --> MT[Metamorphic and Invariance Suite]
+    RSPEC --> MM[Psychometric Aggregation]
+    LRB --> MT
+    TG --> VG[Evidence and Constraint Verification Gate]
+    MT --> VG
+    MM --> VG
+    VG --> S
 ```
 
 ## 读图说明
@@ -74,3 +87,4 @@ graph TD
 - `academic-research-suite` 负责“研究→写作→审稿流程（ARS）”。
 - `Codex-ARS Digest` 负责“姿势手册 + 电网 playbook”。
 - `AERS-Bridge` 负责“投稿前质量闸门工具链”。
+- `C-MARS-ReviewSpec` 负责“把评审构念、证据、约束、不变性和聚合编译为可重放实验”。

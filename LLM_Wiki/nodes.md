@@ -73,3 +73,18 @@
 - 科研基金、科技项目、教改项目、人才计划四类内部路线，三个完整上游执行器按需加载，运行时仅注册一个入口。
 - 来源与固定 commit：[sources.json](../proposal-writing/upstream/sources.json)；指南、模板、编号材料约束在 [主入口](../proposal-writing/SKILL.md)。
 - 已验证文件完整性和路由路径；未验证真实项目申报效果。
+
+## Review Methodology Layer
+
+### `C-MARS-ReviewSpec`
+- 位置：`C:/aicoding/agent_framework`
+- 作用：可编译 ReviewSpec、跨版本多智能体评审方法和 LongReviewBench 种子库。
+- 可执行入口：
+  - `scripts/search_literature.py`：按主题检索并原子化保存 receipt；
+  - `scripts/web_discovery.py`：Brave/Tavily 主来源域补充发现；
+  - `scripts/download_core_papers.py`：开放论文下载、PDF magic 与 SHA-256 验证；
+  - `scripts/download_dataset_assets.py`：有界数据资产下载和 manifest；
+  - `reviewspec/compiler.py`：JSON Schema + 语义引用检查并生成规范化 IR。
+- 关键产物：`literature/notes/reviewspec-evidence-map.md`、`literature/allinone.md`、`literature/manifests/core_papers.json`、`benchmark/cards/dataset-registry.yaml`、`benchmark/cards/asset-manifest.json`。
+- 2025+ 增量扫描：`literature/recent-2025-scan-allinone.md`；人工质量筛选：`literature/notes/recent-2025-quality-screen.md`。
+- 边界：当前是范围综述与 benchmark seed，不是完成双人筛选的系统综述，也不是已发布 benchmark。

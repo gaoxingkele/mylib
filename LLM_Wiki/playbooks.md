@@ -30,6 +30,16 @@
 4. IdeaSpark + RepLLM 本地证据
 5. AERS 投稿闸门
 
+## 4) 构造可编译多智能体评审与 Benchmark
+
+1. 从 `C-MARS-ReviewSpec/literature/protocol.md` 冻结问题、检索式和纳排条件。
+2. 执行 `search_literature.py`，再用 `web_discovery.py` 补充发现；网络结果必须回到主来源核验。
+3. 在 `reviewspec/examples/` 编写规范，由 `reviewspec/compiler.py` 通过 schema、引用闭合、veto 和权重检查。
+4. 按“独立盲审 → issue 冲突 → 有限质询 → 独立裁决 → 测量校准”生成任务图；失败时保留 receipt 并允许弃权/人工复核。
+5. 用 `benchmark/schemas/longreview_instance.schema.json` 表达版本对、受控变形和 group-aware split。
+6. 先跑证据/约束验证门，再报告有效性、复测可靠性、不变性、局部单调性、偏差、校准和成本。
+7. 任何规则、知识库、模型或数据升级都必须冻结版本与哈希，禁止把不同快照的分数直接解释为内容进步。
+
 ## 规则
 
 - 任何改写不得改变系数、样本量、显著性结论与引用指向。
