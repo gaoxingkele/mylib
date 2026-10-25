@@ -54,7 +54,7 @@ description: >
 ## 硬约束
 
 - 每专利独立会话，禁止串案。
-- 模型（2026-09-27 用户指定）：Gemini **Pro**（账号最高档，禁止 Flash-Lite）；ChatGPT 对话选 **GPT-6 Pro**（此前轮次为 GPT-6 Astra 极高）；Grok **Expert**；Perplexity 从 **`https://www.perplexity.ai/patents`** 进入，能选模型委员会就选 **Max**（`/` 搜索菜单，点满三模型后「提交」才可用），该入口下不能选则用页面可用最高档并在 md 中如实记录；Kimi 选 **K3** 模型并启用 **学术数据库** 插件。
+- 模型：Gemini 默认 **`4 Argon` + 思考等级 `高点`**（2026-10-14 实测；UI 常显示「Argon 高点」；禁止 Flash-Lite；旧称 Pro/3.1 Pro 仅作对照）；ChatGPT 对话选 **GPT-6 Pro**（此前轮次为 GPT-6 Astra 极高）；Grok **Expert**；Perplexity 从 **`https://www.perplexity.ai/patents`** 进入，能选模型委员会就选 **Max**（`/` 搜索菜单，点满三模型后「提交」才可用），该入口下不能选则用页面可用最高档并在 md 中如实记录；Kimi 选 **K3** 模型并启用 **学术数据库** 插件。
 - 粘贴用 `page.keyboard.insertText`。Perplexity 可对 composer `drop({files})`。
 - 只改合理项：锁耦合、消 26.4 冲突、补说明书支持。数值/未实测公式不进独权。
 - 每轮：`当前版本_YYYYMMDD` + wiki 一行 `` `GATE` `CASE` 版本 `YYYYMMDD` ``。

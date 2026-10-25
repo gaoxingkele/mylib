@@ -67,6 +67,30 @@ python scripts/authenticity_audit.py compare <original> <revised> --profile pate
 The script reports heuristic signals and protected-token drift. It is not an AI
 detector.
 
+**Unified action (preferred, 2026-10-20):** one entry for locate → rewrite → gate,
+for both patents and papers:
+
+```powershell
+python scripts/deai.py check <file> --profile patent|paper [--claims 02_权利要求书.md] [--json out.json]
+python scripts/deai.py gate <original> <revised> --profile patent|paper [--json gate.json]
+```
+
+- Rules: `references/deai_rules.json`, rebuilt by `scripts/build_deai_rules.py` from
+  `mylib/deai-sources/_catalogue.json` (10 third-party lists, see its
+  `_catalogue_README.md` for sources, licenses and conflicts) plus this script's
+  `PATTERNS` and `paa/scripts/check_ai_traces.py` filler list.
+- Roles: `flag` = review lead; `forbidden` = never use when rewriting (colloquial noise,
+  zero-width/homoglyph, fact-altering swaps, detector-oriented shape manipulation);
+  `guard` = over-correction warnings. English rules run only on English-dominant units.
+- `check` adds structure metrics: patent specs reuse `check_ai_traces.run`; English
+  papers report excess-vocabulary density (Kobak et al. 2025).
+- `gate` FAILs on any protected-token change in filed body text (header/`>` lines
+  excluded), changed patent paragraph numbers, new `forbidden` hits, or a higher
+  scored-hit count or structure score.
+- Patent profile masks statutory and technical phrases (`所要解决的技术问题是`,
+  `如图N所示`, `步骤S`, `绝对误差`, `系统性偏差`, `同时`). Calibrate before tightening:
+  on one pre-LLM granted patent (CN101813932A) the scored density was 0.11/千字.
+
 ### 2. Build a source-of-truth packet
 
 Prefer author or inventor materials over model-generated prose:

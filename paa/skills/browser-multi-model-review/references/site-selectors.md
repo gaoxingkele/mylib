@@ -4,10 +4,19 @@
 
 ## Gemini `gemini.google.com/app`
 
-- 输入：role `textbox` name `为 Gemini 输入提示`
+- 输入：role `textbox` name `为 Gemini 输入提示`（亦见 `与 Gemini 对话`）
 - 发送：role `button` name `发送`（不要在 click 后再 `getAttribute`，会超时）
 - 复制：先点 heading `/风险清单/`，再最后一个 exact name `复制`。`复制` last() 有时会拿到 16 字符失败剪贴板，改走页脚复制。
 - 新聊天法律拒答：同线程 `gemini_reframe.js`。标题为 `对话终止` / `拒绝回答` 时重开。
+- 重命名：`[aria-label*=更多选项]` → `重命名` → `input.fill(简写)` → Enter。
+- **模型（2026-10-14 实测）**：composer 旁按钮 `打开模式选择器，当前模式为“…”`。菜单档位：
+  - `3.5 Flash-Lite`（极速回答）
+  - `3.8 Flash`（全方位帮助）
+  - `3.1 Pro`（高级推理）
+  - **`4 Argon`（复杂任务）** ← 专利评审默认最高档
+  - `思考等级`：`低点` / `中等` / `高点`（超级详尽）
+  - 评审默认：**`4 Argon` + `思考等级`=`高点`**，按钮文案常显示为 `Argon` / `高点`（aria：`当前模式为“Argon 高点”`）。
+  - 模型口头可能自称普通 Gemini、不认「Gemini 4 Argon」代号；以 UI 模式选择器为准，勿因自述降档。
 
 ## ChatGPT `chatgpt.com`
 
@@ -16,6 +25,7 @@
 - 发送：`发送提示|发送`
 - 复制：`复制回复` last()。仅有 `复制消息` 时复制的是用户提问。
 - 未完成：存在 `停止回答`。回复只有「评」等残句时发 `chatgpt_continue.js`。
+- 重命名：`聊天操作` → `重命名` → Ctrl+A + `insertText(简写)` → Enter（侧栏名更新；标签 `document.title` 可能滞后）。
 
 ## Grok `grok.com`
 
@@ -24,6 +34,7 @@
 - 发送：role `button` name `Submit`。若弹出 Meet Grok Bot，先 Dismiss。
 - 复制：`Copy response`
 - 提交后 URL 变成 `/c/<uuid>`，记下该 URL。
+- 重命名：2026-10-12 侧栏菜单仅有置顶/移动到项目/删除聊天，未见重命名；若标题已含案简写可保留。
 
 ## Perplexity `perplexity.ai/patents`（2026-09-27 起固定入口）
 
@@ -35,7 +46,7 @@
 - 点满三个模型后「提交」才启用。2026-09-20 组合：模型1 GPT-5.6 Sol Max（正在思考）、模型2 Claude Opus 5 Max（正在思考）、模型3 Gemini 3.8 Flash。名单漂移时仍选各槽 Max + 思考。
 - 提交：role `button` name `提交`
 - 复制：exact name `复制` last()
-- 重命名：会话操作 → `Pxx-x 简写`。标签仍可能显示提问摘要。
+- 重命名（2026-10-12）：侧栏当前线程的 `会话操作`（需 PointerEvent pointerdown/pointerup/click）→ `重命名` → 对话框「编辑会话标题」role=textbox → 点 `保存`（单按 Enter 不可靠；勿写入主 composer）。简称用案简写即可（如 `数字孪生档案校核`）。浏览器标签仍可能显示提问摘要。
 
 ## Kimi `kimi.com`（2026-09-27 新增，选择器待首次实跑补录）
 
