@@ -79,12 +79,14 @@
 ### `C-MARS-ReviewSpec`
 - 位置：`C:/aicoding/agent_framework`
 - 作用：可编译 ReviewSpec、跨版本多智能体评审方法和 LongReviewBench 种子库。
+- **交接入口（2026-10-25）**：[`docs/handoff-2026-10-25.md`](../../agent_framework/docs/handoff-2026-10-25.md) — 发布 `g7_stable_replay`、三场景冻结 digest、与本库 `paper_harness` / `proposal-writing` / `paa` 的对接边界。
 - 可执行入口：
+  - `scripts/run_cmars_pipeline.py` / `src/cmars/runtime/pipeline.py`：单表面释放链（完整收敛证据用 `generations=7`）；
   - `scripts/search_literature.py`：按主题检索并原子化保存 receipt；
   - `scripts/web_discovery.py`：Brave/Tavily 主来源域补充发现；
   - `scripts/download_core_papers.py`：开放论文下载、PDF magic 与 SHA-256 验证；
   - `scripts/download_dataset_assets.py`：有界数据资产下载和 manifest；
   - `reviewspec/compiler.py`：JSON Schema + 语义引用检查并生成规范化 IR。
-- 关键产物：`literature/notes/reviewspec-evidence-map.md`、`literature/allinone.md`、`literature/manifests/core_papers.json`、`benchmark/cards/dataset-registry.yaml`、`benchmark/cards/asset-manifest.json`。
+- 关键产物：`literature/notes/reviewspec-evidence-map.md`、`literature/notes/review-agent-llm-wiki.md`、`literature/allinone.md`、`literature/manifests/core_papers.json`、`benchmark/tasks/catalog.yaml`、`benchmark/cards/dataset-registry.yaml`、`benchmark/cards/asset-manifest.json`。
 - 2025+ 增量扫描：`literature/recent-2025-scan-allinone.md`；人工质量筛选：`literature/notes/recent-2025-quality-screen.md`。
-- 边界：当前是范围综述与 benchmark seed，不是完成双人筛选的系统综述，也不是已发布 benchmark。
+- 边界：当前是范围综述与 benchmark seed，不是完成双人筛选的系统综述，也不是已发布 benchmark；合成分数与 miniset 不可报告为「最好审稿系统」。
