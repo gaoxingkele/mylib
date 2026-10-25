@@ -6,7 +6,7 @@ description: >
   拜占庭异常评分、跨轮版本漂移和同批案件相对公平。适用于授权成功率、专利评分、
   可专利性评估、低分改进、多专家仲裁、改稿前后复评；不用于把单一分数解释为授权保证。
 metadata:
-  version: "2.2.0"
+  version: "2.3.0"
   domain: chinese-invention-patent-review
 ---
 
@@ -50,7 +50,8 @@ metadata:
 - `search_claim_hash`：检索输入绑定的独权哈希；
 - `evidence_hash`：已核验对比文件及摘录集合哈希；
 - 申请日或优先权日、检索日期、检索接口与错误日志；
-- PatentARA/PAA/CNIPA门禁使用的申请文件版本。
+- PatentARA/PAA/CNIPA门禁使用的申请文件版本；
+- 推荐（2.3.0）：其他独权哈希`independent_claim_hashes`、02–05 文本束哈希`text_bundle_hash`、事实层/论证层证据哈希`evidence_hash_facts`/`argument_hash`、冻结的锚点文件哈希`anchor_sha256`。
 
 比较同一对象在不同工序绑定的哈希，不要求独权哈希与证据集哈希相等。独权与检索输入版本不一致时，输出`STALE_REVIEW_RESEARCH_REQUIRED`。说明书、效果依据、工程证据或评分口径改变时也须检查复评范围；同日评分不代表覆盖当日终稿。
 
@@ -99,7 +100,7 @@ metadata:
 默认运行AHP-only评分器：
 
 ```powershell
-python paa/skills/patent-grant-scorer/scripts/ahp_only_scorer.py input.json -o review.json
+python paa/skills/patent-grant-scorer/scripts/ahp_only_scorer.py input.json -o review.json --root <案件目录>
 ```
 
 默认`robust`模式以中位数抵抗异常值，以证据加权均值保留高质量少数意见；四专家最多抑制一个低证据异常评分，但不删除原始意见。分差大、MAD高、高质量少数意见或疑似异常数超过容错上限时，输出`review_required`并要求定向补证据。
@@ -141,7 +142,28 @@ python paa/skills/patent-grant-scorer/scripts/ahp_sem_scorer.py input.json --agg
 
 改稿复评另附“原问题—修改关系—实际收益—范围代价—证据状态—未关闭风险”表；收益须区分文本、机制、实测效果，不以旧分数为最新稿背书。
 
+提供了 2.3.0 可选字段时，另外输出 `score_layers.residual_distinction`、`score_layers.retrieval_coverage`、`expert_independence` 和 `audit_warnings`，并在复评说明中逐条解读警告。
+
 完整JSON格式和示例见[references/input-output-schema.md](references/input-output-schema.md)。
+
+## 2.3.0 变更与依据
+
+依据是两起中国发明申请（记为案 A、案 B）在“改稿前后＋新检索证据”复评中各自整理的“评分方法问题”清单（记为 A-问题n、B-问题n；原始记录留在所用项目内，不随本技能分发）。
+
+**不变的部分**：AHP 指数公式、组权重、16 项指标、载荷和档位阈值都没有改。没有历史授权结果可用于校准，改了以后新旧分数就不能比较。本版只加可以确定计算的层、门禁和警告。所有新字段都是可选的；都不提供时，输出与 2.2.x 逐字段一致（`protocol_version` 除外；有 history 而没有冻结锚点时多一条 `anchor_not_frozen` 警告）。字段与规则见 schema 第 6 节。
+
+| 变更 | 依据 | 作用 |
+|---|---|---|
+| 残余区别特征层 `residual_distinction`（输入 `feature_matrix`、`feature_matrix_frozen_at`），不入指数 | A-问题1、B-问题1 | 新 Y 文献使区别特征集合缩小时，16 项指标里没有一项会直接下降。现在由特征矩阵确定性地算出未被任何文献单篇公开（●）的特征和覆盖率；只剩 ≤1 个时警告 `single_pivot_independent_claim`。拆分基线要登记，各版本拆分不一致时给警告，以免靠多拆特征抬高“未覆盖数” |
+| 检索覆盖层 `retrieval_coverage`（输入 `retrieval`），degraded 改为分级封顶 45→最高 65 | A-问题2、B-问题5 | 原来只要是 degraded，证据置信度就固定封顶 45，补做的全文语义检索、取全文、多库都看不出来。现在每满足一项加 5。覆盖度单独列出，不并入指数；独权特征没有检索过的逐条警告 |
+| 检索绑定 `input_jsonpath` + `normalization: strip_ws_sha256` | A-问题8、B-问题4 | MCP 证据的查询在 `request.semantic_query`，原评分器只读顶层 `input`，只能记为“评审人声明”。现在评分器自己按“去全部空白、sha256”复算 |
+| `narrowed_from_searched_claim` + `new_features_searched` | B-问题4 | 收窄后的独权以前只能判 STALE。新增特征确实检索过时记为 `narrowed_rechecked`，不判 STALE；没检索过的仍判 STALE |
+| 版本与证据分层：`independent_claim_hashes`、`text_bundle_hash`、`evidence_hash_facts`、`argument_hash` | A-问题3、A-问题4、B-问题7 | 以前只看权 1 哈希：权 22 和说明书改了也判 `same_state_recheck`；playbook 等申请人自写的论证改了也算“证据变化”。现在新增 `non_claim1_text_revision_fixed_evidence` 等类型，证据按事实层判断，只有论证层变化的计为申请人侧改进 |
+| 防提分漏洞警告：`anchor_not_frozen`、`effect_score_raised_without_new_data`、`evidence_set_shrunk` | A-问题7、B-问题7 | 防止三种做法：事后往锚点里补缺陷再修复、不提交新数据只给效果重新贴标签、删掉证据文件来回避 I 组降分。三者都只警告，不改分 |
+| 角色独立性 `expert_meta.<role>.independent` → `disagreement_not_informative` 与角色偏移诊断 | A-问题6、B-问题6 | 四个角色由同一模型扮演时，分歧统计提供不了信息，拜占庭抑制也从不触发。现在明确标出这一点，并给出各角色的固定偏移（例如无效请求人系统性偏低）。不改聚合，也不压置信度，避免历史结果不可比 |
+| 可选门禁 `background_prior_art_alignment`（PASS/WARN/FAIL） | A-问题5、B-问题2 | 背景技术如实补述不再通过 Q3 计正分，改由门禁表达：WARN 计入 conditional，FAIL 计入 blocking。由评审人判定后输入 |
+
+**本版未实现的建议**：新增 I5/N4 指标、拆分 Q1、给 I 组设保守先验、按领域选择 action_queue 模板（A-问题1、A-问题2、B-问题3、B-问题8）。这些都会改变指数或指标集合，要等有历史结果可以校准时再做。
 
 ## 分数解释
 

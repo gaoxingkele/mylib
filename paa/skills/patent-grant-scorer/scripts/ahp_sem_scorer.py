@@ -382,18 +382,71 @@ DERIVED_SEARCH_RELATIONS = frozenset(
     {"verbatim_substring", "derived_claim_text", "claim1_of_document", "extract_of_document"}
 )
 
+#: 2.3.0: reviewed claim = searched claim plus added features. Only honoured
+#: together with ``search_binding.new_features_searched`` (bool); without that
+#: flag the relation is treated like any other non-derived relation (STALE on
+#: hash mismatch), exactly as before 2.3.0.
+NARROWED_SEARCH_RELATION = "narrowed_from_searched_claim"
+
+
+#: Text normalisations the scorer can apply itself before hashing a search
+#: input (2.3.0). ``strip_ws_sha256`` removes every whitespace character
+#: (Python ``str.isspace``, incl. full-width spaces and line breaks) and then
+#: takes sha256 of the UTF-8 bytes.
+SEARCH_TEXT_NORMALISATIONS = frozenset({"none", "strip_ws_sha256"})
+
+
+def _json_path_get(data: Any, dotted: str) -> Any:
+    """Resolve a minimal dotted path such as ``request.semantic_query`` or
+    ``requests[0].query``. Returns None when any step is missing."""
+    current = data
+    for part in str(dotted).strip().split("."):
+        if not part:
+            return None
+        name, _, rest = part.partition("[")
+        if name:
+            if not isinstance(current, Mapping) or name not in current:
+                return None
+            current = current[name]
+        while rest:
+            index_text, _, rest = rest.partition("]")
+            rest = rest[1:] if rest.startswith("[") else rest
+            try:
+                index = int(index_text)
+            except ValueError:
+                return None
+            if not isinstance(current, list) or not -len(current) <= index < len(current):
+                return None
+            current = current[index]
+    return current
+
+
+def _hash_search_text(text: str, normalization: Optional[str]) -> str:
+    if normalization == "strip_ws_sha256":
+        text = "".join(ch for ch in text if not ch.isspace())
+    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
+
 
 def _search_input_hash_from_path(
-    search_path: Any, root: Optional[Any]
+    search_path: Any,
+    root: Optional[Any],
+    input_jsonpath: Optional[str] = None,
+    normalization: Optional[str] = None,
 ) -> Tuple[Optional[str], Optional[str]]:
-    """Read a search-evidence file and return sha256 of its `input` text.
+    """Read a search-evidence file and return sha256 of its query text.
 
     The scorer recomputes this itself so a caller cannot make the binding check
     pass merely by writing the same value into two fields.
+    By default the query is the top-level ``input`` field hashed verbatim
+    (pre-2.3.0 behaviour). ``input_jsonpath`` selects another field (e.g.
+    ``request.semantic_query`` in MCP evidence) and ``normalization`` names a
+    rule from ``SEARCH_TEXT_NORMALISATIONS``.
     Returns (hash, error). hash is None when it could not be established.
     """
     if not isinstance(search_path, str) or not search_path.strip():
         return None, None
+    if normalization is not None and normalization not in SEARCH_TEXT_NORMALISATIONS:
+        return None, "unknown_normalization"
     path = Path(search_path.strip())
     if not path.is_absolute():
         path = Path(root or os.getcwd()) / path
@@ -403,10 +456,15 @@ def _search_input_hash_from_path(
         data = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None, "unparsable"
-    text = data.get("input") if isinstance(data, Mapping) else None
+    if input_jsonpath:
+        text = _json_path_get(data, input_jsonpath)
+        missing_error = "missing_jsonpath_field"
+    else:
+        text = data.get("input") if isinstance(data, Mapping) else None
+        missing_error = "missing_input_field"
     if not isinstance(text, str) or not text:
-        return None, "missing_input_field"
-    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest(), None
+        return None, missing_error
+    return _hash_search_text(text, normalization), None
 
 
 def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = None) -> Dict[str, Any]:
@@ -431,9 +489,13 @@ def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = No
     binding: Mapping[str, Any] = raw_binding if isinstance(raw_binding, Mapping) else {}
     relation = binding.get("relation")
     search_path = review_context.get("search_path") or binding.get("search_path")
+    input_jsonpath = binding.get("input_jsonpath")
+    normalization = binding.get("normalization")
 
     # --- 1) establish the authoritative search-input hash ---
-    recomputed, evidence_error = _search_input_hash_from_path(search_path, root)
+    recomputed, evidence_error = _search_input_hash_from_path(
+        search_path, root, input_jsonpath=input_jsonpath, normalization=normalization
+    )
     if recomputed:
         search_input_hash = recomputed
         binding_basis = "verified_from_evidence"
@@ -459,7 +521,24 @@ def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = No
         declared_text_hash = binding.get("searched_claim_text_hash") or declared_search_hash
         if declared_text_hash and search_input_hash and _norm_hash(declared_text_hash) != _norm_hash(search_input_hash):
             stale_reasons.append("search_input_differs_from_declared_claim_text")
-    else:
+    narrowed_status: Optional[str] = None
+    new_features_searched = binding.get("new_features_searched")
+    if relation == NARROWED_SEARCH_RELATION and isinstance(new_features_searched, bool):
+        # 2.3.0: the reviewed claim = searched claim + added features. Novelty
+        # carries over monotonically; inventive step only if the added
+        # features were themselves searched. The caller states which; the
+        # searched text must still match the declared searched-claim hash.
+        declared_text_hash = binding.get("searched_claim_text_hash") or declared_search_hash
+        if declared_text_hash and search_input_hash and _norm_hash(declared_text_hash) != _norm_hash(search_input_hash):
+            stale_reasons.append("search_input_differs_from_declared_claim_text")
+        if new_features_searched:
+            narrowed_status = "narrowed_rechecked"
+        else:
+            narrowed_status = "narrowed_new_features_not_searched"
+            if current_claim_hash and search_input_hash and _norm_hash(current_claim_hash) != _norm_hash(search_input_hash):
+                stale_reasons.append("search_bound_to_different_claim_hash")
+            stale_reasons.append("narrowed_new_features_not_searched")
+    elif relation not in DERIVED_SEARCH_RELATIONS:
         if current_claim_hash and search_input_hash and _norm_hash(current_claim_hash) != _norm_hash(search_input_hash):
             stale_reasons.append("search_bound_to_different_claim_hash")
 
@@ -471,8 +550,10 @@ def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = No
         binding_warnings.append("missing_search_claim_hash")
     if evidence_error:
         binding_warnings.append(f"search_evidence_{evidence_error}")
+    if narrowed_status == "narrowed_rechecked":
+        binding_warnings.append("narrowed_search_reused_with_added_features_searched")
 
-    return {
+    result = {
         "current_claim_hash": current_claim_hash,
         "reviewed_claim_hash": reviewed_claim_hash,
         "search_claim_hash": search_input_hash,
@@ -484,13 +565,26 @@ def _version_binding(review_context: Mapping[str, Any], root: Optional[Any] = No
         "stale_reasons": stale_reasons,
         "binding_warnings": binding_warnings,
     }
+    # 2.3.0 optional fields: only emitted when the caller used them, so legacy
+    # outputs stay field-for-field identical.
+    if input_jsonpath or normalization:
+        result["search_input_jsonpath"] = input_jsonpath
+        result["search_input_normalization"] = normalization
+    if narrowed_status:
+        result["narrowed_status"] = narrowed_status
+    return result
 
 
 def _evidence_confidence(
     consensus: Mapping[str, Mapping[str, Any]],
     review_context: Mapping[str, Any],
     version_binding: Mapping[str, Any],
+    degraded_cap: float = 0.45,
 ) -> Tuple[float, List[str]]:
+    """``degraded_cap`` (2.3.0) replaces the fixed 0.45 cap for
+    ``search_status == "degraded"`` when the caller supplies a graded value
+    derived from structured retrieval coverage. failed/empty/quota-exhausted
+    keep the fixed 0.45 cap."""
     warnings: List[str] = []
     legacy_only = all(item["legacy_numeric_only"] for item in consensus.values())
     reliabilities = [
@@ -525,9 +619,10 @@ def _evidence_confidence(
     if review_context.get("claim_text_verified") is not True:
         warnings.append("closest_prior_art_claim_text_not_confirmed")
         confidence = min(confidence, 0.65)
-    if review_context.get("search_status") in {"failed", "empty", "quota-exhausted", "degraded"}:
+    search_status = review_context.get("search_status")
+    if search_status in {"failed", "empty", "quota-exhausted", "degraded"}:
         warnings.append("search_failure_is_missing_evidence_not_negative_evidence")
-        confidence = min(confidence, 0.45)
+        confidence = min(confidence, degraded_cap if search_status == "degraded" else 0.45)
     if any(item["review_required"] for item in consensus.values()):
         warnings.append("material_expert_disagreement")
         confidence = min(confidence, 0.68)
