@@ -127,12 +127,16 @@ difference_feature: "对违背图谱关系路径的候选结果施加惩罚因�
 ## Integration with existing tools
 
 - `cn-patent-application-cluster` skill → orchestrates intake, patent-point tree, prior-art preparation, drafting, examiner review, and packaging; companion role prompts live in `./agents/`
-- `incopat-search` skill → feeds `evidence/prior_art_search/` (real pn + search expressions + semantics scores)
+- `incopat-search` / `patsnap-search` skills → feed `evidence/prior_art_search/` and `evidence/prior_art_claims/` (real pn, auditable queries, original text); `google-patents-search` provides free independent re-search and verification
+- `rd-initiation-review` skill → 具体项目/提案的立项与公开新颖性预评审；提案陈述、外部证据、推断和开放缺口分层后支持 `logic/`，不替代四门禁
+- `competitive-landscape` skill → 多玩家竞争分层、路线差异与空白机会；行业/玩家样本不能替代逐项权利要求检索
+- `tech-route-comparison` skill → 同场景、同层级的路线对比与成熟度评估；只有真实发生的路线取舍才进入 `trace/`
+- `company-innovation-assessment` skill → 通过 Company Intelligence MCP 生成单企业科创评估；作为背景证据，不作授权、FTO 或投资意见
 - `patent-grant-scorer` skill → feeds `evidence/scoring/` (AHP weights, SEM scores, indicator scores)
 - `cnipa-drafting-workflow` skill → produces `application/` layer content
 - `patent-disclosure-skill` → produces `logic/invention.md` from project docs
 - `npl-prior-art-search` skill → 非专利文献（论文类对比文件）检索路由，派发到学术检索组
-- `browser-multi-model-review` skill → Playwright MCP 四端浏览器控制（Gemini/ChatGPT/Grok/Perplexity），网页评审不替代 incoPat
+- `browser-multi-model-review` skill → Playwright MCP 四端浏览器控制（Gemini/ChatGPT/Grok/Perplexity），网页评审不替代真实专利检索
 - 探索图（`trace/`）是跨撰写轮次的连接组织——当前分散的 git commit 会丢掉这部分
 
 ## 部署模型（2026-08-29，单一事实源）

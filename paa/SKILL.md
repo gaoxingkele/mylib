@@ -98,6 +98,7 @@ SKILL.md (for Claude Code) or the equivalent adapter.
 - `./references/exploration-tree-spec.md` — exploration tree YAML spec (patent-specific node types)
 - `./references/validation-checklist.md` — Seal Level 1 checks
 - `./references/gates-checklist.md` — four patent-specific gates
+- `./skills/paa-patent-toolkit/SKILL.md` — route optional pre-research to R&D initiation review, competitive landscape, technology-route comparison, or company innovation assessment; load only the module matching the decision object
 
 ## Scripts
 

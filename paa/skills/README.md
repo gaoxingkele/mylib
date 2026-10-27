@@ -13,6 +13,10 @@ PAA 的工件层 (application/) 与验证管线 (`scripts/validate.py`) 由以�
 | **incopat-search** | 真实专利 API 查新（incoPat 开放平台，厦大平潭研究院测试账号） | feeds `evidence/prior_art_search/` 与 `evidence/prior_art_claims/` |
 | **google-patents-search** | **免费**专利检索与原文核验（**纯 HTTP/API，不使用浏览器**；后端=Google 站点接口 / WIPO PATENTSCOPE / Tavily 中继 / Google BigQuery 官方数据集；检索取件免 key）。`gp_pipeline.py`＝种子件四轴扩检流水线（引证/相似文献/语义/关键词 → 取原文 → 核验骨架） | incoPat 不可用/需第二轮复检索时 feeds `evidence/prior_art_search/`；`gp_verify.py` 是引用落稿的门禁 |
 | **patsnap-search** | 智慧芽开放平台检索与取件（检索式/语义/相似/论文、权利要求与说明书原文、法律状态、相似专利群可专利性统计）；只用检索与数据接口，不外发技术方案 | feeds `evidence/prior_art_search/` 与 `evidence/prior_art_claims/` |
+| **rd-initiation-review** | 具体研发项目/提案的立项预审、公开新颖性边界、创新点与证据充分性评审 | 评审包支持 `logic/invention.md`、`logic/inventive_concepts.md`、`logic/prior_art.md`，不替代 PAA 四门禁 |
+| **competitive-landscape** | 技术领域玩家发现、竞争分层、逐玩家路线矩阵与空白机会分析 | 行业/玩家证据支持 `logic/related_work.md` 与 `logic/solution/`；样本不替代逐权项检索 |
+| **tech-route-comparison** | 技术路线发现、同基准对比、TRL/成熟度与反向证据评估 | 支持 `logic/solution/` 与真实路线决策的 `trace/` 记录 |
+| **company-innovation-assessment** | 智慧芽 Company Intelligence MCP 单企业科创力/技术尽调评估及 HTML 报告下载 | 企业与技术背景输入；专利写入 PAA 前仍须取原文 |
 | **patent-grant-scorer** | 证据约束的AHP/SEM四专家评审、拜占庭仲裁与跨轮风险排序 | feeds `evidence/scoring/scoring.json` |
 | **cnipa-drafting-workflow** | CNIPA 申请文件起草与审查工作流（22 条三步法 / 26 条 / OA 预案） | produces `application/` 工件层 |
 | **patent-disclosure-skill** | 从项目文档挖掘专利点并生成可交付技术交底书 | produces `logic/invention.md` 输入 |
@@ -28,7 +32,12 @@ load: ./README.md              # 工具无关核心
 # 2. 按需载入 skill（指向本地或全局路径）
 load: ./skills/cn-patent-application-cluster/SKILL.md
 load: ./skills/incopat-search/SKILL.md
+load: ./skills/patsnap-search/SKILL.md
 load: ./skills/google-patents-search/SKILL.md
+load: ./skills/rd-initiation-review/SKILL.md
+load: ./skills/competitive-landscape/SKILL.md
+load: ./skills/tech-route-comparison/SKILL.md
+load: ./skills/company-innovation-assessment/SKILL.md
 load: ./skills/patent-grant-scorer/SKILL.md
 load: ./skills/cnipa-drafting-workflow/SKILL.md
 load: ./skills/patent-disclosure-skill/SKILL.md
