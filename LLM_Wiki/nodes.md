@@ -80,6 +80,7 @@
 - 位置：`C:/aicoding/agent_framework`
 - 作用：可编译 ReviewSpec、跨版本多智能体评审方法和 LongReviewBench 种子库。
 - **交接入口（2026-10-25）**：[`docs/handoff-2026-10-25.md`](../../agent_framework/docs/handoff-2026-10-25.md) — 发布 `g7_stable_replay`、三场景冻结 digest、与本库 `paper_harness` / `proposal-writing` / `paa` 的对接边界。
+- **gene_bank 卡（2026-10-28）**：[`cmars_g7_stable_replay.md`](../paper_harness/gene_bank/cmars_g7_stable_replay.md)；negative：[`cmars_g1_strict_novelty_reject.md`](../paper_harness/gene_bank/cmars_g1_strict_novelty_reject.md)、[`cmars_g4_settled_claim_curation_reject.md`](../paper_harness/gene_bank/cmars_g4_settled_claim_curation_reject.md)。Gen-8 分歧保留 context 见 agent_framework 交接文档 §9。
 - 可执行入口：
   - `scripts/run_cmars_pipeline.py` / `src/cmars/runtime/pipeline.py`：单表面释放链（完整收敛证据用 `generations=7`）；
   - `scripts/search_literature.py`：按主题检索并原子化保存 receipt；
