@@ -76,6 +76,17 @@ graph TD
     MT --> VG
     MM --> VG
     VG --> S
+
+    SR[Skill-RSI] --> CAT[catalog first-class review/writing skills]
+    SR --> GATE[frozen evaluator gates]
+    SR --> GB[skill gene bank]
+    CM --> SR
+    HB[HarnessBank] --> SR
+    MR[meta-rsi] --> SR
+    CAT --> PR
+    CAT --> PC
+    CAT --> W3
+    GB --> S
 ```
 
 ## 读图说明

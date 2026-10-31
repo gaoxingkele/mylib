@@ -22,4 +22,5 @@
 4. 要做投稿前质量闸门：走 `AERS-Bridge` 节点（引文/图表/降AIGC）。
 5. 要写科研基金、科技、教改或人才申报书：从 [`proposal-writing`](../proposal-writing/SKILL.md) 进入，按指南和模板选内部路线；来源与边界见 [模块说明](../proposal-writing/README.md)。
 6. 要研究可编译评审、多智能体可靠性或纵向 Benchmark：走 `C-MARS-ReviewSpec` 节点。
+7. 要门控进化 mylib 里已有的评审/写作 skill：走 `Skill-RSI` 节点。
 

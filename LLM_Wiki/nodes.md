@@ -76,6 +76,12 @@
 
 ## Review Methodology Layer
 
+### `Skill-RSI`（评审/写作 skill 进化环）
+- 维护源：[skills/skill-rsi/](../skills/skill-rsi/README.md)；入口 [SKILL.md](../skills/skill-rsi/SKILL.md)。
+- 方法：冻结评价器 + 单表面突变 + HarnessBank 门控 + gene bank；CLI `scripts/skillrsi.py`。
+- 目标目录：`config/catalog.yaml`（paper_harness / Paper_CCF / proposal-writing / paa / writing）。
+- 与 `HarnessBank`、`meta-rsi`、`C-MARS-ReviewSpec` 配合：本节点管 mylib skill 发布；C-MARS 管实验床；metaRSI 管项目证据账本。
+
 ### `C-MARS-ReviewSpec`
 - 位置：`C:/aicoding/agent_framework`
 - 作用：可编译 ReviewSpec、跨版本多智能体评审方法和 LongReviewBench 种子库。

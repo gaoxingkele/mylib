@@ -30,6 +30,15 @@
 4. IdeaSpark + RepLLM 本地证据
 5. AERS 投稿闸门
 
+## 4a) 进化 mylib 评审/写作 skill（Skill-RSI）
+
+1. 读 [`skills/skill-rsi/SKILL.md`](../skills/skill-rsi/SKILL.md) 与 `references/PROTOCOL.md`。
+2. `python skills/skill-rsi/scripts/skillrsi.py --root C:/aicoding/mylib init`（仅首次）。
+3. `targets` 确认目标在一等公民目录内；每次只选一个 surface。
+4. 改 skill/协议正文后 `propose` → `gate` → 人确认后 `admit` 或 `reject`。
+5. 申请书候选必须仍能通过 `validate_review_basis.py`；专利不得削弱锚点/硬门禁；论文合成分默认不可报告。
+6. 不要把 `Auto-Empirical-Research-Skills` 里成打 peer-review 推进本环。
+
 ## 4) 构造可编译多智能体评审与 Benchmark
 
 1. 从 `C-MARS-ReviewSpec/literature/protocol.md` 冻结问题、检索式和纳排条件。

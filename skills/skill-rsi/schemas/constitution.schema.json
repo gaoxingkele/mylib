@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project", "protected", "invariants", "mutable_surfaces"],
+  "properties": {
+    "project": {"type": "string", "minLength": 1},
+    "protected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "note"],
+        "properties": {
+          "path": {"type": "string"},
+          "note": {"type": "string"},
+          "human": {"type": "boolean"},
+          "min_tier": {"type": "string"}
+        }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "mutable_surfaces": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["prompt", "skill", "harness", "context"]},
+      "minItems": 1
+    }
+  }
+}

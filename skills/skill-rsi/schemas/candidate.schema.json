@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "target_id",
+    "surface",
+    "title",
+    "beacon",
+    "parent_id",
+    "pathology",
+    "status",
+    "created_at",
+    "reportable"
+  ],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 4},
+    "target_id": {"type": "string"},
+    "surface": {"type": "string", "enum": ["prompt", "skill", "harness", "context"]},
+    "title": {"type": "string", "minLength": 3},
+    "beacon": {"type": "string", "minLength": 8},
+    "parent_id": {"type": "string"},
+    "pathology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["where", "why"],
+      "properties": {
+        "where": {"type": "string", "enum": ["prompt", "skill", "harness", "context", "knowledge", "runtime", "config"]},
+        "why": {"type": "string", "minLength": 3}
+      }
+    },
+    "notes_path": {"type": ["string", "null"]},
+    "touched_paths": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parent_floors": {
+          "type": "object",
+          "additionalProperties": {"type": "number"}
+        },
+        "candidate_scores": {
+          "type": "object",
+          "additionalProperties": {"type": "number"}
+        },
+        "source": {"type": "string"}
+      }
+    },
+    "reportable": {"type": "boolean"},
+    "human_unlock": {"type": "boolean"},
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "gated_pass", "gated_fail", "admitted", "rejected"]
+    },
+    "gate_receipt": {"type": ["object", "null"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "decision_by": {"type": ["string", "null"]},
+    "decision_reason": {"type": ["string", "null"]}
+  }
+}
