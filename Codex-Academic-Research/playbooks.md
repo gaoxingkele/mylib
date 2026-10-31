@@ -30,9 +30,12 @@
 
 ```text
 Use $academic-research-suite.
-请以期刊审稿人审阅 drafts/...（或 paper_projects/.../paper.tex）。
+请以期刊审稿人审阅即将送审的那一份文件（Word/PDF 阅读稿优先于 paper.tex）。
 重点：问题是否清楚、方法能否回答、证据是否支撑、引用是否错配、desk-reject 风险。
-直接说问题，不要夸。目标刊：Applied Sciences / CMC / Energies（选一）。
+不要把审稿收成“文件读不出来”。每条意见要落到具体指标、公式、基线、区间或与表格冲突的句子。定义没写完或运算符不能确定计算，不得用源 TeX 补回，也不得因负面结果或“该刊常不附代码”放过。各审稿人不同的具体点要分开保留。
+文本通道看不到的嵌入图写成抽取限制，不要写成文件没有图。
+直接说问题，不要夸。目标刊：Applied Sciences / CMC / Energies / IEEE Access（选一）。
+IEEE Access 只用三个标签：Accept, minor edits permitted；Reject, updates required before resubmission；Reject, resubmission not permitted。
 ```
 
 ## E. 不该用 ARS 的时候

@@ -2,7 +2,7 @@
 
 > 单一事实源：`D:/aicoding/mylib`。四端（Claude Code / Codex / Kimi / Grok Build）以 junction 引用，不做第二份副本。
 > 本 wiki 记录每个技能的来源、用处、实测效果与路由关系。更新技能时同步更新本文件。
-> 最后更新：2026-10-11
+> 最后更新：2026-10-27
 
 ---
 
@@ -107,6 +107,7 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 - **mw-\*（管理世界，11 件）**：事实源 mylib/skills/（自 Claude 插件缓存拷贝）；Claude 走插件机制，Codex/Kimi 走 junction；选题/综述/机制/政策/复现/投稿/回复全套
 - **aers-powergrid-bridge / codex-ars-powergrid**：电网/AI 论文域路由（AERS/ARS 最小必要子技能）
 - **论文升级经验族（2026-09-22 新增）**：`Codex-Academic-Research/digests/mdpi-information-upgrade-2026-09.md`（MA-SQLGrid 迁 MDPI Information：长度控制、图表预算、补充材料迁移、新证据入稿判据、打包投递纪律）+ `Codex-Academic-Research/tools/manuscript_display_audit.py`（页数/末页余量/图表清单/孤儿图/双源一致/哈希 的确定性审计，失败即退出码 1，可挂 paper_harness 的 `custom:` 验收）；期刊侧场标定写入 `Paper_CCF/journals/mdpi-information/SKILL.md`（标定版本 2026-09-22.1），通用规则与 issue 类型追加进 `paper_harness/resources/paper_experience_digest.json`
+- **Zero_Carbon（2026-10-26，公开页补遗 2026-10-27）**：事实源 `skills/Zero_Carbon/`。从 `D:/aicoding/zero` 的 19 份 PDF 与 2 个已保存产品页蒸馏的零碳园区工作技能：国家级试行核算与 2023 年电力因子、零碳工厂指导意见、江苏三类路径、EIP v2 / OECD、2015 年能源管理指南、泵与空压手册、七篇仿真论文、HOMER Grid 1.9 导航页、ThingJS-X 方案页、IES STEP-WISE 2024-12-16 指南。2026-10-27 另读公开网页并写入 `references/public-supplements.md`：HOMER 逐步平衡与六污染物排放、ThingJS 平台四种数据对接、PVWatts V5 与 SAM 参数不可混用、Annex 60 结论章的三标准。ASHRAE 正文按其页面声明不收录。官方数字只在 `references/carbon-accounts.md`。零碳项目 `.grok/skills/Zero_Carbon` 是指向本目录的 junction。
 - **skill-runtime/**（新）：三端 skill 路径审计/修复运行时 + ara/paa/paper-ccf 路由器（外部端搭建）
 - **素材库**（未进活跃层，按需启用）：Auto-Empirical-Research-Skills（顶层 22 件，统计/计量/降AIGC）、Research-Paper-Writing-Skills（彭思达方法论）、cnki-skills、gs-skills、thesis-writing-skill 等
 

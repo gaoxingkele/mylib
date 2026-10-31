@@ -15,6 +15,10 @@ confidence: medium
 Use with one selected Paper_CCF venue profile for manuscript reviews and review
 reports. For venue selection alone, do not run this audit. Scale depth to the
 claims and available evidence; this is not a fixed experiment wishlist.
+For paragraph-, section- and experiment-level comparison with published papers,
+add [comparative-multiscale-review.md](comparative-multiscale-review.md), whose
+gates cover one-idea alignment, experiment coherence, terminology substance and
+research-history inflation.
 
 ## Establish the evidence boundary
 

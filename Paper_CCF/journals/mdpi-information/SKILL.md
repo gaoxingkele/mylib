@@ -2,10 +2,20 @@
 name: mdpi-information
 description: Assess MDPI Information fit, manuscript quality and submission readiness using official criteria and separately identified full-text observations. Use for Information journal selection, writing calibration or pre-submission review; do not infer acceptance probability from published examples.
 metadata:
-  calibration_version: "2026-09-22.1"
+  calibration_version: "2026-10-31.2"
 ---
 
 # Information (MDPI)
+
+For rejection diagnosis and comparison with recent papers, additionally read
+`references/rejection-reaudit.md`. Recheck inherited review allegations against
+the exact submitted version; distinguish portal completeness from local ZIP
+contents and scientific risks from documented editorial reasons. The 2026-10-31
+sample is ten latest Crossref-indexed records with disclosed partial reading,
+not an acceptance threshold or a completed full-text peer-review corpus.
+For deeper scientific comparison, read `references/scientific-quality-comparison.md`.
+The follow-up audit examines main evidence sections of all ten, with a separate
+coverage ledger; it does not claim exhaustive paragraph, supplement or replication coverage.
 
 ## Current calibration — required before assessment
 
@@ -23,7 +33,7 @@ Source: `Codex-Academic-Research/digests/mdpi-information-upgrade-2026-09.md`. O
   1. Length reduction relocates displays, never deletes them; register tables and figures separately and finish by proving every shipped figure file is referenced somewhere.
   2. A consolidated figure is re-plotted from frozen shipped summaries, its renderer ships with the submission, and no printed value is transcribed by hand.
   3. The supplementary PDF ships together with the markdown it was rendered from, byte-identical, and every archive file is declared in its manifest.
-  4. Decide whether new experiments enter the paper with criteria pre-registered before the results are read; headline and abstract-level claims stay unchanged.
+  4. Decide whether new experiments enter the paper with criteria fixed before results are read where feasible; preserve the exposure history. After a decisive new study is verified, align title, abstract and contribution list with its actual evidence. Freezing a historical headline must not conceal the current study's main result or prevent appropriate claim downgrading.
   5. Visible-evidence class (synthetic/development-visible · public non-domain · unseen expert-adjudicated) is stated with every conclusion, and unfinished external-validity work is named in Limitations with a route rather than hidden behind polish.
 - **Deterministic audit for these items:** `Codex-Academic-Research/tools/manuscript_display_audit.py` (pages, overfull, undefined refs, float inventory, unreferenced labels, orphan figures, last-page headroom, tex/pdf/docx hashes, supplement dual-source equality).
 
