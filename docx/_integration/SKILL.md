@@ -17,8 +17,8 @@ description: >-
 | 《从技术问题到科学问题》 | `docx/nsfc-tech-to-science-problem/` | STE 升维、能量/物质类、主导尺度结构、灵魂五问、宏观一招鲜、摘要七通过、函评循环嵌套 |
 | 《国家自然科学基金项目申请之路》 | `docx/nsfc-application-path/` | 科学问题主线、系统三要素×七阶段、机理三件套/模型七步、栏目职能分离、初筛二违反·三不·四无 |
 | 《凝练科学问题案例》 | `docx/nsfc-science-problem-cases/` | 四类属性、六路凝练、案例族 A–Q、病句改写与三栏对齐 |
-| 《论文不是写出来的》 | `docx/ai-research-thinking-writing/` | 倒金字塔、三项标准、四大目标、四法提示词、工作流分拆 |
-| 《如何用AI写论文》 | `docx/ai-paper-practice-norms/` | 合规边界、披露自证、场景能不能用、全流程实操 |
+| 《论文不是写出来的》 | `docx/ai-research-thinking-writing/` | 倒金字塔、三项标准、四大目标、四法提示词、创新四法、防黑箱工作流 |
+| 《如何用AI写论文》 | `docx/ai-paper-practice-norms/` | 能不能用、自证合规六步、九大场景、披露留痕、全流程实操 |
 
 交叉对照：`docx/ai-paper-crosswalk.md`。
 
@@ -47,11 +47,15 @@ description: >-
 
 ### B. 论文写作（推荐顺序）
 
-1. **科研先于生成**：`ai-research-thinking-writing` — 三项标准 + 四大目标收窄选题；禁止一键成文。
-2. **合规边界**：`ai-paper-practice-norms` — 场景能不能用、披露、自证材料。
-3. **协同写法**：资料投喂 → 要素组合/分步指令 → 多轮优化；每步人工校验引用与数据。
-4. **结构化/评审**：按需 `paper_compiler` / Paper_CCF venue skill。
-5. **去 AI 味门禁**：同 A.7。
+详序见 `docx/ai-paper-crosswalk.md`。压缩版：
+
+1. **规则卡（B）**：管理主体×场景；禁区；能不能用、用到哪一步。
+2. **标准与收敛（A）**：三项标准 + 倒金字塔；禁止一键成文。
+3. **问题与创新（A）**：框架/深入/创新四法 → 可检验命题。
+4. **协同起草（A 四法 + B 九大场景）**：投喂与分步；人工核验引用与数据。
+5. **防黑箱 + 披露留痕（A-Ch7 + B）**：分窗校验；自证六步与声明。
+6. **结构化/评审**：按需 `paper_compiler` / Paper_CCF venue skill。
+7. **去 AI 味门禁**：`academic-humanizer`；不过检测承诺。
 
 ## 句子尺度硬约束（跨书）
 
