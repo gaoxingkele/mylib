@@ -16,7 +16,7 @@ description: >-
 |---|---|---|
 | 《从技术问题到科学问题》 | `docx/nsfc-tech-to-science-problem/` | STE 区分、构效/结构问题、灵魂五问、宏观一招鲜、栏目逻辑 |
 | 《国家自然科学基金项目申请之路》 | `docx/nsfc-application-path/` | 系统哲学选题、特征结构/假说、机理类·模型类、题目摘要立项依据句级写法 |
-| 《凝练科学问题案例》 | `docx/nsfc-science-problem-cases/` | 四类科学问题属性、案例可迁移凝练程序 |
+| 《凝练科学问题案例》 | `docx/nsfc-science-problem-cases/` | 四类属性、六路凝练、案例族 A–Q、病句改写与三栏对齐 |
 | 《论文不是写出来的》 | `docx/ai-research-thinking-writing/` | 倒金字塔、三项标准、四大目标、四法提示词、工作流分拆 |
 | 《如何用AI写论文》 | `docx/ai-paper-practice-norms/` | 合规边界、披露自证、场景能不能用、全流程实操 |
 
@@ -37,7 +37,7 @@ description: >-
 
 ### A. 基金本子（推荐顺序）
 
-1. **属性归类**：读 `nsfc-science-problem-cases` 的四类属性决策表 → 选定一类，禁止四类口号并列。
+1. **属性归类**：读 `nsfc-science-problem-cases`：四类属性决策 + 六路凝练（主一路+辅一路）→ 选定一类，禁止四类口号并列；用病句改写模板压成可检验主问。
 2. **升维科学问题**：读 `nsfc-tech-to-science-problem`：技术/工程载体 → 能量类或物质(结构)类科学问题 → 主导尺度关键结构。
 3. **方法骨架**：读 `nsfc-application-path`：系统边界/结构/演化；机理类或模型类；假说类型。
 4. **立项依据句级**：用灵魂五问写立项依据（每层结论=下层首句）；宏观一招鲜绑定假说干预点。
