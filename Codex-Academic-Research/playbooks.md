@@ -38,6 +38,8 @@ Use $academic-research-suite.
 IEEE Access 只用三个标签：Accept, minor edits permitted；Reject, updates required before resubmission；Reject, resubmission not permitted。
 ```
 
+注意：内部或 AI 审稿只能**发现问题**，不能预测录用。2026-10 两篇稿件都通过了多轮内部评审，仍被 Information 直接拒稿。审稿模拟之后，必须再走一遍 K 节的预审风险自检。
+
 ## E. 不该用 ARS 的时候
 
 - 只下数据集 / 跑 aria2 → 用现有 `AGENTS.md` 下载规则与 `download_tools`。
@@ -82,6 +84,7 @@ IEEE Access 只用三个标签：Accept, minor edits permitted；Reject, updates
 2. `拒稿意见拆解.md`：每条意见 → 稿件位置 → 归类（范围/证据/写作/格式）→ 可能动作（改文字/补材料/增分析/请作者判断）。**不把建议写成已完成的工作**。
 3. 作者选定路线（修订重投 / 转投 / 申诉）后再写 `下一步投稿计划.md`；转投时重新核对目标刊范围、格式、材料；申诉按"决定信依据—稿件事实—请求事项"三段写给编辑。
 4. **决定信当晚不把未改原稿投下一家。**
+5. **复盘回写**：对照 `digests/information-desk-reject-postmortem-2026-11.md` §3 的 D1–D8 逐门判定，并把被证伪的旧经验标注回对应的 digest（保留原文，加结果标注）。编辑决定是本库唯一的外部校准信号，不要只把它留在单篇论文的目录里。
 
 ## J. 诊断 / 负结果评测（配对差、零膨胀、界值）
 
@@ -98,3 +101,20 @@ IEEE Access 只用三个标签：Accept, minor edits permitted；Reject, updates
 6. 跨域层要显式声明"该层不能说明什么"（如域内线索词表跨域后只能界定风险）；不与域内层合并统计。
 7. 收尾门禁：逐层验证组（把正文数字绑回数据文件）+ 逐字文本闸门（已发布数据记录不得含 ≥300 字符且 ≥40 词的连续散文）+ 浮动体闸门（shipped tex 的每个 `\includegraphics` 必须在包内）+ 派生表闸门（写表脚本拒绝 >400 字符字段）。
 8. 补充表**由数据文件生成**（marker 区域内替换），不手抄数字；改完最后一处文字后重跑：编译 → 包 → 公共验证 → 清单 `--check`。
+
+## K. 编辑预审风险自检（投稿前最后一步）
+
+依据：`digests/information-desk-reject-postmortem-2026-11.md`（C2GES 与 MA-SQLGrid 被 Information 直接拒稿的复盘）。
+
+1. 先跑机械检查，任何 FAIL 都要先修：
+   ```text
+   python -B D:/aicoding/mylib/Codex-Academic-Research/tools/submission_consistency_audit.py \
+     --tex paper.tex --supplement supplementary.tex --package <实际上传的 zip 或目录>
+   ```
+   检查项：尾部声明中的"待确认"、补充材料表号能否解析、正文引用的路径和数据是否在包内、AI 使用声明、"upon request"、摘要数字个数。
+2. 人工检查 D2–D8，每门用一句话作答并给出锚点：
+   - D3：编辑读完摘要能否说出"本文提供了什么"；
+   - D4：标题命名的机制是否被可核查的证据支持；
+   - **D8：摘要中的每个结果，在更大或更独立的数据层上方向是否一致。**
+3. 对照复盘文 §5 的写作反模式（9 条）逐条排查。
+4. "故事链"检查：问题 → 缺口 → 方法 → 一个主实验 → 启示。任何一环断裂都先改结构，不要先润色。

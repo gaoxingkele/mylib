@@ -1,5 +1,7 @@
 # Diagnostic / negative-result evaluation: distillation from C²GES (Information, 2026-09)
 
+> **2026-11 outcome note**: the C²GES Information submission (2026-10-23 package) was **desk-rejected** without review (user report; decision letter not seen). The statistical recipes in §1–§2 still hold. The presentation advice in §3 (layered evidence table in the main text) was not validated by the editorial outcome. Read [information-desk-reject-postmortem-2026-11.md](information-desk-reject-postmortem-2026-11.md) §4 first. Note also that §1's own finding (role layer −0.0351 at 110 words) did not reach the submitted abstract, which still headlined the pilot's +0.0186. That gap motivated gate D8 (cross-layer consistency).
+
 Source campaign: `F:\aicoding\powergrid_benchmark\paper_projects\C2GES\Workspace`
 (project AGENTS.md: release scopes `01_Manuscript`, `02_Revision_and_QA`, `03_Reproducibility`;
 everything else — corpora, wiki, scratch — stays outside the release).
@@ -34,6 +36,8 @@ A one-sided 95 % bootstrap **upper limit** on the paired mean difference convert
    `--self-test` reproduces the published C²GES numbers).
 
 ## 3. Layered evidence table (claim bounds, not accuracy)
+
+> **2026-11 note**: the "reviewer" mentioned below was an internal or AI review, not a journal editor. In the desk-rejected manuscript, an eight-layer table in the main text hid the main result. Keep the table in the supplement, and in the main text give one main experiment plus one sentence per claim naming the layer it rests on.
 
 One table listing every evidence layer with **n / budget / main contrast / may support ·
 may not support** replaced three separate "results" sections and removed the reviewer's

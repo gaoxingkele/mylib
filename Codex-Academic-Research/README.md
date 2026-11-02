@@ -11,6 +11,8 @@
 | `playbooks.md` | 电网论文任务路由（接 Paper_CCF / IdeaSpark / RepLLM） |
 | `digests/mdpi-information-upgrade-2026-09.md` | 真实案例蒸馏：长稿迁 MDPI Information 的长度控制、图表预算、补充材料迁移、新证据入稿判据、打包与投递纪律 |
 | `digests/powergrid-diagnostic-eval-2026-09.md` | 真实案例蒸馏：诊断/负结果评测的五个统计陷阱、把零结果写成界、分层证据表、预注册与发布边界工程（C²GES, Information 2026-09） |
+| `digests/information-desk-reject-postmortem-2026-11.md` | **结果校准**：C2GES 与 MA-SQLGrid 被 Information 直接拒稿后的复盘。包括预审风险门 D1–D8（新增跨层一致性）、14 篇录用论文的共性、被证伪或需收窄的旧经验、写作反模式。优先于上面两份 2026-09 的经验 |
+| `tools/submission_consistency_audit.py` | 确定性预审检查：尾部声明中的"待确认"、补充材料表号能否解析、引用路径和数据是否在包内、AI 使用声明、"upon request"、摘要数字个数、否定词密度（纯标准库，已用两篇被拒稿件验证） |
 | `tools/manuscript_display_audit.py` | 确定性审计：页数/Overfull/未定义引用、末页余量、图-表清单与未引用 label、孤儿图、tex/pdf/docx 哈希、补充材料 md↔PDF 双源一致 |
 | `tools/paired_diagnostic_stats.py` | 配对差诊断统计：零质量、不一致对、精确/随机符号翻转、单侧 bootstrap 上界、留一法包络、功效天花板与所需样本量（纯标准库，`--self-test`） |
 | `AGENTS.academic.template.md` | 可复制到项目根的学术规则模板 |
@@ -23,6 +25,12 @@
 python -B D:/aicoding/mylib/Codex-Academic-Research/tools/manuscript_display_audit.py \
   --project <paper_dir> --tex paper.tex --figure-root figures \
   --supplement-zip <supp.zip> --supplement-source build_supplementary/_source.md
+```
+
+```text
+# 投稿前最后一步：编辑预审的机械性风险检查（playbooks K 节）
+python -B D:/aicoding/mylib/Codex-Academic-Research/tools/submission_consistency_audit.py \
+  --tex paper.tex --supplement supplementary.tex --package <上传的 zip 或目录>
 ```
 
 任一硬项失败（编译错误、Overfull、未定义引用、缺图、孤儿图、补充材料双源不一致）时退出码为 1，可直接挂进 CI 或 `paper_harness` 的 `custom:<path>` 验收项。
