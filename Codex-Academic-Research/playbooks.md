@@ -118,3 +118,7 @@ IEEE Access 只用三个标签：Accept, minor edits permitted；Reject, updates
    - **D8：摘要中的每个结果，在更大或更独立的数据层上方向是否一致。**
 3. 对照复盘文 §5 的写作反模式（9 条）逐条排查。
 4. "故事链"检查：问题 → 缺口 → 方法 → 一个主实验 → 启示。任何一环断裂都先改结构，不要先润色。
+5. 修复时调用书蒸馏技能（入口 `grant-paper-books`，源在 `D:/aicoding/mylib/docx/`）：
+   - AI 使用声明缺失或写得含糊 → `docx/ai-paper-practice-norms/SKILL.md`（自证合规六步、披露句）；
+   - 故事链断裂、标题与正文不一致、贡献写成审计记录 → `docx/ai-research-thinking-writing/SKILL.md`（倒金字塔 ch08、三项标准 ch03）。
+   这两本书是通用规范；和复盘文 D1–D8 冲突时，以复盘文为准。对应关系见复盘文 §7。

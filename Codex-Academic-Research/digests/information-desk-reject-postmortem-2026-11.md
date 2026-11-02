@@ -81,3 +81,17 @@ FAIL 表示足以导致直接拒稿。"自动"一列表示能否用 `tools/submi
 3. 按 D1–D8 逐门判定，并对每个 FAIL 标出原文锚点。
 4. **把结果回写到本库**：哪些旧经验被证伪、哪些需要收窄（本文 §4 是第一次这样做）。
 5. 作者选定路线（修订重投、转投、申诉）后，再写修改计划。
+
+## 7. 相关技能（书蒸馏包，2026-11-02 接入）
+
+源在 `D:/aicoding/mylib/docx/`，入口路由 `skill-runtime/routers/grant-paper-books/SKILL.md`。按问题只打开一个包，不要一次读完：
+
+| 本文问题 | 用哪个包 | 对应位置 |
+|---|---|---|
+| D1：没有 AI 使用声明 | [ai-paper-practice-norms](../../docx/ai-paper-practice-norms/SKILL.md) | 自证合规六步；披露句写明工具、版本、用途、是否交叉验证（[ch05](../../docx/ai-paper-practice-norms/chapters/ch05-ethics-self-proof.md)） |
+| D3 / 故事链断裂：写成审计报告，不是学术故事 | [ai-research-thinking-writing](../../docx/ai-research-thinking-writing/SKILL.md) | 倒金字塔四阶收敛：兴趣 → 题目 → 问题 → 难题 → 数据，每阶都要能证伪（[ch08](../../docx/ai-research-thinking-writing/chapters/ch08-inverted-pyramid-workflow.md)） |
+| D4：标题与证据不一致 | 同上 | 三项标准中的题目"完整性、清晰性（题文一致）、简洁性"（[ch03](../../docx/ai-research-thinking-writing/chapters/ch03-three-standards.md)） |
+| §5 反模式 3、4：贡献写成"审计记录"，自造术语 | 同上 | 学术性 = 解释机制并推进已有研究，而不是罗列做过的检查（ch03） |
+| 论文写作全流程对照 | [ai-paper-crosswalk.md](../../docx/ai-paper-crosswalk.md) | 两本书与 mylib 论文技能的对照表 |
+
+注意：这两本书的规范是通用写作规范，没有用 Information 的编辑决定校准过。和本文的 D1–D8 冲突时，以本文为准（本文依据真实拒稿结果）。去 AI 味的操作只能是补证和改写，不能以通过检测为目的，也不能删掉披露。
