@@ -14,7 +14,7 @@ description: >-
 
 | 书 | 技能目录 | 主职责 |
 |---|---|---|
-| 《从技术问题到科学问题》 | `docx/nsfc-tech-to-science-problem/` | STE 区分、构效/结构问题、灵魂五问、宏观一招鲜、栏目逻辑 |
+| 《从技术问题到科学问题》 | `docx/nsfc-tech-to-science-problem/` | STE 升维、能量/物质类、主导尺度结构、灵魂五问、宏观一招鲜、摘要七通过、函评循环嵌套 |
 | 《国家自然科学基金项目申请之路》 | `docx/nsfc-application-path/` | 科学问题主线、系统三要素×七阶段、机理三件套/模型七步、栏目职能分离、初筛二违反·三不·四无 |
 | 《凝练科学问题案例》 | `docx/nsfc-science-problem-cases/` | 四类属性、六路凝练、案例族 A–Q、病句改写与三栏对齐 |
 | 《论文不是写出来的》 | `docx/ai-research-thinking-writing/` | 倒金字塔、三项标准、四大目标、四法提示词、工作流分拆 |
@@ -38,7 +38,7 @@ description: >-
 ### A. 基金本子（推荐顺序）
 
 1. **属性归类**：读 `nsfc-science-problem-cases`：四类属性决策 + 六路凝练（主一路+辅一路）→ 选定一类，禁止四类口号并列；用病句改写模板压成可检验主问。
-2. **升维科学问题**：读 `nsfc-tech-to-science-problem`：技术/工程载体 → 能量类或物质(结构)类科学问题 → 主导尺度关键结构。
+2. **升维科学问题**：读 `nsfc-tech-to-science-problem`：STE 载体论 → 能量类或物质类 → 主导尺度关键结构 / 底层构效；共性科学问题加特色定语。
 3. **方法骨架**：读 `nsfc-application-path`：系统三要素×演化七阶段；机理类三件套或模型七步；假说类型。
 4. **立项依据句级**：`nsfc-tech-to-science-problem` 灵魂五问与 `nsfc-application-path` 立项依据六问对齐（每层结论=下层首句）；宏观一招鲜绑定假说干预点。
 5. **栏目对齐**：题目/摘要句链 → 目标/内容/关键科学问题/方案互锁；用 application-path cheatsheet 做初筛（二违反·三不·四无）与函评自检。
