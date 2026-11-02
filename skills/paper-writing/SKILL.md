@@ -23,10 +23,11 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 |---|---|---|---|
 | **选题与新颖性** | `idea_spark`（生成可证伪的想法）、`scoop_check`（查重先防）、`idea-evaluator`（五维评审式打分+致命缺陷审计） | spark/check 为兄弟族独立 skill；evaluator 在 `skills/idea-evaluator/SKILL.md` | 动笔前；新 idea 过 scoop_check，待选方向过 idea-evaluator |
 | **文献检索与综述** | `npl-prior-art-search` 路由（paper_search 初扫 / academic-search 中文 / paper-search-pro 深度 / literature-review 多视角综述） | 兄弟族 | 所有检索需求走它，不自建检索流程 |
-| **结构化写作** | `ARA`（paper_compiler）、`academic-research-suite`（outline→draft→revision）、`paper-writer`（证据门控正文）、`intro-drafter`（引言六段式） | writer/intro 在 `skills/paper-writer/SKILL.md`、`skills/intro-drafter/SKILL.md` | 已有研究素材 → 结构化成文；引言单列走 intro-drafter |
+| **AI 协同门禁与方法（书蒸馏）** | `grant-paper-books` → `ai-paper-practice-norms`（能不能用/披露）→ `ai-research-thinking-writing`（倒金字塔/三项标准/四法/防黑箱）；对照 `docx/ai-paper-crosswalk.md` | 源在 `D:/aicoding/mylib/docx/`；runtime 名见 `skill-runtime/manifest.json` | **写论文默认先过此层**（尤其用 AI 起草/改稿时）；不替代 ARA/writer，只定标准与合规 |
+| **结构化写作** | `ARA`（paper_compiler）、`academic-research-suite`（outline→draft→revision）、`paper-writer`（证据门控正文）、`intro-drafter`（引言六段式） | writer/intro 在 `skills/paper-writer/SKILL.md`、`skills/intro-drafter/SKILL.md` | 已有研究素材 → 结构化成文；引言单列走 intro-drafter；进入前应已完成上表 AI 协同门禁 |
 | **哲学/理论型跨学科** | `academic-paper-strategist`（平台/框架/空白分析→审稿维度优化大纲）→ `academic-paper-composer`（学风格→逐章→终评；28/35 门槛） | `skills/academic-paper-strategist/SKILL.md` → `skills/academic-paper-composer/SKILL.md` | 概念推进与长链条论证型论文；需 8-10 篇样例做风格校准 |
 | **严谨性评估 / 审稿模拟** | `ARA` 内 `rigor-reviewer`（认知严谨性，Seal L2）、`academic-research-suite` review 流程、`pre-submission-reviewer`（五维投稿前审查，CRITICAL/MAJOR/MINOR）、`literature-review`（综述视角） | reviewer 在 `skills/pre-submission-reviewer/SKILL.md` | 投稿前、R&R 前；顺序：先 rigor（claim↔evidence）后 pre-submission（五维面检）；**评估论文是写作的一部分，不是可选项** |
-| **降 AIGC / 润色** | `academic-humanizer`（文风+证据对齐）或 `paper-polish`（忠于原意：中→英改写、证据强度对腔、AI 腔去除；可能动到含义的改动先列"需作者确认"） | polish 在 `skills/paper-polish/SKILL.md` | 终稿前；保留事实只改文风；语义敏感/中译英场景用 paper-polish 的确认机制，泛润色用 humanizer |
+| **降 AIGC / 润色** | 先按 `ai-paper-practice-norms` + `ai-research-thinking-writing` 做主张—证据/分窗自检，再 `academic-humanizer`（文风+证据对齐）或 `paper-polish`（忠于原意：中→英改写、证据强度对腔、AI 腔去除；可能动到含义的改动先列"需作者确认"） | polish 在 `skills/paper-polish/SKILL.md`；书蒸馏在 `docx/` | 终稿前；保留事实只改文风；**不承诺过检测**；语义敏感/中译英用 paper-polish 确认机制 |
 | **图表设计** | `figure-designer`（核心三图范式+质量审计） | `skills/figure-designer/SKILL.md` | 三图定生死，投稿前单独过一遍 |
 | **长项目系统** | `research-writing-skill`（术语表/证据图/进度回写的工程化长稿系统） | `skills/research-writing-skill/SKILL.md` | 多章节跨会话长项目；短文润色用它会"流程比正文重" |
 | **投稿路由** | `Paper_CCF`（186 件期刊/会议画像） | 兄弟族 | 选 venue、对照 deadline |
@@ -45,6 +46,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 ## 已装清单（事实源 `D:/aicoding/mylib`，各工具端 junction 引用）
 
 - 写作族：`ARA`（mylib/ARA，8 子技能：manager/compiler/rigor-reviewer/visualizer/foresight/context-drop/research-fuzzer/submit）、`academic-research-suite`（Academic-Research-Skills-Codex）、`academic-humanizer`、`thesis-writing-skill`（素材库，按需启用）
+- 书蒸馏族（2026-11-02 接入）：`grant-paper-books` 路由；论文侧 `ai-paper-practice-norms`、`ai-research-thinking-writing`；基金侧 `nsfc-tech-to-science-problem`、`nsfc-application-path`、`nsfc-science-problem-cases`（源均在 `docx/`）
 - 表达校准族（博导推荐三件套，2026-08-29 接入，**ARA 式收敛为本目录子技能 `skills/`，junction 指向上游源**）：`paper-polish`/`paper-writer`/`intro-drafter`/`pre-submission-reviewer`/`idea-evaluator`/`figure-designer`（Supervisor-Skills，**CC-BY-NC-SA-4.0 非商用许可**，商用场景慎用）、`research-writing-skill`（长项目系统）、`academic-paper-strategist`/`academic-paper-composer`（哲学/理论型）
 - 评估族：`rigor-reviewer`（在 ARA 内）、`scoop_check`、`idea_spark`、`literature-review`
 - 逆向/复现族：`repllm-content-parse`（PDF→paper.json）、`paper-to-code`（Paper2Code 三阶段）、`experiment-code`、`experiment-design`、`paper-compilation`（LaTeX 编译）

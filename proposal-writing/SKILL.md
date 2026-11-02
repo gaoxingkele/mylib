@@ -29,7 +29,7 @@ description: 申报书写作统一入口。用于国自然、国社科、省部�
 
 | 项目类型 | 分类适配 | 上游执行器 | 首轮工作表 |
 |---|---|---|---|
-| 科研基金：国自然、国社科、省部级自/社科基金 | [科研基金](references/research-fund.md) | [fund-research-content-writer](skills/fund-research-content-writer/SKILL.md) | 研究目标—研究内容—关键问题 |
+| 科研基金：国自然、国社科、省部级自/社科基金 | [科研基金](references/research-fund.md) | 先按需加载书蒸馏 `grant-paper-books`→`nsfc-science-problem-cases` / `nsfc-tech-to-science-problem` / `nsfc-application-path`（`D:/aicoding/mylib/docx/`），再执行 [fund-research-content-writer](skills/fund-research-content-writer/SKILL.md) | 研究目标—研究内容—关键问题 |
 | 科技项目：技术攻关、示范应用、企业或行业科技项目 | [科技项目](references/technology-project.md) | [research-grants](skills/research-grants/SKILL.md) | 要求—申报栏目—所需证据；任务—指标—验证—里程碑—经费 |
 | 教改项目：课程、教学方法、培养模式改革 | [教改项目](references/teaching-reform.md) | [doc-coauthoring](skills/doc-coauthoring/SKILL.md) | 问题证据—改革措施—实施安排—成效评价 |
 | 人才计划：个人或团队人才项目，按实际评审对象适配 | [人才计划](references/talent-program.md) | [doc-coauthoring](skills/doc-coauthoring/SKILL.md) | 代表性成果—本人贡献—证明材料—未来计划 |
