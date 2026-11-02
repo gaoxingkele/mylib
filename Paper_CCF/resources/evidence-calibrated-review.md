@@ -2,11 +2,13 @@
 type: Protocol
 title: Evidence-calibrated manuscript review
 status: active
-updated: 2026-10-01
+updated: 2026-10-28
 owner: llm
 tags: [peer-review, evidence, calibration]
 source_paths:
   - D:/aicoding/mylib/Paper_CCF/resources/worked-examples/lightgmem-review-distill.md
+  - D:/aicoding/mylib/Paper_CCF/resources/worked-examples/agms-pvbev-aaai-review-distill.md
+  - D:/aicoding/mylib/Paper_CCF/resources/worked-examples/aaai26-published-check-calibration.md
 confidence: medium
 ---
 
@@ -33,6 +35,10 @@ research-history inflation.
   Do not rank reviewer expertise from style, length, identity, or rejection severity.
 - Track evidence as **observed**, **inferred**, or **unavailable**. "Not in the main
   paper" differs from "not provided" when a supplement is referenced but inaccessible.
+- A reproducibility checklist may exist only on the submission form. Check each
+  affirmative answer against the manuscript when that form is in the materials.
+  If it is absent, the alleged conflict is unavailable. Use N/A when a question
+  does not apply. A checklist mismatch is a reporting gap, not misconduct.
 
 ## Build the claim-to-evidence chain
 
@@ -99,6 +105,18 @@ assume every ambiguous input reaches the expensive resolver. State assumptions a
 whether the error is demonstrated, plausible, or contradicted by supplied evidence.
 An approximate method can be soundly motivated by a measured error-cost tradeoff;
 do not demand a universal equivalence proof when the manuscript claims approximation.
+If a claimed sampler reports a hit or coverage rate, state the empty-return fraction.
+A rate below one half means the module is inactive at most of its sites. Leave this
+check inactive when the manuscript does not report a hit or coverage rate. Accepted
+papers are not required to contain one.
+A covariance built only from points on one ray has rank at most one. Using its
+inverse as a 2D Gaussian is an algebraic gap unless the manuscript states a
+transverse scale, footprint, or regularizer. That gap is not an observed crash.
+Do not apply it to a covariance defined as R S S^T R^T with a diagonal scale.
+When compositing changes a standard front-to-back or back-to-front direction,
+name both the convention and the scalar that orders items from different cameras.
+Camera-relative depths are not automatically one shared order. Leave the check
+inactive when the manuscript does not define that ordering.
 
 Entity counts alone do not establish identical graphs or assignments. Different QA
 scores alone do not establish a concurrency bug: generation, judging and sampling
@@ -114,7 +132,18 @@ resolver, then separate downstream generation and judge variability.
   inconsistencies in the findings, while separating clerical errors from reasons
   to reject a central scientific claim.
   Separate percentages from percentage points, call counts from token/money costs,
-  and wall-clock ratios from algorithmic acceleration.
+  and wall-clock ratios from algorithmic acceleration. When prose puts a percent
+  sign on an IoU, NDS, mAP, or rate change, recompute both the point difference
+  and the relative change, and bind the sentence to the row, stage, modality, and
+  resolution it names. AAAI-26 published papers use both conventions: a percent
+  can equal the point difference, or it can equal the relative change. Either
+  match is consistent. If it matches neither, leave the unit unresolved. Do not
+  rename the unit before the check. A one-decimal mean of several displayed
+  deltas may be ordinary rounding. For an efficiency claim, report the absolute
+  difference and the relative difference from the same operands, and keep that
+  pair tied to the row's accuracy setting. A small throughput drop beside a
+  metric gain is an operating point, including on accepted papers. It is not
+  itself a rejection condition.
 - Before declaring conflicting values, align population/problem set, configuration,
   retrieval/judge, aggregation, and run/version. An unexplained mismatch can be an
   important clarity issue without proving data corruption.
@@ -145,6 +174,23 @@ require every new system. When retrieval/reranking differs, distinguish a valid
 fixed-retrieval internal ablation from a cross-system attribution claim. Report
 the measured quality-cost operating point rather than implying universal dominance.
 
+For a pretrained backbone, record the initialization task and whether the
+comparison systems received it. Naming the initialization dataset, and saying
+that comparison systems follow that practice, satisfies the check. A missing
+per-baseline initialization column is common in accepted papers. It becomes a
+main issue when the manuscript credits an initialization the baselines did not
+receive. A sentence in which the manuscript itself credits those weights is
+direct evidence. The public checkpoint's dataset is a separate, labeled inference.
+A figure that shows only the proposed output and ground truth does not show an
+improvement over a baseline. When criticizing quantization, keep the manuscript's
+own qualifier and compare cell size with the stated baseline resolution. Use a
+size the manuscript states, or one that its stated range and cell count determine.
+Do not invent a size it does not give. A one-token resolution mismatch is a
+configuration question when the ablation score still matches a named column of
+another table. Do not treat that table as unusable. A state-of-the-art margin
+from one table must stay on that table. Do not let the sentence attach it to a
+stronger-backbone comparison whose own margin is smaller.
+
 For structural or LLM-rated metrics, inspect definition, denominator, annotation
 provenance and judge protocol. Overlapping memberships can change counting; a
 metric of 1.00 is not by itself evidence of circular normalization. Temporal,
@@ -155,9 +201,16 @@ streaming or deployment extensions are optional unless needed by a central claim
 Prefer a small set of demonstrably relevant primary papers to a name dump. Explain
 the technical delta and comparability of tasks, models and budgets. If only a
 summary is available, label the comparison provisional; do not assert unexamined
-systems dominate on a common protocol. Check public availability against an explicit
-manuscript cutoff. Later work can inform a current revision without making its
-absence a fault of the original submission. Verify live venue policies separately.
+systems dominate on a common protocol. A family-level state-of-the-art claim
+needs the direct same-family system, not only the cited baseline. Numbers that
+appear only in another review stay unverified until the source paper and protocol
+are checked. Before accepting a same-modality ranking, compare the bibliography
+title and the manuscript's own description with the table's modality cell.
+An adapted standard component still needs its source citation. A missing citation
+is a credit and clarity issue, not by itself a novelty decision. Check public
+availability against an explicit manuscript cutoff. Later work can inform a current
+revision without making its absence a fault of the original submission. Verify
+live venue policies separately.
 
 ## Deliver and challenge the review
 
@@ -174,6 +227,10 @@ Before delivery, challenge each major finding:
 3. Is a conditional risk being reported as an observed flaw? Is a documentation
    gap being presented as misconduct, an implementation bug, or an automatic reject?
 4. Would the recommendation remain the same after removing stylistic/minor issues?
+5. Does a rebuttal question ask for evidence the paper already has, or for a new
+   study? Official comments sometimes ask only for the former. A wish list in an
+   accepting review is not an acceptance threshold. Do not average one case's
+   scores into a venue cutoff. Recompute a reviewer's category win count.
 
 For a PDF, verify both text preservation and rendered pages with the applicable
 artifact skill. No new agent/tool/service is required by this review method.
@@ -183,6 +240,14 @@ artifact skill. No new agent/tool/service is required by this review method.
 - [LightGMEM distillation](worked-examples/lightgmem-review-distill.md): source-backed
   lessons, including mistakes in the source reviews and in our own review.
   This is evaluator/reference material, not input for the bounded replay.
+- [AGMS and PV-BEV distillation](worked-examples/agms-pvbev-aaai-review-distill.md):
+  AAAI-27 phase reviews and a first-round rejection pair. Use the review actions.
+  Do not reuse the 5.60 mean, individual scores, or the rejection stance as a cutoff.
+  This pair was not turned into a fresh-session replay.
+- [AAAI-26 published calibration](worked-examples/aaai26-published-check-calibration.md):
+  the same checks run on five published AAAI-26 papers. Use it to separate a
+  consistent percent convention, an inactive check, and a real scope error.
+  The numeric ledger is `tests/fixtures/aaai26-published-ledger.json`.
 - [Bounded review exercise](../tests/fixtures/review-calibration.md): raw excerpts for
   a fresh-session replay. Give the exercise and this method, not the case conclusions.
   Validate the resulting decisions, not exact wording or a predetermined verdict.

@@ -25,6 +25,17 @@ For a substantive review, read [Evidence-calibrated review](../../resources/evid
 Apply this profile's broad-AI contribution bar to manuscript-grounded findings. Distinguish a confirmed
 technical flaw, an unsupported claim, and unavailable evidence. A system or integrative contribution
 can qualify without inventing every component; ask which reusable mechanism the experiments establish.
+AAAI-27 can issue Phase 1 comments before the Phase 2 reviews that precede rebuttal.
+A later modification date does not by itself mean the score changed. Case notes for two
+BEV submissions are in [AGMS and PV-BEV distillation](../../resources/worked-examples/agms-pvbev-aaai-review-distill.md).
+Those notes train review actions. They do not set a numeric acceptance bar.
+The same actions were checked on five published AAAI-26 papers in
+[AAAI-26 published calibration](../../resources/worked-examples/aaai26-published-check-calibration.md).
+Use that calibration for severity. A percent sign may mean either a point difference
+or a relative change. A small speed drop beside a metric gain, a stated ImageNet or
+nuImage initialization, and a one-token resolution mismatch are not rejection
+conditions. Rank-1 covariance, empty-return rate, and compositing order stay inactive
+unless the manuscript actually contains those constructions.
 Keep recommendation-critical evidence in the review, with a concise author question or discriminating
 validation for each major issue. Do not require every proposed extension as a condition of acceptance.
 
@@ -66,6 +77,7 @@ validation for each major issue. Do not require every proposed extension as a co
 - Prefer AAAI when the paper is broad AI research for a general AI audience: reasoning, planning, learning, search, NLP, vision, agents, ethics, or applications with clear AI novelty.
 - Route international AI flagship cycle/community fit to IJCAI, European AI fit to ECAI, and narrow ML method papers to ICML/NeurIPS/ICLR when ML reviewers are primary.
 - AAAI evidence should make the AI contribution, task scope, baselines, generality, and cross-area relevance explicit.
+- For perception and other table-heavy AAAI papers, bind each headline number to its row. Published AAAI-26 papers already show both percent conventions, explicit modality cells, and stated voxel or BEV cell sizes. Read [the published calibration](../../resources/worked-examples/aaai26-published-check-calibration.md) before turning one of those checks into a rejection reason.
 
 ## Method & evidence bar
 
