@@ -1,5 +1,7 @@
 # DIGEST — Codex 做研究的正确姿势 + ARS
 
+2026-11-03案例更新：[Information十篇范文与C2GES/MA-SQLGrid修订](../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。重点：问题组织论证，证据约束结论；区别已发表样本观察与录用标准；修正跨层必须同向、固定一个实验及反复审计替代科学进步的做法。已接入Information、科研思维写作与AI写作规范三个技能入口。
+
 来源浓缩自：
 - OpenAI Codex Best Practices
 - [academic-research-skills-codex](https://github.com/Imbad0202/academic-research-skills-codex)

@@ -10,6 +10,8 @@ description: "来自陈哲《论文不是写出来的：AI科研思维训练与�
 
 ## 如何使用
 
+Information 论文修订可加读[十篇范文与两稿的项目复盘](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。这是2026-11-03的案例扩展，不是本书原文：用问题组织论证、用证据限制结论；审计记录不自动构成贡献，不强制跨数据层同向或恰好一个实验。
+
 - 无参数：加载下方核心框架做科研—AI 协同判断
 - 指定主题：如 `倒金字塔`、`资料投喂`、`负面启发` → 打开对应章节
 - 指定章节：`ch05` → 读 `chapters/ch05-*.md`

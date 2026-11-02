@@ -2,10 +2,27 @@
 name: mdpi-information
 description: Assess MDPI Information fit, manuscript quality and submission readiness using official criteria and separately identified full-text observations. Use for Information journal selection, writing calibration or pre-submission review; do not infer acceptance probability from published examples.
 metadata:
-  calibration_version: "2026-10-31.2"
+  calibration_version: "2026-11-03.1"
 ---
 
 # Information (MDPI)
+
+## Evidence-led revision: current case guidance (2026-11-03)
+
+For the C2GES / MA-SQLGrid cases and learning from the selected R01–R10 corpus,
+read [evidence-led story revision](references/evidence-led-story-revision.md).
+This reference distinguishes that corpus from the older chronological sample
+and the separate 14-paper retrospective. It updates the local workflow: organize
+the paper around a useful research question, discriminating comparisons and a
+bounded answer; retain verified counterexamples. An audit trail is supporting
+infrastructure, not automatically a scientific contribution.
+
+For these cases, the new reference qualifies legacy rules below: preserve source
+evidence, but allow redundant main-text numbers/displays to be consolidated or
+removed with a relocation record. Keep essential measurement and exposure limits
+at the point of interpretation; do not repeat every disclaimer at every mention.
+Different populations or estimands need not have the same effect direction.
+Neither narrative polish nor a mechanical PASS establishes submission readiness.
 
 For rejection diagnosis and comparison with recent papers, additionally read
 `references/rejection-reaudit.md`. Recheck inherited review allegations against

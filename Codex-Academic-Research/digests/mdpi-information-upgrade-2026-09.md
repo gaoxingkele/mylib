@@ -1,5 +1,7 @@
 # MDPI Information 长稿升级案例蒸馏（MA-SQLGrid，2026-09-12 → 2026-09-22）
 
+> **2026-11-03工作规则补正**：先读[当前案例参考](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。保留数据和不利证据，不等于正文保留每个数字、每个图表或重复限定句；可合并与下沉并登记去向。审计完整性不能替代研究贡献，一个主问题允许多个有明确作用的实验。本文篇幅、图数和内部评分仅为历史观测。
+
 > **2026-11 结果标注**：本案例稿件的后续版本（"投稿final"，30 页）投 Information 后被编辑**直接拒稿**，没有送审（用户报告，未见拒稿信）。下文 §2"一稿多研究"和 §1"负结果合法"两处经验，没有被编辑决定验证，使用前先读 [information-desk-reject-postmortem-2026-11.md](information-desk-reject-postmortem-2026-11.md) §4。原文保留，作为历史记录。
 
 > 用途：给"已有长稿 / 已投别刊稿 → 迁到 Information 并升级"的任务提供可执行经验。

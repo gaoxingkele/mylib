@@ -10,6 +10,8 @@ description: "来自马颜昕等《如何用AI写论文：实操与规范》的�
 
 ## 如何使用
 
+Information 案例补充见[证据约束下的修订](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。此为项目经验，不归为教材结论。区分机器判定、独立人评与作者确认；未核验结果移入补充材料仍未被核验。声明中的审阅、认可等事实未确认时，应整项保留待确认，不能只把工具名称留空。
+
 - 无参数：加载合规边界与自证六步
 - 主题：`披露`、`场合`、`文献综述`、`CLEAR` 等 → 打开章节/patterns
 - 与思维训练包联用：先 `ai-research-thinking-writing` 收窄问题，再用本包做场景合规与留痕
