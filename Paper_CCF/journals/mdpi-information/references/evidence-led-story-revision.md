@@ -82,3 +82,12 @@
 作者身份、贡献、资助、利益冲突、AI使用及审阅事实均需真实。占位不能只留工具名称、却写死“作者已检查并认可”；未确认时整个事实性声明保持待确认。未验证240题可留内部恢复档案，不能仅搬到补充就视为已验证发表结果。
 
 详细行动计划位于 quickpaper：`reviews/information_revision_20261103/C2_STORYFIRST_REVISION_PLAN_ZH.md` 和 `MA_STORYFIRST_REVISION_PLAN_ZH.md`。本参考更新的是工作方法，不代表两稿已经完成修订或达到录用条件。
+
+## 7. 实际改稿发现的四项局部纠正
+
+依据quickpaper的`C2_METHOD_REVIEW_ZH.md`、`MA_METHOD_REVIEW_ZH.md`、`RESULT_INTERPRETATION_REVIEW_ZH.md`与`BIRD_ACCEPTANCE_DIAGNOSTIC_RESULTS_ZH.md`（均位于`reviews/information_revision_20261103/`；截至提交49cc0d378及本轮后续复算）。这些是两稿具体失败模式的修复，不能据此发明新的期刊硬门槛。
+
+- **追踪参考信息进入的全部步骤。** C2参考不进入通道评分，却用于候选重合过滤。因此“评分未读参考”不足以支持“参考只用于评价”。同时区分存档实际字段、计算时派生量和拟议元数据；不能把页码写成版面坐标或单元类型。
+- **分清分配单位、分析单位和约束能力。** C2按系列ID分开发/测试，但可按报告计算结果；MA的typed record不等于运行时payload schema校验，历史与live同名角色也未必执行相同操作。
+- **净值、校准和oracle分别检查。** 零净变化可能掩盖纠正与新增错误，也可能是纠正和集合分量相抵。非单调有限样本风险曲线不能单独诊断概率校准。122/180最大组oracle使用正确性标签，必须与SQL-only共识107/108分开。
+- **先证明复杂比较没有退化为简单规则。** BIRD两个候选来源下，最早平局的结果哈希共识恒等于first-eligible。保存结果上它已达到或略超过评分选择；相对另一生成流程的收益不能归因于评分。导出数值/ID/哈希可使计数复算便携，但不能认证原数据库评分或专家语义。
