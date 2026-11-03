@@ -2,7 +2,7 @@
 name: mdpi-information
 description: Assess MDPI Information fit, manuscript quality and submission readiness using official criteria and separately identified full-text observations. Use for Information journal selection, writing calibration or pre-submission review; do not infer acceptance probability from published examples.
 metadata:
-  calibration_version: "2026-11-03.10"
+  calibration_version: "2026-11-03.11"
 ---
 
 # Information (MDPI)
