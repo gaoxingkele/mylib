@@ -2,13 +2,17 @@
 type: Protocol
 title: Comparative multiscale manuscript review
 status: active
-updated: 2026-10-31
+updated: 2026-11-11
 owner: llm
 tags: [peer-review, comparative-review, paragraph, section, experiment, narrative]
 source_paths:
   - D:/aicoding/mylib/Paper_CCF/resources/evidence-calibrated-review.md
 confidence: medium
 ---
+
+章节评分与旧总分比较：需要量化时读取
+[`chapter-journal-scoring-v3.md`](chapter-journal-scoring-v3.md)。该可选模式保留原维度权重，
+将章节分、逻辑边和核心门控分别输出；不取代本文的段落/显示对象语义审查。
 
 # Comparative multiscale manuscript review v2
 

@@ -1,5 +1,16 @@
 # Playbooks — 电网论文 × Codex × ARS
 
+## 章节×期刊评分（2026-11-11新增可选模式）
+
+用户要求逐章节评分并比较旧总分时，使用
+`D:/aicoding/mylib/Paper_CCF/resources/chapter-journal-scoring-v3.md`，
+配合 `tools/chapter_score.py`。先绑定未改稿版本、官方规则与每刊固定10篇，
+冻结章节×原维度矩阵；保留列权重，重算旧分反事实必须精确相等。
+逐章给证据、最贴近范文、弱点及阅读范围，另查核心门控与7条逻辑边。
+新旧差若来自相同稿件，报告为评价细化，不能写成论文质量退步。
+范文中位数不是录取线；Access仍要求distinct contribution和clear advance。
+本次实证：`D:/aicoding/quickpaper/reviews/mintou_chapter_review_20261111_v1/`。
+
 ## A. 新开一篇电网/AI 稿
 
 1. 工作区：打开 `D:/aicoding/powergrid_benchmark`（或具体 `paper_projects/<name>`）。

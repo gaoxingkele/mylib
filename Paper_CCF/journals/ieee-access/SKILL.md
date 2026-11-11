@@ -1,13 +1,15 @@
 ---
 name: ieee-access
-description: Use when targeting IEEE Access or deciding whether an engineering/CS manuscript fits this venue. Encodes the soundness-not-novelty criterion, the binary accept/reject review model, APC/OA facts, scope across all IEEE fields, submission checks, desk-reject risks, and re-routing. IEEE Access is a journal, not a conference.
+description: Use when targeting IEEE Access or deciding whether an engineering/CS manuscript fits this venue. Encodes technical rigor plus a distinct contribution and clear advance, the binary review model, source-dated APC/OA facts, scope across IEEE fields, submission checks and re-routing. IEEE Access is a journal, not a conference.
 ---
 
 # IEEE Access
 
 ## Journal positioning
 
-IEEE Access is IEEE's multidisciplinary **gold open-access "megajournal"** (est. 2013, ISSN 2169-3536, continuous online publication, 100k+ articles). The single most important thing to internalize: **it reviews for technical/scientific SOUNDNESS and quality, NOT for novelty, impact, or significance.** A rigorous, correct, clearly-presented paper that a selective IEEE Transactions would reject as "not novel enough" can be a good fit here — *if the work is methodologically sound.* Treat this skill as a **fit / venue-selection / framing** tool; the live official pages (bibliometrics, APC, guide-for-authors) win over anything here, because APC, IF, quartile, and policies change yearly.
+IEEE Access is IEEE's multidisciplinary **gold open-access journal** (est. 2013, ISSN 2169-3536, continuous online publication). It requires technically sound, comprehensive work with a **distinct contribution and a clear advance over previous work**. A high degree of novelty is not necessarily expected; correctness alone is insufficient. Modest novelty can fit when the contribution, validation, scope and explanation are clear. Current official pages take precedence over historical local metrics and examples.
+
+Quality-rule correction verified **2026-11-11** against the [official reviewer guidelines](https://ieeeaccess.ieee.org/reviewers/reviewer-guidelines/). This corrects the earlier local “soundness only / not novelty” overstatement; it is not evidence of a newly changed journal policy. Metrics, APC and timeline figures below retain their own historical dates and are not reverified by this quality-only update.
 
 - Metrics (2025 JCR, as-of 2026-07 — **verify on https://ieeeaccess.ieee.org/about/bibliometrics/**): Impact Factor ≈ **4.2**, **Q2**; CiteScore ≈ **9.3**. IF history matters: peaked ~9.0 (2020, Q1) in the pandemic citation surge, fell to ~3.4–3.9 (2022–2024), recovered to ~4.2. Quartile slipped Q1→Q2. Do not quote the old ~9.0 to an author.
 - Indexed in SCIE, Scopus, Ei Compendex, DOAJ, Inspec.
@@ -21,6 +23,8 @@ IEEE Access is IEEE's multidisciplinary **gold open-access "megajournal"** (est.
 
 For detailed comparison with published IEEE Access papers, use `../../resources/comparative-multiscale-review.md`. It adds paragraph/section semantics, RQ-by-experiment mapping and gates for one-idea alignment, experiment coherence and research-history inflation; published samples never become an acceptance threshold.
 
+For chapter-level scores and old-score decomposition, use `../../resources/chapter-journal-scoring-v3.md`; preserve the prior dimension margins and report gates separately.
+
 ## Scope & fit
 
 - **All IEEE fields of interest** — strongest volumes in AI/computational intelligence, computers & information processing, communications, signal processing, power & energy.
@@ -29,9 +33,9 @@ For detailed comparison with published IEEE Access papers, use `../../resources/
 
 ## Venue-specific calibration
 
-- **Reviewer lens:** "Is this correct, complete, reproducible, clearly written, and of interest to readers?" — NOT "is this the first/best." Frame contributions around **rigor and validation**, not novelty claims.
+- **Reviewer lens:** Does the work add a distinct, clearly positioned advance that is technically sound, complete, sufficiently described and supported by data? First/best or universal SOTA claims are unnecessary; a missing contribution cannot be repaired by correctness alone.
 - **"Incremental" is not fatal here; "incremental AND not rigorously validated" is.** Solid engineering, complete experiments, honest limitations win.
-- Distinctive fingerprint: binary accept/reject · soundness-not-novelty · IEEE OA megajournal · rapid ~4-week review · single-blind · all-IEEE-fields · continuous publication · no page limit · guest-edited Special Sections · one-resubmission limit.
+- Distinctive fingerprint: binary accept/reject · rigor plus distinct advance · multidisciplinary IEEE OA · single-blind · all-IEEE-fields · continuous publication · guest-edited Special Sections. Process/timing details remain subject to current official verification.
 - Official anchor domain: ieeeaccess.ieee.org. Quote rules only after opening the current bibliometrics/APC/author pages.
 
 ## Method & evidence bar
@@ -43,11 +47,11 @@ For detailed comparison with published IEEE Access papers, use `../../resources/
 
 ## Distilled review standards (4 published power/load papers full-text + 10 contingency-class abstracts — as-of 2026-07, small sample, extrapolate with care)
 
-The observed acceptance function ≈ **sound method × self-consistent evidence chain × complete narrative** (gap → contribution → experiment → limitation), not novelty height or statistical perfection (records in `paper_reviews/corpus/distill_fullpaper/ieee_access.md`):
+Observed features in this small accepted-only sample include **sound methods, self-consistent evidence chains and a complete narrative** (gap → contribution → experiment → limitation; records in `paper_reviews/corpus/distill_fullpaper/ieee_access.md`). They do not identify a causal acceptance function, minimum standard or probability:
 
-- **Novelty in practice:** all 4 full-text papers are component combinations / scenario adaptations with "first time in literature" framing; numbered contribution lists (3–6 bullets) are a near-rigid convention. "Not distinct from prior publication" remains the official red line, but "not novel enough" is the wrong standard for this venue.
-- **Community norms set the statistics bar:** metaheuristics papers ship 50+ independent runs + Wilcoxon/Friedman + convergence/boxplots; **accepted DL papers ship 4–6 baselines with zero significance tests and zero multi-run reporting.** A pure internal-scenario comparison (no external baseline) passed for a framework/evaluation paper. Explicit fairness statements (unified compute budget, parameter-count alignment) appeared in 2/4 and read as a strength.
-- **Not required in practice:** open code (0/4), elegant English (2/4 accepted papers have typos/repeated paragraphs/MT-flavored prose — "understandable" sufficed), private-data release. This exemption does not cover a definition missing from the file under review, and it does not cover a reproducibility claim that the manuscript itself says is not yet archived.
+- **Contribution in this sample:** the 4 full-text papers combine components or adapt scenarios. Their numbered contribution lists are observations, not required counts. A manuscript must explain a distinct advance; neither “first time” language nor a combination of components proves one.
+- **Observed statistical reporting:** this small sample includes metaheuristic multi-run analyses and DL papers without significance tests or repeated training. These are descriptive observations, not proof that uncertainty or adequate comparators may be omitted. Required inference follows the claim, dependence structure and research design; run/baseline counts are not quality quotas. Matched budgets and explicit fairness are useful when they address an actual alternative explanation.
+- **Observed access and prose limitations:** these four papers did not release open code, and some contain prose defects. This does not waive sufficient methods, accurate availability statements or clear English. Do not infer universal requirements or exemptions from accepted-only cases. A definition missing from the submitted file cannot be supplied by a private implementation.
 - **What five external reviews actually flagged (2026-10):** all five used `REJECT, updates required before resubmission`, and none rejected because the result was negative. Do not summarize them as "the upload could not be read." Overlapping points are an unfinished event-balanced MAE definition, target and residual formulas whose operators do not determine the calculation, and a reproducibility claim set against the manuscript's own "no public archive yet" sentence. Keep reviewer-specific points separate: the seed-interval denominator, whether the original RTS baseline reading omits Zero, whether the abstract collapses three protocols, whether one six-decimal value is shared by two dataset tables, whether all-zero runs enter the reported means, and where the DAY_AHEAD inputs sit. Figure readability was not agreed. Do not fill a missing definition from an unreviewed TeX file. Single-column layout, blank author metadata, and blue diff color are not reject reasons. Official labels are only `ACCEPT, minor edits permitted`, `REJECT, updates required before resubmission`, and `REJECT, resubmission not permitted`.
 - **Real slip-throughs reviewers missed in accepted papers** (self-check these): random 90/10 splits on time-series data (leakage), proxy dataset–task mismatch, dense self-citation rings, seemingly revision-stage padded citations, evidence-free generalization claims in conclusions ("extends to medical imaging/finance"), near-zero hyperparameter disclosure.
 
@@ -56,7 +60,7 @@ The observed acceptance function ≈ **sound method × self-consistent evidence 
 Local cache mapped 49 public power datasets → OA targets; **IEEE Access is the #2 most frequent OA target (43/49 dataset rows)** after Energies. Distill notes: `../../resources/powergrid-open-data-corpus-distill.md`.
 
 - **High-fit genres here:** learning-OPF / GNN-OPF (PGLib, OPFData, PGLearn), battery SOH on NASA/CALCE/Oxford, EV charging (ACN-Data), load/price transformers on ETT/OPSD, electricity-theft detectors, PMU-event ML.
-- **What strengthens soundness for this corpus:** name the public benchmark + split protocol; 3–6 numbered contributions; ≥3 named baselines for forecasting/theft; IEEE-bus / scenario self-comparison is acceptable for OPF/RL when claims are about feasibility/control not SOTA MAE.
+- **What can strengthen evidence for this corpus:** identify the benchmark and split, state a distinct contribution and compare the alternatives needed to test the claim. A scenario self-comparison can answer a restricted feasibility question; it does not alone establish superiority. Do not convert observed contribution/baseline counts into mandatory quotas.
 - **Do not oversell novelty:** corpus methods are overwhelmingly combinations (PINN+battery, GNN+OPF, CNN-LSTM+theft). Frame rigor/reproducibility; Access reviewers punish unsupported generalization more than modest Δ%.
 
 ## Structure & house style
@@ -77,7 +81,7 @@ Local cache mapped 49 public power datasets → OA targets; **IEEE Access is the
 - **One resubmission** is generally allowed after a (conditional) reject, with a mandatory point-by-point response; a second rejection is typically final.
 - **Single-blind**; each paper handled by an **Associate Editor** with **≥2 independent reviewers**.
 - **Timeline:** advertised **~4 weeks to first decision**, ~4–6 weeks submission-to-publication (verify current SLA). Acceptance rate ~20%.
-- **Vs traditional IEEE Transactions:** Transactions judge novelty+significance+soundness over multi-round revisions across months; Access strips this to a single soundness gate in weeks, fully OA. Trade-off: fast, but the binary model gives less room to iteratively rescue a borderline paper — so submit when it is already solid.
+- **Vs traditional IEEE Transactions:** novelty expectations and editorial process differ by venue. Access still judges contribution, rigor, completeness and supported conclusions; its binary process is not a single correctness gate. Compare current official policies before making timeline claims.
 - Submit via IEEE **Author Portal / ScholarOne**; CrossCheck/iThenticate integrity screening.
 
 ## Special Sections dynamics
@@ -93,7 +97,7 @@ Local cache mapped 49 public power datasets → OA targets; **IEEE Access is the
 
 ## Pre-submission self-check
 
-- [ ] The contribution is **technically sound, complete, and reproducible** — not merely novel-sounding.
+- [ ] A **distinct contribution and clear advance** are established against relevant prior work, with technically sound methods and sufficient information to assess or reproduce them.
 - [ ] English/clarity is strong enough that a reviewer never struggles to follow the method.
 - [ ] Baselines/validation adequately support every claim; limitations stated honestly.
 - [ ] It is genuinely within an IEEE field of interest.
@@ -104,21 +108,22 @@ Local cache mapped 49 public power datasets → OA targets; **IEEE Access is the
 
 - Poor English / unclear presentation.
 - Insufficient rigor — weak experiments, missing baselines, unsupported claims.
+- No distinct contribution or clear advance established against relevant work.
 - Out of IEEE scope.
 - Self-plagiarism / duplicate or concurrent submission (CrossCheck).
-- Framed as incremental **without** demonstrating soundness.
+- Incremental framing without establishing both a useful advance and sufficient support.
 
 ## Re-routing decision
 
 - Genuinely novel/high-impact → a **selective IEEE Transactions** (TPAMI, TIP, TSP, TNNLS, TII, TWC, TVT, TPWRS, TC, TKDE) — slower, novelty-gated, higher prestige.
-- Same soundness-not-novelty philosophy elsewhere → **Scientific Reports**, **PLOS ONE**, **IEEE Open Journal** series, **Heliyon**, or MDPI **Electronics / Applied Sciences / Sensors**.
+- Other open-access venues → inspect each journal's contribution, scope and evidence requirements; do not transfer a “soundness only” assumption to IEEE Open Journals or MDPI journals.
 - Early/incremental/demo work → the relevant **IEEE flagship conference** (ICC/GLOBECOM, CVPR/ICCV, ICASSP, PES GM) — see the conference profiles in this skill.
 
 ## Output format
 
 ```text
 [Target] IEEE Access
-[Fit] High / Medium / Low (one-line reason grounded in SOUNDNESS, not novelty)
+[Fit] High / Medium / Low (one-line reason grounded in audience, distinct contribution and evidence)
 [Contribution type] system / method / empirical / application / survey(meeting criteria) / other
 [Soundness gaps] <the experiments/validation/clarity fixes needed before the binary gate>
 [Official items to re-check] APC / IF-quartile / template / integrity / resubmission / Special Section CFP
