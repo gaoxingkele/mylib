@@ -24,6 +24,7 @@ description: 将 Codex 学术最佳实践与 academic-research-suite(ARS) 路由
 | 收敛问题 / 文献 | `academic-research-suite` → deep-research |
 | 写/改稿 | `academic-research-suite` → academic-paper |
 | 审稿模拟 | `academic-research-suite` → academic-paper-reviewer |
+| 范文逐段对照 / 同尺度修订复评 / 排名追踪 | `D:/aicoding/mylib/skills/paper-meta-review/SKILL.md`，按需读 Paper_CCF 的 comparative-revision-calibration |
 | 端到端 | `academic-research-suite` → academic-pipeline |
 | 选刊 / APC | `Paper_CCF` |
 | 本地接受模式 | IdeaSpark / RepLLM distill under `powergrid_paper/metadata/` |

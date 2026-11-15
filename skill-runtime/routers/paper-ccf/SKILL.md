@@ -24,5 +24,11 @@ Use the selected profile's evidence bar with that review method; the venue-routi
 does not replace a substantive review. Existing reviews are leads to verify, not authority for a verdict.
 For venue selection alone, keep the lightweight routing path.
 
+For exemplar paragraph comparison, iterative revision/rescoring, cross-review
+adjudication, or tracking ranks across versions, read
+`D:/aicoding/mylib/Paper_CCF/resources/comparative-revision-calibration.md` and use
+`D:/aicoding/mylib/skills/paper-meta-review/SKILL.md`. A rank-only request reuses
+frozen scores; keep individual, manuscript-batch and joint sample ranks separate.
+
 Do not recursively load or register the full venue catalog; it contains more than 180 profiles and is
 designed for on-demand routing.

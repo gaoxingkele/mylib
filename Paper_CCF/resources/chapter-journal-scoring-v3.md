@@ -1,5 +1,10 @@
 # Chapter × journal scoring (v3)
 
+For repeated revision, cross-review adjudication, paragraph comparators, or
+sample-rank tracking, also read
+`D:/aicoding/mylib/Paper_CCF/resources/comparative-revision-calibration.md`.
+That protocol extends workflow and provenance, not this scale or its weights.
+
 Use when the user requests chapter scores against a target journal and a fixed
 reference corpus. The maintained library copy is
 `D:/aicoding/mylib/Paper_CCF/resources/chapter-journal-scoring-v3.md`.

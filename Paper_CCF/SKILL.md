@@ -38,6 +38,11 @@ description: >-
 不将复核包装成严格盲审。只做选刊或周期咨询时，不加载评审方法或展开整篇论文审计。
 报告范围与语言依用户要求；投稿路由模板不替代评审的优点、关键问题、作者问题与有条件建议。
 
+跨轮范文对照、评审后改稿、交叉意见裁决或批量排名追踪时，按需读
+[修订与排名校准](resources/comparative-revision-calibration.md)，执行入口是
+`D:/aicoding/mylib/skills/paper-meta-review/SKILL.md`。
+分开报告同稿重评、同尺度修订和比较集合变化；仅更新排名不触发整篇重审。
+
 ## 期刊模块（Journals）路由
 
 若用户目标是**期刊**（问某本 OA 期刊，或“投哪个 OA 期刊 / 版面费 / 影响因子 / 审稿多快 / Special Issue / 电力+CS 发哪”）：

@@ -72,6 +72,7 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 | **academic-paper-skills** | lishix520/academic-paper-skills | 哲学/跨学科：strategist 分析平台→composer 逐章写作（28/35 大纲门槛） | **收敛为子技能链**：strategist → composer；需 8-10 篇样例风格校准 |
 
 ### 2.3 其他写作/评估执行器
+- **paper-meta-review v1.1（2026-11-15）**：维护源 [`skills/paper-meta-review`](skills/paper-meta-review/SKILL.md)。逐段/章节范文对比、同席修订复评、跨席证据裁决、三种比较集合排名；按需加载 [`Paper_CCF共享协议`](Paper_CCF/resources/comparative-revision-calibration.md)。蒸馏依据为闽投C11/R14/C12实际读者稿和纠错记录，含标签转录错误、原理初等与功能强证据的等级校准、P1同分名次漂移；不是录用模型。新增stdlib排名助手及行为测试，V3权重不变；来源与限制见[案例](Codex-Academic-Research/digests/mintou-review-calibration-2026-11.md)。此前仅存在用户目录的副本归入mylib维护源，运行时manifest同步登记。
 - **academic-research-suite**（Academic-Research-Skills-Codex）：ARS 学术全流程（outline→draft→revision+审稿模拟）
 - **academic-humanizer**（v0.3.3）：学术化改写降 AI 痕迹，保事实/引用/数字
 - **idea_spark / scoop_check**（微软 ResearchStudio-Idea）：可证伪想法生成 / 查重先防

@@ -1,5 +1,17 @@
 # Playbooks — 电网论文 × Codex × ARS
 
+## 多轮范文对照与修订复评（2026-11-15）
+
+入口：`D:/aicoding/mylib/skills/paper-meta-review/SKILL.md`（v1.1）。
+详细协议：`../Paper_CCF/resources/comparative-revision-calibration.md`；
+现场蒸馏：[闽投C11—C12](digests/mintou-review-calibration-2026-11.md)。
+按请求分流：只审稿/授权改稿/只更新排名/更换评分系列。冻结版本、同席旧稿、尺度与范文；
+实际段落双锚点找缺口，补实验保持不同估计对象；跨席原卡先锁，再逐证据裁决。
+原始判断、标签纠正、证据裁决和最终读者重绑各自留痕，不平均挑高分。
+排名分单稿+范文、稿件内部、全体+范文三表；版本、分数、分母及并列区间一起给。
+`tools/journal_rankings.py`可自动计算三种名次和unknown敏感性；它不评分或改变稿件。
+没有新证据不抬分，排名下移先核对比较集合；具体期刊标准仍需画像/官网核实。
+
 ## 章节×期刊评分（2026-11-11新增可选模式）
 
 用户要求逐章节评分并比较旧总分时，使用

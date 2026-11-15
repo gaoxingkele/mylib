@@ -2,7 +2,7 @@
 type: Protocol
 title: Comparative multiscale manuscript review
 status: active
-updated: 2026-11-11
+updated: 2026-11-15
 owner: llm
 tags: [peer-review, comparative-review, paragraph, section, experiment, narrative]
 source_paths:
@@ -15,6 +15,11 @@ confidence: medium
 将章节分、逻辑边和核心门控分别输出；不取代本文的段落/显示对象语义审查。
 
 # Comparative multiscale manuscript review v2
+
+For repeated revisions and scores/ranks across versions, add
+[comparative-revision-calibration.md](comparative-revision-calibration.md).
+Its raw/adjudicated records and comparison-set accounting supplement the semantic
+review here; neither mode silently changes the other's rating scale.
 
 Use this protocol with `evidence-calibrated-review.md` and one venue profile. It is designed for detailed comparison with published papers and for detecting problems that aggregate rubrics miss: a fluent but unnecessary paragraph, an incoherent sequence of good experiments, version-history inflation, or a title and evidence base that no longer describe the same study.
 
