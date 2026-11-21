@@ -45,7 +45,7 @@ function Remove-MylibLink {
         throw "Refusing to replace a real directory or file: $LinkPath"
     }
 
-    $rawTarget = [string]$item.Target[0]
+    $rawTarget = [string]@($item.Target)[0]
     $target = Get-FullPath -Path $rawTarget -BasePath $item.Parent.FullName
     Assert-PathUnderRoot -Path $target -Root $RepoRoot
     if ($item.PSIsContainer) {
@@ -77,7 +77,7 @@ function Install-JunctionSet {
             if ($item.LinkType -notin @('Junction', 'SymbolicLink')) {
                 throw "Install path is occupied by a real directory or file: $linkPath"
             }
-            $currentTarget = Get-FullPath -Path ([string]$item.Target[0]) -BasePath $item.Parent.FullName
+            $currentTarget = Get-FullPath -Path ([string]@($item.Target)[0]) -BasePath $item.Parent.FullName
             if ($currentTarget.Equals($entry.Source, [StringComparison]::OrdinalIgnoreCase)) {
                 $kept += $entry.Name
                 continue

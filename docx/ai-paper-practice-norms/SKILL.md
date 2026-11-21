@@ -10,11 +10,17 @@ description: "来自马颜昕等《如何用AI写论文：实操与规范》的�
 
 ## 如何使用
 
-Information 案例补充见[证据约束下的修订](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。此为项目经验，不归为教材结论。区分机器判定、独立人评与作者确认；未核验结果移入补充材料仍未被核验。声明中的审阅、认可等事实未确认时，应整项保留待确认，不能只把工具名称留空。
-
 - 无参数：加载合规边界与自证六步
 - 主题：`披露`、`场合`、`文献综述`、`CLEAR` 等 → 打开章节/patterns
 - 与思维训练包联用：先 `ai-research-thinking-writing` 收窄问题，再用本包做场景合规与留痕
+
+## Agent 执行视角（2026-11-21 补充）
+
+本书写给“使用 AI 的人”。由 agent 执行时：
+- 按 [`../_integration/agent-gates.md`](../_integration/agent-gates.md) 的 G1–G7 执行；作者才能做的事列成“待作者确认”清单，不能代填；
+- 提示词模板见 [prompts.md](prompts.md)（由原书提示词示例归并而成，已改写为检索优先、可核对的输出格式）；
+- 结构性“AI 腔”用 `python ../_integration/scripts/zh_structure_lint.py check <file>` 量化，词句级问题交给 `academic-humanizer`；
+- 行为评测：[`../_integration/evals/gate_cases.md`](../_integration/evals/gate_cases.md)。
 
 ## 与基金申报技能的边界（硬）
 
@@ -85,5 +91,9 @@ Information 案例补充见[证据约束下的修订](../../Paper_CCF/journals/m
 | 去 AI 痕迹 | cheatsheet + academic-humanizer |
 
 ## 相关文件
-- [glossary.md](glossary.md) · [patterns.md](patterns.md) · [cheatsheet.md](cheatsheet.md)
+- [glossary.md](glossary.md) · [patterns.md](patterns.md) · [cheatsheet.md](cheatsheet.md) · [prompts.md](prompts.md)
 - 交叉对照：[../ai-paper-crosswalk.md](../ai-paper-crosswalk.md)
+
+## 项目经验扩展（非本书内容）
+
+Information 案例补充见[证据约束下的修订](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。此为项目经验，不归为教材结论。区分机器判定、独立人评与作者确认；未核验结果移入补充材料仍未被核验。声明中的审阅、认可等事实未确认时，应整项保留待确认，不能只把工具名称留空。

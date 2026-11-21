@@ -10,12 +10,18 @@ description: "来自陈哲《论文不是写出来的：AI科研思维训练与�
 
 ## 如何使用
 
-Information 论文修订可加读[十篇范文与两稿的项目复盘](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。这是2026-11-03的案例扩展，不是本书原文：用问题组织论证、用证据限制结论；审计记录不自动构成贡献，不强制跨数据层同向或恰好一个实验。
-
 - 无参数：加载下方核心框架做科研—AI 协同判断
 - 指定主题：如 `倒金字塔`、`资料投喂`、`负面启发` → 打开对应章节
 - 指定章节：`ch05` → 读 `chapters/ch05-*.md`
 - 句级写作/质检：同时打开 `cheatsheet.md` + `patterns.md`
+
+## Agent 执行视角（2026-11-21 补充）
+
+本书写给“使用 AI 的人”。由 agent 执行时：
+- 按 [`../_integration/agent-gates.md`](../_integration/agent-gates.md) 的 G1–G7 执行；作者才能做的事列成“待作者确认”清单，不能代填；
+- 提示词模板见 [prompts.md](prompts.md)（由原书提示词示例归并而成，已改写为检索优先、可核对的输出格式）；
+- 结构性“AI 腔”用 `python ../_integration/scripts/zh_structure_lint.py check <file>` 量化，词句级问题交给 `academic-humanizer`；
+- 行为评测：[`../_integration/evals/gate_cases.md`](../_integration/evals/gate_cases.md)。
 
 ## 与基金申报技能的边界（硬）
 
@@ -109,6 +115,10 @@ AI 放大你已有的问题意识、学术素养与逻辑；标准不清时放�
 | 去 AI 痕迹（作者声口，非过检） | cheatsheet + 挂接 academic-humanizer |
 
 ## 相关文件
-- [glossary.md](glossary.md) · [patterns.md](patterns.md) · [cheatsheet.md](cheatsheet.md)
+- [glossary.md](glossary.md) · [patterns.md](patterns.md) · [cheatsheet.md](cheatsheet.md) · [prompts.md](prompts.md)
 - 交叉对照：[../ai-paper-crosswalk.md](../ai-paper-crosswalk.md)
 - 去 AI 味门禁：仓库 `academic-humanizer`（audit→rewrite；禁止规避检测）
+
+## 项目经验扩展（非本书内容）
+
+Information 论文修订可加读[十篇范文与两稿的项目复盘](../../Paper_CCF/journals/mdpi-information/references/evidence-led-story-revision.md)。这是2026-11-03的案例扩展，不是本书原文：用问题组织论证、用证据限制结论；审计记录不自动构成贡献，不强制跨数据层同向或恰好一个实验。

@@ -14,4 +14,4 @@
 上游工具：https://github.com/virgiliojr94/book-to-skill （本地克隆 `tools/book-to-skill`）
 提取缓存：`tools/book-extracts/`（可选是否入库）
 
-使用：先读 `_integration/SKILL.md`。
+使用：先读 `_integration/SKILL.md`。agent 执行门禁、结构 lint 与评测见 `_integration/agent-gates.md`、`_integration/scripts/`、`_integration/evals/`。

@@ -43,7 +43,7 @@ description: >-
 4. **立项依据句级**：`nsfc-tech-to-science-problem` 灵魂五问与 `nsfc-application-path` 立项依据六问对齐（每层结论=下层首句）；宏观一招鲜绑定假说干预点。
 5. **栏目对齐**：题目/摘要句链 → 目标/内容/关键科学问题/方案互锁；用 application-path cheatsheet 做初筛（二违反·三不·四无）与函评自检。
 6. **指南与证据**：切回 `proposal-writing`：当年指南/模板为准（覆盖书中 2019 口径），事实标材料编号，缺口标【待补】。
-7. **去 AI 味门禁**：`academic-humanizer` audit；删空话、补机制句、证据绑定；不编造预实验。
+7. **去 AI 味门禁**：先跑 `scripts/zh_structure_lint.py check`（结构：顿号并列、长段、自造框架、条件限定语、行话），再跑 `academic-humanizer` audit（词句）；删空话、补机制句、证据绑定；改写后 `compare` + humanizer `gate`；不编造预实验。
 
 ### B. 论文写作（推荐顺序）
 
@@ -55,7 +55,8 @@ description: >-
 4. **协同起草（A 四法 + B 九大场景）**：投喂与分步；人工核验引用与数据。
 5. **防黑箱 + 披露留痕（A-Ch7 + B）**：分窗校验；自证六步与声明。
 6. **结构化/评审**：按需 `paper_compiler` / Paper_CCF venue skill。
-7. **去 AI 味门禁**：`academic-humanizer`；不过检测承诺。
+7. **去 AI 味门禁**：`zh_structure_lint.py` + `academic-humanizer`；不过检测承诺。
+8. **Agent 门禁**：全程按 `agent-gates.md` G1–G7；作者事项列“待作者确认”。
 
 ## 句子尺度硬约束（跨书）
 
@@ -68,6 +69,15 @@ description: >-
 5. **学科主语**（用学科底层词，不用“优化性能/提高效率”当科学结论）
 
 禁止默认输出：完善/优化/研制堆砌、四大属性口号墙、无文献投喂的综述、不可追溯的“研究表明”。
+
+## Agent 执行层（2026-11-21）
+
+| 文件 | 用途 |
+|---|---|
+| `agent-gates.md` | 两本 AI 书的规则改写为 agent 可执行门禁 G1–G7 + 作者确认清单 |
+| `scripts/zh_structure_lint.py` | 中文结构性“AI 腔”量化（check / compare），与 academic-humanizer 分工 |
+| `evals/` | lint 回归样例（`run_evals.py`）与门禁行为样例（`gate_cases.md`） |
+| `../ai-research-thinking-writing/prompts.md`、`../ai-paper-practice-norms/prompts.md` | 原书提示词示例归并的模板 |
 
 ## 加载策略
 
