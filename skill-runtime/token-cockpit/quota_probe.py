@@ -23,6 +23,8 @@ per TTL per agent, 3 s timeout):
   kimi   -> api.kimi.com/coding/v1/usages (OAuth from ~/.kimi-code/credentials/kimi-code.json;
          an expired access token is refreshed at auth.kimi.com and written back atomically,
          as Kimi CLI does, because the refresh token rotates)
+  antigravity -> daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota (token from
+         Windows Credential Manager "gemini:antigravity"; refreshed in memory only, never written)
   gemini / opencode: unsupported
 Endpoints and field names were taken from the installed CLI binaries (2026-11-22);
 they are vendor-internal and may change without notice.
@@ -50,11 +52,11 @@ STATE_PATH = os.path.join(STATE_DIR, "state.json")
 META_PATH = os.path.join(STATE_DIR, "meta.json")
 LOCK_PATH = os.path.join(STATE_DIR, "probe.lock")
 LOG_PATH = os.path.join(STATE_DIR, "probe.log")
-AGENTS = ["claude", "codex", "grok", "kimi", "gemini", "opencode"]
+AGENTS = ["claude", "codex", "grok", "kimi", "antigravity", "gemini", "opencode"]
 THROTTLED = "throttled"
 EPOCH = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)
 UNSUPPORTED = {
-    "gemini": "本机未安装 Gemini CLI",
+    "gemini": "本机未安装 Gemini CLI（Google 额度见 antigravity）",
     "opencode": "OpenCode 按 API key 计费，没有周额度概念",
 }
 
@@ -432,11 +434,125 @@ def kimi_network() -> dict:
     return {"plan": None, "windows": wins, "source": "kimi-usages", "observed_at": iso(now_utc())}
 
 
+AGY_CRED_TARGET = "gemini:antigravity"  # Windows Credential Manager (go-keyring)
+AGY_EXE = os.path.join(HOME, "AppData", "Local", "agy", "bin", "agy.exe")
+AGY_API = "https://daily-cloudcode-pa.googleapis.com/v1internal:"
+
+
+def win_cred_read(target: str) -> bytes:
+    if os.name != "nt":
+        raise RuntimeError("Antigravity credentials are read from Windows Credential Manager only")
+    import ctypes
+    import ctypes.wintypes as w
+
+    class CRED(ctypes.Structure):
+        _fields_ = [("Flags", w.DWORD), ("Type", w.DWORD), ("TargetName", w.LPWSTR), ("Comment", w.LPWSTR),
+                    ("LastWritten", w.FILETIME), ("CredentialBlobSize", w.DWORD),
+                    ("CredentialBlob", ctypes.POINTER(ctypes.c_ubyte)), ("Persist", w.DWORD),
+                    ("AttributeCount", w.DWORD), ("Attributes", ctypes.c_void_p),
+                    ("TargetAlias", w.LPWSTR), ("UserName", w.LPWSTR)]
+
+    adv = ctypes.WinDLL("advapi32")
+    p = ctypes.POINTER(CRED)()
+    if not adv.CredReadW(target, 1, 0, ctypes.byref(p)):  # 1 = CRED_TYPE_GENERIC
+        raise RuntimeError("not logged into Antigravity; run `agy` and sign in")
+    try:
+        c = p.contents
+        return bytes(c.CredentialBlob[:c.CredentialBlobSize])
+    finally:
+        adv.CredFree(p)
+
+
+def agy_refresh(refresh_token: str) -> str:
+    """Refresh in memory only. Google refresh tokens do not rotate, so the stored
+    credential stays valid and is never written. The installed-app OAuth client
+    is read from agy.exe at run time rather than copied into this file."""
+    import mmap
+    import re
+    if not os.path.exists(AGY_EXE):
+        raise RuntimeError("Antigravity token expired and agy.exe not found; run `agy` once")
+    with open(AGY_EXE, "rb") as fh:
+        m = mmap.mmap(fh.fileno(), 0, access=mmap.ACCESS_READ)
+        ids = sorted({x.group(0).decode() for x in
+                      re.finditer(rb"[0-9]{6,}-[a-z0-9]{20,}\.apps\.googleusercontent\.com", m)})
+        secs = sorted({x.group(0).decode() for x in re.finditer(rb"GOCSPX-[A-Za-z0-9_\-]{28}", m)})
+    meta = read_json(META_PATH, {})
+    hint = (meta.get("antigravity") or {}).get("client_id")
+    ids.sort(key=lambda i: i != hint)  # try the pair that worked last time first
+    for cid in ids:
+        for sec in secs:
+            body = urllib.parse.urlencode({"client_id": cid, "client_secret": sec, "grant_type": "refresh_token",
+                                           "refresh_token": refresh_token}).encode()
+            try:
+                d = http_json("https://oauth2.googleapis.com/token",
+                              {"Content-Type": "application/x-www-form-urlencoded"}, body)
+            except urllib.error.HTTPError as e:
+                if e.code == 400:
+                    try:
+                        if json.loads(e.read().decode()).get("error") == "invalid_grant":
+                            raise RuntimeError("Antigravity refresh token revoked; run `agy` and sign in") from None
+                    except ValueError:
+                        pass
+                continue  # 401 invalid_client: wrong pair
+            if d.get("access_token"):
+                meta.setdefault("antigravity", {})["client_id"] = cid  # public id only, no secret
+                atomic_write_json(META_PATH, meta)
+                return d["access_token"]
+    raise RuntimeError("Antigravity token refresh failed with every client in agy.exe; run `agy` once")
+
+
+def agy_post(method: str, tok: str, body: dict) -> dict:
+    return http_json(AGY_API + method, {"Authorization": "Bearer " + tok, "Content-Type": "application/json",
+                                        "User-Agent": "antigravity"}, json.dumps(body).encode())
+
+
+def antigravity_network() -> dict:
+    cred = json.loads(win_cred_read(AGY_CRED_TARGET).decode("utf-8"))
+    t = cred.get("token") or {}
+    exp = parse_time(t.get("expiry"))
+    tok = t.get("access_token") if exp and (exp - now_utc()).total_seconds() > 60 else None
+    if not tok:
+        if not t.get("refresh_token"):
+            raise RuntimeError("Antigravity token expired and no refresh token; run `agy` and sign in")
+        tok = agy_refresh(t["refresh_token"])
+    lca = agy_post("loadCodeAssist", tok, {"metadata": {"ideType": "ANTIGRAVITY", "pluginType": "GEMINI",
+                                                        "platform": "PLATFORM_UNSPECIFIED"}})
+    proj = lca.get("cloudaicompanionProject")
+    if isinstance(proj, dict):
+        proj = proj.get("id")
+    if not proj:
+        try:
+            with open(os.path.join(HOME, ".gemini", "antigravity-cli", "cache", "default_project_id.txt"),
+                      encoding="utf-8") as f:
+                proj = f.read().strip()
+        except OSError:
+            raise RuntimeError("Antigravity project id unknown; run `agy` once") from None
+    buckets = agy_post("retrieveUserQuota", tok, {"project": proj}).get("buckets") or []
+    # buckets are per model; models share pools, so report one row per family
+    pools: dict[str, dict] = {}
+    for b in buckets:
+        mid = str(b.get("modelId") or "")
+        if b.get("remainingFraction") is None or not mid:
+            continue
+        fam = next((f for f in ("gemini", "claude", "gpt") if mid.startswith(f)), None)
+        if fam is None:  # tab-completion models etc.: no reset time, not a chat quota
+            continue
+        cur = pools.get(fam)
+        rf = float(b["remainingFraction"])
+        if cur is None or rf < cur["rf"]:
+            pools[fam] = {"rf": rf, "reset": b.get("resetTime")}
+    wins = [window("pool-" + fam, None, (1.0 - v["rf"]) * 100.0, v["reset"]) for fam, v in sorted(pools.items())]
+    tier = lca.get("currentTier") or {}
+    plan = tier.get("id") or tier.get("name")
+    return {"plan": plan, "windows": wins, "source": "agy-quota", "observed_at": iso(now_utc())}
+
+
 ADAPTERS = {
     "codex": (codex_offline, codex_network),
     "claude": (claude_offline, claude_network),
     "grok": (grok_offline, grok_network),
     "kimi": (lambda: None, kimi_network),
+    "antigravity": (lambda: None, antigravity_network),
 }
 
 
@@ -518,7 +634,7 @@ def run(agents: list[str], force: bool) -> dict | None:
 
 WINDOW_LABEL = {"5h": "5小时", "weekly": "每周", "monthly": "每月", "monthly-code": "每月(编码)"}
 SOURCE_LABEL = {"oauth-usage": "在线", "wham-usage": "在线", "grok-billing": "在线", "kimi-usages": "在线",
-                "codex-rollout": "本地日志", "grok-log": "本地日志", "claude-statusline": "本地快照"}
+                "agy-quota": "在线", "codex-rollout": "本地日志", "grok-log": "本地日志", "claude-statusline": "本地快照"}
 
 
 def countdown(t: dt.datetime | None) -> str:
@@ -552,7 +668,9 @@ def render_table(state: dict) -> str:
             used = w.get("used_percent")
             rows.append([agent if i == 0 else "", (snap.get("plan") or "-") if i == 0 else "",
                          WINDOW_LABEL.get(w["name"]) or (
-                             "每周·" + w["name"][7:] if w["name"].startswith("weekly-") else w["name"]),
+                             "每周·" + w["name"][7:] if w["name"].startswith("weekly-") else
+                             "模型池·" + {"gemini": "Gemini", "claude": "Claude", "gpt": "GPT"}.get(
+                                 w["name"][5:], w["name"][5:]) if w["name"].startswith("pool-") else w["name"]),
                          "-" if used is None else f"{used:g}%",
                          "-" if used is None else f"{w['remaining_percent']:g}%",
                          t.astimezone().strftime("%m-%d %H:%M") if t else ("已重置" if w.get("estimated") else "-"),

@@ -24,7 +24,7 @@ TOOLS = [
                     "sorted by remaining percent. Stale entries must be shown as outdated.",
      "inputSchema": {"type": "object", "properties": {}}},
     {"name": "get_quota",
-     "description": "Quota snapshot for one agent: claude, codex, grok, kimi, gemini or opencode.",
+     "description": "Quota snapshot for one agent: claude, codex, grok, kimi, antigravity, gemini or opencode.",
      "inputSchema": {"type": "object", "properties": {"agent": {"type": "string", "enum": qp.AGENTS}},
                      "required": ["agent"]}},
     {"name": "pick_model",

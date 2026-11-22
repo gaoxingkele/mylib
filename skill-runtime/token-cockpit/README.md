@@ -21,6 +21,7 @@
 | Claude | `~/.agent-quota/claude-statusline.json`（若有 statusline 副本） | `api.anthropic.com/api/oauth/usage`（凭据 `~/.claude/.credentials.json`） | 不改 Orca 的 statusLine，所以通常走网络兜底；令牌过期时跳过，等 Claude Code 自己刷新 |
 | Grok | `~/.grok/logs/unified.jsonl` 中最后一条 `billing: fetched credits config` | `cli-chat-proxy.grok.com/v1/billing?format=credits`（凭据 `~/.grok/auth.json`） | `creditUsagePercent` 缺省按 0（protobuf 零值省略）；周期类型由 `currentPeriod.type` 给出（目前是 WEEKLY）；令牌过期时跳过，等 Grok CLI 自己刷新 |
 | Kimi | — | `api.kimi.com/coding/v1/usages`（凭据 `~/.kimi-code/credentials/kimi-code.json`） | 返回 5 小时、7 天、月度总量、月度编码四档，各有 `used_ratio`（按 0–1 处理，尚未实测核对）和 `reset_time`。访问令牌只有 15 分钟，过期时按 Kimi CLI 的做法到 `auth.kimi.com/api/oauth/token` 刷新并原子写回凭据（refresh token 会轮换，不写回会让 CLI 失效）；refresh token 失效时提示 `kimi login` |
+| Antigravity（agy） | — | `daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota`（令牌在 Windows 凭据管理器 `gemini:antigravity`） | 按模型返回 `remainingFraction` 与 `resetTime`；同族模型共用额度池，表中按 Gemini / Claude / GPT 各取最低剩余一行，补全类模型不列。窗口长度接口未给出（实测约 5 小时滚动）。访问令牌 1 小时，过期时在内存中刷新、不写回（Google refresh token 不轮换）；所需安装型应用 OAuth client 运行时从 `agy.exe` 读取，不写入本仓库，`meta.json` 只记成功的 client id |
 | Gemini / OpenCode | — | — | `unsupported`，原因写在快照 `note` 字段 |
 
 接口地址和字段名取自本机安装的各 CLI 程序（2026-11-22），属厂商内部接口，可能随版本变化。
