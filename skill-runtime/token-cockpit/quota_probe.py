@@ -6,18 +6,26 @@ holds only plan names, usage percentages, window sizes, reset times and
 freshness metadata: never tokens, prompts, or credit balances.
 
 Usage:
-  quota_probe.py [--agent all|claude|codex|grok|kimi|gemini|opencode] [--force] [--print]
+  quota_probe.py [--agent all|claude|codex|grok|kimi|gemini|opencode] [--force] [--print|--table]
+  quota_probe.py --table --force   # human-readable table: used %, reset time (local), countdown
   quota_probe.py --hook            # for CLI hooks: drain stdin, spawn a detached
                                    # refresh of all agents, exit 0 immediately
   quota_probe.py --detach ...      # same as above without reading stdin
 
 Sources (offline first; network only when offline data is stale, at most once
 per TTL per agent, 3 s timeout):
-  codex  ~/.codex/sessions/**/rollout-*.jsonl rate_limits -> chatgpt.com wham/usage
+  codex  ~/.codex/sessions/**/rollout-*.jsonl rate_limits
+         -> chatgpt.com/backend-api/wham/usage (404 -> .../codex/usage)
   claude ~/.agent-quota/claude-statusline.json (if a statusline tee exists)
          -> api.anthropic.com/api/oauth/usage
-  grok   ~/.grok/logs/unified.jsonl "billing: fetched credits config" (offline only)
-  kimi / gemini / opencode: unsupported (no local quota source found)
+  grok   ~/.grok/logs/unified.jsonl "billing: fetched credits config"
+         -> cli-chat-proxy.grok.com/v1/billing?format=credits (token from ~/.grok/auth.json)
+  kimi   -> api.kimi.com/coding/v1/usages (OAuth from ~/.kimi-code/credentials/kimi-code.json;
+         an expired access token is refreshed at auth.kimi.com and written back atomically,
+         as Kimi CLI does, because the refresh token rotates)
+  gemini / opencode: unsupported
+Endpoints and field names were taken from the installed CLI binaries (2026-11-22);
+they are vendor-internal and may change without notice.
 """
 from __future__ import annotations
 
@@ -31,6 +39,7 @@ import sys
 import tempfile
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 
 TTL = int(os.environ.get("AGENT_QUOTA_TTL", "300"))
@@ -45,7 +54,6 @@ AGENTS = ["claude", "codex", "grok", "kimi", "gemini", "opencode"]
 THROTTLED = "throttled"
 EPOCH = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)
 UNSUPPORTED = {
-    "kimi": "Kimi Code 本地日志与会话中没有额度字段，也未找到公开的用量接口",
     "gemini": "本机未安装 Gemini CLI",
     "opencode": "OpenCode 按 API key 计费，没有周额度概念",
 }
@@ -57,7 +65,10 @@ def now_utc() -> dt.datetime:
 
 
 def iso(t: dt.datetime | None) -> str | None:
-    return t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if t else None
+    if not t:
+        return None
+    t = t.astimezone(dt.timezone.utc) + dt.timedelta(microseconds=500_000)  # round, don't truncate
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def parse_time(v) -> dt.datetime | None:
@@ -168,8 +179,8 @@ def window_name(minutes: int | None) -> str:
     return {300: "5h", 10080: "weekly"}.get(minutes or 0, f"{minutes}m" if minutes else "window")
 
 
-def http_json(url: str, headers: dict) -> dict:
-    req = urllib.request.Request(url, headers=headers, method="GET")
+def http_json(url: str, headers: dict, data: bytes | None = None) -> dict:
+    req = urllib.request.Request(url, headers=headers, data=data, method="POST" if data else "GET")
     with urllib.request.urlopen(req, timeout=NET_TIMEOUT) as r:  # noqa: S310 (fixed vendor URLs)
         return json.loads(r.read().decode("utf-8"))
 
@@ -216,7 +227,12 @@ def codex_network() -> dict:
                "OpenAI-Beta": "codex-1", "originator": "Codex Desktop"}
     if tok.get("account_id"):
         headers["ChatGPT-Account-Id"] = tok["account_id"]
-    data = http_json("https://chatgpt.com/backend-api/wham/usage", headers)
+    try:
+        data = http_json("https://chatgpt.com/backend-api/wham/usage", headers)
+    except urllib.error.HTTPError as e:
+        if e.code != 404:
+            raise
+        data = http_json("https://chatgpt.com/backend-api/codex/usage", headers)  # same payload
     rl = data.get("rate_limit") or {}
     wins = []
     for key in ("primary_window", "secondary_window"):
@@ -307,16 +323,7 @@ def tail_lines(path: str, needle: str, max_bytes: int = 16 << 20) -> str | None:
     return None
 
 
-def grok_offline() -> dict | None:
-    line = tail_lines(os.path.join(HOME, ".grok", "logs", "unified.jsonl"), "billing: fetched credits config")
-    if not line:
-        return None
-    try:
-        ev = json.loads(line)
-    except ValueError:
-        return None
-    ctx = ev.get("ctx") or {}
-    cfg = ctx.get("config") or {}
+def grok_window(cfg: dict) -> dict:
     period = cfg.get("currentPeriod") or {}
     start, end = parse_time(period.get("start")), parse_time(period.get("end"))
     minutes = int((end - start).total_seconds() // 60) if start and end else None
@@ -327,14 +334,109 @@ def grok_offline() -> dict | None:
     w = window(name, minutes, used, period.get("end"))
     if "creditUsagePercent" not in cfg and not w.get("estimated"):
         w["note"] = "creditUsagePercent omitted by server (protobuf zero value)"
-    return {"plan": ctx.get("subscriptionTier"), "windows": [w], "source": "grok-log",
-            "observed_at": iso(parse_time(ev.get("ts")))}
+    return w
+
+
+def grok_offline() -> dict | None:
+    line = tail_lines(os.path.join(HOME, ".grok", "logs", "unified.jsonl"), "billing: fetched credits config")
+    if not line:
+        return None
+    try:
+        ev = json.loads(line)
+    except ValueError:
+        return None
+    ctx = ev.get("ctx") or {}
+    return {"plan": ctx.get("subscriptionTier"), "windows": [grok_window(ctx.get("config") or {})],
+            "source": "grok-log", "observed_at": iso(parse_time(ev.get("ts")))}
+
+
+def grok_network() -> dict:
+    auth = read_json(os.path.join(HOME, ".grok", "auth.json"), {})
+    entry = next((v for v in auth.values() if isinstance(v, dict) and v.get("key")), None) \
+        if isinstance(auth, dict) else None
+    if not entry:
+        raise RuntimeError("no grok.com login in ~/.grok/auth.json")
+    exp = parse_time(entry.get("expires_at"))
+    if exp and exp < now_utc():
+        raise RuntimeError("Grok access token expired; it refreshes when Grok CLI next runs")
+    data = http_json("https://cli-chat-proxy.grok.com/v1/billing?format=credits",
+                     {"Authorization": "Bearer " + entry["key"], "User-Agent": "grok-cli",
+                      "Accept": "application/json"})
+    cfg = data.get("config") or {}
+    # the billing reply carries no tier name; reuse the last one Grok logged
+    plan = (grok_offline() or {}).get("plan") if os.path.exists(
+        os.path.join(HOME, ".grok", "logs", "unified.jsonl")) else None
+    return {"plan": plan, "windows": [grok_window(cfg)], "source": "grok-billing",
+            "observed_at": iso(now_utc())}
+
+
+KIMI_CRED = os.path.join(HOME, ".kimi-code", "credentials", "kimi-code.json")
+KIMI_CLIENT_ID = "17e5f671-d194-4dfb-9706-5516cb48c098"  # Kimi CLI's public OAuth client id
+
+
+def kimi_access_token() -> str:
+    cred = read_json(KIMI_CRED, {})
+    if not cred.get("access_token"):
+        raise RuntimeError("no Kimi Code login; run `kimi login`")
+    exp = parse_time(cred.get("expires_at"))
+    if exp and (exp - now_utc()).total_seconds() > 60:
+        return cred["access_token"]
+    if not cred.get("refresh_token"):
+        raise RuntimeError("Kimi access token expired and no refresh token; run `kimi login`")
+    body = urllib.parse.urlencode({"client_id": KIMI_CLIENT_ID, "grant_type": "refresh_token",
+                                   "refresh_token": cred["refresh_token"]}).encode()
+    try:
+        d = http_json("https://auth.kimi.com/api/oauth/token",
+                      {"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "kimi-cli"}, body)
+    except urllib.error.HTTPError as e:
+        if e.code in (400, 401):
+            raise RuntimeError("Kimi refresh token rejected (invalid_grant); run `kimi login`") from None
+        raise
+    if not isinstance(d.get("access_token"), str):
+        raise RuntimeError("Kimi token refresh returned no access_token")
+    expires_in = int(d.get("expires_in") or 900)
+    cred.update(access_token=d["access_token"], refresh_token=d.get("refresh_token") or cred["refresh_token"],
+                expires_in=expires_in, expires_at=int(time.time()) + expires_in)
+    for k in ("scope", "token_type"):
+        if d.get(k):
+            cred[k] = d[k]
+    # the refresh token rotates: persist it, or Kimi CLI's next refresh fails
+    fd, tmp = tempfile.mkstemp(prefix=".tmp-", dir=os.path.dirname(KIMI_CRED))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(cred, f)
+        os.replace(tmp, KIMI_CRED)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+    return cred["access_token"]
+
+
+def kimi_network() -> dict:
+    tok = kimi_access_token()
+    data = http_json("https://api.kimi.com/coding/v1/usages",
+                     {"Authorization": "Bearer " + tok, "User-Agent": "kimi-cli", "Accept": "application/json"})
+    usages = data.get("usages") if isinstance(data.get("usages"), dict) else data
+    wins = []
+    for key, name, m in (("limit_5h", "5h", 300), ("limit_7d", "weekly", 10080),
+                         ("limit_month_total", "monthly", None), ("limit_month_code", "monthly-code", None)):
+        e = usages.get(key)
+        if not isinstance(e, dict) or e.get("used_ratio") is None:
+            continue
+        try:
+            r = float(e["used_ratio"])
+        except (TypeError, ValueError):
+            continue
+        # Kimi CLI treats used_ratio as a 0-1 fraction (not verified against a live reply yet)
+        wins.append(window(name, m, r * 100.0 if r <= 1.0 else r, e.get("reset_time")))
+    return {"plan": None, "windows": wins, "source": "kimi-usages", "observed_at": iso(now_utc())}
 
 
 ADAPTERS = {
     "codex": (codex_offline, codex_network),
     "claude": (claude_offline, claude_network),
-    "grok": (grok_offline, None),
+    "grok": (grok_offline, grok_network),
+    "kimi": (lambda: None, kimi_network),
 }
 
 
@@ -414,6 +516,59 @@ def run(agents: list[str], force: bool) -> dict | None:
         return state
 
 
+WINDOW_LABEL = {"5h": "5小时", "weekly": "每周", "monthly": "每月", "monthly-code": "每月(编码)"}
+SOURCE_LABEL = {"oauth-usage": "在线", "wham-usage": "在线", "grok-billing": "在线", "kimi-usages": "在线",
+                "codex-rollout": "本地日志", "grok-log": "本地日志", "claude-statusline": "本地快照"}
+
+
+def countdown(t: dt.datetime | None) -> str:
+    if not t:
+        return "-"
+    s = int((t - now_utc()).total_seconds())
+    if s <= 0:
+        return "已到"
+    d, h, m = s // 86400, s % 86400 // 3600, s % 3600 // 60
+    return (f"{d}天" if d else "") + (f"{h}小时" if h or d else "") + ("" if d else f"{m}分")
+
+
+def render_table(state: dict) -> str:
+    def wcell(s: str) -> int:  # display width: CJK counts as 2
+        return sum(2 if ord(c) > 0x2E80 else 1 for c in s)
+
+    def pad(s: str, n: int) -> str:
+        return s + " " * max(0, n - wcell(s))
+
+    rows = [["模型", "套餐", "窗口", "已用", "剩余", "重置时间(本地)", "距重置", "来源"]]
+    notes = []
+    for agent, snap in (state.get("agents") or {}).items():
+        if snap.get("source") == "unsupported":
+            continue
+        src = SOURCE_LABEL.get(snap.get("source"), snap.get("source") or "-")
+        if snap.get("stale"):
+            src += "(过期)"
+        wins = snap.get("windows") or []
+        for i, w in enumerate(wins):
+            t = parse_time(w.get("resets_at"))
+            used = w.get("used_percent")
+            rows.append([agent if i == 0 else "", (snap.get("plan") or "-") if i == 0 else "",
+                         WINDOW_LABEL.get(w["name"]) or (
+                             "每周·" + w["name"][7:] if w["name"].startswith("weekly-") else w["name"]),
+                         "-" if used is None else f"{used:g}%",
+                         "-" if used is None else f"{w['remaining_percent']:g}%",
+                         t.astimezone().strftime("%m-%d %H:%M") if t else ("已重置" if w.get("estimated") else "-"),
+                         countdown(t), src if i == 0 else ""])
+        if not wins:
+            rows.append([agent, snap.get("plan") or "-", "-", "-", "-", "-", "-", "无数据"])
+        if snap.get("error"):
+            notes.append(f"  {agent}: {snap['error']}")
+    widths = [max(wcell(r[c]) for r in rows) for c in range(len(rows[0]))]
+    out = ["  ".join(pad(c, widths[i]) for i, c in enumerate(r)).rstrip() for r in rows]
+    out.insert(1, "  ".join("-" * w for w in widths))
+    if notes:
+        out += ["", "错误:"] + notes
+    return "\n".join(out)
+
+
 def spawn_detached(agent: str) -> None:
     args = [sys.executable, "-I", os.path.abspath(__file__), "--agent", agent]
     kw = dict(stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
@@ -436,7 +591,13 @@ def main(argv=None) -> int:
     ap.add_argument("--hook", action="store_true", help="hook mode: drain stdin, detach, no output")
     ap.add_argument("--force", action="store_true", help="ignore the network TTL")
     ap.add_argument("--print", action="store_true", help="print the resulting snapshot")
+    ap.add_argument("--table", action="store_true", help="print a human-readable table")
     a = ap.parse_args(argv)
+    for s in (sys.stdout, sys.stderr):
+        try:
+            s.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
     if a.hook or a.detach:
         if a.hook:
             try:
@@ -451,9 +612,13 @@ def main(argv=None) -> int:
         return 0
     agents = AGENTS if a.agent == "all" else [a.agent]
     state = run(agents, a.force)
+    snap = state if state is not None else read_json(STATE_PATH, {})
     if a.print:
-        print(json.dumps(state if state is not None else read_json(STATE_PATH, {}),
-                         ensure_ascii=False, indent=2))
+        print(json.dumps(snap, ensure_ascii=False, indent=2))
+    if a.table:
+        if a.agent != "all":
+            snap = {"agents": {a.agent: (snap.get("agents") or {}).get(a.agent, {})}}
+        print(render_table(snap))
     return 0
 
 

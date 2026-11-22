@@ -17,10 +17,15 @@
 
 | 模型 | 首选（离线） | 兜底（网络，≤1 次 / TTL） | 说明 |
 |---|---|---|---|
-| Codex | `~/.codex/sessions/**/rollout-*.jsonl` 最后一条 `rate_limits` | `chatgpt.com/backend-api/wham/usage`（凭据 `~/.codex/auth.json`） | 离线数据只在 Codex 会话里刷新；超过 2×TTL 才走网络 |
+| Codex | `~/.codex/sessions/**/rollout-*.jsonl` 最后一条 `rate_limits` | `chatgpt.com/backend-api/wham/usage`，404 时改用 `.../codex/usage`（凭据 `~/.codex/auth.json`） | 离线数据只在 Codex 会话里刷新；超过 2×TTL 才走网络 |
 | Claude | `~/.agent-quota/claude-statusline.json`（若有 statusline 副本） | `api.anthropic.com/api/oauth/usage`（凭据 `~/.claude/.credentials.json`） | 不改 Orca 的 statusLine，所以通常走网络兜底；令牌过期时跳过，等 Claude Code 自己刷新 |
-| Grok | `~/.grok/logs/unified.jsonl` 中最后一条 `billing: fetched credits config` | 无 | `creditUsagePercent` 缺省按 0（protobuf 零值省略）；只在 Grok 拉取计费配置时更新 |
-| Kimi / Gemini / OpenCode | — | — | `unsupported`，原因写在快照 `note` 字段 |
+| Grok | `~/.grok/logs/unified.jsonl` 中最后一条 `billing: fetched credits config` | `cli-chat-proxy.grok.com/v1/billing?format=credits`（凭据 `~/.grok/auth.json`） | `creditUsagePercent` 缺省按 0（protobuf 零值省略）；周期类型由 `currentPeriod.type` 给出（目前是 WEEKLY）；令牌过期时跳过，等 Grok CLI 自己刷新 |
+| Kimi | — | `api.kimi.com/coding/v1/usages`（凭据 `~/.kimi-code/credentials/kimi-code.json`） | 返回 5 小时、7 天、月度总量、月度编码四档，各有 `used_ratio`（按 0–1 处理，尚未实测核对）和 `reset_time`。访问令牌只有 15 分钟，过期时按 Kimi CLI 的做法到 `auth.kimi.com/api/oauth/token` 刷新并原子写回凭据（refresh token 会轮换，不写回会让 CLI 失效）；refresh token 失效时提示 `kimi login` |
+| Gemini / OpenCode | — | — | `unsupported`，原因写在快照 `note` 字段 |
+
+接口地址和字段名取自本机安装的各 CLI 程序（2026-11-22），属厂商内部接口，可能随版本变化。
+
+查看：`python quota_probe.py --table --force`（人读表格：已用/剩余、本地重置时间、倒计时；`--agent codex` 只看一家）。
 
 快照只含：`plan`、`windows[]`（`name`、`minutes`、`used_percent`、`remaining_percent`、`resets_at`）、`source`、`observed_at`、`fetched_at`、`stale`、`error`。不存令牌、提示词和余额。
 
