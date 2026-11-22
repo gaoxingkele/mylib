@@ -2,6 +2,8 @@
 
 0.2.81 本地试点的客户端包、证据与待验条件见[交付记录](pilot-status.md)。
 
+2026-11-23 客户端 0.2.82 已验证 Android 同签名升级、窗口改名、选定 PowerShell 退出及相邻进程保留。完整源码和通用安装包见 [SuperMonoAgent v0.2.82](https://github.com/gaoxingkele/supermonoagent/tree/v0.2.82)。
+
 项目总目标、里程碑、责任分工和最终验收统一见[项目目标与执行总计划](rollout-design.md)。本页维护模块契约。普通终端由用户在原窗口确认草稿，支持持久受理回执的工具可在驾驶舱确认并查询原请求。
 
 本目录维护 MCP、Hook、SQLite 和版本评测的试点源码。隔离试点的启动方式、凭据范围和测试见[服务说明](service.md)。各阶段实际放行情况以运行证据为准。
