@@ -1,6 +1,6 @@
 # 多模型额度驾驶舱方案（token-cockpit）
 
-状态：方案稿（2026-11-21），未实施。
+状态：M1–M4 已实施（2026-11-21），M5 未做。使用与回滚见 `README.md`；本文保留设计依据。
 目标：Claude Code、Codex、Grok 及其他 CLI 模型每次 hook 触发后，刷新“本周剩余额度 + 下次重置时间”，汇总成一份统一快照，通过一个本地 MCP 服务提供给全局环境；右侧驾驶舱（Orca）和任意 agent 都能读到。
 
 ## 1. 现状调查（2026-11-21，本机）
@@ -13,7 +13,7 @@
 | 生效前提 | 只在 Orca 窗格里启动的会话才有 `ORCA_AGENT_HOOK_PORT/TOKEN/PANE_KEY`；在独立终端里启动的会话不上报 |
 | Codex 离线数据 | `~/.codex/sessions/**/rollout-*.jsonl` 的 token_count 事件带 `rate_limits`：`primary.used_percent`、`window_minutes`（10080 = 周）、`resets_at`（epoch）、`plan_type`、credits 余额。**不联网即可读取** |
 | Claude 离线数据 | Claude Code statusline 输入 JSON 带 `rate_limits`（five_hour / seven_day 的 used_percentage 与 resets_at） |
-| Grok | `~/.grok` 有 hooks、sessions、settings_cache；本机缓存未发现额度字段，需调研 CLI 是否提供 `/usage` 类命令或接口 |
+| Grok | `~/.grok/logs/unified.jsonl` 有 `billing: fetched credits config` 日志：`creditUsagePercent`、`currentPeriod`（`USAGE_PERIOD_TYPE_WEEKLY`，start/end）、`subscriptionTier`。**不联网即可读取**，但只在 Grok 拉取计费配置时更新。Grok 同时加载 `~/.claude/settings.json` 的 hook 和 `~/.claude.json` 的 MCP |
 | 其他（Kimi、Gemini、OpenCode 等） | 多为 API key 计费，没有“周额度”概念；可显示余额或当期用量，没有就显示 N/A |
 
 结论：Claude、Codex 两家 Orca 已经能显示（前提是在 Orca 里启动）。缺口有三：①Grok 和其他模型；②Orca 之外启动的会话；③没有一个全局可查询的统一快照（agent 自己无法知道“哪个模型还有余量”）。
@@ -50,18 +50,19 @@ quota-mcp（本地 MCP 服务，stdio + 可选 HTTP 127.0.0.1）
         {"name": "weekly", "minutes": 10080, "used_percent": 40.0, "remaining_percent": 60.0,
          "resets_at": "2026-11-26T03:18:32Z"}
       ],
-      "credits": {"balance": "1234.56"},
-      "source": "codex-rollout",
-      "fetched_at": "2026-11-21T07:59:58Z",
+      "source": "codex-rollout | wham-usage",
+      "observed_at": "2026-11-21T07:59:58Z",
+      "fetched_at": "2026-11-21T08:00:00Z",
       "stale": false
     },
     "claude": {"windows": [{"name": "5h"}, {"name": "weekly"}, {"name": "weekly-fable"}], "source": "statusline|oauth-usage"},
-    "grok": {"windows": [], "source": "unsupported", "note": "待调研"}
+    "grok": {"plan": "SuperGrok Plus", "windows": [{"name": "weekly"}], "source": "grok-log"},
+    "kimi": {"windows": [], "source": "unsupported", "note": "原因"}
   }
 }
 ```
 
-`stale = now - fetched_at > 2 × TTL`。驾驶舱和 agent 看到 `stale` 时应该显示“数据过期”，不能把旧数据当作当前值。
+`stale = now - observed_at > 2 × TTL`（observed_at 是数据本身的观测时间，fetched_at 是本次读取时间）。实现时去掉了 credits 余额，快照只留百分比与时间。驾驶舱和 agent 看到 `stale` 时应该显示“数据过期”，不能把旧数据当作当前值。
 
 ## 4. 各模型适配器
 
@@ -69,8 +70,8 @@ quota-mcp（本地 MCP 服务，stdio + 可选 HTTP 127.0.0.1）
 |---|---|---|---|---|
 | Claude Code | statusline payload 的 `rate_limits`（在现有 statusLine 命令里加一行 tee 给 probe） | `api/oauth/usage`，凭据读 `~/.claude/.credentials.json` | `Stop`、`SessionEnd` | oauth/usage 是未公开接口，可能变动；失败时退回 statusline 数据 |
 | Codex | 最新 `rollout-*.jsonl` 中最后一个 `rate_limits` | `backend-api/wham/usage`，凭据读 `~/.codex/auth.json` | `~/.codex/hooks.json` 的 `Stop`（或 turn 完成事件） | 离线数据已验证可用 |
-| Grok | 待调研：CLI 命令、`~/.grok/sessions` 日志、`cli-chat-proxy.grok.com` 响应头 | 无 | `~/.grok` hooks | 第一阶段只记录“最后使用时间” |
-| Kimi / Gemini / OpenCode / 其他 | 厂商余额或用量接口（如有） | 无 | 各自 hook（Orca 已有 kimi-hook.sh 等） | 没有周额度的显示余额或 N/A |
+| Grok | `~/.grok/logs/unified.jsonl` 计费日志（已实现） | 无 | `~/.grok/hooks/agent-quota.json` 的 `Stop` | `creditUsagePercent` 缺省按 0 |
+| Kimi / Gemini / OpenCode / 其他 | 无（已调研：Kimi Code 日志与会话无额度字段；Gemini CLI 未安装；OpenCode 按 key 计费） | 无 | — | 快照标 `unsupported` 并写原因 |
 
 适配器统一接口：`probe(agent) -> Snapshot | None`；每个适配器单独超时（3s），失败只记日志，不抛到 hook。
 
@@ -87,13 +88,13 @@ quota-mcp（本地 MCP 服务，stdio + 可选 HTTP 127.0.0.1）
 
 ## 6. 实施步骤与验收
 
-| 阶段 | 内容 | 验收 |
-|---|---|---|
-| M1 | `quota_probe.py`：Codex 离线适配器 + Claude statusline 适配器 + state.json 原子写 | 在独立终端跑一次，state.json 出现 codex/claude 两项，数值与 Orca 面板一致（误差 ≤1%） |
-| M2 | hook 接线：Claude `Stop`、Codex `Stop` 并列注册 `quota-probe --detach` | hook 总耗时 < 200ms；Orca 原有 hook 行为不变；连续 10 次 Stop 只触发 ≤2 次接口调用 |
-| M3 | `quota_mcp.py` + 三个 CLI 注册 | 三个 CLI 内都能调用 `list_quotas` |
-| M4 | Grok / Kimi / Gemini 适配器调研与实现 | 能拿到的显示数值，拿不到的显示 `unsupported` 和原因 |
-| M5 | 可选：statusline 一行汇总（如 `Codex 60%·5d │ Claude 71%·3d │ Grok –`） | 不影响 Orca statusline 上报 |
+| 阶段 | 内容 | 验收 | 状态（2026-11-21） |
+|---|---|---|---|
+| M1 | `quota_probe.py`：Codex 离线适配器 + Claude statusline 适配器 + state.json 原子写 | 在独立终端跑一次，state.json 出现 codex/claude 两项，数值与 Orca 面板一致（误差 ≤1%） | ✅ 已实现；Claude 走 oauth/usage 兜底（未接 statusline）；与 Orca 面板的数值比对待人工核对 |
+| M2 | hook 接线：Claude `Stop`、Codex `Stop` 并列注册 `quota-probe --detach` | hook 总耗时 < 200ms；Orca 原有 hook 行为不变；连续 10 次 Stop 只触发 ≤2 次接口调用 | ✅ `quota_hook.py` 约 130–180 ms；Orca 条目逐项比对未变；10 次连续触发 0 次接口调用。Codex 新 hook 需在 `/hooks` 里人工信任 |
+| M3 | `quota_mcp.py` + 三个 CLI 注册 | 三个 CLI 内都能调用 `list_quotas` | ✅ `claude mcp list` 显示 Connected；`codex mcp list` 显示 enabled；`grok inspect` 经 `~/.claude.json` 加载 |
+| M4 | Grok / Kimi / Gemini 适配器调研与实现 | 能拿到的显示数值，拿不到的显示 `unsupported` 和原因 | ✅ Grok 离线日志适配器；Kimi/Gemini/OpenCode 为 unsupported |
+| M5 | 可选：statusline 一行汇总（如 `Codex 60%·5d │ Claude 71%·3d │ Grok –`） | 不影响 Orca statusline 上报 | 未做：statusLine 归 Orca 所有，包一层无法保证输出不变 |
 
 ## 7. 风险
 
@@ -102,8 +103,8 @@ quota-mcp（本地 MCP 服务，stdio + 可选 HTTP 127.0.0.1）
 - **服务条款**：调用频率保持与官方客户端同级或更低；不用于绕过额度限制。
 - **hook 叠加**：Codex、Claude 的 hook 数组里新增项必须追加，不能覆盖 Orca 的条目；修改前备份 `settings.json` / `hooks.json`。
 
-## 8. 待决策
+## 8. 决策（2026-11-21 按默认执行）
 
-1. 是否接受“Claude/Codex 继续以 Orca 原生面板为主，quota-mcp 负责全局查询和其他模型”的分工；
-2. Grok 及其他模型优先做哪几个；
-3. 是否需要 `pick_model` 自动选模型（会影响编排类技能的行为）。
+1. 采用：Claude/Codex 继续以 Orca 原生面板为主，quota-mcp 负责全局查询和其他模型；
+2. 先做 Grok（本机有离线来源）；Kimi/Gemini/OpenCode 暂标 unsupported；
+3. `pick_model` 只做只读建议，不接入任何编排技能的自动切换。
