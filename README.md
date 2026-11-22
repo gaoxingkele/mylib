@@ -7,6 +7,10 @@
 - User-level Codex skills are installed as junctions into curated sources under this repository.
 - **技能来源/用处/效果/路由全知识 → 见 [`WIKI.md`](WIKI.md)**（2026-08-29 起，技能变动同步更新）
 
+## Coding Agent 中央 MCP
+
+- [Agent Hub 试点源码与接入说明](tools/agent-hub/README.md)包含多机任务上报、额度采集、窗口反馈、mylib 经验回流和 SQLite 备份换库。
+
 ## Proposal writing / 申报书
 
 - Main module: [`proposal-writing/`](proposal-writing/README.md), entry [`SKILL.md`](proposal-writing/SKILL.md).

@@ -1,0 +1,22 @@
+[Unit]
+Description=Agent Hub private pilot
+After=network.target
+
+[Service]
+User=agent-hub-pilot
+Group=agent-hub-pilot
+WorkingDirectory=/opt/agent-hub-pilot
+EnvironmentFile=/etc/agent-hub-pilot/pilot.env
+Environment=PYTHONNOUSERSITE=1
+StateDirectory=agent-hub-pilot
+UMask=0077
+ExecStart=/opt/agent-hub-pilot/.venv/bin/python -m agent_hub.server --database /var/lib/agent-hub-pilot/pilot.db --auth-file /etc/agent-hub-pilot/grants.json --port 8822 --allowed-host ${HUB_PUBLIC_HOST} --allowed-origin ${HUB_DESKTOP_ORIGIN} --allowed-origin ${HUB_ANDROID_ORIGIN}
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target
