@@ -9,5 +9,5 @@ Playwright MCP 浏览器控制包：Gemini / ChatGPT / Grok / Perplexity（`/pat
 测试：
 
 ```
-D:/Python/Python314/python.exe -m unittest discover -s tests -v
+C:/Python314/python.exe -m unittest discover -s tests -v
 ```

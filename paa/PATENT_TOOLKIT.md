@@ -68,7 +68,7 @@ native Grok roots so the **router** wins by name:
 - Workflow: `<repo>/.grok/workflows/cn-patent.rhai` (`/cn-patent`).
 - Adapter: `paa/adapters/grok.md`.
 
-Python on this machine is `D:/Python/Python314/python.exe`.
+Python on this machine is `C:/Python314/python.exe`.
 
 ## Claude-compatible installation
 

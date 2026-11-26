@@ -21,13 +21,13 @@ description: >
 ## 命令
 
 ```powershell
-D:/Python/Python314/python.exe D:/aicoding/mylib/paa/skills/patent-jev-screen/scripts/screen.py --input <packet.json>
+C:/Python314/python.exe D:/aicoding/mylib/paa/skills/patent-jev-screen/scripts/screen.py --input <packet.json>
 ```
 
 自检不访问网络：
 
 ```powershell
-D:/Python/Python314/python.exe D:/aicoding/mylib/paa/skills/patent-jev-screen/scripts/screen.py --self-test
+C:/Python314/python.exe D:/aicoding/mylib/paa/skills/patent-jev-screen/scripts/screen.py --self-test
 ```
 
 输入至少包含 `disclosure`（固定为 `public_prior_art`）、`lane`（`product` 或 `mechanism`）、`elements`、`candidate` 或最多 8 个 `candidates`。每个特征有 `id` 和 `text`。每篇文献有真实 `pub_number`、`title`、`abstract`、`passage` 和 `source_level`（`abstract` 或 `original_passage`）。

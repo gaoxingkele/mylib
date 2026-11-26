@@ -51,15 +51,14 @@ whole `mylib/paa` directory.
    to call the other experts. The main session (or the `cn-patent` workflow)
    calls `disclosure-analyst` → `prior-art-researcher` → `claim-drafter` → …
    directly.
-2. **Python:** `D:/Python/Python314/python.exe`. The Microsoft Store `python`
-   stub is unusable. Some skill docs still say `D:/Python314/python.exe`;
-   rewrite that path when executing.
+2. **Python:** `C:/Python314/python.exe`. The Microsoft Store `python`
+   stub is unusable. Skill docs now all use this C: path (migrated from D: on 2026-11-25).
 3. **incoPat:** `D:/aicoding/mylib/paa/skills/incopat-search/scripts/incopat_api.py`
    with credentials in that folder's gitignored `credentials.json`.
 4. **PAA validate:**
-   `D:/Python/Python314/python.exe D:/aicoding/mylib/paa/scripts/validate.py output/<案件>/paa`
+   `C:/Python314/python.exe D:/aicoding/mylib/paa/scripts/validate.py output/<案件>/paa`
 5. **Static claim check:**
-   `D:/Python/Python314/python.exe D:/aicoding/mylib/paa/skills/cn-patent-application-cluster/scripts/patent_static_check.py <draft.md>`
+   `C:/Python314/python.exe D:/aicoding/mylib/paa/skills/cn-patent-application-cluster/scripts/patent_static_check.py <draft.md>`
 6. **No fabricated publication numbers.** Every cited pn needs
    `evidence/prior_art_search/<pn>.json` from a real API response.
 

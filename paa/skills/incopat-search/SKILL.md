@@ -29,33 +29,33 @@ description: >
 cd "D:\aicoding\zhuanlishenqing" && export PYTHONIOENCODING=utf-8
 
 # ① 检索式检索（返回 pn/标题/摘要/申请人/发明人/代理机构/申请日/公开日）
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py \
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py \
   search "TI-CN=(变压器 AND 故障诊断) AND PNC=CN AND PD=[20200101 TO 20261231]" --rows 10 --order "PD DESC"
 
 # ② 语义检索：整段技术方案文字 → 相似专利公开号+相似度分（查新首选，中文查中国专利，英文查国外）
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py \
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py \
   semantic "一种基于知识图谱和检索增强生成的变压器油色谱故障诊断方法……" --rows 10
 
 # ③ 按公开号取详情
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py info     CN103399241B   # 单件完整著录项
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py family   CN103399241B   # 同族
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py citation CN103399241B   # 引证
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py claim  CN103399241B   # 权利要求全文
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py spec   CN103399241B   # 说明书全文
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py legal  CN103399241B   # 法律状态 2.0
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py value  CN103399241B   # 合享价值度评分
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py assign CN103399241B   # 转让
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py licence CN103399241B  # 许可
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py reexam CN103399241B   # 复审无效决定
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py info     CN103399241B   # 单件完整著录项
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py family   CN103399241B   # 同族
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py citation CN103399241B   # 引证
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py claim  CN103399241B   # 权利要求全文
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py spec   CN103399241B   # 说明书全文
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py legal  CN103399241B   # 法律状态 2.0
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py value  CN103399241B   # 合享价值度评分
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py assign CN103399241B   # 转让
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py licence CN103399241B  # 许可
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py reexam CN103399241B   # 复审无效决定
 
 # ④ 批量（自动限速）
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py batch CN116842422A CN113112164A --cmd claim
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py batch CN116842422A CN113112164A --cmd claim
 
 # ⑤ 数量及分组统计（账号未开通时明确报错，不要重试）
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py count "TI-CN=(变压器) AND PNC=CN"
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned1 "TI-CN=(变压器) AND PNC=CN" APTT --rows 20
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned2 "TI-CN=(变压器) AND PNC=CN" APTT,PDY --rows 20
-D:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py twod  "TI-CN=(变压器) AND PNC=CN" APTT PDY --rows 20
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py count "TI-CN=(变压器) AND PNC=CN"
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned1 "TI-CN=(变压器) AND PNC=CN" APTT --rows 20
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py oned2 "TI-CN=(变压器) AND PNC=CN" APTT,PDY --rows 20
+C:/Python314/python.exe .claude/skills/incopat-search/scripts/incopat_api.py twod  "TI-CN=(变压器) AND PNC=CN" APTT PDY --rows 20
 ```
 
 ## 推荐查新工作流（三步漏斗）

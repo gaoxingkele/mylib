@@ -8,7 +8,7 @@ description: >
   TRIGGERS: 写论文, 论文写作, 评估论文, 审稿模拟, 论文润色, 降AIGC, 论文投稿, CCF会议,
   论文选题, 新颖性核查, 论文复现, 逆向工程, 复现代码, paper writing, peer review,
   rebuttal, 论文修改, paper to code
-allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), Glob, Grep
+allowed-tools: Read, Write, Bash(C:/Python314/python.exe *|node *|uvx *|git *), Glob, Grep
 ---
 
 # 论文写作路由（写论文 + 评估论文）

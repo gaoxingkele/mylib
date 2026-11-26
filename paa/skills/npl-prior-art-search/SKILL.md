@@ -7,7 +7,7 @@ description: >
   scholar-search 或 papers-skill；BibTeX 管理→citation-management。
   TRIGGERS: NPL检索, 论文对比文件, 学术文献检索, 非专利文献, 文献综述扫描, prior art NPL,
   论文查新, 领域是否已被论文公开
-allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), Glob, Grep
+allowed-tools: Read, Write, Bash(C:/Python314/python.exe *|node *|uvx *|git *), Glob, Grep
 ---
 
 # NPL 现有技术检索路由
@@ -44,7 +44,7 @@ allowed-tools: Read, Write, Bash(D:/Python314/python.exe *|node *|uvx *|git *), 
 2. **不绕付费墙**：只用开放获取渠道取全文；没有 OA 就把摘要+元数据写进报告并标注"未取全文"。
 3. **限流**：S2 已配置 API key（2026-08-29，存于用户环境变量 `S2_API_KEY` + psp config），突发连发仍会瞬时 429——重试前等 10 秒以上，不要重试轰炸。
 4. **S2 key 约定**（已配置，全组生效）：环境变量 `S2_API_KEY`（scholar-search/s2cli、deep-research 系脚本默认读取）+ `~/.paper-search-pro/config.yaml` 的 `semantic_scholar_api_key:`（paper-search-pro）+ academic-search 的 curl 头 `-H "x-api-key: $S2_API_KEY"`。papers-skill 与 paper_search 无 key 通道（设计如此，限流时换渠道）。
-5. Python 一律 `D:/Python314/python.exe`；`uvx` 已装（0.12.7）；`node` v24 可用（academic-search 的 .mjs 脚本、CDP 模式可跑）。
+5. Python 一律 `C:/Python314/python.exe`；`uvx` 已装（0.12.7）；`node` v24 可用（academic-search 的 .mjs 脚本、CDP 模式可跑）。
 
 ## 输出落点（专利流程内）
 

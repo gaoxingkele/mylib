@@ -28,7 +28,7 @@ description: >
 父会话亲自操作浏览器。不要再 spawn 会抢同一 Chrome 的子代理。
 不调用 incoPat。不编造专利号。网页模型点名的文献一律标「非指定对比文件」。
 
-解释器：`D:/Python/Python314/python.exe`。python-docx / AHP 用 `C:\WINDOWS\py.exe -V:3.12`。
+解释器：`C:/Python314/python.exe`。python-docx / AHP 用 `C:\WINDOWS\py.exe -V:3.12`。
 
 ## Token 纪律（硬约束，2026-09-27）
 
@@ -64,13 +64,13 @@ description: >
 1. 准备全文：
 
 ```
-D:/Python/Python314/python.exe D:/aicoding/mylib/paa/skills/browser-multi-model-review/scripts/prepare_case.py --case P0x-x --title "发明名称" --short "简写" --version 20260918 --src <含02/03/04/05的目录> --out <batch-dir>
+C:/Python314/python.exe D:/aicoding/mylib/paa/skills/browser-multi-model-review/scripts/prepare_case.py --case P0x-x --title "发明名称" --short "简写" --version 20260918 --src <含02/03/04/05的目录> --out <batch-dir>
 ```
 
 或 `--cases-json` + `--case` + `--src`。再：
 
 ```
-D:/Python/Python314/python.exe .../scripts/mk_site_insert.py --batch-dir <batch-dir> --case P0x-x --site gemini|chatgpt|grok|pplx
+C:/Python314/python.exe .../scripts/mk_site_insert.py --batch-dir <batch-dir> --case P0x-x --site gemini|chatgpt|grok|pplx
 ```
 
 2. 新标签打开对应站点 → 选最高档 → 粘贴/拖放 → 发送。JS 在 `scripts/js/`。
@@ -78,7 +78,7 @@ D:/Python/Python314/python.exe .../scripts/mk_site_insert.py --batch-dir <batch-
 4. 点复制按钮，然后单次调用 `post_copy.py`（合并 save_clipboard + wrap_eval + wiki_log，3 步 → 1 步）：
 
 ```
-D:/Python/Python314/python.exe .../scripts/post_copy.py \
+C:/Python314/python.exe .../scripts/post_copy.py \
   --case P0x-x --gate GEMINI --version 20260918 \
   --url <会话URL> \
   --out-dir <案目录>/paa/evidence/browser_review \
