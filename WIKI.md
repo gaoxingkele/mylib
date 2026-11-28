@@ -152,6 +152,8 @@ Grok 专利端：skill-runtime/repair_grok_skills.ps1 → ~/.grok/skills（专�
 
 ## 申报书评审与修订能力更新 2026-10-08
 
+- **多专家协同评审**：通过既有申报书入口调用[交叉评审技能](proposal-writing/skills/cross-panel-review/SKILL.md)。固定基线、逐席评议、协调冲突、验证新版，附[可运行的计分与双向认可示例](proposal-writing/skills/cross-panel-review/references/example.json)。
+
 - 维护入口仍为 proposal-writing；四类申报写作路线保留，新增 review-revise 内部路线，不额外注册评审叶技能。
 - 引入固定版本 review-grant（d12975697b8603ec4dd6f0e922fcc1251d5355d1）与 peer-review（92ace75ac21efe19a620434e0ca4e356081fe807）。原文、许可及完整文件来源记录保留；review-grant 的本地入口与原始快照分别记录，不能把适配文件当成上游原文。
 - 采用五类独立审查视角加第六仲裁视角，核查指南、原句、证据和可执行修改；外部证明未到仍保留 needs_external_evidence/partial，不输出官方评分、资助建议或获批概率。
